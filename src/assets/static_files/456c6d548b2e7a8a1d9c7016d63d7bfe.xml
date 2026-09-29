@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+	This file uses the name field as the key; it is the same string that is used for opening the stadium's "></stadium> file in data/$sku/stadiums
+	
+	The "ads" and "pads" fields refer to the filenames (without extension, as that is platform specific) that are to be loaded from the appropriate
+		data directory to populate the textures for the stadium's ads and pads.
+		
+	The element in the stadium node to use is determined by game type, and the backend code will know which element to use.
+ -->
+<stadiums>
+	<stadium name="arenacivica.day">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="auckland.day">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="auckland.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="bath.day">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="bloemfontain.day">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="bourgoin.day">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="brisbane.day">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="bristol.overcast">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="buenosaires.overcast">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="canberra.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="capetown.day">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="cardiff.overcast">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="castres.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>		
+	<stadium name="christchurch.day">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="christchurch.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="clermont.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="dunedin.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="dunedin.overcast">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="durban.day">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="EdgeleyPark.cold">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="EdgeleyPark.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="felixbollaert.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="felixbollaert.overcast">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="gloucester.overcast">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="hamilton.overcast">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="highwycombe.day">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="irishpark.overcast">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="johannesburg.day">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="johannesburg.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="lansdownroad.overcast">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="Leinster.cold">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="Leinster.overcast">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="leparc.day">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="leparc.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="llanelli.day">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="madejski.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="millenium.day">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="millenium.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="millenium.overcast">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="milleniumcovered.cold">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="murrayfield.day">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="murrayfield.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="murrayfield.overcast">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="neath.cold">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="neath.overcast">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="newcastle.cold">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="newcastle.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="newport.cold">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="newport.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="northampton.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="northernpark.cold">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="northernpark.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="Parcdesprinces.day">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="Parcdesprinces.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="Parcdesprinces.overcast">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="paris.overcast">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="perpignan.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="perpignan.overcast">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="perth.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="pretoria.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="Rome.day">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="sanfrancisco.day">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>	
+	</stadium>
+	<stadium name="southpacific.day">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="stadedefrance.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="stadedefrance.overcast">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="stadedegerland.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="stadedegerland.overcast">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="StadeDeLaBeaujoire.overcast">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="StadeMunicipal.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="StadeMunicipal.overcast">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="stadevelodrome.day">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="stadevelodrome.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="stadevelodrome.overcast">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="stadiumaustralia.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="sydney.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="tibilisi.overcast">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>/>
+	</stadium>
+	<stadium name="thestoop.cold">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="thestoop.overcast">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="training.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="twickenham.day">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="twickenham.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="twickenham.overcast">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="Ulster.overcast">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="vancouver.day">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="VicarageRd.overcast">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>	
+	</stadium>
+	<stadium name="welfordroad.overcast">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="wellington.night">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+	<stadium name="Worcester.day">
+		<default 		ads="World_Cup\World_Cup"		pads="Tournaments\World_Cup"/>
+	</stadium>
+</stadiums>
+
+
+

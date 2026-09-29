@@ -1,0 +1,234 @@
+{
+ "10103": {
+  "2009": {
+   "name": "Clermont",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "graphics/stadium_graphics.fsh",
+   "stadium": "",
+   "primaryStadium": "26",
+   "logos": {
+    "main": "logos/logo_1.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2009/home_front.png",
+     "backKitFile": "kits_2009/home_back/home_back_%.png",
+     "previewFile": "kits_2009/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2009/away_front.png",
+     "backKitFile": "kits_2009/away_back/away_back_%.png",
+     "previewFile": "kits_2009/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "121078",
+    "viceCaptain": "121078",
+    "longGK": "124750",
+    "shortGK": "124750",
+    "longPunt": "124750",
+    "shortPunt": "124750",
+    "kickoff": "124750"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "118397",
+    "113716",
+    "124722",
+    "118238",
+    "100750",
+    "128022",
+    "100788",
+    "111367",
+    "127595",
+    "124750",
+    "128074",
+    "108942",
+    "116925",
+    "121078",
+    "109567",
+    "116439",
+    "127080",
+    "127606",
+    "122018",
+    "119877",
+    "101497",
+    "113579",
+    "103818",
+    "114723",
+    "120326",
+    "120489",
+    "114387",
+    "129445",
+    "128315",
+    "115147"
+   ]
+  },
+  "2010": {
+   "name": "Clermont",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "graphics/stadium_graphics.fsh",
+   "stadium": "",
+   "primaryStadium": "26",
+   "logos": {
+    "main": "logos/logo_1.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "121078",
+    "viceCaptain": "100788",
+    "longGK": "124230",
+    "shortGK": "124230",
+    "longPunt": "124230",
+    "shortPunt": "124230",
+    "kickoff": "124230"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "110178",
+    "124050",
+    "124722",
+    "108075",
+    "127606",
+    "120415",
+    "128022",
+    "100788",
+    "124021",
+    "124230",
+    "121726",
+    "121078",
+    "130003",
+    "103753",
+    "110002",
+    "112292",
+    "118397",
+    "131556",
+    "111521",
+    "112079",
+    "124937",
+    "110542",
+    "106602",
+    "129445",
+    "120326",
+    "109567",
+    "119926",
+    "110940",
+    "118238"
+   ]
+  },
+  "2024": {
+   "name": "Clermont",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "graphics/stadium_graphics.fsh",
+   "stadium": "",
+   "primaryStadium": "26",
+   "logos": {
+    "main": "logos/logo_2.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "11923",
+    "viceCaptain": "142311",
+    "longGK": "142313",
+    "shortGK": "142313",
+    "longPunt": "142313",
+    "shortPunt": "142313",
+    "kickoff": "142313"
+   },
+   "setPlays": {
+    "up": "loop",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "142305",
+    "142306",
+    "11923",
+    "142307",
+    "142308",
+    "142309",
+    "142310",
+    "142311",
+    "142312",
+    "142313",
+    "142314",
+    "142315",
+    "142316",
+    "142317",
+    "142318",
+    "142319",
+    "11910",
+    "142320",
+    "142321",
+    "142322",
+    "142323",
+    "142324",
+    "142325",
+    "142326",
+    "142327",
+    "142328",
+    "142329",
+    "142330",
+    "142331",
+    "142332"
+   ]
+  }
+ }
+}

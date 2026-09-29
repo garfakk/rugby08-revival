@@ -1,0 +1,11 @@
+{
+  "5001": {
+    "2024": {
+      "name": "Default",
+      "ball": "ball/ball_%.png",
+      "pads": "stadium_graphics.fsh",
+      "logo": "tournament_logo.png",
+      "pitch_logo": "pitch_logos/pitch_logo_%.png",
+      }
+    }
+}

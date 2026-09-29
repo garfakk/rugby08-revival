@@ -1,0 +1,113 @@
+##### CONFIG #####
+# The section [Main] should only contain:
+#   - R08_directory: directory where Rugby 08 is installed
+#   - R08_filename: name of the Rugby 08 executable inside [game_launcher_directory] folder
+#   - mod_directory : directory where the mod is installed (optional). Default: [game_launcher_directory]/R08_mod
+#   The released build keeps config.ini in <install folder>\user_data and derives every other folder
+#   (app_data, mod_data, game_files) from the exe's location; see shared/app_paths.py.
+# -> all other fields in this section will be ignored
+#
+# The section [Options] is used to override the default values.
+# Any value from shared/config.py can be overriden.
+# Example:
+#   - debug_level = 10
+
+[Main]
+R08_directory = C:\Program Files (x86)\EA SPORTS\EA SPORTS(TM) Rugby 08\
+R08_filename = Rugby08.exe
+mod_directory = C:\Program Files (x86)\EA SPORTS\Rugby 08 Revival\
+
+[Options]
+# Logging: OFF (nothing logged), DEBUG (traces), INFO (milestones),
+# WARNING or ERROR (default INFO). Any level but OFF also switches on the game-side logs
+# (rugby08_patches.log next to Rugby08.exe). Also settable in the app's Settings. The
+# R08_LOG_LEVEL environment variable and --log-level on the entry points override
+# it. log_file adds a rotating log file (console/R08Revival.log output is unchanged).
+#log_level = INFO
+#log_file = /tmp/R08Revival-debug.log
+#game_launcher_executable_filepath = /usr/bin/wine
+#game_launcher_arguments = Rugby08.exe
+#game_launcher_environment = ["DXVK_FORCE_WINDOWED=1"]  Not implemented
+
+########## d3d8.dll proxy (windowing plugin) ##########
+# The proxy d3d8.dll is copied next to Rugby08.exe and forces the game windowed
+# (blocking the monitor resolution switch), which is what makes the game window
+# embeddable. It also chain-loads the gameplay patches DLL. All options below
+# are written to 'rugby08_windowed.ini' next to the exe at match start.
+# Values shown are the defaults.
+
+# --- Deployment ---
+#use_d3d8_proxy = True
+#d3d8proxy_dll_filepath = C:\path\to\d3d8proxy\d3d8.dll
+#use_rugby08patches = True
+#rugby08patches_dll_filepath = C:\path\to\rugby08patches.dll
+
+# --- Proxy behaviour (ini section [windowed]) ---
+# Mode: "all" = windowed everywhere, "frontend-fullscreen" = fullscreen menus
+#d3d8_mode = all
+# Let the user resize the game window (off while embedded)
+#d3d8_allow_resize = False
+# No title bar / frame — required for a clean embed
+#d3d8_borderless = True
+# Keep rendering when the window loses focus
+#d3d8_keep_active = True
+# Refuse the game's display-mode changes (keeps it windowed)
+#d3d8_block_mode_switch = True
+# Window size during the loading and title videos (0 = keep backbuffer size)
+#d3d8_loading_width = 640
+#d3d8_loading_height = 480
+# Size once the frontend is reached; the loading -> frontend size jump is the
+# fallback signal used to reveal the embedded window. The proxy also snaps any
+# resize it considers "going fullscreen" to this size, which is how
+# a fullscreen reveal gets its fullscreen window: with that mode the mod
+# writes the target monitor's size here instead of these values.
+#d3d8_frontend_width = 1280
+#d3d8_frontend_height = 720
+# Proxy writes its own log file next to the exe
+#d3d8_log = False
+# Boot the game window off-screen until it is embedded (no flash on the desktop)
+#d3d8_offscreen_boot = True
+
+# --- Hiding and revealing the game window (frontend side) ---
+# The mod takes charge of the game window (hide while it boots, reveal when the
+# match has loaded). False = game runs in its own window, untouched.
+#embed_game = True
+# Windows only. How the game is shown once its match has loaded:
+#   auto       = follow the mod window: fullscreen mod -> fullscreen game,
+#                windowed mod -> game embedded in (and filling) the mod window
+#   fullscreen = always: own window, borderless, covering the mod window's monitor
+#   embed      = always: reparented into the mod window
+# Linux always embeds (xdotool) into a container filling the mod window, which is
+# fullscreen when the mod is.
+#reveal_mode = auto
+# Window class of the game's real window. The game also creates a short-lived
+# "EAGL PC Caps Retrieval" window first, which must never be adopted.
+#game_window_class = EAGL PC
+# Window title used to locate/embed the game window
+#embed_window_title = Rugby
+# Host window: True = a normal resizable window, False = fullscreen. Read on
+# the first run only — Settings > Windowed Mode then remembers your choice in
+# user_prefs.ini (next to config.ini, in user_data — not mod_data).
+#game_windowed = False
+# The game is revealed once its match has FINISHED loading: screen id equal to
+# reveal_screen_id AND the boot counter at boot_counter_max. 0x0321 is the
+# screen that covers controller selection, the loading card and everything
+# after it (flyover, anthems, team sheets = 0x0079 — too late to start there).
+# 0 = fall back to the window-resize heuristic / timeout.
+#reveal_screen_id = 0x0321
+# Loading bar + reveal: dword counter in the game's memory that climbs from 0 to
+# boot_counter_max while the match loads. Absolute address = Rugby08.exe base
+# (0x400000) + 0x6A6270. boot_counter_max = 0 disables it (time pacing is used
+# instead, and the reveal then falls back to the screen id alone).
+#boot_counter_address = 0x00AA6270
+#boot_counter_max = 20736
+# Rough boot duration (seconds), fallback pacing for the loading progress bar
+#expected_boot_seconds = 25
+
+#mod_src_directory = /path/to/R08-mod-src
+#mod_data_directory = /path/to/R08-mod-data
+
+# Directory for temporary working files (intermediate FSH files, extracted BIG
+# files, memory dumps...). Defaults to <system temp>/R08-mod. Never written to
+# the game directory.
+#temp_directory = C:\Temp\R08-mod
