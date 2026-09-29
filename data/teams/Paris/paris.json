@@ -1,0 +1,245 @@
+{
+ "10102": {
+  "2009": {
+   "name": "Paris",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "graphics/stadium_graphics.fsh",
+   "stadium": "",
+   "primaryStadium": "27",
+   "logos": {
+    "main": "logos/logo_1.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2009/home_front.png",
+     "backKitFile": "kits_2009/home_back/home_back_%.png",
+     "previewFile": "kits_2009/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2009/away_front.png",
+     "backKitFile": "kits_2009/away_back/away_back_%.png",
+     "previewFile": "kits_2009/away_preview.png",
+     "color": ""
+    },
+    "third": {
+     "frontKitFile": "kits_2009/third_front.png",
+     "backKitFile": "kits_2009/third_back/third_back_%.png",
+     "previewFile": "kits_2009/third_preview.png",
+     "color": "",
+     "model3d": {
+      "fit": "tight",
+      "collar": "crew"
+     }
+    }
+   },
+   "roles": {
+    "captain": "127432",
+    "viceCaptain": "127432",
+    "longGK": "127813",
+    "shortGK": "127813",
+    "longPunt": "127813",
+    "shortPunt": "127813",
+    "kickoff": "127813"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "100182",
+    "118634",
+    "114181",
+    "120722",
+    "102330",
+    "120899",
+    "127432",
+    "106972",
+    "128321",
+    "127813",
+    "127216",
+    "119552",
+    "127663",
+    "111462",
+    "118283",
+    "115834",
+    "105454",
+    "126173",
+    "114460",
+    "122848",
+    "111124",
+    "123390",
+    "126424",
+    "112263",
+    "128650",
+    "102363",
+    "127830",
+    "122741",
+    "118540",
+    "100026"
+   ]
+  },
+  "2010": {
+   "name": "Paris",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "graphics/stadium_graphics.fsh",
+   "stadium": "",
+   "primaryStadium": "27",
+   "logos": {
+    "main": "logos/logo_1.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "119314",
+    "viceCaptain": "122619",
+    "longGK": "120945",
+    "shortGK": "120945",
+    "longPunt": "120945",
+    "shortPunt": "120945",
+    "kickoff": "120945"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "100182",
+    "118634",
+    "109261",
+    "121416",
+    "102330",
+    "126362",
+    "141868",
+    "119314",
+    "119718",
+    "141322",
+    "113330",
+    "120945",
+    "123245",
+    "120675",
+    "100074",
+    "129337",
+    "102600",
+    "109876",
+    "122619",
+    "121457",
+    "131928",
+    "110004",
+    "111124",
+    "101355",
+    "111538",
+    "110498",
+    "117861",
+    "119187",
+    "104213",
+    "126909"
+   ]
+  },
+  "2024": {
+   "name": "Paris",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "graphics/stadium_graphics.fsh",
+   "stadium": "",
+   "primaryStadium": "27",
+   "logos": {
+    "main": "logos/logo_2.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "142341",
+    "viceCaptain": "142341",
+    "longGK": "142341",
+    "shortGK": "142341",
+    "longPunt": "142341",
+    "shortPunt": "142341",
+    "kickoff": "142341"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "142333",
+    "142334",
+    "142335",
+    "142336",
+    "142337",
+    "142285",
+    "142338",
+    "142339",
+    "142340",
+    "142341",
+    "142342",
+    "142343",
+    "13651",
+    "142344",
+    "142345",
+    "142346",
+    "142347",
+    "142348",
+    "142349",
+    "142350",
+    "142351",
+    "142276",
+    "142352",
+    "142353",
+    "142354",
+    "142355",
+    "142356",
+    "11927",
+    "142357",
+    "142358"
+   ]
+  }
+ }
+}

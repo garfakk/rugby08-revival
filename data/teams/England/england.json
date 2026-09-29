@@ -1,0 +1,247 @@
+{
+ "10002": {
+  "2009": {
+   "name": "England",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "graphics/stadium_graphics.fsh",
+   "stadium": "",
+   "primaryStadium": "14",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2009/home_front.png",
+     "backKitFile": "kits_2009/home_back/home_back_%.png",
+     "previewFile": "kits_2009/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2009/away_front.png",
+     "backKitFile": "kits_2009/away_back/away_back_%.png",
+     "previewFile": "kits_2009/away_preview.png",
+     "color": ""
+    },
+    "home WC": {
+     "frontKitFile": "kits_2009/home_wc_front.png",
+     "backKitFile": "kits_2009/home_back/home_back_%.png",
+     "previewFile": "kits_2009/home_preview.png",
+     "color": ""
+    },
+    "away WC": {
+     "frontKitFile": "kits_2009/away_wc_front.png",
+     "backKitFile": "kits_2009/away_back/away_back_%.png",
+     "previewFile": "kits_2009/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "124227",
+    "viceCaptain": "124227",
+    "longGK": "120135",
+    "shortGK": "120135",
+    "longPunt": "120135",
+    "shortPunt": "120135",
+    "kickoff": "120135"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "120222",
+    "132707",
+    "100021",
+    "124227",
+    "124488",
+    "124676",
+    "107085",
+    "128070",
+    "100792",
+    "120135",
+    "128476",
+    "124484",
+    "116085",
+    "113330",
+    "104313",
+    "115791",
+    "117922",
+    "127577",
+    "111447",
+    "107949",
+    "126969",
+    "119169",
+    "122830",
+    "127594",
+    "113608",
+    "112189",
+    "110021",
+    "129815",
+    "102625",
+    "106493"
+   ]
+  },
+  "2010": {
+   "name": "England",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "graphics/stadium_graphics.fsh",
+   "stadium": "",
+   "primaryStadium": "14",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "116085",
+    "viceCaptain": "128070",
+    "longGK": "114008",
+    "shortGK": "114008",
+    "longPunt": "114008",
+    "shortPunt": "114008",
+    "kickoff": "114008"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "120222",
+    "141478",
+    "125828",
+    "131591",
+    "118007",
+    "118060",
+    "108880",
+    "128070",
+    "124555",
+    "114008",
+    "128476",
+    "118805",
+    "116085",
+    "141334",
+    "118330",
+    "116704",
+    "125898",
+    "117861",
+    "127577",
+    "107949",
+    "126969",
+    "104313",
+    "107487",
+    "102258",
+    "118703",
+    "129815",
+    "101071",
+    "114387",
+    "126500",
+    "119410"
+   ]
+  },
+  "2024": {
+   "name": "England",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "graphics/stadium_graphics.fsh",
+   "stadium": "",
+   "primaryStadium": "14",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "11006",
+    "viceCaptain": "10542",
+    "longGK": "11006",
+    "shortGK": "11006",
+    "longPunt": "11006",
+    "shortPunt": "11006",
+    "kickoff": "11006"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "pivot",
+    "left": "cross_kick",
+    "right": "pocket"
+   },
+   "players": [
+    "11859",
+    "10719",
+    "10947",
+    "11773",
+    "142272",
+    "118007",
+    "11625",
+    "142273",
+    "12301",
+    "10542",
+    "142274",
+    "11006",
+    "119410",
+    "11131",
+    "11907",
+    "142275",
+    "11888",
+    "11581",
+    "107949",
+    "11168",
+    "142276",
+    "10433",
+    "142277",
+    "10624",
+    "10777",
+    "142278",
+    "11008",
+    "142279",
+    "10072",
+    "142280"
+   ]
+  }
+ }
+}

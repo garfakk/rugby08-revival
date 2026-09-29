@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<Screen ID = "69"
+	DefaultButton = "0"
+	DefaultWindow = "0"
+	ShowFrame = "0"
+	ShowEAMedal = "0"
+>
+	<Window ID = "1100"
+		xPos = "-108.000000"
+		yPos = "0.000000"
+		Width = "0.000000"
+		Height = "0.000000"
+		State = "2"
+	>
+
+	</Window>
+	<Window ID = "1000"
+		xPos = "320.000000"
+		yPos = "400.000000"
+		Width = "0.000000"
+		Height = "0.000000"
+		State = "2"
+	>
+
+	</Window>
+	<Window ID = "0"
+		xPos = "320.000000"
+		yPos = "50.000000"
+		Width = "0.000000"
+		Height = "0.000000"
+		State = "3"
+	>
+
+	</Window>
+	<Window ID = "1"
+		xPos = "320.000000"
+		yPos = "50.000000"
+		Width = "0.000000"
+		Height = "0.000000"
+		State = "3"
+	>
+
+	</Window>
+	<Window ID = "2"
+		xPos = "320.000000"
+		yPos = "50.000000"
+		Width = "0.000000"
+		Height = "0.000000"
+		State = "3"
+	>
+
+	</Window>
+	<Window ID = "3"
+		xPos = "320.000000"
+		yPos = "50.000000"
+		Width = "0.000000"
+		Height = "0.000000"
+		State = "3"
+	>
+
+	</Window>
+	<Window ID = "4"
+		xPos = "320.000000"
+		yPos = "50.000000"
+		Width = "0.000000"
+		Height = "0.000000"
+		State = "3"
+	>
+
+	</Window>
+	<Window ID = "5"
+		xPos = "320.000000"
+		yPos = "50.000000"
+		Width = "0.000000"
+		Height = "0.000000"
+		State = "3"
+	>
+	</Window>
+</Screen>

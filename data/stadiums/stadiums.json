@@ -1,0 +1,408 @@
+{
+    "1": {
+        "name": "Australia Stadium",
+        "country": "Australia",
+        "game_id": 1,
+        "is_custom": false,
+        "environments": ["day"]
+    },
+    "2": {
+        "name": "Brisbane",
+        "country": "England",
+        "game_id": 2,
+        "is_custom": false,
+        "environments": ["day"]
+    },
+    "3": {
+        "name": "Sydney",
+        "country": "England",
+        "game_id": 3,
+        "is_custom": false,
+        "environments": ["night"]
+    },
+    "4": {
+        "name": "Canberra",
+        "country": "England",
+        "game_id": 4,
+        "is_custom": false,
+        "environments": ["night"]
+    },
+    "6": {
+        "name": "Memorial Stadium",
+        "country": "England",
+        "game_id": 6,
+        "is_custom": false,
+        "environments": ["overcast"]
+    },
+    "7": {
+        "name": "Madejski Stadium",
+        "country": "England",
+        "game_id": 7,
+        "is_custom": false,
+        "environments": ["night"]
+    },
+    "8": {
+        "name": "Welford Road",
+        "country": "England",
+        "game_id": 8,
+        "is_custom": false,
+        "environments": ["overcast"]
+    },
+    "9": {
+        "name": "Recreation Ground",
+        "country": "England",
+        "game_id": 9,
+        "is_custom": false,
+        "environments": ["day"]
+    },
+    "10": {
+        "name": "Franklin's Gardens",
+        "country": "England",
+        "game_id": 10,
+        "is_custom": false,
+        "environments": ["night"]
+    },
+    "11": {
+        "name": "Kingston Park",
+        "country": "England",
+        "game_id": 11,
+        "is_custom": false,
+        "environments": ["night", "cold"]
+    },
+    "12": {
+        "name": "Kingsholm Park",
+        "country": "England",
+        "game_id": 12,
+        "is_custom": false,
+        "environments": ["overcast"]
+    },
+    "14": {
+        "name": "Twickenham",
+        "country": "England",
+        "game_id": 14,
+        "is_custom": false,
+        "environments": ["day", "night", "overcast"]
+    },
+    "17": {
+        "name": "Leinster",
+        "country": "Ireland",
+        "game_id": 17,
+        "is_custom": false,
+        "environments": ["overcast", "cold"]
+    },
+    "18": {
+        "name": "Ulster",
+        "country": "Ireland",
+        "game_id": 18,
+        "is_custom": false,
+        "environments": ["overcast"]
+    },
+    "20": {
+        "name": "Le Parc",
+        "country": "France",
+        "game_id": 20,
+        "is_custom": false,
+        "environments": ["day", "night"]
+    },
+    "22": {
+        "name": "Bourgoin",
+        "country": "France",
+        "game_id": 22,
+        "is_custom": false,
+        "environments": ["day"]
+    },
+    "23": {
+        "name": "Castres",
+        "country": "France",
+        "game_id": 23,
+        "is_custom": false,
+        "environments": ["night"]
+    },
+    "24": {
+        "name": "Irish Park",
+        "country": "Ireland",
+        "game_id": 24,
+        "is_custom": false,
+        "environments": ["overcast"]
+    },
+    "25": {
+        "name": "Lansdowne Road",
+        "country": "Ireland",
+        "game_id": 25,
+        "is_custom": false,
+        "environments": ["overcast"]
+    },
+    "26": {
+        "name": "Clermont",
+        "country": "France",
+        "game_id": 26,
+        "is_custom": false,
+        "environments": ["night"]
+    },
+    "27": {
+        "name": "Stade de Paris",
+        "country": "France",
+        "game_id": 27,
+        "is_custom": false,
+        "environments": ["overcast"]
+    },
+    "28": {
+        "name": "Northern Park",
+        "country": "Scotland",
+        "game_id": 28,
+        "is_custom": false,
+        "environments": ["night", "cold"]
+    },
+    "29": {
+        "name": "Murrayfield",
+        "country": "Scotland",
+        "game_id": 29,
+        "is_custom": false,
+        "environments": ["day", "night", "overcast"]
+    },
+    "30": {
+        "name": "Perpignan",
+        "country": "France",
+        "game_id": 30,
+        "is_custom": false,
+        "environments": ["night", "overcast"]
+    },
+    "31": {
+        "name": "Perth",
+        "country": "Australia",
+        "game_id": 31,
+        "is_custom": false,
+        "environments": ["night"]
+    },
+    "32": {
+        "name": "Millennium Stadium",
+        "country": "Wales",
+        "game_id": 32,
+        "is_custom": false,
+        "environments": ["day", "night", "overcast", "cold"]
+    },
+    "33": {
+        "name": "West Glamorgan",
+        "country": "Wales",
+        "game_id": 33,
+        "is_custom": false,
+        "environments": ["overcast", "cold"]
+    },
+    "34": {
+        "name": "Llanelli",
+        "country": "Wales",
+        "game_id": 34,
+        "is_custom": false,
+        "environments": ["day"]
+    },
+    "35": {
+        "name": "Newport",
+        "country": "Wales",
+        "game_id": 35,
+        "is_custom": false,
+        "environments": ["night", "cold"]
+    },
+    "36": {
+        "name": "Cardiff",
+        "country": "Wales",
+        "game_id": 36,
+        "is_custom": false,
+        "environments": ["overcast"]
+    },
+    "37": {
+        "name": "Bloemfontein",
+        "country": "South Africa",
+        "game_id": 37,
+        "is_custom": false,
+        "environments": ["day"]
+    },
+    "38": {
+        "name": "Tblissi",
+        "country": "Georgia",
+        "game_id": 38,
+        "is_custom": false,
+        "environments": ["overcast"]
+    },
+    "39": {
+        "name": "Rome",
+        "country": "Italy",
+        "game_id": 39,
+        "is_custom": false,
+        "environments": ["day"]
+    },
+    "40": {
+        "name": "Arena Civica",
+        "country": "Italy",
+        "game_id": 40,
+        "is_custom": false,
+        "environments": ["day"]
+    },
+    "43": {
+        "name": "Buenos Aires",
+        "country": "Americas",
+        "game_id": 43,
+        "is_custom": false,
+        "environments": ["overcast"]
+    },
+    "44": {
+        "name": "Vancouver",
+        "country": "Americas",
+        "game_id": 44,
+        "is_custom": false,
+        "environments": ["day"]
+    },
+    "45": {
+        "name": "San Francisco",
+        "country": "Americas",
+        "game_id": 45,
+        "is_custom": false,
+        "environments": ["day"]
+    },
+    "48": {
+        "name": "Christchurch",
+        "country": "New Zealand",
+        "game_id": 48,
+        "is_custom": false,
+        "environments": ["day", "night"]
+    },
+    "49": {
+        "name": "Auckland",
+        "country": "New Zealand",
+        "game_id": 49,
+        "is_custom": false,
+        "environments": ["day", "night"]
+    },
+    "50": {
+        "name": "Wellington",
+        "country": "New Zealand",
+        "game_id": 50,
+        "is_custom": false,
+        "environments": ["night"]
+    },
+    "51": {
+        "name": "Dunedin",
+        "country": "New Zealand",
+        "game_id": 51,
+        "is_custom": false,
+        "environments": ["night", "overcast"]
+    },
+    "52": {
+        "name": "Hamilton",
+        "country": "New Zealand",
+        "game_id": 52,
+        "is_custom": false,
+        "environments": ["overcast"]
+    },
+    "55": {
+        "name": "Pretoria",
+        "country": "South Africa",
+        "game_id": 55,
+        "is_custom": false,
+        "environments": ["night"]
+    },
+    "56": {
+        "name": "Cape Town",
+        "country": "South Africa",
+        "game_id": 56,
+        "is_custom": false,
+        "environments": ["day"]
+    },
+    "57": {
+        "name": "Johannesburg",
+        "country": "South Africa",
+        "game_id": 57,
+        "is_custom": false,
+        "environments": ["day", "night"]
+    },
+    "58": {
+        "name": "Durban",
+        "country": "South Africa",
+        "game_id": 58,
+        "is_custom": false,
+        "environments": ["day"]
+    },
+    "62": {
+        "name": "Suva",
+        "country": "Asia Pacific",
+        "game_id": 62,
+        "is_custom": false,
+        "environments": ["day"]
+    },
+    "63": {
+        "name": "Training Ground",
+        "country": "Training Ground",
+        "game_id": 63,
+        "is_custom": false,
+        "environments": ["night"]
+    },
+    "65": {
+        "name": "Nantes",
+        "country": "France",
+        "game_id": 65,
+        "is_custom": false,
+        "environments": ["overcast"]
+    },
+    "68": {
+        "name": "Marseille",
+        "country": "France",
+        "game_id": 68,
+        "is_custom": false,
+        "environments": ["day", "night", "overcast"]
+    },
+    "69": {
+        "name": "Lens",
+        "country": "France",
+        "game_id": 69,
+        "is_custom": false,
+        "environments": ["night", "overcast"]
+    },
+    "70": {
+        "name": "Stade de France",
+        "country": "France",
+        "game_id": 70,
+        "is_custom": false,
+        "environments": ["night", "overcast"]
+    },
+    "72": {
+        "name": "Lyon",
+        "country": "France",
+        "game_id": 72,
+        "is_custom": false,
+        "environments": ["night", "overcast"]
+    },
+    "73": {
+        "name": "Toulouse",
+        "country": "France",
+        "game_id": 73,
+        "is_custom": false,
+        "environments": ["night", "overcast"]
+    },
+    "75": {
+        "name": "Edgeley Park",
+        "country": "England",
+        "game_id": 75,
+        "is_custom": false,
+        "environments": ["night", "cold"]
+    },
+    "76": {
+        "name": "Worcester Sixways",
+        "country": "England",
+        "game_id": 76,
+        "is_custom": false,
+        "environments": ["day"]
+    },
+    "78": {
+        "name": "The Stoop",
+        "country": "England",
+        "game_id": 78,
+        "is_custom": false,
+        "environments": ["overcast", "cold"]
+    },
+    "79": {
+        "name": "Vicarage Road",
+        "country": "England",
+        "game_id": 79,
+        "is_custom": false,
+        "environments": ["overcast"]
+    }
+}

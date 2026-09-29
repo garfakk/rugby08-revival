@@ -1,0 +1,17 @@
+.git
+.venv
+__pycache__
+*.pyc
+config.ini
+.vscode
+.claude/
+prof
+frontend/plugins/
+backend/dump.ini
+assets/audio/menu/*.mp3
+
+# editor/import safety copies, per-user prefs
+*.bak
+*(copy)*
+_backup/
+user_prefs.ini

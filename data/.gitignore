@@ -1,0 +1,7 @@
+# editor/import safety copies, duplicated files, per-user prefs
+*.bak
+*(copy)*
+_backup/
+user_prefs.ini
+__pycache__/
+*.pyc

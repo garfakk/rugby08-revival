@@ -1,0 +1,235 @@
+{
+ "10101": {
+  "2009": {
+   "name": "Toulouse",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "graphics/stadium_graphics.fsh",
+   "stadium": "",
+   "primaryStadium": "73",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2009/home_front.png",
+     "backKitFile": "kits_2009/home_back/home_back_%.png",
+     "previewFile": "kits_2009/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2009/away_front.png",
+     "backKitFile": "kits_2009/away_back/away_back_%.png",
+     "previewFile": "kits_2009/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "128423",
+    "viceCaptain": "121293",
+    "longGK": "124648",
+    "shortGK": "124648",
+    "longPunt": "124648",
+    "shortPunt": "124648",
+    "kickoff": "124648"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "110075",
+    "116336",
+    "124596",
+    "123556",
+    "103959",
+    "128423",
+    "114161",
+    "118058",
+    "119718",
+    "124648",
+    "107479",
+    "121293",
+    "106617",
+    "102125",
+    "107491",
+    "113712",
+    "129152",
+    "101054",
+    "114474",
+    "103728",
+    "110542",
+    "104686",
+    "108213",
+    "108714",
+    "116337",
+    "114867",
+    "131172",
+    "130080",
+    "114893",
+    "100175"
+   ]
+  },
+  "2010": {
+   "name": "Toulouse",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "graphics/stadium_graphics.fsh",
+   "stadium": "",
+   "primaryStadium": "73",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "114161",
+    "viceCaptain": "128423",
+    "longGK": "125043",
+    "shortGK": "125043",
+    "longPunt": "125043",
+    "shortPunt": "125043",
+    "kickoff": "125043"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "107905",
+    "128053",
+    "112654",
+    "113877",
+    "103959",
+    "114161",
+    "103625",
+    "108714",
+    "107267",
+    "125043",
+    "104686",
+    "125333",
+    "106617",
+    "125996",
+    "107491",
+    "113712",
+    "124596",
+    "103271",
+    "128423",
+    "131923",
+    "105945",
+    "114310",
+    "123154",
+    "115944",
+    "129152",
+    "101054",
+    "106900",
+    "100175",
+    "101650",
+    "120783"
+   ]
+  },
+  "2024": {
+   "name": "Toulouse",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "graphics/stadium_graphics.fsh",
+   "stadium": "",
+   "primaryStadium": "73",
+   "logos": {
+    "main": "logos_2/logo.png",
+    "small": "logos_2/logo_small.png",
+    "left": "logos_2/logo_left.png",
+    "right": "logos_2/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "11823",
+    "viceCaptain": "10237",
+    "longGK": "11695",
+    "shortGK": "11695",
+    "longPunt": "10237",
+    "shortPunt": "10237",
+    "kickoff": "10237"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "10224",
+    "11925",
+    "10336",
+    "142359",
+    "11921",
+    "10473",
+    "142360",
+    "11705",
+    "11823",
+    "10237",
+    "11121",
+    "11273",
+    "142361",
+    "142362",
+    "11695",
+    "10775",
+    "142363",
+    "11885",
+    "142364",
+    "142365",
+    "10172",
+    "142366",
+    "142367",
+    "11912",
+    "142368",
+    "142369",
+    "142370",
+    "142371",
+    "142372",
+    "142373"
+   ]
+  }
+ }
+}

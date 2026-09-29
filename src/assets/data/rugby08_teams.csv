@@ -1,0 +1,116 @@
+1,yes,international,Argentina
+2,yes,international,Australia
+3,yes,international,Canada
+4,yes,international,Chile
+5,yes,international,England
+6,yes,international,Fiji
+7,yes,international,France
+8,yes,international,Georgia
+9,yes,international,Ireland
+10,yes,international,Italy
+11,yes,international,Japan
+12,yes,international,Namibia
+13,yes,international,New Zealand
+14,yes,international,Portugal
+15,yes,international,Romania
+16,yes,international,Russia
+17,yes,international,Scotland
+18,yes,international,South Africa
+19,yes,international,Spain
+20,yes,international,Samoa
+21,yes,international,Tonga
+22,yes,international,Tunisia
+23,yes,international,Uruguay
+24,yes,international,USA
+25,yes,international,Wales
+26,yes,new zealand,Jr. All Blacks
+27,yes,south africa,Lions
+28,yes,australia,Brumbies
+29,yes,australia,Waratahs
+30,yes,australia,Reds
+31,yes,australia,Western Force
+32,yes,england,NEC Harlequins
+33,yes,england,Earth Titans
+34,yes,england,Bath
+35,yes,england,Bristol
+36,yes,england,Gloucester
+38,yes,england,Leeds
+39,yes,england,Leicester Tigers
+40,yes,england,London Irish
+41,yes,england,Newcastle
+42,yes,england,Northampton
+43,yes,england,Rotherham
+44,yes,england,Sale
+45,yes,england,Saracens
+46,yes,england,London Wasps
+47,yes,england,Worcester
+48,yes,england,Cornish Pirates
+50,yes,france,Agen
+51,yes,france,Beziers
+52,yes,france,Biarritz
+53,yes,france,Bourgoin
+54,yes,france,Brive
+55,yes,france,Castres
+56,yes,france,Clermont
+57,yes,france,Perpignan
+58,yes,france,Paris
+59,yes,france,Toulouse
+60,yes,ireland,Leinster
+61,yes,ireland,Munster
+62,yes,ireland,Ulster
+63,yes,ireland,Connacht
+66,yes,italy,Treviso
+69,yes,italy,Brescia
+70,yes,italy,Viadana
+73,yes,new zealand,Blues
+74,yes,new zealand,Crusaders
+75,yes,new zealand,Highlanders
+76,yes,new zealand,Chiefs
+77,yes,new zealand,Hurricanes
+80,yes,south africa,Bulls
+81,yes,south africa,Cats
+82,yes,south africa,Sharks
+83,yes,south africa,Stormers
+84,yes,south africa,Cheetahs
+87,yes,scotland,Borders
+88,yes,scotland,Edinburgh
+89,yes,scotland,Glasgow
+92,yes,wales,Bridgend
+93,yes,wales,Cardiff
+94,yes,wales,Llanelli
+95,yes,wales,Neath-Swansea
+96,yes,wales,Newport Gwent
+99,yes,allstars,Australia A
+100,yes,allstars,Barbarians
+101,yes,allstars,The Lions
+102,yes,allstars,Euro All Stars
+103,yes,allstars,NZ Maori
+104,yes,allstars,North All Stars
+105,yes,allstars,Pacific Isles
+106,yes,allstars,South All Stars
+107,yes,allstars,Super 12 All Stars
+108,yes,allstars,World All Stars
+111,yes,college,Air Force
+112,yes,college,Harvard
+113,yes,college,UC Berkeley
+114,yes,college,Army
+115,yes,college,Navy
+116,yes,college,Ohio State
+117,yes,college,Cal Poly
+118,yes,college,Penn. State
+119,yes,college,UC Santa Barbara
+120,yes,college,Texas A & M
+121,yes,college,U of North Carolina
+122,yes,college,Indiana
+123,yes,college,Virgina Tech
+124,yes,college,St. Marys College
+125,yes,college,Bowling Green
+126,yes,college,U of Utah
+129,yes,backup,Backup 1
+130,yes,backup,Backup 2
+131,yes,backup,Backup 3
+133,yes,user,Team 1
+134,yes,user,Team 2
+135,yes,user,Team 3
+136,yes,user,Free Agents
+49,yes,international,England WC2003

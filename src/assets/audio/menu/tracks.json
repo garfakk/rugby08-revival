@@ -1,0 +1,53 @@
+{
+  "_comment": "Every track is Creative Commons. Some are NonCommercial (NC) or NoDerivatives (ND): the mod is free, and tracks are played unmodified.",
+  "tracks": [
+    {
+      "file": "midnight_ride.mp3",
+      "title": "Midnight Ride",
+      "artist": "GeoSuPhat",
+      "license": "CC BY 3.0",
+      "license_url": "https://creativecommons.org/licenses/by/3.0/",
+      "source": "https://archive.org/details/GSP-AP_Collection_V1-4"
+    },
+    {
+      "file": "rompo_todo.mp3",
+      "title": "Rompo Todo",
+      "artist": "Orquesta de Perros",
+      "license": "CC BY 3.0",
+      "license_url": "https://creativecommons.org/licenses/by/3.0/",
+      "source": "https://archive.org/details/OrquestaDePerros-RolesYOficios"
+    },
+    {
+      "file": "dont_mess_with_me.mp3",
+      "title": "Don't Mess With Me",
+      "artist": "Buddard",
+      "license": "CC BY-SA 2.5",
+      "license_url": "https://creativecommons.org/licenses/by-sa/2.5/",
+      "source": "https://archive.org/details/bud001"
+    },
+    {
+      "file": "meet_me_in_the_mountains.mp3",
+      "title": "Meet Me In The Mountains",
+      "artist": "Lemon Knife",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "source": "https://freemusicarchive.org/music/lemon-knife/ignite/meet-me-in-the-mountains/"
+    },
+    {
+      "file": "trepabalcones.mp3",
+      "title": "Trepabalcones",
+      "artist": "Bam Bam",
+      "license": "CC BY-NC-ND 2.5 MX",
+      "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.5/mx/",
+      "source": "https://freemusicarchive.org/music/Bam_Bam/Bam_Bam_1851/03_Trepabalcones/"
+    },
+    {
+      "file": "king_of_clubs.mp3",
+      "title": "King of Clubs",
+      "artist": "Noise Problems Selections",
+      "license": "CC BY-NC-SA 3.0 US",
+      "license_url": "https://creativecommons.org/licenses/by-nc-sa/3.0/us/",
+      "source": "https://freemusicarchive.org/music/Noise_Problems/NP50th_Pony_Pack/Pony_Pack_07/"
+    }
+  ]
+}
