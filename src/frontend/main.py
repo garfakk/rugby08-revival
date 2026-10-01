@@ -352,6 +352,56 @@ class MainWindow(QMainWindow):
         self._menus_ready = True
         self.screen_main.play_entrance()
         self.music.start()
+        QTimer.singleShot(900, self._offer_music_download)
+
+    # ── missing menu music (dev runs only) ─────────────────────────────────
+    def _offer_music_download(self):
+        """The mp3s are gitignored: a fresh checkout run from python has no
+        menu music. Offer once per launch to fetch the missing tracks from
+        their CC sources (tracks.json download_url). Never in the released
+        exe, which ships the tracks itself."""
+        from shared.app_paths import FROZEN
+        from ui.music import missing_downloads
+        if FROZEN or getattr(self, "_music_downloader", None) is not None:
+            return
+        missing = missing_downloads()
+        if not missing:
+            return
+        from ui.editor_kit import ConfirmDialog
+        total_mb = sum(m["size"] for m in missing) / 1e6
+        count = (f"{len(missing)} menu music tracks are" if len(missing) > 1
+                 else f"The menu track \"{missing[0]['title']}\" is")
+        size = f" (about {total_mb:.0f} MB)" if total_mb >= 1 else ""
+        text = (f"{count} not installed. Download {'them' if len(missing) > 1 else 'it'} "
+                f"now{size}? Creative Commons tracks, fetched unmodified from the artists' "
+                f"pages (see assets/audio/menu/CREDITS.md).")
+
+        def choice(role):
+            if role == "ok":
+                self._download_music(missing)
+        ConfirmDialog(self.centralWidget(), "Menu music missing", text,
+                      [("NOT NOW", "neutral", "cancel"), ("DOWNLOAD", "primary", "ok")], choice)
+
+    def _download_music(self, missing):
+        from ui.music import MusicDownloader
+        self._music_downloader = MusicDownloader(missing, self)
+        self._music_downloader.progress.connect(
+            lambda i, n, title: log.info(f"Menu music: downloading {i}/{n} {title}"))
+        self._music_downloader.finished.connect(self._on_music_downloaded)
+        self._music_downloader.start()
+
+    def _on_music_downloaded(self, done, failed):
+        if done:
+            self.music.reload()
+            if self._menus_ready and self.screens.currentWidget() is not self.screen_ingame:
+                self.music.start()
+        if failed:
+            from ui.editor_kit import ConfirmDialog
+            titles = ", ".join(title for title, _err in failed)
+            ConfirmDialog(self.centralWidget(), "Music download failed",
+                          f"Could not download: {titles} (details in the log). The menus "
+                          f"play whatever is installed.",
+                          [("OK", "primary", "ok")], lambda _role: None, cancel_role="ok")
 
     def changeEvent(self, event):
         """Re-assert the fullscreen geometry when the window is activated again
