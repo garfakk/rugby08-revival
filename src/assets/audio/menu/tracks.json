@@ -1,5 +1,5 @@
 {
-  "_comment": "Every track is Creative Commons. Some are NonCommercial (NC) or NoDerivatives (ND): the mod is free, and tracks are played unmodified.",
+  "_comment": "Every track is Creative Commons. Some are NonCommercial (NC) or NoDerivatives (ND): the mod is free, and tracks are played unmodified. download_url/download_size: the artist's original file, fetched by the dev-run download offer (ui/music.py).",
   "tracks": [
     {
       "file": "midnight_ride.mp3",
@@ -7,7 +7,9 @@
       "artist": "GeoSuPhat",
       "license": "CC BY 3.0",
       "license_url": "https://creativecommons.org/licenses/by/3.0/",
-      "source": "https://archive.org/details/GSP-AP_Collection_V1-4"
+      "source": "https://archive.org/details/GSP-AP_Collection_V1-4",
+      "download_url": "https://archive.org/download/GSP-AP_Collection_V1-4/09-Midnight_Ride-v1.mp3",
+      "download_size": 6988800
     },
     {
       "file": "rompo_todo.mp3",
@@ -15,7 +17,9 @@
       "artist": "Orquesta de Perros",
       "license": "CC BY 3.0",
       "license_url": "https://creativecommons.org/licenses/by/3.0/",
-      "source": "https://archive.org/details/OrquestaDePerros-RolesYOficios"
+      "source": "https://archive.org/details/OrquestaDePerros-RolesYOficios",
+      "download_url": "https://archive.org/download/OrquestaDePerros-RolesYOficios/08RompoTodo.mp3",
+      "download_size": 5920652
     },
     {
       "file": "dont_mess_with_me.mp3",
@@ -23,7 +27,9 @@
       "artist": "Buddard",
       "license": "CC BY-SA 2.5",
       "license_url": "https://creativecommons.org/licenses/by-sa/2.5/",
-      "source": "https://archive.org/details/bud001"
+      "source": "https://archive.org/details/bud001",
+      "download_url": "https://archive.org/download/bud001/Buddard_-_Dont_mess_with_me.mp3",
+      "download_size": 3504128
     },
     {
       "file": "meet_me_in_the_mountains.mp3",
@@ -31,7 +37,9 @@
       "artist": "Lemon Knife",
       "license": "CC BY 4.0",
       "license_url": "https://creativecommons.org/licenses/by/4.0/",
-      "source": "https://freemusicarchive.org/music/lemon-knife/ignite/meet-me-in-the-mountains/"
+      "source": "https://freemusicarchive.org/music/lemon-knife/ignite/meet-me-in-the-mountains/",
+      "download_url": "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/IQZRNEqLTZHAbzulc4p3qKP1tPrklu79scebsPEp.mp3",
+      "download_size": 11104124
     },
     {
       "file": "trepabalcones.mp3",
@@ -39,7 +47,9 @@
       "artist": "Bam Bam",
       "license": "CC BY-NC-ND 2.5 MX",
       "license_url": "https://creativecommons.org/licenses/by-nc-nd/2.5/mx/",
-      "source": "https://freemusicarchive.org/music/Bam_Bam/Bam_Bam_1851/03_Trepabalcones/"
+      "source": "https://freemusicarchive.org/music/Bam_Bam/Bam_Bam_1851/03_Trepabalcones/",
+      "download_url": "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Bam_Bam/Bam_Bam/Bam_Bam_-_03_-_Trepabalcones.mp3",
+      "download_size": 3735583
     },
     {
       "file": "king_of_clubs.mp3",
@@ -47,7 +57,19 @@
       "artist": "Noise Problems Selections",
       "license": "CC BY-NC-SA 3.0 US",
       "license_url": "https://creativecommons.org/licenses/by-nc-sa/3.0/us/",
-      "source": "https://freemusicarchive.org/music/Noise_Problems/NP50th_Pony_Pack/Pony_Pack_07/"
+      "source": "https://freemusicarchive.org/music/Noise_Problems/NP50th_Pony_Pack/Pony_Pack_07/",
+      "download_url": "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Noise_Problems/Noise_Problems_Selections/NP50th_Pony_Pack/Noise_Problems_Selections_-_04_-_King_of_Clubs.mp3",
+      "download_size": 7325866
     }
-  ]
+  ],
+  "loading_track": {
+    "file": "rock_metal_energetic_instrumental.mp3",
+    "title": "Rock Metal Energetic Instrumental",
+    "artist": "Alex Productions",
+    "license": "CC BY-NC 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-nc/4.0",
+    "source": "https://freemusicarchive.org/music/alex-productions/single/rock-metal-energetic-instrumental/",
+    "download_url": "https://files.freemusicarchive.org/storage-freemusicarchive-org/tracks/19Vvm2ZzYq6rLcw43ZINB9D3ZRi922g7GGN5AZFS.mp3",
+    "download_size": 3989490
+  }
 }

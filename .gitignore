@@ -5,9 +5,6 @@ __pycache__
 config.ini
 .vscode
 .claude/
-prof
-frontend/plugins/
-backend/dump.ini
 assets/audio/menu/*.mp3
 
 # editor/import safety copies, per-user prefs
@@ -15,3 +12,6 @@ assets/audio/menu/*.mp3
 *(copy)*
 _backup/
 user_prefs.ini
+
+# per-user settings and saves, created at first launch (run.py)
+/user_data/

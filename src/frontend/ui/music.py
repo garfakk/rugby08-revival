@@ -12,6 +12,9 @@ entirely once the game's own audio takes over. Two pieces:
   playlist; no code change needed.
 * `TrackMedal` — the bottom-left "now playing" plate that slides in whenever
   a track starts and fades itself back out a few seconds later.
+* `missing_downloads` / `MusicDownloader` — the mp3s are not in git; a dev
+  run (python, not the released exe, which ships them) offers to fetch the
+  missing ones from each manifest entry's `download_url`.
 
 Alt skips to the next track; the skip is wired app-wide in
 main.MainWindow.eventFilter, since menu focus lives in whatever tile or row
@@ -20,6 +23,8 @@ the user is on, not in a widget this module owns.
 import json
 import os
 import random
+import threading
+import urllib.request
 
 from PyQt5.QtWidgets import QWidget, QGraphicsOpacityEffect
 from PyQt5.QtGui import QPainter, QColor, QFont, QFontMetrics, QPen
@@ -109,6 +114,15 @@ class MenuMusic(QObject):
                 "artist": entry.get("artist", ""),
             })
         return tracks
+
+    def reload(self):
+        """Re-read the manifest — after missing tracks were downloaded.
+        Leaves whatever is playing alone; the new list applies from the
+        next track."""
+        self._tracks = self._load_manifest()
+        self._order = list(range(len(self._tracks)))
+        random.shuffle(self._order)
+        self._pos = 0
 
     @property
     def available(self):
@@ -212,6 +226,81 @@ class MenuMusic(QObject):
             log.warning(f"Menu music disabled: {self._player.errorString()}")
             self._failed = True
             self._player.stop()
+
+
+# ── downloading missing tracks (dev runs) ────────────────────────────────
+DOWNLOAD_TIMEOUT_S = 30
+DOWNLOAD_UA = "Rugby08Revival/1.0 (menu music download)"
+
+
+def missing_downloads():
+    """[{"file", "title", "url", "size", "dest"}] for every manifest track —
+    playlist and loading loop — whose file is not on disk but which has a
+    `download_url`. Empty when nothing is missing or the manifest is
+    unreadable."""
+    directory = getattr(config, "menu_music_directory", None)
+    if not directory or not os.path.isdir(directory):
+        return []
+    try:
+        with open(os.path.join(directory, "tracks.json"), "r", encoding="utf-8") as fh:
+            manifest = json.load(fh)
+    except (OSError, ValueError):
+        return []
+    entries = list(manifest.get("tracks", []))
+    if manifest.get("loading_track"):
+        entries.append(manifest["loading_track"])
+    out = []
+    for entry in entries:
+        name, url = entry.get("file", ""), entry.get("download_url", "")
+        dest = os.path.join(directory, name)
+        if name and url and not os.path.isfile(dest):
+            out.append({"file": name, "title": entry.get("title", name), "url": url,
+                        "size": int(entry.get("download_size") or 0), "dest": dest})
+    return out
+
+
+class MusicDownloader(QObject):
+    """Fetches `missing_downloads()` entries on a worker thread, one after
+    the other. Each file is written to <name>.part and renamed only once
+    complete, so an interrupted download never leaves a truncated mp3 that
+    the manifest would then pick up. Signals are emitted from the worker
+    thread; Qt queues them to the receiver's (GUI) thread."""
+
+    progress = pyqtSignal(int, int, str)   # index (1-based), total, title
+    finished = pyqtSignal(list, list)      # downloaded files, [(title, error)]
+
+    def __init__(self, items, parent=None):
+        super().__init__(parent)
+        self._items = list(items)
+
+    def start(self):
+        threading.Thread(target=self._run, name="music-download", daemon=True).start()
+
+    def _run(self):
+        done, failed = [], []
+        for i, item in enumerate(self._items, 1):
+            self.progress.emit(i, len(self._items), item["title"])
+            part = item["dest"] + ".part"
+            try:
+                req = urllib.request.Request(item["url"], headers={"User-Agent": DOWNLOAD_UA})
+                with urllib.request.urlopen(req, timeout=DOWNLOAD_TIMEOUT_S) as resp, \
+                        open(part, "wb") as fh:
+                    while True:
+                        chunk = resp.read(1 << 16)
+                        if not chunk:
+                            break
+                        fh.write(chunk)
+                os.replace(part, item["dest"])
+                done.append(item["file"])
+                log.info(f"Menu music: downloaded {item['file']}")
+            except Exception as exc:          # network, HTTP, disk — report, keep going
+                failed.append((item["title"], str(exc)))
+                log.warning(f"Menu music: could not download {item['url']}: {exc}")
+                try:
+                    os.remove(part)
+                except OSError:
+                    pass
+        self.finished.emit(done, failed)
 
 
 class TrackMedal(QWidget):
