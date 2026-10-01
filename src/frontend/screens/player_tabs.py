@@ -783,7 +783,7 @@ class AppearanceTab(PlayerTab):
 TENDENCY_NAMES = ["default", "scrum", "lineout", "tackler", "runner", "passer", "kicker",
                   "crasher", "ruck", "goal kicker", "playmaker"]
 # Star player class, written to the roster record's star-flag byte (reR08
-# patches_dll ENABLE_STARPLAYERS). Flag 0 =
+# patches_dll ENABLE_STARPLAYERS, ~/dev/reR08/patches_dll/game.h). Flag 0 =
 # none, 1 = the generic base StarPlayer, 2-26 = named classes gated on that
 # byte value. Cross-referenced against game.h's flag->roster-id table by id
 # (STAR_ABILITIES.md's own "flag" column uses a different, inconsistent

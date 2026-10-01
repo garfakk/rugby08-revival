@@ -3,6 +3,7 @@ import os
 import configparser
 import pprint
 import sys
+import shutil
 import tempfile
 
 from shared.app_paths import (FROZEN, app_directory, app_data_directory, check_writable_or_exit,
@@ -80,8 +81,9 @@ def _needs_installer(config_filepath):
 
 
 def _first_run_setup(config_filepath):
-  """Portable copy only: locate Rugby 08 and write config.ini. Returns True if written.
-  (An installed copy is configured by the separate installer, see packaging/.)"""
+  """Portable copy or source checkout: locate Rugby 08 and write config.ini.
+  Returns True if written. (An installed copy is configured by the separate
+  installer, see packaging/.)"""
   exe_name = "Rugby08.exe"
   game_dir = find_game_directory(exe_name)
   if not game_dir:
@@ -105,11 +107,17 @@ def _first_run_setup(config_filepath):
   try:
     os.makedirs(os.path.dirname(config_filepath), exist_ok=True)
     with open(config_filepath, "w", encoding="utf-8") as f:
+      f.write("# Written at first launch. Every option is documented in config.ini.example\n")
+      f.write(f"# ({os.path.join(app_data_directory(), 'config.ini.example')}).\n\n")
       f.write("[Main]\n")
       f.write(f"R08_directory = {os.path.normpath(game_dir)}{os.sep}\n")
-      f.write(f"R08_filename = {exe_name}\n")
-      f.write(f"mod_directory = {app_directory()}{os.sep}\n\n")
+      f.write(f"R08_filename = {exe_name}\n\n")
       f.write("[Options]\n")
+      if sys.platform != "win32":
+        # The game is a Windows exe: start it through wine (WINEPREFIX etc. are
+        # inherited from the environment).
+        f.write(f"game_launcher_executable_filepath = {shutil.which('wine') or 'wine'}\n")
+        f.write(f"game_launcher_arguments = {exe_name}\n")
   except OSError as e:
     log.error(f"cannot write {config_filepath}: {e}")
     return False
@@ -119,17 +127,16 @@ def _first_run_setup(config_filepath):
 class Config:
   def __init__(self):
 
-    self.data_directory = ''   # [Main] data_directory: dev runs only (released build: mod_data/)
-    if FROZEN:
-      check_writable_or_exit()
-      config_filepath = os.path.join(user_data_directory(), 'config.ini')
-      if not self._config_is_valid(config_filepath):
-        if is_portable():
-          _first_run_setup(config_filepath)
-        else:
-          _needs_installer(config_filepath)
-    else:
-      config_filepath = os.path.join(os.getcwd(), 'config.ini')
+    self.data_directory = ''   # [Main] data_directory: source runs only (default: <repo>/data)
+    # Same layout from source as in the released build (see shared/app_paths.py):
+    # config.ini is in user_data/, written at first launch when missing.
+    check_writable_or_exit()
+    config_filepath = os.path.join(user_data_directory(), 'config.ini')
+    if not self._config_is_valid(config_filepath):
+      if is_portable():
+        _first_run_setup(config_filepath)
+      else:
+        _needs_installer(config_filepath)
 
     # Load the values in the [Main] section (this will set the paths first)
     if not self._load_config_file(config_filepath, 'Main'):
@@ -147,15 +154,10 @@ class Config:
 
     self.R08_data_gob_filepath = os.path.join(self.R08_directory, "Data", "data.gob")
 
-    # Mod directories
-    self.mod_src_directory = os.path.join(self.mod_directory, "src")
-    if FROZEN:
-      # Released layout (see shared/app_paths.py): assets/ and the docs are in app_data/,
-      # the data pack in mod_data/, everything under the exe's folder.
-      self.mod_src_directory = app_data_directory()
-      self.mod_data_directory = mod_data_directory()
-    else:
-      self.mod_data_directory = self.data_directory or os.path.join(self.mod_directory, "data")
+    # Mod directories (see shared/app_paths.py): assets/ and the docs are in
+    # app_data/ (src/ from source), the data pack in mod_data/ (data/ from source).
+    self.mod_src_directory = app_data_directory()
+    self.mod_data_directory = self.data_directory or mod_data_directory()
 
     # Warning bug here. If mod_src_directory or mod_data_directory are overridden in config.ini,
     # then the following paths will be incorrect.
@@ -165,9 +167,11 @@ class Config:
     self.directory_players = os.path.join(self.mod_data_directory, "players")
     self.directory_stadiums = os.path.join(self.mod_data_directory, "stadiums")
     self.directory_tournaments = os.path.join(self.mod_data_directory, "tournaments")
+    self.directory_challenges = os.path.join(self.mod_data_directory, "challenges")
+    # Tournament saves are the user's progress, not data: user_data/.
+    self.directory_tournament_saves = os.path.join(user_data_directory(), "tournaments")
     self.data_version, self.data_schema = self._read_data_version()
-    if FROZEN:
-      self._check_data_installed()
+    self._check_data_installed()
     self.static_files_directory = os.path.join(self.mod_src_directory, "assets", "static_files")
     self.templates_directory = os.path.join(self.mod_src_directory, "assets", "templates")
     # Menu background music (Creative Commons tracks + tracks.json manifest) —
@@ -365,8 +369,8 @@ class Config:
     return info.get("data_version", "unknown"), schema
 
   def _check_data_installed(self):
-    """Released exe only: tell the user (instead of crashing) when the data pack is
-    missing or built for another program version."""
+    """Tell the user (instead of crashing) when the data pack is missing or built
+    for another program version."""
     from shared.version import DATA_SCHEMA
     problem = None
     if not os.path.isdir(self.directory_teams):
@@ -509,10 +513,8 @@ class Config:
         return
       
       self.data_directory = '' if FROZEN else main.get('data_directory', '').strip()
-      if 'mod_directory' in main:
-        self.mod_directory = main['mod_directory']
-      else:
-        self.mod_directory = os.path.join(self.R08_directory, "R08_mod")
+      # Ignored (kept for old config.ini files): every folder derives from app_directory().
+      self.mod_directory = app_directory()
 
     # Handle [Options] section for overrides
     if config.has_section('Options') and section_name == 'Options':

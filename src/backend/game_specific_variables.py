@@ -83,7 +83,7 @@ score_event_types = ["SS_TRY", "SS_CONVERSION", "SS_PENALTY", "SS_DROPGOAL"]
 
 # .mis <OBJECTIVES><OBJECTIVE type="..."> — the objective Type strings
 # code-verified against the mission-objective factory's dispatch chain (see
-# reverse-engineering notes: parsers 0x4bec00/
+# reR08/docs/findings/2026-07-12-storymode-objectives.md: parsers 0x4bec00/
 # 0x4bef30, dispatcher 0x4c3550). A handful of other Type strings appear in
 # stock missions too (ScoreWithPlayerRange, ScoreType, WinMatch, GamePlay,
 # SellPlayer, BuyPlayer) but aren't in that dispatch chain — an unmatched

@@ -1,4 +1,4 @@
-"""Model (.o) reader/writer, based on the reR08 project's omodel tools.
+"""Vendored from reR08/tools/omodel (see that repo for the format notes).
 Local change: per-vertex bone indices are kept (Mesh.bones) so the player
 preview can animate limbs without a skeleton evaluator.
 """
@@ -31,7 +31,8 @@ never declared in the descriptor, so it is classified from the data instead
 (see _find_normal / _find_uv) and the base texture's uv set -- the first one --
 is the one returned.
 
-Indices = triangle strip (PT_TRIANGLESTRIP in GeoPrimState), degenerates dropped.
+Indices = triangle strip for bodies (PT_TRIANGLESTRIP in GeoPrimState), degenerates
+dropped; heads are triangle lists (see _triangles).
 
 Texture link: RenderMethod struct relocs -> __EAGL::TAR:::RUNTIME_ALLOC::...
 SHAPENAME=<id>,... = the SHPI shape id inside the companion .fsh.
@@ -60,6 +61,34 @@ def _tristrip_to_tris(idx):
             continue                       # degenerate (strip restart)
         tris.append((a, c, b) if i & 1 else (a, b, c))
     return tris
+
+
+def _overshared_edges(tris):
+    """Fraction of edges used by more than two triangles — a real surface
+    almost never has any, so a high value means the wrong primitive type."""
+    uses = {}
+    for a, b, c in tris:
+        for e in ((a, b), (b, c), (c, a)):
+            k = (e[0], e[1]) if e[0] < e[1] else (e[1], e[0])
+            uses[k] = uses.get(k, 0) + 1
+    return sum(1 for n in uses.values() if n > 2) / len(uses) if uses else 0.0
+
+
+def _triangles(idx, vcount):
+    """Triangles of an index buffer. The primitive type is not read from the
+    descriptor: bodies are strips, but heads are plain triangle lists, and
+    reading a list as a strip stacks several wrong, overlapping triangles over
+    every face (streaks around the eyes and mouth). A list is only taken when
+    the count divides by 3 and it is clearly the better-formed surface; the
+    strip stays the default."""
+    strip = [t for t in _tristrip_to_tris(idx) if max(t) < vcount]
+    if len(idx) % 3:
+        return strip
+    tri_list = [t for t in zip(idx[0::3], idx[1::3], idx[2::3])
+                if len(set(t)) == 3 and max(t) < vcount]
+    if _overshared_edges(strip) > _overshared_edges(tri_list) + 0.05:
+        return tri_list
+    return strip
 
 
 def _samples(count, n=48):
@@ -115,8 +144,8 @@ def _cstr(data, off):
 def _parse_groups(data, rel, syms, u32, rm_geo):
     """Map geoprim offset -> renderable-group name.
 
-    The __Model::: struct carries the part table (layout as
-    used by the shirt-model builder):
+    The __Model::: struct carries the part table (layout per
+    tools/make_shirt_models.py, which rebuilds it):
         +0x9c  u32  group count N (the root group is extra, not counted)
         +0xa0  ptr  array of N name-string pointers
         +0xcc  ptr  group table: N+1 records of {u32 count, ptr x count},
@@ -276,8 +305,7 @@ def parse_o(blob):
             m.normals.append(struct.unpack_from('<3f', data, o + norm_off) if has_norm else (0, 0, 1))
             m.uvs.append(struct.unpack_from('<2f', data, o + uv_off) if m.has_uv else (0.0, 0.0))
         idx = struct.unpack_from(f'<{icount}H', data, iptr)
-        m.triangles = [t for t in _tristrip_to_tris(idx)
-                       if max(t) < vcount]     # guard multi-batch descriptors
+        m.triangles = _triangles(idx, vcount)   # also guards multi-batch descriptors
         meshes.append(m)
     return meshes
 

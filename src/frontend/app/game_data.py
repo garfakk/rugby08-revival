@@ -237,6 +237,8 @@ def _appearance_problems(stats: dict, mod_dir: str = None) -> list:
         pretty = {"l_medium": "light-medium", "d_medium": "dark-medium"}.get(named, named)
         out.append(("skin_tone", f"skin tone stored as index '{tone}' = {pretty}", INFO_))
 
+    out += _head_skin_problems(stats, named)
+
     skin = stats.get("skin", "")
     if skin and not isinstance(skin, str):
         out.append(("skin", "custom skin must be an image path", ERROR))
@@ -267,6 +269,25 @@ def _appearance_problems(stats: dict, mod_dir: str = None) -> list:
     elif bkind == "image" and mod_dir:
         out += [("boot_style", m, sev) for m, sev in A.asset_problems(mod_dir, boot, "boots")]
     return out
+
+
+def _head_skin_problems(stats: dict, tone) -> list:
+    """A stock face is painted for one skin tone; the body skin should match.
+    Custom heads (.big paths) carry no tone data, so only numeric faces are
+    checked, and only when the body uses a stock tone."""
+    from app import appearance as A
+    from app.stock_faces import load_face_attributes
+    face = str(stats.get("face") or "").strip()
+    skin = stats.get("skin")
+    if not face.isdigit() or tone is None or (isinstance(skin, str) and A.is_image_path(skin)):
+        return []
+    head = A.normalize_tone((load_face_attributes().get(int(face)) or {}).get("skin_tone"))
+    if head is None or head == tone:
+        return []
+    gap = abs(A.SKIN_TONES.index(head) - A.SKIN_TONES.index(tone))
+    pretty = {"l_medium": "light-medium", "d_medium": "dark-medium"}
+    return [("face", f"head {face} is {pretty.get(head, head)} but the body skin is "
+                     f"{pretty.get(tone, tone)}", WARN_ if gap > 1 else INFO_)]
 
 
 def check_player(record: dict, season: str) -> list:

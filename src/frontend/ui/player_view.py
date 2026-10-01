@@ -94,7 +94,7 @@ def _rot_y(deg):
 
 
 # The game scales every bone of the one player mesh from the roster's height and
-# weight (reverse-engineered: FUN_006d6900 / FUN_006d6960):
+# weight (reR08 memory project_rugby08_body_scale: FUN_006d6900 / FUN_006d6960):
 #   s = 1 - (16 - h) * 0.01                  h = height byte, inches over 60
 #   k = 0.85 + (w - 50) * 0.5 / 150 + (24 - h) * 0.3 / 24     w = weight byte, lbs - 100
 #   bone scale = (S, ((k - 1) * T + 1) * S, ((k - 1) * T + 1) * S)   T = 0.12 or 0.06

@@ -192,7 +192,7 @@ class MatchConfig:
     stadium: Optional[dict] = None
     ball_choice: Optional[dict] = None
 
-    difficulty: str = "elite"  # club, pro, elite — matches backend gsv.difficulty / stock game's 3 levels
+    difficulty: str = "elite"  # club, pro, elite (stock levels), legend, immortal — see app/difficulty.py
     halftime_length: str = "5m"  # 2m, 5m, 10m, 20m, 40m — matches backend gsv.halftime_length / stock game's 5 levels
     home_team_side: str = "random"  # random, left, right — resolved to left/right at kick-off
     kick_off: str = "random"

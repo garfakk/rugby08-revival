@@ -17,7 +17,9 @@ SRC="$(cd "$HERE/.." && pwd)"
 TARGET="${1:-all}"
 export WINEPREFIX="${WINEPREFIX:-$HOME/r08-build/prefix}" WINEDEBUG=-all
 OUT="${OUT:-$HOME/r08-build/out}"
-DATA="${R08_DATA:-$SRC/../R08-mod-data}"
+# default: the data/ folder beside src/ (repo layout), else the historical sibling folder
+if [ -d "$SRC/../data/teams" ]; then DEFAULT_DATA="$SRC/../data"; else DEFAULT_DATA="$SRC/../R08-mod-data"; fi
+DATA="${R08_DATA:-$DEFAULT_DATA}"
 DATA_VERSION="${DATA_VERSION:-$(date +%Y.%m.%d)}"
 APP_VERSION="$(sed -n 's/^APP_VERSION *= *"\(.*\)"/\1/p' "$SRC/shared/version.py")"
 DATA_SCHEMA="$(sed -n 's/^DATA_SCHEMA *= *\([0-9]*\)/\1/p' "$SRC/shared/version.py")"

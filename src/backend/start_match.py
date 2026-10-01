@@ -216,7 +216,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Configure and start a match")
     parser.add_argument("match_config_file_positional", nargs="?", type=str, metavar="FILE", help="YAML match configuration file (positional, equivalent to --match-config-file)")
-    parser.add_argument("--match-config-file", dest="config_file", type=str, metavar="FILE", help="YAML match configuration file", required=False)
+    parser.add_argument("--match-config-file", dest="config_file", type=str, metavar="FILE", help="YAML match configuration file (default: examples/match_example.yaml)", required=False, default="examples/match_example.yaml")
     parser.add_argument("--show-config", dest="show_config", action="store_true", help="Print the loaded configuration and exit")
     parser.add_argument("--no-static-files", dest="copy_static_files", action="store_false", help="Don't copy the static files")
     parser.add_argument("--no-mission-file", dest="create_mission_file", action="store_false", help="Don't create the mission file")

@@ -150,14 +150,17 @@ class PostMatchScreen(Screen):
 
         actions = QHBoxLayout()
         actions.addStretch(1)
+        self._continue = None
+        self._buttons = []
         for text, variant, slot in (("RESTART", "neutral", lambda: self.on_rematch()),
-                                      ("MAIN MENU", "primary", lambda: self.on_main_menu())):
+                                      ("MAIN MENU", "primary", lambda: (self._continue or self.on_main_menu)())):
             btn = StyledButton(text, variant)
             btn.setMinimumHeight(BTN_HEIGHT)
             btn.setMinimumWidth(180)
             btn.clicked.connect(slot)
             self.focus.register(btn)
             actions.addWidget(btn)
+            self._buttons.append(btn)
         bl.addLayout(actions)
 
         root.addWidget(body, stretch=1)
@@ -177,6 +180,17 @@ class PostMatchScreen(Screen):
         v.addLayout(holder)
         v.addStretch(1)
         return card, holder
+
+    def set_continue(self, on_continue=None):
+        """Tournament matches: no restart (the result is already recorded),
+        and the primary button / back go on to the tournament instead of
+        the main menu. None restores the friendly-match buttons."""
+        self._continue = on_continue
+        restart, primary = self._buttons
+        restart.setVisible(on_continue is None)
+        primary.setText("CONTINUE" if on_continue else "MAIN MENU")
+        self.on_back_cb = on_continue or self.on_main_menu
+        self.hintbar.set_hints([("A", "select"), ("B", "continue" if on_continue else "main menu")])
 
     # ── data ─────────────────────────────────────────────────────────────
     def set_result(self, match_data, result):

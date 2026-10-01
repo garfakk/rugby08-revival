@@ -10,6 +10,7 @@ from PyQt5.QtGui import QColor, QPalette
 
 sys.path.append(str(Path(__file__).parent.parent.parent))
 from shared.config import config
+from shared.version import APP_VERSION
 from ui import make_page_header, make_separator, make_label, StyledButton
 from ui.theme import AWAY_TINT, BTN_HEIGHT_BACK
 
@@ -75,7 +76,7 @@ class AboutScreen(QWidget):
         )
         credits_view.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         cl.addWidget(credits_view, stretch=1)
-        cl.addWidget(make_label("Version  0.1 beta", role="muted"))
+        cl.addWidget(make_label(f"Version  {APP_VERSION}", role="muted"))
         cl.addWidget(make_separator())
         cl.addSpacing(8)
 

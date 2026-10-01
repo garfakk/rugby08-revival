@@ -1,0 +1,70 @@
+{
+  "id": "six_nations",
+  "name": "Six Nations",
+  "order": 20,
+  "description": "England, France, Ireland, Italy, Scotland and Wales: one round robin, top of the table wins.",
+  "match_type": "six_nations",
+  "venue": "home",
+  "points": {
+    "win": 4,
+    "draw": 2,
+    "loss": 0,
+    "try_bonus": {
+      "tries": 4
+    },
+    "losing_bonus": {
+      "margin": 7
+    }
+  },
+  "tiebreakers": [
+    "points_diff",
+    "tries_for",
+    "lots"
+  ],
+  "discipline": {
+    "red_ban": [
+      1,
+      3
+    ],
+    "yellow_accumulation": 0,
+    "yellow_ban": 1,
+    "citing_chance": 0.01
+  },
+  "default_options": {
+    "difficulty": "pro",
+    "halftime_length": "5m",
+    "injuries": true,
+    "suspensions": true,
+    "fatigue": true,
+    "cards": true,
+    "sim_variance": 1.0,
+    "injury_rate": 1.0,
+    "injury_duration": 1.0
+  },
+  "stages": [
+    {
+      "id": "table",
+      "name": "Championship",
+      "kind": "round_robin",
+      "legs": 1,
+      "match_subtype": "none",
+      "group_names": {
+        "A": "Table"
+      }
+    }
+  ],
+  "participants": {
+    "default": {
+      "table": {
+        "A": [
+          "10002",
+          "10001",
+          "10003",
+          "1007",
+          "1014",
+          "1022"
+        ]
+      }
+    }
+  }
+}

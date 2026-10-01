@@ -8,9 +8,8 @@ user_prefs.ini next to it instead.
 """
 import configparser
 import os
-from pathlib import Path
 
-from shared.app_paths import FROZEN, user_data_directory
+from shared.app_paths import user_data_directory
 from shared.config import config
 
 
@@ -21,22 +20,15 @@ log = get_logger(__name__)
 
 def _prefs_dir() -> str:
     """user_prefs.ini is per-user state, not a game asset, so it belongs next
-    to config.ini (user_data_directory(): user_data/ under the install folder) —
-    never in mod_data_directory,
-    which is the swappable, reinstallable teams/players/stadiums data pack.
-    Dev runs (not FROZEN) fall back to config.mod_directory/this repo, same
-    as config.ini itself does in shared/config.py."""
-    if FROZEN:
-        path = user_data_directory()
-        try:
-            os.makedirs(path, exist_ok=True)
-            return path
-        except OSError as e:
-            log.warning(f"could not create {path}: {e}")
-    for candidate in (getattr(config, "mod_directory", None),):
-        if candidate and os.path.isdir(candidate):
-            return candidate
-    return str(Path(__file__).resolve().parent.parent)
+    to config.ini (user_data_directory(): user_data/ under the install folder,
+    or under the repo root from source) — never in mod_data_directory,
+    which is the swappable, reinstallable teams/players/stadiums data pack."""
+    path = user_data_directory()
+    try:
+        os.makedirs(path, exist_ok=True)
+    except OSError as e:
+        log.warning(f"could not create {path}: {e}")
+    return path
 
 
 PREFS_DIR = _prefs_dir()

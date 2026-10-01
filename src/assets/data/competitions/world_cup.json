@@ -1,0 +1,173 @@
+{
+  "id": "world_cup",
+  "name": "World Cup",
+  "order": 10,
+  "description": "20 nations, four pools of five, then quarter-finals to the final. Neutral venues.",
+  "match_type": "world_cup",
+  "venue": "neutral",
+  "venues": [
+    "49",
+    "48",
+    "50",
+    "51",
+    "52"
+  ],
+  "points": {
+    "win": 4,
+    "draw": 2,
+    "loss": 0,
+    "try_bonus": {
+      "tries": 4
+    },
+    "losing_bonus": {
+      "margin": 7
+    }
+  },
+  "tiebreakers": [
+    "head_to_head",
+    "points_diff",
+    "tries_diff",
+    "points_for",
+    "tries_for",
+    "fewest_cards",
+    "lots"
+  ],
+  "knockout_draw": "tries_then_kicks",
+  "discipline": {
+    "red_ban": [
+      1,
+      3
+    ],
+    "yellow_accumulation": 3,
+    "yellow_ban": 1,
+    "citing_chance": 0.01
+  },
+  "default_options": {
+    "difficulty": "pro",
+    "halftime_length": "5m",
+    "injuries": true,
+    "suspensions": true,
+    "fatigue": true,
+    "cards": true,
+    "sim_variance": 1.0,
+    "injury_rate": 1.0,
+    "injury_duration": 1.0
+  },
+  "stages": [
+    {
+      "id": "pools",
+      "name": "Pool stage",
+      "kind": "round_robin",
+      "legs": 1,
+      "match_subtype": "pool",
+      "group_names": {
+        "A": "Pool A",
+        "B": "Pool B",
+        "C": "Pool C",
+        "D": "Pool D"
+      },
+      "qualify": 2
+    },
+    {
+      "id": "knockouts",
+      "name": "Knockout stage",
+      "kind": "knockout",
+      "rounds": [
+        {
+          "id": "qf",
+          "name": "Quarter-final",
+          "match_subtype": "quarter_final",
+          "ties": [
+            [
+              "pools:C1",
+              "pools:D2"
+            ],
+            [
+              "pools:B1",
+              "pools:A2"
+            ],
+            [
+              "pools:D1",
+              "pools:C2"
+            ],
+            [
+              "pools:A1",
+              "pools:B2"
+            ]
+          ]
+        },
+        {
+          "id": "sf",
+          "name": "Semi-final",
+          "match_subtype": "semi_final",
+          "ties": [
+            [
+              "W:qf1",
+              "W:qf2"
+            ],
+            [
+              "W:qf3",
+              "W:qf4"
+            ]
+          ]
+        },
+        {
+          "id": "bronze",
+          "name": "Bronze final",
+          "ties": [
+            [
+              "L:sf1",
+              "L:sf2"
+            ]
+          ]
+        },
+        {
+          "id": "final",
+          "name": "Final",
+          "match_subtype": "final",
+          "final": true,
+          "ties": [
+            [
+              "W:sf1",
+              "W:sf2"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "participants": {
+    "default": {
+      "pools": {
+        "A": [
+          "1010",
+          "10001",
+          "1018",
+          "1003",
+          "1008"
+        ],
+        "B": [
+          "10002",
+          "1001",
+          "1014",
+          "1006",
+          "1012"
+        ],
+        "C": [
+          "1002",
+          "10003",
+          "1007",
+          "1021",
+          "1013"
+        ],
+        "D": [
+          "1015",
+          "1022",
+          "1017",
+          "1005",
+          "1009"
+        ]
+      }
+    }
+  }
+}

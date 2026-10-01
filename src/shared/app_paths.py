@@ -1,6 +1,7 @@
-"""Where things live for the released (PyInstaller) build. No side effects on import.
+"""Where things live. No side effects on import.
 
-Everything belongs to ONE root folder (the folder holding R08Revival.exe):
+Everything belongs to ONE root folder. Released (PyInstaller) build, the folder
+holding R08Revival.exe:
 
   R08Revival.exe, _internal/   the program (replaced when the program is updated)
   app_data/                    read-only: assets/, README, CREDITS, config.ini.example
@@ -13,6 +14,16 @@ and must be a folder the user can write to (not Program Files): the installer
 refuses such folders and check_writable_or_exit() re-checks at startup.
 A file named portable.txt beside the exe marks a portable copy (no installer:
 first launch locates Rugby 08 itself).
+
+Running from source, the repo root plays the same role, with the same layout:
+
+  run.py                       the launcher (stands for R08Revival.exe)
+  src/                         the program and its assets (app_data + _internal)
+  data/                        the data pack (mod_data)
+  user_data/                   config.ini, user_prefs.ini, ... (created at first launch)
+
+A source checkout behaves like a portable copy: first launch locates Rugby 08 and
+writes user_data/config.ini. There is no game_files/ copy, the game is used in place.
 """
 import os
 import sys
@@ -20,15 +31,24 @@ import uuid
 
 FROZEN = getattr(sys, "frozen", False)
 
-APP_DATA, MOD_DATA, USER_DATA, GAME_FILES = "app_data", "mod_data", "user_data", "game_files"
+if FROZEN:
+    APP_DATA, MOD_DATA = "app_data", "mod_data"
+else:
+    APP_DATA, MOD_DATA = "src", "data"
+USER_DATA, GAME_FILES = "user_data", "game_files"
 
 
 def app_directory():
-    return os.path.dirname(os.path.abspath(sys.executable))
+    if FROZEN:
+        return os.path.dirname(os.path.abspath(sys.executable))
+    # <repo>/src/shared/app_paths.py -> <repo>
+    return os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 def is_portable():
-    return os.path.isfile(os.path.join(app_directory(), "portable.txt"))
+    """No installer to set things up: first launch locates Rugby 08 itself.
+    Always the case running from source."""
+    return not FROZEN or os.path.isfile(os.path.join(app_directory(), "portable.txt"))
 
 
 def app_data_directory():
@@ -49,10 +69,8 @@ def game_files_directory():
 
 def assets_directory():
     """assets/ (models, static_files, templates, audio...). Released build: app_data/assets;
-    running from source: the repo's assets/."""
-    if FROZEN:
-        return os.path.join(app_data_directory(), "assets")
-    return os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "assets")
+    running from source: src/assets."""
+    return os.path.join(app_data_directory(), "assets")
 
 
 def _writable(directory):
