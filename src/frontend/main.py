@@ -163,9 +163,14 @@ from screens.match_setup import MatchSetupContainer
 from screens.settings import SettingsScreen
 from screens.about import AboutScreen
 from screens.game_modes import GameModesScreen
+from screens.match_presentation import MatchPresentationScreen, Presentation, SideSpec
 from screens.ingame import GameWidget
 from screens.post_match import PostMatchScreen
 from screens.tools import ToolsScreen
+from screens.challenge_editor import ChallengeEditorScreen
+from screens.challenge_mode import ChallengeModeScreen
+from screens.tournament import (TournamentDashboardScreen, TournamentHubScreen,
+                                TournamentSquadScreen, TournamentWizardScreen)
 from screens.team_editor import TeamEditorScreen
 from screens.player_editor import PlayerEditorScreen
 from screens.roster_import import RosterImportScreen
@@ -317,7 +322,10 @@ class MainWindow(QMainWindow):
             log.warning("Retrying once with the software OpenGL renderer (QT_OPENGL=software)")
             os.environ["QT_OPENGL"] = "software"
             os.environ["R08_GL_FALLBACK_TRIED"] = "1"
-            os.execv(sys.executable, [sys.executable] + sys.argv[1:])
+            # Frozen: sys.executable is the exe itself; from source it is python,
+            # which needs the script path (sys.argv[0]) too.
+            argv = sys.argv[1:] if getattr(sys, "frozen", False) else sys.argv
+            os.execv(sys.executable, [sys.executable] + argv)
 
     def _on_intro_finished(self):
         self._intro = None
@@ -457,7 +465,9 @@ class MainWindow(QMainWindow):
         self.screen_settings = SettingsScreen(self.show_main, on_windowed_mode_changed=self.apply_windowed_mode,
                                               music=self.music)
         self.screen_about = AboutScreen(self.show_main)
-        self.screen_game_modes = GameModesScreen(self.show_main)
+        self.screen_game_modes = GameModesScreen(self.show_main, self.show_challenge_mode,
+                                                 self.show_tournament_hub)
+        self.screen_presentation = MatchPresentationScreen(self.data)
         self.screen_ingame = GameWidget(self.show_main, self.show_match_setup,
                                          result_callback=self.show_post_match,
                                          on_loading_end=self.music.stop_loading)
@@ -468,7 +478,7 @@ class MainWindow(QMainWindow):
         )
         self.screen_tools = ToolsScreen(
             self.data, self.show_main, self.show_team_editor, self.show_player_editor,
-            on_import=self.show_roster_import)
+            on_import=self.show_roster_import, on_challenge_editor=self.show_challenge_editor)
         editor_back = lambda: self.screens.go_back(default=self.screen_tools)
         self.screen_team_editor = TeamEditorScreen(self.data, editor_back,
                                                    open_player=self.open_player)
@@ -476,9 +486,29 @@ class MainWindow(QMainWindow):
                                                        open_team=self.open_team)
         self.screen_team_editor.on_import = self.show_roster_import
         self.screen_player_editor.on_import = self.show_roster_import
+        self.screen_challenge_editor = ChallengeEditorScreen(self.data, editor_back)
+        self.screen_challenge_mode = ChallengeModeScreen(
+            self.data, lambda: self.screens.go_back(default=self.screen_game_modes),
+            on_play=self.start_challenge, on_present=self.show_challenge_presentation)
         self.screen_roster_import = RosterImportScreen(
             self.data, editor_back, on_open_team=self.show_team_editor,
             on_open_player=self.show_player_editor)
+        # Tournament mode. The session being played is self.tournament (None
+        # outside the mode); self._tournament_fixture is set only while one of
+        # its matches is running in the game.
+        self.tournament = None
+        self._tournament_fixture = None
+        self.screen_tournament_hub = TournamentHubScreen(
+            self.data, self.show_main_game_modes, on_new=self.show_tournament_wizard,
+            on_open=self.open_tournament)
+        self.screen_tournament_wizard = TournamentWizardScreen(
+            self.data, lambda: self.screens.go_back(default=self.screen_tournament_hub),
+            on_created=self.open_tournament)
+        self.screen_tournament = TournamentDashboardScreen(
+            self.data, self.show_tournament_hub, on_play=self.play_tournament_match,
+            on_squad=self.show_tournament_squad)
+        self.screen_tournament_squad = TournamentSquadScreen(
+            lambda: self.screens.go_back(default=self.screen_tournament))
 
         for screen in (
             self.screen_main,
@@ -486,17 +516,32 @@ class MainWindow(QMainWindow):
             self.screen_settings,
             self.screen_about,
             self.screen_game_modes,
+            self.screen_presentation,
             self.screen_ingame,
             self.screen_post_match,
             self.screen_tools,
             self.screen_team_editor,
             self.screen_player_editor,
             self.screen_roster_import,
+            self.screen_challenge_editor,
+            self.screen_challenge_mode,
+            self.screen_tournament_hub,
+            self.screen_tournament_wizard,
+            self.screen_tournament,
+            self.screen_tournament_squad,
         ):
             self.screens.addWidget(screen)
 
     # ── Navigation ─────────────────────────────────────────────────────────
     def show_main(self):
+        if self.tournament and self._tournament_fixture:
+            # Left the game screen mid tournament match (no result came
+            # back): nothing is recorded, back to the tournament.
+            self._tournament_fixture = None
+            self.tournament.abandon_game()
+            self.show_tournament("The match was abandoned, so nothing was recorded. "
+                                 "Play it again or simulate it.")
+            return
         self.screens.show_screen(self.screen_main, push_history=False)
         self.screens.reset_history()
 
@@ -506,6 +551,13 @@ class MainWindow(QMainWindow):
     def show_game_modes(self):
         self.screens.show_screen(self.screen_game_modes)
 
+    def show_main_game_modes(self):
+        """Main menu -> game modes as the history, e.g. leaving the
+        tournament hub (which resets history on the way in)."""
+        self.screens.show_screen(self.screen_main, push_history=False)
+        self.screens.reset_history()
+        self.show_game_modes()
+
     def show_tools(self):
         self.screens.show_screen(self.screen_tools)
 
@@ -514,6 +566,119 @@ class MainWindow(QMainWindow):
 
     def show_player_editor(self):
         self.screens.show_screen(self.screen_player_editor)
+
+    def show_challenge_editor(self):
+        self.screens.show_screen(self.screen_challenge_editor)
+
+    def show_challenge_mode(self):
+        self.screens.show_screen(self.screen_challenge_mode)
+
+    def show_challenge_presentation(self, presentation):
+        """Challenge mode -> the pre-match presentation; BACK returns to the list."""
+        if presentation.on_back is None:
+            presentation.on_back = lambda: self.screens.go_back(default=self.screen_challenge_mode)
+        self.screen_presentation.present(presentation)
+        self.screens.show_screen(self.screen_presentation)
+
+    def start_challenge(self, match_data):
+        """Challenge mode -> kick off; a rematch replays the same challenge."""
+        self.start_match(match_data)
+
+    # ── Tournament mode ────────────────────────────────────────────────────
+    def show_tournament_hub(self):
+        self.tournament = None
+        self.screens.show_screen(self.screen_tournament_hub, push_history=False)
+        self.screens.reset_history()
+
+    def show_tournament_wizard(self):
+        self.screens.show_screen(self.screen_tournament_wizard)
+
+    def open_tournament(self, session, message=""):
+        """Hub (load) or wizard (new) -> the dashboard; BACK from there goes
+        to the hub, not through the wizard again."""
+        self.tournament = session
+        self.screen_tournament.set_session(session, message)
+        self.screens.show_screen(self.screen_tournament, push_history=False)
+        self.screens.reset_history()
+
+    def show_tournament(self, message=None):
+        if message is not None:
+            self.screen_tournament.set_message(message)
+        self.screens.show_screen(self.screen_tournament, push_history=False)
+        self.screens.reset_history()
+
+    def show_tournament_squad(self, session, team_id):
+        if not team_id:
+            return
+        self.screen_tournament_squad.set_team(session, team_id)
+        self.screens.show_screen(self.screen_tournament_squad)
+
+    def play_tournament_match(self, session, fixture):
+        """Dashboard PLAY -> the pre-match presentation (kits) -> kick off.
+        BACK from the presentation drops the pre-match snapshot again."""
+        from app.match_data_builder import build_match_data
+        from app.tournament import report
+        cfg, repairs = session.begin_game(fixture)
+        if repairs:
+            log.info("Tournament: selection repaired before kick-off: %s", repairs)
+
+        def kits(slot):
+            return list(self.data.teams.get(slot.team_id, {}).get(slot.season, {}).get("kits", {}))
+
+        def side(slot):
+            keys = kits(slot)
+            return SideSpec(slot.team_id, slot.season,
+                            keys[slot.kit_index % len(keys)] if keys else "")
+
+        def set_kit(name, key):
+            slot = cfg.home if name == "home" else cfg.away
+            keys = kits(slot)
+            if key in keys:
+                slot.kit_index = keys.index(key)
+
+        def kickoff():
+            match_data = build_match_data(self.data, cfg)
+            if not match_data:
+                session.abandon_game()
+                self.show_tournament("This match could not be set up for the game.")
+                return
+            self._tournament_fixture = fixture
+            self.start_match(match_data)
+
+        def back():
+            session.abandon_game()
+            self.show_tournament()
+
+        t = session.t
+        venue = report.venue_name(self.data, fixture) or (cfg.stadium or {}).get("data", {}).get("name", "")
+        stage = " · ".join(x for x in (fixture.label or fixture.round_name, fixture.group) if x)
+        self.screen_presentation.present(Presentation(
+            title=t.name, breadcrumb="tournament · match",
+            eyebrow=stage or t.template.get("name", "tournament"),
+            heading=report.fixture_caption(t, fixture),
+            details=[f"Stadium: {venue}" if venue else "",
+                     f"Difficulty: {cfg.difficulty}",
+                     f"Half length: {cfg.halftime_length}"],
+            home=side(cfg.home), away=side(cfg.away),
+            on_kit=set_kit, on_kickoff=kickoff, on_back=back,
+            controlled=lambda: {c.get("zone") for c in cfg.controllers.values()}))
+        self.screens.show_screen(self.screen_presentation)
+
+    def _record_tournament_result(self, result):
+        """A tournament match just ended in the game. Returns the message for
+        the dashboard."""
+        session, fixture = self.tournament, self._tournament_fixture
+        self._tournament_fixture = None
+        if not result or result.get("finished") is False:
+            session.abandon_game()
+            minute = (result or {}).get("minute")
+            when = f" (stopped at {minute} min)" if minute else ""
+            return f"The match wasn't completed{when}, so nothing was recorded. Play it again or simulate it."
+        done = session.finish_game(fixture, result)
+        others = len(done) - 1
+        return (f"Result recorded: {session.t.team_name(fixture.home)} {fixture.result.score_text()} "
+                f"{session.t.team_name(fixture.away)}." + (f" {others} other match{'es' if others != 1 else ''}"
+                                                          f" of the matchday simulated." if others > 0 else ""))
 
     def show_roster_import(self):
         self.screens.show_screen(self.screen_roster_import)
@@ -564,6 +729,11 @@ class MainWindow(QMainWindow):
         self.reveal_match()
 
     def show_post_match(self, result):
+        if self.tournament and self._tournament_fixture:
+            message = self._record_tournament_result(result)
+            self.screen_post_match.set_continue(lambda: self.show_tournament(message))
+        else:
+            self.screen_post_match.set_continue(None)
         self.screen_post_match.set_result(getattr(self, "_last_match_data", None), result)
         self.screens.show_screen(self.screen_post_match, push_history=False)
         self.screens.reset_history()

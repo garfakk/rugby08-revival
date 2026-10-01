@@ -13,7 +13,7 @@ import random
 
 from backend import game_specific_variables as gsv
 from shared.config import config
-from app import appearance
+from app import appearance, difficulty
 from app.game_data import normalise_position
 from app.state import DataStore, MatchConfig, TeamSlot
 
@@ -324,7 +324,6 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
     else:
         pitch_logo = ""
 
-    difficulty_map = {"club": 0, "pro": 1, "elite": 2}
     halftime_length_map = {"2m": 0, "5m": 1, "10m": 2, "20m": 3, "40m": 4}
 
     # ── Advanced/.mis fields (config.advanced_user) ─────────────────────
@@ -348,8 +347,8 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
             "mode_period": cfg.mission_mode_period,
         }
 
-    return {
-        "difficulty": difficulty_map.get(cfg.difficulty, 2),
+    match_data = {
+        "difficulty": difficulty.mission_difficulty(cfg.difficulty),
         "halftime_length": halftime_length_map.get(cfg.halftime_length, 1),
         "matchType": gsv.match_type.get(cfg.match_type, 0),
         "matchSubType": gsv.match_subtype.get(cfg.match_subtype, 0),
@@ -400,3 +399,5 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
         "team_A": _build_team_match_data(ds, cfg.home, True),
         "team_B": _build_team_match_data(ds, cfg.away, False),
     }
+    # legend/immortal: stock elite AI plus a strengthened CPU roster.
+    return difficulty.apply(match_data, cfg.difficulty, home_count, away_count)

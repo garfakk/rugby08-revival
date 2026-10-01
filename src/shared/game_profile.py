@@ -10,7 +10,7 @@ The user's choices live in game_profile.ini (next to user_prefs.ini). Only the
 values the user actually changed are stored: everything else keeps what the
 template holds.
 
-Format and field map: reverse-engineered from the game's profile.pro
+Format and field map: reR08 docs/findings/2026-09-25-profile-pro-settings-spec.md
 (offsets below are payload offsets; the file adds a 0x1C-byte header).
 """
 import configparser

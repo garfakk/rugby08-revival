@@ -7,10 +7,9 @@ from PyQt5.QtCore import (
 )
 
 from shared.config import config
-from shared.version import APP_VERSION
 from app.screen_base import Screen
 from ui.broadcast import display_label, HintBar, MenuTile
-from ui.theme import BG_BASE, ACCENT, FG_MUTED
+from ui.theme import BG_BASE, ACCENT
 
 
 class MainMenuScreen(Screen):
@@ -34,9 +33,6 @@ class MainMenuScreen(Screen):
         hero.addWidget(display_label("RUGBY 08", 52, QFont.Bold, track=3.0))
         hero.addSpacing(6)
         hero.addWidget(display_label("REVIVAL", 17, QFont.DemiBold, track=6.0, color=ACCENT))
-        hero.addSpacing(4)
-        hero.addWidget(display_label(f"v{APP_VERSION} · data {config.data_version}", 11, QFont.Normal, track=2.0,
-                                     color=FG_MUTED, upper=False))
         hero.addStretch(2)
         hero_w = QWidget()
         hero_w.setLayout(hero)
@@ -51,7 +47,7 @@ class MainMenuScreen(Screen):
 
         items = [
             ("QUICK MATCH", "", self.mw.show_match_setup, False),
-            ("GAME MODES", "", self.mw.show_game_modes, True),
+            ("GAME MODES", "", self.mw.show_game_modes, False),
             ("TOOLS", "", self.mw.show_tools, False),
             ("SETTINGS", "", self.mw.show_settings, False),
             ("ABOUT", "", self.mw.show_about, False),
@@ -64,7 +60,7 @@ class MainMenuScreen(Screen):
             self.focus.register(tile)
             menu_col.addWidget(tile)
             self._tiles.append(tile)
-        menu_col.addStretch(2)
+        menu_col.addStretch(1)
         menu_w = QWidget()
         menu_w.setLayout(menu_col)
         menu_w.setFixedWidth(560)

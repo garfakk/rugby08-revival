@@ -1,0 +1,118 @@
+{
+  "id": "premiership",
+  "name": "English Premiership",
+  "order": 30,
+  "description": "12 clubs, home and away, then semi-finals (1v4, 2v3) and a final at Twickenham.",
+  "match_type": "premiership",
+  "venue": "home",
+  "venues": [
+    "14"
+  ],
+  "points": {
+    "win": 4,
+    "draw": 2,
+    "loss": 0,
+    "try_bonus": {
+      "tries": 4
+    },
+    "losing_bonus": {
+      "margin": 7
+    }
+  },
+  "tiebreakers": [
+    "wins",
+    "points_diff",
+    "points_for",
+    "head_to_head",
+    "lots"
+  ],
+  "knockout_draw": "tries_then_kicks",
+  "discipline": {
+    "red_ban": [
+      1,
+      4
+    ],
+    "yellow_accumulation": 4,
+    "yellow_ban": 1,
+    "citing_chance": 0.01
+  },
+  "default_options": {
+    "difficulty": "pro",
+    "halftime_length": "5m",
+    "injuries": true,
+    "suspensions": true,
+    "fatigue": true,
+    "cards": true,
+    "sim_variance": 1.0,
+    "injury_rate": 1.0,
+    "injury_duration": 1.0
+  },
+  "stages": [
+    {
+      "id": "league",
+      "name": "League",
+      "kind": "round_robin",
+      "legs": 2,
+      "match_subtype": "none",
+      "group_names": {
+        "A": "Table"
+      },
+      "qualify": 4
+    },
+    {
+      "id": "playoffs",
+      "name": "Play-offs",
+      "kind": "knockout",
+      "rounds": [
+        {
+          "id": "sf",
+          "name": "Semi-final",
+          "match_subtype": "semi_final",
+          "ties": [
+            [
+              "league:A1",
+              "league:A4"
+            ],
+            [
+              "league:A2",
+              "league:A3"
+            ]
+          ]
+        },
+        {
+          "id": "final",
+          "name": "Final",
+          "match_subtype": "final",
+          "final": true,
+          "venue": "neutral",
+          "ties": [
+            [
+              "W:sf1",
+              "W:sf2"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "participants": {
+    "default": {
+      "league": {
+        "A": [
+          "2007",
+          "2009",
+          "2011",
+          "2013",
+          "2014",
+          "2015",
+          "2016",
+          "2017",
+          "2019",
+          "2020",
+          "2021",
+          "2022"
+        ]
+      }
+    }
+  }
+}

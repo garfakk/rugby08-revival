@@ -45,7 +45,7 @@ Wine quirk: always run with `</dev/null` and pipe output (`| cat`), never `> fil
 `smoke_test.sh` · `RELEASE_README.txt` (shipped)
 
 `assets/static_files/` holds the prebuilt `d3d8.dll` / `rugby08patches.dll` copied from the
-reR08 project — refresh them there before releasing.
+reR08 repo — refresh them there before releasing.
 
 `gen_game_includes.py` reads `shared.config.ORIGINAL_GAME_FILES` /
 `ORIGINAL_GAME_FOLDERS` into `game_includes.inc`, so the installer's "copy the

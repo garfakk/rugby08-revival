@@ -27,6 +27,7 @@ from shared.user_prefs import user_prefs
 from app.screen_base import Screen
 from app.input import Action, KEYMAP
 from app.state import DataStore, MatchConfig, TeamSlot
+from app import difficulty
 from app.match_data_builder import build_match_data
 from app.game_data import SNOW_INTENSITY_MAX, WIND_POWER_MAX
 from app.season import season_label
@@ -686,7 +687,7 @@ class MatchSetupScreen(Screen):
         settings_row = QHBoxLayout()
         settings_row.setSpacing(10)
         self.difficulty_row = SelectorRow("difficulty", compact=True)
-        self.difficulty_row.set_values(["club", "pro", "elite"], index=2)
+        self.difficulty_row.set_values(difficulty.LEVELS, index=difficulty.LEVELS.index("elite"))
         self.difficulty_row.changed.connect(
             lambda: setattr(self.cfg, "difficulty", self.difficulty_row.current()))
         self.focus.register(self.difficulty_row)

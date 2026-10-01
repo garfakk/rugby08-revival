@@ -2,9 +2,11 @@
 # The section [Main] should only contain:
 #   - R08_directory: directory where Rugby 08 is installed
 #   - R08_filename: name of the Rugby 08 executable inside [game_launcher_directory] folder
-#   - mod_directory : directory where the mod is installed (optional). Default: [game_launcher_directory]/R08_mod
-#   The released build keeps config.ini in <install folder>\user_data and derives every other folder
-#   (app_data, mod_data, game_files) from the exe's location; see shared/app_paths.py.
+#   - data_directory: running from source only (optional): another data pack. Default: <repo>/data
+#   config.ini lives in user_data/: <install folder>\user_data for the released build,
+#   <repo>/user_data running from source (run.py). It is written at first launch when missing.
+#   Every other folder (app_data/src, mod_data/data, game_files) derives from that root;
+#   see shared/app_paths.py.
 # -> all other fields in this section will be ignored
 #
 # The section [Options] is used to override the default values.
@@ -15,7 +17,6 @@
 [Main]
 R08_directory = C:\Program Files (x86)\EA SPORTS\EA SPORTS(TM) Rugby 08\
 R08_filename = Rugby08.exe
-mod_directory = C:\Program Files (x86)\EA SPORTS\Rugby 08 Revival\
 
 [Options]
 # Logging: OFF (nothing logged), DEBUG (traces), INFO (milestones),

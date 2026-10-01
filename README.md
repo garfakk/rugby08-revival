@@ -34,6 +34,11 @@ Please note that it is still in development, so expect to find bugs.
 The kits/heads/textures used are from [MUP Patch 2009](https://www.therugbyforum.com/threads/mup-v-1-2-season-2008-09.15872), [TRF Patch 10](https://www.therugbyforum.com/threads/trf-rugby-10-patch.18881) and [jim546](https://github.com/jimw546/jimw546-s-Rugby-08-stuff)'s creations for this demo, a big thanks for their work.
 
 ## Installation
-You can find the installer exe in the releases. Alternatively you can run the program directly with python, detailed instructions will be published soon.
+You can find the installer exe in the releases. Alternatively you can run the program directly with python:
+```
+pip install -r src/requirements.txt
+python run.py
+```
+The repository has the same layout as the installed program: `src/` (program), `data/` (teams, players, stadiums, tournaments) and `user_data/` (your settings and saves, created at first launch). On first launch you are asked for the Rugby 08 folder and `user_data/config.ini` is written; all options are documented in `src/config.ini.example`. On Linux the game is started through `wine`.
 To install the mod you need to have a working version of Rugby 08 installed on your computer (with no mods installed). The mod only works with the no-cd executable.
 The compatibility with other utilities (dgVooDoo, dxWnd etc) is not tested, contact me if you experience problems with it.

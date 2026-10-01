@@ -1,0 +1,132 @@
+{
+  "id": "top_14",
+  "name": "Top 14",
+  "order": 40,
+  "description": "The French clubs, home and away, then the six-team play-offs: barrages, semi-finals, final at the Stade de France.",
+  "match_type": "exhibition",
+  "venue": "home",
+  "venues": [
+    "70"
+  ],
+  "branding": "5002",
+  "points": {
+    "win": 4,
+    "draw": 2,
+    "loss": 0,
+    "try_bonus": {
+      "margin": 3
+    },
+    "losing_bonus": {
+      "margin": 5
+    }
+  },
+  "tiebreakers": [
+    "head_to_head",
+    "points_diff",
+    "tries_diff",
+    "points_for",
+    "lots"
+  ],
+  "knockout_draw": "tries_then_kicks",
+  "discipline": {
+    "red_ban": [
+      1,
+      4
+    ],
+    "yellow_accumulation": 3,
+    "yellow_ban": 1,
+    "citing_chance": 0.01
+  },
+  "default_options": {
+    "difficulty": "pro",
+    "halftime_length": "5m",
+    "injuries": true,
+    "suspensions": true,
+    "fatigue": true,
+    "cards": true,
+    "sim_variance": 1.0,
+    "injury_rate": 1.0,
+    "injury_duration": 1.0
+  },
+  "stages": [
+    {
+      "id": "league",
+      "name": "Regular season",
+      "kind": "round_robin",
+      "legs": 2,
+      "match_subtype": "none",
+      "group_names": {
+        "A": "Table"
+      },
+      "qualify": 6
+    },
+    {
+      "id": "playoffs",
+      "name": "Play-offs",
+      "kind": "knockout",
+      "rounds": [
+        {
+          "id": "barrage",
+          "name": "Barrage",
+          "match_subtype": "quarter_final",
+          "ties": [
+            [
+              "league:A3",
+              "league:A6"
+            ],
+            [
+              "league:A4",
+              "league:A5"
+            ]
+          ]
+        },
+        {
+          "id": "sf",
+          "name": "Semi-final",
+          "match_subtype": "semi_final",
+          "venue": "neutral",
+          "ties": [
+            [
+              "league:A1",
+              "W:barrage2"
+            ],
+            [
+              "league:A2",
+              "W:barrage1"
+            ]
+          ]
+        },
+        {
+          "id": "final",
+          "name": "Final",
+          "match_subtype": "final",
+          "final": true,
+          "venue": "neutral",
+          "ties": [
+            [
+              "W:sf1",
+              "W:sf2"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "participants": {
+    "default": {
+      "league": {
+        "A": [
+          "10101",
+          "10102",
+          "10103",
+          "2026",
+          "2029",
+          "2030",
+          "2024",
+          "2025",
+          "2027"
+        ]
+      }
+    }
+  }
+}

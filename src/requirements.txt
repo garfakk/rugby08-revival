@@ -1,9 +1,15 @@
-PyQt5==5.15.11
 Pillow==11.2.1
 numpy==1.26.4
+#pywintypes==0.0.1
 PyYAML==6.0.2
-psutil==7.0.0
 screeninfo==0.8.1
+#win32gui==221.6
+#win32process==0.0.1
+ijson==3.4.0
+json5==0.12.0
+orjson==3.10.18
+psutil==7.0.0
+PyQt5==5.15.11
+requests==2.31.0
 PyOpenGL==3.1.10
 pyelftools==0.33
-pywin32; sys_platform == "win32"

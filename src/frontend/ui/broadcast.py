@@ -301,6 +301,10 @@ class SelectorRow(QWidget):
         self._mirror_target = target
         self.update()
 
+    def set_label(self, label: str):
+        self._label = label
+        self.update()
+
     def set_disabled_visual(self, disabled: bool):
         self._disabled = disabled
         self.setEnabled(not disabled)

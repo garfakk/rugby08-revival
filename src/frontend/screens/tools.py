@@ -19,12 +19,13 @@ from ui.theme import BG_BASE, ACCENT, FG_SECONDARY, FG_MUTED
 
 
 class ToolsScreen(Screen):
-    def __init__(self, ds, on_back, on_team_editor, on_player_editor, on_import=None):
+    def __init__(self, ds, on_back, on_team_editor, on_player_editor, on_import=None,
+                 on_challenge_editor=None):
         super().__init__(on_back=on_back)
         self.ds = ds
-        self._build(on_team_editor, on_player_editor, on_import)
+        self._build(on_team_editor, on_player_editor, on_import, on_challenge_editor)
 
-    def _build(self, on_team_editor, on_player_editor, on_import=None):
+    def _build(self, on_team_editor, on_player_editor, on_import=None, on_challenge_editor=None):
         root = QVBoxLayout(self)
         root.setContentsMargins(0, 0, 0, 0)
         root.setSpacing(0)
@@ -45,6 +46,7 @@ class ToolsScreen(Screen):
             ("TEAM EDITOR", "", on_team_editor, False),
             ("PLAYER EDITOR", "", on_player_editor, False),
             ("IMPORT ROSTER", "", on_import, on_import is None),
+            ("CHALLENGE EDITOR", "", on_challenge_editor, on_challenge_editor is None),
             ("TOURNAMENTS", "", None, True),
         ]
         for title, subtitle, slot, soon in items:

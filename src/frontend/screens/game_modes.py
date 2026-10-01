@@ -1,66 +1,54 @@
-"""screens/game_modes.py — Game Modes screen"""
-from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QWidget, QSizePolicy
+"""screens/game_modes.py — Game Modes hub: challenge mode and tournament."""
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout
 
-from ui import make_page_header, make_separator, StyledButton
-from ui.theme import BTN_HEIGHT, BTN_HEIGHT_BACK
+from app.screen_base import Screen
+from app.input import Action, KEYMAP
+from ui.broadcast import HintBar, MenuTile, page_header
+from ui.theme import BG_BASE
 
 
-class GameModesScreen(QWidget):
-    def __init__(self, back_callback):
-        super().__init__()
-        self.back_callback = back_callback
-        self._init_ui()
+class GameModesScreen(Screen):
+    def __init__(self, on_back, on_challenge, on_tournament):
+        super().__init__(on_back=on_back)
+        self._build(on_challenge, on_tournament)
 
-    def _init_ui(self):
+    def _build(self, on_challenge, on_tournament):
         root = QVBoxLayout(self)
         root.setContentsMargins(0, 0, 0, 0)
         root.setSpacing(0)
-
-        header, bar = make_page_header("GAME MODES")
-        root.addWidget(header)
-        root.addWidget(bar)
+        root.addWidget(page_header("Game modes", on_back=self.on_back_cb))
 
         body = QWidget()
-        body_layout = QVBoxLayout(body)
-        body_layout.setContentsMargins(0, 0, 0, 0)
+        body.setStyleSheet(f"background: {BG_BASE};")
+        bl = QHBoxLayout(body)
+        bl.setContentsMargins(80, 40, 80, 24)
 
-        menu_col = QWidget()
-        menu_col.setMaximumWidth(480)
-        menu_col.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        ml = QVBoxLayout(menu_col)
-        ml.setContentsMargins(20, 0, 20, 0)
-        ml.setSpacing(12)
-
-        ml.addStretch(2)
-
-        for text, variant, slot in [
-            ("NEW TOURNAMENT",  "primary", None),
-            ("LOAD TOURNAMENT", "ghost",   None),
-        ]:
-            btn = StyledButton(text, variant)
-            btn.setMinimumHeight(BTN_HEIGHT)
-            if slot:
-                btn.clicked.connect(slot)
-            ml.addWidget(btn)
-
-        ml.addStretch(1)
-        ml.addWidget(make_separator())
-        ml.addSpacing(6)
-
-        back = StyledButton("BACK", "neutral")
-        back.setMinimumHeight(BTN_HEIGHT_BACK)
-        back.clicked.connect(self.back_callback)
-        ml.addWidget(back)
-
-        ml.addStretch(2)
-
-        center = QHBoxLayout()
-        center.addStretch()
-        center.addWidget(menu_col)
-        center.addStretch()
-        body_layout.addLayout(center, stretch=1)
-
+        menu = QVBoxLayout()
+        menu.setSpacing(10)
+        menu.addStretch(1)
+        for title, slot in (("CHALLENGE MODE", on_challenge), ("TOURNAMENT", on_tournament)):
+            tile = MenuTile(title)
+            tile.activated.connect(slot)
+            self.focus.register(tile)
+            menu.addWidget(tile)
+        menu.addStretch(2)
+        menu_w = QWidget()
+        menu_w.setLayout(menu)
+        bl.addWidget(menu_w, stretch=3)
         root.addWidget(body, stretch=1)
+
+        self.hintbar = HintBar()
+        self.hintbar.set_hints([("A", "select"), ("B", "back")])
+        root.addWidget(self.hintbar)
+
+    def keyPressEvent(self, event):
+        if KEYMAP.get(event.key()) == Action.CONFIRM:
+            w = self.focusWidget()
+            if isinstance(w, MenuTile):
+                w.activate()
+                event.accept()
+                return
+        super().keyPressEvent(event)
 
 
 GameModesMenu = GameModesScreen

@@ -15,9 +15,10 @@ import os
 
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QStackedWidget, QFileDialog, QApplication, QLineEdit,
+    QTableWidget, QTableWidgetItem, QHeaderView, QAbstractItemView,
 )
-from PyQt5.QtGui import QFont
-from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtGui import QFont, QColor
+from PyQt5.QtCore import Qt, QTimer, pyqtSignal
 
 from app.screen_base import Screen
 from app.input import Action, KEYMAP
@@ -25,6 +26,7 @@ from app.game_data import TEAM_TYPES, SaveError
 from app.ratings import position_overall
 from app.roster_import.reader import read_roster, RosterError, TENDENCIES
 from app.roster_import import plan as P
+from app.roster_import import names as N
 from ui.broadcast import page_header, display_label
 from ui.dropdown import PopupList
 from ui.editor_kit import (
@@ -39,12 +41,52 @@ from ui.theme import (
     FG_SECONDARY, FG_TERTIARY, FONT_DISPLAY, T_LABEL, T_TITLE, T_VALUE, BTN_HEIGHT_SM,
 )
 
-STEP_FILE, STEP_TEAMS, STEP_PLAYERS, STEP_REVIEW = range(4)
+STEP_FILE, STEP_TEAMS, STEP_PLAYERS, STEP_ISSUES, STEP_REVIEW = range(5)
 DECISION_TAG = {P.CREATE: ("NEW", INFO), P.SKIP: ("SKIP", FG_TERTIARY)}
 
 
 def _pos(p):
     return POSITION_SHORT.get(p, "—") if p else "—"
+
+
+def _year_diff(mod_year, file_year):
+    """" (+3)" — mod birth year minus the file's (shifted) year."""
+    try:
+        d = int(mod_year) - int(file_year)
+    except (TypeError, ValueError):
+        return ""
+    return f" ({d:+d})"
+
+
+class MatchTable(QTableWidget):
+    """Read-only grid of file players against the mod players they map to."""
+    activated_row = pyqtSignal(int)
+
+    def __init__(self, columns, parent=None):
+        super().__init__(0, len(columns), parent)
+        self.setHorizontalHeaderLabels(columns)
+        self.verticalHeader().hide()
+        self.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.setSelectionMode(QAbstractItemView.SingleSelection)
+        self.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.setShowGrid(False)
+        self.setAlternatingRowColors(True)
+        self.horizontalHeader().setHighlightSections(False)
+        self.setStyleSheet(
+            f"QTableWidget {{ background: {BG_PANEL}; alternate-background-color: {BG_BASE};"
+            f" color: {FG_PRIMARY}; border: 1px solid {BORDER}; font-size: {T_LABEL}pt; }}"
+            f"QTableWidget::item:selected {{ background: {ACCENT}; color: white; }}"
+            f"QHeaderView::section {{ background: {BG_BASE}; color: {FG_SECONDARY};"
+            f" border: none; border-bottom: 1px solid {BORDER}; padding: 6px; }}")
+        self.doubleClicked.connect(lambda idx: self.activated_row.emit(idx.row()))
+
+    def keyPressEvent(self, event):
+        if KEYMAP.get(event.key()) in (Action.TAB_NEXT, Action.TAB_PREV, Action.BACK):
+            event.ignore()                 # the wizard navigates with these
+        elif event.key() in (Qt.Key_Return, Qt.Key_Enter) and self.currentRow() >= 0:
+            self.activated_row.emit(self.currentRow())
+        else:
+            super().keyPressEvent(event)
 
 
 class RosterImportScreen(Screen):
@@ -71,11 +113,11 @@ class RosterImportScreen(Screen):
         bv = QVBoxLayout(body)
         bv.setContentsMargins(40, 12, 40, 8)
         bv.setSpacing(0)
-        self.steps = TabStrip(["1  File & options", "2  Teams", "3  Players", "4  Review"])
+        self.steps = TabStrip(["1  File & options", "2  Teams", "3  Players", "4  Decisions", "5  Review"])
         self.steps.changed.connect(self._on_step_clicked)
         bv.addWidget(self.steps)
         self.stack = QStackedWidget()
-        self.pages = [TabPage() for _ in range(4)]
+        self.pages = [TabPage() for _ in range(5)]
         for page in self.pages:
             self.stack.addWidget(page)
         bv.addWidget(self.stack, stretch=1)
@@ -107,6 +149,7 @@ class RosterImportScreen(Screen):
         self._build_file_page(self.pages[STEP_FILE].layout_)
         self._build_teams_page(self.pages[STEP_TEAMS].layout_)
         self._build_players_page(self.pages[STEP_PLAYERS].layout_)
+        self._build_issues_page(self.pages[STEP_ISSUES].layout_)
         self._build_review_page(self.pages[STEP_REVIEW].layout_)
 
     def _reg(self, *widgets):
@@ -218,7 +261,10 @@ class RosterImportScreen(Screen):
             f"{'Saved roster (.ros)' if roster['kind'] == 'ros' else 'Raw roster (.rdf)'} · "
             f"{len(roster['players'])} players · {len(roster['teams'])} teams with a squad\n"
             f"{multi} players are in more than one squad (club and country), "
-            f"{sum(1 for rid in roster['players'] if rid not in in_squads)} are in none.")
+            f"{sum(1 for rid in roster['players'] if rid not in in_squads)} are in none.\n"
+            + (f"Birth years: the file runs {self.plan.birth_offset} years behind the mod "
+               f"(read from {self.plan.offset_evidence} players both know)."
+               if self.plan.offset_evidence else "Birth years: no shared players to read the shift from."))
         self._on_options()
         self._refresh_teams()
         self.set_status(f"Read {os.path.basename(path)}", GREEN)
@@ -374,98 +420,144 @@ class RosterImportScreen(Screen):
             self._refresh_teams(keep=self.team_list.highlighted_data())
 
     # ── step 3 ───────────────────────────────────────────────────────────
+    TABLE_COLUMNS = ["", "In the file", "Becomes in game", "Matched with", "Born  file / mod",
+                     "Pos  file / mod", "Why"]
+
     def _build_players_page(self, lay):
-        row = QHBoxLayout()
-        row.setSpacing(14)
-        lcol = QVBoxLayout()
-        fg = FieldGrid(columns=1)
+        top = QHBoxLayout()
         self.p_show = self._reg(ChoiceField("Show", ["check", "update", "create", "skip"],
                                             allow_blank=True, blank_label="all",
                                             display=lambda v: {"check": "matches to check",
-                                                               "update": "updates",
+                                                               "update": "confirmed matches",
                                                                "create": "new players",
                                                                "skip": "skipped"}[v]))
         self.p_show.label_width = 60
+        self.p_show.setFixedWidth(340)
         self.p_show.edited.connect(lambda _: self._refresh_players())
-        fg.add(self.p_show)
-        lcol.addWidget(fg)
-        bar = QHBoxLayout()
-        for text, fn in (("CREATE UNMATCHED", lambda: self._bulk(P.CREATE, "none")),
+        top.addWidget(self.p_show)
+        for text, fn in (("CONFIRM ALL SUGGESTED", self._confirm_all),
+                         ("NEW FOR UNMATCHED", lambda: self._bulk(P.CREATE, "none")),
                          ("SKIP TO CHECK", lambda: self._bulk(P.SKIP, "check"))):
             b = self._reg(compact_button(text))
             b.clicked.connect(fn)
-            bar.addWidget(b)
-        lcol.addLayout(bar)
-        self.player_list = self._reg(SearchList("filter players"))
-        self.player_list.setFixedWidth(380)
-        self.player_list.highlighted.connect(self._show_player)
-        lcol.addWidget(self.player_list, stretch=1)
+            top.addWidget(b)
+        top.addStretch(1)
         self.player_count = Note("", color=FG_TERTIARY)
-        lcol.addWidget(self.player_count)
-        row.addLayout(lcol)
+        top.addWidget(self.player_count)
+        lay.addLayout(top)
 
-        right = QVBoxLayout()
-        right.setSpacing(12)
-        dcard = SectionCard("player")
-        self.p_title = dcard.title_lbl
-        g = FieldGrid(columns=1)
-        self.p_decision = self._reg(ChoiceField("Import as", allow_blank=False))
-        self.p_decision.popup_title = "import as"
-        self.p_decision.edited.connect(self._on_decision)
-        g.add(self.p_decision)
-        dcard.add(g)
+        row = QHBoxLayout()
+        row.setSpacing(14)
+        self.table = MatchTable(self.TABLE_COLUMNS)
+        self.table.currentCellChanged.connect(lambda r, *_: self._show_player(self._row_rid(r)))
+        self.table.activated_row.connect(lambda r: self._pick_other(self._row_rid(r)))
+        self.focus.register(self.table)
+        row.addWidget(self.table, stretch=5)
+
+        card = SectionCard("player")
+        self.p_title = card.title_lbl
+        bar = QHBoxLayout()
+        self.p_buttons = {}
+        for key, text in ((P.UPDATE, "CONFIRM MATCH"), (P.CREATE, "NEW PLAYER"), (P.SKIP, "SKIP")):
+            b = self._reg(compact_button(text))
+            b.clicked.connect(lambda _=False, k=key: self._decide(k))
+            bar.addWidget(b)
+            self.p_buttons[key] = b
+        pick = self._reg(compact_button("CHOOSE PLAYER…"))
+        pick.clicked.connect(lambda: self._pick_other(self._row_rid(self.table.currentRow())))
+        self.p_pick = pick
+        bar.addWidget(pick)
+        card.add_layout(bar)
         self.p_compare = Note("", color=FG_PRIMARY, size=T_LABEL)
         self.p_compare.setTextFormat(Qt.RichText)
-        dcard.add(self.p_compare)
-        dcard.v.addStretch(1)
-        right.addWidget(dcard, stretch=1)
-        row.addLayout(right, stretch=1)
-        lay.addLayout(row)
+        card.add(self.p_compare)
+        card.v.addStretch(1)
+        row.addWidget(card, stretch=3)
+        lay.addLayout(row, stretch=1)
+
+    def _row_rid(self, row):
+        item = self.table.item(row, 0) if row >= 0 else None
+        return item.data(Qt.UserRole) if item else None
+
+    def _current_rid(self):
+        return self._row_rid(self.table.currentRow())
+
+    def _kind(self, c):
+        return "check" if (c.decision == P.UPDATE and c.confidence == "check") else c.decision
 
     def _refresh_players(self, keep=None):
         if self.plan is None:
             return
-        scope = self.plan.players_in_scope()
+        keep = keep if keep is not None else self._current_rid()
+        final = P.resolved_decisions(self.plan)
         show = self.p_show.value()
-        items, search = [], []
-        counts = {}
-        for rid in scope:
+        rows, counts = [], {}
+        for rid in self.plan.players_in_scope():
             c = self.plan.players[rid]
-            kind = "check" if (c.decision == P.UPDATE and c.confidence == "check") else c.decision
+            kind = self._kind(c)
             counts[kind] = counts.get(kind, 0) + 1
-            if show and kind != show:
-                continue
+            if not show or kind == show:
+                rows.append((0 if kind == "check" else 1, rid, c))
+        rows.sort(key=lambda r: r[0])           # matches to check first, order kept
+        off = self.plan.birth_offset
+        table = self.table
+        table.blockSignals(True)
+        table.setUpdatesEnabled(False)
+        table.setRowCount(len(rows))
+        select = 0
+        for i, (_, rid, c) in enumerate(rows):
+            rp = c.rp
+            rec = self.ds.players.get(c.pid) if c.decision == P.UPDATE else None
+            block = P.latest_block(rec) if rec else {}
             if c.decision == P.UPDATE:
-                tag, col = ("UPDATE ✓", GREEN) if c.confidence == "exact" else ("CHECK ?", WARN)
+                tag, col = ("MATCH ✓", GREEN) if c.confidence == "exact" else ("CHECK ?", WARN)
             else:
                 tag, col = DECISION_TAG[c.decision]
-            items.append((rid, c.rp["name"], tag, col, c.decision == P.SKIP))
-            search.append(f"{rid} {' '.join(c.rp['positions'])}")
-        self.player_list.set_items(items, keep_data=keep, search_text=search)
+            initial, surname = self.plan.name_parts(c)
+            becomes = N.game_name(initial, surname, self.plan.keep_star(rp),
+                                  fit=self.plan.resolutions.get("name_long", "truncate"))
+            if final[rid][0] != c.decision:
+                tag, col = "DUP ⚠", WARN
+            born_mod = (rec.get("birthdate") or "—")[:4] if rec else "—"
+            pos_mod = _pos(block.get("position1")) if rec else "—"
+            cells = [
+                (tag, col), (rp["name"], FG_PRIMARY), (becomes if c.decision != P.SKIP else "—",
+                                                       FG_PRIMARY if c.decision != P.SKIP else FG_TERTIARY),
+                (f"{rec.get('display_name')}  ({c.pid})" if rec else "—", FG_SECONDARY),
+                (f"{rp['birth'][0] + off} / {born_mod}{_year_diff(born_mod, rp['birth'][0] + off)}",
+                 FG_SECONDARY),
+                (f"{_pos(rp['positions'][0])} / {pos_mod}", FG_SECONDARY),
+                (", ".join(c.reasons) if c.decision == P.UPDATE else "no player with this name",
+                 FG_TERTIARY),
+            ]
+            for j, (text, colour) in enumerate(cells):
+                item = QTableWidgetItem(text)
+                item.setForeground(QColor(colour))
+                item.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
+                if j == 0:
+                    item.setData(Qt.UserRole, rid)
+                table.setItem(i, j, item)
+            if rid == keep:
+                select = i
+        table.setUpdatesEnabled(True)
+        table.blockSignals(False)
+        table.resizeColumnsToContents()
+        table.horizontalHeader().setSectionResizeMode(len(self.TABLE_COLUMNS) - 1, QHeaderView.Stretch)
+        if rows:
+            table.setCurrentCell(select, 0)
         self.player_count.setText(
-            f"{len(scope)} players · {counts.get('update', 0)} update · "
+            f"{sum(counts.values())} players · {counts.get('update', 0)} confirmed · "
             f"{counts.get('check', 0)} to check · {counts.get('create', 0)} new · "
             f"{counts.get('skip', 0)} skipped")
-        self._show_player(self.player_list.highlighted_data())
+        self._show_player(self._current_rid())
 
     def _show_player(self, rid):
         c = self.plan.players.get(rid) if self.plan and rid is not None else None
         if c is None:
             self.p_compare.setText("No player in this view.")
             return
-        rp = c.rp
-        self.p_title.setText(f"{rp['name']} · roster id {rid}".upper())
-        options = [P.CREATE, P.SKIP] + [f"update:{pid}" for pid in c.candidates] + ["other"]
-        self.p_decision.set_options(options)
-        self.p_decision.display = lambda v: {
-            P.CREATE: "a new player", P.SKIP: "skip — don't import",
-            "other": "update another player…"}.get(v) or (
-            f"update {self.ds.players.get(v[7:], {}).get('display_name', v[7:])} (id {v[7:]})")
-        value = f"update:{c.pid}" if c.decision == P.UPDATE else c.decision
-        if value not in options:
-            options.insert(2, value)
-            self.p_decision.set_options(options)
-        self.p_decision.set_value(value)
+        self.p_title.setText(f"{c.rp['name']} · file id {rid}".upper())
+        self.p_buttons[P.UPDATE].setEnabled(c.decision == P.UPDATE)
         self.p_compare.setText(self._compare_html(c))
 
     def _compare_html(self, c):
@@ -474,15 +566,17 @@ class RosterImportScreen(Screen):
         roster_col = {
             "Name": rp["name"],
             "Positions": " / ".join(POSITION_NAMES.get(p, p) for p in rp["positions"] if p) or "—",
-            "Born": f"{rp['birth'][0] + off}" + (f" (file {rp['birth'][0]})" if off else ""),
+            "Born": f"{rp['birth'][0] + off}/{rp['birth'][1]:02d}/{rp['birth'][2]:02d}"
+                    + (f" (file {rp['birth'][0]})" if off else ""),
             "Height / weight": f"{rp['height_cm']} cm / {rp['weight_kg']} kg",
             "Nationality": ", ".join(rp["nationalities"]) or "—",
             "Attack / defence": f"{rp['ratings']['attack']} / {rp['ratings']['defense']}",
             "Speed / kicking": f"{rp['ratings']['speed']} / {rp['ratings']['kicking']}",
             "Tendency": TENDENCIES[rp["tendency"]],
-            "Skills": ", ".join(s.replace("_", " ") for s in rp["skills"]) or "—",
+            "Face / commentary": f"{rp['face_id']} / {rp['commentary'] or '—'}",
         }
         mine = {}
+        latest = None
         if c.decision == P.UPDATE and c.pid in self.ds.players:
             rec = self.ds.players[c.pid]
             stats = rec.get("stats") or {}
@@ -492,61 +586,89 @@ class RosterImportScreen(Screen):
                 "Name": rec.get("display_name", ""),
                 "Positions": " / ".join(POSITION_NAMES.get(b.get(k), b.get(k)) for k in
                                         ("position1", "position2", "position3") if b.get(k)) or "—",
-                "Born": (rec.get("birthdate") or "—")[:4],
+                "Born": (rec.get("birthdate") or "—")
+                        + _year_diff((rec.get("birthdate") or "")[:4], rp["birth"][0] + off),
                 "Height / weight": f"{b.get('height') or '—'} cm / {b.get('weight') or '—'} kg",
                 "Nationality": b.get("nationality") or "—",
                 "Attack / defence": f"{b.get('attack', '—')} / {b.get('defense', '—')}",
                 "Speed / kicking": f"{b.get('speed', '—')} / {b.get('kicking', '—')}",
                 "Tendency": TENDENCIES[int(b["special_ability"])] if str(b.get("special_ability", "")).isdigit()
                 and int(b["special_ability"]) < len(TENDENCIES) else "—",
-                "Skills": ", ".join(k[3:].replace("_", " ") for k, v in b.items()
-                                    if k.startswith("ss_") and str(v).lower() in P_TRUE) or "—",
+                "Face / commentary": f"{b.get('face') or '—'} / {rec.get('commentary') or '—'}",
             }
             head = (f"<b>In the file</b></td><td style='padding-left:24px'>"
-                    f"<b>Existing player {c.pid} (latest season {latest})</b>")
+                    f"<b>Mod player {c.pid} (season {latest})</b>")
         else:
             head = "<b>In the file</b></td><td>"
         rows = [f"<tr><td style='color:{FG_TERTIARY};padding-right:18px'></td><td>{head}</td></tr>"]
         for key, val in roster_col.items():
             other = mine.get(key, "")
-            colour = WARN if mine and other and str(other) != str(val) and key != "Born" else FG_PRIMARY
+            differs = mine and other and str(other)[:4] != str(val)[:4] if key == "Born" \
+                else mine and other and str(other) != str(val)
+            colour = WARN if differs and key not in ("Name", "Face / commentary") else FG_PRIMARY
             rows.append(f"<tr><td style='color:{FG_TERTIARY};padding-right:18px'>{key}</td>"
                         f"<td>{val}</td><td style='padding-left:24px;color:{colour}'>{other}</td></tr>")
-        verdict = {
-            ("update", "exact"): "Matched by name, and birth year or position agrees.",
-            ("update", "check"): "Name matches but the details disagree or several players share "
-                                 "it — check before updating.",
-            ("create", "none"): "No player with this name — a new player will be created.",
-        }.get((c.decision, c.confidence), "")
+        if len(c.candidates) > 1:
+            names = ", ".join(f"{self.ds.players[p].get('display_name')} ({p})"
+                              for p in c.candidates[:5])
+            note = f"Other candidates: {names}"
+        else:
+            note = {
+                ("update", "exact"): "Same surname and initial, and nothing contradicts it.",
+                ("update", "check"): "The name fits but the evidence is thin or disagrees — check it.",
+                ("create", "none"): "No player with this surname — a new player will be created.",
+            }.get((c.decision, c.confidence), "")
         return (f"<table cellspacing='4'>{''.join(rows)}</table>"
-                f"<p style='color:{FG_SECONDARY}'>{verdict}</p>")
+                f"<p style='color:{FG_SECONDARY}'>{note}</p>")
 
-    def _on_decision(self, value):
-        rid = self.player_list.highlighted_data()
-        c = self.plan.players.get(rid) if self.plan else None
+    def _decide(self, decision):
+        rid = self._current_rid()
+        c = self.plan.players.get(rid) if self.plan and rid is not None else None
         if c is None:
             return
-        if value == "other":
-            self._pick_other(c, rid)
-            return
-        if value.startswith("update:"):
-            c.decision, c.pid = P.UPDATE, value[7:]
-            c.confidence = "exact"          # a human confirmed it
+        if decision == P.UPDATE:
+            c.confidence = "exact"              # a human confirmed it
         else:
-            c.decision = value
+            c.decision = decision
         self._refresh_players(keep=rid)
 
-    def _pick_other(self, c, rid):
+    def _pick_other(self, rid):
+        c = self.plan.players.get(rid) if self.plan and rid is not None else None
+        if c is None:
+            return
         popup = PopupList(self, width=460, height=460, own_keys=True)
-        popup.set_title(f"update which player with {c.rp['name']}?")
-        for pid, rec in sorted(self.ds.players.items(), key=lambda kv: (kv[1].get("display_name") or "").lower()):
-            stats = rec.get("stats") or {}
-            b = stats.get(sorted(stats)[-1], {}) if stats else {}
+        popup.set_title(f"which player is {c.rp['name']}?")
+        first = list(c.candidates)
+        rest = sorted((p for p in self.ds.players if p not in first),
+                      key=lambda p: (self.ds.players[p].get("display_name") or "").lower())
+        for pid in first + rest:
+            rec = self.ds.players[pid]
+            b = P.latest_block(rec)
             popup.add_row(rec.get("display_name") or pid, pid, tag=_pos(b.get("position1")),
-                          subtitle=(rec.get("birthdate") or "")[:4])
+                          subtitle=(rec.get("birthdate") or "")[:4] + (" · candidate" if pid in first else ""))
         popup.size_to(len(self.ds.players))
-        popup.picked.connect(lambda pid: self._on_decision(f"update:{pid}") if pid else None)
-        popup.open_at(self.p_decision, self)
+
+        def picked(pid):
+            if pid:
+                c.decision, c.pid, c.confidence = P.UPDATE, pid, "exact"
+                if pid not in c.candidates:
+                    c.candidates.insert(0, pid)
+                c.reasons = ["chosen by you"]
+                self._refresh_players(keep=rid)
+        popup.picked.connect(picked)
+        popup.open_at(self.p_pick, self)
+
+    def _confirm_all(self):
+        if self.plan is None:
+            return
+        n = 0
+        for rid in self.plan.players_in_scope():
+            c = self.plan.players[rid]
+            if c.decision == P.UPDATE and c.confidence == "check":
+                c.confidence = "exact"
+                n += 1
+        self._refresh_players()
+        self.set_status(f"{n} suggested match(es) confirmed", FG_SECONDARY)
 
     def _bulk(self, decision, confidence):
         if self.plan is None:
@@ -557,10 +679,59 @@ class RosterImportScreen(Screen):
             if c.confidence == confidence and c.decision != decision:
                 c.decision = decision
                 n += 1
-        self._refresh_players(keep=self.player_list.highlighted_data())
+        self._refresh_players()
         self.set_status(f"{n} player(s) changed", FG_SECONDARY)
 
-    # ── step 4 ───────────────────────────────────────────────────────────
+    # ── step 4: things the import cannot do as-is ────────────────────────
+    def _build_issues_page(self, lay):
+        self.issue_empty = SectionCard("nothing to decide")
+        self.issue_empty.add(Note("Every value in the file fits the mod. Continue to the review.",
+                                  color=FG_SECONDARY, size=T_LABEL))
+        lay.addWidget(self.issue_empty)
+        self.issue_cards = {}
+        for kind, (title, detail, options) in P.ISSUES.items():
+            card = SectionCard(title)
+            card.add(Note(detail, color=FG_SECONDARY, size=T_LABEL))
+            who = Note("", color=FG_PRIMARY, size=T_LABEL)
+            card.add(who)
+            field = self._reg(ChoiceField("How to handle it", [k for k, _ in options],
+                                          allow_blank=False,
+                                          display=lambda v, o=dict(options): o.get(v, v)))
+            field.edited.connect(lambda v, k=kind: self._resolve(k, v))
+            card.add(field)
+            card.hide()
+            lay.addWidget(card)
+            self.issue_cards[kind] = (card, field, who)
+        lay.addStretch(1)
+
+    def _resolve(self, kind, value):
+        if self.plan:
+            self.plan.resolutions[kind] = value
+
+    def _refresh_issues(self):
+        if self.plan is None:
+            return
+        issues = {i.kind: i for i in P.find_issues(self.plan)}
+        self.issue_empty.setVisible(not issues)
+        for kind, (card, field, who) in self.issue_cards.items():
+            issue = issues.get(kind)
+            card.setVisible(issue is not None)
+            if issue is None:
+                continue
+            current = self.plan.resolutions.setdefault(kind, issue.options[0][0])
+            field.set_value(current)
+            names = []
+            for rid in issue.rids[:8]:
+                c = self.plan.players[rid]
+                extra = ""
+                if kind == "name_long":
+                    initial, surname = self.plan.name_parts(c)
+                    extra = f" → {N.game_name(initial, surname, self.plan.keep_star(c.rp))}"
+                names.append(c.rp["name"] + extra)
+            more = f"  … and {len(issue.rids) - 8} more" if len(issue.rids) > 8 else ""
+            who.setText(f"{len(issue.rids)} player(s): " + ", ".join(names) + more)
+
+    # ── step 5 ───────────────────────────────────────────────────────────
     def _build_review_page(self, lay):
         card = SectionCard("review")
         self.review = Note("", color=FG_PRIMARY, size=T_VALUE)
@@ -588,12 +759,18 @@ class RosterImportScreen(Screen):
         groups = [label.split(" —")[0] for key, label, _ in P.GROUPS if key in self.plan.groups]
         teams = self.plan.selected_teams()
         files = set()
+        final = P.resolved_decisions(self.plan)
         for rid in scope:
-            c = self.plan.players[rid]
-            if c.decision == P.UPDATE and c.pid in self.ds.players:
-                files.add(os.path.basename(self.ds.players_file_path[c.pid]))
-            elif c.decision == P.CREATE:
+            decision, pid = final[rid]
+            if decision == P.UPDATE:
+                files.add(os.path.basename(self.ds.players_file_path[pid]))
+            elif decision == P.CREATE:
                 files.add(os.path.basename(self.plan.players_file))
+        answers = []
+        for issue in P.find_issues(self.plan):
+            key = self.plan.resolutions.get(issue.kind, issue.options[0][0])
+            label = dict(issue.options).get(key, key)
+            answers.append(f"· {issue.title} ({len(issue.rids)}): {label}")
         team_lines = []
         for t in teams:
             if "squads" not in self.plan.groups:
@@ -620,6 +797,7 @@ class RosterImportScreen(Screen):
             f"importing: {', '.join(groups) or 'nothing'}</p>"
             f"<p><b>Players</b>: {s['players_create']} new, {s['players_update']} updated, "
             f"{s['players_skip']} skipped</p>"
+            + (f"<p><b>Your decisions</b><br>{'<br>'.join(answers)}</p>" if answers else "") +
             f"<p><b>Teams</b>: {s['teams_new']} new, {s['teams_update']} updated"
             f"{'<br>' + '<br>'.join(team_lines) if team_lines else ''}</p>"
             f"<p><b>Files written</b> (a .bak of each original is kept on first save):<br>"
@@ -665,7 +843,10 @@ class RosterImportScreen(Screen):
             self._refresh_teams(keep=self.team_list.highlighted_data())
         elif step == STEP_PLAYERS:
             self._on_options()
-            self._refresh_players(keep=self.player_list.highlighted_data())
+            self._refresh_players()
+        elif step == STEP_ISSUES:
+            self._on_options()
+            self._refresh_issues()
         elif step == STEP_REVIEW:
             self._on_options()
             self._refresh_review()
@@ -679,7 +860,8 @@ class RosterImportScreen(Screen):
         hints = {
             STEP_FILE: [("A", "edit"), ("E", "next")],
             STEP_TEAMS: [("A", "include / exclude"), ("↕", "browse"), ("E", "next")],
-            STEP_PLAYERS: [("↕", "browse"), ("→", "decide"), ("E", "next")],
+            STEP_PLAYERS: [("↕", "browse"), ("A", "choose player"), ("E", "next")],
+            STEP_ISSUES: [("A", "change"), ("E", "next")],
             STEP_REVIEW: [("A", "import")],
         }[step]
         self.hints.set_hints(hints + [("B", "back")])
@@ -732,8 +914,13 @@ class RosterImportScreen(Screen):
         self.file_summary.setText("Choose a .ros saved roster (community patches) or a raw "
                                   ".rdf roster file.")
         self.team_list.set_items([])
-        self.player_list.set_items([])
+        self.table.setRowCount(0)
+        self.plan_resolutions_reset()
         self._go(STEP_FILE)
+
+    def plan_resolutions_reset(self):
+        for card, _, _ in self.issue_cards.values():
+            card.hide()
 
     def set_status(self, text, color=FG_SECONDARY):
         self.status.setText(text)

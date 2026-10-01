@@ -1214,7 +1214,7 @@ def configure_d3d8_proxy():
 
   # Mode: "all" (both this app and the game stay windowed/embedded) or
   # "frontend-fullscreen" (game still boots windowed, this app goes
-  # fullscreen around it) — implemented by the d3d8 proxy DLL. Driven
+  # fullscreen around it) — see reR08 patches_dll/d3d8proxy/d3d8.cpp. Driven
   # by the same Settings > Windowed Mode toggle as the frontend's own window
   # (main.MainWindow.apply_windowed_mode), not the separate config.d3d8_mode
   # (an unused advanced override now that Settings owns this).
