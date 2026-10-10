@@ -1,8 +1,13 @@
 """screens/settings.py — Settings screen"""
 import sys
+import re
 from pathlib import Path
 
-from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QWidget, QSizePolicy, QStackedWidget
+from PyQt5.QtWidgets import (
+    QVBoxLayout, QHBoxLayout, QWidget, QSizePolicy, QStackedWidget,
+    QLabel, QPushButton, QComboBox, QLineEdit,
+)
+from PyQt5.QtGui import QFont
 
 sys.path.append(str(Path(__file__).parent.parent.parent))
 from shared.user_prefs import user_prefs
@@ -81,20 +86,55 @@ class SettingsScreen(QWidget):
         center.addWidget(content, 100)      # fills the width up to its maximum
         center.addStretch(1)
         root.addLayout(center, stretch=1)
+        self._enlarge_text()
 
     def _on_tab(self, index):
         self.stack.setCurrentIndex(index)
         self.reset_btn.setVisible(index > 0)    # only the game's own options reset
 
+    def _enlarge_text(self):
+        """Make settings labels and values easier to read without changing
+        shared row-widget typography everywhere else in the app."""
+        text_widgets = []
+        for widget_type in (QLabel, QPushButton, QComboBox, QLineEdit):
+            text_widgets.extend(self.findChildren(widget_type))
+        for widget in text_widgets:
+            if widget.property("settingsFontScaled"):
+                continue
+            widget.setProperty("settingsFontScaled", True)
+            font = QFont(widget.font())
+            font.setPointSize(max(1, font.pointSize() + 2))
+            widget.setFont(font)
+            stylesheet = widget.styleSheet()
+            if stylesheet:
+                widget.setStyleSheet(re.sub(
+                    r"(font-size\s*:\s*)(\d+(?:\.\d+)?)pt",
+                    lambda match: f"{match.group(1)}{float(match.group(2)) + 2:g}pt",
+                    stylesheet,
+                ))
+
+        # TabStrip paints its text instead of using child labels.
+        if not self.tabs.property("settingsFontScaled"):
+            self.tabs.setProperty("settingsFontScaled", True)
+            tab_font = QFont(self.tabs._font)
+            tab_font.setPointSize(tab_font.pointSize() + 2)
+            self.tabs._font = tab_font
+            self.tabs.setFixedHeight(48)
+            self.tabs.update()
+
     # ── General: the mod itself ──
     def _build_general_page(self, cl):
-        # Windowed Mode toggle: temporarily removed from the UI — the embedded
-        # game window doesn't reposition correctly after a match starts in
-        # this mode (see ingame.py's X11 map-watch code). user_prefs.game_windowed
-        # is forced off for the same reason (see shared/user_prefs.py). Bring
-        # this section back once that's fixed.
-
         cl.addWidget(make_label("DISPLAY", role="muted"))
+
+        # Windowed: the normal resizable window. Off (default): unified
+        # fullscreen. Applied live — see main.MainWindow.apply_windowed_mode.
+        def _set_windowed(on):
+            user_prefs.game_windowed = bool(on)
+            user_prefs.save()
+            if self._on_windowed_mode_changed:
+                self._on_windowed_mode_changed(user_prefs.game_windowed)
+
+        cl.addWidget(ToggleRow("Windowed Mode", user_prefs.game_windowed, _set_windowed))
 
         def _set_preview_3d(on):
             user_prefs.preview_3d = bool(on)
@@ -102,6 +142,16 @@ class SettingsScreen(QWidget):
 
         cl.addWidget(ToggleRow("3D Player Preview", user_prefs.preview_3d, _set_preview_3d))
         cl.addSpacing(16)
+
+        # MATCH > Wind (Standard / Advanced): temporarily hidden, and
+        # user_prefs.wind_mode forced to "standard" (see shared/user_prefs.py).
+        # To bring it back:
+        #   def _set_wind_mode(label):
+        #       user_prefs.wind_mode = label.lower(); user_prefs.save()
+        #   cl.addWidget(make_label("MATCH", role="muted"))
+        #   cl.addWidget(CycleRow("Wind", ["Standard", "Advanced"],
+        #                         user_prefs.wind_mode.capitalize(), _set_wind_mode))
+        #   cl.addSpacing(16)
 
         cl.addWidget(make_label("DEBUG", role="muted"))
 
@@ -177,6 +227,7 @@ class SettingsScreen(QWidget):
         if self._music is not None:
             self._music.set_volume(game_profile.get("vol_music"))
         self._build_game_pages()
+        self._enlarge_text()
 
 
 SettingsMenu = SettingsScreen

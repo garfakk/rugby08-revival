@@ -65,7 +65,14 @@ class TeamDataLoader:
                 team_id = next(iter(data))
                 self.teams_folder_path[team_id] = folder_path
                 self.teams_file_path[team_id] = json_path
-                teams.update(data)
+                # A season with "enabled": false stays in the file but is not
+                # loaded, so no screen offers it. A team with no enabled
+                # season is left out altogether.
+                for tid, seasons in data.items():
+                    live = {s: info for s, info in seasons.items()
+                            if not (isinstance(info, dict) and info.get("enabled") is False)}
+                    if live:
+                        teams[tid] = live
             except Exception as e:
                 log.error(f"Error loading team '{folder_name}': {e}")
 

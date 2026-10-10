@@ -22,12 +22,58 @@ UTF-8, unescaped non-ASCII — so a save produces a minimal diff rather than
 reformatting the whole file.
 """
 import json
+import math
 import os
+import re
 import shutil
 from datetime import datetime
 
 # UI range for reR08 ENABLE_WIND's extended wind-power bands.
 WIND_POWER_MAX = 10
+# Wind bearings are relative to the HOME team, not to the screen or the world
+# (reR08 wind.cpp: the .mis <WIND x y z> is a world-frame vector the wind blows
+# TOWARD, direction only; x is lateral across the pitch, z runs along it, goal
+# lines at |z| 50). 0° blows toward the end home attacks in the first half
+# (a tailwind for home), 90° across toward home's right as it attacks, 180°
+# against home, 270° toward home's left. match_data_builder turns that into
+# the world vector once the sides are known (wind_world_xz).
+WIND_BEARINGS = list(range(0, 360, 45))
+# Match setup's wind strength choices (a subset of the 0..WIND_POWER_MAX
+# bands), by name.
+WIND_POWER_NAMES = {0: "none", 1: "calm", 2: "medium", 3: "strong", 4: "very strong"}
+
+
+# Weather-like spread for a generated wind: mostly the stock bands (1-3),
+# sometimes calm, now and then a gale from the extended bands.
+_RANDOM_WIND_WEIGHTS = {0: 12, 1: 24, 2: 24, 3: 18, 4: 8, 5: 6, 6: 4, 7: 2, 8: 1, 9: 0.6, 10: 0.4}
+
+
+def random_wind(rng):
+    """(power, bearing) for a match nobody set the wind for — the bearing
+    is one of WIND_BEARINGS so it reads like a match-setup choice."""
+    power = rng.choices(list(_RANDOM_WIND_WEIGHTS), weights=list(_RANDOM_WIND_WEIGHTS.values()))[0]
+    return power, float(rng.choice(WIND_BEARINGS))
+
+
+_WIND_LABELS = {0: "with home", 45: "with home, to home's right", 90: "across, to home's right",
+                135: "against home, to home's right", 180: "against home",
+                225: "against home, to home's left", 270: "across, to home's left",
+                315: "with home, to home's left"}
+
+
+def wind_direction_label(deg):
+    """Name of a wind bearing (see above), first half."""
+    return _WIND_LABELS.get(int(round(deg / 45.0)) * 45 % 360, f"{deg:.0f}°")
+
+
+def wind_world_xz(deg, attack_sign):
+    """(x, z) of the .mis wind for a home-relative bearing. `attack_sign` is
+    the world Z sign of the goal home attacks (app.challenges.attack_sign);
+    facing it, world +X is on the right when it is +Z and on the left when -Z."""
+    rad = math.radians(deg)
+    return round(math.sin(rad) * attack_sign, 4), round(math.cos(rad) * attack_sign, 4)
+
+
 # UI range for reR08 ENABLE_SNOWFX's intensity levels.
 SNOW_INTENSITY_MAX = 26.0
 
@@ -104,7 +150,19 @@ SOCKS = ["down", "up"]
 BOOT_STYLES = [str(i) for i in range(10)]     # backend: boot_style_id = range(0, 10)
 SET_PLAYS = ["classic", "pivot", "pocket", "dummy_switch",
              "miss", "cross_kick", "loop", "miss_pivot"]
-TEAM_TYPES = ["club", "international"]     # what the data ships; the game ignores it
+# special: sides picked rather than permanent clubs or nations — Barbarians,
+# British & Irish Lions, Junior All Blacks. The game ignores the type.
+TEAM_TYPES = ["club", "international", "special"]
+# Stored lowercase with underscores (new_zealand); shown as "New Zealand".
+COUNTRIES = ["new_zealand", "south_africa", "ireland", "france", "england", "scotland",
+             "argentina", "australia", "wales", "fiji", "italy", "japan", "samoa",
+             "tonga", "georgia"]
+
+
+def country_label(value):
+    return str(value).replace("_", " ").title() if value else ""
+
+
 TEAM_TYPE_ALIASES = {"national": "international"}
 ROLE_KEYS = ["captain", "viceCaptain", "longGK", "shortGK",
              "longPunt", "shortPunt", "kickoff"]
@@ -331,6 +389,34 @@ SQUAD_SIZE = 22
 STARTING_XV = 15
 
 
+def check_team_variants(season_info: dict, players: dict, season: str = None) -> list:
+    """[(field_key, message, severity)] for every competition variant of a
+    season (app/variants.py). Squad variants are checked as they resolve,
+    keys `variant.<id>.<key>`, messages starting with the variant's label;
+    kit variants only get their id checked, `kits.<kit>.variants.<id>`. Kit
+    files are checked by the team editor itself."""
+    from app import variants as V
+
+    def bad_id(vid):
+        return not re.fullmatch(r"[a-z0-9_]+", vid)
+    out = []
+    for vid in V.variant_ids(season_info):
+        label = V.variant_label(season_info, vid)
+        if bad_id(vid):
+            out.append((f"variant.{vid}", f"{label}: variant id '{vid}' should be a competition"
+                                          f" id (lower-case, digits, _)", WARN_))
+        for key, message, severity in check_team_detailed(V.resolve(season_info, vid), players, season):
+            if key.startswith(V.SQUAD_KEYS):
+                out.append((f"variant.{vid}.{key}", f"{label}: {message}", severity))
+    for name, kit in (season_info.get("kits") or {}).items():
+        for vid in V.kit_variant_ids(kit):
+            if bad_id(vid):
+                out.append((f"kits.{name}.variants.{vid}",
+                            f"{name} kit: variant id '{vid}' should be a competition id"
+                            f" (lower-case, digits, _)", WARN_))
+    return out
+
+
 def check_team_detailed(season_info: dict, players: dict, season: str = None) -> list:
     """[(field_key, message, severity)] for a single season of a team.
     Keys point at the control that shows the problem: `players.<index>`
@@ -379,7 +465,7 @@ def check_team_detailed(season_info: dict, players: dict, season: str = None) ->
 
     team_type = season_info.get("type", "")
     if team_type and team_type not in TEAM_TYPES:
-        problems.append(("type", f"'{team_type}' is not club or international (unused by the game)",
+        problems.append(("type", f"'{team_type}' is not club, international or special (unused by the game)",
                          INFO_))
 
     return problems
@@ -400,12 +486,19 @@ def new_team_season(name="", team_type="club", category="") -> dict:
     return {
         "name": name, "type": team_type, "category": category,
         "ball": "", "banners": "", "pads": "",
-        "logos": {"main": "", "small": "", "left": "", "right": ""},
+        "logos": {"main": "", "frontend": "", "small": "", "left": "", "right": ""},
         "kits": {"home": blank_kit(), "away": blank_kit()},
         "roles": {k: "" for k in ROLE_KEYS},
         "setPlays": {k: "" for k in ("left", "up", "right", "down")},
         "players": [],
     }
+
+
+def frontend_logo(info: dict) -> str:
+    """Relative path of the crest the menus show: the frontend-only logo,
+    else the in-game main crest."""
+    logos = (info or {}).get("logos") or {}
+    return logos.get("frontend") or logos.get("main", "")
 
 
 # ── Asset specs — what each team asset path points at ───────────────────
@@ -419,6 +512,8 @@ ASSET_SPECS = {
                      "note": ""},
     "logos.main":   {"frames": 0, "size": (256, 256), "ext": (".png",),
                      "note": ""},
+    "logos.frontend": {"frames": 0, "size": None, "ext": (".png",),
+                       "note": "Shown in the menus only; blank falls back to the main crest."},
     "logos.small":  {"frames": 0, "size": (128, 64), "ext": (".png",), "note": ""},
     "logos.left":   {"frames": 0, "size": (128, 64), "ext": (".png",), "note": ""},
     "logos.right":  {"frames": 0, "size": (128, 64), "ext": (".png",), "note": ""},
@@ -529,6 +624,10 @@ def save_team(path: str, team_id: str, seasons: dict) -> str:
     if not path:
         raise SaveError("no source file recorded for this team")
     data = _load_json(path)
-    data[str(team_id)] = seasons
+    # Disabled seasons ("enabled": false) are never loaded, so the caller's
+    # copy lacks them: carry them over from the file instead of dropping them.
+    kept = {s: info for s, info in (data.get(str(team_id)) or {}).items()
+            if s not in seasons and isinstance(info, dict) and info.get("enabled") is False}
+    data[str(team_id)] = {**seasons, **kept}
     _write_json(path, data)
     return path

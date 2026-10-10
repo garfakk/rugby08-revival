@@ -829,6 +829,8 @@ class ChoiceField(FieldBase):
         self.subtitle_for = None     # optional fn(value) -> str for popup rows
         self.popup_title = label
         self.off_list_badge = True     # False when `display` already explains it
+        self.on_hover = None           # optional fn(value): the popup's cursor moved onto a row
+        self.on_popup_closed = None    # optional fn(): the popup closed (picked or not)
         self._value = ""
         self._popup = None
 
@@ -891,13 +893,20 @@ class ChoiceField(FieldBase):
                           subtitle=self.subtitle_for(opt) if self.subtitle_for else "")
         popup.size_to(len(self.options) + (1 if self.allow_blank else 0))
         popup.picked.connect(self._emit)
-        popup.closed.connect(lambda: self.setFocus())
+        if self.on_hover is not None:
+            popup.hovered.connect(self.on_hover)
+        popup.closed.connect(self._on_popup_closed)
         anchor = self
         popup.open_at(anchor, screen, own_toggle=True)
         cycle = self._cycle()
         if self._value in cycle:
             QTimer.singleShot(0, lambda: popup.set_highlight(cycle.index(self._value)))
         self._popup = popup
+
+    def _on_popup_closed(self):
+        self.setFocus()
+        if self.on_popup_closed is not None:
+            self.on_popup_closed()
 
     def mousePressEvent(self, event):
         self.setFocus()
@@ -1600,20 +1609,77 @@ def browse_assets(screen, anchor, root, spec, current, on_pick, title="choose fi
                     entries.append((rel, rel))
     popup = PopupList(screen, width=520, height=460, own_keys=True)
     popup.set_title(title)
-    popup.add_row("— none (clear)", "", selected=(current == ""))
+    small = (spec or {}).get("size")
+
+    # Files grouped by folder; a folder row expands/collapses in place. The
+    # folder holding the current value starts open, the rest closed.
+    tree = {"dirs": {}, "files": []}
     for value, sample in entries:
+        node = tree
+        parts = sample.split("/")[:-1]
+        for part in parts:
+            node = node["dirs"].setdefault(part, {"dirs": {}, "files": []})
+        node["files"].append((value, sample))
+    cur_dir = os.path.dirname(current.replace("%", "1")) if current else ""
+    open_dirs = set()
+    acc = ""
+    for part in [p for p in cur_dir.split("/") if p]:
+        acc = f"{acc}/{part}" if acc else part
+        open_dirs.add(acc)
+
+    def count(node):
+        return len(node["files"]) + sum(count(d) for d in node["dirs"].values())
+
+    def file_row(value, sample, depth):
         full = os.path.join(root, sample)
-        small = (spec or {}).get("size")
         icon = load_pixmap(full, 64) if small and max(small) <= 512 else None
         tag = ""
         if "%" in value:
-            n = sum(1 for i in range(1, frames + 1) if os.path.isfile(os.path.join(root, expand_pattern(value, i))))
+            n = sum(1 for i in range(1, frames + 1)
+                    if os.path.isfile(os.path.join(root, expand_pattern(value, i))))
             tag = f"{n}/{frames}"
-        popup.add_row(value, value, tag=tag, selected=(value == current), icon=icon)
-    if not entries:
-        popup.add_row("no matching files in this folder", None, disabled=True)
-    popup.size_to(len(entries) + 1)
-    popup.picked.connect(lambda v: on_pick(v) if v is not None else None)
+        popup.add_row("    " * depth + os.path.basename(value), value, tag=tag,
+                      selected=(value == current), icon=icon)
+
+    def add_level(node, prefix, depth):
+        for name in sorted(node["dirs"]):
+            path = f"{prefix}/{name}" if prefix else name
+            child = node["dirs"][name]
+            opened = path in open_dirs
+            popup.add_row("    " * depth + ("▾ " if opened else "▸ ") + name + "/",
+                          ("__dir__", path), tag=str(count(child)), subdued=True)
+            if opened:
+                add_level(child, path, depth + 1)
+        for value, sample in node["files"]:
+            file_row(value, sample, depth)
+
+    def rebuild(highlight=None):
+        bar = popup.scroll.verticalScrollBar()
+        top = bar.value()
+        popup.clear_rows()
+        popup.add_row("— none (clear)", "", selected=(current == ""))
+        add_level(tree, "", 0)
+        if not entries:
+            popup.add_row("no matching files in this folder", None, disabled=True)
+        popup._sync_rows()
+        if highlight is not None:
+            idx = next((i for i, r in enumerate(popup._rows) if r.data == highlight), None)
+            if idx is not None:
+                popup.set_highlight(idx, scroll=False)
+        bar.setValue(top)
+
+    def on_picked(v):
+        if isinstance(v, tuple):
+            open_dirs.symmetric_difference_update({v[1]})
+            rebuild(highlight=v)
+        elif v is not None:
+            on_pick(v)
+
+    rebuild()
+    # fixed height for the fully expanded list, so the box never resizes
+    popup.size_to(1 + len(entries) + len({os.path.dirname(smp) for _, smp in entries} - {""}))
+    popup.keep_open = lambda v: isinstance(v, tuple)
+    popup.picked.connect(on_picked)
     popup.closed.connect(lambda: anchor.setFocus() if anchor is not None else None)
     popup.open_at(anchor, screen)
     return popup
@@ -1872,6 +1938,54 @@ class SeasonPicker(QWidget):
     def open_menu(self):
         popup = open_season_menu(self.menu_btn, self.window(), lambda a: self.action.emit(a))
         popup.closed.connect(lambda: self.menu_btn.setFocus())
+
+
+class VariantPicker(QWidget):
+    """Competition-variant selector (blank = "Default") plus a menu of
+    variant actions. `add_subtitle` says what a variant is where it is used:
+    a season's competition squad, or a kit's competition version."""
+
+    variant_picked = pyqtSignal(str)
+    action = pyqtSignal(str)          # "add" | "rename" | "reset" | "delete"
+
+    def __init__(self, parent=None, display=None, label="Variant",
+                 add_subtitle="a competition squad for this season", width=250):
+        super().__init__(parent)
+        self._add_subtitle = add_subtitle
+        self.setObjectName("variantPicker")
+        self.setStyleSheet("QWidget#variantPicker { background: transparent; }")
+        h = QHBoxLayout(self)
+        h.setContentsMargins(0, 0, 0, 0)
+        h.setSpacing(6)
+        self.choice = ChoiceField(label, allow_blank=True, blank_label="Default",
+                                  display=display or (lambda v: str(v)))
+        self.choice.popup_title = label.lower()
+        self.choice.label_width = 64
+        self.choice.setFixedWidth(width)
+        self.choice.edited.connect(lambda v: self.variant_picked.emit(v or ""))
+        h.addWidget(self.choice)
+        self.menu_btn = compact_button("VARIANT ▾", height=EDITOR_ROW_H)
+        self.menu_btn.clicked.connect(self.open_menu)
+        h.addWidget(self.menu_btn)
+
+    def set_variants(self, variants, current):
+        self.choice.set_options(variants)
+        self.choice.set_value(current or "")
+
+    def open_menu(self):
+        on_variant = bool(self.choice.value())
+        popup = PopupList(self.window(), width=320, height=240, own_keys=True)
+        popup.set_title("variant actions")
+        popup.add_row("Add variant…", "add", subtitle=self._add_subtitle)
+        popup.add_row("Rename this variant…", "rename", disabled=not on_variant)
+        popup.add_row("Reset this variant to default", "reset",
+                      subtitle="keeps it, drops its changes", disabled=not on_variant)
+        popup.add_row("Delete this variant…", "delete", tag="", tag_color=DANGER_LITE,
+                      disabled=not on_variant)
+        popup.size_to(4)
+        popup.picked.connect(lambda a: self.action.emit(a) if a else None)
+        popup.closed.connect(lambda: self.menu_btn.setFocus())
+        popup.open_at(self.menu_btn, self.window())
 
 
 def open_season_menu(anchor, screen, on_pick):

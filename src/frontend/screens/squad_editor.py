@@ -36,6 +36,8 @@ from ui.team_sheet import (   # noqa: E402
     last_name as _last_name, all_positions as _all_positions, initials as _initials,
 )
 
+MATCH_SHEET_ROWS = [([6, 8, 7] if row == [6, 7, 8] else row) for row in SHEET_ROWS]
+
 SET_PLAY_KEYS = {
     "up": "Up Arrow", "down": "Down Arrow",
     "left": "Left Arrow", "right": "Right Arrow",
@@ -73,15 +75,32 @@ def _elide_for(label, text: str) -> str:
 
 class SquadEditorScreen(Screen):
     def __init__(self, side, team_name, players: dict, lineup: dict,
-                 on_confirm, on_discard):
+                 on_confirm, on_discard, variants=(), variant="", load_variant=None):
+        """`variants`: [(id, label)] of the season's competition squads —
+        when given, a "variant" row switches the sheet to one of them
+        (`load_variant(id)` -> (players, lineup)), and `on_confirm` gets
+        (lineup, variant id, players)."""
         super().__init__(on_back=on_discard)
         self.side = side
         self.tint = HOME_TINT
         self.team_name = team_name
-        self.players = {int(k): v for k, v in players.items()}
         self.on_confirm = on_confirm
         self.on_discard = on_discard
+        self.variants = list(variants)
+        self.variant = variant if variant in dict(self.variants) else ""
+        self._load_variant = load_variant
+        self._load_lineup(players, lineup)
+        self._roles_open = False
+        # The shirt the open picker belongs to. Distinct from _last_slot,
+        # which follows the mouse across the sheet and so must never be what
+        # a pick is applied to.
+        self._picker_slot = None
 
+        self._build()
+        self._refresh_all()
+
+    def _load_lineup(self, players: dict, lineup: dict):
+        self.players = {int(k): v for k, v in players.items()}
         # A player can only hold one shirt: dedupe rather than letting a
         # repeated id in the team file fill several slots with the same man.
         # `if pid` (not just `is not None`) — an empty-string slot is a real
@@ -102,14 +121,11 @@ class SquadEditorScreen(Screen):
 
         self.roles = {k: self._to_int(v) for k, v in (lineup.get("roles") or {}).items()}
         self.set_plays = dict(lineup.get("set_plays") or {})
-        self._roles_open = False
-        # The shirt the open picker belongs to. Distinct from _last_slot,
-        # which follows the mouse across the sheet and so must never be what
-        # a pick is applied to.
-        self._picker_slot = None
 
-        self._build()
-        self._refresh_all()
+    def _count_text(self):
+        if self.available < SQUAD_SIZE:
+            return f"{self.available} / {SQUAD_SIZE} players — squad incomplete"
+        return f"{SQUAD_SIZE} players"
 
     @staticmethod
     def _to_int(value):
@@ -123,11 +139,10 @@ class SquadEditorScreen(Screen):
         root = QVBoxLayout(self)
         root.setContentsMargins(0, 0, 0, 0)
         root.setSpacing(0)
-        short = self.available < SQUAD_SIZE
-        right = (f"{self.available} / {SQUAD_SIZE} players — squad incomplete"
-                 if short else f"{SQUAD_SIZE} players")
-        root.addWidget(page_header("Squad", breadcrumb=f"{self.team_name} · {self.side}",
-                                    right=right, on_back=self._on_back_clicked))
+        header = page_header("Squad", breadcrumb=f"{self.team_name} · {self.side}",
+                             right=self._count_text(), on_back=self._on_back_clicked)
+        self._count_lbl = header.findChild(QLabel, "pageHeaderRight")
+        root.addWidget(header)
 
         body = QWidget()
         body.setStyleSheet(f"background: {BG_BASE};")
@@ -165,7 +180,7 @@ class SquadEditorScreen(Screen):
         v.addWidget(eyebrow_label("starting xv", color=self.tint, size=13))
 
         self.avatars = {}
-        for row in SHEET_ROWS:
+        for row in MATCH_SHEET_ROWS:
             hl = QHBoxLayout()
             hl.setSpacing(18)
             hl.addStretch(1)
@@ -209,6 +224,20 @@ class SquadEditorScreen(Screen):
         v = QVBoxLayout(card)
         v.setContentsMargins(SIDE_PANEL_MARGIN, 16, SIDE_PANEL_MARGIN, 16)
         v.setSpacing(10)
+
+        # Competition squads of the season (a World Cup squad…) — only shown
+        # when the team has one. The kits are picked on the setup card.
+        self.variant_row = None
+        if self.variants:
+            labels = dict(self.variants)
+            values = [""] + [vid for vid, _ in self.variants]
+            self.variant_row = SelectorRow("variant", values=values, compact=True,
+                                           display=lambda vid: labels.get(vid, "Default"))
+            self.variant_row.set_index(values.index(self.variant))
+            self.variant_row.changed.connect(self._on_variant_changed)
+            self.focus.register(self.variant_row)
+            v.addWidget(self.variant_row)
+            v.addSpacing(6)
 
         self.slot_lbl = eyebrow_label("number 1", color=ACCENT, size=13)
         v.addWidget(self.slot_lbl)
@@ -517,6 +546,21 @@ class SquadEditorScreen(Screen):
                 self.assignment[number] = leftovers.pop(0) if leftovers else None
         self._refresh_all()
 
+    def _on_variant_changed(self):
+        """Switch the sheet to another variant's squad, roles and set plays."""
+        vid = self.variant_row.current() or ""
+        if vid == self.variant or self._load_variant is None:
+            return
+        self.variant = vid
+        self._load_lineup(*self._load_variant(vid))
+        if self._count_lbl is not None:
+            self._count_lbl.setText(self._count_text())
+        options = list(SET_PLAY_OPTIONS)
+        for key, row in self.set_play_rows.items():
+            k = self.set_plays.get(key)
+            row.set_index(options.index(k) if k in options else 0)
+        self._refresh_all()
+
     def _save(self):
         players_id = [self.assignment.get(n) for n in STARTERS + SUBSTITUTES]
         if any(pid is None for pid in players_id):
@@ -527,7 +571,10 @@ class SquadEditorScreen(Screen):
             "roles": {k: v for k, v in self.roles.items() if v is not None},
             "set_plays": dict(self.set_plays),
         }
-        self.on_confirm(lineup)
+        if self.variants:
+            self.on_confirm(lineup, self.variant, self.players)
+        else:
+            self.on_confirm(lineup)
 
     def _on_back_clicked(self):
         """The header's mouse-clickable back button. Closing the roles

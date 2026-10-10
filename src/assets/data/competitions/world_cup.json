@@ -4,6 +4,7 @@
   "order": 10,
   "description": "20 nations, four pools of five, then quarter-finals to the final. Neutral venues.",
   "match_type": "world_cup",
+  "variant": "world_cup",
   "venue": "neutral",
   "venues": [
     "49",

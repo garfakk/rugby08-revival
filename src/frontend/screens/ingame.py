@@ -394,6 +394,7 @@ class GameWidget(QWidget):
         # Reveal hand-off: the game is shown once it is ready AND the ring is full
         self._game_ready = False
         self._bar_full = False
+        self._loading_music_ended = False
         self._prefilling = False
         # Pace jitter state (see PACE_PROFILE)
         self._pace = 1.0
@@ -506,7 +507,7 @@ class GameWidget(QWidget):
             team = (match_data or {}).get(side, {}) or {}
             label._name_label.setText(str(team.get("name", "")).upper())
             label.clear()
-            logo_rel = team.get("logo")
+            logo_rel = team.get("logo_frontend") or team.get("logo")
             if logo_rel:
                 path = os.path.join(config.mod_data_directory, logo_rel)
                 if os.path.isfile(path):
@@ -976,6 +977,7 @@ class GameWidget(QWidget):
         self._reveal_wait_deadline = 0.0
         self._game_ready = False
         self._bar_full = False
+        self._loading_music_ended = False
         self._prefilling = False
         # Boot tracking is per launch. Left over from the previous match,
         # _boot_started makes the elapsed-time floor read as a boot that has
@@ -1842,8 +1844,8 @@ class GameWidget(QWidget):
             return
         self._finishing = True
         self._game_ready = True
-        if self._on_loading_end:
-            self._on_loading_end()
+        if self._bar_full:
+            self._end_loading_music()
         self._bar_log("reveal", counter=self._read_boot_counter())
         self._stop_boot_watch()
         if self._frontend_timer:
@@ -1864,6 +1866,14 @@ class GameWidget(QWidget):
             finish_ms = FINISH_MS
         self._bar_log("finish_start", gap=f"{gap:.3f}", finish_ms=f"{finish_ms:.0f}")
         self._start_fill(finish_ms)
+
+    def _end_loading_music(self):
+        """Ring is at 100 %: let the loading music fade out (once)."""
+        if self._loading_music_ended:
+            return
+        self._loading_music_ended = True
+        if self._on_loading_end:
+            self._on_loading_end()
 
     def _start_fill(self, finish_ms):
         """Walk the ring from where it is up to 100 % over `finish_ms`, then
@@ -1886,6 +1896,7 @@ class GameWidget(QWidget):
                     self._finish_timer.stop()
                     self._finish_timer = None
                 self._bar_full = True
+                self._end_loading_music()
                 self._bar_log("bar_full", game_ready=self._game_ready)
                 # Ball goes through the posts while the game finishes loading.
                 self._progress.celebrate()

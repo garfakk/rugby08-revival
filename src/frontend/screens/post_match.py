@@ -202,8 +202,8 @@ class PostMatchScreen(Screen):
         away = (match_data or {}).get("team_B", {})
         self.home_name.setText(home.get("name", "HOME").upper())
         self.away_name.setText(away.get("name", "AWAY").upper())
-        self._set_crest(self.home_crest, home.get("logo"))
-        self._set_crest(self.away_crest, away.get("logo"))
+        self._set_crest(self.home_crest, home.get("logo_frontend") or home.get("logo"))
+        self._set_crest(self.away_crest, away.get("logo_frontend") or away.get("logo"))
 
         self._set_status(result)
 

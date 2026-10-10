@@ -15,6 +15,7 @@ from shared.log import get_logger
 
 from app.state import MatchConfig
 
+from .engine import team_variant
 from .effects import MatchContext, effective_record, effective_stats
 from .model import MatchResult, PlayerLine, SideResult
 from .simulator import settle_knockout_draw
@@ -37,10 +38,13 @@ def to_match_config(ds, t, fixture) -> MatchConfig:
     humans = []
     for side, tid, slot in (("home", fixture.home, cfg.home), ("away", fixture.away, cfg.away)):
         entry = t.teams[tid]
-        slot.team_id, slot.season = tid, entry.season
-        info = ds.teams.get(tid, {}).get(entry.season, {})
+        slot.team_id, slot.season, slot.variant = tid, entry.season, entry.variant
+        info = slot.info(ds)
         kits = list(info.get("kits", {}))
         slot.kit_index = 0 if side == "home" or len(kits) < 2 else 1
+        # the competition's kit version (a World Cup patch) when the kit has
+        # one — independent of whether the team has a squad for it
+        slot.kit_variant = team_variant(t.template, tid)
         sel = entry.selection
         positions = sel.get("positions") or SLOT_POSITIONS
         ids, players = [], {}
@@ -78,10 +82,14 @@ def to_match_config(ds, t, fixture) -> MatchConfig:
         cfg.trophy_lift = "on"
     branding = tpl.get("branding")
     if branding and branding in ds.tournaments:
-        cfg.tournament_logo_choice = branding
-        cfg.stadium_graphics_choice = branding
+        # The template's own season's textures when it has one (e.g. the RWC
+        # 2023 template gets "world_cup:2023"), else the competition's first.
+        season = str(tpl.get("branding_season") or "")
+        choice = f"{branding}:{season}" if season in ds.tournaments[branding] and season else branding
+        cfg.tournament_logo_choice = choice
+        cfg.stadium_graphics_choice = choice
         if any(s.get("pitch_logo") for s in ds.tournaments[branding].values()):
-            cfg.pitch_logo_choice = branding
+            cfg.pitch_logo_choice = choice
 
     if len(humans) == 2:
         cfg.controllers = {1: {"kind": "kbd", "label": "KEYBOARD", "zone": "home"},

@@ -18,7 +18,7 @@ from PyQt5.QtGui import QPainter, QColor, QPen, QFont
 from PyQt5.QtCore import Qt, QRectF, pyqtSignal
 
 from ui.broadcast import tracked_font, label_css, draw_frame
-from ui.dropdown import OptionRow, _discard
+from ui.dropdown import OptionRow, RowSpec, VirtualRows
 from ui.theme import (
     BG_CARD, BG_RAISED, BG_HIGHLIGHT, BORDER, BORDER_EM, BLOCKED,
     LIST_BG, LIST_BORDER,
@@ -320,22 +320,17 @@ class SearchList(QWidget):
             self.search.edit_finished.connect(self._on_filter_finished)
             v.addWidget(self.search)
 
-        self.scroll = QScrollArea()
-        self.scroll.setWidgetResizable(True)
-        self.scroll.setFrameShape(QScrollArea.NoFrame)
+        # Only the rows in view exist as widgets (see VirtualRows): the
+        # player editor lists every player in the data, thousands of them.
+        self.scroll = VirtualRows(1, LIST_BG)
         self.scroll.setStyleSheet(f"background: {LIST_BG}; border: 1px solid {LIST_BORDER};")
         self.scroll.viewport().setStyleSheet(f"background: {LIST_BG};")
-        self._holder = QWidget()
-        self._holder.setStyleSheet(f"background: {LIST_BG};")
-        self._holder_v = QVBoxLayout(self._holder)
-        self._holder_v.setContentsMargins(0, 0, 0, 0)
-        self._holder_v.setSpacing(1)
-        self._holder_v.addStretch(1)
-        self.scroll.setWidget(self._holder)
+        self.scroll.row_entered.connect(self._on_row_entered)
+        self.scroll.row_picked.connect(self._on_row_picked)
         v.addWidget(self.scroll, stretch=1)
 
         self._items = []        # [(data, text, tag, tag_color, subdued)]
-        self._all_rows = []     # one OptionRow per item, built once per set_items
+        self._all_rows = []     # one RowSpec per item, built once per set_items
         self._rows = []         # the rows the filter currently lets through
         self._hi = -1
         self._selected = None
@@ -365,40 +360,26 @@ class SearchList(QWidget):
         self.setFocus()
 
     def _rebuild(self, keep_data=None):
-        while self._holder_v.count() > 1:
-            item = self._holder_v.takeAt(0)
-            if item.widget():
-                _discard(item.widget())
-        self._all_rows = []
-        for data, text, tag, tag_color, subdued in self._items:
-            row = OptionRow(text, data, tag=tag, tag_color=tag_color, subdued=subdued,
-                            selected=(data == self._selected), list_style=True)
-            row.entered.connect(lambda r=row: self._on_row_entered(r))
-            row.picked.connect(self._on_row_picked)
-            self._holder_v.insertWidget(self._holder_v.count() - 1, row)
-            self._all_rows.append(row)
+        self._all_rows = [RowSpec(text, data, tag=tag, tag_color=tag_color, subdued=subdued,
+                                  selected=(data == self._selected), list_style=True)
+                          for data, text, tag, tag_color, subdued in self._items]
         self._apply_filter(keep_data)
 
     def _apply_filter(self, keep_data=None):
-        """Hide rather than rebuild: filtering 351 players on every keystroke
-        must not re-create 351 widgets each time."""
+        """Filters the specs; the view rebuilds nothing but the rows in sight."""
         needle = self._filter
         if 0 <= self._hi < len(self._rows):
             self._rows[self._hi].set_highlighted(False)
-        self._rows = []
+        self._rows = [row for row, key in zip(self._all_rows, self._search_keys)
+                      if not needle or needle in key]
         self._hi = -1
-        for row, key in zip(self._all_rows, self._search_keys):
-            show = not needle or needle in key
-            row.setVisible(show)
-            if show:
-                self._rows.append(row)
+        self.scroll.set_specs(self._rows)
         if self._rows:
             target = next((i for i, r in enumerate(self._rows) if r.data == keep_data), 0)
             self.set_highlight(target)
 
-    def _on_row_entered(self, row):
-        if row in self._rows:
-            self.set_highlight(self._rows.index(row), scroll=False)
+    def _on_row_entered(self, i):
+        self.set_highlight(i, scroll=False)
 
     # ── highlight ────────────────────────────────────────────────────────
     def highlighted_data(self):
@@ -413,7 +394,7 @@ class SearchList(QWidget):
         row = self._rows[i]
         row.set_highlighted(True)
         if scroll:
-            self.scroll.ensureWidgetVisible(row, 0, OptionRow.ROW_H)
+            self.scroll.ensure_index_visible(i)
         self.highlighted.emit(row.data)
         return True
 
@@ -423,8 +404,7 @@ class SearchList(QWidget):
         return self.set_highlight(max(0, min(self._hi + delta, len(self._rows) - 1)))
 
     def page_highlight(self, sign):
-        rows = max(1, self.scroll.viewport().height() // (OptionRow.ROW_H + 1))
-        return self.move_highlight(sign * rows)
+        return self.move_highlight(sign * self.scroll.rows_per_page())
 
     def select_data(self, data):
         target = next((i for i, r in enumerate(self._rows) if r.data == data), None)

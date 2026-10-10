@@ -101,8 +101,9 @@ def page_header(title: str, breadcrumb: str = None, right: str = None, on_back=N
     hl.addStretch(1)
 
     if right:
-        hl.addWidget(display_label(right, 12, QFont.DemiBold, track=1.4, color=FG_SECONDARY),
-                     alignment=Qt.AlignVCenter)
+        right_lbl = display_label(right, 12, QFont.DemiBold, track=1.4, color=FG_SECONDARY)
+        right_lbl.setObjectName("pageHeaderRight")   # for screens that update it later
+        hl.addWidget(right_lbl, alignment=Qt.AlignVCenter)
     return header
 
 
@@ -424,6 +425,8 @@ class SelectorRow(QWidget):
         if self._use_popup():
             self._toggle_popup()
             return
+        if self._force_arrows and len(self._values) <= 1:
+            return
         # Left arrow steps back; the text and the right arrow (everything
         # else) both step forward — clicking the value itself is the
         # "advance" action, not a dead zone. force_arrows rows hug their
@@ -546,6 +549,9 @@ class SelectorRow(QWidget):
             ac = ACCENT if focused else FG_MUTED
             if self._use_popup():
                 arrow(p, w - 8, h * 0.62, "down", ac, size=4)
+            elif self._force_arrows and len(self._values) <= 1:
+                # Nothing to cycle to (a team with a single kit): no arrows.
+                self._fw_click_boundary = None
             else:
                 # Hug the value text (TeamNamePicker's "< NAME >" look, just
                 # smaller) instead of sitting at the box's own edges — at

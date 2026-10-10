@@ -12,6 +12,7 @@ from PyQt5.QtCore import Qt
 
 from app.screen_base import Screen
 from app.input import Action, KEYMAP
+from shared.config import config
 from ui.broadcast import (
     Card, HintBar, MenuTile, page_header, eyebrow_label, display_label,
 )
@@ -45,10 +46,13 @@ class ToolsScreen(Screen):
         items = [
             ("TEAM EDITOR", "", on_team_editor, False),
             ("PLAYER EDITOR", "", on_player_editor, False),
-            ("IMPORT ROSTER", "", on_import, on_import is None),
-            ("CHALLENGE EDITOR", "", on_challenge_editor, on_challenge_editor is None),
-            ("TOURNAMENTS", "", None, True),
         ]
+        if config.developper_mode:
+            items.extend([
+                ("IMPORT ROSTER", "", on_import, on_import is None),
+                ("CHALLENGE EDITOR", "", on_challenge_editor, on_challenge_editor is None),
+                ("TOURNAMENT EDITOR", "", None, True),
+            ])
         for title, subtitle, slot, soon in items:
             tile = MenuTile(title, subtitle, soon=soon)
             if slot is not None:

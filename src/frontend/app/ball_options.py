@@ -34,7 +34,7 @@ def _team_option(ds, slot, side, choice_for_own):
     empty), the away team's only when there is something to pick."""
     if not (slot.team_id and slot.season):
         return None
-    info = ds.teams.get(slot.team_id, {}).get(slot.season, {})
+    info = slot.info(ds)
     rel = (info.get("ball") or "").strip()
     pattern = _team_pattern(ds, slot.team_id, rel)
     if not choice_for_own and not (_frames(pattern) or pattern.lower().endswith(".fsh")):

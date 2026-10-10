@@ -89,6 +89,7 @@ class TeamEntry:
     team_id: str
     season: str
     name: str
+    variant: str = ""            # competition variant of the season ("" = default squad)
     human: bool = False
     controller: int = 0          # controller slot when human (1 = keyboard)
     squad: list = field(default_factory=list)

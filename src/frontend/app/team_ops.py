@@ -17,11 +17,14 @@ from app.game_data import (
     blank_kit, new_team_season, create_json_file,
 )
 from app.ratings import position_overall
+from app import variants as V
 
 # Shirt → positions that fit it, using the roster vocabulary plus the generic
-# names found in real data (a generic "flanker" still fits 6 or 7).
+# names found in real data (a generic "flanker" still fits 6 or 7). The game
+# treats loosehead and tighthead as one position: either wears 1 or 3.
+_PROPS = {"loosehead_prop", "tighthead_prop", "prop"}
 SHIRT_FITS = {
-    1: {"loosehead_prop", "prop"}, 2: {"hooker"}, 3: {"tighthead_prop", "prop"},
+    1: _PROPS, 2: {"hooker"}, 3: _PROPS,
     4: {"second_row", "lock"}, 5: {"second_row", "lock"},
     6: {"blindside_flanker", "openside_flanker", "flanker"},
     7: {"openside_flanker", "blindside_flanker", "flanker"},
@@ -125,7 +128,9 @@ def remove(info, i):
         return None
     pid = roster.pop(i)
     if pid not in roster:
-        roles = info.setdefault("roles", {})
+        # get, not setdefault: a variant that inherits its roles must not
+        # suddenly carry an empty set of its own
+        roles = info.get("roles") or {}
         for key, value in list(roles.items()):
             if str(value) == pid:
                 roles[key] = ""
@@ -135,6 +140,130 @@ def remove(info, i):
 def reverse(info):
     roster = _roster(info)
     roster.reverse()
+
+
+# ── competition variants (see app/variants.py) ───────────────────────────
+def squad_blocks(info):
+    """[(variant id, block)] for every block of a season that holds its own
+    squad: the season itself ("") and each variant with its own "players".
+    The blocks are the stored dicts, so squad ops (remove, reverse...) can be
+    applied to them directly."""
+    out = [(V.DEFAULT, info)]
+    for vid, entry in ((info or {}).get(V.VARIANT_KEY) or {}).items():
+        if isinstance(entry, dict) and "players" in entry:
+            out.append((vid, entry))
+    return out
+
+
+def _check_variant_id(vid):
+    vid = (vid or "").strip()
+    if not re.fullmatch(r"[a-z0-9_]+", vid):
+        raise ValueError("a variant id is lower-case letters, digits and _ (a competition id)")
+    return vid
+
+
+def add_variant(info, vid, label=""):
+    """A new squad variant that inherits everything (only its label is stored)."""
+    vid = _check_variant_id(vid)
+    variants = info.setdefault(V.VARIANT_KEY, {})
+    if vid in variants:
+        raise ValueError(f"variant {vid} already exists")
+    variants[vid] = {"label": label} if label else {}
+
+
+def delete_variant(info, vid):
+    variants = info.get(V.VARIANT_KEY) or {}
+    variants.pop(vid, None)
+    if not variants:
+        info.pop(V.VARIANT_KEY, None)
+
+
+def set_variant_label(info, vid, label):
+    entry = info.setdefault(V.VARIANT_KEY, {}).setdefault(vid, {})
+    if label:
+        entry["label"] = label
+    else:
+        entry.pop("label", None)
+
+
+def clear_variant(info, vid):
+    """Back to the default for everything (the label stays)."""
+    entry = (info.get(V.VARIANT_KEY) or {}).get(vid)
+    if entry is not None:
+        label = entry.get("label")
+        entry.clear()
+        if label:
+            entry["label"] = label
+
+
+def edit_variant(info, vid, fn):
+    """Apply `fn` to the squad variant as it resolves, then store back only
+    the squad keys that differ from the season's default — so a variant
+    always holds exactly its differences, and editing a value back to the
+    default's drops the override. Anything else `fn` changes is lost: a
+    squad variant is players, roles and set plays only. Returns fn's result."""
+    view = V.resolve(info, vid)
+    result = fn(view)
+    entry = info.setdefault(V.VARIANT_KEY, {}).setdefault(vid, {})
+    label = entry.get("label")
+    entry.clear()
+    if label:
+        entry["label"] = label
+    for key in V.SQUAD_KEYS:
+        if key in view and info.get(key) != view[key]:
+            entry[key] = copy.deepcopy(view[key])
+    return result
+
+
+# ── kit variants: the same kit with a small difference (a patch…) ───────
+def add_kit_variant(kit, vid, label=""):
+    """A new variant of `kit` that is the plain kit until edited."""
+    vid = _check_variant_id(vid)
+    variants = kit.setdefault(V.KIT_VARIANTS_KEY, {})
+    if vid in variants:
+        raise ValueError(f"this kit already has variant {vid}")
+    variants[vid] = {"label": label} if label else {}
+
+
+def delete_kit_variant(kit, vid):
+    variants = kit.get(V.KIT_VARIANTS_KEY) or {}
+    variants.pop(vid, None)
+    if not variants:
+        kit.pop(V.KIT_VARIANTS_KEY, None)
+
+
+def set_kit_variant_label(kit, vid, label):
+    entry = kit.setdefault(V.KIT_VARIANTS_KEY, {}).setdefault(vid, {})
+    if label:
+        entry["label"] = label
+    else:
+        entry.pop("label", None)
+
+
+def clear_kit_variant(kit, vid):
+    """Back to the plain kit for every file (the label stays)."""
+    entry = (kit.get(V.KIT_VARIANTS_KEY) or {}).get(vid)
+    if entry is not None:
+        label = entry.get("label")
+        entry.clear()
+        if label:
+            entry["label"] = label
+
+
+def edit_kit_variant(kit, vid, fn):
+    """Apply `fn` to the kit variant as it resolves, then store back only
+    the keys that differ from the plain kit (see edit_variant)."""
+    view = V.resolve_kit(kit, vid)
+    result = fn(view)
+    entry = kit.setdefault(V.KIT_VARIANTS_KEY, {}).setdefault(vid, {})
+    label = entry.get("label")
+    entry.clear()
+    if label:
+        entry["label"] = label
+    for key, value in view.items():
+        if key not in V.META_KEYS and kit.get(key) != value:
+            entry[key] = copy.deepcopy(value)
+    return result
 
 
 BENCH_ORDER = [
@@ -366,14 +495,17 @@ def allocate_team_id(team_type, team_json_ids, loaded_ids):
 def referenced_assets(seasons):
     """Relative paths every season references, %-patterns expanded."""
     paths = set()
-    for info in seasons.values():
+    blocks = [V.resolve(info, vid) for season_info in seasons.values()
+              for vid in [V.DEFAULT] + V.variant_ids(season_info) for info in [season_info]]
+    for info in blocks:
         for key in ("ball", "banners", "pads"):
             paths.update(_expand(info.get(key, ""), ASSET_SPECS.get(key)))
         for slot, rel in (info.get("logos") or {}).items():
             paths.update(_expand(rel, ASSET_SPECS.get(f"logos.{slot}")))
-        for kit in (info.get("kits") or {}).values():
-            for key in ("frontKitFile", "backKitFile", "previewFile"):
-                paths.update(_expand(kit.get(key, ""), ASSET_SPECS.get(key)))
+        for stored in (info.get("kits") or {}).values():
+            for kit in [V.resolve_kit(stored, kv) for kv in [V.DEFAULT] + V.kit_variant_ids(stored)]:
+                for key in ("frontKitFile", "backKitFile", "previewFile"):
+                    paths.update(_expand(kit.get(key, ""), ASSET_SPECS.get(key)))
     return sorted(p for p in paths if p)
 
 

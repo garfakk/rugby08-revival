@@ -108,6 +108,17 @@ class PlayerEditorScreen(EditorScreen):
         ds.events.team_changed.connect(lambda _: self._external_change())
         ds.events.team_removed.connect(lambda _: self._external_change())
 
+        # Per-player list facts (issues, position, overall), computed once
+        # and kept while the record object is the same one — every save
+        # replaces the record, so an edit is a miss. Filled in the background
+        # (prewarm / _revalidate) so opening the editor doesn't pay for
+        # thousands of players at once.
+        self._row_cache = {}       # pid -> (record, facts)
+        self._warm_job = None
+        self._warm_timer = QTimer(self)
+        self._warm_timer.setInterval(0)
+        self._warm_timer.timeout.connect(self._warm_step)
+
     def _build_no_season_page(self):
         """Shown instead of the tabs when the record has no season to show
         (a broken/empty player — `collect_issues` already flags it)."""
@@ -300,22 +311,92 @@ class PlayerEditorScreen(EditorScreen):
     GROUP_LABEL = "Team"
     SORTS = [("name", "name"), ("ovr", "overall"), ("issues", "most issues")]
 
+    def _row_facts(self, pid, record):
+        """What the list shows for one player, from the record alone."""
+        stats = record.get("stats") or {}
+        latest = sorted(stats)[-1] if stats else None
+        block = stats.get(latest, {}) if latest else {}
+        issues = check_player_detailed(record, latest, config.mod_data_directory) if latest else []
+        pos = block.get("position1", "")
+        return {
+            "errors": sum(1 for _, _, s in issues if s == "error"),
+            "issues": sum(1 for _, _, s in issues if s != "info"),
+            "pos": pos,
+            "short": POSITION_SHORT.get(pos, pos[:3].upper() if pos else "—"),
+            "ovr": position_overall(block) if block else None,
+        }
+
+    def _cached_facts(self, pid, record):
+        hit = self._row_cache.get(pid)
+        if hit is not None and hit[0] is record:
+            return hit[1]
+        facts = self._row_facts(pid, record)
+        self._row_cache[pid] = (record, facts)
+        return facts
+
+    # ── background warm-up ───────────────────────────────────────────────
+    CHUNK_SECONDS = 0.008      # per timer tick: well inside one frame
+
+    def prewarm(self):
+        """Fill the list cache a few players per event-loop turn, so the
+        first visit opens on a ready list and the UI never stalls for it."""
+        self._start_warm(changed_only=False)
+
+    def _start_warm(self, changed_only):
+        players = self.ds.players
+        self._warm_job = (iter(list(players.items())), changed_only, [False])
+        self._warm_timer.start()
+
+    def _warm_step(self):
+        import time
+        job = self._warm_job
+        if job is None:
+            self._warm_timer.stop()
+            return
+        items, recheck, dirty = job
+        end = time.perf_counter() + self.CHUNK_SECONDS
+        for pid, record in items:
+            if recheck:
+                # Asset files can change on disk without the record
+                # changing: recompute, and note when the list would differ.
+                facts = self._row_facts(pid, record)
+                hit = self._row_cache.get(pid)
+                if hit is None or hit[0] is not record or hit[1] != facts:
+                    dirty[0] = True
+                self._row_cache[pid] = (record, facts)
+            else:
+                self._cached_facts(pid, record)
+            if time.perf_counter() > end:
+                return
+        self._warm_timer.stop()
+        self._warm_job = None
+        if recheck and dirty[0] and self.isVisible():
+            self._quiet_reload()
+
+    def _quiet_reload(self):
+        """reload_list without moving anything the user can see: the cursor
+        stays on its row and the list keeps its scroll position."""
+        bar = self.list.scroll.verticalScrollBar()
+        top = bar.value()
+        items, search = self.list_items()
+        self.list.set_items(items, keep_data=self.list.highlighted_data(), search_text=search)
+        bar.setValue(top)
+
     def list_rows(self):
         team_names = {}
+        from app.team_ops import squad_blocks
         for tid, seasons in self.ds.teams.items():
             for info in seasons.values():
-                for p in info.get("players", []):
-                    team_names.setdefault(str(p), set()).add(info.get("name", tid))
+                for _vid, block in squad_blocks(info):     # default + competition variants
+                    for p in block.get("players", []):
+                        team_names.setdefault(str(p), set()).add(info.get("name", tid))
+        live = set(self.ds.players)
+        for pid in [p for p in self._row_cache if p not in live]:
+            del self._row_cache[pid]
         rows = []
         for pid, record in self.ds.players.items():
-            stats = record.get("stats") or {}
-            latest = sorted(stats)[-1] if stats else None
-            block = stats.get(latest, {}) if latest else {}
-            issues = check_player_detailed(record, latest, config.mod_data_directory) if latest else []
-            errors = sum(1 for _, _, s in issues if s == "error")
-            pos = block.get("position1", "")
-            short = POSITION_SHORT.get(pos, pos[:3].upper() if pos else "—")
-            ovr = position_overall(block) if block else None
+            f = self._cached_facts(pid, record)
+            errors, ovr, pos, short = f["errors"], f["ovr"], f["pos"], f["short"]
             teams = sorted(team_names.get(pid, []))
             rows.append({
                 "id": pid, "text": record.get("display_name") or record.get("last_name") or pid,
@@ -324,11 +405,22 @@ class PlayerEditorScreen(EditorScreen):
                 "search": f"{pid} {record.get('first_name', '')} {record.get('last_name', '')} "
                           f"{pos.replace('_', ' ')} {short} {' '.join(teams)}",
                 "errors": errors,
-                "issues": sum(1 for _, _, s in issues if s != "info"),
+                "issues": f["issues"],
                 "group": teams[0] if teams else "", "groups": teams,
                 "sort": {"ovr": ovr},
             })
         return rows
+
+    def on_show(self):
+        super().on_show()
+        # The list just opened from the cache; re-check it against the disk
+        # (asset files) in the background and refresh it only if it changed.
+        QTimer.singleShot(0, lambda: self._start_warm(changed_only=True))
+
+    def on_hide(self):
+        if self._warm_job is not None and self._warm_job[1]:
+            self._warm_timer.stop()
+            self._warm_job = None
 
     def bulk_actions(self):
         from app.game_data import POSITION_ALIASES
@@ -489,13 +581,14 @@ class PlayerEditorScreen(EditorScreen):
         self.season_list.set_selected(self.season)
 
     # ── 3D preview ───────────────────────────────────────────────────────
-    def refresh_stage(self, preview_face=_NO_PREVIEW):
+    def refresh_stage(self, preview_face=_NO_PREVIEW, preview_boots=_NO_PREVIEW):
         """Rebuild the always-visible 3D preview from the current season's
         appearance. `preview_face` overrides the stored `face` value without
         touching the record — same format either way (a stock id, a custom
         .big path, or blank/None for generic) — used by the head picker to
         show a candidate live while it's still just being browsed; omit it
-        to show the real stored face."""
+        to show the real stored face. `preview_boots` does the same for
+        `boot_style` (the boots picker's hovered row)."""
         if self.session is None or self.season is None:
             self.stage.set_placeholder("NO SEASON")
             self._stage_key = None
@@ -514,7 +607,7 @@ class PlayerEditorScreen(EditorScreen):
         else:
             head = None
 
-        boot = str(stats.get("boot_style") or "")
+        boot = str(stats.get("boot_style") or "") if preview_boots is _NO_PREVIEW else str(preview_boots or "")
         boots = A.abs_path(mod, boot) if A.boot_kind(boot) == "image" else None
         boots_index = int(boot) if boot.isdigit() else 0
 
@@ -546,6 +639,11 @@ class PlayerEditorScreen(EditorScreen):
         the 3D stage without committing it — see FacePicker's on_preview/
         on_cancel."""
         self.refresh_stage(preview_face=face_value)
+
+    def preview_boots(self, boot_value):
+        """Live-preview a candidate boot style (stock number or custom image
+        path) on the 3D stage without committing it."""
+        self.refresh_stage(preview_boots=boot_value)
 
     def collect_issues(self):
         if self.session is None or not self.season:
@@ -623,11 +721,11 @@ class PlayerEditorScreen(EditorScreen):
         return False
 
     # ── cross-navigation ─────────────────────────────────────────────────
-    def open_team(self, tid, season=None, shirt=None):
+    def open_team(self, tid, season=None, shirt=None, variant=""):
         if self._open_team_cb is None:
             self.shell.footer.set_status("Open the team editor from Tools to edit teams", FG_SECONDARY)
             return
-        self.guard_dirty(lambda: self._open_team_cb(tid, season, shirt))
+        self.guard_dirty(lambda: self._open_team_cb(tid, season, shirt, variant))
 
     def show_player(self, pid, season=None):
         """Entry point used by the team editor's "edit player"."""
@@ -780,7 +878,7 @@ class PlayerEditorScreen(EditorScreen):
             return
         pid = self.record_id
         name = self.session.working.get("display_name", pid)
-        memberships = self.ds.memberships(pid)
+        memberships = self.ds.memberships(pid, with_variants=True)
         remove = SegmentField("Also remove from squads", ["yes", "no"])
         remove.set_value("yes" if memberships else "no")
         sources = self.ds.players_sources.get(pid, [])

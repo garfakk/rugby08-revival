@@ -4,6 +4,7 @@
   "order": 20,
   "description": "England, France, Ireland, Italy, Scotland and Wales: one round robin, top of the table wins.",
   "match_type": "six_nations",
+  "variant": "six_nations",
   "venue": "home",
   "points": {
     "win": 4,

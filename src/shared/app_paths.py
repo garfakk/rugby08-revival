@@ -5,7 +5,7 @@ holding R08Revival.exe:
 
   R08Revival.exe, _internal/   the program (replaced when the program is updated)
   app_data/                    read-only: assets/, README, CREDITS, config.ini.example
-  mod_data/                    the data pack: players, teams, kits, stadiums, tournaments
+  mod_data/                    the data pack: players, teams, kits, stadiums, competitions
   user_data/                   config.ini, user_prefs.ini, game_profile.ini, logs
   game_files/                  the private copy of the game the mod works on
 

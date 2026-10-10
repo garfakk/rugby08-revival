@@ -19,8 +19,11 @@ from PyQt5.QtCore import Qt
 
 from backend import game_specific_variables as gsv
 from app import challenges as ch
+from app import challenge_objectives as co
+from app import competition_branding
+from app import variants as V
 from app.screen_base import Screen
-from ui.broadcast import HintBar, page_header
+from ui.broadcast import HintBar, SelectorRow, page_header
 from ui.editor_kit import (
     SectionCard, TextField, NumberField, ChoiceField, SegmentField, SuggestField, FieldGrid,
     ConfirmDialog, Note, compact_button,
@@ -31,6 +34,111 @@ from screens.mission_editor import ScoreEventRow, NisRow, ObjectiveRow
 
 def _yes_no(value):
     return {True: "yes", False: "no"}.get(value, "stock")
+
+
+def _int_or_none(v):
+    try:
+        return int(v)
+    except (TypeError, ValueError):
+        return None
+
+
+class MatchObjectiveRow(QWidget):
+    """One match objective (app/challenge_objectives.py): type, scoring
+    event, shirt, a minute and a number whose meaning follows the type
+    (score: before minute / count; restrict: max; lead_at: minute / margin;
+    win_by: margin). The dict is rewritten whole on every change, so keys
+    the type does not use never linger."""
+
+    MINUTE_KEY = {"score": "before", "lead_at": "minute"}
+    NUMBER_KEY = {"score": "count", "restrict": "max", "lead_at": "margin", "win_by": "margin"}
+
+    def __init__(self, data, on_remove, focus_register, parent=None):
+        super().__init__(parent)
+        self.data = data
+        h = QHBoxLayout(self)
+        h.setContentsMargins(0, 0, 0, 0)
+        h.setSpacing(8)
+        kind = data.get("type") if data.get("type") in co.TYPES else co.TYPES[0]
+        events = co.EVENTS + ["points"]
+        self.type_row = SelectorRow("type", compact=True)
+        self.type_row.set_values(co.TYPES, index=co.TYPES.index(kind))
+        self.event_row = SelectorRow("event", compact=True)
+        self.event_row.set_values(events, index=events.index(data.get("event"))
+                                  if data.get("event") in events else 0)
+        self.shirt = NumberField("player #", lo=0, hi=22)
+        self.shirt.set_value(data.get("player"))
+        self.minute = NumberField("minute", lo=0, hi=120)
+        self.minute.set_value(data.get(self.MINUTE_KEY.get(kind, "")))
+        self.number = NumberField("n", lo=0, hi=99)
+        self.number.set_value(data.get(self.NUMBER_KEY.get(kind, "")))
+        self.text = TextField("text", placeholder="generated")
+        self.text.set_value(data.get("text", ""))
+        for w, stretch in ((self.type_row, 3), (self.event_row, 3), (self.shirt, 2),
+                           (self.minute, 2), (self.number, 1), (self.text, 4)):
+            h.addWidget(w, stretch=stretch)
+            focus_register(w)
+        for row in (self.type_row, self.event_row):
+            row.changed.connect(self._write)
+        for f in (self.shirt, self.minute, self.number, self.text):
+            f.edited.connect(lambda _v: self._write())
+        rm = compact_button("✕")
+        rm.setFixedWidth(32)
+        rm.clicked.connect(lambda: on_remove(self))
+        h.addWidget(rm)
+        focus_register(rm)
+
+    def _write(self):
+        kind = self.type_row.current()
+        entry = {"type": kind}
+        if kind in ("score", "restrict"):
+            entry["event"] = self.event_row.current()
+        shirt = _int_or_none(self.shirt.value())
+        if kind == "score" and shirt:
+            entry["player"] = shirt
+        minute = _int_or_none(self.minute.value())
+        if kind in self.MINUTE_KEY and minute is not None:
+            entry[self.MINUTE_KEY[kind]] = minute
+        number = _int_or_none(self.number.value())
+        if kind in self.NUMBER_KEY and number is not None:
+            entry[self.NUMBER_KEY[kind]] = number
+        if self.text.value():
+            entry["text"] = self.text.value()
+        self.data.clear()
+        self.data.update(entry)
+
+
+class CardRow(QWidget):
+    """One referee card (reR08 ENABLE_CARDS): team, jersey, yellow/red and
+    the match minute it is given at (shown at the next stoppage)."""
+
+    def __init__(self, data, on_remove, focus_register, parent=None):
+        super().__init__(parent)
+        self.data = data
+        h = QHBoxLayout(self)
+        h.setContentsMargins(0, 0, 0, 0)
+        h.setSpacing(8)
+        team = SelectorRow("team", compact=True)
+        team.set_values(["home", "away"], index=0 if data.get("team", "home") == "home" else 1)
+        team.changed.connect(lambda: data.__setitem__("team", team.current()))
+        kind = SelectorRow("card", compact=True)
+        kind.set_values(["yellow", "red"], index=0 if data.get("type", "yellow") == "yellow" else 1)
+        kind.changed.connect(lambda: data.__setitem__("type", kind.current()))
+        # The patch refuses the front row (1-3): scrums need them.
+        jersey = NumberField("jersey", lo=4, hi=15, allow_blank=False)
+        jersey.set_value(data.get("jersey", 4))
+        jersey.edited.connect(lambda v: data.__setitem__("jersey", _int_or_none(v) or 4))
+        minute = NumberField("minute", lo=0, hi=120)
+        minute.set_value(data.get("minute"))
+        minute.edited.connect(lambda v: data.__setitem__("minute", _int_or_none(v)))
+        for w, stretch in ((team, 2), (kind, 2), (jersey, 2), (minute, 2)):
+            h.addWidget(w, stretch=stretch)
+            focus_register(w)
+        rm = compact_button("✕")
+        rm.setFixedWidth(32)
+        rm.clicked.connect(lambda: on_remove(self))
+        h.addWidget(rm)
+        focus_register(rm)
 
 
 class UnlockableRow(QWidget):
@@ -61,9 +169,12 @@ class UnlockableRow(QWidget):
 
 
 class ChallengeEditorScreen(Screen):
-    def __init__(self, ds, on_back, parent=None):
+    def __init__(self, ds, on_back, on_edit_squad=None, parent=None):
+        """`on_edit_squad(side, team_name, players, lineup, on_confirm)` opens
+        the squad editor on top of this screen; on_confirm(lineup) comes back."""
         super().__init__(on_back=on_back, parent=parent)
         self.ds = ds
+        self.on_edit_squad = on_edit_squad
         self.cid = None          # None = a new, never-saved challenge
         self.data = ch.new_challenge()
         self._saved = json.dumps(self.data, sort_keys=True)
@@ -92,6 +203,7 @@ class ChallengeEditorScreen(Screen):
         v = QVBoxLayout(body)
         v.setContentsMargins(40, 20, 40, 24)
         v.setSpacing(16)
+        self._squad_refresh = {}
         self._bound = []   # (field, refresh) — refresh() re-reads the field from self.data
 
         # ── file ─────────────────────────────────────────────────────────
@@ -145,6 +257,10 @@ class ChallengeEditorScreen(Screen):
         self._choice(grid, "home_team_side", "home plays", ch.SIDES)
         self._choice(grid, "match_type", "match type", list(gsv.match_type))
         self._choice(grid, "match_subtype", "stage", list(gsv.match_subtype))
+        self._choice(grid, "branding", "competition textures",
+                     competition_branding.all_choices(self.ds),
+                     display=lambda c: competition_branding.label(self.ds, c),
+                     blank="home team's")
         self._choice(grid, "kick_assist", "easy goal kick", [False, True], display=_yes_no)
         card.add(grid)
         v.addWidget(card)
@@ -200,7 +316,8 @@ class ChallengeEditorScreen(Screen):
         grid = FieldGrid(columns=2)
         self._choice(grid, "mission_mode_name", "start mode", gsv.mission_mode_names[1:],
                      allow_blank=True, blank="kick-off (default)")
-        self._number(grid, "mission_mode_period", "period", 0, 5)
+        # Stock missions: 0 = first half, 1 = second half (2400 s and later).
+        self._number(grid, "mission_mode_period", "period (0 = 1st half)", 0, 5)
         self._mode_min = NumberField("minute", lo=0, hi=200)
         self._mode_sec = NumberField("second", lo=0, hi=59)
         for f in (self._mode_min, self._mode_sec):
@@ -208,6 +325,23 @@ class ChallengeEditorScreen(Screen):
             grid.add(f)
             self.focus.register(f)
         self._bound.append((self._mode_min, self._refresh_mode_time))
+        card.add(grid)
+        card.add(Note("Restart spot (penalty / lineout, used when no restart position is "
+                      "set below): metres from the goal line the side in possession "
+                      "attacks, metres across from the middle (+ = right as it faces the "
+                      "posts) and, for a penalty, the jersey of the player penalised.",
+                      color=FG_MUTED))
+        grid = FieldGrid(columns=3)
+        self._spot = {}
+        for key, label, lo, hi in (("metres_out", "metres out", 0, 100),
+                                   ("across", "across (m)", -33, 33),
+                                   ("offender", "offender #", 0, 22)):
+            f = NumberField(label, lo=lo, hi=hi)
+            f.edited.connect(self._on_spot)
+            grid.add(f)
+            self.focus.register(f)
+            self._spot[key] = f
+        self._bound.append((self._spot["metres_out"], self._refresh_spot))
         card.add(grid)
         v.addWidget(card)
 
@@ -219,7 +353,12 @@ class ChallengeEditorScreen(Screen):
         self._list_card(v, "score_events", "Score so far", "+ SCORE EVENT", ScoreEventRow,
                         lambda: {"type": gsv.score_event_types[0], "team": "home",
                                  "player": 0, "time": 0})
-        self._list_card(v, "objectives", "Objectives", "+ OBJECTIVE", ObjectiveRow,
+        self._list_card(v, "cards", "Referee cards", "+ CARD", CardRow,
+                        lambda: {"team": "home", "jersey": 4, "type": "yellow", "minute": None})
+        self._list_card(v, "match_objectives", "Challenge objectives (all needed to win)",
+                        "+ CHALLENGE OBJECTIVE", MatchObjectiveRow,
+                        lambda: {"type": "score", "event": "try"})
+        self._list_card(v, "objectives", "In-game objectives (.mis)", "+ OBJECTIVE", ObjectiveRow,
                         lambda: {"type": gsv.objective_types[0], "mustpass": False,
                                  "stringid": "", "parameters": []})
         self._list_card(v, "unlockables", "Rewards", "+ REWARD", UnlockableRow,
@@ -289,32 +428,62 @@ class ChallengeEditorScreen(Screen):
         team = ChoiceField(f"{side} team", [t for t, _ in teams], display=lambda t: names.get(t, t),
                            allow_blank=True, blank_label="— choose —")
         season = ChoiceField(f"{side} season", allow_blank=False)
+
+        def variant_label(v):
+            slot = self.data[side]
+            return V.variant_label(self.ds.teams.get(slot["team_id"], {}).get(slot["season"], {}), v)
+        variant = ChoiceField(f"{side} squad", allow_blank=True, blank_label="Default",
+                              display=variant_label)
         kit = ChoiceField(f"{side} kit", allow_blank=False)
 
+        def kit_dict():
+            slot = self.data[side]
+            return self.ds.team_season(slot["team_id"], slot["season"]).get("kits", {}) \
+                .get(slot["kit"], {})
+        kit_variant = ChoiceField(f"{side} kit variant", allow_blank=True, blank_label="Default",
+                                  display=lambda v: V.kit_variant_label(kit_dict(), v))
+
+        def sync_kit_variants():
+            slot = self.data[side]
+            ids = V.kit_variant_ids(kit_dict())
+            if slot.get("kit_variant", "") not in ids:
+                slot["kit_variant"] = ""
+            kit_variant.set_options(ids)
+            kit_variant.set_value(slot["kit_variant"])
+
         def sync_options():
-            tid = self.data[side]["team_id"]
+            slot = self.data[side]
+            tid = slot["team_id"]
             seasons = sorted(self.ds.teams.get(tid, {}), reverse=True)
             season.set_options(seasons)
-            kits = list(self.ds.teams.get(tid, {}).get(self.data[side]["season"], {}).get("kits", {}))
+            variants = self.ds.variants_of(tid, slot["season"]) if tid else []
+            if slot.get("variant", "") not in variants:
+                slot["variant"] = ""
+            variant.set_options(variants)
+            kits = list(self.ds.team_season(tid, slot["season"], slot["variant"]).get("kits", {}))
             kit.set_options(kits)
 
         def on_team(v):
             slot = self.data[side]
             slot["team_id"] = v
+            slot["squad"] = None
             seasons = sorted(self.ds.teams.get(v, {}), reverse=True)
             slot["season"] = seasons[0] if seasons else ""
             sync_options()
             season.set_value(slot["season"])
             pick_kit()
+            self._squad_refresh[side]()
             self._changed()
 
         def pick_kit():
             slot = self.data[side]
-            kits = list(self.ds.teams.get(slot["team_id"], {}).get(slot["season"], {}).get("kits", {}))
+            kits = list(self.ds.team_season(slot["team_id"], slot["season"], slot.get("variant", ""))
+                        .get("kits", {}))
             want = "home" if side == "home" else "away"
             if slot["kit"] not in kits:
                 slot["kit"] = want if want in kits else (kits[0] if kits else "")
             kit.set_value(slot["kit"])
+            sync_kit_variants()
 
         def on_season(v):
             self.data[side]["season"] = v
@@ -322,8 +491,19 @@ class ChallengeEditorScreen(Screen):
             pick_kit()
             self._changed()
 
+        def on_variant(v):
+            self.data[side]["variant"] = v or ""
+            sync_options()
+            pick_kit()
+            self._changed()
+
         def on_kit(v):
             self.data[side]["kit"] = v
+            sync_kit_variants()
+            self._changed()
+
+        def on_kit_variant(v):
+            self.data[side]["kit_variant"] = v or ""
             self._changed()
 
         def refresh():
@@ -331,15 +511,68 @@ class ChallengeEditorScreen(Screen):
             slot = self.data[side]
             team.set_value(slot["team_id"])
             season.set_value(slot["season"])
+            variant.set_value(slot.get("variant", ""))
             kit.set_value(slot["kit"])
+            sync_kit_variants()
 
         team.edited.connect(on_team)
         season.edited.connect(on_season)
+        variant.edited.connect(on_variant)
         kit.edited.connect(on_kit)
-        for f in (team, season, kit):
+        kit_variant.edited.connect(on_kit_variant)
+        for f in (team, season, variant, kit, kit_variant):
             grid.add(f)
             self.focus.register(f)
         self._bound.append((team, refresh))
+        self._squad_row(grid, side)
+
+    def _squad_row(self, grid, side):
+        row = QWidget()
+        h = QHBoxLayout(row)
+        h.setContentsMargins(0, 0, 0, 0)
+        h.setSpacing(8)
+        edit = compact_button("EDIT SQUAD")
+        reset = compact_button("USE TEAM SQUAD")
+        note = Note("", color=FG_MUTED)
+        for w in (edit, reset):
+            h.addWidget(w)
+            self.focus.register(w)
+        h.addWidget(note, stretch=1)
+
+        def refresh():
+            squad = ch.custom_squad(self.data, side)
+            can_edit = bool(self.data[side]["team_id"]) and self.on_edit_squad is not None
+            edit.setEnabled(can_edit)
+            reset.setEnabled(squad is not None)
+            note.setText(f"{side} squad: custom, {len(squad['players'])} players" if squad
+                         else f"{side} squad: the team's own")
+
+        def confirmed(lineup):
+            self.data[side]["squad"] = {
+                "players": [str(p) for p in lineup.get("players_id", [])],
+                "roles": {k: str(v) for k, v in (lineup.get("roles") or {}).items()},
+                "set_plays": dict(lineup.get("set_plays") or {}),
+            }
+            refresh()
+            self._changed()
+
+        def open_editor():
+            slot = self.data[side]
+            name = self.ds.team_season(slot["team_id"], slot["season"],
+                                       slot.get("variant", "")).get("name") or side
+            self.on_edit_squad(side, name, ch.squad_pool(self.ds, self.data, side),
+                               ch.side_lineup(self.ds, self.data, side), confirmed)
+
+        def reset_squad():
+            self.data[side]["squad"] = None
+            refresh()
+            self._changed()
+
+        edit.clicked.connect(open_editor)
+        reset.clicked.connect(reset_squad)
+        grid.add(row)
+        self._bound.append((row, refresh))
+        self._squad_refresh[side] = refresh
 
     def _stadium_field(self, grid):
         stadiums = sorted(self.ds.stadiums.items(), key=lambda kv: kv[1].get("name", "").lower())
@@ -390,6 +623,18 @@ class ChallengeEditorScreen(Screen):
     def _on_mode_time(self, _v):
         m, s = self._mode_min.as_int(), self._mode_sec.as_int()
         self._set("mission_mode_time", None if m is None and s is None else (m or 0) * 60 + (s or 0))
+
+    def _on_spot(self, _v):
+        values = {k: f.as_int() for k, f in self._spot.items()}
+        if values["metres_out"] is None:
+            self._set("restart_spot", None)
+        else:
+            self._set("restart_spot", {k: v or 0 for k, v in values.items()})
+
+    def _refresh_spot(self):
+        spot = self.data.get("restart_spot") or {}
+        for key, f in self._spot.items():
+            f.set_value(spot.get(key))
 
     def _refresh_mode_time(self):
         total = self.data["mission_mode_time"]

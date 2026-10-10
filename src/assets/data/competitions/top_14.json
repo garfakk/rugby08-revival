@@ -4,6 +4,7 @@
   "order": 40,
   "description": "The French clubs, home and away, then the six-team play-offs: barrages, semi-finals, final at the Stade de France.",
   "match_type": "exhibition",
+  "variant": "top_14",
   "venue": "home",
   "venues": [
     "70"

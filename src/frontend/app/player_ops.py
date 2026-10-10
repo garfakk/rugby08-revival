@@ -113,15 +113,18 @@ def delete_everywhere(ds, pid, remove_from_squads, skip_team_ids=()):
     if remove_from_squads:
         for tid, seasons in ds.teams.items():
             touched = False
-            for info in seasons.values():
+            # the default squad and every competition variant with its own squad
+            blocks = [b for season_info in seasons.values()
+                      for _vid, b in team_ops.squad_blocks(season_info)]
+            for info in blocks:
                 while pid in [str(p) for p in info.get("players", [])]:
                     if tid in skip_team_ids:
                         break
                     idx = [str(p) for p in info["players"]].index(pid)
                     team_ops.remove(info, idx)
                     touched = True
-            if tid in skip_team_ids and any(pid in [str(p) for p in s.get("players", [])]
-                                            for s in seasons.values()):
+            if tid in skip_team_ids and any(pid in [str(p) for p in b.get("players", [])]
+                                            for b in blocks):
                 skipped.append(tid)
             elif touched:
                 save_team(ds.teams_file_path[tid], tid, seasons)
