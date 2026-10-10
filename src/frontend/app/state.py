@@ -13,6 +13,7 @@ from typing import Optional
 
 from PyQt5.QtCore import QObject, pyqtSignal
 
+from app import variants as V
 from team_data_loader import TeamDataLoader
 from stadium_data_loader import StadiumDataLoader
 from tournament_data_loader import TournamentDataLoader
@@ -35,6 +36,10 @@ class DataStore:
     def __init__(self):
         loader = TeamDataLoader(config.directory_teams, config.directory_players)
         self.teams = loader.load_teams()
+        # older squad variants could carry kits: they now live in the kit
+        for seasons in self.teams.values():
+            for info in seasons.values():
+                V.migrate_season(info)
         self.players = loader.load_players()
         self.teams_folder_path = loader.teams_folder_path
         # Where each record came from, so the editors can write it back to
@@ -48,7 +53,7 @@ class DataStore:
         stadium_loader = StadiumDataLoader(config.directory_stadiums)
         self.stadiums = stadium_loader.load_stadiums()
 
-        tournament_loader = TournamentDataLoader(config.directory_tournaments)
+        tournament_loader = TournamentDataLoader(config.directory_competitions)
         self.tournaments = tournament_loader.load_tournaments()
         self.tournaments_folder_path = tournament_loader.tournaments_folder_path
 
@@ -90,17 +95,33 @@ class DataStore:
         self.players_sources.pop(pid, None)
         self.events.player_removed.emit(pid)
 
-    def memberships(self, pid) -> list:
+    def memberships(self, pid, with_variants=False) -> list:
         """[(team_id, team name, season, shirt)] for every squad listing
         `pid`. The squad list IS the shirt assignment, so index+1 is the
-        number he wears."""
+        number he wears. `with_variants` adds a 5th item, the variant id
+        ("" = the season's default squad), and lists variant squads too."""
         found = []
         for tid, seasons in self.teams.items():
             for season, info in seasons.items():
-                for index, listed in enumerate(str(p) for p in info.get("players", [])):
-                    if listed == str(pid):
-                        found.append((tid, info.get("name", tid), season, index + 1))
+                for variant in [V.DEFAULT] + (V.variant_ids(info) if with_variants else []):
+                    if variant and "players" not in V.overrides(info, variant):
+                        continue          # same squad as the default: listed once
+                    block = V.resolve(info, variant) if variant else info
+                    for index, listed in enumerate(str(p) for p in block.get("players", [])):
+                        if listed == str(pid):
+                            entry = (tid, block.get("name", tid), season, index + 1)
+                            found.append(entry + (variant,) if with_variants else entry)
         return sorted(found, key=lambda e: (e[2], e[1]), reverse=True)
+
+    # ── resolved team blocks (default squad or a competition variant) ─────
+    def team_season(self, team_id, season, variant=V.DEFAULT, exact=True) -> dict:
+        """Season block as `variant` sees it — a copy; see app/variants.py.
+        `exact` (default): {} when the team has no such season."""
+        return V.team_season(self.teams, team_id, season, variant, exact=exact)
+
+    def variants_of(self, team_id, season) -> list:
+        """Variant ids the team has in `season` (no default)."""
+        return V.variant_ids(self.teams.get(str(team_id), {}).get(str(season), {}))
 
     # ── convenience lookups shared by every screen that touches teams ──────
     def seasons(self) -> list:
@@ -162,19 +183,51 @@ class DataStore:
             result[int(pid)] = flat
         return result
 
-    def get_lineup(self, team_id: str, season: str) -> dict:
-        team = self.teams[team_id][season]
+    def get_lineup(self, team_id: str, season: str, variant: str = V.DEFAULT) -> dict:
+        team = self.team_season(team_id, season, variant)
         return {"players_id": team["players"], "roles": team["roles"], "set_plays": team["setPlays"]}
 
 
 @dataclass
 class TeamSlot:
-    """One side's in-progress selection."""
+    """One side's in-progress selection. `variant` picks a competition
+    squad/look inside the season ("" = the season's default) — every read of
+    the team goes through `info()`, never ds.teams[...] directly.
+    `kit_variant` is a variant of the picked kit itself (a tournament patch…,
+    "" = the plain kit), independent of the squad variant; a kit without it
+    is worn plain."""
     team_id: Optional[str] = None
     season: Optional[str] = None
+    variant: str = ""
     kit_index: int = 0
+    kit_variant: str = ""
+    # Kit file fields (frontKitFile/backKitFile/previewFile, team-folder relative)
+    # replacing the picked kit's — a challenge's own kit, see app/challenges.
+    kit_override: dict = field(default_factory=dict)
     lineup: dict = field(default_factory=dict)
     players: dict = field(default_factory=dict)
+
+    def info(self, ds) -> dict:
+        """The resolved team block for this slot ({} when unset)."""
+        if not (self.team_id and self.season):
+            return {}
+        return ds.team_season(self.team_id, self.season, self.variant)
+
+    def kits(self, ds) -> dict:
+        """The kits `kit_index` picks from ({} when unset), as stored."""
+        return self.info(ds).get("kits", {})
+
+    def kit_key(self, ds) -> str:
+        keys = list(self.kits(ds))
+        return keys[self.kit_index % len(keys)] if keys else ""
+
+    def kit(self, ds) -> dict:
+        """The picked kit with `kit_variant` and `kit_override` applied ({}
+        when none)."""
+        kits = self.kits(ds)
+        kit = V.resolve_kit(kits[self.kit_key(ds)], self.kit_variant) if kits else {}
+        kit.update(self.kit_override or {})
+        return kit
 
 
 @dataclass
@@ -191,6 +244,7 @@ class MatchConfig:
 
     stadium: Optional[dict] = None
     ball_choice: Optional[dict] = None
+    adboards: Optional[str] = None  # optional FSH path relative to mod data
 
     difficulty: str = "elite"  # club, pro, elite (stock levels), legend, immortal — see app/difficulty.py
     halftime_length: str = "5m"  # 2m, 5m, 10m, 20m, 40m — matches backend gsv.halftime_length / stock game's 5 levels
@@ -227,7 +281,7 @@ class MatchConfig:
     # as "omit the .mis attribute entirely" — so a match built with
     # advanced_user off, or with the advanced panel never opened, produces
     # the exact same mission file as before these fields existed.
-    wind_power: Optional[int] = None       # 0..10, reR08 ENABLE_WIND band
+    wind_power: Optional[int] = None       # 0..10, reR08 ENABLE_WIND band; None = stock random wind, rolled by the backend
     wind_dir_deg: float = 0.0              # compass bearing; only used when wind_power is set
     precip_mode: str = "stock"             # stock, none, rain, snow — overrides `rain` above when set
     snow_intensity: Optional[float] = None  # 0..26, reR08 ENABLE_SNOWFX
@@ -256,6 +310,9 @@ class MatchConfig:
     # [{"type": "WinGame", "mustpass": True, "stringid": "",
     #   "parameters": [{"name": "amount", "value": 1}, ...]}, ...]
     objectives: list = field(default_factory=list)
+    # Referee cards at set minutes (reR08 ENABLE_CARDS, .mis <EVENTS><CARD>):
+    # [{"team": "home", "jersey": 12, "type": "yellow", "minute": 46}, ...]
+    cards: list = field(default_factory=list)
 
     def controller_counts(self):
         home = sum(1 for c in self.controllers.values() if c["zone"] == "home")

@@ -20,6 +20,13 @@ from shared.log import get_logger
 
 log = get_logger(__name__)
 
+# Result block layout (offsets from memory_addresses['match_result_start']):
+# 22 player records per team, 0x64 bytes each, team B 0xC60 after team A.
+PLAYER_RECORDS = {'team_A': 0x110, 'team_B': 0x110 + 0xC60}
+PLAYER_RECORD_SIZE = 0x64
+# Scoring counters in a player record (bytes), by score type
+SCORING_COUNTERS = {'try': 0x48, 'conversion': 0x40, 'penalty': 0x3E, 'drop_goal': 0x42}
+
 
 class R08_handler:
     def __init__(self):
@@ -28,6 +35,12 @@ class R08_handler:
         self.match_started = False
         self.match_finished = False
         self.match_result = None
+        # Scores seen while the match is played, timestamped with the match
+        # clock: [{"team": "team_A", "slot": 0-21, "id": roster id,
+        #          "type": "try", "clock": seconds}, ...]
+        self.score_timeline = []
+        self._score_snapshot = None
+        self._last_score_poll = 0.0
         self.R08_pid = None
         self.R08_handle = None
 
@@ -121,6 +134,12 @@ class R08_handler:
                 elif current_screen_id == 0x0032:
                     self.action_on_game_menu_reached()
 
+            if self.screen_controller_selection_reached and not self.match_finished \
+                    and current_screen_id != 0x0032 \
+                    and time.time() - self._last_score_poll >= config.score_poll_interval:
+                self._last_score_poll = time.time()
+                self.poll_scores()
+
             # DEBUG
             #edit_game_memory(self.R08_pid)
 
@@ -175,6 +194,8 @@ class R08_handler:
         self.screen_controller_selection_reached = True
         # A (new) match is being set up: forget any full time from a previous one
         self.match_finished = False
+        self.score_timeline = []
+        self._score_snapshot = None
 
     #    if execute_when_ready:
     #        time.sleep(0.5)
@@ -188,6 +209,7 @@ class R08_handler:
     def action_on_match_finished(self):
         if self.screen_controller_selection_reached:
             log.info("Match finished")
+            self.poll_scores()      # a score in the last moments before the whistle
             self.match_finished = True
         else:
             log.warning("Full-time screen seen without any controller selection: ignored")
@@ -226,6 +248,60 @@ class R08_handler:
                 return int(seconds // 60)
         return None
 
+    # Match clock in seconds (float, as displayed), or None while there is
+    # no match object to read it from.
+    def read_match_clock(self):
+        import struct
+        raw = read_memory(self.R08_handle, config.memory_addresses['world_ptr'], 4)
+        if not raw or len(raw) < 4:
+            return None
+        world = int.from_bytes(raw, 'little')
+        if not world:
+            return None
+        raw = read_memory(self.R08_handle, world + config.memory_addresses['world_clock_offset'], 4)
+        if not raw or len(raw) < 4:
+            return None
+        clock = struct.unpack('<f', raw)[0]
+        return clock if clock == clock and 0 <= clock <= 7200 else None
+
+    # Scoring counters of every player: {(team, slot): (roster id, {type: count})}
+    @staticmethod
+    def scoring_snapshot(dump):
+        snapshot = {}
+        for team, base in PLAYER_RECORDS.items():
+            for slot in range(22):
+                pos = base + slot * PLAYER_RECORD_SIZE
+                if pos + PLAYER_RECORD_SIZE > len(dump):
+                    break
+                snapshot[(team, slot)] = (int.from_bytes(dump[pos:pos+2], 'little'),
+                                          {k: dump[pos + off] for k, off in SCORING_COUNTERS.items()})
+        return snapshot
+
+    # One read of the live scoring counters while the match is played: every
+    # counter that went up since the previous read is a score at the current
+    # clock. The first read (the clock just became readable) is the baseline,
+    # so the score a mission starts on is not counted as scored in play.
+    def poll_scores(self):
+        clock = self.read_match_clock()
+        if clock is None:
+            return
+        dump = dump_memory(self.R08_handle, config.memory_addresses['match_result_start'],
+                           config.memory_addresses['match_result_end'])
+        if not dump:
+            return
+        snapshot = self.scoring_snapshot(dump)
+        previous, self._score_snapshot = self._score_snapshot, snapshot
+        if previous is None:
+            log.debug(f"Score tracking from {clock / 60:.1f} min")
+            return
+        for key, (pid, counts) in snapshot.items():
+            before = previous.get(key, (pid, {}))[1]
+            for kind, n in counts.items():
+                for _ in range(max(0, n - before.get(kind, 0))):
+                    self.score_timeline.append({'team': key[0], 'slot': key[1], 'id': pid,
+                                                'type': kind, 'clock': round(clock, 1)})
+                    log.info(f"Score: {key[0]} #{key[1] + 1} {kind} at {clock / 60:.1f} min")
+
     # Action to be performed when the game menu is reached
     # Note: this should happen only when the match is finished
     def action_on_game_menu_reached(self):
@@ -245,6 +321,9 @@ class R08_handler:
 
             if self.match_result is not None:
                 self.match_result['finished'] = finished
+                # None = the clock was never readable, so nothing was timed
+                self.match_result['events'] = (list(self.score_timeline)
+                                               if self._score_snapshot is not None else None)
                 self.match_result['minute'] = self.decode_match_minute(self.match_result['time'])
                 if not finished:
                     log.info(f"Match interrupted at minute {self.match_result['minute']}")

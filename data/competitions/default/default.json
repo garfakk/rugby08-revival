@@ -1,0 +1,9 @@
+{
+  "id": "5001",
+  "name": "Default",
+  "seasonal": false,
+  "ball": "assets/ball/ball_%.png",
+  "pads": "assets/stadium_graphics.fsh",
+  "logo": "assets/tournament_logo.png",
+  "pitch_logo": "assets/pitch_logos/pitch_logo_%.png"
+}

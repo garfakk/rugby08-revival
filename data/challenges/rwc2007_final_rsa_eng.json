@@ -1,0 +1,161 @@
+{
+  "name": "RWC 2007 Final: South Africa v England",
+  "description": "Stade de France, Saint-Denis - Saturday 20 October 2007. Rugby World Cup final, 80,430 in the stands, Alain Rolland refereeing.\n\nEngland, the 2003 champions, have scrambled back from a disastrous pool stage to reach a second straight final. South Africa, who beat Argentina in the semi-final, are chasing the title they last won in 1995. Percy Montgomery has put the Springboks 3-0 up with a penalty in the 7th minute.\n\nIt is the 13th minute. England have won a penalty and Jonny Wilkinson - the man who won them the cup four years ago - steps up to the tee.\n\nYou are South Africa. Weather the early storm, keep your discipline and protect the lead with the pack and Butch James at ten. Whoever wins this lifts the Webb Ellis Cup.",
+  "win_text": "South Africa 15 - 6 England. Five penalties, no tries, and a second World Cup for the Springboks - exactly as it happened in Paris.",
+  "draw_text": "Level at the final whistle. In Paris, the Springboks kicked five penalties to England's two.",
+  "loss_text": "England take the cup. In real life the Springboks won this final 15-6 - try again.",
+  "order": 2,
+  "user_side": "home",
+  "home": {
+    "team_id": "1015",
+    "season": "2008",
+    "variant": "",
+    "kit": "home",
+    "kit_variant": "",
+    "squad": {
+      "players": [
+        "148158",
+        "143368",
+        "148157",
+        "143955",
+        "142408",
+        "142879",
+        "143341",
+        "143852",
+        "143067",
+        "143361",
+        "143000",
+        "143560",
+        "142750",
+        "143882",
+        "148155",
+        "143798",
+        "143965",
+        "143355",
+        "148173",
+        "143639",
+        "148165",
+        "143926"
+      ],
+      "roles": {
+        "captain": "143368",
+        "viceCaptain": "",
+        "longGK": "148155",
+        "shortGK": "148155",
+        "longPunt": "148155",
+        "shortPunt": "148155",
+        "kickoff": "148155"
+      },
+      "set_plays": {
+        "up": "classic",
+        "down": "miss_pivot",
+        "left": "pivot",
+        "right": "pocket"
+      }
+    }
+  },
+  "away": {
+    "team_id": "10002",
+    "season": "2008",
+    "variant": "",
+    "kit": "home",
+    "kit_variant": "",
+    "squad": {
+      "players": [
+        "120222",
+        "146844",
+        "100021",
+        "101071",
+        "146831",
+        "146830",
+        "129815",
+        "128070",
+        "146843",
+        "114008",
+        "128476",
+        "146842",
+        "119169",
+        "146826",
+        "146840",
+        "143168",
+        "146845",
+        "146846",
+        "107085",
+        "146835",
+        "126969",
+        "143656"
+      ],
+      "roles": {
+        "captain": "100021",
+        "viceCaptain": "",
+        "longGK": "114008",
+        "shortGK": "114008",
+        "longPunt": "114008",
+        "shortPunt": "114008",
+        "kickoff": "114008"
+      },
+      "set_plays": {
+        "left": "",
+        "up": "",
+        "right": "",
+        "down": ""
+      }
+    }
+  },
+  "stadium_id": "70",
+  "difficulty": "elite",
+  "halftime_length": "10m",
+  "home_team_side": "random",
+  "kick_off": "away",
+  "match_type": "world_cup",
+  "match_subtype": "final",
+  "branding": "world_cup:2007",
+  "environment": "night",
+  "pitch_texture": "reg2_08_norm_o",
+  "rain": false,
+  "precip_mode": "stock",
+  "snow_intensity": null,
+  "wind_power": 1,
+  "wind_dir_deg": 225,
+  "breath": null,
+  "anthem": "stock",
+  "haka_home": false,
+  "haka_away": false,
+  "trophy_lift": "WorldCup",
+  "stadium_flags": false,
+  "kick_assist": false,
+  "mission_mode_name": "PEN K",
+  "mission_mode_time": 780,
+  "mission_mode_period": 0,
+  "mission_nis": [{"script_name" : "penalty_general_TeamA", "controller": 0, "team": "home", "player": 10, "angle": null, "x": -29, "y": null, "z": 15}],
+  "restart_spot": {"metres_out": 50, "across": 20, "offender": 0},  
+  "score_events": [
+    {
+      "type": "SS_PENALTY",
+      "team": "home",
+      "player": 14,
+      "time": 420
+    }
+  ],
+  "objectives": [
+  ],
+  "match_objectives": [
+    {
+      "type": "score",
+      "event": "penalty",
+      "player": 15
+    },
+    {
+      "type": "restrict",
+      "event": "try",
+      "max": 0
+    },
+    {
+      "type": "lead_at",
+      "minute": 40,
+      "margin": 1
+    }
+  ],
+  "unlockables": [],
+  "user_choice": []
+}

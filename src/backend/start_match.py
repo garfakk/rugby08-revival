@@ -141,8 +141,9 @@ def start_match(match_data, copy_static_files = True, create_mission_file = True
     
     # The game's settings: profile template copied to the game folder and edited
     # with the user's choices from Settings. Runs after the static files so it
-    # always wins over a user_profile.pro shipped there.
-    game_profile.deploy()
+    # always wins over a user_profile.pro shipped there. The match's AI
+    # difficulty goes in the profile too: the .mis diff= has no effect.
+    game_profile.deploy(difficulty=match_data.get('difficulty'))
 
     # This creates the mission file that will be launched at game startup
     report('mission', "Creating mission file")

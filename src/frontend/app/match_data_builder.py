@@ -7,14 +7,13 @@ Only the source of truth changed — from QComboBox state to MatchConfig/
 DataStore — the ~60 per-player field mappings and asset %-pattern handling
 are untouched, per the migration plan's "preserve, do not rewrite blind".
 """
-import math
 import os
 import random
 
 from backend import game_specific_variables as gsv
 from shared.config import config
-from app import appearance, difficulty
-from app.game_data import normalise_position
+from app import appearance, competition_branding, difficulty
+from app.game_data import frontend_logo, normalise_position, wind_world_xz
 from app.state import DataStore, MatchConfig, TeamSlot
 
 
@@ -46,10 +45,7 @@ def _tournament_asset_path(ds: DataStore, tournament_id, relative_path: str) -> 
 
 
 def _selected_kit_data(ds: DataStore, slot: TeamSlot) -> dict:
-    kits = list(ds.teams[slot.team_id][slot.season].get("kits", {}).values())
-    if not kits:
-        return {}
-    return kits[slot.kit_index % len(kits)]
+    return slot.kit(ds)
 
 
 def _appearance_to_match_data(player: dict):
@@ -96,11 +92,20 @@ def _appearance_to_match_data(player: dict):
     return skin, (layers or False), gloves, boot
 
 
-def _player_to_match_data(player: dict) -> dict:
+def _player_age(player: dict, season) -> int:
+    """Age the player had in `season`'s squad. The backend stores it as a
+    birth year relative to the game's own fixed reference year (see
+    game_files_processor: 107 - age), so ageing a player from today's date
+    shows a 2008-season squad as 40-somethings in game."""
     birthdate = str(player.get("birthdate", ""))
-    age = 24
     if len(birthdate) >= 4 and birthdate[:4].isdigit():
-        age = max(16, 2026 - int(birthdate[:4]))
+        season_year = int(season) if str(season).isdigit() else 2026
+        return max(16, season_year - int(birthdate[:4]))
+    return 24
+
+
+def _player_to_match_data(player: dict, season=None) -> dict:
+    age = _player_age(player, season)
 
     face_value = player.get("face", "")
     if isinstance(face_value, str) and face_value.isdigit():
@@ -191,7 +196,7 @@ def _player_to_match_data(player: dict) -> dict:
 
 
 def _build_team_match_data(ds: DataStore, slot: TeamSlot, is_home: bool) -> dict:
-    team_info = ds.teams[slot.team_id][slot.season]
+    team_info = slot.info(ds)
     lineup = slot.lineup or {}
     selected_player_ids = list(lineup.get("players_id", []))[:22]
     selected_players = []
@@ -206,7 +211,7 @@ def _build_team_match_data(ds: DataStore, slot: TeamSlot, is_home: bool) -> dict
         player = slot.players.get(int(player_id))
         if player is None:
             continue
-        selected_players.append(_player_to_match_data(player))
+        selected_players.append(_player_to_match_data(player, slot.season))
 
     role_key_map = {
         "captain": "captain",
@@ -217,12 +222,12 @@ def _build_team_match_data(ds: DataStore, slot: TeamSlot, is_home: bool) -> dict
         "shortPunt": "short_punt",
         "kickoff": "kick_off",
     }
-    starting_ids = selected_player_ids[:15]
+    starting_ids = [str(p) for p in selected_player_ids[:15]]
     roles = {}
     for source_key, target_key in role_key_map.items():
         selected_player_id = lineup.get("roles", {}).get(source_key)
         try:
-            roles[target_key] = starting_ids.index(int(selected_player_id)) + 1
+            roles[target_key] = starting_ids.index(str(int(selected_player_id))) + 1
         except (ValueError, TypeError):
             roles[target_key] = 10
 
@@ -242,6 +247,7 @@ def _build_team_match_data(ds: DataStore, slot: TeamSlot, is_home: bool) -> dict
         "kit_back": _team_asset_path(ds, slot.team_id, selected_kit.get("backKitFile", "")),
         "banners": _team_asset_path(ds, slot.team_id, team_info.get("banners", "")),
         "logo": _team_asset_path(ds, slot.team_id, logos.get("main", "")),
+        "logo_frontend": _team_asset_path(ds, slot.team_id, frontend_logo(team_info)),
         "logo_small": _team_asset_path(ds, slot.team_id, logos.get("small", "")),
         "logo_left": _team_asset_path(ds, slot.team_id, logos.get("left", "")),
         "logo_right": _team_asset_path(ds, slot.team_id, logos.get("right", "")),
@@ -259,7 +265,7 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
     if not (cfg.home.team_id and cfg.home.season and cfg.away.team_id and cfg.away.season):
         return None
 
-    home_info = ds.teams[cfg.home.team_id][cfg.home.season]
+    home_info = cfg.home.info(ds)
     selected_ball = _team_asset_path(ds, cfg.home.team_id, home_info.get("ball", ""))
     selected_banners = _team_asset_path(ds, cfg.home.team_id, home_info.get("banners", ""))
 
@@ -299,24 +305,27 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
 
     # The advanced panel's "tournament logo" and "stadium graphics" pickers: a
     # tournament's own files instead of the home team's.
-    logo_choice = getattr(cfg, "tournament_logo_choice", "")
-    if logo_choice in ds.tournaments:
-        t_info = next(iter(ds.tournaments[logo_choice].values()), {})
-        tournament_logo = _tournament_asset_path(ds, logo_choice, t_info.get("logo", "")) or tournament_logo
-    pads_choice = getattr(cfg, "stadium_graphics_choice", "")
-    if pads_choice in ds.tournaments:
-        t_info = next(iter(ds.tournaments[pads_choice].values()), {})
-        stadium_graphics = _tournament_asset_path(ds, pads_choice, t_info.get("pads", "")) or stadium_graphics
+    logo_tid, t_info = competition_branding.resolve(ds, getattr(cfg, "tournament_logo_choice", ""))
+    if logo_tid:
+        tournament_logo = _tournament_asset_path(ds, logo_tid, t_info.get("logo", "")) or tournament_logo
+    pads_tid, t_info = competition_branding.resolve(ds, getattr(cfg, "stadium_graphics_choice", ""))
+    if pads_tid:
+        stadium_graphics = _tournament_asset_path(ds, pads_tid, t_info.get("pads", "")) or stadium_graphics
+    adboards = cfg.adboards or ""
+    if not adboards and pads_tid:
+        adboard_path = (t_info.get("adboards") or "").strip()
+        folder = ds.tournaments_folder_path.get(pads_tid, "")
+        if os.path.isfile(os.path.join(folder, adboard_path)):
+            adboards = _tournament_asset_path(ds, pads_tid, adboard_path)
 
     # cfg.pitch_logo_choice (the advanced panel's own picker) overrides
     # whatever the tournament/team fallback above would have given — that
     # fallback in practice never fires anyway, since nothing ever sets
     # cfg.shared_tournament (see on_team_changed).
-    if cfg.pitch_logo_choice and cfg.pitch_logo_choice in ds.tournaments:
-        pl_seasons = ds.tournaments[cfg.pitch_logo_choice]
-        pl_info = next(iter(pl_seasons.values()), {})
+    pl_tid, pl_info = competition_branding.resolve(ds, cfg.pitch_logo_choice)
+    if pl_tid:
         pl_raw = pl_info.get("pitch_logo", "")
-        pitch_logo = _tournament_asset_path(ds, cfg.pitch_logo_choice, pl_raw) if pl_raw else ""
+        pitch_logo = _tournament_asset_path(ds, pl_tid, pl_raw) if pl_raw else ""
     elif tournament:
         pitch_logo_raw = tournament.get("pitch_logo", "")
         pitch_logo = (_tournament_asset_path(ds, tournament.get("tournament_id"), pitch_logo_raw)
@@ -335,12 +344,15 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
     # the .mis's own representation, not something the UI needs to expose.
     wind_x = wind_z = 0.0
     if cfg.wind_power:
-        heading = math.radians(cfg.wind_dir_deg % 360.0)
-        wind_x = round(math.sin(heading), 4)
-        wind_z = round(math.cos(heading), 4)
+        from app.challenges import attack_sign
+        wind_x, wind_z = wind_world_xz(
+            cfg.wind_dir_deg % 360.0,
+            attack_sign("home", home_team_side, cfg.mission_mode_period))
 
     mission_state = {}
-    if cfg.mission_mode_name:
+    # A time with no mode name is the stock mid-match restart (MODE name=""
+    # time=... + NIS kick_off) — see app/challenges.start_state.
+    if cfg.mission_mode_name or cfg.mission_mode_time is not None:
         mission_state = {
             "mode_name": cfg.mission_mode_name,
             "mode_time": cfg.mission_mode_time,
@@ -360,6 +372,7 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
         },
         "stadium": stadium_id,
         "stadium_graphics": stadium_graphics,
+        "adboards": _relative_to_mod_data(adboards) if adboards else "",
         "kick_off": kick_off,
         # Was set on cfg by the advanced panel's side row but never actually
         # read into this dict — create_mission_file's side= always fell back
@@ -396,6 +409,7 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
         "mission_nis": list(cfg.mission_nis),
         "score_events": list(cfg.score_events),
         "objectives": list(cfg.objectives),
+        "cards": list(cfg.cards),
         "team_A": _build_team_match_data(ds, cfg.home, True),
         "team_B": _build_team_match_data(ds, cfg.away, False),
     }

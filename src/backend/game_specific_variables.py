@@ -45,7 +45,7 @@ special_ability_id = {'default': 0, 'scrum': 1, 'lineout': 2, 'tackler':3, 'runn
 halftime_length = {"2m": 0, "5m": 1, "10m": 2, "20m": 3, "40m": 4}
 
 # Difficulty for the mission file
-difficulty = {"club": 0, "pro": 1, "elite":2}
+difficulty = {"club": 0, "pro": 1, "elite": 2}
 
 # Match type for the mission file (this only influence the commentaries)
 match_type = {"exhibition": 0, "world_cup": 1, "tri_nations": 2, "six_nations": 3, "ten_nations": 5, "european_cup": 6, "super_14": 7, "premiership": 8}
@@ -187,6 +187,7 @@ game_filenames={
   'stadium_graphics': "9b569b7cf7da2ee6ca753256884a6718.fsh",
   'tournament_logo': "df8c343a1c88fade15492c0eb1079877.fsh",
   'pitch_logo': "b95c433dfa0054d5bda8fbedd0df61d0.fsh",
+  'adboards': '485c3bef5972390ec66b2ff013c45d14.fsh',
   'crowd': "8bded45ac947bbcebc2bd17f63b396c3.fsh",
   'skins': "e6032b2303f4b08e2765786e39b6a5f0.fsh",
   'boots': "5f1c1437ecb6fb9c7f280f5b54e47f7e.fsh",

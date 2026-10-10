@@ -56,42 +56,61 @@ class UserPrefs:
         # goes fullscreen, game stays embedded inside it) — drives BOTH the
         # frontend window (see main.MainWindow.apply_windowed_mode) and the
         # d3d8 proxy's own Mode= (see backend.mod_utils.configure_d3d8_proxy).
-        # Temporarily forced off and no longer user-facing (the Settings
-        # toggle was removed) — the embedded game window doesn't reposition
-        # correctly once the reveal moved to match-start (see ingame.py's
-        # X11 map-watch code); come back to this once that's fixed. Not
-        # loaded from or saved to disk in the meantime, so a previously
-        # saved True doesn't leak back in.
+        # Settings > Windowed Mode; off by default.
         self.game_windowed = False
         # Expert mode: reveals unfinished features (shown disabled, "coming
-        # soon") that are hidden from normal users. No longer user-facing
-        # (the Settings toggle was removed) — always off now, never loaded
-        # from or saved to disk.
+        # soon") that are hidden from normal users, and the tournament's
+        # manual result entry. Not in Settings: opt in with `expert_mode =
+        # true` in the prefs file.
         self.expert_mode = False
         # Logging level chosen in Settings (DEBUG / INFO / WARNING / ERROR);
         # "" = not chosen, so R08_LOG_LEVEL / config.ini / INFO apply.
         self.log_level = ""
         # 3D player previews on/off. Off: kit stages show the flat kit picture.
         self.preview_3d = True
+        # Coin toss before each quick/tournament match (World Rugby Law 6.3):
+        # decides kick-off and ends, so match setup locks those two rows.
+        # Off, and not in Settings: expert opt-in via `coin_toss = true` in
+        # the prefs file.
+        self.coin_toss = False
+        # "standard" = the game's stock random wind (rolled by the backend);
+        # "advanced" = the reR08 wind patch, set per match (match setup,
+        # challenge file, tournament fixture).
+        # Temporarily forced to "standard" (Settings row hidden, never loaded
+        # from disk); the stored choice is kept in _stored_wind_mode and still
+        # saved. To bring it back: default "advanced", load into wind_mode,
+        # restore the Settings row.
+        self.wind_mode = "standard"
+        self._stored_wind_mode = "advanced"
         self._load()
 
     def _load(self):
         if not os.path.isfile(_PREFS_FILE):
             return
-        cp = configparser.ConfigParser()
+        cp = configparser.ConfigParser(strict=False)    # duplicate keys: last wins, not a silent reset
         try:
             cp.read(_PREFS_FILE)
         except (OSError, configparser.Error):
             return
         if cp.has_section(_SECTION):
+            self.game_windowed = cp.getboolean(_SECTION, "game_windowed", fallback=self.game_windowed)
             self.log_level = cp.get(_SECTION, "log_level", fallback=self.log_level).strip().upper()
             self.preview_3d = cp.getboolean(_SECTION, "preview_3d", fallback=self.preview_3d)
+            self.coin_toss = cp.getboolean(_SECTION, "coin_toss", fallback=self.coin_toss)
+            self.expert_mode = cp.getboolean(_SECTION, "expert_mode", fallback=self.expert_mode)
+            mode = cp.get(_SECTION, "wind_mode", fallback=self.wind_mode).strip().lower()
+            mode = "standard" if mode == "default" else mode      # older name
+            if mode in ("standard", "advanced"):
+                self._stored_wind_mode = mode
 
     def save(self):
         cp = configparser.ConfigParser()
         cp[_SECTION] = {"game_windowed": str(self.game_windowed),
                         "log_level": self.log_level,
-                        "preview_3d": str(self.preview_3d)}
+                        "preview_3d": str(self.preview_3d),
+                        "coin_toss": str(self.coin_toss),
+                        "expert_mode": str(self.expert_mode),
+                        "wind_mode": self._stored_wind_mode}
         try:
             with open(_PREFS_FILE, "w") as fh:
                 cp.write(fh)

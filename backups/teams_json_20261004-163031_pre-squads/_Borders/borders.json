@@ -1,0 +1,61 @@
+{
+ "2058": {
+  "2010": {
+   "enabled": false,
+   "name": "Borders",
+   "type": "scotland",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "142906",
+    "viceCaptain": "142780",
+    "longGK": "144028",
+    "shortGK": "142849",
+    "longPunt": "144028",
+    "shortPunt": "144028",
+    "kickoff": "142875"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "classic",
+    "left": "classic",
+    "right": "classic"
+   },
+   "players": [
+    "142906",
+    "143347",
+    "143350",
+    "143454",
+    "143611",
+    "143948",
+    "143348",
+    "142875",
+    "142849",
+    "142780",
+    "144028"
+   ]
+  }
+ }
+}

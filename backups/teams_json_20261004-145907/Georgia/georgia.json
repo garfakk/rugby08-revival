@@ -1,0 +1,1204 @@
+{
+ "1006": {
+  "2008": {
+   "name": "Georgia",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2008/home_front.png",
+     "backKitFile": "kits_2008/home_back/home_back_%.png",
+     "previewFile": "kits_2008/home_preview.png",
+     "color": "",
+     "variants": {
+      "rwc_2007": {
+       "label": "RWC 2007",
+       "frontKitFile": "kits_2008/home_wc_front.png"
+      }
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2008/away_front.png",
+     "backKitFile": "kits_2008/away_back/away_back_%.png",
+     "previewFile": "kits_2008/away_preview.png",
+     "color": "",
+     "variants": {
+      "rwc_2007": {
+       "label": "RWC 2007",
+       "frontKitFile": "kits_2008/away_wc_front.png"
+      }
+     }
+    }
+   },
+   "roles": {
+    "captain": "147564",
+    "viceCaptain": "147555",
+    "longGK": "147550",
+    "shortGK": "147550",
+    "longPunt": "147550",
+    "shortPunt": "147550",
+    "kickoff": "147550"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "loop",
+    "left": "miss",
+    "right": "pocket"
+   },
+   "players": [
+    "147552",
+    "147560",
+    "118397",
+    "147555",
+    "147556",
+    "147557",
+    "147558",
+    "147559",
+    "147564",
+    "147550",
+    "147569",
+    "147568",
+    "147547",
+    "147565",
+    "147545",
+    "147553",
+    "147554",
+    "147570",
+    "147563",
+    "147551",
+    "147567",
+    "147546",
+    "147561",
+    "147562",
+    "147548",
+    "147549",
+    "147566",
+    "147573",
+    "147574",
+    "147571",
+    "147572"
+   ]
+  },
+  "2024": {
+   "name": "Georgia",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": "",
+     "variants": {
+      "rwc_2023": {
+       "label": "RWC 2023",
+       "frontKitFile": "kits_2024/home_wc_front.png",
+       "backKitFile": "kits_2024/home_wc_back/home_wc_back_%.png"
+      }
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": "",
+     "variants": {
+      "rwc_2023": {
+       "label": "RWC 2023",
+       "frontKitFile": "kits_2024/away_wc_front.png",
+       "backKitFile": "kits_2024/away_wc_back/away_wc_back_%.png"
+      }
+     }
+    }
+   },
+   "roles": {
+    "captain": "145591",
+    "viceCaptain": "145424",
+    "longGK": "145493",
+    "shortGK": "145493",
+    "longPunt": "145493",
+    "shortPunt": "145493",
+    "kickoff": "145493"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "loop",
+    "left": "miss",
+    "right": "pocket"
+   },
+   "players": [
+    "144592",
+    "145424",
+    "144277",
+    "144923",
+    "145190",
+    "142355",
+    "144303",
+    "145591",
+    "145641",
+    "145493",
+    "144235",
+    "145125",
+    "144487",
+    "146070",
+    "144977",
+    "144580",
+    "145106",
+    "144972",
+    "145208",
+    "144574",
+    "146404",
+    "144601",
+    "146155",
+    "144974",
+    "146560",
+    "145546",
+    "146419",
+    "146451",
+    "146515",
+    "144232"
+   ],
+   "variant": {
+    "world_cup": {
+     "label": "Rugby World Cup 2023",
+     "players": [
+      "145106",
+      "146795",
+      "144277",
+      "145190",
+      "144923",
+      "144303",
+      "145591",
+      "146451",
+      "144574",
+      "145493",
+      "144235",
+      "145125",
+      "146799",
+      "146515",
+      "144977",
+      "144592",
+      "145424",
+      "144974",
+      "146797",
+      "145641",
+      "144601",
+      "144487",
+      "146796",
+      "146560",
+      "146155",
+      "146419",
+      "144972",
+      "145057",
+      "142355",
+      "146798",
+      "146404",
+      "144232",
+      "146070"
+     ],
+     "roles": {
+      "captain": "145125",
+      "viceCaptain": "145493",
+      "longGK": "145493",
+      "shortGK": "145493",
+      "longPunt": "145493",
+      "shortPunt": "145493",
+      "kickoff": "145493"
+     }
+    }
+   }
+  },
+  "2010": {
+   "enabled": false,
+   "name": "Georgia",
+   "type": "international",
+   "category": "",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "143829",
+    "viceCaptain": "142726",
+    "longGK": "142726",
+    "shortGK": "142726",
+    "longPunt": "143832",
+    "shortPunt": "142726",
+    "kickoff": "142726"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "loop",
+    "left": "miss",
+    "right": "pocket"
+   },
+   "players": [
+    "143294",
+    "143047",
+    "118397",
+    "143050",
+    "142938",
+    "142636",
+    "142728",
+    "144054",
+    "143829",
+    "142726",
+    "142916",
+    "142423",
+    "142561",
+    "143561",
+    "143832",
+    "143957",
+    "143178",
+    "142666",
+    "143401",
+    "144002",
+    "142601",
+    "143975",
+    "143467",
+    "143055",
+    "143141",
+    "142456",
+    "142783",
+    "142854",
+    "143601",
+    "142425"
+   ]
+  },
+  "2012": {
+   "enabled": false,
+   "name": "Georgia",
+   "type": "international",
+   "category": "",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "147564",
+    "viceCaptain": "147579",
+    "longGK": "147550",
+    "shortGK": "147550",
+    "longPunt": "147550",
+    "shortPunt": "147550",
+    "kickoff": "147550"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "loop",
+    "left": "miss",
+    "right": "pocket"
+   },
+   "players": [
+    "147579",
+    "144704",
+    "118397",
+    "147562",
+    "147578",
+    "147559",
+    "147556",
+    "147576",
+    "147564",
+    "147550",
+    "144235",
+    "147575",
+    "147548",
+    "147565",
+    "144977",
+    "147553",
+    "142842",
+    "147577",
+    "147582",
+    "147551",
+    "142726",
+    "147547",
+    "147567",
+    "142561",
+    "147555",
+    "147560",
+    "147581",
+    "145633",
+    "147584",
+    "147586",
+    "147587",
+    "145106",
+    "145424",
+    "147589",
+    "147590",
+    "147583",
+    "142916",
+    "147585",
+    "145125",
+    "147573",
+    "147588",
+    "146052",
+    "147563",
+    "144575",
+    "147591",
+    "147593",
+    "144983"
+   ]
+  },
+  "2016": {
+   "enabled": false,
+   "name": "Georgia",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "147556",
+    "viceCaptain": "147577",
+    "longGK": "147550",
+    "shortGK": "147550",
+    "longPunt": "147550",
+    "shortPunt": "147550",
+    "kickoff": "147550"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "loop",
+    "left": "miss",
+    "right": "pocket"
+   },
+   "players": [
+    "147598",
+    "144704",
+    "118397",
+    "147585",
+    "144923",
+    "147577",
+    "147589",
+    "147556",
+    "144575",
+    "144983",
+    "144235",
+    "145125",
+    "147548",
+    "145561",
+    "147550",
+    "145424",
+    "145106",
+    "147593",
+    "147562",
+    "147600",
+    "147603",
+    "147596",
+    "147597",
+    "147559",
+    "147594",
+    "145641",
+    "147581",
+    "147602",
+    "144977",
+    "147599",
+    "146052",
+    "145745",
+    "145190",
+    "147607",
+    "147587",
+    "147595",
+    "147601",
+    "147604",
+    "147605",
+    "142842",
+    "147608"
+   ]
+  },
+  "2017": {
+   "enabled": false,
+   "name": "Georgia",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145125",
+    "viceCaptain": "147556",
+    "longGK": "147550",
+    "shortGK": "147550",
+    "longPunt": "147550",
+    "shortPunt": "147550",
+    "kickoff": "147550"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "loop",
+    "left": "miss",
+    "right": "pocket"
+   },
+   "players": [
+    "145106",
+    "144704",
+    "147593",
+    "147585",
+    "144923",
+    "147600",
+    "147581",
+    "147587",
+    "145641",
+    "144977",
+    "144235",
+    "145125",
+    "147548",
+    "145561",
+    "147550",
+    "147609",
+    "147595",
+    "142842",
+    "147559",
+    "147589",
+    "144575",
+    "144983",
+    "147594",
+    "147556",
+    "147613",
+    "147614",
+    "147611",
+    "147577",
+    "145428",
+    "145424",
+    "147615",
+    "142355",
+    "145633",
+    "147610",
+    "147612",
+    "147599",
+    "147602",
+    "145190",
+    "147608"
+   ]
+  },
+  "2018": {
+   "enabled": false,
+   "name": "Georgia",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145125",
+    "viceCaptain": "147585",
+    "longGK": "144977",
+    "shortGK": "144977",
+    "longPunt": "144977",
+    "shortPunt": "144977",
+    "kickoff": "147611"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "loop",
+    "left": "miss",
+    "right": "pocket"
+   },
+   "players": [
+    "145106",
+    "144704",
+    "147593",
+    "144923",
+    "147585",
+    "147600",
+    "147581",
+    "147587",
+    "145641",
+    "144977",
+    "146515",
+    "145125",
+    "147548",
+    "147611",
+    "145428",
+    "145424",
+    "147595",
+    "147613",
+    "147559",
+    "147589",
+    "144575",
+    "147612",
+    "147550",
+    "144601",
+    "145745",
+    "144983",
+    "147577",
+    "144574",
+    "144235",
+    "147614",
+    "142355",
+    "146052",
+    "142352",
+    "145190",
+    "147616",
+    "147610"
+   ]
+  },
+  "2020": {
+   "enabled": false,
+   "name": "Georgia",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145106",
+    "viceCaptain": "145125",
+    "longGK": "145493",
+    "shortGK": "145493",
+    "longPunt": "147548",
+    "shortPunt": "147548",
+    "kickoff": "145428"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "loop",
+    "left": "miss",
+    "right": "pocket"
+   },
+   "players": [
+    "145106",
+    "145424",
+    "144277",
+    "147585",
+    "144923",
+    "147589",
+    "147556",
+    "145591",
+    "145641",
+    "145493",
+    "144235",
+    "145125",
+    "147548",
+    "144601",
+    "145428",
+    "144704",
+    "147617",
+    "147593",
+    "147614",
+    "144303",
+    "144574",
+    "142726",
+    "145561",
+    "144977",
+    "146515",
+    "147577",
+    "147618",
+    "147600",
+    "142352",
+    "144983",
+    "147619",
+    "144580",
+    "147595"
+   ]
+  },
+  "2021": {
+   "enabled": false,
+   "name": "Georgia",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145125",
+    "viceCaptain": "144923",
+    "longGK": "145493",
+    "shortGK": "145493",
+    "longPunt": "145493",
+    "shortPunt": "145493",
+    "kickoff": "145493"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "loop",
+    "left": "miss",
+    "right": "pocket"
+   },
+   "players": [
+    "145106",
+    "145424",
+    "144277",
+    "144972",
+    "144923",
+    "145208",
+    "144303",
+    "145546",
+    "145641",
+    "145493",
+    "144235",
+    "145125",
+    "144601",
+    "144232",
+    "145428",
+    "144704",
+    "144592",
+    "145190",
+    "145057",
+    "144574",
+    "144487",
+    "145561",
+    "144580",
+    "144976",
+    "144442",
+    "145591",
+    "144983",
+    "144977",
+    "145733"
+   ]
+  },
+  "2023": {
+   "enabled": false,
+   "name": "Georgia",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145125",
+    "viceCaptain": "147617",
+    "longGK": "145493",
+    "shortGK": "145493",
+    "longPunt": "145493",
+    "shortPunt": "145493",
+    "kickoff": "145493"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "loop",
+    "left": "miss",
+    "right": "pocket"
+   },
+   "players": [
+    "147617",
+    "144580",
+    "146155",
+    "147621",
+    "144923",
+    "145591",
+    "144303",
+    "145546",
+    "145641",
+    "145493",
+    "144235",
+    "145125",
+    "144487",
+    "144232",
+    "146070",
+    "145424",
+    "146560",
+    "147622",
+    "146419",
+    "147623",
+    "146404",
+    "144977",
+    "146515",
+    "144601",
+    "147614",
+    "144277",
+    "144574",
+    "147620",
+    "146798",
+    "147600",
+    "144972",
+    "144974",
+    "146451",
+    "147624",
+    "144704",
+    "147625"
+   ],
+   "variant": {
+    "world_cup": {
+     "label": "Rugby World Cup 2023",
+     "players": [
+      "145106",
+      "146795",
+      "144277",
+      "145190",
+      "144923",
+      "144303",
+      "145591",
+      "146451",
+      "144574",
+      "145493",
+      "144235",
+      "145125",
+      "146799",
+      "146515",
+      "144977",
+      "144592",
+      "145424",
+      "144974",
+      "146797",
+      "145641",
+      "144601",
+      "144487",
+      "146796",
+      "146560",
+      "146155",
+      "146419",
+      "144972",
+      "145057",
+      "142355",
+      "146798",
+      "146404",
+      "144232",
+      "146070"
+     ],
+     "roles": {
+      "captain": "145125",
+      "viceCaptain": "145493",
+      "longGK": "145493",
+      "shortGK": "145493",
+      "longPunt": "145493",
+      "shortPunt": "145493",
+      "kickoff": "145493"
+     }
+    }
+   }
+  },
+  "2025": {
+   "enabled": false,
+   "name": "Georgia",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145641",
+    "viceCaptain": "147635",
+    "longGK": "146404",
+    "shortGK": "146404",
+    "longPunt": "146404",
+    "shortPunt": "146404",
+    "kickoff": "146404"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "loop",
+    "left": "miss",
+    "right": "pocket"
+   },
+   "players": [
+    "147629",
+    "147619",
+    "147628",
+    "147624",
+    "147627",
+    "147626",
+    "147635",
+    "145591",
+    "145641",
+    "146404",
+    "144235",
+    "144601",
+    "144487",
+    "144232",
+    "146070",
+    "146795",
+    "147637",
+    "144974",
+    "146419",
+    "146451",
+    "146797",
+    "144574",
+    "145493",
+    "146799",
+    "142355",
+    "145546",
+    "147632",
+    "147633",
+    "147634",
+    "147636",
+    "147586",
+    "146560",
+    "144303",
+    "147630",
+    "147623",
+    "147631",
+    "144972",
+    "147638",
+    "147639"
+   ],
+   "variant": {
+    "world_cup": {
+     "label": "Rugby World Cup 2023",
+     "players": [
+      "145106",
+      "146795",
+      "144277",
+      "145190",
+      "144923",
+      "144303",
+      "145591",
+      "146451",
+      "144574",
+      "145493",
+      "144235",
+      "145125",
+      "146799",
+      "146515",
+      "144977",
+      "144592",
+      "145424",
+      "144974",
+      "146797",
+      "145641",
+      "144601",
+      "144487",
+      "146796",
+      "146560",
+      "146155",
+      "146419",
+      "144972",
+      "145057",
+      "142355",
+      "146798",
+      "146404",
+      "144232",
+      "146070"
+     ],
+     "roles": {
+      "captain": "145125",
+      "viceCaptain": "145493",
+      "longGK": "145493",
+      "shortGK": "145493",
+      "longPunt": "145493",
+      "shortPunt": "145493",
+      "kickoff": "145493"
+     }
+    }
+   }
+  },
+  "2026": {
+   "enabled": false,
+   "name": "Georgia",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145591",
+    "viceCaptain": "147635",
+    "longGK": "145493",
+    "shortGK": "145493",
+    "longPunt": "145493",
+    "shortPunt": "145493",
+    "kickoff": "147586"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "loop",
+    "left": "miss",
+    "right": "pocket"
+   },
+   "players": [
+    "147629",
+    "147619",
+    "147628",
+    "147624",
+    "146419",
+    "146451",
+    "144303",
+    "145591",
+    "145641",
+    "145493",
+    "144487",
+    "144601",
+    "147586",
+    "144232",
+    "146070",
+    "147646",
+    "145749",
+    "144277",
+    "147627",
+    "147626",
+    "146797",
+    "144574",
+    "146404",
+    "146799",
+    "147640",
+    "147631",
+    "147641",
+    "147623",
+    "147635",
+    "144974",
+    "147642",
+    "147643",
+    "147644",
+    "147630",
+    "147645",
+    "147632",
+    "147647"
+   ],
+   "variant": {
+    "world_cup": {
+     "label": "Rugby World Cup 2023",
+     "players": [
+      "145106",
+      "146795",
+      "144277",
+      "145190",
+      "144923",
+      "144303",
+      "145591",
+      "146451",
+      "144574",
+      "145493",
+      "144235",
+      "145125",
+      "146799",
+      "146515",
+      "144977",
+      "144592",
+      "145424",
+      "144974",
+      "146797",
+      "145641",
+      "144601",
+      "144487",
+      "146796",
+      "146560",
+      "146155",
+      "146419",
+      "144972",
+      "145057",
+      "142355",
+      "146798",
+      "146404",
+      "144232",
+      "146070"
+     ],
+     "roles": {
+      "captain": "145125",
+      "viceCaptain": "145493",
+      "longGK": "145493",
+      "shortGK": "145493",
+      "longPunt": "145493",
+      "shortPunt": "145493",
+      "kickoff": "145493"
+     }
+    }
+   }
+  }
+ }
+}

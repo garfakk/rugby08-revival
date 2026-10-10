@@ -4,6 +4,7 @@
   "order": 30,
   "description": "12 clubs, home and away, then semi-finals (1v4, 2v3) and a final at Twickenham.",
   "match_type": "premiership",
+  "variant": "premiership",
   "venue": "home",
   "venues": [
     "14"

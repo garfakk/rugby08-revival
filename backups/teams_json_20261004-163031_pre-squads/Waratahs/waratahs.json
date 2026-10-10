@@ -1,0 +1,1310 @@
+{
+ "2004": {
+  "2009": {
+   "enabled": false,
+   "name": "Waratahs",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "143746",
+    "viceCaptain": "143466",
+    "longGK": "142615",
+    "shortGK": "142615",
+    "longPunt": "143464",
+    "shortPunt": "143464",
+    "kickoff": "107267"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "classic",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143703",
+    "142803",
+    "147232",
+    "143510",
+    "143821",
+    "142387",
+    "143240",
+    "142902",
+    "107267",
+    "143464",
+    "147226",
+    "143746",
+    "143466",
+    "142615",
+    "152462",
+    "143188",
+    "143420",
+    "143504",
+    "152463",
+    "142510",
+    "143449",
+    "147249",
+    "142706",
+    "142674",
+    "152464",
+    "147233",
+    "143356",
+    "143518",
+    "143872"
+   ]
+  },
+  "2010": {
+   "enabled": false,
+   "name": "Waratahs",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "143240",
+    "viceCaptain": "143851",
+    "longGK": "143710",
+    "shortGK": "143710",
+    "longPunt": "143710",
+    "shortPunt": "143710",
+    "kickoff": "143710"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "classic",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143703",
+    "142803",
+    "143851",
+    "143510",
+    "143821",
+    "142387",
+    "143240",
+    "142902",
+    "107267",
+    "143710",
+    "143530",
+    "143746",
+    "143466",
+    "142615",
+    "143449",
+    "143188",
+    "142706",
+    "143679",
+    "143518",
+    "143999",
+    "143464",
+    "142435",
+    "144093",
+    "142825",
+    "143049",
+    "142674",
+    "142675",
+    "142992",
+    "143504",
+    "143420"
+   ]
+  },
+  "2011": {
+   "enabled": false,
+   "name": "Waratahs",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "143746",
+    "viceCaptain": "143710",
+    "longGK": "143449",
+    "shortGK": "143449",
+    "longPunt": "143710",
+    "shortPunt": "143710",
+    "kickoff": "143710"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "classic",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143703",
+    "142803",
+    "147232",
+    "143510",
+    "143679",
+    "143518",
+    "143240",
+    "142387",
+    "107267",
+    "143710",
+    "143530",
+    "143746",
+    "143120",
+    "142615",
+    "143449",
+    "145799",
+    "143356",
+    "145472",
+    "143049",
+    "147263",
+    "143464",
+    "144212",
+    "143420",
+    "152466",
+    "142992",
+    "152465",
+    "142902",
+    "143188",
+    "152467",
+    "152470",
+    "147262",
+    "143999",
+    "143466",
+    "148258",
+    "144273",
+    "152468",
+    "152469",
+    "147242"
+   ]
+  },
+  "2012": {
+   "enabled": false,
+   "name": "Waratahs",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "147244",
+    "viceCaptain": "143746",
+    "longGK": "152470",
+    "shortGK": "152470",
+    "longPunt": "143710",
+    "shortPunt": "143710",
+    "kickoff": "152470"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "classic",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143703",
+    "142803",
+    "143420",
+    "143510",
+    "143679",
+    "143518",
+    "143049",
+    "142902",
+    "147263",
+    "143710",
+    "147244",
+    "143746",
+    "143466",
+    "152470",
+    "144273",
+    "145799",
+    "147262",
+    "145472",
+    "145014",
+    "152471",
+    "143633",
+    "143464",
+    "143356",
+    "143878",
+    "143530",
+    "144212",
+    "152473",
+    "144011",
+    "142615",
+    "147048",
+    "152472",
+    "145226",
+    "143188",
+    "152474",
+    "147268",
+    "152466"
+   ]
+  },
+  "2013": {
+   "enabled": false,
+   "name": "Waratahs",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "147244",
+    "viceCaptain": "143466",
+    "longGK": "144273",
+    "shortGK": "144273",
+    "longPunt": "144273",
+    "shortPunt": "144273",
+    "kickoff": "143530"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "classic",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143703",
+    "145799",
+    "143420",
+    "145472",
+    "143679",
+    "143518",
+    "145069",
+    "142902",
+    "147263",
+    "144273",
+    "143530",
+    "143466",
+    "147244",
+    "149256",
+    "146189",
+    "149267",
+    "147262",
+    "143302",
+    "152466",
+    "149285",
+    "144322",
+    "152470",
+    "145226",
+    "142803",
+    "145705",
+    "143710",
+    "143356",
+    "145014",
+    "146232",
+    "143746",
+    "144614",
+    "142615",
+    "149992",
+    "152475",
+    "152476",
+    "144157",
+    "152477",
+    "145537"
+   ]
+  },
+  "2014": {
+   "enabled": false,
+   "name": "Waratahs",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "147244",
+    "viceCaptain": "143466",
+    "longGK": "143449",
+    "shortGK": "143449",
+    "longPunt": "144273",
+    "shortPunt": "144273",
+    "kickoff": "143449"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "classic",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143703",
+    "142803",
+    "143420",
+    "148182",
+    "143679",
+    "143518",
+    "145069",
+    "142902",
+    "145184",
+    "144273",
+    "143466",
+    "143449",
+    "147244",
+    "148132",
+    "146189",
+    "145554",
+    "143356",
+    "147262",
+    "145705",
+    "142950",
+    "147263",
+    "144770",
+    "143872",
+    "152466",
+    "145226",
+    "149256",
+    "145730",
+    "143302",
+    "151770",
+    "145533",
+    "145023"
+   ]
+  },
+  "2015": {
+   "enabled": false,
+   "name": "Waratahs",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "147244",
+    "viceCaptain": "143466",
+    "longGK": "143449",
+    "shortGK": "143449",
+    "longPunt": "144273",
+    "shortPunt": "144273",
+    "kickoff": "143449"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "classic",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143703",
+    "142803",
+    "143420",
+    "145705",
+    "143518",
+    "148182",
+    "145069",
+    "142902",
+    "145184",
+    "144273",
+    "143466",
+    "143449",
+    "147244",
+    "145730",
+    "146189",
+    "145554",
+    "143356",
+    "147262",
+    "143302",
+    "142950",
+    "147263",
+    "143872",
+    "145226",
+    "151770",
+    "152466",
+    "145418",
+    "144770",
+    "143510",
+    "144721",
+    "144471",
+    "145533"
+   ]
+  },
+  "2016": {
+   "enabled": false,
+   "name": "Waratahs",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "143466",
+    "viceCaptain": "143449",
+    "longGK": "143449",
+    "shortGK": "143449",
+    "longPunt": "144273",
+    "shortPunt": "144273",
+    "kickoff": "143449"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "classic",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "147262",
+    "142803",
+    "145576",
+    "143510",
+    "145705",
+    "144721",
+    "145069",
+    "146232",
+    "145184",
+    "144273",
+    "143466",
+    "143449",
+    "146189",
+    "152478",
+    "145941",
+    "151770",
+    "143356",
+    "144231",
+    "145418",
+    "142902",
+    "149285",
+    "149852",
+    "143872",
+    "143518",
+    "142441",
+    "143703",
+    "145554",
+    "145171",
+    "144750",
+    "145730",
+    "144281",
+    "152479",
+    "152480"
+   ]
+  },
+  "2017": {
+   "enabled": false,
+   "name": "Waratahs",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "143466",
+    "viceCaptain": "149852",
+    "longGK": "149852",
+    "shortGK": "149852",
+    "longPunt": "149852",
+    "shortPunt": "149852",
+    "kickoff": "149852"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "classic",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145576",
+    "145554",
+    "143420",
+    "143510",
+    "145705",
+    "145171",
+    "145069",
+    "145141",
+    "144740",
+    "144273",
+    "149287",
+    "149852",
+    "143466",
+    "145730",
+    "146189",
+    "151770",
+    "147262",
+    "152481",
+    "151894",
+    "146232",
+    "145184",
+    "144281",
+    "142331",
+    "143188",
+    "145941",
+    "144231",
+    "152478",
+    "144721",
+    "149285",
+    "145474",
+    "152484",
+    "145309",
+    "152485",
+    "152482",
+    "152483",
+    "145998"
+   ]
+  },
+  "2018": {
+   "enabled": false,
+   "name": "Waratahs",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "143449",
+    "viceCaptain": "144273",
+    "longGK": "143449",
+    "shortGK": "143449",
+    "longPunt": "144273",
+    "shortPunt": "144273",
+    "kickoff": "145730"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "classic",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145576",
+    "143188",
+    "143420",
+    "145171",
+    "147252",
+    "152486",
+    "145069",
+    "145141",
+    "144740",
+    "144273",
+    "145730",
+    "143449",
+    "144397",
+    "149287",
+    "146189",
+    "151770",
+    "147280",
+    "147262",
+    "145585",
+    "146232",
+    "145184",
+    "144961",
+    "144281",
+    "142318",
+    "145554",
+    "152487",
+    "152488",
+    "145998",
+    "145941",
+    "151839",
+    "147516",
+    "145309",
+    "152489"
+   ]
+  },
+  "2019": {
+   "enabled": false,
+   "name": "Waratahs",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "147244",
+    "viceCaptain": "143449",
+    "longGK": "143449",
+    "shortGK": "143449",
+    "longPunt": "144273",
+    "shortPunt": "144273",
+    "kickoff": "147275"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "classic",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "147280",
+    "143188",
+    "143420",
+    "146232",
+    "147252",
+    "145171",
+    "145069",
+    "145141",
+    "145184",
+    "144273",
+    "144397",
+    "147275",
+    "147244",
+    "142318",
+    "143449",
+    "152490",
+    "152491",
+    "148704",
+    "145009",
+    "152486",
+    "144740",
+    "144961",
+    "149287",
+    "144721",
+    "145585",
+    "152484",
+    "145576",
+    "146189",
+    "145554",
+    "144656",
+    "145309",
+    "151839",
+    "152492",
+    "142803",
+    "152488",
+    "152493"
+   ]
+  },
+  "2022": {
+   "enabled": false,
+   "name": "Waratahs",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "146199",
+    "viceCaptain": "144471",
+    "longGK": "145524",
+    "shortGK": "145524",
+    "longPunt": "145524",
+    "shortPunt": "145524",
+    "kickoff": "145524"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "classic",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "144147",
+    "144471",
+    "147280",
+    "146232",
+    "148705",
+    "144360",
+    "145069",
+    "145682",
+    "144740",
+    "145524",
+    "146071",
+    "144961",
+    "146199",
+    "146794",
+    "142318",
+    "145540",
+    "145527",
+    "145939",
+    "144656",
+    "146332",
+    "144224",
+    "144269",
+    "143015",
+    "146559",
+    "152497",
+    "152496",
+    "145683",
+    "146286",
+    "144409",
+    "145047",
+    "147262",
+    "145575",
+    "146700",
+    "152494",
+    "145171",
+    "152499",
+    "152495",
+    "144498",
+    "152498",
+    "144812",
+    "145009",
+    "144557"
+   ]
+  },
+  "2023": {
+   "enabled": false,
+   "name": "Waratahs",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144961",
+    "viceCaptain": "145009",
+    "longGK": "144269",
+    "shortGK": "144269",
+    "longPunt": "144269",
+    "shortPunt": "144269",
+    "kickoff": "144269"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "classic",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145527",
+    "144471",
+    "147280",
+    "146232",
+    "144656",
+    "145009",
+    "145069",
+    "146332",
+    "144740",
+    "144269",
+    "146071",
+    "144961",
+    "146199",
+    "146794",
+    "146376",
+    "152496",
+    "152500",
+    "152501",
+    "146687",
+    "145682",
+    "146012",
+    "144857",
+    "144670",
+    "144360",
+    "145171",
+    "145554",
+    "148146",
+    "145524",
+    "145939",
+    "146700",
+    "146439",
+    "152502",
+    "152503",
+    "142825",
+    "152506",
+    "144557",
+    "152504",
+    "152505",
+    "144147",
+    "152507",
+    "146209"
+   ]
+  },
+  "2024": {
+   "enabled": false,
+   "name": "Waratahs",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144961",
+    "viceCaptain": "145009",
+    "longGK": "145524",
+    "shortGK": "145524",
+    "longPunt": "145524",
+    "shortPunt": "145524",
+    "kickoff": "145524"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "classic",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "144147",
+    "152512",
+    "147280",
+    "146232",
+    "146360",
+    "145009",
+    "144360",
+    "146332",
+    "144740",
+    "145524",
+    "146071",
+    "144961",
+    "144857",
+    "146794",
+    "146376",
+    "152509",
+    "144665",
+    "149286",
+    "144656",
+    "148567",
+    "144224",
+    "145683",
+    "146199",
+    "145575",
+    "145171",
+    "152508",
+    "149940",
+    "152510",
+    "146700",
+    "144670",
+    "152496",
+    "146209",
+    "146641",
+    "152511",
+    "152506",
+    "152501",
+    "147532",
+    "146439",
+    "145433",
+    "147262",
+    "145233",
+    "149291",
+    "152513",
+    "152514",
+    "144518",
+    "152515"
+   ]
+  },
+  "2025": {
+   "enabled": false,
+   "name": "Waratahs",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145303",
+    "viceCaptain": "144360",
+    "longGK": "145941",
+    "shortGK": "145941",
+    "longPunt": "145941",
+    "shortPunt": "145941",
+    "kickoff": "145941"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "classic",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "144147",
+    "144471",
+    "145597",
+    "144656",
+    "146050",
+    "145303",
+    "144360",
+    "146332",
+    "146700",
+    "144353",
+    "145575",
+    "144857",
+    "152516",
+    "145941",
+    "147291",
+    "152496",
+    "152500",
+    "146561",
+    "152518",
+    "152519",
+    "144224",
+    "146209",
+    "147288",
+    "145524",
+    "152501",
+    "146360",
+    "144961",
+    "152517",
+    "144740",
+    "146376",
+    "147283",
+    "152520",
+    "152512",
+    "148567",
+    "152521"
+   ]
+  },
+  "2026": {
+   "enabled": false,
+   "name": "Waratahs",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145257",
+    "viceCaptain": "144360",
+    "longGK": "146215",
+    "shortGK": "146215",
+    "longPunt": "146215",
+    "shortPunt": "146215",
+    "kickoff": "146215"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "classic",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "152500",
+    "152520",
+    "152501",
+    "145110",
+    "146360",
+    "152523",
+    "144360",
+    "145257",
+    "144740",
+    "146215",
+    "146376",
+    "144857",
+    "147291",
+    "146175",
+    "152522",
+    "142306",
+    "147283",
+    "146561",
+    "144148",
+    "152517",
+    "146700",
+    "146209",
+    "145575",
+    "144353",
+    "152519",
+    "144226",
+    "145941",
+    "149930",
+    "152515",
+    "152525",
+    "152526",
+    "152524",
+    "146050",
+    "152527",
+    "145099"
+   ]
+  }
+ }
+}

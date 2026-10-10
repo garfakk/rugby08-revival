@@ -29,6 +29,8 @@ R08_filename = Rugby08.exe
 #game_launcher_executable_filepath = /usr/bin/wine
 #game_launcher_arguments = Rugby08.exe
 #game_launcher_environment = ["DXVK_FORCE_WINDOWED=1"]  Not implemented
+# Set True to show Import Roster, Challenge Editor, and Tournament Editor in Tools.
+#developper_mode = False
 
 ########## d3d8.dll proxy (windowing plugin) ##########
 # The proxy d3d8.dll is copied next to Rugby08.exe and forces the game windowed

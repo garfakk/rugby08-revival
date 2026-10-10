@@ -1,0 +1,198 @@
+{
+  "name": "RWC 2023 Semi-Final: England v South Africa",
+  "description": "Stade de France, Saint-Denis - Saturday 21 October 2023. Rugby World Cup semi-final, 78,098 in the stands, Ben O'Keeffe refereeing.\n\nThe defending champions are in trouble. England, written off before the tournament, have turned the semi-final into a siege: Owen Farrell kicked four penalties to lead 12-6 at the break, Handre Pollard replacing Manie Libbok at fly-half after half an hour.\n\nNow it is the 53rd minute. Farrell has just dropped a goal from 40 metres and England lead 15-6. The Springboks, who survived France by a single point in the quarter-final, are nine points behind with the clock running and no try scored all night.\n\nYou are South Africa, about to kick off under Siya Kolisi. Nine points, twenty-seven minutes: make the bomb squad count, win the territory battle and find a way back into a World Cup final.",
+  "win_text": "England 15 - 16 South Africa. RG Snyman's try, Pollard's conversion and a late penalty from halfway - exactly as it happened in Paris. On to the final.",
+  "draw_text": "Level at the final whistle. In Paris, a late Pollard penalty edged it by a single point.",
+  "loss_text": "England are through. In real life the Springboks fought back to win 16-15 - try again.",
+  "order": 4,
+  "user_side": "away",
+  "home": {
+    "team_id": "10002",
+    "season": "2024",
+    "variant": "world_cup",
+    "kit": "home",
+    "kit_variant": "rwc_2023",
+    "squad": {
+      "players": [
+        "10777",
+        "10719",
+        "125828",
+        "11773",
+        "142272",
+        "118007",
+        "11625",
+        "142273",
+        "10072",
+        "11006",
+        "10433",
+        "119410",
+        "142276",
+        "142274",
+        "11907",
+        "145943",
+        "144505",
+        "10947",
+        "11888",
+        "107949",
+        "10542",
+        "145216"
+      ],
+      "roles": {
+        "captain": "11006",
+        "viceCaptain": "",
+        "longGK": "11006",
+        "shortGK": "11006",
+        "longPunt": "11006",
+        "shortPunt": "11006",
+        "kickoff": "11006"
+      },
+      "set_plays": {
+        "up": "classic",
+        "down": "pivot",
+        "left": "cross_kick",
+        "right": "pocket"
+      }
+    }
+  },
+  "away": {
+    "team_id": "1015",
+    "season": "2024",
+    "variant": "world_cup",
+    "kit": "home",
+    "kit_variant": "rwc_2023",
+    "squad": {
+      "players": [
+        "145406",
+        "144289",
+        "144550",
+        "144501",
+        "144554",
+        "145407",
+        "144483",
+        "143824",
+        "144395",
+        "144824",
+        "144785",
+        "144434",
+        "144766",
+        "144935",
+        "144490",
+        "143310",
+        "145218",
+        "145637",
+        "145133",
+        "144928",
+        "145678",
+        "145694"
+      ],
+      "roles": {
+        "captain": "145407",
+        "viceCaptain": "",
+        "longGK": "144824",
+        "shortGK": "144824",
+        "longPunt": "144824",
+        "shortPunt": "144824",
+        "kickoff": "144824"
+      },
+      "set_plays": {
+        "up": "classic",
+        "down": "dummy_switch",
+        "left": "miss",
+        "right": "pocket"
+      }
+    }
+  },
+  "stadium_id": "70",
+  "difficulty": "elite",
+  "halftime_length": "10m",
+  "home_team_side": "random",
+  "kick_off": "away",
+  "match_type": "world_cup",
+  "match_subtype": "semi_final",
+  "branding": "world_cup:2023",
+  "environment": "night",
+  "pitch_texture": "default",
+  "rain": false,
+  "precip_mode": "rain",
+  "snow_intensity": null,
+  "wind_power": 2,
+  "wind_dir_deg": 45,
+  "breath": null,
+  "anthem": "stock",
+  "haka_home": false,
+  "haka_away": false,
+  "trophy_lift": "stock",
+  "stadium_flags": false,
+  "kick_assist": false,
+  "mission_mode_name": "KICK OFF",
+  "mission_mode_time": 3200,
+  "mission_mode_period": 1,
+  "mission_nis": [],
+  "score_events": [
+    {
+      "type": "SS_PENALTY",
+      "team": "home",
+      "player": 10,
+      "time": 180
+    },
+    {
+      "type": "SS_PENALTY",
+      "team": "home",
+      "player": 10,
+      "time": 600
+    },
+    {
+      "type": "SS_PENALTY",
+      "team": "away",
+      "player": 10,
+      "time": 1260
+    },
+    {
+      "type": "SS_PENALTY",
+      "team": "home",
+      "player": 10,
+      "time": 1440
+    },
+    {
+      "type": "SS_PENALTY",
+      "team": "away",
+      "player": 10,
+      "time": 2100
+    },
+    {
+      "type": "SS_PENALTY",
+      "team": "home",
+      "player": 10,
+      "time": 2340
+    },
+    {
+      "type": "SS_DROPGOAL",
+      "team": "home",
+      "player": 10,
+      "time": 3180
+    }
+  ],
+  "objectives": [
+  ],
+  "match_objectives": [
+    {
+      "type": "score",
+      "event": "try"
+    },
+    {
+      "type": "score",
+      "event": "conversion"
+    },
+    {
+      "type": "score",
+      "event": "penalty"
+    },
+    {
+      "type": "restrict",
+      "event": "points",
+      "max": 0
+    }
+  ],
+  "unlockables": [],
+  "user_choice": []
+}

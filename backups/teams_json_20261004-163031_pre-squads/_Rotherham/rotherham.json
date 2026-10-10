@@ -1,0 +1,80 @@
+{
+ "2018": {
+  "2010": {
+   "enabled": false,
+   "name": "Rotherham",
+   "type": "england",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "143808",
+    "viceCaptain": "142414",
+    "longGK": "142722",
+    "shortGK": "142722",
+    "longPunt": "142722",
+    "shortPunt": "142722",
+    "kickoff": "142722"
+   },
+   "setPlays": {
+    "up": "miss_pivot",
+    "down": "pivot",
+    "left": "cross_kick",
+    "right": "pocket"
+   },
+   "players": [
+    "143919",
+    "143237",
+    "142478",
+    "142650",
+    "142414",
+    "143808",
+    "143005",
+    "143824",
+    "143251",
+    "142722",
+    "142429",
+    "142597",
+    "143669",
+    "142543",
+    "142645",
+    "142407",
+    "142689",
+    "144048",
+    "142891",
+    "143453",
+    "142921",
+    "142545",
+    "142741",
+    "143588",
+    "109876",
+    "142464",
+    "143633",
+    "143382",
+    "143083",
+    "143032"
+   ]
+  }
+ }
+}

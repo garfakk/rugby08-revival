@@ -168,7 +168,9 @@ from screens.ingame import GameWidget
 from screens.post_match import PostMatchScreen
 from screens.tools import ToolsScreen
 from screens.challenge_editor import ChallengeEditorScreen
+from screens.squad_editor import SquadEditorScreen
 from screens.challenge_mode import ChallengeModeScreen
+from screens.challenge_result import ChallengeResultScreen
 from screens.tournament import (TournamentDashboardScreen, TournamentHubScreen,
                                 TournamentSquadScreen, TournamentWizardScreen)
 from screens.team_editor import TeamEditorScreen
@@ -187,6 +189,16 @@ from ui.music import MenuMusic, TrackMedal
 # past this width instead; below it, unaffected (no screen's content
 # actually reaches it in normal windowed use).
 MAX_CONTENT_WIDTH = 1920
+
+
+def _wind_detail(cfg):
+    """The pre-match line for a generated wind; "" for the stock random one."""
+    from app.game_data import wind_direction_label
+    if cfg.wind_power is None:
+        return ""
+    if not cfg.wind_power:
+        return "Wind: calm"
+    return f"Wind: {cfg.wind_power} {wind_direction_label(cfg.wind_dir_deg)}"
 
 
 class MainWindow(QMainWindow):
@@ -322,10 +334,7 @@ class MainWindow(QMainWindow):
             log.warning("Retrying once with the software OpenGL renderer (QT_OPENGL=software)")
             os.environ["QT_OPENGL"] = "software"
             os.environ["R08_GL_FALLBACK_TRIED"] = "1"
-            # Frozen: sys.executable is the exe itself; from source it is python,
-            # which needs the script path (sys.argv[0]) too.
-            argv = sys.argv[1:] if getattr(sys, "frozen", False) else sys.argv
-            os.execv(sys.executable, [sys.executable] + argv)
+            os.execv(sys.executable, [sys.executable] + sys.argv[1:])
 
     def _on_intro_finished(self):
         self._intro = None
@@ -349,6 +358,8 @@ class MainWindow(QMainWindow):
         # Idle-time preparation of the match-setup 3D previews (see
         # MatchSetupScreen.prewarm) — after the splash, before anyone gets there.
         QTimer.singleShot(1200, self.screen_match_setup.prewarm)
+        # Same for the player editor's list (thousands of players).
+        QTimer.singleShot(1500, self.screen_player_editor.prewarm)
         self._menus_ready = True
         self.screen_main.play_entrance()
         self.music.start()
@@ -517,13 +528,18 @@ class MainWindow(QMainWindow):
         self.screen_about = AboutScreen(self.show_main)
         self.screen_game_modes = GameModesScreen(self.show_main, self.show_challenge_mode,
                                                  self.show_tournament_hub)
-        self.screen_presentation = MatchPresentationScreen(self.data)
+        self.screen_presentation = MatchPresentationScreen(self.data, self.begin_match_launch, self.reveal_match)
         self.screen_ingame = GameWidget(self.show_main, self.show_match_setup,
                                          result_callback=self.show_post_match,
                                          on_loading_end=self.music.stop_loading)
         self.screen_post_match = PostMatchScreen(
             on_rematch=self.rematch,
             on_match_setup=self.show_match_setup,
+            on_main_menu=self.show_main,
+        )
+        self.screen_challenge_result = ChallengeResultScreen(
+            on_retry=self.rematch,
+            on_challenges=self.show_challenge_mode_from_result,
             on_main_menu=self.show_main,
         )
         self.screen_tools = ToolsScreen(
@@ -536,7 +552,8 @@ class MainWindow(QMainWindow):
                                                        open_team=self.open_team)
         self.screen_team_editor.on_import = self.show_roster_import
         self.screen_player_editor.on_import = self.show_roster_import
-        self.screen_challenge_editor = ChallengeEditorScreen(self.data, editor_back)
+        self.screen_challenge_editor = ChallengeEditorScreen(
+            self.data, editor_back, on_edit_squad=self.edit_challenge_squad)
         self.screen_challenge_mode = ChallengeModeScreen(
             self.data, lambda: self.screens.go_back(default=self.screen_game_modes),
             on_play=self.start_challenge, on_present=self.show_challenge_presentation)
@@ -569,6 +586,7 @@ class MainWindow(QMainWindow):
             self.screen_presentation,
             self.screen_ingame,
             self.screen_post_match,
+            self.screen_challenge_result,
             self.screen_tools,
             self.screen_team_editor,
             self.screen_player_editor,
@@ -620,8 +638,26 @@ class MainWindow(QMainWindow):
     def show_challenge_editor(self):
         self.screens.show_screen(self.screen_challenge_editor)
 
+    def edit_challenge_squad(self, side, team_name, players, lineup, on_confirm):
+        """Challenge editor -> squad editor; confirm or discard returns to it."""
+        def close():
+            self.screens.go_back(default=self.screen_challenge_editor)
+            QTimer.singleShot(0, lambda: (self.screens.removeWidget(widget), widget.deleteLater()))
+
+        def confirm(result):
+            on_confirm(result)
+            close()
+        widget = SquadEditorScreen(side, team_name, players, lineup,
+                                   on_confirm=confirm, on_discard=close)
+        self.screens.show_screen(widget)
+
     def show_challenge_mode(self):
         self.screens.show_screen(self.screen_challenge_mode)
+
+    def show_challenge_mode_from_result(self):
+        """Challenge result -> list without keeping the result in Back history."""
+        self.screens.show_screen(self.screen_challenge_mode, push_history=False)
+        self.screens.reset_history()
 
     def show_challenge_presentation(self, presentation):
         """Challenge mode -> the pre-match presentation; BACK returns to the list."""
@@ -673,12 +709,11 @@ class MainWindow(QMainWindow):
             log.info("Tournament: selection repaired before kick-off: %s", repairs)
 
         def kits(slot):
-            return list(self.data.teams.get(slot.team_id, {}).get(slot.season, {}).get("kits", {}))
+            return list(slot.kits(self.data))
 
         def side(slot):
-            keys = kits(slot)
-            return SideSpec(slot.team_id, slot.season,
-                            keys[slot.kit_index % len(keys)] if keys else "")
+            return SideSpec(slot.team_id, slot.season, slot.kit_key(self.data),
+                            variant=slot.variant, kit_variant=slot.kit_variant)
 
         def set_kit(name, key):
             slot = cfg.home if name == "home" else cfg.away
@@ -687,6 +722,15 @@ class MainWindow(QMainWindow):
                 slot.kit_index = keys.index(key)
 
         def kickoff():
+            if user_prefs.coin_toss:
+                # The toss decides kick-off and ends (Settings > Coin Toss
+                # Before Match); BACK during it just stays on this screen.
+                from ui.coin_toss import toss_for_match
+                toss_for_match(self.screen_presentation, self.data, cfg, launch)
+            else:
+                launch(cfg)
+
+        def launch(cfg):
             match_data = build_match_data(self.data, cfg)
             if not match_data:
                 session.abandon_game()
@@ -708,7 +752,8 @@ class MainWindow(QMainWindow):
             heading=report.fixture_caption(t, fixture),
             details=[f"Stadium: {venue}" if venue else "",
                      f"Difficulty: {cfg.difficulty}",
-                     f"Half length: {cfg.halftime_length}"],
+                     f"Half length: {cfg.halftime_length}",
+                     _wind_detail(cfg)],
             home=side(cfg.home), away=side(cfg.away),
             on_kit=set_kit, on_kickoff=kickoff, on_back=back,
             controlled=lambda: {c.get("zone") for c in cfg.controllers.values()}))
@@ -738,10 +783,11 @@ class MainWindow(QMainWindow):
         self.screens.show_screen(self.screen_player_editor)
         self.screen_player_editor.show_player(pid, season)
 
-    def open_team(self, tid, season=None, shirt=None):
-        """Player editor → team editor on that squad; BACK returns to the player."""
+    def open_team(self, tid, season=None, shirt=None, variant=""):
+        """Player editor → team editor on that squad (a competition variant's
+        squad when `variant`); BACK returns to the player."""
         self.screens.show_screen(self.screen_team_editor)
-        self.screen_team_editor.show_team(tid, season, shirt)
+        self.screen_team_editor.show_team(tid, season, shirt, variant)
 
     def show_settings(self):
         self.screens.show_screen(self.screen_settings)
@@ -773,12 +819,23 @@ class MainWindow(QMainWindow):
         self.screen_ingame.restart_loading_display()
 
     def start_match(self, match_data):
-        """Begin + reveal together, no animation — used where there is no
-        match-setup screen to vanish first (e.g. a rematch)."""
+        """Kick off. From the pre-match presentation (challenge, tournament)
+        the same sequence as quick match plays — chrome vanishes, players
+        zoom, crests fly to the loading screen. Where there is no screen to
+        vanish first (a rematch) it begins + reveals together."""
+        if self.screens.currentWidget() is self.screen_presentation:
+            self.screen_presentation.start_kickoff_sequence(match_data)
+            return
         self.begin_match_launch(match_data)
         self.reveal_match()
 
     def show_post_match(self, result):
+        match_data = getattr(self, "_last_match_data", None)
+        if (match_data or {}).get("challenge"):
+            self.screen_challenge_result.set_result(match_data, result)
+            self.screens.show_screen(self.screen_challenge_result, push_history=False)
+            self.screens.reset_history()
+            return
         if self.tournament and self._tournament_fixture:
             message = self._record_tournament_result(result)
             self.screen_post_match.set_continue(lambda: self.show_tournament(message))

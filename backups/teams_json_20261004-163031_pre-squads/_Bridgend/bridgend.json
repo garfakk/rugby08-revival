@@ -1,0 +1,51 @@
+{
+ "2063": {
+  "2010": {
+   "enabled": false,
+   "name": "Bridgend",
+   "type": "wales",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "142685",
+    "viceCaptain": "142685",
+    "longGK": "142685",
+    "shortGK": "142685",
+    "longPunt": "142685",
+    "shortPunt": "142685",
+    "kickoff": "142685"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "classic",
+    "left": "classic",
+    "right": "classic"
+   },
+   "players": [
+    "142685"
+   ]
+  }
+ }
+}

@@ -1,0 +1,940 @@
+{
+ "1020": {
+  "2024": {
+   "name": "Uruguay",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": "",
+     "variants": {
+      "rwc_2023": {
+       "label": "RWC 2023",
+       "frontKitFile": "kits_2024/home_wc_front.png",
+       "backKitFile": "kits_2024/home_wc_back/home_wc_back_%.png",
+       "previewFile": "kits_2024/home_wc_preview.png"
+      }
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": "",
+     "variants": {
+      "rwc_2023": {
+       "label": "RWC 2023",
+       "frontKitFile": "kits_2024/away_wc_front.png",
+       "backKitFile": "kits_2024/away_wc_back/away_wc_back_%.png",
+       "previewFile": "kits_2024/away_wc_preview.png"
+      }
+     }
+    }
+   },
+   "roles": {
+    "captain": "145586",
+    "viceCaptain": "145044",
+    "longGK": "144528",
+    "shortGK": "144528",
+    "longPunt": "144528",
+    "shortPunt": "144528",
+    "kickoff": "144528"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145119",
+    "144598",
+    "144424",
+    "145642",
+    "145088",
+    "145026",
+    "146096",
+    "145044",
+    "145357",
+    "144528",
+    "145166",
+    "145586",
+    "146115",
+    "145337",
+    "144609",
+    "144541",
+    "146353",
+    "144462",
+    "146503",
+    "144211",
+    "144535",
+    "145543",
+    "146157",
+    "146198",
+    "146510",
+    "146540",
+    "146114",
+    "145370",
+    "146505",
+    "146535"
+   ],
+   "variant": {
+    "world_cup": {
+     "label": "Rugby World Cup 2023",
+     "players": [
+      "145119",
+      "144598",
+      "146353",
+      "145642",
+      "146114",
+      "145026",
+      "146096",
+      "145044",
+      "144211",
+      "144528",
+      "145337",
+      "145586",
+      "145166",
+      "146763",
+      "144609",
+      "144424",
+      "144541",
+      "146759",
+      "146503",
+      "145357",
+      "145543",
+      "146115",
+      "146157",
+      "146198",
+      "146540",
+      "145088",
+      "145370",
+      "146760",
+      "146761",
+      "146762",
+      "146505",
+      "146764",
+      "146765"
+     ],
+     "roles": {
+      "captain": "145586",
+      "viceCaptain": "144528",
+      "longGK": "144528",
+      "shortGK": "144528",
+      "longPunt": "144528",
+      "shortPunt": "144528",
+      "kickoff": "144528"
+     }
+    }
+   }
+  },
+  "2010": {
+   "enabled": false,
+   "name": "Uruguay",
+   "type": "international",
+   "category": "",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144039",
+    "viceCaptain": "143059",
+    "longGK": "142849",
+    "shortGK": "142849",
+    "longPunt": "142849",
+    "shortPunt": "142849",
+    "kickoff": "142849"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "142906",
+    "143142",
+    "142780",
+    "142621",
+    "142466",
+    "144019",
+    "143059",
+    "144039",
+    "142875",
+    "144028",
+    "143348",
+    "143864",
+    "143347",
+    "142677",
+    "142849",
+    "143948",
+    "143450",
+    "144012",
+    "143603",
+    "142758",
+    "142596",
+    "143548",
+    "142482",
+    "142694",
+    "143350",
+    "143520",
+    "143670",
+    "142486",
+    "143454",
+    "143611"
+   ]
+  },
+  "2016": {
+   "enabled": false,
+   "name": "Uruguay",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "148447",
+    "viceCaptain": "148451",
+    "longGK": "144528",
+    "shortGK": "144528",
+    "longPunt": "148442",
+    "shortPunt": "148442",
+    "kickoff": "144528"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "148450",
+    "148449",
+    "148448",
+    "148447",
+    "148446",
+    "144883",
+    "148444",
+    "144209",
+    "144211",
+    "144528",
+    "145337",
+    "145586",
+    "148443",
+    "148442",
+    "144609",
+    "144598",
+    "148451",
+    "145119",
+    "148460",
+    "144462",
+    "148453",
+    "148454",
+    "148459",
+    "144546",
+    "148452",
+    "148455",
+    "148456",
+    "148457",
+    "148461",
+    "148458",
+    "148462"
+   ]
+  },
+  "2020": {
+   "enabled": false,
+   "name": "Uruguay",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144883",
+    "viceCaptain": "145586",
+    "longGK": "144528",
+    "shortGK": "144528",
+    "longPunt": "145166",
+    "shortPunt": "145166",
+    "kickoff": "144528"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145119",
+    "144598",
+    "144424",
+    "145642",
+    "145088",
+    "144883",
+    "145370",
+    "145044",
+    "145357",
+    "144528",
+    "145166",
+    "145586",
+    "148463",
+    "148456",
+    "144609",
+    "146157",
+    "144729",
+    "148464",
+    "144462",
+    "144871",
+    "144211",
+    "144535",
+    "145337",
+    "144541",
+    "144546",
+    "145543",
+    "145026",
+    "144209",
+    "144538",
+    "148466",
+    "144164",
+    "146762",
+    "148467"
+   ]
+  },
+  "2021": {
+   "enabled": false,
+   "name": "Uruguay",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144883",
+    "viceCaptain": "144528",
+    "longGK": "144528",
+    "shortGK": "144528",
+    "longPunt": "144528",
+    "shortPunt": "144528",
+    "kickoff": "144528"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145119",
+    "144598",
+    "144729",
+    "144462",
+    "145088",
+    "144883",
+    "145044",
+    "144209",
+    "145357",
+    "144528",
+    "144538",
+    "145166",
+    "145586",
+    "143520",
+    "144609",
+    "144541",
+    "144424",
+    "145642",
+    "145370",
+    "144211",
+    "144881",
+    "145543",
+    "143454",
+    "144871",
+    "144546",
+    "145026",
+    "145005",
+    "144164",
+    "145337",
+    "144535"
+   ]
+  },
+  "2022": {
+   "enabled": false,
+   "name": "Uruguay",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145586",
+    "viceCaptain": "145166",
+    "longGK": "144609",
+    "shortGK": "144609",
+    "longPunt": "145166",
+    "shortPunt": "145166",
+    "kickoff": "145166"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145119",
+    "146157",
+    "146198",
+    "146096",
+    "144462",
+    "145026",
+    "145370",
+    "145044",
+    "145543",
+    "144535",
+    "144609",
+    "145586",
+    "145166",
+    "144538",
+    "145337",
+    "148472",
+    "146353",
+    "144729",
+    "148473",
+    "144546",
+    "146761",
+    "148470",
+    "146765",
+    "146505",
+    "144424",
+    "144541",
+    "146115",
+    "146503",
+    "148468",
+    "146114",
+    "148469",
+    "145088",
+    "144598",
+    "144211",
+    "146760",
+    "148471",
+    "148474",
+    "146763",
+    "148475"
+   ]
+  },
+  "2023": {
+   "enabled": false,
+   "name": "Uruguay",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145586",
+    "viceCaptain": "145119",
+    "longGK": "146505",
+    "shortGK": "146505",
+    "longPunt": "144528",
+    "shortPunt": "144528",
+    "kickoff": "146505"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145119",
+    "144598",
+    "146198",
+    "145642",
+    "145088",
+    "146503",
+    "145370",
+    "145026",
+    "145543",
+    "144528",
+    "146505",
+    "145586",
+    "146115",
+    "146765",
+    "144535",
+    "146157",
+    "146353",
+    "148476",
+    "144462",
+    "146760",
+    "145044",
+    "146761",
+    "148477",
+    "145337",
+    "146096",
+    "144729",
+    "144609",
+    "145166",
+    "144546",
+    "144211",
+    "144541",
+    "146540",
+    "146114",
+    "148473",
+    "146763"
+   ],
+   "variant": {
+    "world_cup": {
+     "label": "Rugby World Cup 2023",
+     "players": [
+      "145119",
+      "144598",
+      "146353",
+      "145642",
+      "146114",
+      "145026",
+      "146096",
+      "145044",
+      "144211",
+      "144528",
+      "145337",
+      "145586",
+      "145166",
+      "146763",
+      "144609",
+      "144424",
+      "144541",
+      "146759",
+      "146503",
+      "145357",
+      "145543",
+      "146115",
+      "146157",
+      "146198",
+      "146540",
+      "145088",
+      "145370",
+      "146760",
+      "146761",
+      "146762",
+      "146505",
+      "146764",
+      "146765"
+     ],
+     "roles": {
+      "captain": "145586",
+      "viceCaptain": "144528",
+      "longGK": "144528",
+      "shortGK": "144528",
+      "longPunt": "144528",
+      "shortPunt": "144528",
+      "kickoff": "144528"
+     }
+    }
+   }
+  },
+  "2025": {
+   "enabled": false,
+   "name": "Uruguay",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145088",
+    "viceCaptain": "145586",
+    "longGK": "146505",
+    "shortGK": "146505",
+    "longPunt": "146762",
+    "shortPunt": "146762",
+    "kickoff": "148470"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145119",
+    "146157",
+    "146198",
+    "146114",
+    "145088",
+    "145370",
+    "146503",
+    "145044",
+    "146761",
+    "146762",
+    "146763",
+    "146505",
+    "146115",
+    "148470",
+    "148484",
+    "148479",
+    "144424",
+    "148471",
+    "145642",
+    "146760",
+    "148480",
+    "148481",
+    "146287",
+    "148478",
+    "145543",
+    "146540",
+    "145026",
+    "146765",
+    "148483",
+    "144609",
+    "145586",
+    "145166",
+    "144598",
+    "144462",
+    "148485",
+    "148486",
+    "145357",
+    "148487",
+    "148488"
+   ],
+   "variant": {
+    "world_cup": {
+     "label": "Rugby World Cup 2023",
+     "players": [
+      "145119",
+      "144598",
+      "146353",
+      "145642",
+      "146114",
+      "145026",
+      "146096",
+      "145044",
+      "144211",
+      "144528",
+      "145337",
+      "145586",
+      "145166",
+      "146763",
+      "144609",
+      "144424",
+      "144541",
+      "146759",
+      "146503",
+      "145357",
+      "145543",
+      "146115",
+      "146157",
+      "146198",
+      "146540",
+      "145088",
+      "145370",
+      "146760",
+      "146761",
+      "146762",
+      "146505",
+      "146764",
+      "146765"
+     ],
+     "roles": {
+      "captain": "145586",
+      "viceCaptain": "144528",
+      "longGK": "144528",
+      "shortGK": "144528",
+      "longPunt": "144528",
+      "shortPunt": "144528",
+      "kickoff": "144528"
+     }
+    }
+   }
+  },
+  "2026": {
+   "enabled": false,
+   "name": "Uruguay",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145088",
+    "viceCaptain": "145026",
+    "longGK": "146505",
+    "shortGK": "146505",
+    "longPunt": "146762",
+    "shortPunt": "146762",
+    "kickoff": "148489"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "148471",
+    "144598",
+    "146540",
+    "146114",
+    "145088",
+    "145026",
+    "146503",
+    "145044",
+    "146761",
+    "146762",
+    "146505",
+    "145586",
+    "146115",
+    "146763",
+    "148489",
+    "148479",
+    "148495",
+    "146198",
+    "145642",
+    "146760",
+    "145370",
+    "148492",
+    "148493",
+    "148491",
+    "148480",
+    "148484",
+    "145119",
+    "144541",
+    "148490",
+    "148494",
+    "148481",
+    "145357",
+    "144424",
+    "148496",
+    "148497"
+   ],
+   "variant": {
+    "world_cup": {
+     "label": "Rugby World Cup 2023",
+     "players": [
+      "145119",
+      "144598",
+      "146353",
+      "145642",
+      "146114",
+      "145026",
+      "146096",
+      "145044",
+      "144211",
+      "144528",
+      "145337",
+      "145586",
+      "145166",
+      "146763",
+      "144609",
+      "144424",
+      "144541",
+      "146759",
+      "146503",
+      "145357",
+      "145543",
+      "146115",
+      "146157",
+      "146198",
+      "146540",
+      "145088",
+      "145370",
+      "146760",
+      "146761",
+      "146762",
+      "146505",
+      "146764",
+      "146765"
+     ],
+     "roles": {
+      "captain": "145586",
+      "viceCaptain": "144528",
+      "longGK": "144528",
+      "shortGK": "144528",
+      "longPunt": "144528",
+      "shortPunt": "144528",
+      "kickoff": "144528"
+     }
+    }
+   }
+  }
+ }
+}

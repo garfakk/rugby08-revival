@@ -1,0 +1,60 @@
+{
+ "2040": {
+  "2010": {
+   "enabled": false,
+   "name": "Brescia",
+   "type": "italy",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "115944",
+    "viceCaptain": "143311",
+    "longGK": "143316",
+    "shortGK": "143316",
+    "longPunt": "143316",
+    "shortPunt": "143316",
+    "kickoff": "143316"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143198",
+    "142911",
+    "143311",
+    "143316",
+    "143125",
+    "142661",
+    "143147",
+    "143482",
+    "144038",
+    "115944"
+   ]
+  }
+ }
+}

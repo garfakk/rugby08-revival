@@ -4,6 +4,7 @@
   "order": 50,
   "description": "24 clubs in six pools of four, home and away. Pool winners and the two best runners-up reach the quarter-finals.",
   "match_type": "european_cup",
+  "variant": "european_cup",
   "venue": "home",
   "venues": [
     "32"

@@ -30,7 +30,7 @@ from PyQt5.QtWidgets import QWidget, QGraphicsOpacityEffect
 from PyQt5.QtGui import QPainter, QColor, QFont, QFontMetrics, QPen
 from PyQt5.QtCore import (
     Qt, QObject, QUrl, QRectF, QPropertyAnimation, QSequentialAnimationGroup,
-    QEasingCurve, QEvent, QPoint, pyqtSignal,
+    QEasingCurve, QEvent, QPoint, QVariantAnimation, pyqtSignal,
 )
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 
@@ -46,6 +46,8 @@ from ui.broadcast import tracked_font, draw_frame
 # playlist (tracks.json) entirely, so it never turns up at random in the
 # menus and the menus never turn up during a load.
 LOADING_TRACK_FILE = "rock_metal_energetic_instrumental.mp3"
+# Fade-out of the loading loop once the loading ring reaches 100 %.
+LOADING_FADE_OUT_MS = 1500
 
 
 from shared.log import get_logger
@@ -148,6 +150,10 @@ class MenuMusic(QObject):
         self._play_current()
 
     def suspend(self):
+        self._cancel_fade()
+        self._suspend_now()
+
+    def _suspend_now(self):
         """A match is starting: stop dead and refuse to restart until
         `release()`. Stops rather than pauses — the game owns audio for
         however long the match lasts, and a paused player holding the
@@ -173,12 +179,42 @@ class MenuMusic(QObject):
         self._player.setVolume(self._target_volume())
         self._player.play()
 
-    def stop_loading(self):
-        """Loading is over — cut the loop dead, same as `suspend()`."""
+    def stop_loading(self, fade_ms=LOADING_FADE_OUT_MS):
+        """Loading is over — fade the loop out, then stop dead like
+        `suspend()`. The player stays suspended meanwhile, so nothing else
+        can restart it."""
+        self._cancel_fade()
+        if (fade_ms <= 0 or not self._loading
+                or self._player.state() != QMediaPlayer.PlayingState):
+            self.suspend()
+            return
+        self._suspended = True
+        start = self._player.volume()
+        anim = QVariantAnimation(self)
+        anim.setStartValue(start)
+        anim.setEndValue(0)
+        anim.setDuration(fade_ms)
+        anim.setEasingCurve(QEasingCurve.InQuad)
+        anim.valueChanged.connect(lambda v: self._player.setVolume(int(v)))
+        anim.finished.connect(self._finish_fade)
+        self._fade_anim = anim
+        anim.start()
+
+    def _cancel_fade(self):
+        anim = getattr(self, "_fade_anim", None)
+        if anim is not None:
+            self._fade_anim = None
+            anim.stop()
+            anim.deleteLater()
+
+    def _finish_fade(self):
+        self._fade_anim = None
         self.suspend()
+        self._player.setVolume(self._target_volume())
 
     def release(self):
         """Back in the menus — allowed to play again."""
+        self._cancel_fade()
         self._suspended = False
         self._loading = False
 

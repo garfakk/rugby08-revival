@@ -11,7 +11,7 @@ from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QScrollArea, QApplication, QSizePolicy,
 )
 from PyQt5.QtGui import QPainter, QColor, QPen, QFont, QPolygonF
-from PyQt5.QtCore import Qt, QPoint, QRectF, QEvent, pyqtSignal
+from PyQt5.QtCore import Qt, QPoint, QRectF, QEvent, QTimer, pyqtSignal
 
 from ui.broadcast import tracked_font, eyebrow_label, draw_frame
 from ui.theme import (
@@ -104,6 +104,18 @@ class OptionRow(QWidget):
             self.selected = on
             self.update()
 
+    def bind(self, spec):
+        """Show `spec` (a RowSpec) — VirtualRows recycles one OptionRow for
+        whichever row scrolls into its slot."""
+        self.spec = spec
+        if callable(spec.subtitle):
+            # Computed on first show — a list of thousands only ever pays
+            # for the rows someone scrolls to.
+            spec.subtitle = spec.subtitle() or ""
+        for name in RowSpec.FIELDS:
+            setattr(self, name, getattr(spec, name))
+        self.update()
+
     def enterEvent(self, event):
         # Report only — PopupList decides what the highlight becomes, so a
         # mouse and a d-pad drive the same single piece of state.
@@ -174,6 +186,142 @@ class OptionRow(QWidget):
                 sub = p.fontMetrics().elidedText(self.subtitle, Qt.ElideRight, int(avail - used))
                 p.drawText(self.rect().adjusted(x0 + used, 0, 0, 0),
                            Qt.AlignLeft | Qt.AlignVCenter, sub)
+
+
+class RowSpec:
+    """What one OptionRow shows, without being a widget. A list of thousands
+    of these (every player in the data) costs next to nothing; VirtualRows
+    turns only the ones in view into OptionRows. Same attribute names and
+    set_highlighted / set_selected as OptionRow, so list code can treat the
+    two alike. `subtitle` may be a callable, resolved when the row is first
+    shown."""
+
+    FIELDS = ("text", "data", "tag", "tag_color", "disabled", "selected", "subdued",
+              "highlighted", "icon", "subtitle", "list_style")
+    __slots__ = FIELDS + ("view",)
+
+    def __init__(self, text, data, tag="", tag_color=None, disabled=False, selected=False,
+                 subdued=False, icon=None, subtitle="", list_style=False):
+        self.text, self.data, self.tag, self.tag_color = text, data, tag, tag_color
+        self.disabled, self.selected, self.subdued = disabled, selected, subdued
+        self.highlighted = False
+        self.icon, self.subtitle, self.list_style = icon, subtitle, list_style
+        self.view = None
+
+    def set_highlighted(self, on):
+        if on != self.highlighted:
+            self.highlighted = on
+            if self.view is not None:
+                self.view.refresh_spec(self)
+
+    def set_selected(self, on):
+        if on != self.selected:
+            self.selected = on
+            if self.view is not None:
+                self.view.refresh_spec(self)
+
+
+class VirtualRows(QScrollArea):
+    """A scrolling column of OptionRows that only builds the rows in view.
+
+    The content widget is sized for every row, so the scroll bar, wheel and
+    paging behave exactly as with one widget per row; a small pool of
+    OptionRows is moved and re-bound as the view scrolls. Building 4,800
+    row widgets (one per player) was what took the editors many seconds to
+    open — this keeps that at the ~20 rows a list can show at once."""
+
+    row_entered = pyqtSignal(int)      # index into the specs — mouse over a row
+    row_picked = pyqtSignal(object)    # the picked row's data
+
+    def __init__(self, spacing, bg, parent=None):
+        super().__init__(parent)
+        self.setWidgetResizable(False)
+        self.setFrameShape(QScrollArea.NoFrame)
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self._step = OptionRow.ROW_H + spacing
+        self._content = QWidget()
+        self._content.setStyleSheet(f"background: {bg};")
+        self.setWidget(self._content)
+        self.verticalScrollBar().setSingleStep(20)
+        self._specs = []
+        self._linked = 0      # how many of _specs already point back here
+        self._pool = []
+        self.verticalScrollBar().valueChanged.connect(lambda _v: self._layout_rows())
+
+    def set_specs(self, specs):
+        """`specs` is kept by reference: a caller that appends to the same
+        list calls this again to show the new rows."""
+        start = self._linked if specs is self._specs else 0
+        if specs is not self._specs:
+            for spec in self._specs:
+                if spec.view is self:
+                    spec.view = None
+            for row in self._pool:
+                row.spec = None
+        self._specs = specs
+        for spec in specs[start:]:
+            spec.view = self
+        self._linked = len(specs)
+        self._resize_content()
+
+    def _resize_content(self):
+        total = max(0, len(self._specs) * self._step - (self._step - OptionRow.ROW_H))
+        self._content.resize(self.viewport().width(), total)
+        self._layout_rows()
+
+    def viewportEvent(self, event):
+        # The viewport, not the scroll area: the scroll bar coming and going
+        # changes the viewport's width with no resize of the area itself.
+        handled = super().viewportEvent(event)
+        if event.type() == QEvent.Resize:
+            self._resize_content()
+        return handled
+
+    def _layout_rows(self):
+        n = len(self._specs)
+        top = self.verticalScrollBar().value()
+        first = max(0, top // self._step)
+        last = min(n, (top + self.viewport().height()) // self._step + 1)
+        need = max(0, last - first)
+        while len(self._pool) < need:
+            row = OptionRow("", None)
+            row.spec = None
+            row.setParent(self._content)
+            row.entered.connect(lambda r=row: self._on_entered(r))
+            row.picked.connect(self.row_picked.emit)
+            self._pool.append(row)
+        width = self._content.width()
+        for i, row in enumerate(self._pool):
+            if i >= need:
+                if not row.isHidden():
+                    row.hide()
+                continue
+            index = first + i
+            spec = self._specs[index]
+            if row.spec is not spec:
+                row.bind(spec)
+            row.index = index
+            row.setGeometry(0, index * self._step, width, OptionRow.ROW_H)
+            if row.isHidden():
+                row.show()
+
+    def _on_entered(self, row):
+        if row.spec is not None and not row.spec.disabled:
+            self.row_entered.emit(row.index)
+
+    def refresh_spec(self, spec):
+        for row in self._pool:
+            if row.spec is spec:
+                row.bind(spec)
+
+    def ensure_index_visible(self, i, margin=OptionRow.ROW_H):
+        """ensureWidgetVisible(row, 0, margin) for a row that may not exist."""
+        if 0 <= i < len(self._specs):
+            self.ensureVisible(0, i * self._step + OptionRow.ROW_H // 2,
+                               0, OptionRow.ROW_H // 2 + margin)
+
+    def rows_per_page(self):
+        return max(1, self.viewport().height() // self._step)
 
 
 class PopupList(QWidget):
@@ -250,9 +398,7 @@ class PopupList(QWidget):
         self._toolbar_v.setContentsMargins(10, 0, 10, 0)
         v.addLayout(self._toolbar_v)
 
-        self.scroll = QScrollArea()
-        self.scroll.setWidgetResizable(True)
-        self.scroll.setFrameShape(QScrollArea.NoFrame)
+        self.scroll = VirtualRows(ROW_SPACING, DROPDOWN_BG)
         # Opaque throughout — the viewport is a separate child widget and
         # doesn't inherit an instance stylesheet set on the QScrollArea, so
         # it needs its own fill or it shows through to whatever is stacked
@@ -266,13 +412,10 @@ class PopupList(QWidget):
         # borderless (see above), so this is the one edge the whole thing has.
         self.scroll.setStyleSheet(f"background: {DROPDOWN_BG}; border: 2px solid {DROPDOWN_BORDER};")
         self.scroll.viewport().setStyleSheet(f"background: {DROPDOWN_BG};")
-        self._holder = QWidget()
-        self._holder.setStyleSheet(f"background: {DROPDOWN_BG};")
-        self._holder_v = QVBoxLayout(self._holder)
-        self._holder_v.setContentsMargins(0, 0, 0, 0)
-        self._holder_v.setSpacing(ROW_SPACING)
-        self._holder_v.addStretch(1)
-        self.scroll.setWidget(self._holder)
+        # scroll=False: the mouse is already on the row, and scrolling the
+        # list under a moving cursor makes it chase itself.
+        self.scroll.row_entered.connect(lambda i: self.set_highlight(i, scroll=False))
+        self.scroll.row_picked.connect(self._on_row_picked)
         list_wrap = QVBoxLayout()
         # No top margin — that halo strip sat right above the list's own
         # border with nothing between it and the toolbar/top edge, reading
@@ -282,8 +425,11 @@ class PopupList(QWidget):
         v.addLayout(list_wrap, stretch=1)
 
         self._rows = []
+        self._rows_pending = False
         self._hi = -1
         self._anchor = None
+        # keep_open(data) -> True: picking that row doesn't close the popup.
+        self.keep_open = None
 
         self.hide()
 
@@ -308,25 +454,26 @@ class PopupList(QWidget):
             self._toolbar_v.addWidget(widget)
 
     def clear_rows(self):
-        while self._holder_v.count() > 1:   # keep the trailing stretch
-            item = self._holder_v.takeAt(0)
-            if item.widget():
-                _discard(item.widget())
         self._rows = []
         self._hi = -1
+        self._sync_rows()
 
     def add_row(self, text, data, tag="", tag_color=None, disabled=False,
                 selected=False, subdued=False, icon=None, subtitle=""):
-        row = OptionRow(text, data, tag=tag, tag_color=tag_color, disabled=disabled,
-                        selected=selected, subdued=subdued, icon=icon, subtitle=subtitle)
-        index = len(self._rows)
-        # scroll=False: the mouse is already on the row, and scrolling the
-        # list under a moving cursor makes it chase itself.
-        row.entered.connect(lambda i=index: self.set_highlight(i, scroll=False))
-        row.picked.connect(self._on_row_picked)
-        self._holder_v.insertWidget(self._holder_v.count() - 1, row)
+        row = RowSpec(text, data, tag=tag, tag_color=tag_color, disabled=disabled,
+                      selected=selected, subdued=subdued, icon=icon, subtitle=subtitle)
         self._rows.append(row)
+        # The view catches up once per batch, not once per row: on the next
+        # highlight / open, or the next event-loop turn, whichever is first.
+        if not self._rows_pending:
+            self._rows_pending = True
+            QTimer.singleShot(0, self._sync_rows)
         return row
+
+    def _sync_rows(self):
+        self._rows_pending = False
+        if not _is_deleted(self):
+            self.scroll.set_specs(self._rows)
 
     # ── the highlight ────────────────────────────────────────────────────
     def highlighted_index(self):
@@ -338,13 +485,15 @@ class PopupList(QWidget):
     def set_highlight(self, i, scroll=True):
         if not (0 <= i < len(self._rows)) or self._rows[i].disabled:
             return False
+        if self._rows_pending:
+            self._sync_rows()
         if 0 <= self._hi < len(self._rows):
             self._rows[self._hi].set_highlighted(False)
         self._hi = i
         row = self._rows[i]
         row.set_highlighted(True)
         if scroll:
-            self.scroll.ensureWidgetVisible(row, 0, OptionRow.ROW_H)
+            self.scroll.ensure_index_visible(i)
         self.hovered.emit(row.data)
         return True
 
@@ -368,7 +517,7 @@ class PopupList(QWidget):
         return self.set_highlight(landed) if landed != self._hi else False
 
     def rows_per_page(self):
-        return max(1, self.scroll.viewport().height() // (OptionRow.ROW_H + ROW_SPACING))
+        return self.scroll.rows_per_page()
 
     def page_highlight(self, sign):
         return self.move_highlight(sign * self.rows_per_page())
@@ -385,6 +534,8 @@ class PopupList(QWidget):
         # describing what this popup was opened for, and that state is
         # exactly what a `picked` handler needs to apply the pick.
         self.picked.emit(data)
+        if self.keep_open is not None and self.keep_open(data):
+            return          # e.g. a folder row that expands in place
         self.close_popup()
 
     def open_at(self, anchor: QWidget, screen: QWidget, gap: int = 4, own_toggle: bool = False):
@@ -397,6 +548,8 @@ class PopupList(QWidget):
         default: every caller that doesn't opt in keeps today's plain
         "any outside click closes it" behaviour unchanged."""
         self._anchor = anchor if own_toggle else None
+        if self._rows_pending:
+            self._sync_rows()
         pos = anchor.mapTo(screen, QPoint(0, anchor.height() + gap))
         x = max(8, min(pos.x(), screen.width() - self.width() - 8))
         y = max(8, min(pos.y(), screen.height() - self.height() - 8))

@@ -1,0 +1,51 @@
+{
+ "2023": {
+  "2010": {
+   "enabled": false,
+   "name": "Cornish Pirates",
+   "type": "england",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "142580",
+    "viceCaptain": "142580",
+    "longGK": "142580",
+    "shortGK": "142580",
+    "longPunt": "142580",
+    "shortPunt": "142580",
+    "kickoff": "142580"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "classic",
+    "left": "classic",
+    "right": "classic"
+   },
+   "players": [
+    "142580"
+   ]
+  }
+ }
+}

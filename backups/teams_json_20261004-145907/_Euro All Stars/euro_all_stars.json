@@ -1,0 +1,80 @@
+{
+ "2073": {
+  "2010": {
+   "enabled": false,
+   "name": "Euro All Stars",
+   "type": "allstars",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "143399",
+    "viceCaptain": "142976",
+    "longGK": "114008",
+    "shortGK": "114008",
+    "longPunt": "114008",
+    "shortPunt": "114008",
+    "kickoff": "114008"
+   },
+   "setPlays": {
+    "up": "miss_pivot",
+    "down": "pivot",
+    "left": "classic",
+    "right": "pocket"
+   },
+   "players": [
+    "116439",
+    "143488",
+    "143529",
+    "142778",
+    "144007",
+    "143399",
+    "143081",
+    "142976",
+    "127595",
+    "114008",
+    "142899",
+    "120945",
+    "143380",
+    "113330",
+    "143473",
+    "143805",
+    "142842",
+    "143883",
+    "143090",
+    "142832",
+    "142863",
+    "143373",
+    "143947",
+    "143187",
+    "142603",
+    "142403",
+    "143324",
+    "143396",
+    "143300",
+    "144127"
+   ]
+  }
+ }
+}

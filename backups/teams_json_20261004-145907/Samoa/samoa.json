@@ -1,0 +1,1004 @@
+{
+ "1017": {
+  "2008": {
+   "name": "Samoa",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_2024/logo.png",
+    "small": "logos_2024/logo_small.png",
+    "left": "logos_2024/logo_left.png",
+    "right": "logos_2024/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2009/home_front.png",
+     "backKitFile": "kits_2009/home_back/home_back_%.png",
+     "previewFile": "kits_2009/home_preview.png",
+     "color": "",
+     "variants": {
+      "rwc_2007": {
+       "label": "RWC 2007",
+       "frontKitFile": "kits_2009/home_wc_front.png"
+      }
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2009/away_front.png",
+     "backKitFile": "kits_2009/away_back/away_back_%.png",
+     "previewFile": "kits_2009/away_preview.png",
+     "color": "",
+     "variants": {
+      "rwc_2007": {
+       "label": "RWC 2007",
+       "frontKitFile": "kits_2009/away_wc_front.png"
+      }
+     }
+    }
+   },
+   "roles": {
+    "captain": "148059",
+    "viceCaptain": "148061",
+    "longGK": "148056",
+    "shortGK": "148056",
+    "longPunt": "148056",
+    "shortPunt": "148056",
+    "kickoff": "148056"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "148061",
+    "142695",
+    "112654",
+    "142465",
+    "142644",
+    "143435",
+    "148059",
+    "143022",
+    "148057",
+    "148056",
+    "143920",
+    "143224",
+    "142682",
+    "148054",
+    "148064",
+    "148060",
+    "148072",
+    "148063",
+    "148062",
+    "148070",
+    "143113",
+    "142502",
+    "143869",
+    "148055",
+    "148065",
+    "148066",
+    "148069",
+    "148058",
+    "148067",
+    "148068",
+    "143788",
+    "148071"
+   ]
+  },
+  "2024": {
+   "name": "Samoa",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_2024/logo.png",
+    "small": "logos_2024/logo_small.png",
+    "left": "logos_2024/logo_left.png",
+    "right": "logos_2024/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": "",
+     "variants": {
+      "rwc_2023": {
+       "label": "RWC 2023",
+       "frontKitFile": "kits_2024/home_wc_front.png",
+       "backKitFile": "kits_2024/home_wc_back/home_wc_back_%.png"
+      }
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": "",
+     "variants": {
+      "rwc_2023": {
+       "label": "RWC 2023",
+       "frontKitFile": "kits_2024/away_wc_front.png",
+       "backKitFile": "kits_2024/away_wc_back/away_wc_back_%.png"
+      }
+     }
+    }
+   },
+   "roles": {
+    "captain": "145023",
+    "viceCaptain": "145419",
+    "longGK": "145006",
+    "shortGK": "145006",
+    "longPunt": "145006",
+    "shortPunt": "145006",
+    "kickoff": "145006"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145023",
+    "145410",
+    "142848",
+    "145589",
+    "144415",
+    "145419",
+    "144835",
+    "145380",
+    "144500",
+    "145006",
+    "146630",
+    "146580",
+    "145558",
+    "146433",
+    "142731",
+    "146345",
+    "144889",
+    "146674",
+    "146687",
+    "144836",
+    "144057",
+    "146082",
+    "145552",
+    "144841",
+    "146659",
+    "144768",
+    "142311",
+    "145957",
+    "146067",
+    "145735"
+   ],
+   "variant": {
+    "world_cup": {
+     "label": "Rugby World Cup 2023",
+     "players": [
+      "145023",
+      "146201",
+      "142848",
+      "145589",
+      "144415",
+      "144835",
+      "145419",
+      "142311",
+      "144836",
+      "144057",
+      "146433",
+      "145558",
+      "144467",
+      "144285",
+      "145006",
+      "144889",
+      "145410",
+      "146687",
+      "144204",
+      "144500",
+      "146630",
+      "145735",
+      "146345",
+      "142335",
+      "144866",
+      "146674",
+      "146617",
+      "145380",
+      "146366",
+      "145096",
+      "146067",
+      "144503",
+      "146082"
+     ],
+     "roles": {
+      "captain": "145023",
+      "viceCaptain": "144057",
+      "longGK": "144057",
+      "shortGK": "144057",
+      "longPunt": "144057",
+      "shortPunt": "144057",
+      "kickoff": "144057"
+     }
+    }
+   }
+  },
+  "2010": {
+   "enabled": false,
+   "name": "Samoa",
+   "type": "international",
+   "category": "",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_2024/logo.png",
+    "small": "logos_2024/logo_small.png",
+    "left": "logos_2024/logo_left.png",
+    "right": "logos_2024/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "142695",
+    "viceCaptain": "143224",
+    "longGK": "142611",
+    "shortGK": "142611",
+    "longPunt": "142611",
+    "shortPunt": "142611",
+    "kickoff": "142611"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143235",
+    "142695",
+    "112654",
+    "143570",
+    "142644",
+    "143029",
+    "142948",
+    "143695",
+    "142810",
+    "142611",
+    "143920",
+    "143224",
+    "143468",
+    "143113",
+    "110004",
+    "124050",
+    "142991",
+    "142465",
+    "142820",
+    "143128",
+    "143969",
+    "143386",
+    "142492",
+    "143534",
+    "143145",
+    "143435",
+    "144017",
+    "142502",
+    "143682",
+    "143046"
+   ]
+  },
+  "2011": {
+   "enabled": false,
+   "name": "Samoa",
+   "type": "international",
+   "category": "",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_2024/logo.png",
+    "small": "logos_2024/logo_small.png",
+    "left": "logos_2024/logo_left.png",
+    "right": "logos_2024/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "148086",
+    "viceCaptain": "142502",
+    "longGK": "142611",
+    "shortGK": "142611",
+    "longPunt": "110004",
+    "shortPunt": "110004",
+    "kickoff": "110004"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "148087",
+    "148086",
+    "142991",
+    "142644",
+    "143570",
+    "148075",
+    "142948",
+    "143695",
+    "142810",
+    "142611",
+    "143920",
+    "143224",
+    "143468",
+    "143113",
+    "110004",
+    "124050",
+    "148080",
+    "142465",
+    "142820",
+    "148057",
+    "143869",
+    "143046",
+    "143969",
+    "112654",
+    "142502",
+    "143682",
+    "142974",
+    "145461",
+    "148073",
+    "148074",
+    "148076",
+    "148077",
+    "142492",
+    "148079",
+    "145791",
+    "148081",
+    "148082",
+    "148083",
+    "148084",
+    "148085",
+    "148088",
+    "143435"
+   ]
+  },
+  "2012": {
+   "enabled": false,
+   "name": "Samoa",
+   "type": "international",
+   "category": "",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_2024/logo.png",
+    "small": "logos_2024/logo_small.png",
+    "left": "logos_2024/logo_left.png",
+    "right": "logos_2024/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "148086",
+    "viceCaptain": "143113",
+    "longGK": "148089",
+    "shortGK": "148089",
+    "longPunt": "148089",
+    "shortPunt": "148089",
+    "kickoff": "148089"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "148087",
+    "148086",
+    "112654",
+    "143435",
+    "142644",
+    "148090",
+    "143934",
+    "143695",
+    "142810",
+    "148089",
+    "143920",
+    "143224",
+    "143468",
+    "143788",
+    "110004",
+    "124050",
+    "142991",
+    "142465",
+    "142948",
+    "148095",
+    "148056",
+    "148093",
+    "148075",
+    "143570",
+    "148057",
+    "142611",
+    "143113",
+    "148096",
+    "148079",
+    "143235",
+    "148092",
+    "148097",
+    "148098",
+    "143046",
+    "148099",
+    "148100",
+    "148101",
+    "148102",
+    "142632",
+    "142502"
+   ]
+  },
+  "2013": {
+   "enabled": false,
+   "name": "Samoa",
+   "type": "international",
+   "category": "",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_2024/logo.png",
+    "small": "logos_2024/logo_small.png",
+    "left": "logos_2024/logo_left.png",
+    "right": "logos_2024/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "110004",
+    "viceCaptain": "143113",
+    "longGK": "148089",
+    "shortGK": "148089",
+    "longPunt": "148089",
+    "shortPunt": "148089",
+    "kickoff": "148089"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "148087",
+    "148096",
+    "112654",
+    "142503",
+    "143435",
+    "148075",
+    "144768",
+    "148090",
+    "148095",
+    "148089",
+    "143920",
+    "148104",
+    "110004",
+    "144189",
+    "148093",
+    "124050",
+    "145791",
+    "142422",
+    "148106",
+    "148057",
+    "143004",
+    "143224",
+    "148108",
+    "148079",
+    "148098",
+    "143468",
+    "143113",
+    "142810",
+    "143934",
+    "142465",
+    "148103",
+    "148105",
+    "142632",
+    "142644",
+    "148097",
+    "143442",
+    "148107",
+    "142368"
+   ]
+  },
+  "2014": {
+   "enabled": false,
+   "name": "Samoa",
+   "type": "international",
+   "category": "",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_2024/logo.png",
+    "small": "logos_2024/logo_small.png",
+    "left": "logos_2024/logo_left.png",
+    "right": "logos_2024/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "142810",
+    "viceCaptain": "148114",
+    "longGK": "148089",
+    "shortGK": "148089",
+    "longPunt": "148089",
+    "shortPunt": "148089",
+    "kickoff": "148089"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "148087",
+    "124050",
+    "142422",
+    "148106",
+    "142503",
+    "148075",
+    "144768",
+    "148090",
+    "142810",
+    "148089",
+    "143004",
+    "148104",
+    "143468",
+    "144189",
+    "148097",
+    "148096",
+    "145791",
+    "148125",
+    "142465",
+    "142368",
+    "148095",
+    "148117",
+    "148129",
+    "148079",
+    "148109",
+    "148113",
+    "148116",
+    "148108",
+    "143046",
+    "148110",
+    "142991",
+    "145461",
+    "148111",
+    "148112",
+    "148114",
+    "148115",
+    "148118",
+    "148119",
+    "148120",
+    "148076",
+    "148121",
+    "142492",
+    "148122",
+    "148123",
+    "148124",
+    "148081",
+    "148126",
+    "148127",
+    "148128"
+   ]
+  },
+  "2016": {
+   "enabled": false,
+   "name": "Samoa",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_2024/logo.png",
+    "small": "logos_2024/logo_small.png",
+    "left": "logos_2024/logo_left.png",
+    "right": "logos_2024/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "148075",
+    "viceCaptain": "142810",
+    "longGK": "148089",
+    "shortGK": "148089",
+    "longPunt": "148089",
+    "shortPunt": "148089",
+    "kickoff": "148089"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "148087",
+    "148096",
+    "112654",
+    "142503",
+    "142644",
+    "148108",
+    "144768",
+    "148075",
+    "142810",
+    "148089",
+    "143920",
+    "145302",
+    "148098",
+    "148111",
+    "148131",
+    "145097",
+    "145791",
+    "142991",
+    "148110",
+    "148135",
+    "148117",
+    "148134",
+    "148097",
+    "142465",
+    "143934",
+    "145616",
+    "148104",
+    "148124",
+    "148133",
+    "143468",
+    "148116",
+    "148132",
+    "145231",
+    "148136",
+    "143113",
+    "144470",
+    "148137",
+    "148106",
+    "142422",
+    "148125",
+    "145410",
+    "148138",
+    "148121",
+    "148139",
+    "148119",
+    "148140",
+    "146067",
+    "148141"
+   ]
+  },
+  "2017": {
+   "enabled": false,
+   "name": "Samoa",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_2024/logo.png",
+    "small": "logos_2024/logo_small.png",
+    "left": "logos_2024/logo_left.png",
+    "right": "logos_2024/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "143113",
+    "viceCaptain": "142810",
+    "longGK": "148136",
+    "shortGK": "148136",
+    "longPunt": "148136",
+    "shortPunt": "148136",
+    "kickoff": "148136"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "148087",
+    "148124",
+    "112654",
+    "144415",
+    "148106",
+    "148108",
+    "148144",
+    "148142",
+    "142810",
+    "148116",
+    "143113",
+    "145302",
+    "144903",
+    "148098",
+    "148136",
+    "145410",
+    "148146",
+    "142991",
+    "148139",
+    "148119",
+    "144470",
+    "146067",
+    "148111",
+    "148143",
+    "148079",
+    "148137",
+    "143468",
+    "144768",
+    "142503",
+    "145231",
+    "148090",
+    "144236",
+    "144189",
+    "148089",
+    "148110",
+    "142368",
+    "145791",
+    "142335",
+    "110004",
+    "148145",
+    "148147",
+    "148140",
+    "148148",
+    "148131",
+    "148120",
+    "148149",
+    "148150",
+    "148135",
+    "144661",
+    "148151"
+   ]
+  },
+  "2020": {
+   "enabled": false,
+   "name": "Samoa",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_2024/logo.png",
+    "small": "logos_2024/logo_small.png",
+    "left": "logos_2024/logo_left.png",
+    "right": "logos_2024/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144768",
+    "viceCaptain": "144415",
+    "longGK": "148089",
+    "shortGK": "148089",
+    "longPunt": "148089",
+    "shortPunt": "148089",
+    "kickoff": "148089"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "148079",
+    "148153",
+    "145023",
+    "142503",
+    "144691",
+    "144415",
+    "145616",
+    "144768",
+    "144470",
+    "148089",
+    "144503",
+    "144661",
+    "144189",
+    "144236",
+    "148131",
+    "145410",
+    "142335",
+    "144889",
+    "142368",
+    "144847",
+    "145231",
+    "144251",
+    "144903",
+    "145735",
+    "145302",
+    "148152",
+    "145097",
+    "145474",
+    "145096",
+    "144318",
+    "144866",
+    "148154"
+   ]
+  },
+  "2021": {
+   "enabled": false,
+   "name": "Samoa",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_2024/logo.png",
+    "small": "logos_2024/logo_small.png",
+    "left": "logos_2024/logo_left.png",
+    "right": "logos_2024/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144768",
+    "viceCaptain": "144415",
+    "longGK": "145735",
+    "shortGK": "145735",
+    "longPunt": "145735",
+    "shortPunt": "145735",
+    "kickoff": "145735"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145023",
+    "145097",
+    "143996",
+    "144415",
+    "144691",
+    "145616",
+    "144768",
+    "142368",
+    "145231",
+    "145735",
+    "144189",
+    "144903",
+    "145302",
+    "144503",
+    "142731",
+    "145410",
+    "144866",
+    "142503",
+    "144204",
+    "144470",
+    "144251",
+    "144661",
+    "145321",
+    "144889",
+    "145474",
+    "144847",
+    "145096",
+    "143007",
+    "144318",
+    "144236"
+   ]
+  }
+ }
+}

@@ -1,0 +1,80 @@
+{
+ "2072": {
+  "2010": {
+   "enabled": false,
+   "name": "British and Irish Lions",
+   "type": "special",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "110195",
+    "viceCaptain": "100235",
+    "longGK": "142576",
+    "shortGK": "142576",
+    "longPunt": "142576",
+    "shortPunt": "142576",
+    "kickoff": "142576"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss",
+    "left": "miss_pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "120222",
+    "143192",
+    "144120",
+    "101071",
+    "110195",
+    "127577",
+    "104940",
+    "101679",
+    "142893",
+    "142576",
+    "102625",
+    "143015",
+    "100235",
+    "130614",
+    "110002",
+    "132707",
+    "142377",
+    "108075",
+    "107085",
+    "143687",
+    "106202",
+    "143276",
+    "143410",
+    "143890",
+    "103737",
+    "143573",
+    "143797",
+    "142785",
+    "124484",
+    "104954"
+   ]
+  }
+ }
+}

@@ -84,7 +84,8 @@ def delete(tid: str) -> None:
 
 def list_saves() -> list:
     """Summaries, most recently updated first: {id, name, template_id,
-    season, day, last_day, updated, humans, champion, error}."""
+    season, day, last_day, updated, humans, human_ids [(id, season)],
+    options, played, total, champion, champion_id, error}."""
     out = []
     d = saves_directory()
     for name in os.listdir(d):
@@ -101,6 +102,11 @@ def list_saves() -> list:
                 "last_day": max((f.get("day", 0) for f in data.get("fixtures", [])), default=0),
                 "updated": data.get("updated", ""),
                 "humans": [v.get("name", k) for k, v in teams.items() if v.get("human")],
+                "human_ids": [(k, v.get("season", "")) for k, v in teams.items() if v.get("human")],
+                "options": data.get("options", {}),
+                "played": sum(1 for f in data.get("fixtures", []) if f.get("result")),
+                "total": len(data.get("fixtures", [])),
+                "champion_id": data.get("champion"),
                 "champion": teams.get(data.get("champion"), {}).get("name") if data.get("champion") else None,
                 "has_prematch": os.path.exists(_path(tid, ".prematch")),
             })

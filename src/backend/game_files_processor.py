@@ -14,6 +14,8 @@ Alternatively you can run this script directly, in this case the match data will
 import struct
 import os
 import time
+import math
+import random
 from PIL import Image
 import subprocess
 import xml.etree.ElementTree as ET
@@ -136,14 +138,27 @@ def create_mission_file(match_data):
 
         weather = ET.SubElement(environment, "WEATHER", weather_attrs)
 
-        # Add WIND element under WEATHER. reR08 ENABLE_WIND: power = band
+        # WIND element under WEATHER. reR08 ENABLE_WIND: power = band
         # 0..10 (0 = calm, 1..3 stock bands, 4..10 extended); x/y/z direction
         # only (normalized) — match_data_builder turns the UI's compass
         # bearing into wind_x/wind_z (ground plane, y always 0).
-        wind_power = match_data.get("wind_power") or 0
-        wind_x = match_data.get("wind_x", 0) if wind_power else 0
-        wind_z = match_data.get("wind_z", 0) if wind_power else 0
-        wind = ET.SubElement(weather, "WIND", {
+        # Always written: the stock .mis reader (FUN_004bf0d0) reads <WIND>
+        # attributes without a null check, so a mission without it crashes
+        # the game during loading (AV at Rugby08.exe+0x46572c).
+        # wind_power None (Settings > Wind: Default) rolls the stock random
+        # wind instead: band rand(0,3), random ground-plane direction — what
+        # the game itself does at 0x4c0047 / FUN_004f6cc0.
+        wind_power = match_data.get("wind_power")
+        if wind_power is None:
+            wind_power = random.randint(0, 3)
+            angle = random.uniform(0, 2 * math.pi)
+            wind_x, wind_z = round(math.sin(angle), 4), round(math.cos(angle), 4)
+        else:
+            wind_x = match_data.get("wind_x", 0)
+            wind_z = match_data.get("wind_z", 0)
+        if not wind_power:
+            wind_x = wind_z = 0
+        ET.SubElement(weather, "WIND", {
             "power": str(wind_power),
             "x": str(wind_x),
             "y": "0",
@@ -223,6 +238,18 @@ def create_mission_file(match_data):
                     "value": str(param.get("value", "")),
                 })
 
+        # reR08 ENABLE_CARDS: cards the referee gives at a set match minute
+        # (shown at the next stoppage, like a stock card). No element = stock.
+        cards = [c for c in match_data.get("cards") or [] if c.get("jersey")]
+        if cards:
+            events = ET.SubElement(mission, "EVENTS")
+            for card in cards:
+                attrs = {"team": card.get("team") or "home", "jersey": str(int(card["jersey"])),
+                         "type": card.get("type") or "yellow"}
+                if card.get("minute") is not None:
+                    attrs["minute"] = str(card["minute"])
+                ET.SubElement(events, "CARD", attrs)
+
         # Write the XML to the file
         xml_str = ET.tostring(mission, encoding='utf-8', method='xml').decode()
         pretty_xml = xml.dom.minidom.parseString(xml_str).toprettyxml(indent="    ")
@@ -260,6 +287,22 @@ def wears_stock_gloves(player):
     return is_custom_asset(gloves) and not custom_asset_exists(gloves, config.mod_data_directory)
 
 
+def _copy_optional_adboards(match_data):
+    adboards = (match_data or {}).get("adboards")
+    if not adboards:
+        return
+    if os.path.splitext(adboards)[1].lower() != ".fsh":
+        log.warning(f"Ignoring adboards asset with unsupported extension: {adboards}")
+        return
+
+    source = os.path.join(config.mod_data_directory, adboards)
+    if not os.path.isfile(source):
+        log.warning(f"Ignoring missing adboards asset: {source}")
+        return
+    destination = os.path.join(config.game_launcher_directory, game_filenames["adboards"])
+    copy_file(source, destination)
+
+
 # This function copies all the graphics files (logos, kits, etc) into the game folder and edit them if necessary
 def edit_graphics_files(match_data):
 
@@ -287,6 +330,8 @@ def edit_graphics_files(match_data):
   # Copy stadium graphics files
   stadium_graphics_filepath = os.path.join(config.game_launcher_directory, game_filenames['stadium_graphics'])
   copy_file(os.path.join(config.mod_data_directory, match_data['stadium_graphics']), stadium_graphics_filepath)
+  # Leave default adboards untouched unless an optional FSH is selected.
+  _copy_optional_adboards(match_data)
 
   # Copy pitch logo file template and edit it
   pitch_logo_filepath = os.path.join(config.game_launcher_directory, game_filenames['pitch_logo'])

@@ -13,7 +13,7 @@ from copy import deepcopy
 
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QStackedWidget, QFrame,
-    QGraphicsOpacityEffect, QScrollArea,
+    QScrollArea,
 )
 from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtCore import (
@@ -28,14 +28,17 @@ from app.screen_base import Screen
 from app.input import Action, KEYMAP
 from app.state import DataStore, MatchConfig, TeamSlot
 from app import difficulty
+from app import variants as V
 from app.match_data_builder import build_match_data
-from app.game_data import SNOW_INTENSITY_MAX, WIND_POWER_MAX
+from app.game_data import (
+    SNOW_INTENSITY_MAX, WIND_BEARINGS, WIND_POWER_NAMES, frontend_logo, wind_direction_label,
+)
 from app.season import season_label
 from ui import StyledButton
 from ui.player_stage import KitStage, _try_load_model
 from ui.dropdown import DropdownRow
 from ui.atmosphere import AtmosphereWidget
-from ui.pixmap_utils import trim_transparent
+from ui.kickoff_transition import KickoffTransition, WALKOFF_MS
 from ui.side_panel import SidePanelSlide
 from ui.broadcast import (
     Card, SelectorRow, TeamNamePicker, HintBar,
@@ -54,22 +57,7 @@ from screens.squad_editor import SquadEditorScreen
 # than each looking straight out of the screen.
 FACE_YAW = 18.0
 
-# How long the kickoff sequence's run-off takes. Deliberately long: this
-# time is hidden real backend work (see _start_kickoff_sequence) — the
-# longer the run, the more of the game's slow prep steps finish before the
-# loading screen is ever shown, which is what actually fixes a loading bar
-# that otherwise visibly stalls partway through.
-WALKOFF_MS = 2200
 ADVANCED_PANEL_W = 520   # slide-over width; also its travel (see ui/side_panel.py)
-
-# Gap between the players' 3D zoom-in starting and the crest flight kicking
-# off, so the crests visibly follow the players rather than moving with them.
-CREST_DELAY_MS = 200
-
-# Duration of the loading screen's own fade-in (names, wheel...). Scheduled
-# to START early enough that it reaches full opacity exactly when the crest
-# flight (which begins CREST_DELAY_MS after zoom-in) lands.
-LOADING_FADE_MS = 1200
 
 
 from shared.log import get_logger
@@ -241,9 +229,23 @@ class TeamColumn(QWidget):
         # Home/away is a 2-3 item list — always cycle with < / >, never the
         # popup, regardless of the dropdown_menus preference.
         self.kit_row.set_force_arrows(True)
-        self.kit_row.changed.connect(self._refresh_kit_preview)
+        self.kit_row.changed.connect(self._on_kit_changed)
         screen.focus.register(self.kit_row)
         chrome_bottom_v.addWidget(self.kit_row)
+
+        # Variants of the picked kit itself (a tournament patch…) — only
+        # shown when that kit has one. The squad variant is picked in the
+        # squad editor, independently.
+        self.kit_variant_row = SelectorRow("variant", display=self._kit_variant_label,
+                                           compact=True)
+        self.kit_variant_row.set_force_arrows(True)
+        self.kit_variant_row.changed.connect(self._on_kit_variant_changed)
+        screen.focus.register(self.kit_variant_row)
+        chrome_bottom_v.addWidget(self.kit_variant_row)
+        self.kit_variant_row.hide()
+        # The variant last picked by hand: kept while switching kits, so
+        # home → away → home with a World Cup patch keeps the patch.
+        self._wanted_kit_variant = ""
 
         chrome_bottom_v.addStretch(1)
 
@@ -271,6 +273,12 @@ class TeamColumn(QWidget):
             self._crest_size = crest
             self.crest_lbl.setFixedSize(crest, crest)
             self._apply_crest()
+        self._apply_stage_height()
+
+    def restore_stage(self):
+        """Puts the stage back between the two chrome wrappers after the
+        kickoff sequence reparented it."""
+        self.card.layout().insertWidget(1, self.stage)
         self._apply_stage_height()
 
     def _apply_stage_height(self):
@@ -350,18 +358,46 @@ class TeamColumn(QWidget):
     def _on_season_row_changed(self):
         self._reload_teams(self.season_row.current(), pick_random=False)
 
+    def _stored_kit(self):
+        """The picked kit as stored (with its "variants")."""
+        return self._slot().kits(self.screen.ds).get(self.kit_row.current() or "", {})
+
+    def _kit_variant_label(self, vid):
+        return V.kit_variant_label(self._stored_kit(), vid)
+
+    def _sync_kit_variants(self):
+        """Refill the variant row for the picked kit; hidden without any."""
+        ids = V.kit_variant_ids(self._stored_kit())
+        values = [""] + ids
+        want = self._wanted_kit_variant if self._wanted_kit_variant in ids else ""
+        self.kit_variant_row.set_values(values, index=values.index(want))
+        self.kit_variant_row.setVisible(bool(ids))
+
+    def _on_kit_changed(self):
+        self._sync_kit_variants()
+        self._refresh_kit_preview()
+
+    def _on_kit_variant_changed(self):
+        self._wanted_kit_variant = self.kit_variant_row.current() or ""
+        self._refresh_kit_preview()
+
     def _on_team_changed(self):
-        ds = self.screen.ds
+        """Team picked: back to its default squad (a competition squad is
+        picked in the squad editor), then load it."""
         slot = self._slot()
         tid = self.name_picker.current()
         slot.team_id = tid
-        slot.kit_index = 0
+        slot.variant = ""
         if not tid:
             return
-        season = slot.season
-        info = ds.teams[tid][season]
-        crest_path = os.path.join(ds.teams_folder_path.get(tid, ""),
-                                   info.get("logos", {}).get("main", ""))
+        self._load_team()
+
+    def _load_crest(self):
+        ds = self.screen.ds
+        slot = self._slot()
+        info = slot.info(ds)
+        crest_path = os.path.join(ds.teams_folder_path.get(slot.team_id, ""),
+                                   frontend_logo(info))
         self._crest_src = _load_crest(crest_path)
         if not self._crest_src.isNull():
             self._apply_crest()
@@ -370,16 +406,22 @@ class TeamColumn(QWidget):
             self.crest_lbl.setText("NO CREST")
             self.crest_lbl.setStyleSheet(f"color: {FG_MUTED}; background: transparent;")
 
-        slot.lineup = ds.get_lineup(tid, season)
-        slot.players = ds.get_players(slot.lineup.get("players_id", []), season)
+    def _load_team(self):
+        ds = self.screen.ds
+        slot = self._slot()
+        self._load_crest()
+        slot.lineup = ds.get_lineup(slot.team_id, slot.season, slot.variant)
+        slot.players = ds.get_players(slot.lineup.get("players_id", []), slot.season)
 
         # Home side opens on its home kit, away side on its away kit —
         # the usual pairing, and it stops both sides showing the same
         # strip. Falls back to the first kit when a side isn't named.
-        kit_keys = [k for k, _ in info.get("kits", {}).items()] or ["default"]
+        kit_keys = list(slot.kits(ds)) or ["default"]
         preferred = "home" if self.side == "home" else "away"
         kit_index = kit_keys.index(preferred) if preferred in kit_keys else 0
         self.kit_row.set_values(kit_keys, index=kit_index)
+        self._wanted_kit_variant = ""
+        self._sync_kit_variants()
         self._refresh_kit_preview()
         self.screen.on_team_changed(self.side)
 
@@ -395,9 +437,8 @@ class TeamColumn(QWidget):
         """(kit dict, front kit path, back-panel path) of the selected kit."""
         ds = self.screen.ds
         slot = self._slot()
-        kits = ds.teams[slot.team_id][slot.season].get("kits", {})
-        key = self.kit_row.current()
-        kit = kits.get(key, {}) if key else {}
+        self._apply_kit_choice()
+        kit = slot.kit(ds)
         team_root = ds.teams_folder_path.get(slot.team_id, "")
         # backKitFile is the shirt's own back panel ("jbck") — without it that
         # panel falls back to plain white. It ships as a %-pattern, one image
@@ -407,6 +448,17 @@ class TeamColumn(QWidget):
         back_pattern = kit.get("backKitFile", "") if kit else ""
         back_source = os.path.join(team_root, back_pattern.replace("%", "1", 1)) if back_pattern else ""
         return kit, kit_source, back_source
+
+    def _apply_kit_choice(self):
+        """Store the kit and variant rows' picks on the slot; returns the
+        kit key."""
+        slot = self._slot()
+        key = self.kit_row.current() or ""
+        keys = list(slot.kits(self.screen.ds))
+        slot.kit_index = keys.index(key) if key in keys else 0
+        slot.kit_variant = (self.kit_variant_row.current() or "") \
+            if self.kit_variant_row.has_values() else ""
+        return key
 
     def kit_model_args(self):
         """The (args, kwargs) `_try_load_model` gets for this column's kit, or
@@ -425,14 +477,11 @@ class TeamColumn(QWidget):
         if not slot.team_id or not slot.season:
             self.stage.set_placeholder()
             return
-        info = ds.teams[slot.team_id][slot.season]
-        kits = info.get("kits", {})
-        key = self.kit_row.current()
-        kit = kits.get(key, {}) if key else {}
-        slot.kit_index = list(kits.keys()).index(key) if key in kits else 0
+        key = self._apply_kit_choice()
+        kit = slot.kit(ds)
         team_root = ds.teams_folder_path.get(slot.team_id, "")
         fp = os.path.join(team_root, kit.get("previewFile", ""))
-        cache_key = (slot.team_id, slot.season, key)
+        cache_key = (slot.team_id, slot.season, slot.kit_variant, key)
         if cache_key not in self._kit_cache:
             self._kit_cache[cache_key] = QPixmap(fp) if os.path.exists(fp) else None
         pix = self._kit_cache[cache_key]
@@ -447,7 +496,7 @@ class TeamColumn(QWidget):
                               load_3d=not self.screen._defer_3d)
 
 
-class MatchSetupScreen(Screen):
+class MatchSetupScreen(KickoffTransition, Screen):
     def __init__(self, ds: DataStore, on_back, on_play_begin, on_play_reveal, on_edit_squad,
                  on_edit_mission=None):
         super().__init__(on_back=on_back)
@@ -473,6 +522,7 @@ class MatchSetupScreen(Screen):
         self.on_edit_mission = on_edit_mission
         self._advanced_open = False
         self._kickoff_running = False
+        self._toss = None              # the coin toss overlay while it runs
         self._build()
         self._init_devices()
 
@@ -556,8 +606,15 @@ class MatchSetupScreen(Screen):
         # to team selection before a rematch, say) — the cards need their
         # players and chrome back before anything else on this screen makes
         # sense again.
-        self._reset_kickoff_visuals()
+        self.reset_kickoff_visuals()
         self._apply_expert_mode()      # picks up a Settings toggle flipped meanwhile
+        self._apply_coin_toss_lock()   # same, for Settings > Coin Toss Before Match
+        # Settings > Wind: Advanced = a fresh random strength each time the
+        # screen opens (editable); Standard = no row, the game's own wind.
+        self.wind_power_row.setVisible(user_prefs.wind_mode == "advanced")
+        self.wind_power_row.set_values(
+            list(WIND_POWER_NAMES), index=random.randrange(len(WIND_POWER_NAMES)))
+        self._on_wind_changed()
         # Re-roll which two mannequins wear the kits each time the screen is
         # opened — except the first, which uses the ones already picked (and
         # preloaded) when the screen was built.
@@ -578,38 +635,35 @@ class MatchSetupScreen(Screen):
         for row in getattr(self, "_coming_soon_rows", []):
             row.setVisible(user_prefs.expert_mode)
 
-    def _reset_kickoff_visuals(self):
-        if not self._kickoff_running:
-            return
-        for eff in getattr(self, '_fade_effects', []):
-            eff.setOpacity(1.0)
-        for widget in (self.home_col._chrome_top, self.home_col._chrome_bottom,
-                       self.away_col._chrome_top, self.away_col._chrome_bottom,
-                       self.mid_col, self.header_widget, self.hintbar, self.play_btn):
-            widget.setGraphicsEffect(None)
-        for col in (self.home_col, self.away_col):
-            col.card.bg_opacity = 1.0
-            col.crest_lbl.setGraphicsEffect(None)
-        self._drop_overlay()
+    def _apply_coin_toss_lock(self):
+        """With the coin toss on, the toss decides who kicks off and which
+        end each team takes — the two rows show that instead of a value and
+        take no input (a disabled row is skipped by pad/keyboard navigation).
+        cfg keeps their values for when the toss is turned off again."""
+        locked = user_prefs.coin_toss
+        for row in (self.side_row, self.kickoff_row):
+            row.set_free_text("coin toss" if locked else None)
+            row.set_disabled_visual(locked)
 
-        from ui.player_anim import IdleAnimation
-        for col in (self.home_col, self.away_col):
-            stage = col.stage
-            if stage.parentWidget() is self:
-                stage.setParent(col.card)
-                col.card.layout().insertWidget(1, stage)   # between the two chrome wrappers
-                col._apply_stage_height()
-                stage.show()
-            if stage.player_view is not None:
-                rnd = stage.player_view.renderer
-                rnd.anim = IdleAnimation(rnd.rig)
-                stage.reset_yaw()
-                rnd._t0 -= random.uniform(0.0, IdleAnimation.LOOP)
-                stage.unfreeze()
-                stage.player_view.resume()
+    def _on_wind_changed(self):
+        """Strength None = the game's stock random wind (rolled by the
+        backend), 0 = none. The direction (relative to home, see
+        app.game_data) only matters for a set strength."""
+        power = self.wind_power_row.current() if user_prefs.wind_mode == "advanced" else None
+        self.cfg.wind_power = power
+        # wind_dir_row stays hidden (random direction each match)
+        direction = self.wind_dir_row.current()
+        if direction is not None:
+            self.cfg.wind_dir_deg = float(direction)
 
-        self.play_btn.setEnabled(True)
-        self._kickoff_running = False
+    # ── kickoff transition hooks (ui/kickoff_transition.py) ──────────────
+    def kt_columns(self):
+        return self.home_col, self.away_col
+
+    def kt_fade_widgets(self):
+        return [self.home_col._chrome_top, self.home_col._chrome_bottom,
+                self.away_col._chrome_top, self.away_col._chrome_bottom,
+                self.mid_col, self.header_widget, self.hintbar, self.play_btn]
 
     # ── layout ───────────────────────────────────────────────────────────
     def _build(self):
@@ -721,6 +775,25 @@ class MatchSetupScreen(Screen):
             lambda: setattr(self.cfg, "environment", self.environment_row.current()))
         self.focus.register(self.environment_row)
         v.addWidget(self.environment_row)
+
+        # Wind (the reR08 wind patch): strength and direction, each can be
+        # left on "random" (strength: the game's own wind; direction: a fresh
+        # one at each kick-off, see _play).
+        self.wind_power_row = SelectorRow("wind")
+        self.wind_power_row.set_values(list(WIND_POWER_NAMES), index=0)   # re-rolled in on_show
+        self.wind_power_row._display = lambda n: WIND_POWER_NAMES.get(n, str(n))
+        self.wind_power_row.changed.connect(self._on_wind_changed)
+        self.focus.register(self.wind_power_row)
+        v.addWidget(self.wind_power_row)
+        self.wind_dir_row = SelectorRow("wind direction")
+        self.wind_dir_row.set_values([None] + list(WIND_BEARINGS), index=0)
+        self.wind_dir_row._display = lambda d: "random" if d is None else wind_direction_label(d)
+        self.wind_dir_row.changed.connect(self._on_wind_changed)
+        # Temporarily hidden: direction stays on "random" (rolled per match
+        # in _play). Re-enable: register in focus + restore setVisible in
+        # _on_wind_changed.
+        v.addWidget(self.wind_dir_row)
+        self.wind_dir_row.setVisible(False)
 
         self.advanced_btn = StyledButton("ADVANCED", "neutral")
         self.advanced_btn.setMinimumHeight(BTN_HEIGHT)
@@ -838,14 +911,12 @@ class MatchSetupScreen(Screen):
         self.focus.register(self.pitch_row)
         v.addWidget(self.pitch_row)
 
-        # Only two pitch-logo packs ship today (data/tournaments/*/pitch_logos)
+        # Only two pitch-logo packs ship today (data/competitions/*/assets/pitch_logos)
         # — "none" forces no logo; any tournament choice forces that pack.
         # Defaults to the "Default" pack rather than "none" so picking a
         # pitch logo isn't itself a hidden extra step.
-        self._pitch_logo_choices = [("none", "none")] + [
-            (tid, next(iter(seasons.values())).get("name", tid))
-            for tid, seasons in self.ds.tournaments.items() if seasons
-        ]
+        from app import competition_branding
+        self._pitch_logo_choices = [("none", "none")] + competition_branding.choices(self.ds, "pitch_logo")
         default_index = next((i for i, (_, label) in enumerate(self._pitch_logo_choices)
                               if label == "Default"), 0)
         self.pitch_logo_row = SelectorRow("pitch logo")
@@ -859,12 +930,11 @@ class MatchSetupScreen(Screen):
         self.cfg.pitch_logo_choice = self._pitch_logo_choices[default_index][0]
 
         # Tournament logo (scoreboard / in-game graphics) and stadium graphics
-        # ("pads"): taken from the tournaments' own files, both defaulting to
-        # the "Default" tournament.
+        # ("pads"): taken from the tournaments' own files, one entry per
+        # season that has the file on disk, both defaulting to the "Default"
+        # tournament.
         def tournament_choices(key):
-            return [(tid, next(iter(seasons.values())).get("name", tid))
-                    for tid, seasons in self.ds.tournaments.items()
-                    if seasons and next(iter(seasons.values())).get(key)]
+            return competition_branding.choices(self.ds, key)
 
         self._tournament_logo_choices = tournament_choices("logo")
         if self._tournament_logo_choices:
@@ -913,8 +983,7 @@ class MatchSetupScreen(Screen):
         # same thing as the RWC stadium_flags toggle below it).
         # Hidden unless Settings > Expert Mode is on (see _apply_expert_mode).
         self._coming_soon_rows = []
-        for label in (("referee",) if config.advanced_user
-                     else ("wind", "referee")):
+        for label in ("referee",):
             row = SelectorRow(label)
             row.set_free_text("—")
             row.set_disabled_visual(True)
@@ -950,27 +1019,11 @@ class MatchSetupScreen(Screen):
 
     # ── config.advanced_user rows ────────────────────────────────────────
     def _build_advanced_weather_rows(self, v):
-        """Wind + the weather extras reR08 supports beyond the plain rain
-        toggle above. Every row here is additive/optional at the MatchConfig
+        """The weather extras reR08 supports beyond the plain rain toggle
+        above (wind lives on the match card — see _build_mid_column). Every row here is additive/optional at the MatchConfig
         level (see its own comment) — leaving all of them at their default
         produces the exact same .mis this screen has always produced."""
-        v.addWidget(eyebrow_label("WIND & WEATHER", color=ACCENT, size=13))
-
-        self.wind_power_row = SelectorRow("wind power")
-        self.wind_power_row.set_values(list(range(WIND_POWER_MAX + 1)), index=0)
-        self.wind_power_row._display = lambda n: "off" if n == 0 else str(n)
-        self.wind_power_row.changed.connect(
-            lambda: setattr(self.cfg, "wind_power", self.wind_power_row.current() or None))
-        self.focus.register(self.wind_power_row)
-        v.addWidget(self.wind_power_row)
-
-        self.wind_dir_row = SelectorRow("wind direction")
-        self.wind_dir_row.set_values(list(range(0, 360, 45)), index=0)
-        self.wind_dir_row._display = lambda n: f"{n}°"
-        self.wind_dir_row.changed.connect(
-            lambda: setattr(self.cfg, "wind_dir_deg", float(self.wind_dir_row.current())))
-        self.focus.register(self.wind_dir_row)
-        v.addWidget(self.wind_dir_row)
+        v.addWidget(eyebrow_label("WEATHER", color=ACCENT, size=13))
 
         # Overrides the plain rain toggle above when set to anything but
         # "stock" — it's the only path to real falling snow (precipitation
@@ -1127,7 +1180,7 @@ class MatchSetupScreen(Screen):
         slot = self.cfg.home
         sid = None
         if slot.team_id and slot.season:
-            info = self.ds.teams.get(slot.team_id, {}).get(slot.season, {})
+            info = slot.info(self.ds)
             sid = info.get("primaryStadium") or None
         idx = None
         if sid:
@@ -1218,73 +1271,42 @@ class MatchSetupScreen(Screen):
     def open_squad_editor(self, side):
         self.on_edit_squad(side, self.cfg)
 
-    def refresh_after_lineup_edit(self, side, data):
+    def refresh_after_lineup_edit(self, side, data, variant="", players=None):
         slot = self.cfg.home if side == "home" else self.cfg.away
+        if variant != slot.variant:
+            slot.variant = variant
+            slot.players = players or {}
         slot.lineup = data
 
     def _play(self):
-        if self._kickoff_running:
+        if self._kickoff_running or self._toss is not None:
             return
         home, away = self.cfg.controller_counts()
         if home + away < 1:
             return
-        match_data = build_match_data(self.ds, self.cfg)
+        # Direction left on "random": a fresh one each match.
+        if self.wind_dir_row.current() is None:
+            self.cfg.wind_dir_deg = float(random.choice(WIND_BEARINGS))
+        if user_prefs.coin_toss:
+            from ui.coin_toss import toss_for_match
+            self._toss = toss_for_match(self, self.ds, self.cfg,
+                                        self._on_toss_done, self._on_toss_cancelled)
+            return
+        self._launch(self.cfg)
+
+    def _on_toss_done(self, cfg):
+        self._toss = None
+        self._launch(cfg)
+
+    def _on_toss_cancelled(self):
+        self._toss = None
+        self.play_btn.setFocus()
+
+    def _launch(self, cfg):
+        match_data = build_match_data(self.ds, cfg)
         if match_data is None:
             return
-        self._start_kickoff_sequence(match_data)
-
-    # ── kickoff sequence: vanish chrome, walk the players off, reveal ────
-    def _start_kickoff_sequence(self, match_data):
-        self._kickoff_running = True
-        self.play_btn.setEnabled(False)
-
-        # Real backend work (file prep, launching the game process) starts
-        # now, hidden behind the animation — by the time the loading ring
-        # is actually shown it already has a head start. The ring's own
-        # display is forced back to 0 on reveal regardless (see
-        # on_play_reveal / GameWidget.restart_loading_display), so what the
-        # player sees is a normal-looking 0->100 climb that is quietly
-        # ahead of schedule the whole way — the "trick" that makes the wait
-        # feel shorter without lying about a fixed duration.
-        self.on_play_begin(match_data)
-        self._make_crest_flyers()
-
-        fade_targets = [
-            self.home_col._chrome_top, self.home_col._chrome_bottom,
-            self.away_col._chrome_top, self.away_col._chrome_bottom,
-            self.mid_col, self.header_widget, self.hintbar, self.play_btn,
-        ]
-        group = QParallelAnimationGroup(self)
-        self._fade_effects = []
-        for w in fade_targets:
-            eff = QGraphicsOpacityEffect(w)
-            w.setGraphicsEffect(eff)
-            self._fade_effects.append(eff)
-            anim = QPropertyAnimation(eff, b"opacity", self)
-            anim.setDuration(450)
-            anim.setStartValue(1.0)
-            anim.setEndValue(0.0)
-            anim.setEasingCurve(QEasingCurve.InOutQuad)
-            group.addAnimation(anim)
-        # The team cards' own panel (fill, border, stripe) fades too — not
-        # via QGraphicsOpacityEffect, which would also dim the 3D player
-        # stage living inside it, but via the card's own bg_opacity so the
-        # player stays fully opaque while its bordered box disappears
-        # around it instead of sitting there empty through the whole
-        # walk-off / zoom.
-        for col in (self.home_col, self.away_col):
-            anim = QPropertyAnimation(col.card, b"bg_opacity", self)
-            anim.setDuration(450)
-            anim.setStartValue(1.0)
-            anim.setEndValue(0.0)
-            anim.setEasingCurve(QEasingCurve.OutCubic)
-            group.addAnimation(anim)
-
-        self._fade_group = group
-        # The camera dollies in past the players. (_begin_walk_off, the walk-off
-        # that used to be picked at random, is kept but unused.)
-        group.finished.connect(self._begin_zoom_in)
-        group.start()
+        self.start_kickoff_sequence(match_data)
 
     def _begin_walk_off(self):
         # Each player detaches from its card's layout and is reparented onto
@@ -1341,182 +1363,6 @@ class MatchSetupScreen(Screen):
         group.finished.connect(self._finish_kickoff)
         group.start()
 
-    # ── crest flight: match-setup crests -> loading-screen crests ────────
-    def _make_crest_flyers(self):
-        """From the moment Kick off is pressed, draw each team crest on a
-        window-level overlay, on top of the real one (which is hidden), so it
-        can later fly to its place on the loading screen."""
-        self._overlay = None
-        self._flyers = {}
-        win = self.window()
-        if getattr(win, "screen_ingame", None) is None:
-            return
-        overlay = QWidget(win)
-        overlay.setAttribute(Qt.WA_TransparentForMouseEvents)
-        overlay.setStyleSheet("background: transparent;")
-        overlay.setGeometry(win.rect())
-        for side, col in (("home", self.home_col), ("away", self.away_col)):
-            pix = col.crest_lbl.pixmap()
-            if pix is None or pix.isNull():
-                continue
-            trimmed, kept = trim_transparent(pix)
-            dpr = pix.devicePixelRatio()
-            w, h = int(pix.width() / dpr), int(pix.height() / dpr)
-            label_box = QRect(col.crest_lbl.mapTo(win, QPoint(0, 0)), col.crest_lbl.size())
-            origin = QPoint(label_box.x() + (label_box.width() - w) // 2,
-                            label_box.y() + (label_box.height() - h) // 2)
-            start = QRect(origin.x() + int(kept.x() / dpr), origin.y() + int(kept.y() / dpr),
-                          max(1, int(kept.width() / dpr)), max(1, int(kept.height() / dpr)))
-            fly = QLabel(overlay)
-            fly.setScaledContents(True)
-            fly.setPixmap(trimmed)
-            fly.setStyleSheet("background: transparent;")
-            fly.setGeometry(start)
-            fly.show()
-            self._flyers[side] = fly
-            eff = QGraphicsOpacityEffect(col.crest_lbl)
-            eff.setOpacity(0.0)
-            col.crest_lbl.setGraphicsEffect(eff)
-        overlay.show()
-        overlay.raise_()
-        self._overlay = overlay
-
-    def _drop_overlay(self):
-        overlay = getattr(self, "_overlay", None)
-        if overlay is None:
-            return
-        for col in (self.home_col, self.away_col):
-            stage = col.stage
-            if stage.parentWidget() is overlay:
-                stage.setParent(self)     # what _reset_kickoff_visuals expects
-                stage.hide()
-        overlay.hide()
-        overlay.deleteLater()
-        self._overlay = None
-        self._flyers = {}
-
-    def _begin_zoom_in(self):
-        # Players keep their idle loop — only the "camera" moves, dollying
-        # in on the point between the two of them. A zoom into that
-        # barycentre pushes everything away from it in the frame, so each
-        # player grows *and* slides toward whichever edge is already on
-        # their side — home left, away right — until they run off it,
-        # rather than the two of them converging into one blob at centre.
-        #
-        # The loading screen is switched to at the START of the zoom: the
-        # players (moved onto the window-level overlay) keep zooming over it,
-        # the crests fly to their places and the rest of the loading screen
-        # fades in. Without a loading screen to hand it falls back to the old
-        # behaviour (reveal it once the zoom is over).
-        win = self.window()
-        ingame = getattr(win, "screen_ingame", None)
-        overlay = getattr(self, "_overlay", None)
-        transition = ingame is not None and overlay is not None
-        parent, offset = (overlay, self.mapTo(win, QPoint(0, 0))) if transition else (self, QPoint(0, 0))
-
-        rects = {}
-        for col in (self.home_col, self.away_col):
-            stage = col.stage
-            top_left = stage.mapTo(self, QPoint(0, 0))
-            rect = stage.geometry()
-            rect.moveTopLeft(top_left + offset)
-            rects[col] = rect
-        barycentre = QPoint(
-            (rects[self.home_col].center().x() + rects[self.away_col].center().x()) // 2,
-            (rects[self.home_col].center().y() + rects[self.away_col].center().y()) // 2)
-
-        group = QParallelAnimationGroup(self)
-        scale = 3.4
-        for col in (self.home_col, self.away_col):
-            stage = col.stage
-            rect = rects[col]
-            stage.freeze(scale)     # animate one finished image, not a live 3D render
-            layout = stage.parentWidget().layout()
-            if layout is not None:
-                layout.removeWidget(stage)
-            stage.setParent(parent)
-            stage.setMinimumHeight(0)
-            stage.setMaximumHeight(16777215)
-            stage.setGeometry(rect)
-            stage.show()
-            stage.raise_()
-
-            end_w, end_h = int(rect.width() * scale), int(rect.height() * scale)
-            end_cx = barycentre.x() + (rect.center().x() - barycentre.x()) * scale
-            end_cy = barycentre.y() + (rect.center().y() - barycentre.y()) * scale
-            end_rect = QRect(int(end_cx - end_w / 2), int(end_cy - end_h / 2), end_w, end_h)
-            anim = QPropertyAnimation(stage, b"geometry", self)
-            anim.setDuration(WALKOFF_MS)
-            anim.setStartValue(rect)
-            anim.setEndValue(end_rect)
-            # Accelerating, unlike the walk-off's steady InQuad — a dolly-in
-            # starts slow and rushes at the end.
-            anim.setEasingCurve(QEasingCurve.InCubic)
-            group.addAnimation(anim)
-        self._walkoff_group = group
-
-        if not transition:
-            group.finished.connect(self._finish_kickoff)
-            group.start()
-            return
-
-        ingame.prepare_intro_transition()
-        self.on_play_reveal()                 # loading screen on, match setup off
-
-        def start_animations():
-            # Players start zooming (and, over the run, fading out) right away.
-            group.start()
-
-            # The crests follow CREST_DELAY_MS later, in their own group, so
-            # they visibly trail the players instead of moving in lockstep.
-            crest_group = QParallelAnimationGroup(self)
-            for side, fly in self._flyers.items():
-                target, _pix = ingame.crest_display_rect(side, win)
-                if target.isEmpty():
-                    fly.hide()
-                    continue
-                anim = QPropertyAnimation(fly, b"geometry", self)
-                anim.setDuration(WALKOFF_MS)
-                anim.setStartValue(fly.geometry())
-                anim.setEndValue(target)
-                anim.setEasingCurve(QEasingCurve.InOutCubic)
-                crest_group.addAnimation(anim)
-            self._crest_group = crest_group
-            crest_group.finished.connect(self._finish_zoom_transition)
-
-            def start_crest_group():
-                # Kickoff may have been reset (e.g. game exited) while we
-                # were waiting out the delay — the flyers are gone by then.
-                if self._kickoff_running and self._flyers:
-                    crest_group.start()
-            QTimer.singleShot(CREST_DELAY_MS, start_crest_group)
-
-            # The rest of the loading screen (names, wheel...) fades in so its
-            # own end lines up with the crests landing, not starting from there.
-            fade_start = max(0, CREST_DELAY_MS + WALKOFF_MS - LOADING_FADE_MS)
-
-            def start_loading_fade():
-                if self._kickoff_running:
-                    # Re-triggers the ring's 0%-start climb (see
-                    # ingame._run_intro_climb) right as it becomes visible —
-                    # otherwise the climb that began back when this screen
-                    # was first switched to has already run ahead by the
-                    # time the fade reveals it.
-                    ingame.restart_loading_display()
-                    ingame.play_intro_fade(LOADING_FADE_MS)
-            QTimer.singleShot(fade_start, start_loading_fade)
-        QTimer.singleShot(0, start_animations)
-
-    def _finish_zoom_transition(self):
-        ingame = getattr(self.window(), "screen_ingame", None)
-        if ingame is not None:
-            ingame.show_crests()
-        self._drop_overlay()
-
-    def _finish_kickoff(self):
-        self.on_play_reveal()
-
-
 class MatchSetupContainer(QWidget):
     """Owns the nested MatchSetup <-> LineupEdit sub-flow, same pattern the
     pre-redesign TeamSelectionMenu used."""
@@ -1557,11 +1403,23 @@ class MatchSetupContainer(QWidget):
         if not slot.team_id:
             return
         self._editing_side = side
-        team_name = self.ds.teams[slot.team_id][slot.season].get("name", slot.team_id)
+        team_name = slot.info(self.ds).get("name", slot.team_id)
+        tid, season = slot.team_id, slot.season
+        block = self.ds.teams.get(tid, {}).get(season, {})
+        # Only variants with a squad of their own: a kit-only variant is the
+        # default squad, and its kit is picked on the setup card.
+        variants = [(vid, V.variant_label(block, vid)) for vid in V.variant_ids(block)
+                    if "players" in V.overrides(block, vid)]
+
+        def load_variant(vid):
+            lineup = self.ds.get_lineup(tid, season, vid)
+            return self.ds.get_players(lineup.get("players_id", []), season), lineup
+
         widget = SquadEditorScreen(
             side, team_name, slot.players, deepcopy(slot.lineup),
             on_confirm=self._on_confirm,
             on_discard=self._show_setup,
+            variants=variants, variant=slot.variant, load_variant=load_variant,
         )
         self.stack.addWidget(widget)
         self.stack.setCurrentWidget(widget)
@@ -1570,6 +1428,6 @@ class MatchSetupContainer(QWidget):
     def _show_setup(self):
         self.stack.setCurrentWidget(self.setup_screen)
 
-    def _on_confirm(self, data):
-        self.setup_screen.refresh_after_lineup_edit(self._editing_side, data)
+    def _on_confirm(self, data, variant="", players=None):
+        self.setup_screen.refresh_after_lineup_edit(self._editing_side, data, variant, players)
         self._show_setup()
