@@ -12,6 +12,8 @@ from datetime import datetime
 
 from shared.log import get_logger
 
+from app import variants as V
+
 from . import scheduler, selection, simulator, standings
 from .events import bus
 from .model import SCHEMA_VERSION, PlayerState, TeamEntry, Tournament
@@ -23,16 +25,23 @@ log = get_logger(__name__)
 
 def pick_season(seasons, wanted) -> str:
     """`wanted` if the team has it, else the closest one it does have."""
-    if wanted in seasons:
-        return wanted
-    keys = sorted(seasons, key=lambda s: int(s) if str(s).isdigit() else 0)
-    if not keys:
-        return ""
-    try:
-        w = int(wanted)
-        return min(keys, key=lambda s: (abs(int(s) - w), -int(s)))
-    except (TypeError, ValueError):
-        return keys[-1]
+    return V.pick_season(seasons, wanted)
+
+
+def team_variant(template, team_id) -> str:
+    """The variant a template asks of `team_id` — for its squad and,
+    independently, its kits: its "team_variants" entry, else its "variant"
+    — "" = the default."""
+    per_team = (template or {}).get("team_variants") or {}
+    if str(team_id) in per_team:
+        return str(per_team[str(team_id)] or "")
+    return str((template or {}).get("variant") or "")
+
+
+def entry_variant(ds, template, team_id, season) -> str:
+    """team_variant() if the team really has it in `season`, else ""."""
+    wanted = team_variant(template, team_id)
+    return wanted if wanted in ds.variants_of(team_id, season) else ""
 
 
 def default_participants(template, season) -> dict:
@@ -44,8 +53,8 @@ def default_participants(template, season) -> dict:
             for sid, groups in chosen.items()}
 
 
-def usable_squad(ds, team_id, season) -> list:
-    info = ds.teams.get(team_id, {}).get(season, {})
+def usable_squad(ds, team_id, season, variant="") -> list:
+    info = ds.team_season(team_id, season, variant)
     return [str(p) for p in info.get("players", []) if p and str(p) in ds.players
             and "stats" in ds.players[str(p)]]
 
@@ -70,10 +79,12 @@ def create_tournament(ds, template, season, participants=None, humans=(), option
     for tid in team_ids:
         seasons = ds.teams[tid]
         tseason = pick_season(seasons, str(season))
-        info = seasons[tseason]
-        squad = usable_squad(ds, tid, tseason)
+        variant = entry_variant(ds, template, tid, tseason)
+        info = ds.team_season(tid, tseason, variant)
+        squad = usable_squad(ds, tid, tseason, variant)
         human = tid in humans
-        entry = TeamEntry(team_id=tid, season=tseason, name=info.get("name", tid), human=human,
+        entry = TeamEntry(team_id=tid, season=tseason, variant=variant,
+                          name=info.get("name", tid), human=human,
                           controller=controller if human else 0,
                           default_roles={k: str(v) for k, v in (info.get("roles") or {}).items()},
                           set_plays=dict(info.get("setPlays") or {}),

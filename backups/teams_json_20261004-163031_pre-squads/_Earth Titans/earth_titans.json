@@ -1,0 +1,80 @@
+{
+ "2008": {
+  "2010": {
+   "enabled": false,
+   "name": "Earth Titans",
+   "type": "england",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "124227",
+    "viceCaptain": "132707",
+    "longGK": "118703",
+    "shortGK": "118703",
+    "longPunt": "118703",
+    "shortPunt": "118703",
+    "kickoff": "118703"
+   },
+   "setPlays": {
+    "up": "miss_pivot",
+    "down": "miss",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143337",
+    "132707",
+    "143313",
+    "143438",
+    "124227",
+    "110021",
+    "111447",
+    "143342",
+    "143180",
+    "118703",
+    "102625",
+    "143879",
+    "119169",
+    "142487",
+    "143508",
+    "142589",
+    "143098",
+    "131591",
+    "142655",
+    "142704",
+    "143199",
+    "143330",
+    "142828",
+    "143780",
+    "143002",
+    "127594",
+    "107487",
+    "143918",
+    "143656",
+    "144070"
+   ]
+  }
+ }
+}

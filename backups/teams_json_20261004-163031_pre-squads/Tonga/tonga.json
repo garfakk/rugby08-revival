@@ -1,0 +1,818 @@
+{
+ "1018": {
+  "2008": {
+   "name": "Tonga",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2009/home_front.png",
+     "backKitFile": "kits_2009/home_back/home_back_%.png",
+     "previewFile": "kits_2009/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2009/away_wc_front.png",
+     "backKitFile": "kits_2009/away_back/away_back_%.png",
+     "previewFile": "kits_2009/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "148221",
+    "viceCaptain": "148216",
+    "longGK": "148214",
+    "shortGK": "148214",
+    "longPunt": "148214",
+    "shortPunt": "148214",
+    "kickoff": "148214"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "pocket",
+    "right": "miss"
+   },
+   "players": [
+    "148216",
+    "148223",
+    "143193",
+    "148225",
+    "148219",
+    "148220",
+    "148221",
+    "148222",
+    "148227",
+    "148214",
+    "148213",
+    "148212",
+    "148211",
+    "148210",
+    "148209",
+    "148217",
+    "148224",
+    "148218",
+    "148230",
+    "148231",
+    "148228",
+    "148232",
+    "148226",
+    "148229",
+    "148233",
+    "148215",
+    "142919",
+    "143056"
+   ]
+  },
+  "2009": {
+   "name": "Tonga",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2009/home_front.png",
+     "backKitFile": "kits_2009/home_back/home_back_%.png",
+     "previewFile": "kits_2009/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2009/away_front.png",
+     "backKitFile": "kits_2009/away_back/away_back_%.png",
+     "previewFile": "kits_2009/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "148221",
+    "viceCaptain": "148216",
+    "longGK": "148214",
+    "shortGK": "148214",
+    "longPunt": "148214",
+    "shortPunt": "148214",
+    "kickoff": "148214"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "pocket",
+    "right": "miss"
+   },
+   "players": [
+    "148216",
+    "148223",
+    "143193",
+    "148225",
+    "148219",
+    "148220",
+    "148221",
+    "148222",
+    "148227",
+    "148214",
+    "148213",
+    "148212",
+    "148211",
+    "148210",
+    "148209",
+    "148217",
+    "148224",
+    "148218",
+    "148230",
+    "148231",
+    "148228",
+    "148232",
+    "148226",
+    "148229",
+    "148233",
+    "148215",
+    "142919",
+    "143056"
+   ]
+  },
+  "2024": {
+   "name": "Tonga",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": "",
+     "variants": {
+      "rwc_2023": {
+       "label": "RWC 2023",
+       "frontKitFile": "kits_2024/home_wc_front.png",
+       "backKitFile": "kits_2024/home_wc_back/home_wc_back_%.png",
+       "previewFile": "kits_2024/home_wc_preview.png"
+      }
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": "",
+     "variants": {
+      "rwc_2023": {
+       "label": "RWC 2023",
+       "frontKitFile": "kits_2024/away_wc_front.png",
+       "backKitFile": "kits_2024/away_wc_back/away_wc_back_%.png",
+       "previewFile": "kits_2024/away_wc_preview.png"
+      }
+     }
+    }
+   },
+   "roles": {
+    "captain": "145468",
+    "viceCaptain": "144391",
+    "longGK": "146717",
+    "shortGK": "146717",
+    "longPunt": "146717",
+    "shortPunt": "146717",
+    "kickoff": "146717"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145384",
+    "146602",
+    "144313",
+    "144157",
+    "145418",
+    "146574",
+    "146132",
+    "145478",
+    "145468",
+    "146717",
+    "145404",
+    "142315",
+    "144257",
+    "146189",
+    "144391",
+    "145246",
+    "144539",
+    "145014",
+    "145632",
+    "146425",
+    "146325",
+    "11273",
+    "146666",
+    "145420",
+    "144960",
+    "142337",
+    "146308",
+    "143650",
+    "146125",
+    "146352"
+   ],
+   "variant": {
+    "world_cup": {
+     "label": "Rugby World Cup 2023",
+     "players": [
+      "145384",
+      "146602",
+      "144313",
+      "144157",
+      "144960",
+      "145632",
+      "146132",
+      "145478",
+      "145468",
+      "146325",
+      "146352",
+      "144257",
+      "142315",
+      "145965",
+      "144391",
+      "144539",
+      "145246",
+      "142337",
+      "146574",
+      "146308",
+      "143650",
+      "145404",
+      "145422",
+      "146776",
+      "146666",
+      "146777",
+      "145418",
+      "145420",
+      "146778",
+      "146425",
+      "146717",
+      "11273",
+      "146125"
+     ],
+     "roles": {
+      "captain": "145468",
+      "viceCaptain": "146325",
+      "longGK": "146325",
+      "shortGK": "146325",
+      "longPunt": "146325",
+      "shortPunt": "146325",
+      "kickoff": "146325"
+     }
+    }
+   }
+  },
+  "2010": {
+   "enabled": false,
+   "name": "Tonga",
+   "type": "international",
+   "category": "",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "143143",
+    "viceCaptain": "143316",
+    "longGK": "143316",
+    "shortGK": "143316",
+    "longPunt": "143316",
+    "shortPunt": "143316",
+    "kickoff": "143316"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "pocket",
+    "right": "miss"
+   },
+   "players": [
+    "142729",
+    "143480",
+    "143239",
+    "143481",
+    "143645",
+    "143379",
+    "143457",
+    "118058",
+    "142898",
+    "143316",
+    "142710",
+    "143556",
+    "144013",
+    "143143",
+    "143289",
+    "142970",
+    "143193",
+    "142952",
+    "143935",
+    "143822",
+    "143056",
+    "142540",
+    "143281",
+    "143549",
+    "142919",
+    "143290",
+    "143339",
+    "142996",
+    "143521",
+    "142883"
+   ]
+  },
+  "2012": {
+   "enabled": false,
+   "name": "Tonga",
+   "type": "international",
+   "category": "",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "148222",
+    "viceCaptain": "148223",
+    "longGK": "148235",
+    "shortGK": "148235",
+    "longPunt": "142736",
+    "shortPunt": "142736",
+    "kickoff": "142736"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "pocket",
+    "right": "miss"
+   },
+   "players": [
+    "148216",
+    "148223",
+    "143193",
+    "148244",
+    "148237",
+    "145403",
+    "148243",
+    "143741",
+    "142736",
+    "148236",
+    "148211",
+    "148235",
+    "145449",
+    "148240",
+    "148209",
+    "148217",
+    "143578",
+    "148246",
+    "142883",
+    "148242",
+    "145386",
+    "148239",
+    "148234",
+    "148222",
+    "148238",
+    "142957",
+    "142919",
+    "148245",
+    "148241",
+    "148247",
+    "148248",
+    "148249",
+    "148250",
+    "148219",
+    "148251",
+    "148252"
+   ]
+  },
+  "2016": {
+   "enabled": false,
+   "name": "Tonga",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "148221",
+    "viceCaptain": "145449",
+    "longGK": "145602",
+    "shortGK": "145602",
+    "longPunt": "148236",
+    "shortPunt": "148236",
+    "kickoff": "148253"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "148216",
+    "148258",
+    "148246",
+    "148256",
+    "142957",
+    "145403",
+    "148221",
+    "143741",
+    "145468",
+    "148236",
+    "148240",
+    "148253",
+    "145449",
+    "145602",
+    "148209",
+    "145246",
+    "143578",
+    "148254",
+    "145420",
+    "148255",
+    "145386",
+    "144962",
+    "148241",
+    "144445",
+    "148223",
+    "148220",
+    "142583",
+    "148257",
+    "148259"
+   ]
+  },
+  "2020": {
+   "enabled": false,
+   "name": "Tonga",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145449",
+    "viceCaptain": "145384",
+    "longGK": "144731",
+    "shortGK": "144731",
+    "longPunt": "144731",
+    "shortPunt": "144731",
+    "kickoff": "144445"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145384",
+    "145246",
+    "144313",
+    "145418",
+    "144960",
+    "145403",
+    "145739",
+    "145687",
+    "145468",
+    "144731",
+    "144445",
+    "145449",
+    "145068",
+    "144212",
+    "145602",
+    "145718",
+    "145663",
+    "145055",
+    "145613",
+    "143628",
+    "145450",
+    "144962",
+    "144416",
+    "145736",
+    "148260",
+    "145422",
+    "148236",
+    "145012",
+    "148261",
+    "145420",
+    "144548"
+   ]
+  },
+  "2021": {
+   "enabled": false,
+   "name": "Tonga",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145449",
+    "viceCaptain": "145403",
+    "longGK": "144731",
+    "shortGK": "144731",
+    "longPunt": "144731",
+    "shortPunt": "144731",
+    "kickoff": "144731"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145055",
+    "145718",
+    "144313",
+    "144960",
+    "145418",
+    "145687",
+    "145739",
+    "145403",
+    "145386",
+    "144731",
+    "145736",
+    "145449",
+    "145068",
+    "144416",
+    "145602",
+    "145246",
+    "145663",
+    "145420",
+    "145613",
+    "145450",
+    "144962",
+    "144445",
+    "145422",
+    "145012",
+    "145384",
+    "144548",
+    "143628",
+    "145468",
+    "144212",
+    "144559"
+   ]
+  },
+  "2025": {
+   "enabled": false,
+   "name": "Tonga",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144313",
+    "viceCaptain": "148270",
+    "longGK": "146717",
+    "shortGK": "146717",
+    "longPunt": "148264",
+    "shortPunt": "148264",
+    "kickoff": "148264"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "146666",
+    "146602",
+    "144313",
+    "148267",
+    "148268",
+    "148278",
+    "148270",
+    "146395",
+    "148265",
+    "148264",
+    "148263",
+    "144559",
+    "146125",
+    "148262",
+    "146717",
+    "148271",
+    "148266",
+    "146777",
+    "148273",
+    "148274",
+    "148275",
+    "148288",
+    "148283",
+    "146778",
+    "148276",
+    "145718",
+    "148269",
+    "144257",
+    "148277",
+    "144731",
+    "146425",
+    "144157",
+    "144548",
+    "148289",
+    "148272",
+    "145602",
+    "148279",
+    "148280",
+    "148281",
+    "148282",
+    "148284",
+    "148285",
+    "148286",
+    "148287",
+    "148290",
+    "148291",
+    "148292"
+   ],
+   "variant": {
+    "world_cup": {
+     "label": "Rugby World Cup 2023",
+     "players": [
+      "145384",
+      "146602",
+      "144313",
+      "144157",
+      "144960",
+      "145632",
+      "146132",
+      "145478",
+      "145468",
+      "146325",
+      "146352",
+      "144257",
+      "142315",
+      "145965",
+      "144391",
+      "144539",
+      "145246",
+      "142337",
+      "146574",
+      "146308",
+      "143650",
+      "145404",
+      "145422",
+      "146776",
+      "146666",
+      "146777",
+      "145418",
+      "145420",
+      "146778",
+      "146425",
+      "146717",
+      "11273",
+      "146125"
+     ],
+     "roles": {
+      "captain": "145468",
+      "viceCaptain": "146325",
+      "longGK": "146325",
+      "shortGK": "146325",
+      "longPunt": "146325",
+      "shortPunt": "146325",
+      "kickoff": "146325"
+     }
+    }
+   }
+  }
+ }
+}

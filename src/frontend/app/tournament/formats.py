@@ -5,7 +5,7 @@ A template is a JSON file describing a competition's structure and rules:
 
   {"id": "world_cup", "name": "World Cup",
    "match_type": "world_cup",          # game commentary flag (gsv.match_type)
-   "branding": "default",              # data/tournaments id for logo/pads/pitch
+   "branding": "default",              # competition id (data/competitions/<competition>/<competition>.json)
    "venue": "neutral" | "home",        # default for every stage
    "venues": ["70", ...],              # neutral venue rotation (stadium ids)
    "points": {...}, "tiebreakers": [...], "discipline": {...},
@@ -19,10 +19,21 @@ A template is a JSON file describing a competition's structure and rules:
          "ties": [["pools:A1", "pools:B2"], ...]},
         {"id": "final", "name": "Final", "match_subtype": "final", "final": true,
          "ties": [["W:sf1", "W:sf2"]]}]}],
-   "participants": {"default": {"pools": {"A": ["1010", ...]}}, "2024": {...}}}
+   "participants": {"default": {"pools": {"A": ["1010", ...]}}, "2024": {...}},
+   "season": "2024",                   # optional: the season the wizard preselects
+   "variant": "world_cup",             # optional: competition squads/kits (app/variants.py)
+   "team_variants": {"1004": ""}}      # optional per-team exception ("" = default)
 
-Built-in templates ship in assets/data/competitions/; a data pack can add
-or override them (same id) in <mod data>/competitions/.
+Every team plays its season's `variant` squad when it has one, else its
+default — so the generic world_cup template with season 2024 plays the RWC
+2023 squads, with 2028 the RWC 2027 ones. Independently, each kit worn is
+that kit's `variant` version (a tournament patch) when the kit has one.
+
+Built-in templates ship as flat files in assets/data/competitions/; a data
+pack can add or override them (same id) inside its competition definitions,
+<mod data>/competitions/<competition>/<competition>.json — under "template"
+for a seasonless competition, under "seasons" -> <year> -> "template" for a
+seasonal one (see tournament_data_loader.py).
 """
 import json
 import os
@@ -45,21 +56,43 @@ def _read(path):
         return json.loads(re.sub(r",\s*([}\]])", r"\1", fh.read()))
 
 
+def _templates_in(d):
+    """(source name, template) for every template in directory `d`: its own
+    .json files, then those in each <competition>/<competition>.json."""
+    for name in sorted(os.listdir(d)):
+        path = os.path.join(d, name)
+        try:
+            if name.endswith(".json") and os.path.isfile(path):
+                tpl = _read(path)
+                tpl.setdefault("id", os.path.splitext(name)[0])
+                yield name, tpl
+                continue
+            root_json = os.path.join(path, f"{name}.json")
+            if not os.path.isfile(root_json):
+                continue
+            definition = _read(root_json)
+            entries = (definition.get("seasons", {}).items() if definition.get("seasonal")
+                       else [("", definition)])
+            for season, entry in entries:
+                tpl = entry.get("template")
+                if tpl:
+                    tpl.setdefault("branding", str(definition.get("id", name)))
+                    if season:
+                        tpl.setdefault("branding_season", str(season))
+                    tpl.setdefault("id", name)
+                    yield name, tpl
+        except Exception as e:
+            log.error("competition template %s: %s", name, e)
+
+
 def load_templates(dirs=None) -> dict:
     """{id: template}, later directories overriding earlier ones."""
     out = {}
     for d in dirs or _dirs():
         if not os.path.isdir(d):
             continue
-        for name in sorted(os.listdir(d)):
-            if not name.endswith(".json"):
-                continue
-            try:
-                tpl = _read(os.path.join(d, name))
-                tpl.setdefault("id", os.path.splitext(name)[0])
-                out[tpl["id"]] = tpl
-            except Exception as e:
-                log.error("competition template %s: %s", name, e)
+        for _, tpl in _templates_in(d):
+            out[tpl["id"]] = tpl
     return dict(sorted(out.items(), key=lambda kv: (kv[1].get("order", 100), kv[1].get("name", kv[0]))))
 
 
@@ -69,7 +102,7 @@ def stage_team_count(template, participants) -> int:
 
 def problems(ds, template, season, participants) -> list:
     """What would stop this template running with these participants."""
-    from .engine import pick_season, usable_squad
+    from .engine import pick_season, usable_squad, entry_variant
     found = []
     seen = set()
     rr = [s for s in template.get("stages", []) if s.get("kind", "round_robin") == "round_robin"]
@@ -90,10 +123,12 @@ def problems(ds, template, season, participants) -> list:
                     found.append(f"team {tid} is not in the data")
                     continue
                 s = pick_season(ds.teams[tid], str(season))
-                n = len(usable_squad(ds, tid, s))
+                variant = entry_variant(ds, template, tid, s)
+                n = len(usable_squad(ds, tid, s, variant))
                 if n < 22:
-                    name = ds.teams[tid][s].get("name", tid)
-                    found.append(f"{name}: only {n} usable players (22 needed)")
+                    name = ds.team_season(tid, s, variant).get("name", tid)
+                    squad = f" ({variant.replace('_', ' ')} squad)" if variant else ""
+                    found.append(f"{name}{squad}: only {n} usable players (22 needed)")
     # refs must point at something that exists
     stage_ids = {s["id"]: s for s in template.get("stages", [])}
     tie_ids = set()

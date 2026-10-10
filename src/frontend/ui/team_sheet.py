@@ -63,11 +63,13 @@ POSITION_SHORT = {
 }
 
 # The squad data uses finer-grained tags than POSITION_FOR_NUMBER's generic
-# ones (loosehead_prop vs prop), so a shirt accepts a set, not one string.
+# ones (loosehead_prop vs prop), so a shirt accepts a set, not one string. The
+# game treats loosehead and tighthead as one position: either wears 1 or 3.
+_PROPS = {"prop", "loosehead_prop", "tighthead_prop"}
 ACCEPTED_POSITIONS = {
-    1: {"prop", "loosehead_prop"},
+    1: _PROPS,
     2: {"hooker"},
-    3: {"prop", "tighthead_prop"},
+    3: _PROPS,
     4: {"second_row", "lock"},
     5: {"second_row", "lock"},
     6: {"flanker", "blindside_flanker", "openside_flanker"},

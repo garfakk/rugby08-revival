@@ -1,0 +1,55 @@
+{
+ "2052": {
+  "2010": {
+   "enabled": false,
+   "name": "Cats",
+   "type": "south africa",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "143182",
+    "viceCaptain": "143182",
+    "longGK": "114310",
+    "shortGK": "114310",
+    "longPunt": "114310",
+    "shortPunt": "114310",
+    "kickoff": "114310"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143182",
+    "142910",
+    "114310",
+    "143925",
+    "115944"
+   ]
+  }
+ }
+}

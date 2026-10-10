@@ -1,0 +1,1184 @@
+{
+ "1003": {
+  "2008": {
+   "name": "Canada",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2008/home_front.png",
+     "backKitFile": "kits_2008/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": "",
+     "variants": {
+      "rwc_2007": {
+       "label": "RWC 2007",
+       "frontKitFile": "kits_2008/home_wc_front.png"
+      }
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2008/away_front.png",
+     "backKitFile": "kits_2008/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": "",
+     "variants": {
+      "rwc_2007": {
+       "label": "RWC 2007",
+       "frontKitFile": "kits_2008/away_wc_front.png"
+      }
+     }
+    }
+   },
+   "roles": {
+    "captain": "143749",
+    "viceCaptain": "147302",
+    "longGK": "142468",
+    "shortGK": "142468",
+    "longPunt": "142468",
+    "shortPunt": "142468",
+    "kickoff": "142468"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "147302",
+    "147301",
+    "147300",
+    "147306",
+    "147298",
+    "142406",
+    "147297",
+    "147296",
+    "143749",
+    "147309",
+    "142468",
+    "147294",
+    "147293",
+    "143165",
+    "147292",
+    "147303",
+    "147304",
+    "147305",
+    "147299",
+    "147313",
+    "147308",
+    "147295",
+    "112292",
+    "147314",
+    "147310",
+    "147311",
+    "147312",
+    "147315",
+    "147316"
+   ]
+  },
+  "2024": {
+   "name": "Canada",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145002",
+    "viceCaptain": "144773",
+    "longGK": "146259",
+    "shortGK": "146259",
+    "longPunt": "146259",
+    "shortPunt": "146259",
+    "kickoff": "146259"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "144476",
+    "144217",
+    "145953",
+    "144373",
+    "144773",
+    "145977",
+    "145002",
+    "145945",
+    "146497",
+    "146259",
+    "146711",
+    "145969",
+    "146632",
+    "144156",
+    "146563",
+    "146086",
+    "145914",
+    "146265",
+    "145498",
+    "146121",
+    "145245",
+    "144919",
+    "146460",
+    "146487",
+    "145976",
+    "146225",
+    "146055",
+    "144946",
+    "145443",
+    "146486"
+   ]
+  },
+  "2010": {
+   "enabled": false,
+   "name": "Canada",
+   "type": "international",
+   "category": "",
+   "ball": "ball/ball_%.png",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "142755",
+    "viceCaptain": "143790",
+    "longGK": "142468",
+    "shortGK": "142468",
+    "longPunt": "142468",
+    "shortPunt": "142468",
+    "kickoff": "143790"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "142880",
+    "142755",
+    "143501",
+    "142640",
+    "143959",
+    "142838",
+    "142391",
+    "142633",
+    "143179",
+    "143790",
+    "142912",
+    "142651",
+    "143165",
+    "143692",
+    "142468",
+    "143264",
+    "143658",
+    "142721",
+    "143133",
+    "142799",
+    "143831",
+    "142580",
+    "143977",
+    "142944",
+    "142977",
+    "143025",
+    "143905",
+    "142406",
+    "143777",
+    "142839"
+   ]
+  },
+  "2012": {
+   "enabled": false,
+   "name": "Canada",
+   "type": "international",
+   "category": "",
+   "ball": "ball/ball_%.png",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "147301",
+    "viceCaptain": "147303",
+    "longGK": "147308",
+    "shortGK": "147308",
+    "longPunt": "142468",
+    "shortPunt": "142468",
+    "kickoff": "142468"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "144632",
+    "147301",
+    "147319",
+    "147318",
+    "112292",
+    "147310",
+    "142838",
+    "147303",
+    "147308",
+    "147295",
+    "142651",
+    "147309",
+    "143165",
+    "147317",
+    "142468",
+    "147320",
+    "147311",
+    "147321",
+    "142799",
+    "147323",
+    "147324",
+    "147322",
+    "143905",
+    "143658",
+    "147326",
+    "147330",
+    "145498",
+    "147327",
+    "147328",
+    "147329",
+    "144746",
+    "147305",
+    "147332",
+    "147325",
+    "144778",
+    "147331",
+    "147333",
+    "143179",
+    "147334"
+   ]
+  },
+  "2014": {
+   "enabled": false,
+   "name": "Canada",
+   "type": "international",
+   "category": "",
+   "ball": "ball/ball_%.png",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145498",
+    "viceCaptain": "147303",
+    "longGK": "147344",
+    "shortGK": "147344",
+    "longPunt": "147344",
+    "shortPunt": "147344",
+    "kickoff": "147344"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "144632",
+    "147338",
+    "143658",
+    "147332",
+    "147329",
+    "147318",
+    "147336",
+    "145498",
+    "145241",
+    "147335",
+    "145567",
+    "147344",
+    "147317",
+    "144746",
+    "143905",
+    "147339",
+    "144476",
+    "144299",
+    "147342",
+    "147310",
+    "144778",
+    "145250",
+    "147343",
+    "147322",
+    "142799",
+    "147321",
+    "142468",
+    "147333",
+    "147303",
+    "147340",
+    "142651",
+    "147337",
+    "147341",
+    "112292",
+    "147319",
+    "144607",
+    "143165"
+   ]
+  },
+  "2016": {
+   "enabled": false,
+   "name": "Canada",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "112292",
+    "viceCaptain": "145498",
+    "longGK": "147324",
+    "shortGK": "147324",
+    "longPunt": "147324",
+    "shortPunt": "147324",
+    "kickoff": "147324"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "144632",
+    "147338",
+    "147337",
+    "147329",
+    "112292",
+    "147342",
+    "147336",
+    "147303",
+    "144607",
+    "147324",
+    "143165",
+    "147344",
+    "147317",
+    "142651",
+    "143905",
+    "144299",
+    "144476",
+    "143658",
+    "144514",
+    "142799",
+    "145241",
+    "147322",
+    "147335",
+    "147318",
+    "144778",
+    "144756",
+    "147333",
+    "145567",
+    "144746",
+    "144044",
+    "147345",
+    "145250",
+    "145002",
+    "144897",
+    "144507",
+    "147330",
+    "145132",
+    "147343",
+    "145498",
+    "147319",
+    "147346",
+    "147347",
+    "145067",
+    "147348",
+    "147349",
+    "142468",
+    "147332",
+    "147321",
+    "147350",
+    "144817"
+   ]
+  },
+  "2017": {
+   "enabled": false,
+   "name": "Canada",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "143165",
+    "viceCaptain": "147329",
+    "longGK": "147344",
+    "shortGK": "147344",
+    "longPunt": "147344",
+    "shortPunt": "147344",
+    "kickoff": "147344"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "144476",
+    "147338",
+    "144756",
+    "147329",
+    "144514",
+    "144897",
+    "145067",
+    "147352",
+    "144607",
+    "147343",
+    "147328",
+    "147344",
+    "147322",
+    "143165",
+    "143905",
+    "144507",
+    "147351",
+    "145132",
+    "144373",
+    "147355",
+    "145241",
+    "145250",
+    "147317",
+    "147303",
+    "145567",
+    "147353",
+    "147356",
+    "144156",
+    "147357",
+    "144299",
+    "147358",
+    "145002",
+    "147354",
+    "112292",
+    "147345",
+    "144586",
+    "147359",
+    "147360",
+    "145498",
+    "147361"
+   ]
+  },
+  "2018": {
+   "enabled": false,
+   "name": "Canada",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145241",
+    "viceCaptain": "145002",
+    "longGK": "145250",
+    "shortGK": "145250",
+    "longPunt": "147344",
+    "shortPunt": "147344",
+    "kickoff": "147344"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "144476",
+    "147338",
+    "144756",
+    "144773",
+    "144514",
+    "145002",
+    "145067",
+    "145498",
+    "145241",
+    "145250",
+    "145567",
+    "147344",
+    "147353",
+    "147346",
+    "144156",
+    "144507",
+    "147365",
+    "147364",
+    "144897",
+    "147362",
+    "147356",
+    "144586",
+    "147363",
+    "145132",
+    "143165",
+    "147317",
+    "147357",
+    "144632",
+    "147354",
+    "144373",
+    "147342",
+    "144299",
+    "147329",
+    "144746",
+    "144946",
+    "145582",
+    "147345",
+    "147303",
+    "147347",
+    "147366",
+    "147368",
+    "146259",
+    "147358",
+    "147367",
+    "147343",
+    "144607",
+    "147352",
+    "147369",
+    "147328"
+   ]
+  },
+  "2020": {
+   "enabled": false,
+   "name": "Canada",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145498",
+    "viceCaptain": "144632",
+    "longGK": "147370",
+    "shortGK": "147370",
+    "longPunt": "147370",
+    "shortPunt": "147370",
+    "kickoff": "145250"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "144632",
+    "144507",
+    "144756",
+    "144514",
+    "144373",
+    "145002",
+    "145067",
+    "145498",
+    "144607",
+    "147370",
+    "143165",
+    "147317",
+    "147322",
+    "144746",
+    "145250",
+    "144217",
+    "144476",
+    "145132",
+    "145126",
+    "144773",
+    "144778",
+    "147357",
+    "144156",
+    "147353",
+    "147344",
+    "144299",
+    "144946",
+    "145241",
+    "144897",
+    "147364",
+    "145567",
+    "144586",
+    "147362",
+    "145245",
+    "147371"
+   ]
+  },
+  "2021": {
+   "enabled": false,
+   "name": "Canada",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145498",
+    "viceCaptain": "143165",
+    "longGK": "145250",
+    "shortGK": "145250",
+    "longPunt": "145250",
+    "shortPunt": "145250",
+    "kickoff": "145250"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "144632",
+    "144299",
+    "144476",
+    "145126",
+    "144514",
+    "145498",
+    "144897",
+    "145002",
+    "144607",
+    "145250",
+    "145567",
+    "143692",
+    "144411",
+    "143165",
+    "145245",
+    "144507",
+    "144756",
+    "144373",
+    "145067",
+    "145241",
+    "145443",
+    "144586",
+    "144217",
+    "145132",
+    "144773",
+    "144946",
+    "144778",
+    "144919",
+    "144156",
+    "145582"
+   ]
+  },
+  "2022": {
+   "enabled": false,
+   "name": "Canada",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145002",
+    "viceCaptain": "147364",
+    "longGK": "147381",
+    "shortGK": "147381",
+    "longPunt": "147381",
+    "shortPunt": "147381",
+    "kickoff": "147381"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "147364",
+    "144217",
+    "144756",
+    "144373",
+    "144897",
+    "145002",
+    "147375",
+    "145945",
+    "146121",
+    "147381",
+    "147363",
+    "147372",
+    "147353",
+    "147366",
+    "146259",
+    "144507",
+    "144476",
+    "147382",
+    "147374",
+    "144773",
+    "146497",
+    "147377",
+    "147378",
+    "145977",
+    "146563",
+    "145245",
+    "147373",
+    "145953",
+    "147383",
+    "147376",
+    "147379",
+    "147380",
+    "147384",
+    "147385"
+   ]
+  },
+  "2023": {
+   "enabled": false,
+   "name": "Canada",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145002",
+    "viceCaptain": "147353",
+    "longGK": "146259",
+    "shortGK": "146259",
+    "longPunt": "147380",
+    "shortPunt": "147380",
+    "kickoff": "147363"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "144476",
+    "147386",
+    "145953",
+    "145977",
+    "144773",
+    "145002",
+    "147375",
+    "145945",
+    "146497",
+    "146259",
+    "147363",
+    "147372",
+    "147353",
+    "147380",
+    "146563",
+    "144217",
+    "147379",
+    "147389",
+    "147390",
+    "144946",
+    "146121",
+    "147385",
+    "147392",
+    "144373",
+    "144156",
+    "145969",
+    "146711",
+    "147387",
+    "145245",
+    "144756",
+    "147360",
+    "144897",
+    "145976",
+    "147388",
+    "147382",
+    "147391",
+    "147393",
+    "147364",
+    "147394"
+   ]
+  },
+  "2025": {
+   "enabled": false,
+   "name": "Canada",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145002",
+    "viceCaptain": "147379",
+    "longGK": "146563",
+    "shortGK": "146563",
+    "longPunt": "145245",
+    "shortPunt": "145245",
+    "kickoff": "147395"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "147379",
+    "144217",
+    "145976",
+    "144373",
+    "147384",
+    "145067",
+    "147402",
+    "145002",
+    "146497",
+    "145245",
+    "147395",
+    "147396",
+    "147404",
+    "144156",
+    "146563",
+    "147399",
+    "147400",
+    "147364",
+    "147405",
+    "147407",
+    "147414",
+    "147410",
+    "147416",
+    "147353",
+    "147401",
+    "147387",
+    "147403",
+    "144897",
+    "146711",
+    "147397",
+    "147398",
+    "147406",
+    "147393",
+    "147408",
+    "147409",
+    "147411",
+    "147412",
+    "147413",
+    "147415",
+    "145945",
+    "147417",
+    "144476"
+   ]
+  },
+  "2026": {
+   "enabled": false,
+   "name": "Canada",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145002",
+    "viceCaptain": "147406",
+    "longGK": "147381",
+    "shortGK": "147381",
+    "longPunt": "147381",
+    "shortPunt": "147381",
+    "kickoff": "147381"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "147406",
+    "147412",
+    "147364",
+    "147390",
+    "147407",
+    "147384",
+    "145002",
+    "147393",
+    "146497",
+    "146259",
+    "147395",
+    "147418",
+    "147381",
+    "146711",
+    "145245",
+    "147419",
+    "147420",
+    "145132",
+    "147387",
+    "147402",
+    "147430",
+    "147396",
+    "147428",
+    "147403",
+    "146563",
+    "147421",
+    "147425",
+    "147383",
+    "147426",
+    "147413",
+    "144217",
+    "145067",
+    "147427",
+    "147389",
+    "147422",
+    "147423",
+    "147424",
+    "147410",
+    "147414",
+    "147382",
+    "144514",
+    "147429"
+   ]
+  }
+ }
+}

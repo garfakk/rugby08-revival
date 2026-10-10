@@ -62,6 +62,11 @@ def normalise_birthdate(text):
     return t.replace("-", "/").replace(".", "/")
 
 
+
+def _variant_label(ds, tid, season, variant):
+    from app import variants as V
+    return V.variant_label(ds.teams.get(tid, {}).get(season, {}), variant)
+
 class PlayerTab:
     def __init__(self, screen, index):
         self.screen = screen
@@ -264,7 +269,7 @@ class ProfileTab(PlayerTab):
         sources = self.screen.ds.players_sources.get(self.screen.record_id, [])
         self.file_note.setText("Defined in " + ", ".join(os.path.basename(x) for x in sources)
                                + ("  — the last one is used" if len(sources) > 1 else ""))
-        memberships = self.screen.ds.memberships(self.screen.record_id)
+        memberships = self.screen.ds.memberships(self.screen.record_id, with_variants=True)
         self.squads_note.setText(f"In {len(memberships)} squad list(s)." if memberships else
                                  "Not in any squad.")
         for i, b in enumerate(self._squad_btns):
@@ -273,10 +278,12 @@ class ProfileTab(PlayerTab):
             except TypeError:
                 pass
             if i < len(memberships):
-                tid, name, s, shirt = memberships[i]
+                tid, name, s, shirt, variant = memberships[i]
                 role = "starter" if shirt <= 15 else ("bench" if shirt <= 22 else "not loaded")
-                b.setText(f"{name}  {s}  ·  #{shirt} {role}   →")
-                b.clicked.connect(lambda _=False, t=tid, ss=s, sh=shirt: self.screen.open_team(t, ss, sh))
+                tag = f" ({_variant_label(self.screen.ds, tid, s, variant)})" if variant else ""
+                b.setText(f"{name}  {s}{tag}  ·  #{shirt} {role}   →")
+                b.clicked.connect(lambda _=False, t=tid, ss=s, sh=shirt, v=variant:
+                                  self.screen.open_team(t, ss, sh, v))
                 b.show()
             else:
                 b.hide()
@@ -493,6 +500,11 @@ class AppearanceTab(PlayerTab):
                                              "stock boots in the game" if str(v).isdigit() else
                                              "custom texture · 256×256")
         self.boots.edited.connect(self._on_boots)
+        # Browsing the list tries each style on the 3D preview; closing it
+        # goes back to the stored one (or the one just picked).
+        self.boots.on_hover = lambda v: (self.screen.preview_boots(v) if v != "__file__"
+                                         else self.screen.refresh_stage())
+        self.boots.on_popup_closed = self.screen.refresh_stage
         g2.add(self.boots)
 
         # Goal-kick animation bank (reR08 ENABLE_KICKSTYLE, .rdf +0x50) —
@@ -919,15 +931,18 @@ class TeamsTab(PlayerTab):
         self._row_btns = []
 
         season = self.screen.season
-        memberships = [m for m in self.screen.ds.memberships(self.screen.record_id) if m[2] == season]
+        memberships = [m for m in self.screen.ds.memberships(self.screen.record_id, with_variants=True)
+                       if m[2] == season]
         self.note.setText(f"In {len(memberships)} squad{'s' if len(memberships) != 1 else ''} "
                           f"for {season_label(season)}." if memberships else
                           f"Not named in any squad for {season_label(season)}.")
-        for tid, name, s, shirt in memberships:
+        for tid, name, s, shirt, variant in memberships:
             role = "starter" if shirt <= 15 else ("bench" if shirt <= 22 else "not loaded")
-            b = compact_button(f"{name}   ·   #{shirt} {role}   →", height=32)
+            tag = f" ({_variant_label(self.screen.ds, tid, s, variant)})" if variant else ""
+            b = compact_button(f"{name}{tag}   ·   #{shirt} {role}   →", height=32)
             b.setStyleSheet(b.styleSheet() + "QPushButton { text-align: left; }")
-            b.clicked.connect(lambda _=False, t=tid, ss=s, sh=shirt: self.screen.open_team(t, ss, sh))
+            b.clicked.connect(lambda _=False, t=tid, ss=s, sh=shirt, v=variant:
+                              self.screen.open_team(t, ss, sh, v))
             self.screen.focus.register(b)
             self.rows.addWidget(b)
             self._row_btns.append(b)

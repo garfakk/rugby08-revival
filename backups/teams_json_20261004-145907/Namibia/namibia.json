@@ -1,0 +1,616 @@
+{
+ "1009": {
+  "2008": {
+   "name": "Namibia",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2008/home_front.png",
+     "backKitFile": "kits_2008/home_back/home_back_%.png",
+     "previewFile": "kits_2008/home_preview.png",
+     "color": "",
+     "variants": {
+      "rwc_2007": {
+       "label": "RWC 2007",
+       "frontKitFile": "kits_2008/home_wc_front.png"
+      }
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2008/away_front.png",
+     "backKitFile": "kits_2008/away_back/away_back_%.png",
+     "previewFile": "kits_2008/away_preview.png",
+     "color": "",
+     "variants": {
+      "rwc_2007": {
+       "label": "RWC 2007",
+       "frontKitFile": "kits_2008/away_wc_front.png"
+      }
+     }
+    }
+   },
+   "roles": {
+    "captain": "147845",
+    "viceCaptain": "147841",
+    "longGK": "147860",
+    "shortGK": "147860",
+    "longPunt": "147859",
+    "shortPunt": "147859",
+    "kickoff": "147838"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "147845",
+    "147846",
+    "147854",
+    "147848",
+    "147855",
+    "147861",
+    "142769",
+    "147851",
+    "147856",
+    "147860",
+    "147838",
+    "147840",
+    "147842",
+    "147839",
+    "147859",
+    "147852",
+    "147853",
+    "147863",
+    "147849",
+    "147844",
+    "147862",
+    "147857",
+    "147850",
+    "147841",
+    "147843",
+    "147847",
+    "147858",
+    "147864",
+    "147865"
+   ]
+  },
+  "2024": {
+   "name": "Namibia",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": "",
+     "variants": {
+      "rwc_2023": {
+       "label": "RWC 2023",
+       "frontKitFile": "kits_2024/home_wc_front.png",
+       "backKitFile": "kits_2024/home_wc_back/home_wc_back_%.png"
+      }
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": "",
+     "variants": {
+      "rwc_2023": {
+       "label": "RWC 2023",
+       "frontKitFile": "kits_2024/away_wc_front.png",
+       "backKitFile": "kits_2024/away_wc_back/away_wc_back_%.png"
+      }
+     }
+    }
+   },
+   "roles": {
+    "captain": "144722",
+    "viceCaptain": "145293",
+    "longGK": "144377",
+    "shortGK": "144377",
+    "longPunt": "144377",
+    "shortPunt": "144377",
+    "kickoff": "144377"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "144255",
+    "146696",
+    "144252",
+    "146520",
+    "146285",
+    "144815",
+    "145293",
+    "144150",
+    "144482",
+    "144377",
+    "144475",
+    "146511",
+    "144722",
+    "146557",
+    "146556",
+    "146346",
+    "144478",
+    "144218",
+    "145076",
+    "145670",
+    "145614",
+    "146481",
+    "146509",
+    "145191",
+    "146541",
+    "146518",
+    "145264",
+    "145225",
+    "146504",
+    "146506"
+   ],
+   "variant": {
+    "world_cup": {
+     "label": "Rugby World Cup 2023",
+     "players": [
+      "146541",
+      "145601",
+      "144478",
+      "145264",
+      "146768",
+      "145076",
+      "145293",
+      "144815",
+      "144482",
+      "145614",
+      "146775",
+      "144722",
+      "146773",
+      "144868",
+      "144475",
+      "144255",
+      "146346",
+      "146766",
+      "144150",
+      "146770",
+      "146774",
+      "146511",
+      "145219",
+      "146767",
+      "146518",
+      "146769",
+      "145598",
+      "145670",
+      "145225",
+      "146771",
+      "144377",
+      "145587",
+      "146772"
+     ],
+     "roles": {
+      "captain": "144722",
+      "viceCaptain": "145614",
+      "longGK": "145614",
+      "shortGK": "145614",
+      "longPunt": "144868",
+      "shortPunt": "145614",
+      "kickoff": "144868"
+     }
+    }
+   }
+  },
+  "2010": {
+   "enabled": false,
+   "name": "Namibia",
+   "type": "international",
+   "category": "",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "143575",
+    "viceCaptain": "143129",
+    "longGK": "143129",
+    "shortGK": "143129",
+    "longPunt": "143129",
+    "shortPunt": "143129",
+    "kickoff": "143129"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143136",
+    "143634",
+    "142766",
+    "143335",
+    "142553",
+    "143902",
+    "142769",
+    "142715",
+    "143960",
+    "143129",
+    "142786",
+    "143575",
+    "143209",
+    "143427",
+    "142447",
+    "143806",
+    "143691",
+    "143186",
+    "143585",
+    "144508",
+    "142697",
+    "142559",
+    "143717",
+    "142653",
+    "143719",
+    "143990",
+    "143516",
+    "143307",
+    "144006",
+    "143524"
+   ]
+  },
+  "2012": {
+   "enabled": false,
+   "name": "Namibia",
+   "type": "international",
+   "category": "",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "142769",
+    "viceCaptain": "147853",
+    "longGK": "147869",
+    "shortGK": "147869",
+    "longPunt": "147869",
+    "shortPunt": "147869",
+    "kickoff": "147840"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "147853",
+    "147846",
+    "147871",
+    "147870",
+    "147855",
+    "147851",
+    "142769",
+    "147850",
+    "147856",
+    "147869",
+    "147867",
+    "147840",
+    "147868",
+    "147875",
+    "147866",
+    "147872",
+    "147854",
+    "147873",
+    "145301",
+    "147874",
+    "144435",
+    "147879",
+    "144380",
+    "147876",
+    "147877",
+    "147878",
+    "147838",
+    "147847",
+    "147848",
+    "147880"
+   ]
+  },
+  "2016": {
+   "enabled": false,
+   "name": "Namibia",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "142769",
+    "viceCaptain": "145301",
+    "longGK": "147869",
+    "shortGK": "147869",
+    "longPunt": "147881",
+    "shortPunt": "147881",
+    "kickoff": "147881"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143258",
+    "147883",
+    "144255",
+    "145598",
+    "144855",
+    "142769",
+    "147851",
+    "147885",
+    "147856",
+    "147869",
+    "147881",
+    "144722",
+    "144868",
+    "147880",
+    "147866",
+    "147888",
+    "147853",
+    "147884",
+    "147873",
+    "145301",
+    "147886",
+    "144482",
+    "147889",
+    "144842",
+    "146541",
+    "147871",
+    "147868",
+    "144380",
+    "144435",
+    "147890",
+    "147891",
+    "145670",
+    "145529",
+    "147882",
+    "147887"
+   ]
+  },
+  "2020": {
+   "enabled": false,
+   "name": "Namibia",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145598",
+    "viceCaptain": "144722",
+    "longGK": "144435",
+    "shortGK": "144435",
+    "longPunt": "144435",
+    "shortPunt": "144435",
+    "kickoff": "144435"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "144218",
+    "147883",
+    "147884",
+    "144815",
+    "145598",
+    "145225",
+    "145670",
+    "144855",
+    "147856",
+    "144377",
+    "144868",
+    "144435",
+    "144800",
+    "144978",
+    "144842",
+    "147888",
+    "145191",
+    "144255",
+    "145076",
+    "145301",
+    "144482",
+    "145614",
+    "144722",
+    "144392",
+    "145265",
+    "144150",
+    "145529",
+    "144478",
+    "145219",
+    "147873",
+    "147892",
+    "147893",
+    "144727"
+   ]
+  },
+  "2021": {
+   "enabled": false,
+   "name": "Namibia",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144722",
+    "viceCaptain": "145264",
+    "longGK": "144377",
+    "shortGK": "144377",
+    "longPunt": "144377",
+    "shortPunt": "144377",
+    "kickoff": "144377"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "144218",
+    "145601",
+    "144252",
+    "145264",
+    "145598",
+    "145670",
+    "145529",
+    "144885",
+    "144508",
+    "144377",
+    "144978",
+    "144722",
+    "144800",
+    "144868",
+    "144842",
+    "145219",
+    "144478",
+    "144815",
+    "145076",
+    "144482",
+    "144435",
+    "144727",
+    "145016",
+    "145191",
+    "145225",
+    "144150",
+    "145301",
+    "145614",
+    "145265",
+    "144392"
+   ]
+  }
+ }
+}

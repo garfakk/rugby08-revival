@@ -1,0 +1,79 @@
+{
+ "2041": {
+  "2010": {
+   "enabled": false,
+   "name": "Viadana",
+   "type": "italy",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "142788",
+    "viceCaptain": "120899",
+    "longGK": "143699",
+    "shortGK": "143699",
+    "longPunt": "143699",
+    "shortPunt": "143699",
+    "kickoff": "143699"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "classic",
+    "left": "classic",
+    "right": "classic"
+   },
+   "players": [
+    "142386",
+    "142788",
+    "143030",
+    "143979",
+    "143304",
+    "142558",
+    "120899",
+    "119314",
+    "142585",
+    "143699",
+    "142866",
+    "111462",
+    "142826",
+    "143282",
+    "142549",
+    "142719",
+    "143353",
+    "142830",
+    "142551",
+    "143951",
+    "143933",
+    "143673",
+    "143743",
+    "143787",
+    "143783",
+    "143931",
+    "143930",
+    "144003",
+    "142470"
+   ]
+  }
+ }
+}

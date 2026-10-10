@@ -1,0 +1,1372 @@
+{
+  "id": "world_cup",
+  "name": "World Cup",
+  "seasonal": true,
+  "seasons": {
+    "2007": {
+      "ball": "2007/ball/ball_%.png",
+      "pads": "2007/stadium_graphics.fsh",
+      "logo": "2007/tournament_logo.png",
+      "pitch_logo": "2007/pitch_logos/pitch_logo_%.png",
+      "template": {
+        "id": "rwc_2007",
+        "name": "Rugby World Cup 2007",
+        "order": 8,
+        "description": "France (with matches in Cardiff and Edinburgh), 7 September – 20 October 2007. The real draw, calendar and venues, played with each nation's season 2008 squad (the original Rugby 08 rosters). Four pools of five, quarter-finals to the final at the Stade de France.",
+        "season": "2008",
+        "match_type": "world_cup",
+        "branding": "5001",
+        "venue": "neutral",
+        "venues": [
+          "70",
+          "20",
+          "68",
+          "72",
+          "73",
+          "65",
+          "69",
+          "32",
+          "29"
+        ],
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "tries": 4
+          },
+          "losing_bonus": {
+            "margin": 7
+          }
+        },
+        "tiebreakers": [
+          "head_to_head",
+          "points_diff",
+          "tries_diff",
+          "points_for",
+          "tries_for",
+          "lots"
+        ],
+        "knockout_draw": "kicks",
+        "discipline": {
+          "red_ban": [
+            1,
+            3
+          ],
+          "yellow_accumulation": 3,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "pools",
+            "name": "Pool stage",
+            "kind": "round_robin",
+            "legs": 1,
+            "match_subtype": "pool",
+            "group_names": {
+              "A": "Pool A",
+              "B": "Pool B",
+              "C": "Pool C",
+              "D": "Pool D"
+            },
+            "qualify": 2,
+            "fixtures": [
+              {
+                "date": "2007-09-07",
+                "group": "D",
+                "home": "10001",
+                "away": "1001",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "12–17"
+              },
+              {
+                "date": "2007-09-08",
+                "group": "A",
+                "home": "10002",
+                "away": "1021",
+                "stadium": "69",
+                "venue": "Stade Félix-Bollaert, Lens",
+                "real_score": "28–10"
+              },
+              {
+                "date": "2007-09-08",
+                "group": "B",
+                "home": "1002",
+                "away": "1008",
+                "stadium": "72",
+                "venue": "Stade de Gerland, Lyon",
+                "real_score": "91–3"
+              },
+              {
+                "date": "2007-09-08",
+                "group": "C",
+                "home": "1010",
+                "away": "1007",
+                "stadium": "68",
+                "venue": "Stade Vélodrome, Marseille",
+                "real_score": "76–14"
+              },
+              {
+                "date": "2007-09-09",
+                "group": "A",
+                "home": "1015",
+                "away": "1017",
+                "stadium": "20",
+                "venue": "Parc des Princes, Paris",
+                "real_score": "59–7"
+              },
+              {
+                "date": "2007-09-09",
+                "group": "B",
+                "home": "1022",
+                "away": "1003",
+                "stadium": "65",
+                "venue": "Stade de la Beaujoire, Nantes",
+                "real_score": "42–17"
+              },
+              {
+                "date": "2007-09-09",
+                "group": "C",
+                "home": "1014",
+                "away": "1011",
+                "stadium": "72",
+                "venue": "Stade Geoffroy-Guichard, Saint-Étienne (Lyon stand-in)",
+                "real_score": "56–10"
+              },
+              {
+                "date": "2007-09-09",
+                "group": "D",
+                "home": "10003",
+                "away": "1009",
+                "stadium": "73",
+                "venue": "Stade Chaban-Delmas, Bordeaux (Toulouse stand-in)",
+                "real_score": "32–17"
+              },
+              {
+                "date": "2007-09-11",
+                "group": "D",
+                "home": "1001",
+                "away": "1006",
+                "stadium": "72",
+                "venue": "Stade de Gerland, Lyon",
+                "real_score": "33–3"
+              },
+              {
+                "date": "2007-09-12",
+                "group": "A",
+                "home": "1021",
+                "away": "1018",
+                "stadium": "68",
+                "venue": "Stade de la Mosson, Montpellier (Marseille stand-in)",
+                "real_score": "15–25"
+              },
+              {
+                "date": "2007-09-12",
+                "group": "B",
+                "home": "1008",
+                "away": "1005",
+                "stadium": "73",
+                "venue": "Stadium de Toulouse",
+                "real_score": "31–35"
+              },
+              {
+                "date": "2007-09-12",
+                "group": "C",
+                "home": "1007",
+                "away": "1012",
+                "stadium": "68",
+                "venue": "Stade Vélodrome, Marseille",
+                "real_score": "24–18"
+              },
+              {
+                "date": "2007-09-14",
+                "group": "A",
+                "home": "10002",
+                "away": "1015",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "0–36"
+              },
+              {
+                "date": "2007-09-15",
+                "group": "B",
+                "home": "1022",
+                "away": "1002",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "20–32"
+              },
+              {
+                "date": "2007-09-15",
+                "group": "C",
+                "home": "1010",
+                "away": "1011",
+                "stadium": "72",
+                "venue": "Stade de Gerland, Lyon",
+                "real_score": "108–13"
+              },
+              {
+                "date": "2007-09-15",
+                "group": "D",
+                "home": "10003",
+                "away": "1006",
+                "stadium": "73",
+                "venue": "Stade Chaban-Delmas, Bordeaux (Toulouse stand-in)",
+                "real_score": "14–10"
+              },
+              {
+                "date": "2007-09-16",
+                "group": "A",
+                "home": "1017",
+                "away": "1018",
+                "stadium": "68",
+                "venue": "Stade de la Mosson, Montpellier (Marseille stand-in)",
+                "real_score": "15–19"
+              },
+              {
+                "date": "2007-09-16",
+                "group": "B",
+                "home": "1005",
+                "away": "1003",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "29–16"
+              },
+              {
+                "date": "2007-09-16",
+                "group": "D",
+                "home": "10001",
+                "away": "1009",
+                "stadium": "73",
+                "venue": "Stadium de Toulouse",
+                "real_score": "87–10"
+              },
+              {
+                "date": "2007-09-18",
+                "group": "C",
+                "home": "1014",
+                "away": "1012",
+                "stadium": "29",
+                "venue": "Murrayfield, Edinburgh",
+                "real_score": "42–0"
+              },
+              {
+                "date": "2007-09-19",
+                "group": "C",
+                "home": "1007",
+                "away": "1011",
+                "stadium": "20",
+                "venue": "Parc des Princes, Paris",
+                "real_score": "31–5"
+              },
+              {
+                "date": "2007-09-20",
+                "group": "B",
+                "home": "1022",
+                "away": "1008",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "72–18"
+              },
+              {
+                "date": "2007-09-21",
+                "group": "D",
+                "home": "10001",
+                "away": "10003",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "25–3"
+              },
+              {
+                "date": "2007-09-22",
+                "group": "A",
+                "home": "1015",
+                "away": "1018",
+                "stadium": "69",
+                "venue": "Stade Félix-Bollaert, Lens",
+                "real_score": "30–25"
+              },
+              {
+                "date": "2007-09-22",
+                "group": "A",
+                "home": "10002",
+                "away": "1017",
+                "stadium": "65",
+                "venue": "Stade de la Beaujoire, Nantes",
+                "real_score": "44–22"
+              },
+              {
+                "date": "2007-09-22",
+                "group": "D",
+                "home": "1001",
+                "away": "1009",
+                "stadium": "68",
+                "venue": "Stade Vélodrome, Marseille",
+                "real_score": "63–3"
+              },
+              {
+                "date": "2007-09-23",
+                "group": "B",
+                "home": "1002",
+                "away": "1005",
+                "stadium": "68",
+                "venue": "Stade de la Mosson, Montpellier (Marseille stand-in)",
+                "real_score": "55–12"
+              },
+              {
+                "date": "2007-09-23",
+                "group": "C",
+                "home": "1014",
+                "away": "1010",
+                "stadium": "29",
+                "venue": "Murrayfield, Edinburgh",
+                "real_score": "0–40"
+              },
+              {
+                "date": "2007-09-25",
+                "group": "B",
+                "home": "1003",
+                "away": "1008",
+                "stadium": "73",
+                "venue": "Stade Chaban-Delmas, Bordeaux (Toulouse stand-in)",
+                "real_score": "12–12"
+              },
+              {
+                "date": "2007-09-25",
+                "group": "C",
+                "home": "1012",
+                "away": "1011",
+                "stadium": "73",
+                "venue": "Stadium de Toulouse",
+                "real_score": "14–10"
+              },
+              {
+                "date": "2007-09-26",
+                "group": "A",
+                "home": "1017",
+                "away": "1021",
+                "stadium": "72",
+                "venue": "Stade Geoffroy-Guichard, Saint-Étienne (Lyon stand-in)",
+                "real_score": "25–21"
+              },
+              {
+                "date": "2007-09-26",
+                "group": "D",
+                "home": "1006",
+                "away": "1009",
+                "stadium": "69",
+                "venue": "Stade Félix-Bollaert, Lens",
+                "real_score": "30–0"
+              },
+              {
+                "date": "2007-09-28",
+                "group": "A",
+                "home": "10002",
+                "away": "1018",
+                "stadium": "20",
+                "venue": "Parc des Princes, Paris",
+                "real_score": "36–20"
+              },
+              {
+                "date": "2007-09-29",
+                "group": "B",
+                "home": "1002",
+                "away": "1003",
+                "stadium": "73",
+                "venue": "Stade Chaban-Delmas, Bordeaux (Toulouse stand-in)",
+                "real_score": "37–6"
+              },
+              {
+                "date": "2007-09-29",
+                "group": "B",
+                "home": "1022",
+                "away": "1005",
+                "stadium": "65",
+                "venue": "Stade de la Beaujoire, Nantes",
+                "real_score": "34–38"
+              },
+              {
+                "date": "2007-09-29",
+                "group": "C",
+                "home": "1007",
+                "away": "1014",
+                "stadium": "72",
+                "venue": "Stade Geoffroy-Guichard, Saint-Étienne (Lyon stand-in)",
+                "real_score": "16–18"
+              },
+              {
+                "date": "2007-09-29",
+                "group": "C",
+                "home": "1010",
+                "away": "1012",
+                "stadium": "73",
+                "venue": "Stadium de Toulouse",
+                "real_score": "85–8"
+              },
+              {
+                "date": "2007-09-30",
+                "group": "A",
+                "home": "1015",
+                "away": "1021",
+                "stadium": "68",
+                "venue": "Stade de la Mosson, Montpellier (Marseille stand-in)",
+                "real_score": "64–15"
+              },
+              {
+                "date": "2007-09-30",
+                "group": "D",
+                "home": "10001",
+                "away": "1006",
+                "stadium": "68",
+                "venue": "Stade Vélodrome, Marseille",
+                "real_score": "64–7"
+              },
+              {
+                "date": "2007-09-30",
+                "group": "D",
+                "home": "10003",
+                "away": "1001",
+                "stadium": "20",
+                "venue": "Parc des Princes, Paris",
+                "real_score": "15–30"
+              }
+            ]
+          },
+          {
+            "id": "knockouts",
+            "name": "Knockout stage",
+            "kind": "knockout",
+            "rounds": [
+              {
+                "id": "qf",
+                "name": "Quarter-final",
+                "match_subtype": "quarter_final",
+                "ties": [
+                  {
+                    "id": "qf1",
+                    "teams": [
+                      "pools:B1",
+                      "pools:A2"
+                    ],
+                    "date": "2007-10-06",
+                    "stadium": "68",
+                    "venue": "Stade Vélodrome, Marseille",
+                    "real_score": "10–12"
+                  },
+                  {
+                    "id": "qf2",
+                    "teams": [
+                      "pools:C1",
+                      "pools:D2"
+                    ],
+                    "date": "2007-10-06",
+                    "stadium": "32",
+                    "venue": "Millennium Stadium, Cardiff",
+                    "real_score": "18–20"
+                  },
+                  {
+                    "id": "qf3",
+                    "teams": [
+                      "pools:A1",
+                      "pools:B2"
+                    ],
+                    "date": "2007-10-07",
+                    "stadium": "68",
+                    "venue": "Stade Vélodrome, Marseille",
+                    "real_score": "37–20"
+                  },
+                  {
+                    "id": "qf4",
+                    "teams": [
+                      "pools:D1",
+                      "pools:C2"
+                    ],
+                    "date": "2007-10-07",
+                    "stadium": "70",
+                    "venue": "Stade de France, Saint-Denis",
+                    "real_score": "19–13"
+                  }
+                ]
+              },
+              {
+                "id": "sf",
+                "name": "Semi-final",
+                "match_subtype": "semi_final",
+                "ties": [
+                  {
+                    "id": "sf1",
+                    "teams": [
+                      "W:qf1",
+                      "W:qf2"
+                    ],
+                    "date": "2007-10-13",
+                    "stadium": "70",
+                    "venue": "Stade de France, Saint-Denis",
+                    "real_score": "14–9"
+                  },
+                  {
+                    "id": "sf2",
+                    "teams": [
+                      "W:qf3",
+                      "W:qf4"
+                    ],
+                    "date": "2007-10-14",
+                    "stadium": "70",
+                    "venue": "Stade de France, Saint-Denis",
+                    "real_score": "37–13"
+                  }
+                ]
+              },
+              {
+                "id": "bronze",
+                "name": "Bronze final",
+                "ties": [
+                  {
+                    "id": "bronze",
+                    "teams": [
+                      "L:sf1",
+                      "L:sf2"
+                    ],
+                    "date": "2007-10-19",
+                    "stadium": "20",
+                    "venue": "Parc des Princes, Paris",
+                    "real_score": "10–34"
+                  }
+                ]
+              },
+              {
+                "id": "final",
+                "name": "Final",
+                "match_subtype": "final",
+                "final": true,
+                "ties": [
+                  {
+                    "id": "final",
+                    "teams": [
+                      "W:sf1",
+                      "W:sf2"
+                    ],
+                    "date": "2007-10-20",
+                    "stadium": "70",
+                    "venue": "Stade de France, Saint-Denis",
+                    "real_score": "6–15"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "2008": {
+            "pools": {
+              "A": [
+                "1015",
+                "10002",
+                "1018",
+                "1017",
+                "1021"
+              ],
+              "B": [
+                "1002",
+                "1005",
+                "1022",
+                "1008",
+                "1003"
+              ],
+              "C": [
+                "1010",
+                "1014",
+                "1007",
+                "1012",
+                "1011"
+              ],
+              "D": [
+                "1001",
+                "10001",
+                "10003",
+                "1006",
+                "1009"
+              ]
+            }
+          },
+          "default": {
+            "pools": {
+              "A": [
+                "1015",
+                "10002",
+                "1018",
+                "1017",
+                "1021"
+              ],
+              "B": [
+                "1002",
+                "1005",
+                "1022",
+                "1008",
+                "1003"
+              ],
+              "C": [
+                "1010",
+                "1014",
+                "1007",
+                "1012",
+                "1011"
+              ],
+              "D": [
+                "1001",
+                "10001",
+                "10003",
+                "1006",
+                "1009"
+              ]
+            }
+          }
+        },
+        "variant": "world_cup",
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "1015",
+          "runner_up": "10002",
+          "third": "1001",
+          "fourth": "10001",
+          "pool_winners": {
+            "A": "1015",
+            "B": "1002",
+            "C": "1010",
+            "D": "1001"
+          },
+          "pool_runners_up": {
+            "A": "10002",
+            "B": "1005",
+            "C": "1014",
+            "D": "10001"
+          }
+        },
+        "_venue_note": "Game stadium stand-ins: Parc des Princes → Le Parc (20), Bordeaux → Toulouse (73), Saint-Étienne → Lyon (72), Montpellier → Marseille (68).",
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2007_Rugby_World_Cup",
+          "https://en.wikipedia.org/wiki/2007_Rugby_World_Cup_knockout_stage"
+        ]
+      }
+    },
+    "2023": {
+      "ball": "2023/ball/ball_%.png",
+      "pads": "2023/stadium_graphics.fsh",
+      "adboards": "2023/adboards.fsh",
+      "logo": "2023/tournament_logo.png",
+      "pitch_logo": "2023/pitch_logos/pitch_logo_%.png",
+      "template": {
+        "id": "rwc_2023",
+        "name": "Rugby World Cup 2023",
+        "order": 9,
+        "description": "",
+        "season": "2024",
+        "match_type": "world_cup",
+        "branding": "world_cup",
+        "venue": "neutral",
+        "venues": [
+          "70",
+          "68",
+          "72",
+          "65",
+          "73",
+          "69"
+        ],
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "tries": 4
+          },
+          "losing_bonus": {
+            "margin": 7
+          }
+        },
+        "tiebreakers": [
+          "head_to_head",
+          "points_diff",
+          "tries_diff",
+          "points_for",
+          "tries_for",
+          "lots"
+        ],
+        "knockout_draw": "kicks",
+        "discipline": {
+          "red_ban": [
+            1,
+            3
+          ],
+          "yellow_accumulation": 3,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "pools",
+            "name": "Pool stage",
+            "kind": "round_robin",
+            "legs": 1,
+            "match_subtype": "pool",
+            "group_names": {
+              "A": "Pool A",
+              "B": "Pool B",
+              "C": "Pool C",
+              "D": "Pool D"
+            },
+            "qualify": 2,
+            "fixtures": [
+              {
+                "date": "2023-09-08",
+                "time": "21:15 CEST",
+                "group": "A",
+                "home": "10001",
+                "away": "1010",
+                "stadium": "70",
+                "venue": "Stade de France",
+                "real_score": "27–13"
+              },
+              {
+                "date": "2023-09-09",
+                "time": "13:00 CEST",
+                "group": "A",
+                "home": "1007",
+                "away": "1009",
+                "stadium": "72",
+                "venue": "Stade Geoffroy-Guichard, Saint-Étienne (Lyon stand-in)",
+                "real_score": "52–8"
+              },
+              {
+                "date": "2023-09-14",
+                "time": "21:00 CEST",
+                "group": "A",
+                "home": "10001",
+                "away": "1020",
+                "stadium": "69",
+                "venue": "Stade Pierre-Mauroy, Lille (Lens stand-in)",
+                "real_score": "27–12"
+              },
+              {
+                "date": "2023-09-15",
+                "time": "21:00 CEST",
+                "group": "A",
+                "home": "1010",
+                "away": "1009",
+                "stadium": "73",
+                "venue": "Stadium de Toulouse",
+                "real_score": "71–3"
+              },
+              {
+                "date": "2023-09-20",
+                "time": "17:45 CEST",
+                "group": "A",
+                "home": "1007",
+                "away": "1020",
+                "stadium": "68",
+                "venue": "Allianz Riviera, Nice (Marseille stand-in)",
+                "real_score": "38–17"
+              },
+              {
+                "date": "2023-09-21",
+                "time": "21:00 CEST",
+                "group": "A",
+                "home": "10001",
+                "away": "1009",
+                "stadium": "68",
+                "venue": "Stade Vélodrome, Marseille",
+                "real_score": "96–0"
+              },
+              {
+                "date": "2023-09-27",
+                "time": "17:45 CEST",
+                "group": "A",
+                "home": "1020",
+                "away": "1009",
+                "stadium": "72",
+                "venue": "OL Stadium, Lyon",
+                "real_score": "36–26"
+              },
+              {
+                "date": "2023-09-29",
+                "time": "21:00 CEST",
+                "group": "A",
+                "home": "1010",
+                "away": "1007",
+                "stadium": "72",
+                "venue": "OL Stadium, Lyon",
+                "real_score": "96–17"
+              },
+              {
+                "date": "2023-10-05",
+                "time": "21:00 CEST",
+                "group": "A",
+                "home": "1010",
+                "away": "1020",
+                "stadium": "72",
+                "venue": "OL Stadium, Lyon",
+                "real_score": "73–0"
+              },
+              {
+                "date": "2023-10-06",
+                "time": "21:00 CEST",
+                "group": "A",
+                "home": "10001",
+                "away": "1007",
+                "stadium": "72",
+                "venue": "OL Stadium, Lyon",
+                "real_score": "60–7"
+              },
+              {
+                "date": "2023-09-09",
+                "time": "15:30 CEST",
+                "group": "B",
+                "home": "10003",
+                "away": "1012",
+                "stadium": "73",
+                "venue": "Matmut Atlantique, Bordeaux (Toulouse stand-in)",
+                "real_score": "82–8"
+              },
+              {
+                "date": "2023-09-10",
+                "time": "17:45 CEST",
+                "group": "B",
+                "home": "1015",
+                "away": "1014",
+                "stadium": "68",
+                "venue": "Stade Vélodrome, Marseille",
+                "real_score": "18–3"
+              },
+              {
+                "date": "2023-09-16",
+                "time": "21:00 CEST",
+                "group": "B",
+                "home": "10003",
+                "away": "1018",
+                "stadium": "65",
+                "venue": "Stade de la Beaujoire, Nantes",
+                "real_score": "59–16"
+              },
+              {
+                "date": "2023-09-17",
+                "time": "15:00 CEST",
+                "group": "B",
+                "home": "1015",
+                "away": "1012",
+                "stadium": "73",
+                "venue": "Matmut Atlantique, Bordeaux (Toulouse stand-in)",
+                "real_score": "76–0"
+              },
+              {
+                "date": "2023-09-23",
+                "time": "21:00 CEST",
+                "group": "B",
+                "home": "1015",
+                "away": "10003",
+                "stadium": "70",
+                "venue": "Stade de France",
+                "real_score": "8–13"
+              },
+              {
+                "date": "2023-09-24",
+                "time": "17:45 CEST",
+                "group": "B",
+                "home": "1014",
+                "away": "1018",
+                "stadium": "68",
+                "venue": "Allianz Riviera, Nice (Marseille stand-in)",
+                "real_score": "45–17"
+              },
+              {
+                "date": "2023-09-30",
+                "time": "21:00 CEST",
+                "group": "B",
+                "home": "1014",
+                "away": "1012",
+                "stadium": "69",
+                "venue": "Stade Pierre-Mauroy, Lille (Lens stand-in)",
+                "real_score": "84–0"
+              },
+              {
+                "date": "2023-10-01",
+                "time": "21:00 CEST",
+                "group": "B",
+                "home": "1015",
+                "away": "1018",
+                "stadium": "68",
+                "venue": "Stade Vélodrome, Marseille",
+                "real_score": "49–18"
+              },
+              {
+                "date": "2023-10-07",
+                "time": "21:00 CEST",
+                "group": "B",
+                "home": "10003",
+                "away": "1014",
+                "stadium": "70",
+                "venue": "Stade de France",
+                "real_score": "36–14"
+              },
+              {
+                "date": "2023-10-08",
+                "time": "17:45 CEST",
+                "group": "B",
+                "home": "1018",
+                "away": "1012",
+                "stadium": "69",
+                "venue": "Stade Pierre-Mauroy, Lille (Lens stand-in)",
+                "real_score": "45–24"
+              },
+              {
+                "date": "2023-09-09",
+                "time": "18:00 CEST",
+                "group": "C",
+                "home": "1002",
+                "away": "1006",
+                "stadium": "70",
+                "venue": "Stade de France",
+                "real_score": "35–15"
+              },
+              {
+                "date": "2023-09-10",
+                "time": "21:00 CEST",
+                "group": "C",
+                "home": "1022",
+                "away": "1005",
+                "stadium": "73",
+                "venue": "Matmut Atlantique, Bordeaux (Toulouse stand-in)",
+                "real_score": "32–26"
+              },
+              {
+                "date": "2023-09-16",
+                "time": "17:45 CEST",
+                "group": "C",
+                "home": "1022",
+                "away": "1011",
+                "stadium": "68",
+                "venue": "Allianz Riviera, Nice (Marseille stand-in)",
+                "real_score": "28–8"
+              },
+              {
+                "date": "2023-09-17",
+                "time": "17:45 CEST",
+                "group": "C",
+                "home": "1002",
+                "away": "1005",
+                "stadium": "72",
+                "venue": "Stade Geoffroy-Guichard, Saint-Étienne (Lyon stand-in)",
+                "real_score": "15–22"
+              },
+              {
+                "date": "2023-09-23",
+                "time": "14:00 CEST",
+                "group": "C",
+                "home": "1006",
+                "away": "1011",
+                "stadium": "73",
+                "venue": "Stadium de Toulouse",
+                "real_score": "18–18"
+              },
+              {
+                "date": "2023-09-24",
+                "time": "21:00 CEST",
+                "group": "C",
+                "home": "1022",
+                "away": "1002",
+                "stadium": "72",
+                "venue": "OL Stadium, Lyon",
+                "real_score": "40–6"
+              },
+              {
+                "date": "2023-09-30",
+                "time": "17:45 CEST",
+                "group": "C",
+                "home": "1005",
+                "away": "1006",
+                "stadium": "73",
+                "venue": "Matmut Atlantique, Bordeaux (Toulouse stand-in)",
+                "real_score": "17–12"
+              },
+              {
+                "date": "2023-10-01",
+                "time": "17:45 CEST",
+                "group": "C",
+                "home": "1002",
+                "away": "1011",
+                "stadium": "72",
+                "venue": "Stade Geoffroy-Guichard, Saint-Étienne (Lyon stand-in)",
+                "real_score": "34–14"
+              },
+              {
+                "date": "2023-10-07",
+                "time": "15:00 CEST",
+                "group": "C",
+                "home": "1022",
+                "away": "1006",
+                "stadium": "65",
+                "venue": "Stade de la Beaujoire, Nantes",
+                "real_score": "43–19"
+              },
+              {
+                "date": "2023-10-08",
+                "time": "21:00 CEST",
+                "group": "C",
+                "home": "1005",
+                "away": "1011",
+                "stadium": "73",
+                "venue": "Stadium de Toulouse",
+                "real_score": "23–24"
+              },
+              {
+                "date": "2023-09-09",
+                "time": "21:00 CEST",
+                "group": "D",
+                "home": "10002",
+                "away": "1001",
+                "stadium": "68",
+                "venue": "Stade Vélodrome, Marseille",
+                "real_score": "27–10"
+              },
+              {
+                "date": "2023-09-10",
+                "time": "13:00 CEST",
+                "group": "D",
+                "home": "1008",
+                "away": "1004",
+                "stadium": "73",
+                "venue": "Stadium de Toulouse",
+                "real_score": "42–12"
+              },
+              {
+                "date": "2023-09-16",
+                "time": "15:00 CEST",
+                "group": "D",
+                "home": "1017",
+                "away": "1004",
+                "stadium": "73",
+                "venue": "Matmut Atlantique, Bordeaux (Toulouse stand-in)",
+                "real_score": "43–10"
+              },
+              {
+                "date": "2023-09-17",
+                "time": "21:00 CEST",
+                "group": "D",
+                "home": "10002",
+                "away": "1008",
+                "stadium": "68",
+                "venue": "Allianz Riviera, Nice (Marseille stand-in)",
+                "real_score": "34–12"
+              },
+              {
+                "date": "2023-09-22",
+                "time": "17:45 CEST",
+                "group": "D",
+                "home": "1001",
+                "away": "1017",
+                "stadium": "72",
+                "venue": "Stade Geoffroy-Guichard, Saint-Étienne (Lyon stand-in)",
+                "real_score": "19–10"
+              },
+              {
+                "date": "2023-09-23",
+                "time": "17:45 CEST",
+                "group": "D",
+                "home": "10002",
+                "away": "1004",
+                "stadium": "69",
+                "venue": "Stade Pierre-Mauroy, Lille (Lens stand-in)",
+                "real_score": "71–0"
+              },
+              {
+                "date": "2023-09-28",
+                "time": "21:00 CEST",
+                "group": "D",
+                "home": "1008",
+                "away": "1017",
+                "stadium": "73",
+                "venue": "Stadium de Toulouse",
+                "real_score": "28–22"
+              },
+              {
+                "date": "2023-09-30",
+                "time": "15:00 CEST",
+                "group": "D",
+                "home": "1001",
+                "away": "1004",
+                "stadium": "65",
+                "venue": "Stade de la Beaujoire, Nantes",
+                "real_score": "59–5"
+              },
+              {
+                "date": "2023-10-07",
+                "time": "17:45 CEST",
+                "group": "D",
+                "home": "10002",
+                "away": "1017",
+                "stadium": "69",
+                "venue": "Stade Pierre-Mauroy, Lille (Lens stand-in)",
+                "real_score": "18–17"
+              },
+              {
+                "date": "2023-10-08",
+                "time": "13:00 CEST",
+                "group": "D",
+                "home": "1008",
+                "away": "1001",
+                "stadium": "65",
+                "venue": "Stade de la Beaujoire, Nantes",
+                "real_score": "27–39"
+              }
+            ]
+          },
+          {
+            "id": "knockouts",
+            "name": "Knockout stage",
+            "kind": "knockout",
+            "rounds": [
+              {
+                "id": "qf",
+                "name": "Quarter-final",
+                "match_subtype": "quarter_final",
+                "ties": [
+                  {
+                    "id": "qf1",
+                    "teams": [
+                      "pools:C1",
+                      "pools:D2"
+                    ],
+                    "date": "2023-10-14",
+                    "time": "17:00 CEST",
+                    "stadium": "68",
+                    "venue": "Stade Vélodrome, Marseille",
+                    "real_score": "17–29"
+                  },
+                  {
+                    "id": "qf2",
+                    "teams": [
+                      "pools:B1",
+                      "pools:A2"
+                    ],
+                    "date": "2023-10-14",
+                    "time": "21:00 CEST",
+                    "stadium": "70",
+                    "venue": "Stade de France",
+                    "real_score": "24–28"
+                  },
+                  {
+                    "id": "qf3",
+                    "teams": [
+                      "pools:D1",
+                      "pools:C2"
+                    ],
+                    "date": "2023-10-15",
+                    "time": "17:00 CEST",
+                    "stadium": "68",
+                    "venue": "Stade Vélodrome, Marseille",
+                    "real_score": "30–24"
+                  },
+                  {
+                    "id": "qf4",
+                    "teams": [
+                      "pools:A1",
+                      "pools:B2"
+                    ],
+                    "date": "2023-10-15",
+                    "time": "21:00 CEST",
+                    "stadium": "70",
+                    "venue": "Stade de France",
+                    "real_score": "28–29"
+                  }
+                ]
+              },
+              {
+                "id": "sf",
+                "name": "Semi-final",
+                "match_subtype": "semi_final",
+                "ties": [
+                  {
+                    "id": "sf1",
+                    "teams": [
+                      "W:qf1",
+                      "W:qf2"
+                    ],
+                    "date": "2023-10-20",
+                    "time": "21:00 CEST",
+                    "stadium": "70",
+                    "venue": "Stade de France",
+                    "real_score": "6–44"
+                  },
+                  {
+                    "id": "sf2",
+                    "teams": [
+                      "W:qf3",
+                      "W:qf4"
+                    ],
+                    "date": "2023-10-21",
+                    "time": "21:00 CEST",
+                    "stadium": "70",
+                    "venue": "Stade de France",
+                    "real_score": "15–16"
+                  }
+                ]
+              },
+              {
+                "id": "bronze",
+                "name": "Bronze final",
+                "ties": [
+                  {
+                    "id": "bronze",
+                    "teams": [
+                      "L:sf1",
+                      "L:sf2"
+                    ],
+                    "date": "2023-10-27",
+                    "time": "21:00 CEST",
+                    "stadium": "70",
+                    "venue": "Stade de France",
+                    "real_score": "23–26"
+                  }
+                ]
+              },
+              {
+                "id": "final",
+                "name": "Final",
+                "match_subtype": "final",
+                "final": true,
+                "ties": [
+                  {
+                    "id": "final",
+                    "teams": [
+                      "W:sf1",
+                      "W:sf2"
+                    ],
+                    "date": "2023-10-28",
+                    "time": "21:00 CEST",
+                    "stadium": "70",
+                    "venue": "Stade de France",
+                    "real_score": "11–12"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "2024": {
+            "pools": {
+              "A": [
+                "1010",
+                "10001",
+                "1007",
+                "1020",
+                "1009"
+              ],
+              "B": [
+                "1015",
+                "10003",
+                "1014",
+                "1018",
+                "1012"
+              ],
+              "C": [
+                "1022",
+                "1002",
+                "1005",
+                "1006",
+                "1011"
+              ],
+              "D": [
+                "10002",
+                "1008",
+                "1001",
+                "1017",
+                "1004"
+              ]
+            }
+          },
+          "default": {
+            "pools": {
+              "A": [
+                "1010",
+                "10001",
+                "1007",
+                "1020",
+                "1009"
+              ],
+              "B": [
+                "1015",
+                "10003",
+                "1014",
+                "1018",
+                "1012"
+              ],
+              "C": [
+                "1022",
+                "1002",
+                "1005",
+                "1006",
+                "1011"
+              ],
+              "D": [
+                "10002",
+                "1008",
+                "1001",
+                "1017",
+                "1004"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "1015",
+          "runner_up": "1010",
+          "third": "10002",
+          "fourth": "1001",
+          "pool_winners": {
+            "A": "10001",
+            "B": "10003",
+            "C": "1022",
+            "D": "10002"
+          },
+          "pool_runners_up": {
+            "A": "1010",
+            "B": "1015",
+            "C": "1005",
+            "D": "1001"
+          }
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2023_Rugby_World_Cup_squads",
+          "https://en.wikipedia.org/wiki/2023_Rugby_World_Cup_Pool_A",
+          "https://en.wikipedia.org/wiki/2023_Rugby_World_Cup_knockout_stage"
+        ],
+        "_venue_note": "Game stadium stand-ins: Lille → Lens (69), Bordeaux → Toulouse (73), Saint-Étienne → Lyon (72), Nice → Marseille (68).",
+        "variant": "world_cup"
+      }
+    }
+  }
+}

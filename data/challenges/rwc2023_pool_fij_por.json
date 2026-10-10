@@ -1,0 +1,107 @@
+{
+  "name": "RWC 2023 Pool C: Fiji v Portugal",
+  "description": "Stadium de Toulouse - Sunday 8 October 2023. Rugby World Cup pool C, final round.\n\nFiji are already through to the quarter-finals; Portugal, in their first World Cup since 2007, have everything to play for - a first win at this tournament in sixteen years.\n\nIt is the 49th minute and it is all square at 10-10. Portugal's Raffaele Storti went over just after the break, but Levani Botia has answered for Fiji and Frank Lomani has kicked the conversion. Portugal restart.\n\nYou are Portugal. Win it, score at least two tries, and do not let Fiji cross the line again.",
+  "win_text": "Portugal 24 - 23 Fiji. A famous one-point win and Portugal's first World Cup victory since 2007, exactly as it happened.",
+  "draw_text": "Level at the final whistle. In real life Portugal won by a single point, 24-23.",
+  "loss_text": "Fiji edge it. In real life Portugal won 24-23 - try again.",
+  "order": 6,
+  "user_side": "away",
+  "home": {
+    "team_id": "1005",
+    "season": "2024",
+    "variant": "world_cup",
+    "kit": "home",
+    "kit_variant": "rwc_2023",
+    "squad": null,
+    "custom_kit": null
+  },
+  "away": {
+    "team_id": "1011",
+    "season": "2024",
+    "variant": "world_cup",
+    "kit": "home",
+    "kit_variant": "rwc_2023",
+    "squad": null,
+    "custom_kit": null
+  },
+  "stadium_id": "73",
+  "difficulty": "elite",
+  "halftime_length": "10m",
+  "home_team_side": "left",
+  "kick_off": "away",
+  "match_type": "world_cup",
+  "match_subtype": "pool",
+  "branding": "world_cup:2023",
+  "environment": "night",
+  "pitch_texture": "default",
+  "rain": false,
+  "precip_mode": "stock",
+  "snow_intensity": null,
+  "wind_power": 1,
+  "wind_dir_deg": 135,
+  "breath": null,
+  "anthem": "stock",
+  "haka_home": false,
+  "haka_away": false,
+  "trophy_lift": "stock",
+  "stadium_flags": false,
+  "kick_assist": false,
+  "mission_mode_name": "KICK OFF",
+  "mission_mode_time": 2940,
+  "mission_mode_period": 1,
+  "mission_nis": [],
+  "score_events": [
+    {
+      "type": "SS_PENALTY",
+      "team": "home",
+      "player": 9,
+      "time": 600
+    },
+    {
+      "type": "SS_PENALTY",
+      "team": "away",
+      "player": 9,
+      "time": 2280
+    },
+    {
+      "type": "SS_TRY",
+      "team": "away",
+      "player": 22,
+      "time": 2700
+    },
+    {
+      "type": "SS_CONVERSION",
+      "team": "away",
+      "player": 9,
+      "time": 2820
+    },
+    {
+      "type": "SS_TRY",
+      "team": "home",
+      "player": 6,
+      "time": 2880
+    },
+    {
+      "type": "SS_CONVERSION",
+      "team": "home",
+      "player": 9,
+      "time": 2940
+    }
+  ],
+  "objectives": [
+  ],
+  "match_objectives": [
+    {
+      "type": "score",
+      "event": "try",
+      "count": 2
+    },
+    {
+      "type": "restrict",
+      "event": "try",
+      "max": 0
+    }
+  ],
+  "unlockables": [],
+  "user_choice": []
+}

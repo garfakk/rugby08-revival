@@ -1,0 +1,257 @@
+{
+ "2027": {
+  "2009": {
+   "enabled": false,
+   "name": "Bourgoin",
+   "type": "france",
+   "category": "",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2009/home_front.png",
+     "backKitFile": "kits_2009/home_back/home_back_%.png",
+     "previewFile": "kits_2009/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2009/away_front.png",
+     "backKitFile": "",
+     "previewFile": "kits_2009/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "124021",
+    "viceCaptain": "143981",
+    "longGK": "124021",
+    "shortGK": "124021",
+    "longPunt": "124021",
+    "shortPunt": "124021",
+    "kickoff": "148998"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "cross_kick",
+    "right": "pocket"
+   },
+   "players": [
+    "143698",
+    "142479",
+    "142929",
+    "143825",
+    "143118",
+    "143476",
+    "101650",
+    "142462",
+    "124021",
+    "143981",
+    "148998",
+    "142860",
+    "142531",
+    "143956",
+    "143213",
+    "148769",
+    "148995",
+    "148997",
+    "143944",
+    "143876",
+    "143655",
+    "142605",
+    "143592",
+    "142881",
+    "142413",
+    "148999",
+    "148996",
+    "148994",
+    "143236",
+    "149000",
+    "143212",
+    "149001",
+    "143176",
+    "149002",
+    "142595",
+    "142490",
+    "149003"
+   ]
+  },
+  "2010": {
+   "enabled": false,
+   "name": "Bourgoin",
+   "type": "france",
+   "category": "",
+   "ball": "ball/ball_%.png",
+   "banners": "banners_2010/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "143476",
+    "viceCaptain": "142834",
+    "longGK": "142834",
+    "shortGK": "142834",
+    "longPunt": "142834",
+    "shortPunt": "142834",
+    "kickoff": "142834"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "cross_kick",
+    "right": "pocket"
+   },
+   "players": [
+    "143698",
+    "142479",
+    "143106",
+    "142658",
+    "143118",
+    "143476",
+    "143259",
+    "142462",
+    "142529",
+    "142834",
+    "142825",
+    "142531",
+    "143004",
+    "143011",
+    "143076",
+    "142897",
+    "142490",
+    "143236",
+    "143176",
+    "142595",
+    "142605",
+    "143592",
+    "142693",
+    "111538",
+    "143825",
+    "143944",
+    "143876",
+    "143209",
+    "143655",
+    "142413"
+   ]
+  },
+  "2011": {
+   "enabled": false,
+   "name": "Bourgoin",
+   "type": "france",
+   "category": "",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "142531",
+    "viceCaptain": "142834",
+    "longGK": "142834",
+    "shortGK": "142834",
+    "longPunt": "143876",
+    "shortPunt": "143876",
+    "kickoff": "148998"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "cross_kick",
+    "right": "pocket"
+   },
+   "players": [
+    "111538",
+    "142479",
+    "143106",
+    "143236",
+    "143118",
+    "149008",
+    "148997",
+    "142462",
+    "143876",
+    "142834",
+    "148998",
+    "142531",
+    "144167",
+    "142413",
+    "143076",
+    "142897",
+    "142490",
+    "143825",
+    "143259",
+    "142881",
+    "143655",
+    "149004",
+    "149005",
+    "143698",
+    "147840",
+    "143176",
+    "149007",
+    "142825",
+    "143592",
+    "143944",
+    "149006",
+    "149001",
+    "142605",
+    "143476",
+    "148996",
+    "142595",
+    "143004",
+    "148762",
+    "148707",
+    "149009",
+    "149012",
+    "149015",
+    "149013",
+    "149016",
+    "149010",
+    "149011",
+    "149014",
+    "149017"
+   ]
+  }
+ }
+}

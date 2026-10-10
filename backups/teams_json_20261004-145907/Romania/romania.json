@@ -1,0 +1,518 @@
+{
+ "1012": {
+  "2008": {
+   "name": "Romania",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_2024/logo.png",
+    "small": "logos_2024/logo_small.png",
+    "left": "logos_2024/logo_left.png",
+    "right": "logos_2024/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": "",
+     "variants": {
+      "rwc_2007": {
+       "label": "RWC 2007",
+       "frontKitFile": "kits_2009/home_wc_front.png",
+       "backKitFile": "kits_2009/home_back/home_wc_back_%.png"
+      }
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2009/away_front.png",
+     "backKitFile": "kits_2009/away_back/away_back_%.png",
+     "previewFile": "",
+     "color": "",
+     "variants": {
+      "rwc_2007": {
+       "label": "RWC 2007",
+       "frontKitFile": "kits_2009/away_wc_front.png"
+      }
+     }
+    }
+   },
+   "roles": {
+    "captain": "148020",
+    "viceCaptain": "142907",
+    "longGK": "148016",
+    "shortGK": "148016",
+    "longPunt": "148016",
+    "shortPunt": "148016",
+    "kickoff": "148011"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "loop",
+    "right": "pocket"
+   },
+   "players": [
+    "148018",
+    "142591",
+    "148019",
+    "148020",
+    "148021",
+    "148022",
+    "148023",
+    "142907",
+    "148017",
+    "148016",
+    "148015",
+    "148014",
+    "148013",
+    "148012",
+    "148011",
+    "148025",
+    "148033",
+    "148026",
+    "148027",
+    "148028",
+    "144569",
+    "148037",
+    "148024",
+    "148029",
+    "148032",
+    "148034",
+    "148030",
+    "148031",
+    "148035",
+    "148036"
+   ]
+  },
+  "2024": {
+   "name": "Romania",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_2024/logo.png",
+    "small": "logos_2024/logo_small.png",
+    "left": "logos_2024/logo_left.png",
+    "right": "logos_2024/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145675",
+    "viceCaptain": "144562",
+    "longGK": "145505",
+    "shortGK": "145505",
+    "longPunt": "145505",
+    "shortPunt": "145505",
+    "kickoff": "145505"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "loop",
+    "right": "pocket"
+   },
+   "players": [
+    "144225",
+    "146116",
+    "146706",
+    "144853",
+    "146713",
+    "144929",
+    "144477",
+    "145675",
+    "144562",
+    "145505",
+    "144227",
+    "146133",
+    "145654",
+    "146442",
+    "145319",
+    "145203",
+    "145967",
+    "146145",
+    "144679",
+    "146080",
+    "146159",
+    "146183",
+    "145963",
+    "144341",
+    "146130",
+    "144469",
+    "145917",
+    "146380",
+    "146405",
+    "146590"
+   ],
+   "variant": {
+    "world_cup": {
+     "label": "Rugby World Cup 2023",
+     "players": [
+      "146145",
+      "145203",
+      "146781",
+      "146784",
+      "146785",
+      "146130",
+      "144477",
+      "144341",
+      "144562",
+      "145505",
+      "146442",
+      "146133",
+      "146790",
+      "146405",
+      "146590",
+      "144225",
+      "146116",
+      "146780",
+      "146786",
+      "146159",
+      "146791",
+      "146792",
+      "146779",
+      "146782",
+      "146783",
+      "144203",
+      "146787",
+      "145651",
+      "146080",
+      "146788",
+      "146789",
+      "146793",
+      "146183"
+     ],
+     "roles": {
+      "captain": "144341",
+      "viceCaptain": "145505",
+      "longGK": "145505",
+      "shortGK": "145505",
+      "longPunt": "145505",
+      "shortPunt": "145505",
+      "kickoff": "145505"
+     }
+    }
+   }
+  },
+  "2010": {
+   "enabled": false,
+   "name": "Romania",
+   "type": "international",
+   "category": "",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_2024/logo.png",
+    "small": "logos_2024/logo_small.png",
+    "left": "logos_2024/logo_left.png",
+    "right": "logos_2024/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "142688",
+    "viceCaptain": "142591",
+    "longGK": "144036",
+    "shortGK": "143895",
+    "longPunt": "143895",
+    "shortPunt": "143895",
+    "kickoff": "143895"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "loop",
+    "right": "pocket"
+   },
+   "players": [
+    "142876",
+    "142591",
+    "143329",
+    "142514",
+    "143110",
+    "143597",
+    "142907",
+    "142688",
+    "143593",
+    "143895",
+    "142885",
+    "142401",
+    "143572",
+    "142917",
+    "144036",
+    "143171",
+    "142953",
+    "142567",
+    "143680",
+    "143648",
+    "143659",
+    "143767",
+    "143646",
+    "143498",
+    "143255",
+    "142874",
+    "143720",
+    "143469",
+    "143940",
+    "142798"
+   ]
+  },
+  "2012": {
+   "enabled": false,
+   "name": "Romania",
+   "type": "international",
+   "category": "",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_2024/logo.png",
+    "small": "logos_2024/logo_small.png",
+    "left": "logos_2024/logo_left.png",
+    "right": "logos_2024/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "142591",
+    "viceCaptain": "148021",
+    "longGK": "148016",
+    "shortGK": "148016",
+    "longPunt": "148031",
+    "shortPunt": "148031",
+    "kickoff": "148011"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "loop",
+    "right": "pocket"
+   },
+   "players": [
+    "143329",
+    "142591",
+    "148033",
+    "148034",
+    "148021",
+    "145675",
+    "142907",
+    "148038",
+    "144562",
+    "148031",
+    "142874",
+    "148016",
+    "148013",
+    "148036",
+    "148011",
+    "148039",
+    "148024",
+    "145655",
+    "148040",
+    "148028",
+    "143659",
+    "144569",
+    "148041",
+    "148017",
+    "143680",
+    "148042",
+    "148043",
+    "148026",
+    "148030"
+   ]
+  },
+  "2016": {
+   "enabled": false,
+   "name": "Romania",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_2024/logo.png",
+    "small": "logos_2024/logo_small.png",
+    "left": "logos_2024/logo_left.png",
+    "right": "logos_2024/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145675",
+    "viceCaptain": "148034",
+    "longGK": "148046",
+    "shortGK": "148046",
+    "longPunt": "148046",
+    "shortPunt": "148046",
+    "kickoff": "148046"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "loop",
+    "right": "pocket"
+   },
+   "players": [
+    "143329",
+    "148050",
+    "148033",
+    "145655",
+    "144853",
+    "148034",
+    "148049",
+    "148038",
+    "148028",
+    "148046",
+    "148045",
+    "144569",
+    "148044",
+    "142874",
+    "148012",
+    "148048",
+    "148047",
+    "144651",
+    "142907",
+    "143680",
+    "144562",
+    "148042",
+    "148013",
+    "145675",
+    "144233",
+    "148051",
+    "148031",
+    "148052",
+    "148053"
+   ]
+  },
+  "2021": {
+   "enabled": false,
+   "name": "Romania",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_2024/logo.png",
+    "small": "logos_2024/logo_small.png",
+    "left": "logos_2024/logo_left.png",
+    "right": "logos_2024/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145675",
+    "viceCaptain": "144569",
+    "longGK": "144569",
+    "shortGK": "144569",
+    "longPunt": "144569",
+    "shortPunt": "144569",
+    "kickoff": "144569"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "loop",
+    "right": "pocket"
+   },
+   "players": [
+    "144393",
+    "144497",
+    "144225",
+    "144679",
+    "145655",
+    "145675",
+    "144477",
+    "145651",
+    "144562",
+    "145505",
+    "145528",
+    "144569",
+    "145654",
+    "144672",
+    "145253",
+    "145203",
+    "144432",
+    "144853",
+    "144341",
+    "144234",
+    "144469",
+    "142885",
+    "144651",
+    "144203",
+    "144139",
+    "144929",
+    "145319",
+    "145459",
+    "144370",
+    "144678"
+   ]
+  }
+ }
+}

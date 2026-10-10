@@ -16,7 +16,9 @@ import copy
 
 # .mis diff= value each level runs the stock AI at.
 MISSION_DIFFICULTY = {"club": 0, "pro": 1, "elite": 2, "legend": 2, "immortal": 2}
-LEVELS = list(MISSION_DIFFICULTY)
+# Temporarily keep the boosted levels out of every difficulty selector while
+# retaining their mappings and profiles for existing saved data.
+LEVELS = ["club", "pro", "elite"]
 
 RATING_KEYS = [
     "attack", "defense", "speed", "acceleration", "agility", "handling", "passing",

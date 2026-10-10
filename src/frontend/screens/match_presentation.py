@@ -15,20 +15,23 @@ import random
 from dataclasses import dataclass, field
 from typing import Callable, List, Optional
 
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QLabel, QFrame
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QLabel, QFrame, QScrollArea
 from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtCore import Qt
 
 from backend.mod_utils import stock_head_path
 from shared.config import config
 from app.screen_base import Screen
+from app import variants as V
+from app.game_data import frontend_logo
 from ui import StyledButton
+from ui.kickoff_transition import KickoffTransition
 from ui.atmosphere import AtmosphereWidget
 from ui.player_stage import KitStage
 from ui.broadcast import Card, SelectorRow, HintBar, page_header, eyebrow_label, display_label
 from ui.editor_kit import Note
 from ui.theme import (
-    ACCENT, HOME_TINT, AWAY_TINT, BORDER, FG_MUTED, FG_SECONDARY, BTN_HEIGHT, T_TITLE,
+    ACCENT, HOME_TINT, AWAY_TINT, BORDER, FG_MUTED, FG_PRIMARY, FG_SECONDARY, T_VALUE, BTN_HEIGHT, T_TITLE,
 )
 from screens.match_setup import FACE_YAW, MANNEQUIN_POOL, _load_crest
 
@@ -39,6 +42,11 @@ class SideSpec:
     season: str
     kit: str                        # key in the season's "kits"
     kit_locked: bool = False        # fixed by the mode: shown, not changeable
+    variant: str = ""               # squad variant of the season ("" = default)
+    kit_variant: str = ""           # variant of the kit (a tournament patch…), if it has it
+    # kit fields (frontKitFile/backKitFile/previewFile, team-folder relative)
+    # replacing the picked kit's: a mode's own kit, worn whatever is picked
+    kit_override: dict = field(default_factory=dict)
 
 
 @dataclass
@@ -61,6 +69,7 @@ class Presentation:
     heading: str = ""
     briefing: str = ""
     details: List[str] = field(default_factory=list)
+    objectives: List[str] = field(default_factory=list)   # shown in their own highlighted block
     choices: List[Choice] = field(default_factory=list)
     on_kit: Optional[Callable] = None        # fn(side, kit_key)
     on_kickoff: Optional[Callable] = None    # fn()
@@ -68,10 +77,11 @@ class Presentation:
     controlled: Optional[Callable] = None    # fn() -> sides the player controls
 
 
-def _kit_assets(ds, team_id, season, key):
+def _kit_assets(ds, team_id, season, key, kit_variant="", kit_override=None):
     """(flat preview path, front kit path, back-panel path, model3d) for one
     kit — the same files match setup's TeamColumn feeds its KitStage."""
-    kit = ds.teams.get(team_id, {}).get(season, {}).get("kits", {}).get(key) or {}
+    kit = V.resolve_kit(ds.team_season(team_id, season).get("kits", {}).get(key), kit_variant)
+    kit.update(kit_override or {})
     root = ds.teams_folder_path.get(team_id, "")
     preview = os.path.join(root, kit.get("previewFile", "")) if kit.get("previewFile") else ""
     front = os.path.join(root, kit.get("frontKitFile", "")) if kit.get("frontKitFile") else ""
@@ -108,7 +118,7 @@ class _SideCard(QWidget):
 
         ident = QHBoxLayout()
         ident.setSpacing(16)
-        self.crest = QLabel()
+        self.crest = self.crest_lbl = QLabel()
         self.crest.setFixedSize(96, 96)
         self.crest.setAlignment(Qt.AlignCenter)
         self.crest.setStyleSheet("background: transparent;")
@@ -123,10 +133,10 @@ class _SideCard(QWidget):
             ident.addWidget(self.crest)
         v.addLayout(ident)
 
-        rule = QFrame()
-        rule.setFixedHeight(1)
-        rule.setStyleSheet(f"background: {BORDER}; border: none;")
-        v.addWidget(rule)
+        self.rule = QFrame()
+        self.rule.setFixedHeight(1)
+        self.rule.setStyleSheet(f"background: {BORDER}; border: none;")
+        v.addWidget(self.rule)
 
         self.stage = KitStage(default_yaw=FACE_YAW if side == "home" else -FACE_YAW)
         self.stage.setMinimumHeight(180)
@@ -138,6 +148,16 @@ class _SideCard(QWidget):
         screen.focus.register(self.kit_row)
         v.addWidget(self.kit_row)
 
+    def chrome(self):
+        """What the kickoff sequence fades out around the stage and crest."""
+        return [self.eyebrow, self.name, self.rule, self.kit_row]
+
+    def restore_stage(self):
+        """Puts the stage back in the card after the kickoff sequence took it
+        out to animate it freely."""
+        self.card.layout().insertWidget(3, self.stage)    # after eyebrow, identity, rule
+        self.stage.setMinimumHeight(180)
+
     def set_mannequin(self, face_id, skin_entry):
         self._head_path = stock_head_path(face_id, os.path.join(config.temp_directory, "stock_heads"))
         self._skin_entry = skin_entry
@@ -145,10 +165,10 @@ class _SideCard(QWidget):
     def set_spec(self, spec: SideSpec):
         ds = self.screen.ds
         self.spec = spec
-        info = ds.teams.get(spec.team_id, {}).get(spec.season, {})
+        info = ds.team_season(spec.team_id, spec.season, spec.variant)
         self.name.setText((info.get("name") or spec.team_id or "?").upper())
         crest = _load_crest(os.path.join(ds.teams_folder_path.get(spec.team_id, ""),
-                                         info.get("logos", {}).get("main", "")))
+                                         frontend_logo(info)))
         if crest.isNull():
             self.crest.clear()
             self.crest.setText("NO CREST")
@@ -161,8 +181,9 @@ class _SideCard(QWidget):
         self.kit_row.set_values(kits, index=index)
         # A fixed kit stays readable but takes no input — and a disabled row
         # is skipped by pad/keyboard navigation (FocusManager.alive).
-        locked = spec.kit_locked or len(kits) < 2
-        self.kit_row.set_label("kit · fixed" if spec.kit_locked else "kit")
+        custom = bool(spec.kit_override)
+        locked = spec.kit_locked or custom or len(kits) < 2
+        self.kit_row.set_label("kit · custom" if custom else "kit · fixed" if spec.kit_locked else "kit")
         self.kit_row.set_disabled_visual(locked)
 
     def set_controlled(self, controlled):
@@ -180,7 +201,8 @@ class _SideCard(QWidget):
             self.stage.set_placeholder()
             return
         preview, front, back, model3d = _kit_assets(self.screen.ds, self.spec.team_id,
-                                                    self.spec.season, self.kit_row.current())
+                                                    self.spec.season, self.kit_row.current(),
+                                                    self.spec.kit_variant, self.spec.kit_override)
         if preview not in self._pix_cache:
             self._pix_cache[preview] = QPixmap(preview) if preview and os.path.exists(preview) else None
         pix = self._pix_cache[preview]
@@ -189,9 +211,13 @@ class _SideCard(QWidget):
                               load_3d=load_3d)
 
 
-class MatchPresentationScreen(Screen):
-    def __init__(self, ds, parent=None):
+class MatchPresentationScreen(KickoffTransition, Screen):
+    def __init__(self, ds, on_play_begin, on_play_reveal, parent=None):
         super().__init__(on_back=None, parent=parent)
+        # Same split as match setup's: the backend starts the moment the
+        # sequence does, the loading screen is only shown part-way through.
+        self.on_play_begin = on_play_begin
+        self.on_play_reveal = on_play_reveal
         self.on_back_cb = self._back
         self.ds = ds
         self.p = None
@@ -219,9 +245,12 @@ class MatchPresentationScreen(Screen):
         self.home_card = _SideCard("home", HOME_TINT, self)
         self.away_card = _SideCard("away", AWAY_TINT, self)
 
-        mid = Card(translucent=True)
+        self.mid_card = mid = Card(translucent=True)
         mid.setMinimumWidth(340)
         mid.setMaximumWidth(420)
+        # Eyebrow, title, objectives and choices always stay in view; only the
+        # briefing (and the fixed-settings lines under it) scrolls, when it is
+        # taller than the room left. Fits = no scrollbar.
         mv = QVBoxLayout(mid)
         mv.setContentsMargins(24, 18, 24, 20)
         mv.setSpacing(10)
@@ -230,17 +259,51 @@ class MatchPresentationScreen(Screen):
         self.heading = display_label("", T_TITLE, QFont.Bold, track=0.8, upper=False)
         self.heading.setWordWrap(True)
         mv.addWidget(self.heading)
+        self.text_scroll = QScrollArea()
+        self.text_scroll.setWidgetResizable(True)
+        self.text_scroll.setFrameShape(QFrame.NoFrame)
+        self.text_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.text_scroll.setMinimumHeight(60)
+        self.text_scroll.setStyleSheet("QScrollArea { background: transparent; border: none; }")
+        self.text_scroll.viewport().setStyleSheet("background: transparent;")
+        text_body = QWidget()
+        text_body.setObjectName("presentationText")
+        text_body.setStyleSheet("QWidget#presentationText { background: transparent; }")
+        tv = QVBoxLayout(text_body)
+        tv.setContentsMargins(0, 0, 10, 0)
+        tv.setSpacing(10)
         self.briefing = Note("", color=FG_SECONDARY)
-        mv.addWidget(self.briefing)
+        tv.addWidget(self.briefing)
         self.details = Note("", color=FG_MUTED)
-        mv.addWidget(self.details)
+        tv.addWidget(self.details)
+        tv.addStretch(1)
+        self.text_scroll.setWidget(text_body)
+        mv.addWidget(self.text_scroll, stretch=100)
+        # Objectives: a framed block of their own, bigger and brighter than
+        # the rest of the card.
+        self.objectives_box = QFrame()
+        self.objectives_box.setObjectName("objectivesBox")
+        self.objectives_box.setStyleSheet(
+            f"QFrame#objectivesBox {{ background: rgba(255,255,255,0.05);"
+            f" border: 1px solid {ACCENT}; border-left: 4px solid {ACCENT}; border-radius: 6px; }}"
+            " QFrame#objectivesBox QLabel { border: none; background: transparent; }")
+        ov = QVBoxLayout(self.objectives_box)
+        ov.setContentsMargins(14, 10, 14, 12)
+        ov.setSpacing(6)
+        ov.addWidget(eyebrow_label("objectives", color=ACCENT, size=13))
+        self.objectives_hint = Note("All needed to win the challenge", color=FG_MUTED)
+        ov.addWidget(self.objectives_hint)
+        self.objectives_list = Note("", color=FG_PRIMARY, size=T_VALUE)
+        self.objectives_list.setTextFormat(Qt.RichText)
+        ov.addWidget(self.objectives_list)
+        mv.addWidget(self.objectives_box)
         self.choices_label = eyebrow_label("your choices", color=ACCENT, size=12)
         mv.addWidget(self.choices_label)
         self.choices_grid = QGridLayout()
         self.choices_grid.setHorizontalSpacing(10)
         self.choices_grid.setVerticalSpacing(8)
         mv.addLayout(self.choices_grid)
-        mv.addStretch(1)
+        mv.addStretch(1)      # takes the room only when the text block is hidden
 
         bl.addWidget(self.home_card, stretch=5)
         bl.addWidget(mid, stretch=3)
@@ -287,7 +350,11 @@ class MatchPresentationScreen(Screen):
         details = "\n".join(d for d in p.details if d)
         self.details.setText(details)
         self.details.setVisible(bool(details))
+        self.objectives_list.setText("<br>".join(f"▸&nbsp;<b>{o}</b>" for o in p.objectives))
+        self.objectives_box.setVisible(bool(p.objectives))
         self._build_choices(p.choices)
+        self.text_scroll.setVisible(bool(p.briefing or details))
+        self.text_scroll.verticalScrollBar().setValue(0)
 
         home_pick, away_pick = random.sample(MANNEQUIN_POOL, 2)
         self.home_card.set_mannequin(*home_pick)
@@ -326,8 +393,18 @@ class MatchPresentationScreen(Screen):
         self.home_card.set_controlled("home" in sides)
         self.away_card.set_controlled("away" in sides)
 
+    # ── kickoff transition hooks (ui/kickoff_transition.py) ──────────────
+    def kt_columns(self):
+        return self.home_card, self.away_card
+
+    def kt_fade_widgets(self):
+        return [*self.home_card.chrome(), *self.away_card.chrome(),
+                self.mid_card, self.header_holder.itemAt(0).widget(),
+                self.hintbar, self.play_btn]
+
     def on_show(self):
         super().on_show()
+        self.reset_kickoff_visuals()
         for card in (self.home_card, self.away_card):
             card.refresh_preview()
         self.play_btn.setFocus()

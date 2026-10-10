@@ -1,0 +1,79 @@
+{
+ "2001": {
+  "2010": {
+   "enabled": false,
+   "name": "Jr. All Blacks",
+   "type": "new zealand",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "142408",
+    "viceCaptain": "142741",
+    "longGK": "143638",
+    "shortGK": "143638",
+    "longPunt": "142645",
+    "shortPunt": "143067",
+    "kickoff": "142645"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "107905",
+    "142741",
+    "142478",
+    "143955",
+    "142408",
+    "142464",
+    "143808",
+    "143173",
+    "143067",
+    "143638",
+    "142955",
+    "143926",
+    "143924",
+    "143221",
+    "142645",
+    "143946",
+    "143258",
+    "143852",
+    "142745",
+    "144033",
+    "143237",
+    "143064",
+    "142414",
+    "143453",
+    "143305",
+    "142402",
+    "143068",
+    "128053",
+    "115944"
+   ]
+  }
+ }
+}

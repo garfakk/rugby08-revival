@@ -7,8 +7,8 @@ user_profile.pro is copied to the game folder as user_profile.pro and the
 settings the user changed in the mod's Settings screen are written into it.
 
 The user's choices live in game_profile.ini (next to user_prefs.ini). Only the
-values the user actually changed are stored: everything else keeps what the
-template holds.
+values the user actually changed are stored: everything else keeps the
+setting's own `default` when it has one, else what the template holds.
 
 Format and field map: reR08 docs/findings/2026-09-25-profile-pro-settings-spec.md
 (offsets below are payload offsets; the file adds a 0x1C-byte header).
@@ -94,6 +94,7 @@ class Setting:
     maximum: int = 100
     step: int = 1
     note: str = ""
+    default: Optional[int] = None               # the mod's default; None = the template's
 
 
 def _choices(*labels):
@@ -180,13 +181,13 @@ SECTIONS = (
     )),
     ("VIDEO", (
         Setting("shadows", "Shadows", 0x25C, "choice", size=4, shift=9, bits=1,
-                choices=(("Simple", 0), ("Complex", 1))),
+                choices=(("Simple", 0), ("Complex", 1)), default=1),
         Setting("texture_filter", "Texture Filter", 0x25C, "choice", size=4, shift=10, bits=1,
-                choices=(("Bilinear", 0), ("Trilinear", 1))),
+                choices=(("Bilinear", 0), ("Trilinear", 1)), default=1),
         Setting("force_lod", "Force LOD", 0x25C, "choice", size=4, shift=11, bits=4,
-                choices=_choices("No", "Low", "Medium", "High")),
+                choices=_choices("No", "Low", "Medium", "High"), default=3),
         Setting("antialiasing", "Antialiasing", 0x25C, "choice", size=4, shift=15, bits=3,
-                choices=_choices("Off", "2x", "4x", "8x")),
+                choices=_choices("Off", "2x", "4x", "8x"), default=3),
         Setting("gamma", "Gamma", 0x260, "range"),
         Setting("screen_x", "Screen Centre Horizontal", 0x218, "range", size=2, bits=16,
                 signed=True, minimum=-32, maximum=32),
@@ -196,6 +197,12 @@ SECTIONS = (
 )
 
 SETTINGS = {s.key: s for _title, group in SECTIONS for s in group}
+
+# The AI difficulty (spec 0x270 bits 0-3: 0 Club, 1 Pro, 2 Elite; the game
+# copies it to the match context). Not a Settings entry: it is set per match,
+# from the match's own difficulty, by deploy(difficulty=...).
+DIFFICULTY = Setting("difficulty", "Difficulty", 0x270, "choice", bits=4,
+                     choices=_choices("Club", "Pro", "Elite"))
 
 # Resolution: two consecutive u16 (width, height)
 _OFF_RES_W, _OFF_RES_H = 0x262, 0x264
@@ -304,10 +311,13 @@ class GameProfile:
 
     # ── values ──
     def get(self, key: str) -> int:
-        """Current value: the user's override, else the template's."""
+        """Current value: the user's override, else the setting's default,
+        else the template's."""
         if key in self._overrides:
             return self._overrides[key]
         setting = SETTINGS[key]
+        if setting.default is not None:
+            return _clamp(setting, setting.default)
         payload = self._template_payload()
         if payload is None:
             return setting.choices[0][1] if setting.choices else setting.minimum
@@ -337,24 +347,31 @@ class GameProfile:
         self._overrides[RESOLUTION_KEY] = size
 
     def reset(self):
-        """Back to the template's values."""
+        """Back to the defaults (the settings' own, else the template's)."""
         self._overrides.clear()
         self.save()
 
     # ── deployment ──
-    def deploy(self, game_dir: str = None) -> bool:
+    def deploy(self, game_dir: str = None, difficulty: Optional[int] = None) -> bool:
         """Copy the template to the game folder as user_profile.pro and write the
-        user's settings into it. Called at every game launch."""
+        user's settings into it. Called at every game launch. `difficulty`
+        (0 club, 1 pro, 2 elite) is this match's AI level; the .mis diff=
+        attribute does not set it, the profile does."""
         payload = self._template_payload()
         if payload is None:
             return False
         payload = bytearray(payload)
+        for s in SETTINGS.values():
+            if s.default is not None and s.key not in self._overrides:
+                _write(payload, s, _clamp(s, s.default))
         for key, value in self._overrides.items():
             if key == RESOLUTION_KEY:
                 struct.pack_into("<HH", payload, _OFF_RES_W, value[0], value[1])
             else:
                 _write(payload, SETTINGS[key], value)
         _apply_camera(payload)
+        if difficulty is not None:
+            _write(payload, DIFFICULTY, _clamp(DIFFICULTY, int(difficulty)))
 
         destination = os.path.join(game_dir or config.game_launcher_directory, GAME_FILE_NAME)
         try:
@@ -364,7 +381,7 @@ class GameProfile:
             log.error(f"cannot write game profile {destination}: {e}")
             return False
         w, h = struct.unpack_from("<HH", payload, _OFF_RES_W)
-        log.info(f"Game profile written to {destination}: {w}x{h}, {len(self._overrides)} user settings")
+        log.info(f"Game profile written to {destination}: {w}x{h}, {len(self._overrides)} user settings, difficulty {difficulty}")
         return True
 
 

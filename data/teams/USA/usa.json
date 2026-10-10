@@ -1,0 +1,1188 @@
+{
+ "1021": {
+  "2008": {
+   "name": "USA",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2008/home_wc_front.png",
+     "backKitFile": "kits_2008/home_wc_back/home_wc_back_%.png",
+     "previewFile": "kits_2008/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2008/away_wc_front.png",
+     "backKitFile": "kits_2008/away_wc_back/away_wc_back_%.png",
+     "previewFile": "kits_2008/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "148296",
+    "viceCaptain": "144023",
+    "longGK": "148296",
+    "shortGK": "148296",
+    "longPunt": "148296",
+    "shortPunt": "148296",
+    "kickoff": "148296"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "144023",
+    "148298",
+    "148299",
+    "148300",
+    "148310",
+    "148302",
+    "142699",
+    "148306",
+    "148297",
+    "148296",
+    "148295",
+    "148294",
+    "148293",
+    "143166",
+    "143705",
+    "148304",
+    "143434",
+    "148301",
+    "148327",
+    "148307",
+    "148308",
+    "148309",
+    "143203",
+    "149584",
+    "148303",
+    "148305",
+    "148311",
+    "143328",
+    "148312"
+   ]
+  },
+  "2009": {
+   "name": "USA",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2009/home_front.png",
+     "backKitFile": "kits_2009/home_back/home_back_%.png",
+     "previewFile": "kits_2009/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2009/away_front.png",
+     "backKitFile": "kits_2009/away_back/away_back_%.png",
+     "previewFile": "kits_2009/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "148296",
+    "viceCaptain": "144023",
+    "longGK": "148296",
+    "shortGK": "148296",
+    "longPunt": "148296",
+    "shortPunt": "148296",
+    "kickoff": "148296"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "144023",
+    "148298",
+    "148299",
+    "148300",
+    "148310",
+    "148302",
+    "142699",
+    "148306",
+    "148297",
+    "148296",
+    "148295",
+    "148294",
+    "148293",
+    "143166",
+    "143705",
+    "148304",
+    "143434",
+    "148301",
+    "148313",
+    "148307",
+    "148308",
+    "148309",
+    "148305",
+    "148303",
+    "148311",
+    "148312",
+    "143203"
+   ]
+  },
+  "2024": {
+   "name": "USA",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": "",
+     "variants": {
+      "rwc_2023": {
+       "label": "RWC 2023",
+       "frontKitFile": "kits_2024/home_wc_front.png",
+       "backKitFile": "kits_2024/home_wc_back/home_wc_back_%.png"
+      }
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": "",
+     "variants": {
+      "rwc_2023": {
+       "label": "RWC 2023",
+       "frontKitFile": "kits_2024/away_wc_front.png",
+       "backKitFile": "kits_2024/away_wc_back/away_wc_back_%.png"
+      }
+     }
+    }
+   },
+   "roles": {
+    "captain": "144253",
+    "viceCaptain": "144262",
+    "longGK": "144253",
+    "shortGK": "144253",
+    "longPunt": "144253",
+    "shortPunt": "144253",
+    "kickoff": "144253"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "146363",
+    "146647",
+    "145244",
+    "144614",
+    "146467",
+    "145599",
+    "145932",
+    "146610",
+    "145283",
+    "144253",
+    "146153",
+    "144262",
+    "146200",
+    "145144",
+    "146370",
+    "144834",
+    "142367",
+    "145158",
+    "146219",
+    "146324",
+    "146558",
+    "146185",
+    "144926",
+    "146211",
+    "146057",
+    "146320",
+    "145025",
+    "146434",
+    "145072",
+    "145686"
+   ]
+  },
+  "2010": {
+   "enabled": false,
+   "name": "USA",
+   "type": "international",
+   "category": "",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "142997",
+    "viceCaptain": "142997",
+    "longGK": "142997",
+    "shortGK": "142997",
+    "longPunt": "142997",
+    "shortPunt": "142997",
+    "kickoff": "142997"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143434",
+    "142980",
+    "142824",
+    "143328",
+    "143392",
+    "143856",
+    "142699",
+    "142794",
+    "143334",
+    "142997",
+    "144031",
+    "143612",
+    "143203",
+    "143166",
+    "143705",
+    "142398",
+    "144023",
+    "143945",
+    "142431",
+    "143010",
+    "143942",
+    "143197",
+    "144049",
+    "142784",
+    "143862",
+    "143214",
+    "143594",
+    "143532",
+    "143986",
+    "142395"
+   ]
+  },
+  "2012": {
+   "enabled": false,
+   "name": "USA",
+   "type": "international",
+   "category": "",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "142699",
+    "viceCaptain": "148307",
+    "longGK": "148314",
+    "shortGK": "148314",
+    "longPunt": "148314",
+    "shortPunt": "148314",
+    "kickoff": "148314"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "144023",
+    "148318",
+    "144504",
+    "143328",
+    "143392",
+    "148302",
+    "142699",
+    "142794",
+    "148307",
+    "148315",
+    "143859",
+    "148314",
+    "143203",
+    "143166",
+    "144304",
+    "148317",
+    "148316",
+    "148319",
+    "148320",
+    "148321",
+    "148308",
+    "148322",
+    "143705",
+    "143434",
+    "148323",
+    "148326",
+    "148325",
+    "148330",
+    "148331",
+    "148332",
+    "148333",
+    "148334",
+    "148336",
+    "148327",
+    "145488",
+    "148337",
+    "148324",
+    "148328",
+    "148329",
+    "148335",
+    "148338"
+   ]
+  },
+  "2014": {
+   "enabled": false,
+   "name": "USA",
+   "type": "international",
+   "category": "",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "142699",
+    "viceCaptain": "148346",
+    "longGK": "148351",
+    "shortGK": "148351",
+    "longPunt": "148339",
+    "shortPunt": "148339",
+    "kickoff": "148339"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "148346",
+    "148317",
+    "144504",
+    "148345",
+    "148352",
+    "142699",
+    "148319",
+    "145599",
+    "148307",
+    "148339",
+    "148341",
+    "148314",
+    "148351",
+    "144304",
+    "143705",
+    "148347",
+    "145213",
+    "145552",
+    "148344",
+    "148334",
+    "145488",
+    "148340",
+    "148330",
+    "148342",
+    "148343",
+    "148316",
+    "148348",
+    "148349",
+    "148350",
+    "148327",
+    "145653",
+    "148353",
+    "148354",
+    "143392",
+    "148302",
+    "148355",
+    "148356",
+    "148357"
+   ]
+  },
+  "2015": {
+   "enabled": false,
+   "name": "USA",
+   "type": "international",
+   "category": "",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "142699",
+    "viceCaptain": "148319",
+    "longGK": "148351",
+    "shortGK": "148351",
+    "longPunt": "148359",
+    "shortPunt": "148359",
+    "kickoff": "148359"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "148346",
+    "148317",
+    "143434",
+    "148348",
+    "144614",
+    "142699",
+    "145653",
+    "148360",
+    "148307",
+    "148354",
+    "148359",
+    "148314",
+    "148340",
+    "143166",
+    "148351",
+    "148355",
+    "148361",
+    "148344",
+    "148349",
+    "148315",
+    "148302",
+    "148341",
+    "148319",
+    "145213",
+    "148339",
+    "148312",
+    "143705",
+    "144304",
+    "148358",
+    "148356",
+    "143392",
+    "148352",
+    "144504",
+    "148362",
+    "148363",
+    "148364"
+   ]
+  },
+  "2016": {
+   "enabled": false,
+   "name": "USA",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "143705",
+    "viceCaptain": "144304",
+    "longGK": "144253",
+    "shortGK": "144253",
+    "longPunt": "148312",
+    "shortPunt": "148312",
+    "kickoff": "143705"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "144504",
+    "148347",
+    "145552",
+    "143392",
+    "144614",
+    "148365",
+    "148332",
+    "148352",
+    "148307",
+    "144253",
+    "144304",
+    "148312",
+    "148340",
+    "143166",
+    "143705",
+    "148317",
+    "145213",
+    "148366",
+    "145599",
+    "145653",
+    "148356",
+    "148357",
+    "148351",
+    "148354",
+    "144834",
+    "148358",
+    "148368",
+    "148302",
+    "148331",
+    "145157",
+    "142699",
+    "148369",
+    "144750",
+    "148370",
+    "148362",
+    "148371",
+    "148372",
+    "145551",
+    "145131",
+    "148314",
+    "148367",
+    "148360",
+    "148373",
+    "148374",
+    "148330",
+    "143434"
+   ]
+  },
+  "2017": {
+   "enabled": false,
+   "name": "USA",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "142699",
+    "viceCaptain": "145157",
+    "longGK": "148331",
+    "shortGK": "148331",
+    "longPunt": "148331",
+    "shortPunt": "148331",
+    "kickoff": "148331"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145552",
+    "144750",
+    "148366",
+    "148369",
+    "145162",
+    "142699",
+    "145551",
+    "148332",
+    "145157",
+    "148331",
+    "145072",
+    "145032",
+    "144262",
+    "144304",
+    "145131",
+    "148376",
+    "144834",
+    "148379",
+    "148377",
+    "148374",
+    "148371",
+    "148375",
+    "148378",
+    "148365",
+    "148362",
+    "148312",
+    "148352",
+    "148380",
+    "145599",
+    "148381",
+    "148382",
+    "144253",
+    "148384",
+    "148370",
+    "145488",
+    "148386",
+    "148351",
+    "148356",
+    "148354",
+    "144504",
+    "148383",
+    "145653",
+    "148385",
+    "144286",
+    "148387"
+   ]
+  },
+  "2018": {
+   "enabled": false,
+   "name": "USA",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144304",
+    "viceCaptain": "144504",
+    "longGK": "145686",
+    "shortGK": "145686",
+    "longPunt": "145488",
+    "shortPunt": "145488",
+    "kickoff": "145032"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "144504",
+    "144834",
+    "145244",
+    "148352",
+    "145162",
+    "145653",
+    "144635",
+    "145599",
+    "145488",
+    "144253",
+    "145032",
+    "145240",
+    "144262",
+    "144304",
+    "145686",
+    "144750",
+    "145213",
+    "148366",
+    "144614",
+    "144286",
+    "145157",
+    "148386",
+    "148389",
+    "145131",
+    "148382",
+    "148332",
+    "145551",
+    "148379",
+    "148384",
+    "148388",
+    "148385",
+    "148369",
+    "146647",
+    "145552",
+    "148380",
+    "148390",
+    "145283",
+    "148378",
+    "148391",
+    "142699",
+    "148370",
+    "148392"
+   ]
+  },
+  "2020": {
+   "enabled": false,
+   "name": "USA",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144304",
+    "viceCaptain": "144504",
+    "longGK": "145686",
+    "shortGK": "145686",
+    "longPunt": "144253",
+    "shortPunt": "144253",
+    "kickoff": "145032"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "144504",
+    "144834",
+    "145552",
+    "144286",
+    "145162",
+    "145551",
+    "144635",
+    "145599",
+    "145283",
+    "144253",
+    "145072",
+    "145240",
+    "145032",
+    "144304",
+    "145686",
+    "146647",
+    "145213",
+    "145244",
+    "144614",
+    "144300",
+    "145488",
+    "144262",
+    "145131",
+    "148369",
+    "145157",
+    "145653",
+    "148386",
+    "145025",
+    "148393",
+    "148312",
+    "144750"
+   ]
+  },
+  "2021": {
+   "enabled": false,
+   "name": "USA",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144304",
+    "viceCaptain": "145551",
+    "longGK": "144253",
+    "shortGK": "144253",
+    "longPunt": "144253",
+    "shortPunt": "144253",
+    "kickoff": "144253"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145552",
+    "144834",
+    "144504",
+    "144614",
+    "145162",
+    "145653",
+    "145551",
+    "145599",
+    "145283",
+    "144253",
+    "145032",
+    "145240",
+    "144262",
+    "145072",
+    "144304",
+    "144750",
+    "142367",
+    "145158",
+    "144635",
+    "145157",
+    "145697",
+    "144049",
+    "145244",
+    "145213",
+    "144286",
+    "144300",
+    "145025",
+    "145488",
+    "145686",
+    "145131"
+   ]
+  },
+  "2025": {
+   "enabled": false,
+   "name": "USA",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144614",
+    "viceCaptain": "148411",
+    "longGK": "144253",
+    "shortGK": "144253",
+    "longPunt": "144253",
+    "shortPunt": "144253",
+    "kickoff": "144253"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "146211",
+    "148401",
+    "145244",
+    "148399",
+    "144614",
+    "146219",
+    "148398",
+    "148397",
+    "145283",
+    "144253",
+    "145157",
+    "146200",
+    "148396",
+    "148395",
+    "148394",
+    "144926",
+    "148402",
+    "148403",
+    "148404",
+    "148420",
+    "148405",
+    "146558",
+    "144262",
+    "148400",
+    "145932",
+    "148406",
+    "148408",
+    "145506",
+    "148412",
+    "148413",
+    "146647",
+    "148415",
+    "146610",
+    "148407",
+    "148409",
+    "148410",
+    "148411",
+    "148414",
+    "148417",
+    "148418",
+    "146320",
+    "148419",
+    "148421",
+    "148422"
+   ]
+  },
+  "2026": {
+   "enabled": false,
+   "name": "USA",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "148399",
+    "viceCaptain": "148420",
+    "longGK": "148430",
+    "shortGK": "148430",
+    "longPunt": "148430",
+    "shortPunt": "148430",
+    "kickoff": "148423"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "148425",
+    "148419",
+    "148431",
+    "148424",
+    "148399",
+    "146219",
+    "148439",
+    "146610",
+    "145283",
+    "148423",
+    "146655",
+    "146200",
+    "148396",
+    "148430",
+    "148406",
+    "148418",
+    "148426",
+    "148437",
+    "148438",
+    "148429",
+    "148412",
+    "148394",
+    "148440",
+    "148385",
+    "148428",
+    "146558",
+    "147065",
+    "148434",
+    "148420",
+    "148401",
+    "146211",
+    "148398",
+    "148403",
+    "148427",
+    "148433",
+    "148435",
+    "148436",
+    "145157",
+    "144253",
+    "148441",
+    "145506",
+    "148409",
+    "148405",
+    "148432",
+    "148415",
+    "144926"
+   ]
+  }
+ }
+}

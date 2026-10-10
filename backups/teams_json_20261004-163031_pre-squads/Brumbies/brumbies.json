@@ -1,0 +1,1206 @@
+{
+ "2003": {
+  "2009": {
+   "enabled": false,
+   "name": "Brumbies",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "143848",
+    "viceCaptain": "147244",
+    "longGK": "143848",
+    "shortGK": "143848",
+    "longPunt": "144057",
+    "shortPunt": "144057",
+    "kickoff": "144057"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss_pivot",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143228",
+    "143511",
+    "143941",
+    "142843",
+    "142381",
+    "143302",
+    "143081",
+    "142950",
+    "143999",
+    "144057",
+    "144047",
+    "143649",
+    "143848",
+    "147244",
+    "147224",
+    "142765",
+    "143244",
+    "145472",
+    "144029",
+    "142535",
+    "142566",
+    "147237",
+    "149242",
+    "143372",
+    "149243",
+    "143596",
+    "143650",
+    "145799",
+    "143094",
+    "149246",
+    "149244",
+    "149245"
+   ]
+  },
+  "2010": {
+   "enabled": false,
+   "name": "Brumbies",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "142950",
+    "viceCaptain": "142608",
+    "longGK": "142608",
+    "shortGK": "142608",
+    "longPunt": "142608",
+    "shortPunt": "142608",
+    "kickoff": "142608"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss_pivot",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143228",
+    "143511",
+    "143941",
+    "143637",
+    "142381",
+    "143878",
+    "143081",
+    "142950",
+    "142449",
+    "142608",
+    "144047",
+    "144057",
+    "143848",
+    "143052",
+    "143737",
+    "142765",
+    "143244",
+    "144029",
+    "143302",
+    "142535",
+    "142566",
+    "143649",
+    "142703",
+    "143596",
+    "143650",
+    "142843",
+    "143161",
+    "143094",
+    "142483",
+    "144059"
+   ]
+  },
+  "2011": {
+   "enabled": false,
+   "name": "Brumbies",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "142608",
+    "viceCaptain": "147244",
+    "longGK": "142608",
+    "shortGK": "142608",
+    "longPunt": "142608",
+    "shortPunt": "142608",
+    "kickoff": "142608"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss_pivot",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143228",
+    "143511",
+    "142706",
+    "142843",
+    "142381",
+    "143302",
+    "149242",
+    "149249",
+    "142449",
+    "142608",
+    "147244",
+    "144057",
+    "143649",
+    "144659",
+    "143052",
+    "149251",
+    "143244",
+    "144029",
+    "145069",
+    "142535",
+    "149247",
+    "143161",
+    "149248",
+    "144047",
+    "142765",
+    "142566",
+    "149250",
+    "147494",
+    "143094",
+    "142950",
+    "149253",
+    "145194",
+    "149252",
+    "143878",
+    "145368"
+   ]
+  },
+  "2012": {
+   "enabled": false,
+   "name": "Brumbies",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144057",
+    "viceCaptain": "143052",
+    "longGK": "144057",
+    "shortGK": "144057",
+    "longPunt": "144057",
+    "shortPunt": "144057",
+    "kickoff": "144057"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss_pivot",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143228",
+    "143511",
+    "142706",
+    "145382",
+    "145368",
+    "144029",
+    "145069",
+    "142387",
+    "145194",
+    "144057",
+    "149257",
+    "143052",
+    "143161",
+    "144659",
+    "144793",
+    "149251",
+    "149254",
+    "149255",
+    "149249",
+    "144683",
+    "149247",
+    "145549",
+    "145738",
+    "149258",
+    "145462",
+    "149256",
+    "142566",
+    "142843",
+    "149248"
+   ]
+  },
+  "2013": {
+   "enabled": false,
+   "name": "Brumbies",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "143081",
+    "viceCaptain": "144057",
+    "longGK": "144057",
+    "shortGK": "144057",
+    "longPunt": "142566",
+    "shortPunt": "142566",
+    "kickoff": "142566"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss_pivot",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145462",
+    "143511",
+    "142706",
+    "145382",
+    "145368",
+    "144029",
+    "143081",
+    "142387",
+    "145194",
+    "142566",
+    "149257",
+    "144057",
+    "145549",
+    "144659",
+    "144793",
+    "149259",
+    "146559",
+    "149258",
+    "149248",
+    "144683",
+    "149247",
+    "147237",
+    "143228",
+    "143161",
+    "143052",
+    "149260",
+    "149254",
+    "143404",
+    "145738",
+    "149255",
+    "144515",
+    "143574",
+    "147268"
+   ]
+  },
+  "2014": {
+   "enabled": false,
+   "name": "Brumbies",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "149247",
+    "viceCaptain": "144057",
+    "longGK": "149247",
+    "shortGK": "149247",
+    "longPunt": "149247",
+    "shortPunt": "149247",
+    "kickoff": "142566"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss_pivot",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145462",
+    "143511",
+    "143228",
+    "145382",
+    "145368",
+    "149260",
+    "149261",
+    "142387",
+    "145194",
+    "142566",
+    "149247",
+    "144057",
+    "145549",
+    "144659",
+    "144793",
+    "147268",
+    "146559",
+    "146292",
+    "144858",
+    "149266",
+    "149263",
+    "143161",
+    "143052",
+    "149255",
+    "149254",
+    "149257",
+    "149258",
+    "149264",
+    "149265",
+    "149259",
+    "142588",
+    "147237",
+    "143404",
+    "144138",
+    "149267",
+    "149268",
+    "145585",
+    "149269"
+   ]
+  },
+  "2015": {
+   "enabled": false,
+   "name": "Brumbies",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144057",
+    "viceCaptain": "149247",
+    "longGK": "149247",
+    "shortGK": "149247",
+    "longPunt": "149247",
+    "shortPunt": "149247",
+    "kickoff": "144057"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss_pivot",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145462",
+    "143511",
+    "143228",
+    "145275",
+    "145368",
+    "145382",
+    "143404",
+    "149249",
+    "145194",
+    "144057",
+    "149257",
+    "149247",
+    "145549",
+    "144659",
+    "144793",
+    "147268",
+    "144138",
+    "146559",
+    "149260",
+    "149261",
+    "149263",
+    "146630",
+    "149271",
+    "146292",
+    "144271",
+    "142566",
+    "149270",
+    "144811",
+    "149268",
+    "149272"
+   ]
+  },
+  "2016": {
+   "enabled": false,
+   "name": "Brumbies",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144057",
+    "viceCaptain": "142566",
+    "longGK": "144057",
+    "shortGK": "144057",
+    "longPunt": "144057",
+    "shortPunt": "144057",
+    "kickoff": "144057"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss_pivot",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145462",
+    "143511",
+    "143228",
+    "145275",
+    "145368",
+    "145382",
+    "143404",
+    "149261",
+    "145514",
+    "144057",
+    "149257",
+    "142566",
+    "145549",
+    "146630",
+    "149273",
+    "147268",
+    "144138",
+    "149274",
+    "145585",
+    "145141",
+    "144811",
+    "143161",
+    "149270",
+    "149260",
+    "149271",
+    "149247",
+    "146559",
+    "149263",
+    "144271",
+    "149249",
+    "144659",
+    "149275",
+    "149276",
+    "149277"
+   ]
+  },
+  "2017": {
+   "enabled": false,
+   "name": "Brumbies",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "143049",
+    "viceCaptain": "147268",
+    "longGK": "149278",
+    "shortGK": "149278",
+    "longPunt": "149278",
+    "shortPunt": "149278",
+    "kickoff": "149278"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss_pivot",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "148841",
+    "147268",
+    "144138",
+    "145275",
+    "145368",
+    "145382",
+    "143049",
+    "149260",
+    "144811",
+    "149278",
+    "149271",
+    "147274",
+    "145549",
+    "144659",
+    "149273",
+    "149276",
+    "143228",
+    "149274",
+    "144271",
+    "149261",
+    "149279",
+    "149275",
+    "143161",
+    "145500",
+    "145585",
+    "149280",
+    "145462",
+    "146630",
+    "145514",
+    "149277",
+    "144205",
+    "147251",
+    "145515",
+    "149281",
+    "149282",
+    "145305",
+    "144057"
+   ]
+  },
+  "2019": {
+   "enabled": false,
+   "name": "Brumbies",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "149264",
+    "viceCaptain": "144057",
+    "longGK": "144057",
+    "shortGK": "144057",
+    "longPunt": "144057",
+    "shortPunt": "144057",
+    "kickoff": "142331"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss_pivot",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145462",
+    "142306",
+    "144138",
+    "145275",
+    "145368",
+    "145345",
+    "145515",
+    "149264",
+    "144811",
+    "144057",
+    "145572",
+    "142331",
+    "145549",
+    "144659",
+    "145500",
+    "144383",
+    "144830",
+    "149274",
+    "145267",
+    "149283",
+    "149285",
+    "149278",
+    "145610",
+    "145257",
+    "145657",
+    "144205",
+    "147268",
+    "145305",
+    "144271",
+    "149286",
+    "149275",
+    "149284",
+    "143404",
+    "149270",
+    "144970",
+    "145663",
+    "11816"
+   ]
+  },
+  "2022": {
+   "enabled": false,
+   "name": "Brumbies",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145194",
+    "viceCaptain": "142331",
+    "longGK": "145176",
+    "shortGK": "145176",
+    "longPunt": "145194",
+    "shortPunt": "145194",
+    "kickoff": "145194"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss_pivot",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "144830",
+    "142306",
+    "144138",
+    "145267",
+    "144385",
+    "145345",
+    "145657",
+    "145257",
+    "145194",
+    "145176",
+    "144205",
+    "142331",
+    "144970",
+    "145610",
+    "145500",
+    "147282",
+    "145462",
+    "149286",
+    "145167",
+    "144999",
+    "145305",
+    "146168",
+    "146457",
+    "145539",
+    "146587",
+    "145207",
+    "145335",
+    "149268",
+    "144793",
+    "146102",
+    "144383",
+    "147265",
+    "149287",
+    "149288",
+    "149289"
+   ]
+  },
+  "2023": {
+   "enabled": false,
+   "name": "Brumbies",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145257",
+    "viceCaptain": "145345",
+    "longGK": "145176",
+    "shortGK": "145176",
+    "longPunt": "145176",
+    "shortPunt": "145176",
+    "kickoff": "146694"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss_pivot",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "144830",
+    "145207",
+    "144138",
+    "145167",
+    "144385",
+    "145345",
+    "145335",
+    "145257",
+    "145194",
+    "145176",
+    "146036",
+    "146694",
+    "144970",
+    "144205",
+    "145610",
+    "144383",
+    "146466",
+    "146550",
+    "145267",
+    "144999",
+    "145305",
+    "146215",
+    "149290",
+    "146457",
+    "146587",
+    "145539",
+    "145657",
+    "147282",
+    "149288",
+    "146003",
+    "144793",
+    "149292",
+    "149291",
+    "146134",
+    "146168",
+    "149286",
+    "145799",
+    "146246",
+    "149293"
+   ]
+  },
+  "2024": {
+   "enabled": false,
+   "name": "Brumbies",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145345",
+    "viceCaptain": "146694",
+    "longGK": "145176",
+    "shortGK": "145176",
+    "longPunt": "145176",
+    "shortPunt": "145176",
+    "kickoff": "146694"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss_pivot",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "144830",
+    "147282",
+    "144138",
+    "145267",
+    "144385",
+    "145345",
+    "145657",
+    "146003",
+    "145305",
+    "145176",
+    "146036",
+    "146694",
+    "144970",
+    "144205",
+    "145610",
+    "149294",
+    "146466",
+    "146587",
+    "145167",
+    "144999",
+    "146012",
+    "146134",
+    "146457",
+    "145539",
+    "146550",
+    "146215",
+    "144383",
+    "149295",
+    "145335",
+    "145207",
+    "146168",
+    "146246",
+    "149290",
+    "149288",
+    "149296"
+   ]
+  },
+  "2025": {
+   "enabled": false,
+   "name": "Brumbies",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145345",
+    "viceCaptain": "145539",
+    "longGK": "145176",
+    "shortGK": "145176",
+    "longPunt": "145176",
+    "shortPunt": "145176",
+    "kickoff": "145176"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss_pivot",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "144830",
+    "147282",
+    "144138",
+    "145167",
+    "145539",
+    "145345",
+    "145335",
+    "146695",
+    "145305",
+    "145176",
+    "146036",
+    "146534",
+    "144970",
+    "144205",
+    "145610",
+    "145207",
+    "146466",
+    "144539",
+    "149296",
+    "144999",
+    "146012",
+    "146134",
+    "146457",
+    "146550",
+    "144385",
+    "149298",
+    "146215",
+    "146168",
+    "146003",
+    "149299",
+    "146246",
+    "149297",
+    "149294",
+    "149300"
+   ]
+  },
+  "2026": {
+   "enabled": false,
+   "name": "Brumbies",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145345",
+    "viceCaptain": "149300",
+    "longGK": "144205",
+    "shortGK": "144205",
+    "longPunt": "146134",
+    "shortPunt": "146134",
+    "kickoff": "146457"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss_pivot",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "144830",
+    "147282",
+    "146550",
+    "149296",
+    "144385",
+    "145345",
+    "145335",
+    "146003",
+    "145305",
+    "146134",
+    "146036",
+    "146534",
+    "149300",
+    "146457",
+    "144205",
+    "149294",
+    "146466",
+    "149301",
+    "149302",
+    "144999",
+    "146246",
+    "145524",
+    "146168",
+    "145167",
+    "145207",
+    "145610",
+    "149303",
+    "144138",
+    "146695",
+    "149306",
+    "149297",
+    "149304",
+    "149305",
+    "149298"
+   ]
+  }
+ }
+}

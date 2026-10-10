@@ -166,7 +166,7 @@ class Config:
     self.directory_teams = os.path.join(self.mod_data_directory, "teams")
     self.directory_players = os.path.join(self.mod_data_directory, "players")
     self.directory_stadiums = os.path.join(self.mod_data_directory, "stadiums")
-    self.directory_tournaments = os.path.join(self.mod_data_directory, "tournaments")
+    self.directory_competitions = os.path.join(self.mod_data_directory, "competitions")
     self.directory_challenges = os.path.join(self.mod_data_directory, "challenges")
     # Tournament saves are the user's progress, not data: user_data/.
     self.directory_tournament_saves = os.path.join(user_data_directory(), "tournaments")
@@ -213,7 +213,14 @@ class Config:
       'match_result_start': 0x009B6720,
       'match_result_end': 0x009B8125,
       'screen_id': 0x009F9CB8,
+      # *(world_ptr) = the match object; +world_clock_offset = match clock,
+      # float seconds as displayed (reR08 patches_dll/cards.cpp, FUN_004233d0)
+      'world_ptr': 0x00A31988,
+      'world_clock_offset': 0x58,
     }
+    # Seconds between two reads of the live scoring counters during a match
+    # (timestamps the scores for challenge objectives).
+    self.score_poll_interval = 0.5
 
     # Front end options
     self.loading_image_filepath = "img.jpg"
@@ -242,6 +249,9 @@ class Config:
     # experimental/rarely-needed fields, most of them gated by a reR08
     # rugby08patches.dll patch (default-on, but only if that DLL is in use).
     self.advanced_user = False
+
+    # Reveal unfinished and data-editing tools in the Tools menu.
+    self.developper_mode = False
 
     # d3d8.dll proxy: forces the game windowed and blocks the monitor resolution
     # switch, which is what makes the game window embeddable.

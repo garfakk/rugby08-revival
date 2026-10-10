@@ -1,0 +1,1148 @@
+{
+ "2006": {
+  "2009": {
+   "enabled": false,
+   "name": "Western Force",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "142608",
+    "viceCaptain": "142563",
+    "longGK": "142608",
+    "shortGK": "142608",
+    "longPunt": "142608",
+    "shortPunt": "142608",
+    "kickoff": "142608"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "pivot",
+    "left": "miss_pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143157",
+    "147229",
+    "143256",
+    "142489",
+    "142440",
+    "143398",
+    "143404",
+    "142947",
+    "142449",
+    "142608",
+    "142563",
+    "142635",
+    "143120",
+    "147239",
+    "143530",
+    "149267",
+    "152581",
+    "143093",
+    "152582",
+    "143526",
+    "142974",
+    "142446",
+    "143190",
+    "152584",
+    "144011",
+    "143175",
+    "143009",
+    "143247",
+    "152585",
+    "152465",
+    "152583",
+    "143778"
+   ]
+  },
+  "2010": {
+   "enabled": false,
+   "name": "Western Force",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "142440",
+    "viceCaptain": "143404",
+    "longGK": "143914",
+    "shortGK": "143914",
+    "longPunt": "143914",
+    "shortPunt": "143914",
+    "kickoff": "143914"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "pivot",
+    "left": "miss_pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143372",
+    "143157",
+    "143728",
+    "142489",
+    "142440",
+    "143398",
+    "143404",
+    "142947",
+    "142510",
+    "143914",
+    "142563",
+    "143120",
+    "143816",
+    "143190",
+    "142635",
+    "143175",
+    "144001",
+    "143093",
+    "142415",
+    "143526",
+    "143063",
+    "143422",
+    "143424",
+    "142446",
+    "142908",
+    "142974",
+    "143009",
+    "143778",
+    "143574",
+    "144011"
+   ]
+  },
+  "2011": {
+   "enabled": false,
+   "name": "Western Force",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "142563",
+    "viceCaptain": "142635",
+    "longGK": "142563",
+    "shortGK": "142563",
+    "longPunt": "142563",
+    "shortPunt": "142563",
+    "kickoff": "142563"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "pivot",
+    "left": "miss_pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143157",
+    "147266",
+    "144001",
+    "143093",
+    "142440",
+    "142947",
+    "143404",
+    "142415",
+    "142510",
+    "142635",
+    "143568",
+    "149243",
+    "143190",
+    "143596",
+    "142563",
+    "143175",
+    "143778",
+    "142489",
+    "152472",
+    "149244",
+    "142435",
+    "152587",
+    "143398",
+    "143728",
+    "143816",
+    "143131",
+    "152471",
+    "143574",
+    "152586",
+    "152588",
+    "152589",
+    "145527"
+   ]
+  },
+  "2012": {
+   "enabled": false,
+   "name": "Western Force",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "152592",
+    "viceCaptain": "128074",
+    "longGK": "152592",
+    "shortGK": "152592",
+    "longPunt": "148814",
+    "shortPunt": "148814",
+    "kickoff": "148814"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "pivot",
+    "left": "miss_pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143157",
+    "147266",
+    "143244",
+    "143403",
+    "142440",
+    "142947",
+    "143404",
+    "143398",
+    "142510",
+    "152592",
+    "128074",
+    "148814",
+    "143190",
+    "152590",
+    "143596",
+    "148258",
+    "143778",
+    "146216",
+    "149264",
+    "143999",
+    "142435",
+    "152587",
+    "152591",
+    "152333",
+    "142415",
+    "145710",
+    "152593",
+    "143175",
+    "149244",
+    "152595",
+    "149992",
+    "146559",
+    "147274",
+    "143093",
+    "145527",
+    "142563",
+    "152594",
+    "148147"
+   ]
+  },
+  "2013": {
+   "enabled": false,
+   "name": "Western Force",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "152587",
+    "viceCaptain": "142410",
+    "longGK": "152587",
+    "shortGK": "152587",
+    "longPunt": "152587",
+    "shortPunt": "152587",
+    "kickoff": "143602"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "pivot",
+    "left": "miss_pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143157",
+    "152596",
+    "143244",
+    "143403",
+    "143093",
+    "152593",
+    "143049",
+    "142415",
+    "142410",
+    "143602",
+    "143596",
+    "147274",
+    "148814",
+    "152587",
+    "143162",
+    "144750",
+    "145527",
+    "152597",
+    "142947",
+    "152598",
+    "150007",
+    "152462",
+    "143398",
+    "143778",
+    "147246",
+    "142772",
+    "143190",
+    "142510",
+    "145710",
+    "152329",
+    "147266",
+    "152599",
+    "143175",
+    "146216",
+    "152333"
+   ]
+  },
+  "2014": {
+   "enabled": false,
+   "name": "Western Force",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "143602",
+    "viceCaptain": "150007",
+    "longGK": "144683",
+    "shortGK": "144683",
+    "longPunt": "143602",
+    "shortPunt": "143602",
+    "kickoff": "143602"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "pivot",
+    "left": "miss_pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143157",
+    "147266",
+    "143778",
+    "143093",
+    "142414",
+    "152593",
+    "143398",
+    "142415",
+    "144683",
+    "143602",
+    "143190",
+    "147274",
+    "150007",
+    "143009",
+    "143162",
+    "152596",
+    "145527",
+    "145211",
+    "144157",
+    "144310",
+    "152595",
+    "145738",
+    "145032",
+    "149177",
+    "142410",
+    "147257",
+    "152587",
+    "147246",
+    "144460",
+    "143049",
+    "152601",
+    "144572",
+    "152600",
+    "146216"
+   ]
+  },
+  "2015": {
+   "enabled": false,
+   "name": "Western Force",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "142410",
+    "viceCaptain": "143602",
+    "longGK": "143602",
+    "shortGK": "143602",
+    "longPunt": "143602",
+    "shortPunt": "143602",
+    "kickoff": "143602"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "pivot",
+    "left": "miss_pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143157",
+    "147266",
+    "145527",
+    "143093",
+    "144157",
+    "152593",
+    "143398",
+    "142415",
+    "142410",
+    "143602",
+    "143190",
+    "152601",
+    "147274",
+    "147257",
+    "143009",
+    "152596",
+    "145604",
+    "145211",
+    "142414",
+    "144917",
+    "144683",
+    "145738",
+    "152587",
+    "145032",
+    "145420",
+    "150007",
+    "146519",
+    "143049",
+    "148796",
+    "144310",
+    "145122",
+    "152602",
+    "144572",
+    "152597",
+    "152595"
+   ]
+  },
+  "2016": {
+   "enabled": false,
+   "name": "Western Force",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "143676",
+    "viceCaptain": "150007",
+    "longGK": "143676",
+    "shortGK": "143676",
+    "longPunt": "143676",
+    "shortPunt": "143676",
+    "kickoff": "143676"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "pivot",
+    "left": "miss_pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143157",
+    "152603",
+    "148796",
+    "152602",
+    "144157",
+    "144310",
+    "143398",
+    "142415",
+    "142410",
+    "143676",
+    "146533",
+    "150007",
+    "144314",
+    "145032",
+    "143009",
+    "152604",
+    "145604",
+    "144692",
+    "145420",
+    "152593",
+    "146519",
+    "144683",
+    "148136",
+    "147257",
+    "147274",
+    "145527",
+    "144572",
+    "152596",
+    "152597",
+    "147266",
+    "144770",
+    "145293",
+    "143049",
+    "145110",
+    "152601",
+    "152605",
+    "144917"
+   ]
+  },
+  "2017": {
+   "enabled": false,
+   "name": "Western Force",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "143398",
+    "viceCaptain": "144770",
+    "longGK": "144683",
+    "shortGK": "144683",
+    "longPunt": "144770",
+    "shortPunt": "144770",
+    "kickoff": "144683"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "pivot",
+    "left": "miss_pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143157",
+    "142803",
+    "145527",
+    "145110",
+    "144157",
+    "152602",
+    "143398",
+    "144681",
+    "144683",
+    "144770",
+    "142318",
+    "150148",
+    "144397",
+    "149284",
+    "143009",
+    "152596",
+    "144572",
+    "152488",
+    "144948",
+    "145293",
+    "145793",
+    "152601",
+    "149369",
+    "145032",
+    "144310",
+    "151874",
+    "143676",
+    "144692",
+    "142359",
+    "147257",
+    "151839",
+    "146519",
+    "144917",
+    "152606",
+    "152604",
+    "149247",
+    "146533",
+    "142415"
+   ]
+  },
+  "2022": {
+   "enabled": false,
+   "name": "Western Force",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144683",
+    "viceCaptain": "147274",
+    "longGK": "144683",
+    "shortGK": "144683",
+    "longPunt": "144683",
+    "shortPunt": "144683",
+    "kickoff": "144683"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "pivot",
+    "left": "miss_pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145576",
+    "144545",
+    "145431",
+    "142678",
+    "144685",
+    "148567",
+    "144917",
+    "145497",
+    "144683",
+    "145326",
+    "146386",
+    "144284",
+    "147274",
+    "145572",
+    "146272",
+    "144220",
+    "152608",
+    "147230",
+    "145309",
+    "145202",
+    "152611",
+    "144787",
+    "142856",
+    "144558",
+    "144310",
+    "152513",
+    "146261",
+    "152609",
+    "152607",
+    "145099",
+    "152610",
+    "152612",
+    "152613",
+    "145343",
+    "151135",
+    "149921"
+   ]
+  },
+  "2023": {
+   "enabled": false,
+   "name": "Western Force",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145497",
+    "viceCaptain": "145202",
+    "longGK": "144281",
+    "shortGK": "144281",
+    "longPunt": "144281",
+    "shortPunt": "144281",
+    "kickoff": "144281"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "pivot",
+    "left": "miss_pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145576",
+    "142306",
+    "145431",
+    "152518",
+    "146286",
+    "145497",
+    "145202",
+    "152497",
+    "152611",
+    "144281",
+    "146386",
+    "144660",
+    "146618",
+    "145740",
+    "144407",
+    "145540",
+    "152616",
+    "146561",
+    "145309",
+    "146261",
+    "144683",
+    "152526",
+    "144284",
+    "152607",
+    "145141",
+    "145572",
+    "144545",
+    "152066",
+    "144409",
+    "152614",
+    "146272",
+    "144681",
+    "142678",
+    "152608",
+    "144685",
+    "148283",
+    "146018",
+    "152615",
+    "146651",
+    "152617"
+   ]
+  },
+  "2024": {
+   "enabled": false,
+   "name": "Western Force",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "143449",
+    "viceCaptain": "144409",
+    "longGK": "143449",
+    "shortGK": "143449",
+    "longPunt": "143449",
+    "shortPunt": "143449",
+    "kickoff": "143449"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "pivot",
+    "left": "miss_pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "149688",
+    "145540",
+    "145431",
+    "146286",
+    "144685",
+    "145682",
+    "144409",
+    "145329",
+    "145194",
+    "144269",
+    "144407",
+    "144660",
+    "146618",
+    "144284",
+    "143449",
+    "144545",
+    "152616",
+    "144557",
+    "151919",
+    "145141",
+    "152611",
+    "152614",
+    "152526",
+    "145985",
+    "145497",
+    "152516",
+    "146175",
+    "145202",
+    "149905",
+    "149691",
+    "145368",
+    "146018",
+    "144637",
+    "152499",
+    "152618",
+    "144683",
+    "152117",
+    "146553"
+   ]
+  },
+  "2025": {
+   "enabled": false,
+   "name": "Western Force",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "147289",
+    "viceCaptain": "144409",
+    "longGK": "144269",
+    "shortGK": "144269",
+    "longPunt": "145194",
+    "shortPunt": "145194",
+    "kickoff": "145194"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "pivot",
+    "left": "miss_pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "152616",
+    "146861",
+    "145576",
+    "146286",
+    "145267",
+    "145682",
+    "144409",
+    "147289",
+    "145194",
+    "144269",
+    "146071",
+    "144660",
+    "145476",
+    "146175",
+    "145649",
+    "145540",
+    "149688",
+    "152619",
+    "145329",
+    "146553",
+    "152611",
+    "152614",
+    "152526",
+    "144200",
+    "147278",
+    "152499",
+    "145326",
+    "146737",
+    "144284",
+    "145368",
+    "144557",
+    "143449",
+    "144917",
+    "152623",
+    "152620",
+    "152621",
+    "152622",
+    "151919",
+    "152624",
+    "152625",
+    "152626"
+   ]
+  },
+  "2026": {
+   "enabled": false,
+   "name": "Western Force",
+   "type": "australia",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144269",
+    "viceCaptain": "146286",
+    "longGK": "144269",
+    "shortGK": "144269",
+    "longPunt": "144269",
+    "shortPunt": "144269",
+    "kickoff": "144269"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "pivot",
+    "left": "miss_pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145576",
+    "147278",
+    "147280",
+    "147204",
+    "145267",
+    "147289",
+    "144409",
+    "146737",
+    "146227",
+    "144269",
+    "146071",
+    "144660",
+    "144579",
+    "152629",
+    "145649",
+    "146861",
+    "150355",
+    "152628",
+    "151919",
+    "145682",
+    "147214",
+    "152614",
+    "143449",
+    "146286",
+    "144284",
+    "152499",
+    "152616",
+    "147288",
+    "152622",
+    "152627",
+    "151197",
+    "152630",
+    "144917",
+    "146631"
+   ]
+  }
+ }
+}

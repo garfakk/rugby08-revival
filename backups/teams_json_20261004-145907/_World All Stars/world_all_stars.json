@@ -1,0 +1,80 @@
+{
+ "2079": {
+  "2010": {
+   "enabled": false,
+   "name": "World All Stars",
+   "type": "allstars",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "130109",
+    "viceCaptain": "130833",
+    "longGK": "124855",
+    "shortGK": "124855",
+    "longPunt": "143964",
+    "shortPunt": "143964",
+    "kickoff": "143964"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "115834",
+    "143961",
+    "143495",
+    "130109",
+    "143898",
+    "142686",
+    "103625",
+    "142592",
+    "124855",
+    "130833",
+    "142763",
+    "143964",
+    "142920",
+    "143166",
+    "143446",
+    "142935",
+    "143111",
+    "143145",
+    "142500",
+    "128149",
+    "142443",
+    "115147",
+    "143992",
+    "142712",
+    "143377",
+    "143833",
+    "143376",
+    "143100",
+    "143009",
+    "143003"
+   ]
+  }
+ }
+}

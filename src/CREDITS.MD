@@ -8,9 +8,9 @@ Credits:
 - Core app: Garfakk
 - Game assets used:
     - 2023-2024: [jim546](https://github.com/jimw546/jimw546-s-Rugby-08-stuff)
-    - 2008-2009: [MUP Patch 2009](https://www.therugbyforum.com/threads/mup-v-1-2-season-2008-09.15872)
     - 2009-2010: [TRF Patch 10](https://www.therugbyforum.com/threads/trf-rugby-10-patch.18881)
-    - Heads: [jim546](https://github.com/jimw546/jimw546-s-Rugby-08-stuff)
+    - 2007-2009: [MUP Patch 2009](https://www.therugbyforum.com/threads/mup-v-1-2-season-2008-09.15872)
+    - Heads: [jim546](https://github.com/jimw546/jimw546-s-Rugby-08-stuff) and [JPilky](https://www.therugbyforum.com/threads/trf-custom-face-design-tracker.47791)
 
 - Music:
     - Title: [Midnight Ride](https://archive.org/details/GSP-AP_Collection_V1-4), Artist: GeoSuPhat (George P. Peterson), License: CC BY 3.0  

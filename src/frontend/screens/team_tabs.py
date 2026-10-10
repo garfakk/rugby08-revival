@@ -15,13 +15,15 @@ from PyQt5.QtCore import Qt, QRectF, QTimer, pyqtSignal, QMimeData, QPoint
 
 from app import team_ops as T
 from app.game_data import (
-    ASSET_SPECS, ROLE_KEYS, SET_PLAYS, TEAM_TYPES, STARTING_XV, SQUAD_SIZE,
-    looks_reversed,
+    ASSET_SPECS, COUNTRIES, country_label, ROLE_KEYS, SET_PLAYS, TEAM_TYPES, STARTING_XV, SQUAD_SIZE,
+    frontend_logo, looks_reversed,
 )
 from app.ratings import position_overall
 from app.season import season_label
 from ui.broadcast import Card, draw_frame, tracked_font, display_label, eyebrow_label
+from app import variants as V
 from ui.editor_kit import (
+    VariantPicker, FormDialog,
     FieldGrid, SectionCard, TextField, ChoiceField, SegmentField, AssetField,
     FrameStrip, Thumb, Note, Badge, TabStrip, browse_assets, load_pixmap, compact_button,
     SEVERITY_COLOR, worst,
@@ -62,6 +64,10 @@ def _button(text, variant="neutral", h=BTN_HEIGHT_SM):
 
 
 class TeamTab:
+    # Edits follow the squad variant picked in the header only where a squad
+    # variant can differ: players, roles and set plays (the squad tab).
+    SQUAD_SCOPED = False
+
     def __init__(self, screen, index):
         self.screen = screen
         self.index = index
@@ -73,8 +79,22 @@ class TeamTab:
 
     def edit(self, label, fn, key=None, coalesce=None):
         season = self.screen.season
-        return self.screen.edit(label, lambda w: fn(w[season]), coalesce_key=coalesce,
-                                view_hint={"season": season, "tab": self.index, "field": key})
+        picked = getattr(self.screen, "variant", "")
+        variant = picked if self.SQUAD_SCOPED else ""
+        if variant:
+            # edit the variant as it resolves; only its differences are kept
+            def mutate(w):
+                return T.edit_variant(w[season], variant, fn)
+        else:
+            def mutate(w):
+                return fn(w[season])
+        return self.screen.edit(label, mutate, coalesce_key=coalesce,
+                                view_hint={"season": season, "variant": picked,
+                                           "tab": self.index, "field": key, **self.view_extra()})
+
+    def view_extra(self):
+        """Extra view state an undo/redo of this tab's edits brings back."""
+        return {}
 
     def register(self, key, widget):
         return self.screen.register_field(key, widget, self.index)
@@ -86,6 +106,14 @@ class TeamTab:
 # ═════════════════════════════════════════════════════════════════════════
 # Overview
 # ═════════════════════════════════════════════════════════════════════════
+def _set_optional(info, key, value):
+    value = (value or "").strip()
+    if value:
+        info[key] = value
+    else:
+        info.pop(key, None)
+
+
 class OverviewTab(TeamTab):
     def __init__(self, screen, index):
         super().__init__(screen, index)
@@ -104,6 +132,9 @@ class OverviewTab(TeamTab):
         self.type = self.register("type", SegmentField("Type", TEAM_TYPES))
         self.type.edited.connect(lambda v: self.edit("team type", lambda i: i.__setitem__("type", v), "type"))
         grid.add(self.type)
+        self.country = self.register("country", ChoiceField("Country", allow_blank=True, display=country_label))
+        self.country.edited.connect(lambda v: self.edit("country", lambda i: _set_optional(i, "country", v), "country"))
+        grid.add(self.country)
         self.category = self.register("category", ChoiceField("Category", allow_blank=True))
         self.category.edited.connect(self._on_category)
         grid.add(self.category)
@@ -120,8 +151,13 @@ class OverviewTab(TeamTab):
         self.crest = self.register("logos.main", AssetField("Main crest", ASSET_SPECS["logos.main"]))
         self._wire_asset(self.crest, "logos.main")
         cgrid.add(self.crest)
+        self.crest_frontend = self.register("logos.frontend",
+                                            AssetField("Frontend logo", ASSET_SPECS["logos.frontend"]))
+        self._wire_asset(self.crest_frontend, "logos.frontend")
+        cgrid.add(self.crest_frontend)
         ccol.addWidget(cgrid)
-        ccol.addWidget(Note(ASSET_SPECS["logos.main"]["note"] + " 256×256 PNG."))
+        ccol.addWidget(Note(ASSET_SPECS["logos.main"]["note"] + " Main crest: in-game, 256×256 PNG. "
+                            + ASSET_SPECS["logos.frontend"]["note"]))
         ccol.addStretch(1)
         crow.addLayout(ccol, stretch=1)
         crest.add_layout(crow)
@@ -191,6 +227,9 @@ class OverviewTab(TeamTab):
         info = self.info()
         self.name.set_value(info.get("name", ""))
         self.type.set_value(info.get("type", ""))
+        cur_country = info.get("country", "")
+        self.country.set_options(COUNTRIES + ([cur_country] if cur_country and cur_country not in COUNTRIES else []))
+        self.country.set_value(cur_country)
         cats = list(self.screen.ds.all_categories())
         cur = info.get("category", "")
         if cur and cur not in cats:
@@ -201,8 +240,10 @@ class OverviewTab(TeamTab):
         root = self.screen.team_folder()
         self.crest.set_root(root)
         self.crest.set_value((info.get("logos") or {}).get("main", ""))
-        self.crest_big.set_image(os.path.join(root, self.crest.value()) if self.crest.value() else "",
-                                 "NO CREST")
+        self.crest_frontend.set_root(root)
+        self.crest_frontend.set_value((info.get("logos") or {}).get("frontend", ""))
+        shown = frontend_logo(info)
+        self.crest_big.set_image(os.path.join(root, shown) if shown else "", "NO CREST")
 
         roster = [str(p) for p in info.get("players", [])]
         players = self.screen.ds.players
@@ -361,6 +402,10 @@ class KitsTab(TeamTab):
     def __init__(self, screen, index):
         super().__init__(screen, index)
         self.kit_index = 0
+        # A variant of the selected kit (a tournament patch…): the same kit
+        # with a few files of its own; the fields show it as it resolves and
+        # edits store only what differs from the plain kit.
+        self.kit_variant = V.DEFAULT
         row = QHBoxLayout()
         row.setSpacing(14)
 
@@ -412,6 +457,14 @@ class KitsTab(TeamTab):
         # right: files
         right = SectionCard("files")
         self.kit_title = right.title_lbl
+        self.variant_picker = VariantPicker(
+            display=lambda vid: V.kit_variant_label(self.stored_kit(), vid), width=300,
+            add_subtitle="this kit with a small difference (a patch, a logo)")
+        self.variant_picker.variant_picked.connect(self._pick_variant)
+        self.variant_picker.action.connect(self.variant_action)
+        screen.register_field("kits.variant", self.variant_picker.choice, index)
+        screen.focus.register(self.variant_picker.menu_btn)
+        right.add(self.variant_picker)
         fgrid = FieldGrid(columns=1)
         self.front = self.register("kits.frontKitFile",
                                    AssetField("Shirt front", ASSET_SPECS["frontKitFile"]))
@@ -448,11 +501,133 @@ class KitsTab(TeamTab):
         self.kit_index = max(0, min(self.kit_index, len(names) - 1))
         return names[self.kit_index]
 
+    def stored_kit(self):
+        """The selected kit as stored (plain, with its "variants")."""
+        name = self.current_kit_name()
+        return (self.info().get("kits") or {}).get(name, {}) if name else {}
+
+    def current_variant(self):
+        """The picked kit variant if the selected kit has it, else "" (the
+        pick is kept while browsing kits without it)."""
+        vid = self.kit_variant
+        return vid if vid in V.kit_variant_ids(self.stored_kit()) else V.DEFAULT
+
+    def view_extra(self):
+        return {"kit_variant": self.kit_variant}
+
     def _edit_kit(self, label, fn):
         name = self.current_kit_name()
         if name is None:
             return
-        self.edit(f"{name} kit {label}", lambda i: fn(i["kits"][name]), f"kits.{name}")
+        vid = self.current_variant()
+        if vid:
+            self.edit(f"{name} kit ({vid}) {label}",
+                      lambda i: T.edit_kit_variant(i["kits"][name], vid, fn),
+                      f"kits.{name}.variants.{vid}")
+        else:
+            self.edit(f"{name} kit {label}", lambda i: fn(i["kits"][name]), f"kits.{name}")
+
+    def _pick_variant(self, vid):
+        self.kit_variant = vid or V.DEFAULT
+        self.refresh()
+
+    def variant_action(self, action):
+        name = self.current_kit_name()
+        if name is None:
+            return
+        kit = self.stored_kit()
+        vid = self.current_variant()
+        screen = self.screen
+
+        def kit_edit(label, fn):
+            self.edit(f"{name} kit {label}", lambda i: fn(i["kits"][name]), f"kits.{name}")
+
+        if action == "add":
+            taken = set(V.kit_variant_ids(kit))
+            world_cup = None
+            if self.info().get("type") == "international":
+                # international kits only get the World Cup patch, named
+                # after the tournament held the year before the season
+                try:
+                    year = int(self.screen.season) - 1
+                    world_cup = (f"rwc_{year}", f"RWC {year}")
+                except (TypeError, ValueError):
+                    pass
+            if world_cup:
+                if world_cup[0] in taken:
+                    screen.shell.footer.set_status(
+                        f"{name} kit already has {world_cup[0]}", DANGER_LITE)
+                    return
+                fields = {}
+            else:
+                known = [v for v in screen._known_variant_ids() if v not in taken]
+                family = ChoiceField("Competition", known, allow_blank=True,
+                                     blank_label="(type a new id below)",
+                                     display=lambda v: v.replace("_", " "))
+                family.set_value(known[0] if known else "")
+                other = TextField("New id")
+                label = TextField("Label")
+                fields = {"family": family, "other": other, "label": label}
+
+            def done(role):
+                screen._dialog = None
+                if role != "ok":
+                    return
+                if world_cup:
+                    new, new_label = world_cup
+                else:
+                    new = (other.value() or "").strip().lower() or family.value()
+                    new_label = label.value().strip()
+                try:
+                    T.add_kit_variant({V.KIT_VARIANTS_KEY: dict.fromkeys(taken)}, new)  # validate only
+                except ValueError as e:
+                    screen.shell.footer.set_status(str(e), DANGER_LITE)
+                    return
+                self.kit_variant = new
+                kit_edit(f"add variant {new}",
+                         lambda k: T.add_kit_variant(k, new, new_label))
+                screen.shell.footer.set_status(
+                    f"{name} kit · {V.kit_variant_label(self.stored_kit(), new)} added — it is "
+                    "the plain kit until you give it its own files", GREEN)
+
+            if world_cup:
+                intro = (f"The {name} kit with the World Cup patch: id {world_cup[0]}, label "
+                         f"\"{world_cup[1]}\". Only the files you change are stored; the rest "
+                         "stay the plain kit's.")
+            else:
+                intro = (f"The {name} kit with a small difference for one competition (a "
+                         "tournament patch, a logo), named after the competition's id "
+                         "(world_cup, six_nations…). Only the files you change are stored; "
+                         "the rest stay the plain kit's.")
+            screen.show_dialog(FormDialog(
+                screen, "Add kit variant", intro, fields,
+                [("CANCEL", "neutral", "cancel"), ("ADD VARIANT", "primary", "ok")], done))
+        elif action == "rename" and vid:
+            label = TextField("Label")
+            label.set_value(V.kit_variant_label(kit, vid))
+
+            def done(role):
+                screen._dialog = None
+                if role == "ok":
+                    kit_edit(f"rename variant {vid}",
+                             lambda k: T.set_kit_variant_label(k, vid, label.value().strip()))
+            screen.show_dialog(FormDialog(screen, "Rename kit variant", f"Id {vid} stays the same.",
+                                          {"label": label},
+                                          [("CANCEL", "neutral", "cancel"),
+                                           ("RENAME", "primary", "ok")], done))
+        elif action == "reset" and vid:
+            screen.confirm(f"Reset {V.kit_variant_label(kit, vid)} to the plain {name} kit?",
+                           "Its own files are dropped (the image files stay on disk; Ctrl+Z "
+                           "to undo until you save).", "RESET",
+                           lambda: kit_edit(f"reset variant {vid}",
+                                            lambda k: T.clear_kit_variant(k, vid)))
+        elif action == "delete" and vid:
+            def go():
+                self.kit_variant = V.DEFAULT
+                kit_edit(f"delete variant {vid}", lambda k: T.delete_kit_variant(k, vid))
+            screen.confirm(f"Delete {V.kit_variant_label(kit, vid)} from the {name} kit?",
+                           "Competitions asking for it wear the plain kit instead "
+                           "(Ctrl+Z to undo until you save).", "DELETE VARIANT", go)
 
     def _wire_asset(self, field, key):
         field.browse_requested.connect(lambda: browse_assets(
@@ -527,21 +702,36 @@ class KitsTab(TeamTab):
                 status[parts[1]] = worst([status.get(parts[1]), sev])
         self.kit_list.set_kits(names, self.kit_index, status)
         name = self.current_kit_name()
-        kit = kits.get(name, {}) if name else {}
+        stored = kits.get(name, {}) if name else {}
+        # Another kit without the variant shows plain; the id is kept, so
+        # stepping back to a kit that has it shows that variant again.
+        ids = V.kit_variant_ids(stored)
+        vid = self.current_variant()
+        kit = V.resolve_kit(stored, vid)
+        over = V.kit_overrides(stored, vid)
         has = name is not None
-        for w in (self.front, self.back, self.preview, self.color, self.fit, self.collar):
+        for w in (self.front, self.back, self.preview, self.color, self.fit, self.collar,
+                  self.variant_picker):
             w.setEnabled(has)
+        self.variant_picker.set_variants(ids, vid)
         for action, b in self.kit_buttons.items():
             b.setEnabled(has or action == "add")
-        self.kit_title.setText(f"{name} kit · files".upper() if has else "FILES")
+        title = f"{name} kit" + (f" · {V.kit_variant_label(stored, vid)}" if vid else "")
+        self.kit_title.setText(f"{title} · files".upper() if has else "FILES")
         root = self.screen.team_folder()
+        prefix = f"kits.{name}.variants.{vid}" if vid else f"kits.{name}"
         for w, key in ((self.front, "frontKitFile"), (self.back, "backKitFile"),
                        (self.preview, "previewFile")):
-            w.key = f"kits.{name}.{key}" if has else f"kits.{key}"
+            w.key = f"{prefix}.{key}" if has else f"kits.{key}"
             w.set_root(root)
             w.set_value(kit.get(key, ""))
+        # on a variant, mark what it changes (the rest is the plain kit's)
+        for w, key in ((self.front, "frontKitFile"), (self.back, "backKitFile"),
+                       (self.preview, "previewFile"), (self.fit, "model3d"),
+                       (self.collar, "model3d")):
+            w.set_badge(("OWN" if key in over else "PLAIN KIT") if vid else "")
         self.color.set_value(kit.get("color", ""))
-        self.color.key = f"kits.{name}.color"
+        self.color.key = f"{prefix}.color"
         model = kit.get("model3d") or {}
         self.fit.set_value(model.get("fit", ""))
         self.collar.set_value(model.get("collar", ""))
@@ -576,6 +766,8 @@ class KitsTab(TeamTab):
 # Squad & roles
 # ═════════════════════════════════════════════════════════════════════════
 class SquadTab(TeamTab):
+    SQUAD_SCOPED = True
+
     def __init__(self, screen, index):
         super().__init__(screen, index)
         self.selected_shirt = 1
@@ -617,6 +809,7 @@ class SquadTab(TeamTab):
 
         side = QVBoxLayout()
         side.setSpacing(10)
+        self.side_col = side        # the team editor puts the squad variant picker on top
         player_card = SectionCard("selected shirt")
         player_card.setFixedWidth(390)
         player_card.v.setSpacing(6)
@@ -796,12 +989,14 @@ class SquadTab(TeamTab):
         entries = [(pid, (players.get(pid) or {}).get("display_name") or pid, fits(pid)) for pid in pool]
         taken = {pid: s for pid, s in in_squad.items() if pid != current}
         tags = {pid: ("NEW", FG_TERTIARY) for pid in pool if pid not in in_squad}
-        subtitles = {}
-        for pid in pool:
+        def subtitle(pid):
             s = self.stats(pid)
             pos = POSITION_SHORT.get(s.get("position1", ""), s.get("position1", ""))
             ovr = position_overall(s)
-            subtitles[pid] = f"{pos}  {ovr if ovr is not None else ''}"
+            return f"{pos}  {ovr if ovr is not None else ''}"
+        # Callables: the picker lists every player in the data, and only the
+        # rows actually scrolled into view need their rating worked out.
+        subtitles = {pid: (lambda p=pid: subtitle(p)) for pid in pool}
         title = f"SHIRT {number}"
         if number <= STARTING_XV:
             from app.game_data import SHIRT_POSITIONS

@@ -1,0 +1,825 @@
+{
+ "1011": {
+  "2008": {
+   "name": "Portugal",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2008/home_wc_front.png",
+     "backKitFile": "kits_2008/home_wc_back/home_back_%.png",
+     "previewFile": "kits_2008/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand",
+      "fit": "loose"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2008/away_wc_front.png",
+     "backKitFile": "kits_2008/away_wc_back/away_back_%.png",
+     "previewFile": "kits_2008/away_preview.png",
+     "color": "",
+     "model3d": {
+      "fit": "loose",
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "147939",
+    "viceCaptain": "147945",
+    "longGK": "147938",
+    "shortGK": "147938",
+    "longPunt": "147938",
+    "shortPunt": "147938",
+    "kickoff": "147938"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "cross_kick",
+    "left": "dummy_switch",
+    "right": "loop"
+   },
+   "players": [
+    "147946",
+    "147948",
+    "147944",
+    "147943",
+    "147942",
+    "147950",
+    "147940",
+    "147939",
+    "147938",
+    "147937",
+    "147936",
+    "147935",
+    "147953",
+    "147954",
+    "147932",
+    "147947",
+    "147945",
+    "147949",
+    "147958",
+    "147951",
+    "147961",
+    "147962",
+    "147933",
+    "147952",
+    "147955",
+    "147957",
+    "147959",
+    "147934",
+    "147941",
+    "147956",
+    "147960",
+    "147963"
+   ]
+  },
+  "2009": {
+   "name": "Portugal",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2008/home_front.png",
+     "backKitFile": "kits_2008/home_back/home_back_%.png",
+     "previewFile": "kits_2008/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2008/away_front.png",
+     "backKitFile": "kits_2008/away_back/away_back_%.png",
+     "previewFile": "kits_2008/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "147939",
+    "viceCaptain": "147945",
+    "longGK": "147938",
+    "shortGK": "147938",
+    "longPunt": "147938",
+    "shortPunt": "147938",
+    "kickoff": "147938"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "cross_kick",
+    "left": "dummy_switch",
+    "right": "loop"
+   },
+   "players": [
+    "147946",
+    "147948",
+    "147944",
+    "147943",
+    "147942",
+    "147950",
+    "147940",
+    "147939",
+    "147938",
+    "147937",
+    "147936",
+    "147935",
+    "147953",
+    "147954",
+    "147932",
+    "147947",
+    "147945",
+    "147949",
+    "147958",
+    "147951",
+    "147961",
+    "147962",
+    "147933",
+    "147952",
+    "147955",
+    "147957",
+    "147959",
+    "147934",
+    "147941",
+    "147956",
+    "147960",
+    "147963"
+   ]
+  },
+  "2024": {
+   "name": "Portugal",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145805",
+    "viceCaptain": "145824",
+    "longGK": "145824",
+    "shortGK": "145824",
+    "longPunt": "145824",
+    "shortPunt": "145824",
+    "kickoff": "145824"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "cross_kick",
+    "left": "dummy_switch",
+    "right": "loop"
+   },
+   "players": [
+    "146719",
+    "145821",
+    "145806",
+    "145369",
+    "146008",
+    "145825",
+    "145978",
+    "146220",
+    "145824",
+    "146323",
+    "146010",
+    "145805",
+    "145807",
+    "146420",
+    "146023",
+    "146406",
+    "146474",
+    "145811",
+    "146709",
+    "146427",
+    "145800",
+    "146671",
+    "146355",
+    "145822",
+    "146532",
+    "145812",
+    "146337",
+    "146464",
+    "146294",
+    "145823"
+   ],
+   "variant": {
+    "world_cup": {
+     "label": "Rugby World Cup 2023",
+     "players": [
+      "146719",
+      "146406",
+      "146802",
+      "145811",
+      "145369",
+      "145812",
+      "145825",
+      "146220",
+      "145824",
+      "146807",
+      "146420",
+      "145805",
+      "145807",
+      "146010",
+      "146023",
+      "146801",
+      "145821",
+      "145978",
+      "146806",
+      "146464",
+      "146671",
+      "146294",
+      "146800",
+      "145822",
+      "145806",
+      "146803",
+      "146804",
+      "146805",
+      "145813",
+      "146427",
+      "146808",
+      "145823",
+      "145800"
+     ],
+     "roles": {
+      "captain": "145805",
+      "viceCaptain": "146807",
+      "longGK": "146807",
+      "shortGK": "146807",
+      "longPunt": "146807",
+      "shortPunt": "146807",
+      "kickoff": "146807"
+     }
+    }
+   }
+  },
+  "2010": {
+   "enabled": false,
+   "name": "Portugal",
+   "type": "international",
+   "category": "",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "115944",
+    "viceCaptain": "115944",
+    "longGK": "115944",
+    "shortGK": "115944",
+    "longPunt": "115944",
+    "shortPunt": "115944",
+    "kickoff": "115944"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "cross_kick",
+    "left": "dummy_switch",
+    "right": "loop"
+   },
+   "players": [
+    "115944"
+   ]
+  },
+  "2021": {
+   "enabled": false,
+   "name": "Portugal",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145805",
+    "viceCaptain": "145814",
+    "longGK": "145814",
+    "shortGK": "145814",
+    "longPunt": "145814",
+    "shortPunt": "145814",
+    "kickoff": "145814"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "cross_kick",
+    "left": "dummy_switch",
+    "right": "loop"
+   },
+   "players": [
+    "145806",
+    "145817",
+    "145808",
+    "145801",
+    "145810",
+    "145802",
+    "145812",
+    "145813",
+    "145803",
+    "145814",
+    "145816",
+    "145805",
+    "145807",
+    "145823",
+    "145800",
+    "145822",
+    "145821",
+    "145811",
+    "145827",
+    "145804",
+    "145820",
+    "145815",
+    "145809",
+    "145818",
+    "145819",
+    "145824",
+    "145825",
+    "145826",
+    "145828",
+    "145829"
+   ]
+  },
+  "2023": {
+   "enabled": false,
+   "name": "Portugal",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145807",
+    "viceCaptain": "146719",
+    "longGK": "146808",
+    "shortGK": "146808",
+    "longPunt": "146808",
+    "shortPunt": "146808",
+    "kickoff": "146808"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "cross_kick",
+    "left": "dummy_switch",
+    "right": "loop"
+   },
+   "players": [
+    "146719",
+    "145821",
+    "145806",
+    "145369",
+    "145825",
+    "145812",
+    "145811",
+    "146220",
+    "145824",
+    "146808",
+    "147964",
+    "145805",
+    "145807",
+    "146294",
+    "145800",
+    "145822",
+    "146800",
+    "146474",
+    "146805",
+    "145978",
+    "146427",
+    "146420",
+    "146023",
+    "145823",
+    "145803",
+    "146406",
+    "145810",
+    "146801",
+    "147965",
+    "147966",
+    "146337",
+    "146806"
+   ],
+   "variant": {
+    "world_cup": {
+     "label": "Rugby World Cup 2023",
+     "players": [
+      "146719",
+      "146406",
+      "146802",
+      "145811",
+      "145369",
+      "145812",
+      "145825",
+      "146220",
+      "145824",
+      "146807",
+      "146420",
+      "145805",
+      "145807",
+      "146010",
+      "146023",
+      "146801",
+      "145821",
+      "145978",
+      "146806",
+      "146464",
+      "146671",
+      "146294",
+      "146800",
+      "145822",
+      "145806",
+      "146803",
+      "146804",
+      "146805",
+      "145813",
+      "146427",
+      "146808",
+      "145823",
+      "145800"
+     ],
+     "roles": {
+      "captain": "145805",
+      "viceCaptain": "146807",
+      "longGK": "146807",
+      "shortGK": "146807",
+      "longPunt": "146807",
+      "shortPunt": "146807",
+      "kickoff": "146807"
+     }
+    }
+   }
+  },
+  "2025": {
+   "enabled": false,
+   "name": "Portugal",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145805",
+    "viceCaptain": "145822",
+    "longGK": "146294",
+    "shortGK": "146294",
+    "longPunt": "147984",
+    "shortPunt": "147984",
+    "kickoff": "147984"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "cross_kick",
+    "left": "dummy_switch",
+    "right": "loop"
+   },
+   "players": [
+    "145822",
+    "147972",
+    "145806",
+    "147970",
+    "146805",
+    "145825",
+    "145978",
+    "145812",
+    "147985",
+    "147984",
+    "145823",
+    "145805",
+    "145807",
+    "146294",
+    "146023",
+    "147986",
+    "147987",
+    "147992",
+    "147988",
+    "147989",
+    "147975",
+    "147968",
+    "147967",
+    "147964",
+    "146719",
+    "146427",
+    "147969",
+    "145369",
+    "147971",
+    "146803",
+    "147973",
+    "145810",
+    "147974",
+    "147976",
+    "147977",
+    "147978",
+    "147966",
+    "145824",
+    "145802",
+    "147979",
+    "147980",
+    "147981",
+    "147982",
+    "147983",
+    "146474",
+    "147990",
+    "146807",
+    "147991",
+    "147993"
+   ],
+   "variant": {
+    "world_cup": {
+     "label": "Rugby World Cup 2023",
+     "players": [
+      "146719",
+      "146406",
+      "146802",
+      "145811",
+      "145369",
+      "145812",
+      "145825",
+      "146220",
+      "145824",
+      "146807",
+      "146420",
+      "145805",
+      "145807",
+      "146010",
+      "146023",
+      "146801",
+      "145821",
+      "145978",
+      "146806",
+      "146464",
+      "146671",
+      "146294",
+      "146800",
+      "145822",
+      "145806",
+      "146803",
+      "146804",
+      "146805",
+      "145813",
+      "146427",
+      "146808",
+      "145823",
+      "145800"
+     ],
+     "roles": {
+      "captain": "145805",
+      "viceCaptain": "146807",
+      "longGK": "146807",
+      "shortGK": "146807",
+      "longPunt": "146807",
+      "shortPunt": "146807",
+      "kickoff": "146807"
+     }
+    }
+   }
+  },
+  "2026": {
+   "enabled": false,
+   "name": "Portugal",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145805",
+    "viceCaptain": "146806",
+    "longGK": "147976",
+    "shortGK": "147976",
+    "longPunt": "147976",
+    "shortPunt": "147976",
+    "kickoff": "147976"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "cross_kick",
+    "left": "dummy_switch",
+    "right": "loop"
+   },
+   "players": [
+    "148001",
+    "147972",
+    "147971",
+    "148000",
+    "146805",
+    "147994",
+    "145978",
+    "146806",
+    "147998",
+    "147976",
+    "146023",
+    "145805",
+    "145823",
+    "146294",
+    "145800",
+    "147980",
+    "145817",
+    "147982",
+    "147965",
+    "147983",
+    "147969",
+    "147968",
+    "147999",
+    "146420",
+    "145822",
+    "145824",
+    "147995",
+    "147996",
+    "147997",
+    "146801",
+    "148002",
+    "147964",
+    "148003",
+    "147985",
+    "145806",
+    "147970",
+    "148004",
+    "147988",
+    "147992",
+    "148005",
+    "148006",
+    "148007",
+    "148008",
+    "147989",
+    "148009",
+    "148010"
+   ],
+   "variant": {
+    "world_cup": {
+     "label": "Rugby World Cup 2023",
+     "players": [
+      "146719",
+      "146406",
+      "146802",
+      "145811",
+      "145369",
+      "145812",
+      "145825",
+      "146220",
+      "145824",
+      "146807",
+      "146420",
+      "145805",
+      "145807",
+      "146010",
+      "146023",
+      "146801",
+      "145821",
+      "145978",
+      "146806",
+      "146464",
+      "146671",
+      "146294",
+      "146800",
+      "145822",
+      "145806",
+      "146803",
+      "146804",
+      "146805",
+      "145813",
+      "146427",
+      "146808",
+      "145823",
+      "145800"
+     ],
+     "roles": {
+      "captain": "145805",
+      "viceCaptain": "146807",
+      "longGK": "146807",
+      "shortGK": "146807",
+      "longPunt": "146807",
+      "shortPunt": "146807",
+      "kickoff": "146807"
+     }
+    }
+   }
+  }
+ }
+}

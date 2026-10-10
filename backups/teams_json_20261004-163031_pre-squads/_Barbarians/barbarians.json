@@ -1,0 +1,80 @@
+{
+ "2071": {
+  "2010": {
+   "enabled": false,
+   "name": "Barbarians",
+   "type": "allstars",
+   "category": "",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "142608",
+    "viceCaptain": "143749",
+    "longGK": "142608",
+    "shortGK": "142608",
+    "longPunt": "142608",
+    "shortPunt": "142608",
+    "kickoff": "142608"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss_pivot",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "110075",
+    "143511",
+    "143309",
+    "109876",
+    "143182",
+    "143349",
+    "143749",
+    "144009",
+    "142792",
+    "142608",
+    "143530",
+    "143737",
+    "143721",
+    "142717",
+    "142635",
+    "142821",
+    "143278",
+    "142578",
+    "142457",
+    "142547",
+    "143917",
+    "143605",
+    "113716",
+    "118397",
+    "130792",
+    "120415",
+    "143128",
+    "143316",
+    "143414",
+    "143165"
+   ]
+  }
+ }
+}

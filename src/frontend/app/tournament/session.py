@@ -88,7 +88,16 @@ class TournamentSession:
         repairs = engine.prepare_fixture(self.t, fixture)
         self.save()
         persistence.snapshot(self.t, "prematch")
-        return bridge.to_match_config(self.ds, self.t, fixture), repairs
+        cfg = bridge.to_match_config(self.ds, self.t, fixture)
+        # Settings > Wind: Advanced has no match setup here to set it, so
+        # the fixture gets its own wind (seeded: the same fixture always
+        # gets the same wind, even after BACK). Standard leaves it None —
+        # the game's stock random wind.
+        from shared.user_prefs import user_prefs
+        if user_prefs.wind_mode == "advanced":
+            from app.game_data import random_wind
+            cfg.wind_power, cfg.wind_dir_deg = random_wind(engine.fixture_rng(self.t, fixture, "wind"))
+        return cfg, repairs
 
     def finish_game(self, fixture, game_result: dict) -> list:
         """Record the game's result, then simulate the rest of the day."""
@@ -98,6 +107,20 @@ class TournamentSession:
         engine.record_result(self.t, fixture, result)
         done = [fixture] + engine.simulate_day(self.t)
         persistence.drop_snapshot(self.t.id, "prematch")
+        self.save()
+        return done
+
+    def prepare(self, fixture):
+        """Selections ready for a fixture without playing or simulating it
+        (the manual result form lists the players of both squads)."""
+        engine.prepare_fixture(self.t, fixture)
+        self.save()
+
+    def enter_result(self, fixture, result) -> list:
+        """Record a result typed in by hand, then simulate the rest of the day."""
+        self._checkpoint()
+        engine.record_result(self.t, fixture, result)
+        done = [fixture] + engine.simulate_day(self.t)
         self.save()
         return done
 
