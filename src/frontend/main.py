@@ -904,7 +904,7 @@ class MainWindow(QMainWindow):
 
     def _record_tournament_result(self, result):
         """A tournament match just ended in the game. Returns the message for
-        the dashboard."""
+        the dashboard ("" when it was recorded: the recap shows it)."""
         session, fixture = self.tournament, self._tournament_fixture
         self._tournament_fixture = None
         if not result or result.get("finished") is False:
@@ -912,11 +912,13 @@ class MainWindow(QMainWindow):
             minute = (result or {}).get("minute")
             when = f" (stopped at {minute} min)" if minute else ""
             return f"The match wasn't completed{when}, so nothing was recorded. Play it again or simulate it."
+        from screens.tournament import moments
+        before = moments.snapshot(session.t)
         done = session.finish_game(fixture, result)
-        others = len(done) - 1
-        return (f"Result recorded: {session.t.team_name(fixture.home)} {fixture.result.score_text()} "
-                f"{session.t.team_name(fixture.away)}." + (f" {others} other match{'es' if others != 1 else ''}"
-                                                          f" of the matchday simulated." if others > 0 else ""))
+        # the dashboard opens on the matchday recap (your result, the rest
+        # of the matchday, the table) instead of a line of text
+        self.screen_tournament.queue_moments(before, done)
+        return ""
 
     def show_roster_import(self):
         self.screens.show_screen(self.screen_roster_import)

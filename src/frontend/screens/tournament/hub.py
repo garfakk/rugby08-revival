@@ -2,8 +2,10 @@
 screens/tournament/hub.py — Tournament mode's front door.
 
 Left: the saved tournaments as cards, newest first (emblem, managed team,
-progress, last played). Right: a NEW TOURNAMENT tile and the focused save's
-details with CONTINUE / DELETE. Pad: A continue, X delete, Y new, B back.
+progress, last played). Right: a NEW TOURNAMENT tile and the focused save
+with CONTINUE / DELETE; its description and options wait behind DETAILS.
+The cards rise in one after the other. Pad: A continue, X delete, Y new,
+B back.
 """
 from datetime import datetime
 
@@ -17,6 +19,7 @@ from app.season import season_label
 from app.tournament import formats, persistence
 from app.tournament.session import TournamentSession
 from shared.log import get_logger
+from ui import motion
 from ui.broadcast import Card, HintBar, display_label, eyebrow_label, page_header, tracked_font
 from ui.editor_kit import ConfirmDialog, Note, compact_button
 from ui.theme import (ACCENT, AWAY_TINT, BG_BASE, BTN_HEIGHT, FG_MUTED, FG_PRIMARY, FG_SECONDARY,
@@ -82,9 +85,11 @@ class SaveCard(ActivatableCard):
                    p.fontMetrics().elidedText(s.get("name", "").upper(), Qt.ElideRight, w - x - 230))
         p.setFont(tracked_font(FONT_DISPLAY, 11, QFont.DemiBold, 1.4))
         p.setPen(QColor(FG_TERTIARY))
-        sub = self._comp.upper()
+        # the competition once: not again under a save named after it
+        name = s.get("name", "").strip().upper()
+        sub = self._comp.upper() if self._comp.upper() != name else ""
         if s.get("season"):
-            sub += f"  ·  {season_label(s['season'])}"
+            sub += ("  ·  " if sub else "") + season_label(s["season"])
         p.drawText(QRectF(x, 44, w - x - 230, 18), Qt.AlignLeft | Qt.AlignVCenter, sub)
         if self._err:
             p.setPen(QColor(WARN))
@@ -233,27 +238,39 @@ class TournamentHubScreen(Screen):
         tv.addWidget(self.d_comp)
         top.addLayout(tv, stretch=1)
         dv.addLayout(top)
-        self.d_desc = Note("", color=FG_SECONDARY)
-        dv.addWidget(self.d_desc)
         self.d_status = display_label("", 14, QFont.Bold, track=1.0, color=FG_PRIMARY)
         dv.addWidget(self.d_status)
         self.d_progress = ProgressStrip(height=8)
         dv.addWidget(self.d_progress)
+        self.d_when = Note("", color=FG_TERTIARY)
+        dv.addWidget(self.d_when)
+        # the rest on demand: the competition's description, the options
+        self.d_more = transparent(QWidget(), "hubMore")
+        mv = QVBoxLayout(self.d_more)
+        mv.setContentsMargins(0, 4, 0, 0)
+        mv.setSpacing(8)
+        self.d_desc = Note("", color=FG_SECONDARY)
+        mv.addWidget(self.d_desc)
         self.d_opts = Note("", color=FG_TERTIARY)
-        dv.addWidget(self.d_opts)
+        mv.addWidget(self.d_opts)
+        self.d_more.hide()
+        dv.addWidget(self.d_more)
         dv.addSpacing(6)
         row = QHBoxLayout()
         row.setSpacing(10)
         self.delete_btn = compact_button("DELETE", "danger", height=BTN_HEIGHT)
         self.delete_btn.clicked.connect(self._delete)
         row.addWidget(self.delete_btn)
+        self.more_btn = compact_button("DETAILS  ▾", "ghost", height=BTN_HEIGHT)
+        self.more_btn.clicked.connect(self._toggle_details)
+        row.addWidget(self.more_btn)
         row.addStretch(1)
         self.continue_btn = compact_button("CONTINUE", "primary", height=BTN_HEIGHT)
         self.continue_btn.setMinimumWidth(200)
         self.continue_btn.clicked.connect(self._continue)
         row.addWidget(self.continue_btn)
         dv.addLayout(row)
-        for b in (self.continue_btn, self.delete_btn):
+        for b in (self.continue_btn, self.more_btn, self.delete_btn):
             self.focus.register(b)
         rv.addWidget(self.detail)
 
@@ -278,6 +295,15 @@ class TournamentHubScreen(Screen):
         super().on_show()
         self.reload()
         (self._cards[0] if self._cards else self.new_tile).setFocus()
+        motion.stagger_in(self._cards[:8] + [self.new_tile, self.detail if self._saves else self.empty],
+                          step=55)
+
+    def _toggle_details(self):
+        show = self.d_more.isHidden()
+        self.d_more.setVisible(show)
+        self.more_btn.setText("DETAILS  ▴" if show else "DETAILS  ▾")
+        if show:
+            motion.fade_in(self.d_more, ms=200)
 
     def reload(self):
         self.templates = formats.load_templates()
@@ -304,22 +330,29 @@ class TournamentHubScreen(Screen):
                              else [("A", "select"), ("Y", "new"), ("B", "back")])
 
     def _select(self, s):
+        changed = s is not self._selected
         self._selected = s
         for c in self._cards:
             c.selected = c.save is s
             c.update()
         if not s:
             return
+        if changed and self.isVisible():
+            motion.fade_in(self.detail, ms=160)
         tpl = self.templates.get(s.get("template_id"), {})
         self.d_emblem.set_pixmap(competition_emblem(self.ds, tpl or {"name": s.get("name", "")}, 84))
         self.d_name.setText(s.get("name", "").upper())
         comp = tpl.get("name", s.get("template_id", ""))
-        self.d_comp.setText((comp + (f" · {season_label(s['season'])}" if s.get("season") else "")).upper())
+        parts = [comp if comp.upper() != s.get("name", "").strip().upper() else "",
+                 season_label(s["season"]) if s.get("season") else ""]
+        self.d_comp.setText(" · ".join(p for p in parts if p).upper())
         self.d_desc.setText(tpl.get("description", ""))
+        self.more_btn.setVisible(bool(tpl.get("description")) or not s.get("error"))
         if s.get("error"):
             self.d_status.setText("This save can't be read")
             self.d_progress.set_value(0)
             self.d_opts.setText(s["error"])
+            self.d_when.setText("")
             self.continue_btn.setEnabled(False)
         else:
             if s.get("champion"):
@@ -330,8 +363,8 @@ class TournamentHubScreen(Screen):
                 self.d_status.setText(f"{managing} · matchday {s.get('day', 0) + 1} of "
                                       f"{s.get('last_day', 0) + 1}".upper())
                 self.d_progress.set_value((s.get("played") or 0) / max(1, s.get("total") or 1), ACCENT)
-            self.d_opts.setText(_options_line(s.get("options") or {}) + "   ·   last played "
-                                + (relative_time(s.get("updated")) or "—"))
+            self.d_opts.setText(_options_line(s.get("options") or {}))
+            self.d_when.setText("Last played " + (relative_time(s.get("updated")) or "—"))
             self.continue_btn.setEnabled(True)
             self.continue_btn.setText("VIEW" if s.get("champion") else "CONTINUE")
 
