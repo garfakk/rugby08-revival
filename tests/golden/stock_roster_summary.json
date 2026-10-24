@@ -1,0 +1,51 @@
+{
+ "first_teams": {
+  "1": [
+   "Argentina",
+   30
+  ],
+  "10": [
+   "Italy",
+   30
+  ],
+  "2": [
+   "Australia",
+   30
+  ],
+  "3": [
+   "Canada",
+   30
+  ],
+  "4": [
+   "Chile",
+   7
+  ],
+  "5": [
+   "England",
+   30
+  ],
+  "6": [
+   "Fiji",
+   30
+  ],
+  "7": [
+   "France",
+   30
+  ],
+  "8": [
+   "Georgia",
+   30
+  ],
+  "9": [
+   "Ireland",
+   30
+  ]
+ },
+ "players": 1904,
+ "teams": 80,
+ "teams_with_unknown_players": [
+  38,
+  81,
+  103
+ ]
+}

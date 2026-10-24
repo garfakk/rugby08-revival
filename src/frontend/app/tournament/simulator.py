@@ -10,38 +10,53 @@ A minute-block model: eight 10-minute blocks. Each block:
   * a chance becomes a try (attack vs defence), else maybe a penalty shot
     (opponent discipline), else maybe a drop goal,
   * kicks succeed on the kicker's goal_kicking,
+  * rain or snow (tournament/weather.py) makes tries and goal kicks harder,
   * cards (discipline/aggression) and injuries (fitness, fatigue) can
     happen; injured players come off for the best bench cover,
   * tactical substitutions around 50-70 minutes.
 
-Each side also has a hidden "day form" draw, and the host gets a small
-edge, so upsets happen at a plausible rate. Everything uses the `rng`
-passed in (seeded per fixture by the engine), so a tournament replays
-identically from its seed.
+The data's player ratings barely separate the nations, so each side also
+gets a "class" edge from its reputation (tournament/reputation.py: World
+Rugby rankings-style points) — a tier-1 side is expected to beat a tier-2
+one comfortably — and the two XVs' rating gap counts for only part
+(STATS_WEIGHT). Each side also has a hidden "day form" draw, and the host
+gets a small edge, so upsets happen at a plausible rate. Everything uses
+the `rng` passed in (seeded per fixture by the engine), so a tournament
+replays identically from its seed.
 
-The constants below are calibrated with tools/tournament_sim_calibrate.py.
+The constants below are calibrated against Test rugby: about 50 points
+and 5-6 tries a match, one yellow card, the favourite winning ~60% of
+matches between sides a few ranking points apart, ~85% at 10-15 points
+and virtually all at 25+. tests/test_tournament_realism.py checks that
+they stay there.
 """
 import math
 
+from . import reputation, weather
 from .effects import MatchContext, component, effective_stats
 from .model import MatchResult, PlayerLine, SideResult
-from .strength import SLOT_POSITIONS, group_of, position_fit, unit_ratings
+from .strength import SLOT_POSITIONS, group_of, position_fit, team_rating, unit_ratings
 
 BLOCKS = 8
 BLOCK_MINUTES = 10
-CHANCES_PER_BLOCK = 1.35      # per side at an even territory split
-TRY_BIAS = -0.80              # logit of P(try | chance) for evenly matched sides
-ATTACK_SCALE = 7.0            # rating gap that moves that logit by 1
-TERRITORY_SCALE = 8.0
-PENALTY_SHOT_BASE = 0.36
-DISCIPLINE_PAR = 96.0          # team discipline unit at which base rates apply
+CHANCES_PER_BLOCK = 1.05      # per side at an even territory split
+TRY_BIAS = -0.95              # logit of P(try | chance) for evenly matched sides
+ATTACK_SCALE = 10.0            # rating gap that moves that logit by 1
+TERRITORY_SCALE = 12.0
+PENALTY_SHOT_BASE = 0.45
+DISCIPLINE_PAR = 76.0          # fallback for field_par()'s discipline
 DISCIPLINE_SCALE = 8.0
 DROP_GOAL_BASE = 0.025
-YELLOW_BASE = 0.06            # per side per block
-RED_BASE = 0.004
+YELLOW_BASE = 0.05            # per side per block
+RED_BASE = 0.005
 INJURY_BASE = 0.006           # per player per block
-HOME_ADVANTAGE = 2.0          # rating points
+HOME_ADVANTAGE = 3.0          # rating points
 DAY_FORM_SIGMA = 1.5          # rating points, × the "sim_variance" option
+CLASS_WEIGHT = 0.45           # rating points per reputation point of difference
+STATS_WEIGHT = 0.5            # share of the two XVs' unit-rating gap that counts
+WET_TRY_PENALTY = 0.3         # logit off P(try | chance) in rain or snow
+WET_KICK_PENALTY = 0.06       # off every goal kick's success chance in rain or snow
+WIN_SCALE = 2.5               # rating-point edge that moves win_probability's logit by 1
 
 
 def logistic(x):
@@ -58,11 +73,57 @@ def _poisson(rng, lam):
         k += 1
 
 
-def discipline_factor(unit, lo, hi):
-    """Multiplier on penalties/cards: 1 at DISCIPLINE_PAR, more below it.
-    The data's discipline ratings bunch up in the high 90s, hence the
-    tight scale."""
-    return max(lo, min(hi, 1 + (DISCIPLINE_PAR - unit) / DISCIPLINE_SCALE))
+def class_gap(t, home, away) -> float:
+    """Rating points the home side's reputation is worth over the away
+    side's (negative when the away side is the stronger)."""
+    return CLASS_WEIGHT * (reputation.reputation(t, home) - reputation.reputation(t, away))
+
+
+def _damped(units):
+    """Each side's unit ratings pulled toward the two sides' mean by
+    STATS_WEIGHT: the data's ratings are noisy, so their gap counts for
+    less than class does, while what happens on the day (cards, injuries,
+    fatigue, a weakened XV) still moves them."""
+    a, b = units.values()
+    out = {}
+    for side, own, other in ((0, a, b), (1, b, a)):
+        out[side] = {k: (own[k] + other[k]) / 2 + STATS_WEIGHT * (own[k] - other[k]) / 2 for k in own}
+    return dict(zip(units, out.values()))
+
+
+def win_probability(t, fixture) -> float:
+    """The home side's chance of winning, as the simulator sees it before
+    kick-off: selected XVs, class and venue (a draw counts as half)."""
+    if not fixture.home or not fixture.away:
+        return 0.5
+    edge = (STATS_WEIGHT * (team_rating(t, fixture.home) - team_rating(t, fixture.away))
+            + class_gap(t, fixture.home, fixture.away)
+            + (0.0 if fixture.neutral else HOME_ADVANTAGE))
+    return logistic(edge / WIN_SCALE)
+
+
+def field_par(t) -> dict:
+    """The field's average XV, which the base rates are calibrated for:
+    {"discipline": mean discipline unit, "attack_edge": mean attack unit
+    minus mean defence unit}. Data seasons rate on different scales (the
+    2008 squads' discipline bunches up in the 90s, 2024's in the 70s), so
+    penalties, cards and tries are measured against the field rather than
+    fixed numbers. Worked out once (at creation; on first use for older
+    saves) and kept with the tournament, so it replays identically."""
+    par = t.components.get("sim_par")
+    if par is None:
+        units = [_Side(t, tid, None, False).units(0) for tid in t.teams if t.teams[tid].selection]
+        n = max(1, len(units))
+        par = {"discipline": round(sum(u["discipline"] for u in units) / n, 2) if units else DISCIPLINE_PAR,
+               "attack_edge": round(sum(u["attack"] - u["defence"] for u in units) / n, 2)}
+        t.components["sim_par"] = par
+    return par
+
+
+def discipline_factor(unit, lo, hi, par=DISCIPLINE_PAR):
+    """Multiplier on penalties/cards: 1 at the field's par, more below it.
+    Discipline ratings bunch up, hence the tight scale."""
+    return max(lo, min(hi, 1 + (par - unit) / DISCIPLINE_SCALE))
 
 
 def goal_probability(goal_kicking, kind="penalty"):
@@ -176,12 +237,17 @@ def simulate(t, fixture, rng) -> MatchResult:
     variance = float(opts.get("sim_variance", 1.0))
     injury_rate = float(opts.get("injury_rate", 1.0)) if opts.get("injuries", True) else 0.0
     cards_on = opts.get("cards", True)
+    par = field_par(t)
+    wet = weather.forecast(t, fixture)["precip"] != "none"
+    try_bias = TRY_BIAS - (WET_TRY_PENALTY if wet else 0.0)
+    wet_kick = WET_KICK_PENALTY if wet else 0.0
     home = _Side(t, fixture.home, fixture, True)
     away = _Side(t, fixture.away, fixture, False)
     sides = (home, away)
     edge = 0.0 if fixture.neutral else HOME_ADVANTAGE
-    home.form = rng.gauss(0, DAY_FORM_SIGMA * variance) + edge
-    away.form = rng.gauss(0, DAY_FORM_SIGMA * variance)
+    gap = class_gap(t, fixture.home, fixture.away)
+    home.form = rng.gauss(0, DAY_FORM_SIGMA * variance) + edge + gap / 2
+    away.form = rng.gauss(0, DAY_FORM_SIGMA * variance) - gap / 2
     events = []
     shares = []
 
@@ -194,7 +260,7 @@ def simulate(t, fixture, rng) -> MatchResult:
                     if cands and any(group_of(b.pos) == group for b in side.bench):
                         tired = min(cands, key=lambda p: p.stats["stamina"])
                         side.substitute(rng, block, tired, "tactical", events)
-        u = {s: s.units(block) for s in sides}
+        u = _damped({s: s.units(block) for s in sides})
 
         def territory(s):
             x = u[s]
@@ -207,8 +273,8 @@ def simulate(t, fixture, rng) -> MatchResult:
             chances = _poisson(rng, CHANCES_PER_BLOCK * 2 * share)
             att = u[side]["attack"] + side.form
             dfn = u[opp]["defence"] + opp.form
-            p_try = logistic((att - dfn) / ATTACK_SCALE + TRY_BIAS)
-            p_pen = PENALTY_SHOT_BASE * discipline_factor(u[opp]["discipline"], 0.6, 2.0)
+            p_try = logistic((att - dfn - par["attack_edge"]) / ATTACK_SCALE + try_bias)
+            p_pen = PENALTY_SHOT_BASE * discipline_factor(u[opp]["discipline"], 0.6, 2.0, par["discipline"])
             for _ in range(chances):
                 minute = block * BLOCK_MINUTES + rng.randint(0, BLOCK_MINUTES - 1)
                 active = side.active(block)
@@ -224,7 +290,7 @@ def simulate(t, fixture, rng) -> MatchResult:
                     kicker = side.kicker(block)
                     if kicker:
                         side.lines[kicker.pid].conversions_attempted += 1
-                        if rng.random() < goal_probability(kicker.stats["goal_kicking"], "conversion"):
+                        if rng.random() < goal_probability(kicker.stats["goal_kicking"], "conversion") - wet_kick:
                             side.lines[kicker.pid].conversions += 1
                             events.append({"minute": minute, "team": side.team_id, "kind": "conversion",
                                            "pid": kicker.pid})
@@ -232,14 +298,14 @@ def simulate(t, fixture, rng) -> MatchResult:
                     kicker = side.kicker(block)
                     if kicker:
                         side.lines[kicker.pid].penalties_attempted += 1
-                        if rng.random() < goal_probability(kicker.stats["goal_kicking"], "penalty"):
+                        if rng.random() < goal_probability(kicker.stats["goal_kicking"], "penalty") - wet_kick:
                             side.lines[kicker.pid].penalties += 1
                             events.append({"minute": minute, "team": side.team_id, "kind": "penalty",
                                            "pid": kicker.pid})
                 elif rng.random() < DROP_GOAL_BASE:
                     dropper = max(active, key=lambda p: p.stats["kicking"]
                                   * (1.5 if group_of(p.pos) == "fly_half" else 1.0))
-                    if rng.random() < goal_probability(dropper.stats["kicking"], "drop"):
+                    if rng.random() < goal_probability(dropper.stats["kicking"], "drop") - wet_kick:
                         side.lines[dropper.pid].drop_goals += 1
                         events.append({"minute": minute, "team": side.team_id, "kind": "drop",
                                        "pid": dropper.pid})
@@ -251,7 +317,7 @@ def simulate(t, fixture, rng) -> MatchResult:
                 if not active:
                     continue
                 disc = u[side]["discipline"]
-                factor = discipline_factor(disc, 0.4, 3.0)
+                factor = discipline_factor(disc, 0.4, 3.0, par["discipline"])
                 weights = [max(1, 100 - p.stats["discipline"] + p.stats["aggression"]) for p in active]
                 minute = block * BLOCK_MINUTES + rng.randint(0, BLOCK_MINUTES - 1)
                 if rng.random() < RED_BASE * factor:

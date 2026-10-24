@@ -21,12 +21,14 @@ from ui.theme import BG_BASE, ACCENT, FG_SECONDARY, FG_MUTED
 
 class ToolsScreen(Screen):
     def __init__(self, ds, on_back, on_team_editor, on_player_editor, on_import=None,
-                 on_challenge_editor=None):
+                 on_challenge_editor=None, on_edits=None, on_updates=None):
         super().__init__(on_back=on_back)
         self.ds = ds
-        self._build(on_team_editor, on_player_editor, on_import, on_challenge_editor)
+        self._build(on_team_editor, on_player_editor, on_import, on_challenge_editor, on_edits,
+                    on_updates)
 
-    def _build(self, on_team_editor, on_player_editor, on_import=None, on_challenge_editor=None):
+    def _build(self, on_team_editor, on_player_editor, on_import=None, on_challenge_editor=None,
+               on_edits=None, on_updates=None):
         root = QVBoxLayout(self)
         root.setContentsMargins(0, 0, 0, 0)
         root.setSpacing(0)
@@ -46,6 +48,8 @@ class ToolsScreen(Screen):
         items = [
             ("TEAM EDITOR", "", on_team_editor, False),
             ("PLAYER EDITOR", "", on_player_editor, False),
+            ("MY EDITS", "", on_edits, on_edits is None),
+            ("UPDATES", "", on_updates, on_updates is None),
         ]
         if config.developper_mode:
             items.extend([
@@ -53,8 +57,11 @@ class ToolsScreen(Screen):
                 ("CHALLENGE EDITOR", "", on_challenge_editor, on_challenge_editor is None),
                 ("TOURNAMENT EDITOR", "", None, True),
             ])
+        self.edits_tile = None
         for title, subtitle, slot, soon in items:
             tile = MenuTile(title, subtitle, soon=soon)
+            if title == "MY EDITS":
+                self.edits_tile = tile
             if slot is not None:
                 tile.activated.connect(slot)
             self.focus.register(tile)
@@ -69,6 +76,24 @@ class ToolsScreen(Screen):
         self.hintbar = HintBar()
         self.hintbar.set_hints([("A", "open"), ("B", "back")])
         root.addWidget(self.hintbar)
+
+    def on_show(self):
+        super().on_show()
+        self._update_edits_tile()
+
+    def _update_edits_tile(self):
+        """MY EDITS says how many records are edited and how many wait for a choice."""
+        edits = getattr(self.ds, "edits", None)
+        if self.edits_tile is None or edits is None:
+            return
+        n, conflicts = edits.count(), len(edits.conflicts)
+        text = f"{n} record{'s' if n != 1 else ''} edited" if n else ""
+        if conflicts:
+            text += f" · {conflicts} to settle"
+        if n and not edits.enabled:
+            text += " · turned off"
+        self.edits_tile.subtitle = text
+        self.edits_tile.update()
 
     def _data_summary(self):
         return (f"{len(self.ds.teams)} teams · {len(self.ds.players)} players")

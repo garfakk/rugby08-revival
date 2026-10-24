@@ -1,0 +1,91 @@
+{
+ "10160": {
+  "2009": {
+   "name": "Mont-de-Marsan",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2009/home_front.png",
+     "backKitFile": "kits_2009/home_back/home_back_%.png",
+     "previewFile": "kits_2009/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2009/away_front.png",
+     "backKitFile": "kits_2009/away_back/away_back_%.png",
+     "previewFile": "kits_2009/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "158438",
+    "viceCaptain": "158388",
+    "longGK": "158396",
+    "shortGK": "158396",
+    "longPunt": "158395",
+    "shortPunt": "158395",
+    "kickoff": "158395"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "158400",
+    "158386",
+    "158391",
+    "158390",
+    "158402",
+    "158438",
+    "158388",
+    "158392",
+    "158399",
+    "158396",
+    "158387",
+    "158431",
+    "158444",
+    "158406",
+    "158395",
+    "158404",
+    "158397",
+    "158401",
+    "158405",
+    "158440",
+    "158437",
+    "158434",
+    "158426",
+    "158393",
+    "158394",
+    "158389",
+    "153196",
+    "153491",
+    "158337",
+    "152325",
+    "158398",
+    "158335",
+    "158445",
+    "158432",
+    "147299",
+    "158403",
+    "152899"
+   ],
+   "enabled": true
+  }
+ }
+}

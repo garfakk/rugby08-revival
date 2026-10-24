@@ -14,7 +14,7 @@ from shared.log import get_logger
 
 from app import variants as V
 
-from . import scheduler, selection, simulator, standings
+from . import calendar, reputation, scheduler, selection, simulator, standings, weather
 from .events import bus
 from .model import SCHEMA_VERSION, PlayerState, TeamEntry, Tournament
 
@@ -75,6 +75,8 @@ def create_tournament(ds, template, season, participants=None, humans=(), option
 
     team_ids = [tid for groups in participants.values() for teams in groups.values() for tid in teams]
     humans = [str(h) for h in humans]
+    team_names = {s.get("name") for seasons in ds.teams.values() for s in seasons.values()
+                  if isinstance(s, dict)}
     controller = 1
     for tid in team_ids:
         seasons = ds.teams[tid]
@@ -88,7 +90,7 @@ def create_tournament(ds, template, season, participants=None, humans=(), option
                           controller=controller if human else 0,
                           default_roles={k: str(v) for k, v in (info.get("roles") or {}).items()},
                           set_plays=dict(info.get("setPlays") or {}),
-                          stadium_id=str(info.get("primaryStadium") or ""))
+                          stadium_id=scheduler.home_ground(ds.stadiums, tid, info, team_names))
         if human:
             controller += 1
         records = ds.get_players(squad, tseason)
@@ -105,6 +107,7 @@ def create_tournament(ds, template, season, participants=None, humans=(), option
             entry.squad.append(key)
         entry.default_roles = {k: (v if v in entry.squad else "") for k, v in entry.default_roles.items()}
         t.teams[tid] = entry
+    reputation.assign(ds, t)
 
     day = 0
     for spec in template.get("stages", []):
@@ -115,9 +118,12 @@ def create_tournament(ds, template, season, participants=None, humans=(), option
         t.stages[0].status = "active"
     scheduler.assign_stadiums(t, list(ds.stadiums))
     t.components["stadium_ids"] = list(ds.stadiums)
+    weather.keep_stadiums(t, ds)
+    calendar.assign_dates(t)
 
     for tid in t.teams:
         t.teams[tid].selection = selection.auto_select(t, tid)
+    simulator.field_par(t)
     bus.emit("tournament_created", t=t)
     return t
 
@@ -268,12 +274,29 @@ def next_human_fixture(t):
     return None
 
 
+def simulate_earlier(t) -> list:
+    """Simulate today's AI fixtures that kick off on an earlier date than
+    the humans' next match (a round's Saturday matches when the user plays
+    on the Sunday). Returns them."""
+    f = next_human_fixture(t)
+    if not f or not f.date:
+        return []
+    done = []
+    for g in list(t.fixtures_on(t.day)):
+        if not g.played and g.ready and g.date and g.date < f.date and not is_human_fixture(t, g):
+            simulate_fixture(t, g)
+            done.append(g)
+    return done
+
+
 def simulate_until_human(t) -> list:
-    """Simulate AI fixtures until a human fixture is due (or the end)."""
+    """Simulate AI fixtures until a human fixture is due (or the end),
+    including that day's earlier kick-offs."""
     done = []
     while not t.finished:
         f = next_human_fixture(t)
         if f:
+            done += simulate_earlier(t)
             break
         sims = simulate_day(t)
         done += sims

@@ -1,5 +1,6 @@
 """
-tournament_data_loader.py — Loads competition branding packs (ball, logo, pads, pitch logos) from disk.
+tournament_data_loader.py — Loads competition branding packs (ball, logo, pads, pitch logos,
+menu logo) from disk.
 """
 import os
 import re
@@ -23,7 +24,17 @@ def _read(path: str):
 
 
 # Branding fields holding a path (relative to the competition folder).
-_ASSET_KEYS = ("ball", "pads", "logo", "pitch_logo", "adboards")
+_ASSET_KEYS = ("ball", "pads", "logo", "logo_frontend", "pitch_logo", "adboards")
+
+
+def _on_disk(folder, relative) -> bool:
+    relative = str(relative or "").strip()
+    if not relative:
+        return False
+    path = os.path.join(folder, relative)
+    if "%" in path:
+        return any(os.path.isfile(path.replace("%", str(i))) for i in (1, 2))
+    return os.path.isfile(path)
 
 
 class TournamentDataLoader:
@@ -40,6 +51,9 @@ class TournamentDataLoader:
           {"id": "5002", "name": "Top 14", "seasonal": false,
            "ball": "...", "pads": "...", "logo": "...", "pitch_logo": "...",
            "adboards": "...",                    # optional FSH, relative to competition folder
+           "logo_frontend": "...",               # optional PNG for the menus only (the
+                                                 # in-game "logo" when absent), as teams'
+                                                 # logos.frontend
            "template": {...}}                       # optional, app/tournament/formats.py
 
           {"id": "world_cup", "name": "World Cup", "seasonal": true,
@@ -75,7 +89,8 @@ class TournamentDataLoader:
     @staticmethod
     def _load_competition(folder_path: str, definition: dict) -> dict:
         """{"_id": id, season: branding} for one competition definition;
-        seasons without any branding asset are left out."""
+        seasons with no branding file on disk are left out (a season can
+        name its files before they are made)."""
         base = {k: v for k, v in definition.items()
                 if k not in ("id", "seasonal", "seasons", "template")}
         base.setdefault("name", os.path.basename(folder_path))
@@ -85,7 +100,7 @@ class TournamentDataLoader:
         else:
             seasons = {"": base}
         seasons = {s: info for s, info in seasons.items()
-                   if any(info.get(k) for k in _ASSET_KEYS)}
+                   if any(_on_disk(folder_path, info.get(k)) for k in _ASSET_KEYS)}
         if seasons:
             seasons["_id"] = str(definition.get("id") or os.path.basename(folder_path))
         return seasons

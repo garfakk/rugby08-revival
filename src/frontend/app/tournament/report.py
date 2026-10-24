@@ -86,3 +86,36 @@ def player_status(t, p) -> str:
     if t.options.get("fatigue", True) and lv >= 15:
         notes.append(f"tired {lv}%")
     return ", ".join(notes) or "fit"
+
+
+def _ordinal(n) -> str:
+    return f"{n}{'th' if 10 <= n % 100 <= 20 else {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th')}"
+
+
+def campaign_summary(t, team_id) -> str:
+    """Where a team's tournament ended (or stands): "champions", "lost the
+    Quarter-final to Wales", "4th in Pool A"..."""
+    from . import standings
+    if t.champion == team_id:
+        return "champions"
+    mine = [f for f in t.fixtures if f.played and f.involves(team_id)]
+    last = mine[-1] if mine else None
+    if last and last.knockout:
+        won = last.result.winner_id() == team_id
+        other = t.team_name(last.away if last.home == team_id else last.home)
+        if last.final:
+            return "runners-up" if not won else "champions"
+        if not won:
+            return f"lost the {last.round_name or 'knockout'} to {other}"
+        if not any(not f.played and f.involves(team_id) for f in t.fixtures):
+            return f"won the {last.round_name or 'knockout'} against {other}"
+    for stage in reversed(t.stages):
+        if stage.kind != "round_robin":
+            continue
+        for g in stage.groups:
+            tab = standings.group_table(t, stage, g)
+            for i, row in enumerate(tab):
+                if row.team_id == team_id and row.played:
+                    where = g.name if len(stage.groups) > 1 else stage.name
+                    return f"{_ordinal(i + 1)} in {where} ({row.points} pts)"
+    return ""

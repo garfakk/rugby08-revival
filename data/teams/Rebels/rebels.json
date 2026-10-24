@@ -1,0 +1,580 @@
+{
+ "10126": {
+  "2022": {
+   "name": "Rebels",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "153255",
+    "viceCaptain": "153255",
+    "longGK": "145353",
+    "shortGK": "145353",
+    "longPunt": "145353",
+    "shortPunt": "153255",
+    "kickoff": "145353"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155644",
+    "144848",
+    "155822",
+    "145110",
+    "155944",
+    "155621",
+    "155652",
+    "145303",
+    "155658",
+    "153255",
+    "155831",
+    "155764",
+    "146580",
+    "155688",
+    "145353",
+    "155501",
+    "154008",
+    "145233",
+    "155811",
+    "155939",
+    "144811",
+    "144363",
+    "155779",
+    "155854",
+    "155863",
+    "145293",
+    "155942",
+    "145941",
+    "155855",
+    "155681",
+    "155643",
+    "155949",
+    "155796",
+    "155839",
+    "154171",
+    "155798",
+    "155875"
+   ],
+   "enabled": true
+  },
+  "2023": {
+   "name": "Rebels",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2023/home_front.png",
+     "backKitFile": "kits_2023/home_back/home_back_%.png",
+     "previewFile": "kits_2023/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2023/away_front.png",
+     "backKitFile": "kits_2023/away_back/away_back_%.png",
+     "previewFile": "kits_2023/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144363",
+    "viceCaptain": "144363",
+    "longGK": "144363",
+    "shortGK": "144363",
+    "longPunt": "144363",
+    "shortPunt": "144363",
+    "kickoff": "144363"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "154008",
+    "155678",
+    "154011",
+    "155944",
+    "155740",
+    "144761",
+    "155652",
+    "145293",
+    "155661",
+    "144363",
+    "145071",
+    "146580",
+    "155942",
+    "155839",
+    "145941",
+    "144848",
+    "155875",
+    "145233",
+    "145110",
+    "155904",
+    "155658",
+    "153255",
+    "155938",
+    "145353",
+    "155681",
+    "155822",
+    "155993",
+    "155829",
+    "155984",
+    "155939",
+    "155644",
+    "155690",
+    "155949",
+    "155680",
+    "155831",
+    "156000"
+   ],
+   "enabled": true
+  },
+  "2024": {
+   "name": "Rebels",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144363",
+    "viceCaptain": "145303",
+    "longGK": "144363",
+    "shortGK": "144363",
+    "longPunt": "144363",
+    "shortPunt": "144363",
+    "kickoff": "144363"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "154008",
+    "144848",
+    "154011",
+    "155993",
+    "155944",
+    "144761",
+    "155904",
+    "145303",
+    "155661",
+    "144363",
+    "156020",
+    "155984",
+    "153981",
+    "155839",
+    "145941",
+    "155678",
+    "155875",
+    "145597",
+    "155829",
+    "153096",
+    "155658",
+    "155681",
+    "156037",
+    "155689",
+    "155794",
+    "155831",
+    "155652",
+    "155949",
+    "156030",
+    "153952",
+    "155942",
+    "156011",
+    "155822"
+   ],
+   "enabled": true
+  },
+  "2018": {
+   "name": "Rebels",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": "",
+     "model3d": {
+      "fit": "loose",
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "",
+     "model3d": {
+      "fit": "loose",
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "155639",
+    "viceCaptain": "155639",
+    "longGK": "145353",
+    "shortGK": "145353",
+    "longPunt": "142792",
+    "shortPunt": "142792",
+    "kickoff": "142792"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153101",
+    "155680",
+    "153102",
+    "145110",
+    "144157",
+    "145293",
+    "158573",
+    "154559",
+    "142792",
+    "155639",
+    "145457",
+    "153100",
+    "158585",
+    "142358",
+    "145353",
+    "146201",
+    "154011",
+    "158613",
+    "155643",
+    "153949",
+    "154863",
+    "158588",
+    "155526",
+    "155716",
+    "144780",
+    "157480",
+    "144848",
+    "145014",
+    "158650",
+    "155312",
+    "155747",
+    "145233",
+    "158677"
+   ],
+   "enabled": true
+  },
+  "2019": {
+   "name": "Rebels",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2019/home_front.png",
+     "backKitFile": "kits_2019/home_back/home_back_%.png",
+     "previewFile": "kits_2019/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2019/away_front.png",
+     "backKitFile": "kits_2019/away_back/away_back_%.png",
+     "previewFile": "kits_2019/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "142385",
+    "viceCaptain": "142385",
+    "longGK": "142385",
+    "shortGK": "142385",
+    "longPunt": "142792",
+    "shortPunt": "142792",
+    "kickoff": "142792"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153101",
+    "155680",
+    "154011",
+    "145110",
+    "144157",
+    "158573",
+    "145293",
+    "153976",
+    "142792",
+    "142385",
+    "145457",
+    "153100",
+    "146622",
+    "158650",
+    "145353",
+    "158566",
+    "154008",
+    "153102",
+    "155643",
+    "145303",
+    "154863",
+    "158677",
+    "158593",
+    "158585",
+    "152891",
+    "155652",
+    "145233",
+    "153094",
+    "155716",
+    "144848",
+    "144780",
+    "155312",
+    "158684",
+    "158613",
+    "155513",
+    "157480"
+   ],
+   "enabled": true
+  },
+  "2020": {
+   "name": "Rebels",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "153255",
+    "shortGK": "153255",
+    "longPunt": "145941",
+    "shortPunt": "153255",
+    "kickoff": "145941"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "154008",
+    "155680",
+    "153102",
+    "155643",
+    "145110",
+    "158573",
+    "145293",
+    "153976",
+    "155661",
+    "153255",
+    "145457",
+    "153100",
+    "158585",
+    "145941",
+    "153094",
+    "155644",
+    "145303",
+    "144549",
+    "155822",
+    "155621",
+    "157571",
+    "158701",
+    "158703",
+    "145353",
+    "158677",
+    "157765",
+    "144848",
+    "158613",
+    "152891"
+   ],
+   "enabled": false
+  },
+  "2021": {
+   "name": "Rebels",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "153255",
+    "shortGK": "153255",
+    "longPunt": "145941",
+    "shortPunt": "153255",
+    "kickoff": "145941"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "154008",
+    "155680",
+    "153102",
+    "155643",
+    "145110",
+    "158573",
+    "145293",
+    "153976",
+    "155661",
+    "153255",
+    "145457",
+    "153100",
+    "158585",
+    "145941",
+    "153094",
+    "155644",
+    "145303",
+    "144549",
+    "155822",
+    "155621",
+    "157571",
+    "158701",
+    "158703",
+    "145353",
+    "158677",
+    "157765",
+    "144848",
+    "158613",
+    "152891"
+   ],
+   "enabled": false
+  }
+ }
+}

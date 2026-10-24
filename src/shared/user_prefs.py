@@ -36,6 +36,19 @@ _PREFS_FILE = os.path.join(PREFS_DIR, "user_prefs.ini")
 _SECTION = "prefs"
 
 
+def fit_rect(left, top, width, height, ratio):
+    """The largest width / height = `ratio` rectangle centred in the given one
+    (left, top, width, height); the rectangle itself when ratio is None (the
+    picture fills it: Screen Ratio "Auto")."""
+    if not ratio or width <= 0 or height <= 0:
+        return left, top, width, height
+    if width / height > ratio:
+        w, h = max(1, round(height * ratio)), height
+    else:
+        w, h = width, max(1, round(width / ratio))
+    return left + (width - w) // 2, top + (height - h) // 2, w, h
+
+
 class UserPrefs:
     def __init__(self):
         # 3D preview is the plan's confirmed default ("replacing the kit
@@ -68,6 +81,13 @@ class UserPrefs:
         self.log_level = ""
         # 3D player previews on/off. Off: kit stages show the flat kit picture.
         self.preview_3d = True
+        # 3D match view in the game window's aspect ratio (rugby08patches.dll
+        # widescreen patch) instead of a stretched 4:3. Settings > Screen Ratio;
+        # config.ini's widescreen is only the default until it is toggled.
+        self.widescreen = config.widescreen
+        # Aspect ratio of that 3D view: "auto" (follow the window) or "W:H".
+        # Settings > Screen Ratio; config.ini's widescreen_aspect is the default.
+        self.widescreen_aspect = str(config.widescreen_aspect)
         # Coin toss before each quick/tournament match (World Rugby Law 6.3):
         # decides kick-off and ends, so match setup locks those two rows.
         # Off, and not in Settings: expert opt-in via `coin_toss = true` in
@@ -82,6 +102,9 @@ class UserPrefs:
         # restore the Settings row.
         self.wind_mode = "standard"
         self._stored_wind_mode = "advanced"
+        # The user's team/player edits (user_data/edits) laid over the data
+        # pack. Off: the pack alone is used, the edits are kept. Tools › My edits.
+        self.use_edits = True
         self._load()
 
     def _load(self):
@@ -96,20 +119,42 @@ class UserPrefs:
             self.game_windowed = cp.getboolean(_SECTION, "game_windowed", fallback=self.game_windowed)
             self.log_level = cp.get(_SECTION, "log_level", fallback=self.log_level).strip().upper()
             self.preview_3d = cp.getboolean(_SECTION, "preview_3d", fallback=self.preview_3d)
+            self.widescreen = cp.getboolean(_SECTION, "widescreen", fallback=self.widescreen)
+            self.widescreen_aspect = cp.get(_SECTION, "widescreen_aspect",
+                                            fallback=self.widescreen_aspect).strip() or "auto"
             self.coin_toss = cp.getboolean(_SECTION, "coin_toss", fallback=self.coin_toss)
             self.expert_mode = cp.getboolean(_SECTION, "expert_mode", fallback=self.expert_mode)
+            self.use_edits = cp.getboolean(_SECTION, "use_edits", fallback=self.use_edits)
             mode = cp.get(_SECTION, "wind_mode", fallback=self.wind_mode).strip().lower()
             mode = "standard" if mode == "default" else mode      # older name
             if mode in ("standard", "advanced"):
                 self._stored_wind_mode = mode
+
+    def picture_ratio(self):
+        """Width / height the match picture keeps inside the window, as big
+        as fits, black bars around it; None: it fills the window (the
+        widescreen 3D view following the window's own ratio, "auto")."""
+        if not self.widescreen:
+            return 4 / 3
+        text = str(self.widescreen_aspect).strip().lower()
+        try:
+            if ":" in text:
+                w, h = (float(part) for part in text.split(":", 1))
+                return w / h if w > 0 and h > 0 else None
+            return float(text) or None
+        except ValueError:
+            return None                     # "auto"
 
     def save(self):
         cp = configparser.ConfigParser()
         cp[_SECTION] = {"game_windowed": str(self.game_windowed),
                         "log_level": self.log_level,
                         "preview_3d": str(self.preview_3d),
+                        "widescreen": str(self.widescreen),
+                        "widescreen_aspect": self.widescreen_aspect,
                         "coin_toss": str(self.coin_toss),
                         "expert_mode": str(self.expert_mode),
+                        "use_edits": str(self.use_edits),
                         "wind_mode": self._stored_wind_mode}
         try:
             with open(_PREFS_FILE, "w") as fh:

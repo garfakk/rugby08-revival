@@ -11,7 +11,7 @@ from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QScrollArea, QApplication, QSizePolicy,
 )
 from PyQt5.QtGui import QPainter, QColor, QPen, QFont, QPolygonF
-from PyQt5.QtCore import Qt, QPoint, QRectF, QEvent, QTimer, pyqtSignal
+from PyQt5.QtCore import Qt, QPoint, QRect, QRectF, QEvent, QTimer, pyqtSignal
 
 from ui.broadcast import tracked_font, eyebrow_label, draw_frame
 from ui.theme import (
@@ -359,6 +359,9 @@ class PopupList(QWidget):
         # need this — no screen knows they are open, so keys used to land on
         # the form behind them.
         self._own_keys = own_keys
+        # Optional callable(event) -> bool tried before the keys below, for
+        # an owner that takes some keys itself (a picker's search query).
+        self.key_hook = None
         self._typeahead = ""
         self._typeahead_t = 0.0
         self.setObjectName("popupList")
@@ -550,9 +553,20 @@ class PopupList(QWidget):
         self._anchor = anchor if own_toggle else None
         if self._rows_pending:
             self._sync_rows()
+        # Kept inside the part of `screen` the window actually shows (a screen
+        # can be taller than the window when it scrolls); opens above the
+        # anchor when there is no room below it.
+        win = screen.window()
+        area = QRect(screen.mapFrom(win, QPoint(0, 0)), win.size()).intersected(screen.rect())
+        if area.isEmpty():
+            area = screen.rect()
         pos = anchor.mapTo(screen, QPoint(0, anchor.height() + gap))
-        x = max(8, min(pos.x(), screen.width() - self.width() - 8))
-        y = max(8, min(pos.y(), screen.height() - self.height() - 8))
+        if pos.y() + self.height() > area.bottom() - 8:
+            above = anchor.mapTo(screen, QPoint(0, -gap)).y() - self.height()
+            if above >= area.top() + 8:
+                pos.setY(above)
+        x = max(area.left() + 8, min(pos.x(), area.right() - self.width() - 8))
+        y = max(area.top() + 8, min(pos.y(), area.bottom() - self.height() - 8))
         if self.parentWidget() is not screen:
             self.setParent(screen)
         self.move(x, y)
@@ -600,6 +614,8 @@ class PopupList(QWidget):
 
     def _handle_key(self, event):
         import time
+        if self.key_hook is not None and self.key_hook(event):
+            return True
         k = event.key()
         toolbar = self._toolbar_v.itemAt(0).widget() if self._toolbar_v.count() else None
         if k == Qt.Key_Up:

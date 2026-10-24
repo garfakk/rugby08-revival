@@ -13,7 +13,7 @@ from copy import deepcopy
 
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QStackedWidget, QFrame,
-    QScrollArea,
+    QScrollArea, QGridLayout,
 )
 from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtCore import (
@@ -26,7 +26,7 @@ from shared.config import config
 from shared.user_prefs import user_prefs
 from app.screen_base import Screen
 from app.input import Action, KEYMAP
-from app.state import DataStore, MatchConfig, TeamSlot
+from app.state import CONTROLLER_SLOTS, DataStore, MatchConfig, TeamSlot
 from app import difficulty
 from app import variants as V
 from app.match_data_builder import build_match_data
@@ -34,6 +34,7 @@ from app.game_data import (
     SNOW_INTENSITY_MAX, WIND_BEARINGS, WIND_POWER_NAMES, frontend_logo, wind_direction_label,
 )
 from app.season import season_label
+from app.shell import present
 from ui import StyledButton
 from ui.player_stage import KitStage, _try_load_model
 from ui.dropdown import DropdownRow
@@ -803,20 +804,31 @@ class MatchSetupScreen(KickoffTransition, Screen):
         wv.addWidget(card)
         wv.addSpacing(14)
 
-        # Controllers — its own container below the match card. Only the
-        # keyboard exists as a controller for now (pad detection is a later
-        # migration step), so it's one plain row, not a tile grid.
+        # Controllers — its own container below the match card: the
+        # keyboard and up to three gamepads, each given to a team (or left
+        # off). They become the .mis c0..c3 the reR08 controllers patch reads
+        # (keyboard = the game's device 0, pads in their connection order);
+        # a pad that isn't plugged in is simply absent in game. Every device
+        # off = CPU vs CPU.
         controls_card = Card(translucent=True)
         cv = QVBoxLayout(controls_card)
         cv.setContentsMargins(24, 18, 24, 20)
         cv.setSpacing(10)
         cv.addWidget(eyebrow_label("Controllers", color=ACCENT, size=15))
-        self.keyboard_row = SelectorRow("keyboard")
-        self.keyboard_row.set_values([("home", "home"), ("away", "away")], index=0)
-        self.keyboard_row._display = lambda t: t[0]
-        self.keyboard_row.changed.connect(self._on_keyboard_zone_changed)
-        self.focus.register(self.keyboard_row)
-        cv.addWidget(self.keyboard_row)
+        grid = QGridLayout()
+        grid.setHorizontalSpacing(10)
+        grid.setVerticalSpacing(10)
+        self.controller_rows = {}
+        for i, (slot_id, kind, label) in enumerate(CONTROLLER_SLOTS):
+            row = SelectorRow(label.lower(), compact=True)
+            zones = [("home", "home"), ("away", "away"), ("off", "none")]
+            row.set_values(zones, index=0 if kind == "kbd" else len(zones) - 1)
+            row._display = lambda t: t[0]
+            row.changed.connect(lambda slot_id=slot_id: self._on_controller_zone_changed(slot_id))
+            self.focus.register(row)
+            grid.addWidget(row, i // 2, i % 2)
+            self.controller_rows[slot_id] = row
+        cv.addLayout(grid)
         wv.addWidget(controls_card)
 
         wv.addStretch(1)
@@ -1127,15 +1139,17 @@ class MatchSetupScreen(KickoffTransition, Screen):
         if hasattr(self, "_advanced_slide"):
             self._advanced_slide.sync_geometry()
 
-    # ── controllers (keyboard-only this phase; pad detection is a later
-    #    migration step per the approved plan) ─────────────────────────────
+    # ── controllers (keyboard + 3 gamepads, no pad detection) ─────────────
     def _init_devices(self):
-        # Matches self.keyboard_row's own default (index 0, "home").
-        self.cfg.controllers = {1: {"kind": "kbd", "label": "KEYBOARD", "zone": "home"}}
+        # Matches each row's own default: keyboard home, pads off.
+        self.cfg.controllers = {
+            slot_id: {"kind": kind, "label": label, "zone": "home" if kind == "kbd" else "none"}
+            for slot_id, kind, label in CONTROLLER_SLOTS}
 
-    def _on_keyboard_zone_changed(self):
-        zone = self.keyboard_row.current()
-        self.cfg.controllers[1]["zone"] = zone[1] if zone else "home"
+    def _on_controller_zone_changed(self, slot_id):
+        zone = self.controller_rows[slot_id].current()
+        default = "home" if self.cfg.controllers[slot_id]["kind"] == "kbd" else "none"
+        self.cfg.controllers[slot_id]["zone"] = zone[1] if zone else default
 
     # ── competition options / backend sync ──────────────────────────────────
     def on_team_changed(self, side):
@@ -1281,9 +1295,6 @@ class MatchSetupScreen(KickoffTransition, Screen):
     def _play(self):
         if self._kickoff_running or self._toss is not None:
             return
-        home, away = self.cfg.controller_counts()
-        if home + away < 1:
-            return
         # Direction left on "random": a fresh one each match.
         if self.wind_dir_row.current() is None:
             self.cfg.wind_dir_deg = float(random.choice(WIND_BEARINGS))
@@ -1395,8 +1406,7 @@ class MatchSetupContainer(QWidget):
             self.mission_editor_screen = MissionEditorScreen(on_back=self._show_setup)
             self.stack.addWidget(self.mission_editor_screen)
         self.mission_editor_screen.bind(cfg)
-        self.stack.setCurrentWidget(self.mission_editor_screen)
-        self.mission_editor_screen.on_show()
+        present(self.stack, self.mission_editor_screen)
 
     def _open_squad_editor(self, side, cfg):
         slot = cfg.home if side == "home" else cfg.away
@@ -1422,11 +1432,10 @@ class MatchSetupContainer(QWidget):
             variants=variants, variant=slot.variant, load_variant=load_variant,
         )
         self.stack.addWidget(widget)
-        self.stack.setCurrentWidget(widget)
-        widget.on_show()
+        present(self.stack, widget)
 
     def _show_setup(self):
-        self.stack.setCurrentWidget(self.setup_screen)
+        present(self.stack, self.setup_screen, call_on_show=False)
 
     def _on_confirm(self, data, variant="", players=None):
         self.setup_screen.refresh_after_lineup_edit(self._editing_side, data, variant, players)

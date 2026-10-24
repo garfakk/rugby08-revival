@@ -159,12 +159,14 @@ class BallView(QWidget):
         if self.isVisible():
             self._frame()
 
+    def _target_size(self):
+        ratio = self.devicePixelRatioF()
+        return max(1, int(self.width() * ratio)), max(1, int(self.height() * ratio))
+
     def _frame(self):
         if self._drag_x is None:
             self.renderer.yaw = (self.renderer.yaw + 1.1) % 360.0
-        ratio = self.devicePixelRatioF()
-        self._image = self._surface.render_image(
-            max(1, int(self.width() * ratio)), max(1, int(self.height() * ratio)))
+        self._image = self._surface.render_image(*self._target_size())
         self.update()
 
     def showEvent(self, event):
@@ -182,6 +184,9 @@ class BallView(QWidget):
             self._frame()
 
     def paintEvent(self, event):
+        # An image rendered at another size would show the ball stretched for a frame: render at this size.
+        if self._image is not None and (self._image.width(), self._image.height()) != self._target_size():
+            self._image = self._surface.render_image(*self._target_size())
         if self._image is not None:
             QPainter(self).drawImage(self.rect(), self._image)
 

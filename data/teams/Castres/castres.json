@@ -1,7 +1,6 @@
 {
  "2029": {
   "2009": {
-   "enabled": false,
    "name": "Castres",
    "type": "club",
    "category": "Top 14",
@@ -17,26 +16,32 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2010/home_front.png",
-     "backKitFile": "kits_2010/home_back/home_back_%.png",
-     "previewFile": "kits_2010/home_preview.png",
-     "color": ""
+     "frontKitFile": "kits_2009/home_front.png",
+     "backKitFile": "kits_2009/home_back/home_back_%.png",
+     "previewFile": "kits_2009/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     },
     "away": {
-     "frontKitFile": "kits_2010/away_front.png",
-     "backKitFile": "kits_2010/away_back/away_back_%.png",
-     "previewFile": "kits_2010/away_preview.png",
-     "color": ""
+     "frontKitFile": "kits_2009/away_front.png",
+     "backKitFile": "kits_2009/away_back/away_back_%.png",
+     "previewFile": "kits_2009/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     }
    },
    "roles": {
-    "captain": "148626",
-    "viceCaptain": "143274",
-    "longGK": "143274",
-    "shortGK": "143274",
-    "longPunt": "143274",
-    "shortPunt": "143274",
-    "kickoff": "143274"
+    "captain": "142800",
+    "viceCaptain": "106900",
+    "longGK": "153181",
+    "shortGK": "153181",
+    "longPunt": "153181",
+    "shortPunt": "153181",
+    "kickoff": "153181"
    },
    "setPlays": {
     "up": "classic",
@@ -46,48 +51,49 @@
    },
    "players": [
     "106900",
-    "143961",
+    "153167",
     "101364",
-    "130792",
-    "142730",
-    "142926",
+    "156231",
+    "153171",
+    "153175",
     "142800",
-    "142465",
-    "146890",
-    "143274",
-    "148901",
-    "148626",
-    "142448",
-    "149487",
-    "149488",
-    "142664",
-    "142572",
-    "144039",
-    "149485",
-    "148295",
-    "149481",
-    "149178",
-    "119926",
-    "147560",
-    "144037",
-    "149483",
-    "147845",
-    "143833",
-    "149482",
-    "149480",
-    "149490",
-    "149479",
-    "149489",
-    "142836",
-    "149484",
+    "153178",
+    "153179",
+    "153181",
+    "153188",
+    "152631",
+    "153184",
+    "153191",
+    "153192",
+    "153166",
+    "153169",
     "143411",
-    "149486",
-    "149168",
-    "149491"
+    "130792",
+    "142465",
+    "119926",
+    "153182",
+    "153176",
+    "148295",
+    "147845",
+    "147560",
+    "153193",
+    "153177",
+    "153186",
+    "156384",
+    "153170",
+    "153190",
+    "153183",
+    "153173",
+    "153168",
+    "153187",
+    "153180",
+    "153174",
+    "153459",
+    "153044",
+    "153038"
    ]
   },
   "2010": {
-   "enabled": false,
    "name": "Castres",
    "type": "club",
    "category": "Top 14",
@@ -106,23 +112,29 @@
      "frontKitFile": "kits_2010/home_front.png",
      "backKitFile": "kits_2010/home_back/home_back_%.png",
      "previewFile": "kits_2010/home_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     },
     "away": {
      "frontKitFile": "kits_2010/away_front.png",
      "backKitFile": "kits_2010/away_back/away_back_%.png",
      "previewFile": "kits_2010/away_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     }
    },
    "roles": {
     "captain": "118540",
     "viceCaptain": "106900",
-    "longGK": "144037",
-    "shortGK": "143274",
-    "longPunt": "143274",
-    "shortPunt": "143274",
-    "kickoff": "143274"
+    "longGK": "153182",
+    "shortGK": "153182",
+    "longPunt": "101588",
+    "shortPunt": "101588",
+    "kickoff": "101588"
    },
    "setPlays": {
     "up": "classic",
@@ -132,35 +144,684 @@
    },
    "players": [
     "106900",
-    "124937",
+    "153166",
     "101364",
-    "144039",
-    "142982",
-    "142871",
-    "142392",
+    "153460",
+    "156231",
+    "153048",
     "142800",
+    "153462",
     "118540",
-    "144037",
+    "153182",
     "101588",
-    "108942",
-    "143105",
-    "143357",
-    "143274",
-    "142664",
-    "142572",
-    "143569",
-    "142465",
-    "143559",
+    "153465",
     "116925",
-    "143213",
-    "143047",
-    "142836",
-    "142730",
-    "142926",
-    "143416",
-    "143956",
-    "142974",
-    "143608"
+    "148295",
+    "153468",
+    "153038",
+    "153168",
+    "143411",
+    "153171",
+    "142465",
+    "153179",
+    "153180",
+    "153186",
+    "153169",
+    "153458",
+    "153461",
+    "153466",
+    "147560",
+    "153175",
+    "153193",
+    "153176",
+    "153173",
+    "143608",
+    "153192",
+    "153183",
+    "153191",
+    "147845",
+    "153187",
+    "153459",
+    "153044",
+    "153463",
+    "153464",
+    "153172"
+   ]
+  },
+  "2018": {
+   "name": "Castres",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "142323",
+    "viceCaptain": "145964",
+    "longGK": "144726",
+    "shortGK": "144726",
+    "longPunt": "142323",
+    "shortPunt": "142323",
+    "kickoff": "142323"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss",
+    "left": "miss_pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145964",
+    "153037",
+    "153042",
+    "153045",
+    "100750",
+    "153048",
+    "145028",
+    "153051",
+    "142350",
+    "142323",
+    "153061",
+    "153056",
+    "153055",
+    "156217",
+    "144726",
+    "153043",
+    "153038",
+    "112079",
+    "153047",
+    "145420",
+    "154966",
+    "153052",
+    "143650",
+    "156231",
+    "153050",
+    "11705",
+    "156385",
+    "153174",
+    "131172",
+    "153059",
+    "153046",
+    "153036",
+    "144268",
+    "153054",
+    "153040",
+    "153862",
+    "156282",
+    "145636",
+    "153060",
+    "154940"
+   ]
+  },
+  "2019": {
+   "name": "Castres",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2019/home_front.png",
+     "backKitFile": "kits_2019/home_back/home_back_%.png",
+     "previewFile": "kits_2019/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2019/away_front.png",
+     "backKitFile": "kits_2019/away_back/away_back_%.png",
+     "previewFile": "kits_2019/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "142323",
+    "viceCaptain": "142323",
+    "longGK": "142323",
+    "shortGK": "142323",
+    "longPunt": "142323",
+    "shortPunt": "142323",
+    "kickoff": "142323"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss",
+    "left": "miss_pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145964",
+    "153037",
+    "153042",
+    "100750",
+    "153045",
+    "145028",
+    "144268",
+    "153050",
+    "142350",
+    "142323",
+    "153061",
+    "153056",
+    "153055",
+    "153060",
+    "153062",
+    "112079",
+    "153039",
+    "153043",
+    "153051",
+    "153038",
+    "153046",
+    "153036",
+    "154966",
+    "156217",
+    "153047",
+    "145084",
+    "144726",
+    "11705",
+    "154098",
+    "153048",
+    "145688",
+    "145420",
+    "153040",
+    "145636",
+    "152327",
+    "156300",
+    "156231",
+    "153054",
+    "153049",
+    "153052",
+    "153059"
+   ]
+  },
+  "2020": {
+   "enabled": false,
+   "name": "Castres",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "142323",
+    "shortGK": "142323",
+    "longPunt": "142323",
+    "shortPunt": "142323",
+    "kickoff": "142323"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss",
+    "left": "miss_pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145964",
+    "153036",
+    "145688",
+    "100750",
+    "153044",
+    "145028",
+    "144268",
+    "11705",
+    "142350",
+    "142323",
+    "144555",
+    "153055",
+    "152327",
+    "145084",
+    "144726",
+    "153037",
+    "153039",
+    "153040",
+    "153046",
+    "153051",
+    "112079",
+    "154969",
+    "153041",
+    "153042",
+    "153043",
+    "153549",
+    "154967",
+    "153038",
+    "154968",
+    "153047",
+    "154098",
+    "153049",
+    "153050",
+    "153056",
+    "154966",
+    "153058",
+    "153059",
+    "153060",
+    "154545",
+    "145636"
+   ]
+  },
+  "2021": {
+   "enabled": false,
+   "name": "Castres",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "145028",
+    "viceCaptain": "142350",
+    "longGK": "142323",
+    "shortGK": "142323",
+    "longPunt": "142323",
+    "shortPunt": "142323",
+    "kickoff": "142323"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss",
+    "left": "miss_pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "154971",
+    "146136",
+    "145688",
+    "100750",
+    "145585",
+    "145028",
+    "144268",
+    "11705",
+    "142350",
+    "142323",
+    "144555",
+    "145627",
+    "144155",
+    "145084",
+    "145636",
+    "153036",
+    "145964",
+    "153042",
+    "145328",
+    "153270",
+    "145357",
+    "154969",
+    "154972",
+    "153043",
+    "153549",
+    "153038",
+    "144564",
+    "154968",
+    "145498",
+    "145595",
+    "153050",
+    "154341",
+    "153055",
+    "152327",
+    "154966",
+    "153058",
+    "154976",
+    "144726"
+   ]
+  },
+  "2022": {
+   "name": "Castres",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "146136",
+    "viceCaptain": "145028",
+    "longGK": "142323",
+    "shortGK": "142323",
+    "longPunt": "142323",
+    "shortPunt": "142323",
+    "kickoff": "144726"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss",
+    "left": "miss_pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "146489",
+    "146136",
+    "145688",
+    "144564",
+    "145585",
+    "145028",
+    "153552",
+    "156287",
+    "156311",
+    "142323",
+    "144555",
+    "145627",
+    "153055",
+    "145084",
+    "144726",
+    "145246",
+    "153547",
+    "144949",
+    "100750",
+    "146262",
+    "145357",
+    "153145",
+    "144268",
+    "145974",
+    "144155",
+    "145595",
+    "142350",
+    "145498",
+    "145964",
+    "145636",
+    "154978",
+    "152970",
+    "154981",
+    "145328",
+    "154977",
+    "153548",
+    "154894",
+    "154984",
+    "146333",
+    "153549",
+    "154972",
+    "153058"
+   ]
+  },
+  "2023": {
+   "name": "Castres",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2023/home_front.png",
+     "backKitFile": "kits_2023/home_back/home_back_%.png",
+     "previewFile": "kits_2023/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2023/away_front.png",
+     "backKitFile": "kits_2023/away_back/away_back_%.png",
+     "previewFile": "kits_2023/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "142323",
+    "viceCaptain": "142323",
+    "longGK": "142323",
+    "shortGK": "142323",
+    "longPunt": "144726",
+    "shortPunt": "142323",
+    "kickoff": "144726"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss",
+    "left": "miss_pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "146489",
+    "146136",
+    "145688",
+    "144564",
+    "145585",
+    "145028",
+    "153552",
+    "145498",
+    "145357",
+    "142323",
+    "144555",
+    "145627",
+    "144155",
+    "145084",
+    "144726",
+    "156317",
+    "145964",
+    "144949",
+    "153551",
+    "156287",
+    "142350",
+    "153145",
+    "146262",
+    "154977",
+    "144268",
+    "146333",
+    "145959",
+    "144992",
+    "145974",
+    "153553",
+    "146141",
+    "153596",
+    "153546",
+    "145595",
+    "145982",
+    "156311",
+    "145328",
+    "153547",
+    "154984",
+    "154981",
+    "156358",
+    "145636",
+    "153055",
+    "145246",
+    "153548",
+    "152401"
+   ]
+  },
+  "2024": {
+   "name": "Castres",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145028",
+    "viceCaptain": "145585",
+    "longGK": "145979",
+    "shortGK": "145979",
+    "longPunt": "144726",
+    "shortPunt": "145979",
+    "kickoff": "144726"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss",
+    "left": "miss_pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "156358",
+    "146136",
+    "144949",
+    "144992",
+    "145585",
+    "145028",
+    "144268",
+    "145498",
+    "156311",
+    "145979",
+    "152401",
+    "144155",
+    "145959",
+    "144555",
+    "144726",
+    "145986",
+    "145964",
+    "144664",
+    "144564",
+    "144213",
+    "146141",
+    "153145",
+    "146333",
+    "145357",
+    "145627",
+    "146262",
+    "153551",
+    "145636",
+    "153552",
+    "145982",
+    "145688",
+    "152397",
+    "144738",
+    "146489",
+    "156317",
+    "153546",
+    "153547",
+    "145328",
+    "156332",
+    "153549",
+    "145084"
    ]
   },
   "2011": {
@@ -183,13 +844,19 @@
      "frontKitFile": "kits_2010/home_front.png",
      "backKitFile": "kits_2010/home_back/home_back_%.png",
      "previewFile": "kits_2010/home_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     },
     "away": {
      "frontKitFile": "kits_2010/away_front.png",
      "backKitFile": "kits_2010/away_back/away_back_%.png",
      "previewFile": "kits_2010/away_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     }
    },
    "roles": {
@@ -213,7 +880,7 @@
     "101364",
     "143569",
     "142465",
-    "142871",
+    "153461",
     "142392",
     "142800",
     "118540",
@@ -266,13 +933,19 @@
      "frontKitFile": "kits_2010/home_front.png",
      "backKitFile": "kits_2010/home_back/home_back_%.png",
      "previewFile": "kits_2010/home_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     },
     "away": {
      "frontKitFile": "kits_2010/away_front.png",
      "backKitFile": "kits_2010/away_back/away_back_%.png",
      "previewFile": "kits_2010/away_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     }
    },
    "roles": {
@@ -296,7 +969,7 @@
     "142929",
     "143569",
     "144039",
-    "142871",
+    "153461",
     "142392",
     "142800",
     "146891",
@@ -306,7 +979,7 @@
     "149487",
     "143357",
     "143274",
-    "145147",
+    "153038",
     "149493",
     "142982",
     "142926",
@@ -356,13 +1029,19 @@
      "frontKitFile": "kits_2010/home_front.png",
      "backKitFile": "kits_2010/home_back/home_back_%.png",
      "previewFile": "kits_2010/home_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     },
     "away": {
      "frontKitFile": "kits_2010/away_front.png",
      "backKitFile": "kits_2010/away_back/away_back_%.png",
      "previewFile": "kits_2010/away_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     }
    },
    "roles": {
@@ -381,17 +1060,17 @@
     "right": "pocket"
    },
    "players": [
-    "143329",
+    "154940",
     "146888",
     "149503",
-    "143883",
+    "153047",
     "144039",
-    "142871",
+    "153461",
     "142392",
     "142378",
     "146891",
     "146885",
-    "145292",
+    "152500",
     "143105",
     "145512",
     "103753",
@@ -403,11 +1082,11 @@
     "148596",
     "143950",
     "144726",
-    "149502",
+    "131172",
     "143357",
     "143275",
     "142497",
-    "145147",
+    "153038",
     "142368",
     "143620",
     "145296",
@@ -444,13 +1123,19 @@
      "frontKitFile": "kits_2010/home_front.png",
      "backKitFile": "kits_2010/home_back/home_back_%.png",
      "previewFile": "kits_2010/home_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     },
     "away": {
      "frontKitFile": "kits_2010/away_front.png",
      "backKitFile": "kits_2010/away_back/away_back_%.png",
      "previewFile": "kits_2010/away_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     }
    },
    "roles": {
@@ -469,17 +1154,17 @@
     "right": "pocket"
    },
    "players": [
-    "143329",
-    "145147",
+    "154940",
+    "153038",
     "142929",
-    "143883",
+    "153047",
     "144039",
     "142392",
     "149168",
-    "143259",
+    "153051",
     "146891",
     "142323",
-    "143568",
+    "153061",
     "143275",
     "145512",
     "103753",
@@ -492,7 +1177,7 @@
     "144726",
     "144568",
     "149507",
-    "149502",
+    "131172",
     "142368",
     "146888",
     "142378",
@@ -505,8 +1190,8 @@
     "149509",
     "143950",
     "143105",
-    "145292",
-    "142871",
+    "152500",
+    "153461",
     "149506",
     "145752",
     "149510",
@@ -519,7 +1204,7 @@
    ]
   },
   "2017": {
-   "enabled": false,
+   "enabled": true,
    "name": "Castres",
    "type": "club",
    "category": "Top 14",
@@ -535,26 +1220,32 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2010/home_front.png",
-     "backKitFile": "kits_2010/home_back/home_back_%.png",
-     "previewFile": "kits_2010/home_preview.png",
-     "color": ""
+     "frontKitFile": "kits_2017/home_front.png",
+     "backKitFile": "kits_2017/home_back/home_back_%.png",
+     "previewFile": "kits_2017/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     },
     "away": {
-     "frontKitFile": "kits_2010/away_front.png",
-     "backKitFile": "kits_2010/away_back/away_back_%.png",
-     "previewFile": "kits_2010/away_preview.png",
-     "color": ""
+     "frontKitFile": "kits_2017/away_front.png",
+     "backKitFile": "kits_2017/away_back/away_back_%.png",
+     "previewFile": "kits_2017/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     }
    },
    "roles": {
-    "captain": "143693",
+    "captain": "153056",
     "viceCaptain": "142323",
     "longGK": "145636",
     "shortGK": "145636",
-    "longPunt": "146891",
-    "shortPunt": "146891",
-    "kickoff": "146891"
+    "longPunt": "153056",
+    "shortPunt": "142323",
+    "kickoff": "153056"
    },
    "setPlays": {
     "up": "classic",
@@ -564,652 +1255,42 @@
    },
    "players": [
     "145964",
-    "149514",
-    "144456",
+    "153037",
+    "153042",
     "100750",
     "144039",
     "145028",
     "11705",
-    "143259",
-    "146891",
+    "153051",
+    "142350",
     "142323",
-    "143568",
-    "143693",
-    "145512",
+    "153061",
+    "153056",
+    "153055",
     "143796",
     "145636",
-    "146888",
-    "143329",
-    "145752",
+    "158430",
+    "154940",
+    "153046",
     "145420",
     "11823",
     "144726",
-    "144568",
-    "149513",
+    "154966",
+    "156385",
     "143650",
-    "145147",
-    "149168",
+    "153038",
+    "153174",
     "142392",
     "149516",
-    "149515",
-    "149502",
-    "149154",
-    "143883",
-    "149517",
-    "145292",
+    "153045",
+    "131172",
+    "153059",
+    "153047",
+    "153043",
     "148909",
-    "145687",
-    "149507",
+    "153050",
+    "153862",
     "149518"
-   ]
-  },
-  "2018": {
-   "enabled": false,
-   "name": "Castres",
-   "type": "club",
-   "category": "Top 14",
-   "ball": "ball/ball_%.png",
-   "banners": "banners/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos/logo.png",
-    "frontend": "logos/logo_frontend.png",
-    "small": "logos/logo_small.png",
-    "left": "logos/logo_left.png",
-    "right": "logos/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2010/home_front.png",
-     "backKitFile": "kits_2010/home_back/home_back_%.png",
-     "previewFile": "kits_2010/home_preview.png",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "kits_2010/away_front.png",
-     "backKitFile": "kits_2010/away_back/away_back_%.png",
-     "previewFile": "kits_2010/away_preview.png",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "144039",
-    "viceCaptain": "145964",
-    "longGK": "144726",
-    "shortGK": "144726",
-    "longPunt": "146891",
-    "shortPunt": "146891",
-    "kickoff": "146891"
-   },
-   "setPlays": {
-    "up": "classic",
-    "down": "miss",
-    "left": "miss_pivot",
-    "right": "pocket"
-   },
-   "players": [
-    "145964",
-    "149514",
-    "144456",
-    "149515",
-    "144039",
-    "142392",
-    "145028",
-    "143259",
-    "146891",
-    "142323",
-    "143568",
-    "144568",
-    "145512",
-    "144144",
-    "144726",
-    "145147",
-    "149517",
-    "143883",
-    "145420",
-    "149521",
-    "149519",
-    "149520",
-    "149502",
-    "143693",
-    "100750",
-    "143650",
-    "145687",
-    "11705",
-    "149513",
-    "149168",
-    "149154",
-    "144902",
-    "145752",
-    "144268",
-    "149507",
-    "149522",
-    "149503",
-    "143329",
-    "145567",
-    "145636"
-   ]
-  },
-  "2019": {
-   "enabled": false,
-   "name": "Castres",
-   "type": "club",
-   "category": "Top 14",
-   "ball": "ball/ball_%.png",
-   "banners": "banners/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos/logo.png",
-    "frontend": "logos/logo_frontend.png",
-    "small": "logos/logo_small.png",
-    "left": "logos/logo_left.png",
-    "right": "logos/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2010/home_front.png",
-     "backKitFile": "kits_2010/home_back/home_back_%.png",
-     "previewFile": "kits_2010/home_preview.png",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "kits_2010/away_front.png",
-     "backKitFile": "kits_2010/away_back/away_back_%.png",
-     "previewFile": "kits_2010/away_preview.png",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "143693",
-    "viceCaptain": "146889",
-    "longGK": "142323",
-    "shortGK": "142323",
-    "longPunt": "146889",
-    "shortPunt": "146889",
-    "kickoff": "146889"
-   },
-   "setPlays": {
-    "up": "classic",
-    "down": "miss",
-    "left": "miss_pivot",
-    "right": "pocket"
-   },
-   "players": [
-    "145964",
-    "149514",
-    "144456",
-    "100750",
-    "149515",
-    "145028",
-    "144268",
-    "145687",
-    "146891",
-    "142323",
-    "143568",
-    "143693",
-    "145512",
-    "145084",
-    "146889",
-    "145147",
-    "149517",
-    "145752",
-    "143259",
-    "149519",
-    "144726",
-    "144568",
-    "148942",
-    "144144",
-    "143883",
-    "145567",
-    "11705",
-    "149523",
-    "144902",
-    "145688",
-    "142392",
-    "145420",
-    "149503",
-    "142860",
-    "145636",
-    "149524",
-    "149520",
-    "144039",
-    "148787",
-    "149521",
-    "149154",
-    "149525"
-   ]
-  },
-  "2020": {
-   "enabled": false,
-   "name": "Castres",
-   "type": "club",
-   "category": "Top 14",
-   "ball": "ball/ball_%.png",
-   "banners": "banners/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos/logo.png",
-    "frontend": "logos/logo_frontend.png",
-    "small": "logos/logo_small.png",
-    "left": "logos/logo_left.png",
-    "right": "logos/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2010/home_front.png",
-     "backKitFile": "kits_2010/home_back/home_back_%.png",
-     "previewFile": "kits_2010/home_preview.png",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "kits_2010/away_front.png",
-     "backKitFile": "kits_2010/away_back/away_back_%.png",
-     "previewFile": "kits_2010/away_preview.png",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "143693",
-    "viceCaptain": "146891",
-    "longGK": "142323",
-    "shortGK": "142323",
-    "longPunt": "142323",
-    "shortPunt": "142323",
-    "kickoff": "146891"
-   },
-   "setPlays": {
-    "up": "classic",
-    "down": "miss",
-    "left": "miss_pivot",
-    "right": "pocket"
-   },
-   "players": [
-    "145132",
-    "149514",
-    "145688",
-    "100750",
-    "144039",
-    "144268",
-    "11705",
-    "145687",
-    "146891",
-    "142323",
-    "145567",
-    "143693",
-    "145512",
-    "144555",
-    "144726",
-    "144902",
-    "149526",
-    "145752",
-    "149523",
-    "149519",
-    "149529",
-    "145084",
-    "142929",
-    "143883",
-    "144568",
-    "143259",
-    "142860",
-    "145636",
-    "145531",
-    "149503",
-    "148787",
-    "144456",
-    "145147",
-    "144647",
-    "149154",
-    "144144",
-    "149525",
-    "145028",
-    "145964",
-    "149527",
-    "149201",
-    "149517",
-    "149524",
-    "149528",
-    "149530",
-    "149531",
-    "149532"
-   ]
-  },
-  "2021": {
-   "enabled": false,
-   "name": "Castres",
-   "type": "club",
-   "category": "Top 14",
-   "ball": "ball/ball_%.png",
-   "banners": "banners/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos/logo.png",
-    "frontend": "logos/logo_frontend.png",
-    "small": "logos/logo_small.png",
-    "left": "logos/logo_left.png",
-    "right": "logos/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2010/home_front.png",
-     "backKitFile": "kits_2010/home_back/home_back_%.png",
-     "previewFile": "kits_2010/home_preview.png",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "kits_2010/away_front.png",
-     "backKitFile": "kits_2010/away_back/away_back_%.png",
-     "previewFile": "kits_2010/away_preview.png",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "145028",
-    "viceCaptain": "142350",
-    "longGK": "142323",
-    "shortGK": "142323",
-    "longPunt": "142323",
-    "shortPunt": "142323",
-    "kickoff": "142323"
-   },
-   "setPlays": {
-    "up": "classic",
-    "down": "miss",
-    "left": "miss_pivot",
-    "right": "pocket"
-   },
-   "players": [
-    "145132",
-    "145147",
-    "144456",
-    "100750",
-    "145585",
-    "11705",
-    "145028",
-    "144564",
-    "142350",
-    "142323",
-    "144555",
-    "142860",
-    "145627",
-    "144144",
-    "145636",
-    "144902",
-    "145688",
-    "145328",
-    "145498",
-    "145357",
-    "145531",
-    "145084",
-    "144647",
-    "144268",
-    "145444",
-    "145687",
-    "144155",
-    "145512",
-    "145593",
-    "144726"
-   ]
-  },
-  "2022": {
-   "enabled": false,
-   "name": "Castres",
-   "type": "club",
-   "category": "Top 14",
-   "ball": "ball/ball_%.png",
-   "banners": "banners/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos/logo.png",
-    "frontend": "logos/logo_frontend.png",
-    "small": "logos/logo_small.png",
-    "left": "logos/logo_left.png",
-    "right": "logos/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2010/home_front.png",
-     "backKitFile": "kits_2010/home_back/home_back_%.png",
-     "previewFile": "kits_2010/home_preview.png",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "kits_2010/away_front.png",
-     "backKitFile": "kits_2010/away_back/away_back_%.png",
-     "previewFile": "kits_2010/away_preview.png",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "146136",
-    "viceCaptain": "145028",
-    "longGK": "142323",
-    "shortGK": "142323",
-    "longPunt": "142323",
-    "shortPunt": "142323",
-    "kickoff": "145636"
-   },
-   "setPlays": {
-    "up": "classic",
-    "down": "miss",
-    "left": "miss_pivot",
-    "right": "pocket"
-   },
-   "players": [
-    "146489",
-    "146136",
-    "145688",
-    "144564",
-    "145585",
-    "145028",
-    "147289",
-    "149533",
-    "149529",
-    "142323",
-    "144555",
-    "144155",
-    "145512",
-    "145636",
-    "144726",
-    "145246",
-    "149526",
-    "100750",
-    "144268",
-    "145357",
-    "145974",
-    "146262",
-    "147593",
-    "145627",
-    "145595",
-    "146891",
-    "145498",
-    "145964",
-    "145084",
-    "149534",
-    "144258",
-    "149537",
-    "149511",
-    "149535",
-    "145328",
-    "149538",
-    "148698",
-    "149536",
-    "149540",
-    "146333",
-    "149539",
-    "144858",
-    "145132"
-   ]
-  },
-  "2023": {
-   "enabled": false,
-   "name": "Castres",
-   "type": "club",
-   "category": "Top 14",
-   "ball": "ball/ball_%.png",
-   "banners": "banners/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos/logo.png",
-    "frontend": "logos/logo_frontend.png",
-    "small": "logos/logo_small.png",
-    "left": "logos/logo_left.png",
-    "right": "logos/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2022/home_front.png",
-     "backKitFile": "kits_2022/home_back/home_back_%.png",
-     "previewFile": "kits_2010/home_preview.png",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "kits_2010/away_front.png",
-     "backKitFile": "kits_2010/away_back/away_back_%.png",
-     "previewFile": "kits_2010/away_preview.png",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "147289",
-    "viceCaptain": "145498",
-    "longGK": "142323",
-    "shortGK": "142323",
-    "longPunt": "142323",
-    "shortPunt": "142323",
-    "kickoff": "144726"
-   },
-   "setPlays": {
-    "up": "classic",
-    "down": "miss",
-    "left": "miss_pivot",
-    "right": "pocket"
-   },
-   "players": [
-    "146489",
-    "146136",
-    "145688",
-    "144564",
-    "145585",
-    "145028",
-    "147289",
-    "145498",
-    "145357",
-    "142323",
-    "144555",
-    "145627",
-    "144155",
-    "145636",
-    "144726",
-    "149544",
-    "145964",
-    "149546",
-    "145595",
-    "144268",
-    "144702",
-    "145974",
-    "147593",
-    "146262",
-    "145959",
-    "146333",
-    "144992",
-    "146141",
-    "145777",
-    "149542",
-    "149535",
-    "145982",
-    "149529",
-    "145328",
-    "149526",
-    "149540",
-    "149511",
-    "149533",
-    "149545",
-    "144258",
-    "145512",
-    "145246",
-    "145084",
-    "149538",
-    "146891",
-    "149541",
-    "149543",
-    "145132",
-    "149534"
-   ]
-  },
-  "2024": {
-   "name": "Castres",
-   "type": "club",
-   "category": "Top 14",
-   "ball": "ball/ball_%.png",
-   "banners": "banners/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos/logo.png",
-    "frontend": "logos/logo_frontend.png",
-    "small": "logos/logo_small.png",
-    "left": "logos/logo_left.png",
-    "right": "logos/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2024/home_front.png",
-     "backKitFile": "kits_2024/home_back/home_back_%.png",
-     "previewFile": "kits_2024/home_preview.png",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "kits_2024/away_front.png",
-     "backKitFile": "kits_2024/away_back/away_back_%.png",
-     "previewFile": "kits_2024/away_preview.png",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "145028",
-    "viceCaptain": "145585",
-    "longGK": "146333",
-    "shortGK": "146333",
-    "longPunt": "146333",
-    "shortPunt": "146333",
-    "kickoff": "146333"
-   },
-   "setPlays": {
-    "up": "classic",
-    "down": "miss",
-    "left": "miss_pivot",
-    "right": "pocket"
-   },
-   "players": [
-    "145964",
-    "146136",
-    "144949",
-    "144992",
-    "145585",
-    "145028",
-    "144268",
-    "144213",
-    "146141",
-    "146333",
-    "144555",
-    "144155",
-    "144738",
-    "145636",
-    "144726",
-    "145986",
-    "145688",
-    "145328",
-    "145982",
-    "145357",
-    "145979",
-    "145627",
-    "146489",
-    "144564",
-    "146431",
-    "145498",
-    "146262",
-    "145959",
-    "145974",
-    "145084"
    ]
   },
   "2025": {
@@ -1231,14 +1312,17 @@
     "home": {
      "frontKitFile": "kits_2022/home_front.png",
      "backKitFile": "kits_2022/home_back/home_back_%.png",
-     "previewFile": "kits_2010/home_preview.png",
+     "previewFile": "kits_2022/home_preview.png",
      "color": ""
     },
     "away": {
      "frontKitFile": "kits_2010/away_front.png",
      "backKitFile": "kits_2010/away_back/away_back_%.png",
      "previewFile": "kits_2010/away_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     }
    },
    "roles": {
@@ -1324,14 +1408,17 @@
     "home": {
      "frontKitFile": "kits_2022/home_front.png",
      "backKitFile": "kits_2022/home_back/home_back_%.png",
-     "previewFile": "kits_2010/home_preview.png",
+     "previewFile": "kits_2022/home_preview.png",
      "color": ""
     },
     "away": {
      "frontKitFile": "kits_2010/away_front.png",
      "backKitFile": "kits_2010/away_back/away_back_%.png",
      "previewFile": "kits_2010/away_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     }
    },
    "roles": {
@@ -1398,6 +1485,94 @@
     "149553",
     "149560"
    ]
+  },
+  "2008": {
+   "name": "Castres",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "153193",
+    "shortGK": "153193",
+    "longPunt": "142465",
+    "shortPunt": "142465",
+    "kickoff": "142465"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "106900",
+    "153167",
+    "101364",
+    "156231",
+    "153171",
+    "153175",
+    "142800",
+    "142465",
+    "153179",
+    "153193",
+    "153188",
+    "152631",
+    "153184",
+    "153191",
+    "153192",
+    "153176",
+    "153166",
+    "148295",
+    "153169",
+    "119926",
+    "147845",
+    "147560",
+    "153181",
+    "153182",
+    "153177",
+    "153186",
+    "130792",
+    "156384",
+    "153170",
+    "153178",
+    "153190",
+    "153183",
+    "153173",
+    "153168",
+    "153187",
+    "153180",
+    "143411",
+    "153174",
+    "153459",
+    "153044",
+    "153038"
+   ],
+   "enabled": false
   }
  }
 }

@@ -1,0 +1,962 @@
+{
+ "10117": {
+  "2009": {
+   "name": "Hurricanes",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "143146",
+    "shortGK": "143146",
+    "longPunt": "143146",
+    "shortPunt": "143146",
+    "kickoff": "143146"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155570",
+    "142665",
+    "143309",
+    "156050",
+    "153993",
+    "152967",
+    "155611",
+    "143349",
+    "154343",
+    "143146",
+    "153061",
+    "143721",
+    "143215",
+    "155480",
+    "153994",
+    "142708",
+    "155608",
+    "156053",
+    "143206",
+    "154661",
+    "143540",
+    "156133",
+    "155595",
+    "156052",
+    "156132",
+    "153997",
+    "156054",
+    "155616",
+    "155553"
+   ],
+   "enabled": false
+  },
+  "2010": {
+   "name": "Hurricanes",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "156133",
+    "viceCaptain": "156133",
+    "longGK": "143146",
+    "shortGK": "143146",
+    "longPunt": "143146",
+    "shortPunt": "143146",
+    "kickoff": "143146"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155570",
+    "142665",
+    "143309",
+    "143206",
+    "156055",
+    "152967",
+    "156132",
+    "143349",
+    "143146",
+    "156133",
+    "153997",
+    "143721",
+    "143215",
+    "153061",
+    "143540",
+    "142708",
+    "154268",
+    "153659",
+    "153993",
+    "155484",
+    "156056",
+    "153672",
+    "155608",
+    "153994",
+    "155611",
+    "156050",
+    "155503",
+    "155595",
+    "154650",
+    "155502",
+    "154661",
+    "155616"
+   ],
+   "enabled": true
+  },
+  "2022": {
+   "name": "Hurricanes",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "155914",
+    "viceCaptain": "155914",
+    "longGK": "",
+    "shortGK": "",
+    "longPunt": "",
+    "shortPunt": "",
+    "kickoff": ""
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155719",
+    "153674",
+    "145557",
+    "155665",
+    "155699",
+    "155659",
+    "155648",
+    "144741",
+    "153316",
+    "155914",
+    "155712",
+    "155625",
+    "155721",
+    "154345",
+    "155845",
+    "142708",
+    "155783",
+    "142499",
+    "155889",
+    "155736",
+    "146030",
+    "155640",
+    "155776",
+    "155654",
+    "155762",
+    "145312",
+    "155650",
+    "155733",
+    "155722",
+    "155807",
+    "155897",
+    "155896",
+    "155635",
+    "155758",
+    "155766",
+    "155624",
+    "155677",
+    "155700",
+    "155636",
+    "145422",
+    "155649",
+    "155720",
+    "155679",
+    "155895"
+   ],
+   "enabled": false
+  },
+  "2023": {
+   "name": "Hurricanes",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2023/home_front.png",
+     "backKitFile": "kits_2023/home_back/home_back_%.png",
+     "previewFile": "kits_2023/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2023/away_front.png",
+     "backKitFile": "kits_2023/away_back/away_back_%.png",
+     "previewFile": "kits_2023/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "155914",
+    "viceCaptain": "155914",
+    "longGK": "145312",
+    "shortGK": "145312",
+    "longPunt": "145312",
+    "shortPunt": "145312",
+    "kickoff": "145312"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155762",
+    "142708",
+    "145557",
+    "155665",
+    "155699",
+    "155758",
+    "155722",
+    "144741",
+    "146030",
+    "155914",
+    "155712",
+    "145312",
+    "155733",
+    "154345",
+    "155807",
+    "146645",
+    "155776",
+    "142499",
+    "153652",
+    "155736",
+    "155654",
+    "153956",
+    "155783",
+    "155889",
+    "155966",
+    "155896",
+    "153674",
+    "155820",
+    "155962",
+    "155719",
+    "155720",
+    "155721",
+    "155897",
+    "155924",
+    "155954",
+    "155809",
+    "155845",
+    "155895",
+    "155973"
+   ],
+   "enabled": true
+  },
+  "2024": {
+   "name": "Hurricanes",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "153956",
+    "viceCaptain": "153956",
+    "longGK": "145312",
+    "shortGK": "145312",
+    "longPunt": "145312",
+    "shortPunt": "145312",
+    "kickoff": "145312"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155762",
+    "153674",
+    "145557",
+    "155889",
+    "155699",
+    "155758",
+    "155962",
+    "155736",
+    "153316",
+    "153956",
+    "155820",
+    "145312",
+    "155733",
+    "155712",
+    "155845",
+    "155635",
+    "155776",
+    "155964",
+    "155897",
+    "152485",
+    "146030",
+    "155914",
+    "155719",
+    "155677",
+    "155807",
+    "155722",
+    "155954",
+    "155783",
+    "155721",
+    "153961",
+    "155641",
+    "155785",
+    "155945",
+    "156032",
+    "155966",
+    "155896",
+    "155766",
+    "155924",
+    "155752"
+   ],
+   "enabled": true
+  },
+  "2008": {
+   "name": "Hurricanes",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "143146",
+    "viceCaptain": "143146",
+    "longGK": "",
+    "shortGK": "",
+    "longPunt": "",
+    "shortPunt": "",
+    "kickoff": ""
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155570",
+    "142665",
+    "143309",
+    "156050",
+    "153993",
+    "152967",
+    "155611",
+    "143349",
+    "154343",
+    "156133",
+    "153061",
+    "143721",
+    "143215",
+    "155480",
+    "143540",
+    "142708",
+    "155608",
+    "156053",
+    "143206",
+    "154661",
+    "143146",
+    "156054",
+    "153994",
+    "155595",
+    "156052",
+    "156132",
+    "153997",
+    "155616",
+    "155553",
+    "156055",
+    "154268",
+    "155484"
+   ],
+   "enabled": false
+  },
+  "2018": {
+   "name": "Hurricanes",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "145054",
+    "viceCaptain": "145054",
+    "longGK": "145054",
+    "shortGK": "145054",
+    "longPunt": "145054",
+    "shortPunt": "145054",
+    "kickoff": "145054"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155506",
+    "155664",
+    "153659",
+    "156804",
+    "145418",
+    "152485",
+    "144741",
+    "153954",
+    "153316",
+    "145054",
+    "144285",
+    "153665",
+    "153961",
+    "154345",
+    "155653",
+    "155635",
+    "158596",
+    "155596",
+    "155860",
+    "155659",
+    "155654",
+    "144690",
+    "158577",
+    "153404",
+    "145632",
+    "158594",
+    "153667",
+    "155650",
+    "144530",
+    "155640",
+    "158570",
+    "153674",
+    "155677",
+    "155670",
+    "155700",
+    "153952",
+    "155684",
+    "155699",
+    "145312"
+   ],
+   "enabled": true
+  },
+  "2019": {
+   "name": "Hurricanes",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2019/home_front.png",
+     "backKitFile": "kits_2019/home_back/home_back_%.png",
+     "previewFile": "kits_2019/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2019/away_front.png",
+     "backKitFile": "kits_2019/away_back/away_back_%.png",
+     "previewFile": "kits_2019/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "145054",
+    "viceCaptain": "145054",
+    "longGK": "145054",
+    "shortGK": "145054",
+    "longPunt": "145054",
+    "shortPunt": "145054",
+    "kickoff": "145054"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155506",
+    "155664",
+    "153659",
+    "155665",
+    "155699",
+    "145632",
+    "144741",
+    "155659",
+    "153316",
+    "145054",
+    "144285",
+    "153665",
+    "146082",
+    "155650",
+    "155653",
+    "153674",
+    "155762",
+    "155596",
+    "145418",
+    "155677",
+    "156498",
+    "158577",
+    "158596",
+    "144530",
+    "155722",
+    "153954",
+    "157752",
+    "145312",
+    "142708",
+    "154670",
+    "146633",
+    "155712",
+    "155640",
+    "158570",
+    "158594",
+    "155492",
+    "155635",
+    "153667",
+    "155700",
+    "155733",
+    "153952",
+    "155684"
+   ],
+   "enabled": true
+  },
+  "2020": {
+   "name": "Hurricanes",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "146633",
+    "viceCaptain": "146633",
+    "longGK": "",
+    "shortGK": "",
+    "longPunt": "",
+    "shortPunt": "146633",
+    "kickoff": ""
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "158577",
+    "153674",
+    "145557",
+    "155665",
+    "155624",
+    "145632",
+    "155722",
+    "153954",
+    "153316",
+    "146633",
+    "144285",
+    "153665",
+    "158594",
+    "156976",
+    "155653",
+    "155664",
+    "155700",
+    "155596",
+    "155699",
+    "155659",
+    "155654",
+    "155640",
+    "155758",
+    "155719",
+    "155733",
+    "155650",
+    "142708",
+    "155762",
+    "155783",
+    "145312",
+    "156498",
+    "144836",
+    "153961",
+    "157752"
+   ],
+   "enabled": false
+  },
+  "2021": {
+   "name": "Hurricanes",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "146633",
+    "viceCaptain": "146633",
+    "longGK": "",
+    "shortGK": "",
+    "longPunt": "",
+    "shortPunt": "146633",
+    "kickoff": ""
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "158577",
+    "153674",
+    "145557",
+    "155665",
+    "155624",
+    "145632",
+    "155722",
+    "153954",
+    "153316",
+    "146633",
+    "144285",
+    "153665",
+    "158594",
+    "156976",
+    "155653",
+    "155664",
+    "155700",
+    "155596",
+    "155699",
+    "155659",
+    "155654",
+    "155640",
+    "155758",
+    "155719",
+    "155733",
+    "155650",
+    "142708",
+    "155762",
+    "155783",
+    "145312",
+    "156498",
+    "144836",
+    "153961",
+    "157752"
+   ],
+   "enabled": false
+  },
+  "2016": {
+   "name": "Hurricanes",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "145312",
+    "shortGK": "145312",
+    "longPunt": "145312",
+    "shortPunt": "145054",
+    "kickoff": "145312"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155506",
+    "155664",
+    "153659",
+    "156804",
+    "145418",
+    "152485",
+    "144741",
+    "153954",
+    "153316",
+    "145054",
+    "144285",
+    "153665",
+    "153952",
+    "154345",
+    "145312",
+    "155635",
+    "158596",
+    "144690",
+    "155654",
+    "155596",
+    "158577",
+    "155659",
+    "153404",
+    "145632",
+    "158594",
+    "153667",
+    "155860",
+    "155650",
+    "144530",
+    "155640",
+    "158570",
+    "153674",
+    "155677",
+    "155670",
+    "155700",
+    "153961",
+    "155684",
+    "155699"
+   ],
+   "enabled": false
+  }
+ }
+}

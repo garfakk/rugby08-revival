@@ -1,0 +1,952 @@
+{
+ "10110": {
+  "2009": {
+   "name": "Blues",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "110004",
+    "shortGK": "110004",
+    "longPunt": "110004",
+    "shortPunt": "110004",
+    "kickoff": "110004"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "143296",
+    "142821",
+    "142484",
+    "156120",
+    "142475",
+    "156122",
+    "155568",
+    "143160",
+    "156119",
+    "155569",
+    "142717",
+    "142622",
+    "155571",
+    "153990",
+    "110004",
+    "156123",
+    "156140",
+    "142848",
+    "142614",
+    "153592",
+    "156141",
+    "156118",
+    "156142",
+    "155567",
+    "154264",
+    "156157",
+    "142899",
+    "156121",
+    "155575",
+    "152874",
+    "156143",
+    "156191",
+    "155537",
+    "153599",
+    "156162"
+   ],
+   "enabled": false
+  },
+  "2010": {
+   "name": "Blues",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "155583",
+    "viceCaptain": "155583",
+    "longGK": "155583",
+    "shortGK": "155583",
+    "longPunt": "142622",
+    "shortPunt": "142622",
+    "kickoff": "142622"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "143296",
+    "142821",
+    "142484",
+    "156120",
+    "142475",
+    "143160",
+    "156051",
+    "153332",
+    "154343",
+    "155583",
+    "142899",
+    "153599",
+    "153990",
+    "142717",
+    "142622",
+    "156123",
+    "156140",
+    "142848",
+    "154671",
+    "153592",
+    "155567",
+    "156054",
+    "110004",
+    "125043",
+    "156191",
+    "154263",
+    "155537",
+    "155571",
+    "156119",
+    "156162",
+    "156143",
+    "156122"
+   ],
+   "enabled": true
+  },
+  "2022": {
+   "name": "Blues",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "153661",
+    "viceCaptain": "",
+    "longGK": "145054",
+    "shortGK": "145054",
+    "longPunt": "145054",
+    "shortPunt": "145054",
+    "kickoff": "145054"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153959",
+    "155671",
+    "142363",
+    "153661",
+    "144738",
+    "155708",
+    "144468",
+    "153312",
+    "144530",
+    "145054",
+    "144421",
+    "153311",
+    "145299",
+    "145130",
+    "153309",
+    "155849",
+    "144889",
+    "145222",
+    "155641",
+    "155904",
+    "155672",
+    "155907",
+    "155770",
+    "153660",
+    "155664",
+    "155756",
+    "155847",
+    "155818",
+    "154357",
+    "155846",
+    "155670",
+    "153315",
+    "155902",
+    "155848",
+    "155906",
+    "155903",
+    "155808",
+    "155850",
+    "155697",
+    "155735",
+    "155725",
+    "155950"
+   ],
+   "enabled": false
+  },
+  "2023": {
+   "name": "Blues",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2023/home_front.png",
+     "backKitFile": "kits_2023/home_back/home_back_%.png",
+     "previewFile": "kits_2023/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2023/away_front.png",
+     "backKitFile": "kits_2023/away_back/away_back_%.png",
+     "previewFile": "kits_2023/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145054",
+    "viceCaptain": "145054",
+    "longGK": "145054",
+    "shortGK": "145054",
+    "longPunt": "145054",
+    "shortPunt": "145054",
+    "kickoff": "145054"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "145222",
+    "155664",
+    "142363",
+    "153314",
+    "155808",
+    "155770",
+    "144468",
+    "153312",
+    "144530",
+    "145054",
+    "144421",
+    "153311",
+    "145299",
+    "145130",
+    "155847",
+    "155671",
+    "144889",
+    "155670",
+    "155641",
+    "153315",
+    "155672",
+    "153309",
+    "154357",
+    "155818",
+    "144866",
+    "155708",
+    "155902",
+    "155846",
+    "155735",
+    "155906",
+    "155848",
+    "155950",
+    "155849",
+    "155903",
+    "153959",
+    "155850",
+    "155976"
+   ],
+   "enabled": true
+  },
+  "2024": {
+   "name": "Blues",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "155735",
+    "viceCaptain": "155735",
+    "longGK": "155735",
+    "shortGK": "155735",
+    "longPunt": "145299",
+    "shortPunt": "155735",
+    "kickoff": "145299"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "145222",
+    "155664",
+    "155670",
+    "153314",
+    "155728",
+    "153315",
+    "144468",
+    "153312",
+    "144530",
+    "155735",
+    "144421",
+    "154357",
+    "145299",
+    "145130",
+    "155777",
+    "155671",
+    "144889",
+    "155888",
+    "155959",
+    "155902",
+    "155672",
+    "153309",
+    "155950",
+    "153317",
+    "155770",
+    "155906",
+    "155903",
+    "155818",
+    "155846",
+    "155849",
+    "155808",
+    "155847",
+    "155976",
+    "155916",
+    "155899"
+   ],
+   "enabled": true
+  },
+  "2008": {
+   "name": "Blues",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "110004",
+    "shortGK": "110004",
+    "longPunt": "110004",
+    "shortPunt": "110004",
+    "kickoff": "110004"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "143296",
+    "142821",
+    "142484",
+    "156120",
+    "142475",
+    "156122",
+    "155568",
+    "143160",
+    "156119",
+    "155569",
+    "142717",
+    "142622",
+    "155571",
+    "153990",
+    "110004",
+    "156123",
+    "156140",
+    "142848",
+    "142614",
+    "153592",
+    "156141",
+    "156118",
+    "156142",
+    "155567",
+    "154264",
+    "156157",
+    "142899",
+    "156121",
+    "155575",
+    "152874",
+    "156143",
+    "156191",
+    "155537",
+    "153599",
+    "156162"
+   ],
+   "enabled": false
+  },
+  "2018": {
+   "name": "Blues",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "153309",
+    "viceCaptain": "153309",
+    "longGK": "153309",
+    "shortGK": "153309",
+    "longPunt": "145299",
+    "shortPunt": "153309",
+    "kickoff": "145299"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "158555",
+    "158562",
+    "145222",
+    "153314",
+    "158645",
+    "143160",
+    "144468",
+    "153315",
+    "146308",
+    "153309",
+    "157089",
+    "145299",
+    "158623",
+    "153675",
+    "155847",
+    "155649",
+    "158564",
+    "158622",
+    "154685",
+    "158616",
+    "144819",
+    "155674",
+    "155623",
+    "157078",
+    "158612",
+    "155615",
+    "155672",
+    "158604",
+    "153666",
+    "158601",
+    "156054",
+    "142315",
+    "153959",
+    "145558",
+    "158629",
+    "144421",
+    "155624",
+    "158595",
+    "157062",
+    "158653",
+    "155726",
+    "155648",
+    "157049"
+   ],
+   "enabled": true
+  },
+  "2019": {
+   "name": "Blues",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2019/home_front.png",
+     "backKitFile": "kits_2019/home_back/home_back_%.png",
+     "previewFile": "kits_2019/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2019/away_front.png",
+     "backKitFile": "kits_2019/away_back/away_back_%.png",
+     "previewFile": "kits_2019/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "158674",
+    "viceCaptain": "158674",
+    "longGK": "158674",
+    "shortGK": "158674",
+    "longPunt": "144421",
+    "shortPunt": "143721",
+    "kickoff": "144421"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153959",
+    "158562",
+    "145222",
+    "153314",
+    "155624",
+    "155708",
+    "155648",
+    "153315",
+    "144819",
+    "158674",
+    "153675",
+    "143721",
+    "158604",
+    "144421",
+    "155847",
+    "157078",
+    "153660",
+    "155670",
+    "158612",
+    "158631",
+    "146308",
+    "155735",
+    "155649",
+    "155672",
+    "144468",
+    "155623",
+    "155756",
+    "145299",
+    "153666",
+    "155116",
+    "157049",
+    "155660",
+    "158668",
+    "153309",
+    "154685",
+    "155768",
+    "158564",
+    "158616",
+    "153312",
+    "158645",
+    "155697",
+    "157089"
+   ],
+   "enabled": true
+  },
+  "2020": {
+   "name": "Blues",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "153309",
+    "shortGK": "153309",
+    "longPunt": "153309",
+    "shortPunt": "153309",
+    "kickoff": "153309"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153660",
+    "155671",
+    "155623",
+    "153314",
+    "158706",
+    "144468",
+    "155648",
+    "153312",
+    "144819",
+    "158674",
+    "145130",
+    "158604",
+    "142276",
+    "158629",
+    "153309",
+    "155735",
+    "155672",
+    "145222",
+    "155768",
+    "146040",
+    "153675",
+    "158707",
+    "155708",
+    "158562",
+    "145299",
+    "154725",
+    "153315",
+    "158612",
+    "155670",
+    "146345",
+    "153959",
+    "154668"
+   ],
+   "enabled": false
+  },
+  "2021": {
+   "name": "Blues",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "153309",
+    "shortGK": "153309",
+    "longPunt": "153309",
+    "shortPunt": "153309",
+    "kickoff": "153309"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153660",
+    "155671",
+    "155623",
+    "153314",
+    "158706",
+    "144468",
+    "155648",
+    "153312",
+    "144819",
+    "158674",
+    "145130",
+    "158604",
+    "142276",
+    "158629",
+    "153309",
+    "155735",
+    "155672",
+    "145222",
+    "155768",
+    "146040",
+    "153675",
+    "158707",
+    "155708",
+    "158562",
+    "145299",
+    "154725",
+    "153315",
+    "158612",
+    "155670",
+    "146345",
+    "153959",
+    "154668"
+   ],
+   "enabled": false
+  },
+  "2016": {
+   "name": "Blues",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "153309",
+    "shortGK": "153309",
+    "longPunt": "145299",
+    "shortPunt": "153309",
+    "kickoff": "145299"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "158555",
+    "158562",
+    "145222",
+    "153314",
+    "158645",
+    "143160",
+    "144468",
+    "153315",
+    "146308",
+    "153309",
+    "157089",
+    "145299",
+    "158623",
+    "153675",
+    "157049",
+    "144819",
+    "158564",
+    "158622",
+    "155649",
+    "154685",
+    "158616",
+    "155623",
+    "157078",
+    "158612",
+    "155674",
+    "155615",
+    "155672",
+    "158604",
+    "153666",
+    "158601",
+    "156054",
+    "142315",
+    "153959",
+    "145558",
+    "158629",
+    "144421",
+    "155624",
+    "158595",
+    "157062",
+    "158653",
+    "155726",
+    "155648"
+   ],
+   "enabled": false
+  }
+ }
+}

@@ -22,9 +22,9 @@ from PyQt5.QtWidgets import (
     QSizePolicy, QLineEdit, QStackedWidget, QApplication, QFrame,
 )
 from PyQt5.QtGui import (
-    QPainter, QColor, QPen, QFont, QFontMetrics, QPixmap, QImageReader, QBrush,
+    QPainter, QColor, QPen, QFont, QFontMetrics, QPixmap, QImageReader, QBrush, QPolygonF,
 )
-from PyQt5.QtCore import Qt, QRectF, QRect, QSize, QTimer, QPoint, pyqtSignal, QEvent
+from PyQt5.QtCore import Qt, QRectF, QRect, QSize, QTimer, QPoint, QPointF, pyqtSignal, QEvent
 
 from ui.broadcast import Card, HintBar, draw_frame, tracked_font, display_label, eyebrow_label
 from ui.dropdown import PopupList
@@ -94,10 +94,12 @@ def expand_pattern(path, n):
     return path.replace("%", str(n), 1)
 
 
-def asset_status(root, rel, spec):
+def asset_status(root, rel, spec, check_size=False):
     """(state, detail, count) for a team asset path.
 
     state: "empty" | "ok" | "missing" | "partial" | "size" | "archive" | "outside"
+    An image of another size than the game's is "ok" (the mod resizes it); "size" only with `check_size`
+    (the data audit in tests).
     """
     rel = (rel or "").strip()
     if not rel:
@@ -122,7 +124,7 @@ def asset_status(root, rel, spec):
     if ext in (".fsh", ".big"):
         return "archive", ext[1:].upper() + " archive", 1
     want = spec.get("size")
-    if want:
+    if want and check_size:
         got = image_size(full)
         if got and tuple(got) != tuple(want):
             return "size", f"{got[0]}×{got[1]} (expected {want[0]}×{want[1]})", 1
@@ -452,12 +454,15 @@ class TextField(FieldBase):
             self._edit.selectAll()
         self.update()
 
-    def commit(self):
+    def commit(self, refocus=True):
+        """Keep the typed text. `refocus` False when focus is already going elsewhere (a button being
+        clicked): pulling it back here would swallow that click."""
         if not self.is_editing():
             return
         new = self._edit.text()
         self._edit.hide()
-        self.setFocus()
+        if refocus:
+            self.setFocus()
         self.update()
         if self.validator:
             new = self.validator(new)
@@ -485,7 +490,7 @@ class TextField(FieldBase):
 
     def _commit_if_left(self):
         if self.is_editing() and not self._edit.hasFocus():
-            self.commit()
+            self.commit(refocus=False)
 
     def mousePressEvent(self, event):
         self.setFocus()
@@ -615,6 +620,61 @@ class NumberField(FieldBase):
         self._buffer_timer = QTimer(self)
         self._buffer_timer.setSingleShot(True)
         self._buffer_timer.timeout.connect(self._commit_buffer)
+        self._arrow_hover = 0         # +1 / -1: the arrow under the mouse
+        self._arrow_dir = 0           # the arrow being held (auto-repeat)
+        self._repeat = QTimer(self)
+        self._repeat.timeout.connect(self._repeat_step)
+
+    ARROW_W = 22
+
+    def _arrow_rects(self):
+        """(up, down) buttons at the right end of the value box, like a spin box."""
+        box = self.value_rect()
+        w, h = self.ARROW_W, box.height() / 2
+        x = box.right() - w - 1
+        return QRectF(x, box.y() + 1, w, h - 1), QRectF(x, box.y() + h, w, h - 1)
+
+    def _arrow_at(self, pos):
+        up, down = self._arrow_rects()
+        return 1 if up.contains(QPointF(pos)) else -1 if down.contains(QPointF(pos)) else 0
+
+    def _paint_arrows(self, p):
+        up, down = self._arrow_rects()
+        p.setPen(Qt.NoPen)
+        for rect, d in ((up, 1), (down, -1)):
+            hot = self._arrow_hover == d or self._arrow_dir == d
+            p.fillRect(rect, QColor(BG_HIGHLIGHT if hot else BG_BASE))
+            c, m = rect.center(), 3.5
+            tri = QPolygonF([QPointF(c.x() - m, c.y() + d * m / 2), QPointF(c.x() + m, c.y() + d * m / 2),
+                             QPointF(c.x(), c.y() - d * m / 2)])
+            p.setBrush(QColor(ACCENT if hot else FG_SECONDARY))
+            p.drawPolygon(tri)
+        p.setBrush(Qt.NoBrush)
+
+    def _repeat_step(self):
+        self._repeat.setInterval(70)
+        if self._arrow_dir:
+            self.step(self._arrow_dir)
+
+    def mouseMoveEvent(self, event):
+        d = self._arrow_at(event.pos())
+        if d != self._arrow_hover:
+            self._arrow_hover = d
+            self.update()
+        super().mouseMoveEvent(event)
+
+    def leaveEvent(self, event):
+        if self._arrow_hover:
+            self._arrow_hover = 0
+            self.update()
+        super().leaveEvent(event)
+
+    def mouseReleaseEvent(self, event):
+        self._repeat.stop()
+        if self._arrow_dir:
+            self._arrow_dir = 0
+            self.update()
+        super().mouseReleaseEvent(event)
 
     def value(self):
         return self._value
@@ -714,6 +774,12 @@ class NumberField(FieldBase):
         # after a click went nowhere, because the click itself never
         # actually moved keyboard focus onto the field.
         self.setFocus()
+        d = self._arrow_at(event.pos())
+        if d:
+            self._commit_buffer()
+            self._arrow_dir = d
+            self.step(d * (5 if event.modifiers() & Qt.ShiftModifier else 1))
+            self._repeat.start(400)
 
     def focusOutEvent(self, event):
         self._buffer_timer.stop()
@@ -721,6 +787,8 @@ class NumberField(FieldBase):
         super().focusOutEvent(event)
 
     def paint_value(self, p, rect, focused):
+        self._paint_arrows(p)
+        rect = rect.adjusted(0, 0, -(self.ARROW_W - 6), 0)       # the text stays clear of the arrows
         p.setFont(self._value_font)
         if self._buffer:
             p.setPen(QColor(ACCENT))
@@ -740,15 +808,13 @@ class NumberField(FieldBase):
 
 
 class RatingField(NumberField):
-    """0-99 rating: label, bar, number, and the change against a reference
-    (the previous season) as a delta and a ghost tick on the bar. Only the
-    bar reacts to the mouse — clicking the label or number just focuses."""
+    """0-99 rating: label, number with up / down arrows (click, hold to repeat, Shift = 5; or type, ←→,
+    wheel), and the change against a reference (the previous season) as a delta."""
 
     def __init__(self, label, parent=None):
         super().__init__(label, lo=0, hi=99, allow_blank=False, parent=parent)
         self.setFixedHeight(34)
         self.reference = None
-        self._dragging = False
 
     def set_reference(self, value):
         try:
@@ -757,59 +823,27 @@ class RatingField(NumberField):
             self.reference = None
         self.update()
 
-    def value_rect(self):
-        return QRectF(self.label_width, 2, self.width() - self.label_width, self.height() - 4)
-
-    def _bar_rect(self):
-        box = self.value_rect()
-        return QRectF(box.x() + 10, box.center().y() - 3, box.width() - 10 - 84, 6)
-
-    def _set_from_x(self, x):
-        bar = self._bar_rect()
-        if bar.width() > 0:
-            ratio = max(0.0, min(1.0, (x - bar.x()) / bar.width()))
-            self._emit(str(round(ratio * 99)))
-
-    def mousePressEvent(self, event):
-        self.setFocus()
-        self._dragging = self._bar_rect().adjusted(-4, -12, 4, 12).contains(event.pos())
-        if self._dragging:
-            self._set_from_x(event.x())
-
-    def mouseMoveEvent(self, event):
-        if self._dragging and event.buttons() & Qt.LeftButton:
-            self._set_from_x(event.x())
-
-    def mouseReleaseEvent(self, event):
-        self._dragging = False
-
     def paint_value(self, p, rect, focused):
-        bar = self._bar_rect()
+        self._paint_arrows(p)
+        rect = rect.adjusted(0, 0, -(self.ARROW_W - 6), 0)
         n = self.as_int()
-        p.fillRect(bar, QColor(BG_BASE))
-        if n is not None:
-            col = ACCENT if focused else (FG_SECONDARY if 0 <= n <= 99 else WARN)
-            if self._issue:
-                col = SEVERITY_COLOR[self._issue[0]]
-            p.fillRect(QRectF(bar.x(), bar.y(), bar.width() * max(0, min(n, 99)) / 99,
-                              bar.height()), QColor(col))
-        if self.reference is not None:
-            gx = bar.x() + bar.width() * max(0, min(self.reference, 99)) / 99
-            p.fillRect(QRectF(gx - 1, bar.y() - 3, 2, bar.height() + 6), QColor(FG_TERTIARY))
-        right = QRectF(bar.right() + 8, rect.y(), rect.right() - bar.right() - 8, rect.height())
         p.setFont(tracked_font(FONT_DISPLAY, T_VALUE, QFont.Bold, 0))
         if self._buffer:
             p.setPen(QColor(ACCENT))
-            p.drawText(right, Qt.AlignLeft | Qt.AlignVCenter, self._buffer + "▏")
+            p.drawText(rect, Qt.AlignLeft | Qt.AlignVCenter, self._buffer + "▏")
             return
-        p.setPen(QColor(FG_PRIMARY))
-        p.drawText(QRectF(right.x(), right.y(), 30, right.height()),
-                   Qt.AlignRight | Qt.AlignVCenter, self._value or "—")
+        col = FG_PRIMARY
+        if n is None or not 0 <= n <= 99:
+            col = WARN
+        if self._issue:
+            col = SEVERITY_COLOR[self._issue[0]]
+        p.setPen(QColor(col))
+        p.drawText(QRectF(rect.x(), rect.y(), 34, rect.height()), Qt.AlignLeft | Qt.AlignVCenter, self._value or "—")
         if self.reference is not None and n is not None and n != self.reference:
             d = n - self.reference
             p.setFont(tracked_font(FONT_DISPLAY, T_SMALL, QFont.Bold, 0))
             p.setPen(QColor(GREEN if d > 0 else DANGER_LITE))
-            p.drawText(QRectF(right.x() + 34, right.y(), 40, right.height()),
+            p.drawText(QRectF(rect.x() + 38, rect.y(), 44, rect.height()),
                        Qt.AlignLeft | Qt.AlignVCenter, f"{'+' if d > 0 else '−'}{abs(d)}")
 
 
@@ -1260,6 +1294,62 @@ class ToggleGrid(QWidget):
                        ("✓  " if on else "") + label)
 
 
+class ScopeCheck(QWidget):
+    """A small "ALL SEASONS" checkbox for a card's title row: whether the
+    card's edits go to every season of the record or only the one shown.
+    One focus stop; Space/Enter or a click toggles it."""
+
+    toggled = pyqtSignal(bool)
+
+    def __init__(self, text="all seasons", checked=True, parent=None):
+        super().__init__(parent)
+        self.setFocusPolicy(Qt.StrongFocus)
+        self.setCursor(Qt.PointingHandCursor)
+        self.text = text.upper()
+        self.checked = checked
+        self.key = None
+        self._font = tracked_font(FONT_DISPLAY, T_SMALL, QFont.Bold, 0.6)
+        self.setFixedSize(QFontMetrics(self._font).horizontalAdvance(self.text) + 34, 22)
+
+    def set_checked(self, on):
+        if on != self.checked:
+            self.checked = on
+            self.update()
+
+    def _toggle(self):
+        self.checked = not self.checked
+        self.update()
+        self.toggled.emit(self.checked)
+
+    def mousePressEvent(self, event):
+        self.setFocus()
+        self._toggle()
+
+    def keyPressEvent(self, event):
+        if event.key() in (Qt.Key_Space, Qt.Key_Return, Qt.Key_Enter):
+            self._toggle()
+            event.accept()
+            return
+        super().keyPressEvent(event)
+
+    def paintEvent(self, event):
+        p = QPainter(self)
+        p.setRenderHint(QPainter.Antialiasing)
+        focused = self.hasFocus()
+        box = QRectF(2, (self.height() - 14) / 2, 14, 14)
+        p.setPen(QPen(QColor(ACCENT if (focused or self.checked) else BORDER), 2 if focused else 1))
+        p.setBrush(QColor(ACCENT if self.checked else BG_RAISED))
+        p.drawRoundedRect(box, 2, 2)
+        if self.checked:
+            p.setPen(QPen(QColor(BG_BASE), 2))
+            p.drawLine(QPoint(5, 11), QPoint(8, 14))
+            p.drawLine(QPoint(8, 14), QPoint(13, 7))
+        p.setPen(QColor(FG_PRIMARY if focused else (FG_SECONDARY if self.checked else FG_TERTIARY)))
+        p.setFont(self._font)
+        p.drawText(QRectF(24, 0, self.width() - 24, self.height()), Qt.AlignLeft | Qt.AlignVCenter,
+                   self.text)
+
+
 class LayerStackField(QWidget):
     """The ordered skin layer stack: the base skin, the overlay images painted
     over it bottom to top, and the gloves image that always ends up on top.
@@ -1560,13 +1650,17 @@ class FrameStrip(QWidget):
         shown = [e for e in self._pix if e[1] is not None]
         label_w = 96
         avail = self.width() - label_w
-        per = self.tw + gap
-        fit = max(1, int(avail // per))
+        # Narrower than every frame at full size: shrink them (aspect kept)
+        # rather than drop the last ones.
+        tw = min(self.tw, max(16, (avail - gap * (len(shown) - 1)) / max(1, len(shown))))
+        th = self.th * tw / self.tw
+        per = tw + gap
+        fit = max(1, int((avail + gap) // per))
         for i, pix, ok in shown[:fit]:
-            r = QRectF(x, 0, self.tw, self.th)
+            r = QRectF(x, (self.th - th) / 2, tw, th)
             p.fillRect(r, QColor(BG_BASE))
             if pix is not None and not pix.isNull():
-                scaled = pix.scaled(self.tw - 2, self.th - 2, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                scaled = pix.scaled(int(tw) - 2, int(th) - 2, Qt.KeepAspectRatio, Qt.SmoothTransformation)
                 p.drawPixmap(int(r.center().x() - scaled.width() / 2),
                              int(r.center().y() - scaled.height() / 2), scaled)
             p.setPen(QPen(QColor(BORDER if ok else DANGER_LITE), 1))
@@ -1575,7 +1669,7 @@ class FrameStrip(QWidget):
                 p.drawLine(r.topLeft(), r.bottomRight())
             p.setFont(tracked_font(FONT_DISPLAY, T_SMALL - 1, QFont.DemiBold, 0.2))
             p.setPen(QColor(FG_TERTIARY))
-            p.drawText(QRectF(x, self.th + 2, self.tw, 16), Qt.AlignCenter, str(i))
+            p.drawText(QRectF(x, self.th + 2, tw, 16), Qt.AlignCenter, str(i))
             x += per
         p.setFont(tracked_font(FONT_DISPLAY, T_SMALL, QFont.DemiBold, 0.4))
         p.setPen(QColor(GREEN if present == self.count else WARN))
@@ -1806,15 +1900,29 @@ class TabStrip(QWidget):
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         self.titles = list(titles)
         self.counts = [None] * len(self.titles)   # (n, severity)
+        self.hidden = set()                       # tabs not offered (see set_hidden)
         self._index = 0
         self._font = tracked_font(FONT_DISPLAY, 13, QFont.Bold, track=1.4)
 
     def index(self):
         return self._index
 
+    def set_hidden(self, hidden):
+        """Hide the tabs at these indexes: not drawn, not reachable."""
+        self.hidden = set(hidden)
+        self.update()
+
+    def step(self, delta):
+        """The next shown tab in that direction (stays put at either end)."""
+        i = self._index + delta
+        while 0 <= i < len(self.titles) and i in self.hidden:
+            i += delta
+        if 0 <= i < len(self.titles):
+            self.set_index(i)
+
     def set_index(self, i, notify=True):
         i = max(0, min(len(self.titles) - 1, i))
-        if i == self._index:
+        if i == self._index or i in self.hidden:
             return
         self._index = i
         self.update()
@@ -1830,6 +1938,9 @@ class TabStrip(QWidget):
         x = 0
         out = []
         for i, t in enumerate(self.titles):
+            if i in self.hidden:
+                out.append(QRectF(x, 0, 0, self.height()))
+                continue
             text = t.upper()
             # Qt versions/platforms disagree on whether the advance includes the
             # letter spacing: take the widest measure, and add the spacing back,
@@ -1850,7 +1961,7 @@ class TabStrip(QWidget):
 
     def keyPressEvent(self, event):
         if event.key() in (Qt.Key_Left, Qt.Key_Right):
-            self.set_index(self._index + (-1 if event.key() == Qt.Key_Left else 1))
+            self.step(-1 if event.key() == Qt.Key_Left else 1)
             event.accept()
             return
         super().keyPressEvent(event)
@@ -1861,6 +1972,8 @@ class TabStrip(QWidget):
         focused = self.hasFocus()
         p.fillRect(QRectF(0, self.height() - 1, self.width(), 1), QColor(BORDER))
         for i, r in enumerate(self._rects()):
+            if i in self.hidden:
+                continue
             on = i == self._index
             p.setFont(self._font)
             p.setPen(QColor(FG_PRIMARY if on else FG_TERTIARY))
@@ -2444,6 +2557,19 @@ class FormDialog(ConfirmDialog):
         if footer:
             self.footer_note.setText(footer)
         super().__init__(screen, title, text, buttons, on_choice, cancel_role, content, width)
+
+    def commit_fields(self):
+        """Take what is still being typed in any field: one click on OK both ends the edit and confirms."""
+        for f in self.fields.values():
+            if isinstance(f, TextField):
+                f.commit(refocus=False)
+            elif hasattr(f, "_commit_buffer"):
+                f._commit_buffer()
+
+    def choose(self, role):
+        if not self._done and role != self._cancel_role:
+            self.commit_fields()
+        super().choose(role)
 
     def values(self):
         return {k: f.value() for k, f in self.fields.items()}

@@ -5,7 +5,8 @@ Both the simulator and the game only say that a player got hurt (the
 game's per-player injury byte is treated as a flag), so the type and how
 many matches he misses are rolled here from INJURY_TABLE, scaled by the
 "injury_duration" option. Concussions always cost at least one match
-(return-to-play protocol). A "knock" costs nothing but makes the news.
+(return-to-play protocol). A "knock" costs nothing; it makes the news
+only for a team the user manages.
 """
 from .conditions import add_condition
 from .effects import register_condition_kind
@@ -75,8 +76,11 @@ def _injuries(t, fixture, result, rng):
             kind, n = roll_injury(rng, scale)
             team = entry.name if entry else side.team_id
             if n <= 0:
-                t.add_news("knock", f"{p.name} ({team}) took {with_article(kind)} but should be fine",
-                           [side.team_id], p.pid)
+                # Only the user's own knocks are news: everyone else's
+                # would bury the headlines that matter.
+                if entry and entry.human:
+                    t.add_news("knock", f"{p.name} ({team}) took {with_article(kind)} but should be fine",
+                               [side.team_id], p.pid)
                 continue
             add_condition(t, p, Condition(kind="injury", matches_left=n, data={"type": kind}))
             if n >= OUT_FOR_TOURNAMENT:

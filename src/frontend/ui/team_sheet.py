@@ -11,11 +11,11 @@ exactly the look and interaction it had: compact size, role badges, a fit /
 problem tint, drag and drop between shirts, and a "carrying" state for
 moving a player with the keyboard or pad.
 """
-from PyQt5.QtWidgets import QWidget, QSizePolicy
+from PyQt5.QtWidgets import QWidget, QSizePolicy, QVBoxLayout, QLabel
 from PyQt5.QtGui import QPainter, QColor, QPen, QFont, QFontMetrics, QDrag
 from PyQt5.QtCore import Qt, QRectF, QTimer, QMimeData, QPoint, pyqtSignal
 
-from ui.broadcast import SegmentedToggle, tracked_font
+from ui.broadcast import SegmentedToggle, tracked_font, draw_frame
 from ui.dropdown import PopupList
 from ui.theme import (
     BG_BASE, BG_CARD, BG_RAISED, BG_HIGHLIGHT, BORDER, ACCENT, WARN,
@@ -40,6 +40,8 @@ SHEET_ROWS = [
     [11, 12, 13, 14],
     [15],
 ]
+# Match setup's squad editor swaps 7 and 8 (6, 8, 7): the team editor follows it.
+MATCH_SHEET_ROWS = [([6, 8, 7] if row == [6, 7, 8] else row) for row in SHEET_ROWS]
 STARTERS = [n for row in SHEET_ROWS for n in row]
 SUBSTITUTES = list(range(16, 23))     # 7 replacements — 22 players total
 SQUAD_SIZE = len(STARTERS) + len(SUBSTITUTES)
@@ -202,6 +204,7 @@ class SlotAvatar(_DragSource, QWidget):
     hovered = pyqtSignal(int)
     dropped = pyqtSignal(int, int)          # (from shirt, to shirt)
     double_clicked = pyqtSignal(int)
+    unhovered = pyqtSignal(int)
 
     def __init__(self, number: int, tint: str, parent=None, size="normal"):
         super().__init__(parent)
@@ -256,6 +259,9 @@ class SlotAvatar(_DragSource, QWidget):
 
     def enterEvent(self, event):
         self.hovered.emit(self.number)
+
+    def leaveEvent(self, event):
+        self.unhovered.emit(self.number)
 
     def paintEvent(self, event):
         p = QPainter(self)
@@ -317,8 +323,10 @@ class SubChip(_DragSource, QWidget):
     hovered = pyqtSignal(int)
     dropped = pyqtSignal(int, int)
     double_clicked = pyqtSignal(int)
+    unhovered = pyqtSignal(int)
+    remove_requested = pyqtSignal(int)     # the × of a removable chip
 
-    def __init__(self, number: int, tint: str, parent=None, size="normal"):
+    def __init__(self, number: int, tint: str, parent=None, size="normal", show_number=True):
         super().__init__(parent)
         self.setFocusPolicy(Qt.StrongFocus)
         self.setFixedHeight(30 if size == "compact" else 38)
@@ -331,6 +339,9 @@ class SubChip(_DragSource, QWidget):
         self.badges = []
         self.issue_color = None
         self.carrying = False
+        self.show_number = show_number
+        self.empty_label = ""       # shown on an empty chip (an "add" item)
+        self.removable = False      # draws a × that emits remove_requested
         self._init_dnd()
 
     def set_player(self, player):
@@ -349,7 +360,16 @@ class SubChip(_DragSource, QWidget):
         self.carrying = on
         self.update()
 
+    def _cross_rect(self):
+        return QRectF(self.width() - 24, 0, 24, self.height())
+
+    def _on_cross(self, event):
+        return self.removable and self.player is not None and self._cross_rect().contains(event.pos())
+
     def mousePressEvent(self, event):
+        if self._on_cross(event):
+            self.remove_requested.emit(self.number)
+            return
         self.setFocus()
         if self._dnd:
             self._dnd_press(event)
@@ -370,36 +390,54 @@ class SubChip(_DragSource, QWidget):
     def enterEvent(self, event):
         self.hovered.emit(self.number)
 
+    def leaveEvent(self, event):
+        self.unhovered.emit(self.number)
+
     def paintEvent(self, event):
         p = QPainter(self)
         focused = self.hasFocus()
         p.fillRect(self.rect(), QColor(BG_HIGHLIGHT if (focused or self._drop_hover) else BG_CARD))
-        pen = QPen(QColor(ACCENT if (focused or self._drop_hover) else (self.issue_color or BORDER)), 1)
         if self.carrying:
-            pen = QPen(QColor(ACCENT), 2, Qt.DashLine)
-        p.setPen(pen)
-        p.drawRect(self.rect().adjusted(0, 0, -1, -1))
+            p.setPen(QPen(QColor(ACCENT), 2, Qt.DashLine))
+            p.drawRect(self.rect().adjusted(1, 1, -1, -1))
+        else:
+            # filled strips, not a pen: a 1px stroke can vanish under the
+            # app's fractional QT_SCALE_FACTOR (see draw_frame)
+            draw_frame(p, self.rect(), ACCENT if (focused or self._drop_hover)
+                       else (self.issue_color or BORDER))
 
-        p.setFont(tracked_font(FONT_DISPLAY, 13, QFont.Bold, track=0.6))
-        p.setPen(QColor(ACCENT if focused else self.tint))
-        p.drawText(QRectF(10, 0, 26, self.height()), Qt.AlignLeft | Qt.AlignVCenter, str(self.number))
+        left = 38 if self.show_number else 10
+        if self.show_number:
+            p.setFont(tracked_font(FONT_DISPLAY, 13, QFont.Bold, track=0.6))
+            p.setPen(QColor(ACCENT if focused else self.tint))
+            p.drawText(QRectF(10, 0, 26, self.height()), Qt.AlignLeft | Qt.AlignVCenter, str(self.number))
         right = 8
+        if self.removable and self.player is not None:
+            p.setFont(tracked_font(FONT_DISPLAY, 13, QFont.Bold, track=0))
+            p.setPen(QColor(FG_SECONDARY))
+            p.drawText(self._cross_rect(), Qt.AlignCenter, "×")
+            right = 26
         if self.badges:
             p.setFont(tracked_font(FONT_DISPLAY, 9, QFont.Bold, track=0))
             text = self.badges[0] + (f"+{len(self.badges) - 1}" if len(self.badges) > 1 else "")
             w = p.fontMetrics().horizontalAdvance(text) + 10
-            br = QRectF(self.width() - w - 6, (self.height() - 16) / 2, w, 16)
+            br = QRectF(self.width() - w - right + 2, (self.height() - 16) / 2, w, 16)
             p.setBrush(QColor(ACCENT))
             p.setPen(Qt.NoPen)
             p.drawRoundedRect(br, 8, 8)
             p.setPen(QColor(BG_BASE))
             p.drawText(br, Qt.AlignCenter, text)
-            right = w + 12
+            right += w + 4
         p.setFont(tracked_font(FONT_DISPLAY, 13, QFont.Bold, track=0.6))
         p.setPen(QColor(self.issue_color or (FG_PRIMARY if self.player else FG_MUTED)))
+        if self.player is None and self.empty_label:
+            p.setPen(QColor(ACCENT if focused else FG_SECONDARY))
+            p.drawText(QRectF(left, 0, self.width() - left - right, self.height()),
+                       Qt.AlignLeft | Qt.AlignVCenter, self.empty_label)
+            return
         name = p.fontMetrics().elidedText(last_name(self.player), Qt.ElideRight,
-                                          int(self.width() - 38 - right))
-        p.drawText(QRectF(38, 0, self.width() - 38 - right, self.height()),
+                                          int(self.width() - left - right))
+        p.drawText(QRectF(left, 0, self.width() - left - right, self.height()),
                    Qt.AlignLeft | Qt.AlignVCenter, name)
 
 
@@ -441,7 +479,32 @@ class StatsPanel(QWidget):
             y += row_h
 
 
-FITS, ALL = 0, 1        # the picker's two view modes
+FITS, ALL, SEARCH = 0, 1, 2     # the picker's view modes (SEARCH only when given a pool)
+
+
+class _PickerToolbar(QWidget):
+    """The segments plus, in SEARCH view, the query typed so far. Exposes
+    index()/set_index() so the popup's ←→ keys drive the segments."""
+
+    def __init__(self, segments, parent=None):
+        super().__init__(parent)
+        self.segments = segments
+        v = QVBoxLayout(self)
+        v.setContentsMargins(0, 0, 0, 0)
+        v.setSpacing(4)
+        v.addWidget(segments)
+        self.query = QLabel("")
+        self.query.setFont(tracked_font(FONT_DISPLAY, 11, QFont.DemiBold, 0.4))
+        self.query.setStyleSheet(f"color: {FG_SECONDARY}; background: {BG_RAISED};"
+                                 f" border: 1px solid {BORDER}; padding: 3px 8px;")
+        self.query.hide()
+        v.addWidget(self.query)
+
+    def index(self):
+        return self.segments.index()
+
+    def set_index(self, i, notify=True):
+        self.segments.set_index(i, notify)
 
 
 class PlayerPickerPopup(QWidget):
@@ -450,7 +513,8 @@ class PlayerPickerPopup(QWidget):
 
     One piece of state, shown rather than hidden: a segmented FITS / ALL
     switch carrying the count of each, defaulting to the players who fit
-    this shirt. Nothing else is filtered — a player already wearing another
+    this shirt. Given a `search` pool, a third SEARCH view lists it instead
+    (the whole player database), narrowed by what is typed. Nothing else is filtered — a player already wearing another
     shirt is listed and tagged with it (picking them MOVES them, vacating
     that shirt), and in ALL view a player out of position keeps his rail and
     dimmed name rather than being hidden behind a toggle.
@@ -473,14 +537,19 @@ class PlayerPickerPopup(QWidget):
 
         self.segments = SegmentedToggle([("SUGGESTED", 0), ("ALL", 0)])
         self.segments.changed.connect(self._on_segment_changed)
-        self._popup.set_toolbar_widget(self.segments)
+        self.toolbar = _PickerToolbar(self.segments)
+        self._popup.set_toolbar_widget(self.toolbar)
+        self._popup.key_hook = self._search_key
 
         self._entries = []          # [(pid, name, fits)] in rank order
+        self._search = None         # [(pid, name, fits)]: the SEARCH view's pool
+        self._query = ""
         self._current_pid = None
         self._taken_by = {}
         self._tags = {}
         self._subtitles = {}
         self._mode = FITS
+        self._seg_modes = [FITS, ALL]   # segment index -> view
 
     def isVisible(self):
         return self._popup.isVisible()
@@ -489,23 +558,35 @@ class PlayerPickerPopup(QWidget):
         self._popup.hide()
 
     def open_for(self, title, entries, current_pid, taken_by, anchor, screen,
-                 tags=None, subtitles=None):
+                 tags=None, subtitles=None, search=None, mode=FITS):
         """`entries`: [(pid, name, fits)] for the WHOLE squad, already in the
         order they should appear. `taken_by`: {pid: shirt_number} for every
-        OTHER filled slot. `tags`: optional {pid: (text, color)} overrides."""
+        OTHER filled slot. `tags`: optional {pid: (text, color)} overrides.
+        `search`: optional [(pid, name, fits)] the SEARCH view filters.
+        `mode`: the view it opens on."""
         self._entries = list(entries)
+        self._search = list(search) if search is not None else None
+        self._query = ""
         self._current_pid, self._taken_by = current_pid, taken_by
         self._tags = tags or {}
         self._subtitles = subtitles or {}
-        self._mode = FITS
+        self._mode = mode if (mode != SEARCH or self._search is not None) else FITS
         fit_count = sum(1 for pid, _, fits in self._entries
                         if fits or pid == current_pid)
-        self.segments.set_segments([("SUGGESTED", fit_count), ("ALL", len(self._entries))])
-        self.segments.set_index(FITS, notify=False)
+        # no entries and opened on SEARCH: the SEARCH segment alone
+        if self._search is not None and not self._entries and self._mode == SEARCH:
+            self._seg_modes = [SEARCH]
+        else:
+            self._seg_modes = [FITS, ALL] + ([SEARCH] if self._search is not None else [])
+        counts = {FITS: fit_count, ALL: len(self._entries), SEARCH: len(self._search or ())}
+        names = {FITS: "SUGGESTED", ALL: "ALL", SEARCH: "SEARCH"}
+        self.segments.set_segments([(names[m], counts[m]) for m in self._seg_modes])
+        self.segments.set_index(self._seg_modes.index(self._mode), notify=False)
+        self._show_query()
         self._popup.set_title(title)
-        # Sized for ALL, the larger view, so flipping the segment scrolls the
+        # Sized for the largest view, so flipping the segment scrolls the
         # list rather than resizing the popup under the cursor.
-        self._popup.size_to(len(self._entries))
+        self._popup.size_to(max(len(self._entries), len(self._search or ())))
         self._rebuild()
         self._popup.open_at(anchor, screen)
         # ensureWidgetVisible needs a laid-out scroll area, and open_at shows
@@ -517,10 +598,40 @@ class PlayerPickerPopup(QWidget):
         self.segments.set_index(self.segments.index() + delta)
 
     def _on_segment_changed(self, index):
-        self._mode = index
+        self._mode = self._seg_modes[index]
+        self._show_query()
         self._rebuild()
 
+    def _show_query(self):
+        on = self._mode == SEARCH
+        self.toolbar.query.setVisible(on)
+        if on:
+            self.toolbar.query.setText(f"SEARCH: {self._query}_" if self._query
+                                       else "TYPE A NAME TO SEARCH")
+
+    def _search_key(self, event):
+        """SEARCH view: typing edits the query (instead of jumping to a row),
+        Backspace deletes from it. Returns True when the key was used."""
+        if self._mode != SEARCH:
+            return False
+        if event.key() == Qt.Key_Backspace:
+            if not self._query:
+                return False
+            self._query = self._query[:-1]
+        elif event.text() and event.text().isprintable() and (event.key() != Qt.Key_Space
+                                                               or self._query):
+            self._query += event.text()
+        else:
+            return False
+        self._show_query()
+        self._rebuild()
+        return True
+
     def _visible_entries(self):
+        if self._mode == SEARCH:
+            needle = self._query.strip().lower()
+            return [e for e in self._search or ()
+                    if not needle or needle in e[1].lower() or needle == str(e[0])]
         if self._mode == ALL:
             return self._entries
         # The incumbent stays listed even when he doesn't fit the shirt —
@@ -536,7 +647,8 @@ class PlayerPickerPopup(QWidget):
 
         rows = self._visible_entries()
         if not rows:
-            self._popup.add_row("NO PLAYER FITS THIS SHIRT", None, disabled=True)
+            self._popup.add_row("NO PLAYER MATCHES" if self._mode == SEARCH
+                                else "NO PLAYER FITS THIS SHIRT", None, disabled=True)
             return
 
         for pid, name, fits in rows:

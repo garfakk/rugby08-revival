@@ -11,7 +11,10 @@ The editors need two things this module owns:
     than imported because `frontend/` must not depend on `backend/`;
     `check_player` exists to catch them drifting apart.
 
-  * a save path that cannot lose the file it is editing. Records are written
+  * a save path that cannot lose the file it is editing. By default an edit
+    of a team or a player is kept as the user's own (app/user_edits.py,
+    user_data/edits/), and the pack files are not touched: see
+    set_edit_store. In the maintainer's mode records are written
     back into the file they were LOADED from (several files can define the
     same ids — see TeamDataLoader), the rest of that file is preserved
     untouched, unknown keys on the edited record survive, and the write is
@@ -431,12 +434,12 @@ def check_team_detailed(season_info: dict, players: dict, season: str = None) ->
     for index, pid in enumerate(roster):
         if pid in seen:
             problems.append((f"players.{index}",
-                             f"shirt {index + 1}: player {pid} already wears {seen[pid] + 1}", ERROR))
+                             f"player {index + 1}: {pid} is already player {seen[pid] + 1}", ERROR))
         else:
             seen[pid] = index
         if pid not in players:
             problems.append((f"players.{index}",
-                             f"shirt {index + 1}: player {pid} is not in the player files", ERROR))
+                             f"player {index + 1}: {pid} is not in the player files", ERROR))
 
     if len(roster) < SQUAD_SIZE:
         problems.append(("players", f"{len(roster)} players — the game needs 22 or the"
@@ -444,17 +447,17 @@ def check_team_detailed(season_info: dict, players: dict, season: str = None) ->
 
     if looks_reversed(roster, players, season):
         problems.append(("players",
-                         "squad looks back-to-front — shirt 1 is a back and the "
+                         "squad looks back-to-front — player 1 is a back and the "
                          "front row is at the end of the list", WARN_))
 
     starters = roster[:STARTING_XV]
     for key in ROLE_KEYS:
         value = str((season_info.get("roles") or {}).get(key, "") or "").strip()
         if not value:
-            problems.append((f"roles.{key}", f"{key} is unset — the game uses shirt 10", WARN_))
+            problems.append((f"roles.{key}", f"{key} is unset — the game uses player 10", WARN_))
         elif value not in starters:
             problems.append((f"roles.{key}",
-                             f"{key} is not in the starting XV — the game uses shirt 10", WARN_))
+                             f"{key} is not in the starting XV — the game uses player 10", WARN_))
 
     for key, value in (season_info.get("setPlays") or {}).items():
         if value and value not in SET_PLAYS:
@@ -531,6 +534,72 @@ class SaveError(Exception):
     pass
 
 
+#: The user's edits (app/user_edits.EditStore). Saving a team or a player
+#: goes there, unless _into_pack (the maintainer's config save_edits_to =
+#: mod): then the pack file itself is written and the record's edit, now in
+#: the pack, is dropped.
+_edits = None
+_into_pack = False
+
+
+def set_edit_store(store, into_pack=False):
+    global _edits, _into_pack
+    _edits, _into_pack = store, into_pack
+
+
+def edit_store():
+    return _edits
+
+
+class writing_pack:
+    """`with writing_pack():` the saves inside write the pack files (the
+    maintainer writing edits into the release), whatever the mode."""
+
+    def __enter__(self):
+        global _into_pack
+        self._was, _into_pack = _into_pack, True
+
+    def __exit__(self, *exc):
+        global _into_pack
+        _into_pack = self._was
+
+
+def saves_to_user_edits() -> bool:
+    return _edits is not None and not _into_pack
+
+
+def save_target(path: str) -> str:
+    """Where a save of the record from `path` goes, for the editors' labels."""
+    if saves_to_user_edits():
+        return "my edits" if _edits.enabled else "my edits (turned off: saving is blocked)"
+    return os.path.basename(path or "")
+
+
+def user_record_id(used) -> str:
+    """The id for a record the user creates (from the install's own block,
+    see user_edits.IdBlocks), or "" in the maintainer's mode."""
+    if not saves_to_user_edits():
+        return ""
+    return _edits.ids.next_id({int(v) for v in used if str(v).isdigit()})
+
+
+def _pack_written(kind, rid):
+    if _edits is not None and _edits.is_edited(kind, rid):
+        _edits._drop(kind, rid)
+
+
+def _keep(kind, rid, record, path):
+    if not _edits.enabled:
+        # the editors show the pack's records: a save would replace the
+        # kept edit with them
+        raise SaveError("your edits are turned off: turn them on in Tools › My edits to save")
+    try:
+        _edits.save(kind, rid, record, path)
+    except OSError as e:
+        raise SaveError(str(e)) from e
+    return path
+
+
 def _write_json(path: str, data) -> None:
     """Atomic, and never the first thing to touch the original: the .bak is
     taken before the replace, and only once — a second save would otherwise
@@ -562,11 +631,32 @@ def save_player(path: str, pid: str, record: dict) -> str:
     since startup aren't clobbered by our in-memory copy."""
     if not path:
         raise SaveError("no source file recorded for this player")
+    if saves_to_user_edits():
+        return _keep("players", pid, record, path)
     data = _load_json(path)
     if isinstance(data, list):
         raise SaveError(f"{os.path.basename(path)} is a list, not a player map")
     data[str(pid)] = record
     _write_json(path, data)
+    _pack_written("players", pid)
+    return path
+
+
+def save_players(path: str, records: dict) -> str:
+    """save_player for many players of one file, read and written once."""
+    if not path:
+        raise SaveError("no players file chosen")
+    if saves_to_user_edits():
+        for pid, record in records.items():
+            _keep("players", pid, record, path)
+        return path
+    data = _load_json(path)
+    if not isinstance(data, dict):
+        raise SaveError(f"{os.path.basename(path)} is a list, not a player map")
+    data.update(records)
+    _write_json(path, data)
+    for pid in records:
+        _pack_written("players", pid)
     return path
 
 
@@ -598,16 +688,25 @@ def soft_delete_file(path: str) -> str:
 
 
 def delete_player(path: str, pid: str) -> str:
+    if saves_to_user_edits():
+        return _keep("players", pid, None, path)
     data = _load_json(path)
     if isinstance(data, list):
         raise SaveError(f"{os.path.basename(path)} is a list, not a player map")
     if str(pid) in data:
         del data[str(pid)]
         _write_json(path, data)
+    _pack_written("players", pid)
     return path
 
 
 def add_player(path: str, pid: str, record: dict) -> str:
+    if saves_to_user_edits():
+        env = _edits.get("players", pid)
+        if (env and env["mine"] is not None) or (not env and _edits.pack.record(
+                _edits.pack.relpath(path), pid) is not None):
+            raise SaveError(f"player {pid} already exists")
+        return _keep("players", pid, record, path)
     data = _load_json(path)
     if isinstance(data, list):
         raise SaveError(f"{os.path.basename(path)} is a list, not a player map")
@@ -615,6 +714,7 @@ def add_player(path: str, pid: str, record: dict) -> str:
         raise SaveError(f"player {pid} already exists in {os.path.basename(path)}")
     data[str(pid)] = record
     _write_json(path, data)
+    _pack_written("players", pid)
     return path
 
 
@@ -623,6 +723,12 @@ def save_team(path: str, team_id: str, seasons: dict) -> str:
     team, but it is written whole so any sibling key survives."""
     if not path:
         raise SaveError("no source file recorded for this team")
+    if saves_to_user_edits():
+        env = _edits.get("teams", team_id)
+        current = env["mine"] if env else _edits.pack.record(_edits.pack.relpath(path), team_id)
+        kept = {s: info for s, info in (current or {}).items()
+                if s not in seasons and isinstance(info, dict) and info.get("enabled") is False}
+        return _keep("teams", team_id, {**seasons, **kept}, path)
     data = _load_json(path)
     # Disabled seasons ("enabled": false) are never loaded, so the caller's
     # copy lacks them: carry them over from the file instead of dropping them.
@@ -630,4 +736,26 @@ def save_team(path: str, team_id: str, seasons: dict) -> str:
             if s not in seasons and isinstance(info, dict) and info.get("enabled") is False}
     data[str(team_id)] = {**seasons, **kept}
     _write_json(path, data)
+    _pack_written("teams", team_id)
     return path
+
+
+def create_team_file(path: str, team_id: str, seasons: dict) -> str:
+    """The json of a new team (its folder already made)."""
+    if saves_to_user_edits():
+        return _keep("teams", team_id, seasons, path)
+    create_json_file(path, {str(team_id): seasons})
+    _pack_written("teams", team_id)
+    return path
+
+
+def delete_team(path: str, team_id: str) -> str:
+    """Stop loading a team. A user edit: the deletion is kept with the
+    user's edits (undone from My edits). In the pack: the file is renamed
+    (soft_delete_file). Returns what to tell the user."""
+    if saves_to_user_edits():
+        _keep("teams", team_id, None, path)
+        return "the team is deleted in your edits (restore it from Tools › My edits)"
+    renamed = soft_delete_file(path)
+    _pack_written("teams", team_id)
+    return f"file renamed to {os.path.basename(renamed)}"

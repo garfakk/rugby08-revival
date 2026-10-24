@@ -29,8 +29,8 @@ STAT_ROWS = [
     ("PENALTIES", lambda s, st: s.get("penalties", 0)),
     ("DROP GOALS", lambda s, st: s.get("drop_goals", 0)),
     ("TACKLES", lambda s, st: s.get("tackles", 0)),
-    ("SCRUMS WON", lambda s, st: st.get("scrums_won_own", 0)),
-    ("LINEOUTS WON", lambda s, st: st.get("lineouts_won_own", 0)),
+    ("SCRUMS WON", lambda s, st: st.get("scrums_won", 0)),
+    ("LINEOUTS WON", lambda s, st: st.get("lineouts_won", 0)),
     ("YELLOW CARDS", lambda s, st: s.get("yellow_cards", 0)),
     ("RED CARDS", lambda s, st: s.get("red_cards", 0)),
 ]

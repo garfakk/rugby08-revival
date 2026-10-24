@@ -1,0 +1,308 @@
+{
+ "1010": {
+  "2008": {
+   "name": "New Zealand",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2008/home_front.png",
+     "backKitFile": "kits_2008/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2008/away_front.png",
+     "backKitFile": "kits_2008/away_back/away_back_%.png",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "143122",
+    "viceCaptain": "142779",
+    "longGK": "143425",
+    "shortGK": "143425",
+    "longPunt": "143425",
+    "shortPunt": "143425",
+    "kickoff": "143425"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss",
+    "left": "miss_pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143296",
+    "147899",
+    "143529",
+    "147898",
+    "142614",
+    "142779",
+    "143122",
+    "143349",
+    "119718",
+    "143425",
+    "103753",
+    "125043",
+    "143135",
+    "142717",
+    "147894",
+    "142665",
+    "143309",
+    "143182",
+    "143461",
+    "143200",
+    "144034",
+    "142622",
+    "142852",
+    "147897",
+    "142821",
+    "147896",
+    "142800",
+    "143215",
+    "147901",
+    "142547"
+   ]
+  },
+  "2024": {
+   "name": "New Zealand",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": "",
+     "variants": {
+      "rwc_2023": {
+       "label": "RWC 2023",
+       "frontKitFile": "kits_2024/home_wc_front.png",
+       "backKitFile": "kits_2024/home_wc_back/home_wc_back_%.png"
+      }
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": "",
+     "variants": {
+      "rwc_2023": {
+       "label": "RWC 2023",
+       "frontKitFile": "kits_2024/away_wc_front.png",
+       "backKitFile": "kits_2024/away_wc_back/away_wc_back_%.png"
+      }
+     }
+    }
+   },
+   "roles": {
+    "captain": "145366",
+    "viceCaptain": "144741",
+    "longGK": "145312",
+    "shortGK": "144367",
+    "longPunt": "145312",
+    "shortPunt": "144367",
+    "kickoff": "144367"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "classic",
+    "left": "cross_kick",
+    "right": "pocket"
+   },
+   "players": [
+    "146095",
+    "144406",
+    "145557",
+    "144302",
+    "145362",
+    "146573",
+    "145366",
+    "144741",
+    "143263",
+    "144367",
+    "145130",
+    "145312",
+    "145299",
+    "145692",
+    "145054",
+    "145470",
+    "145222",
+    "142845",
+    "144468",
+    "144530",
+    "144463",
+    "144191",
+    "146129",
+    "145600",
+    "144971",
+    "146091",
+    "146030",
+    "144446",
+    "144421",
+    "144959"
+   ],
+   "variant": {
+    "world_cup": {
+     "label": "Rugby World Cup 2023",
+     "players": [
+      "146703",
+      "145470",
+      "145557",
+      "144302",
+      "145362",
+      "145366",
+      "144468",
+      "144741",
+      "143263",
+      "145054",
+      "145130",
+      "145312",
+      "144446",
+      "144421",
+      "145692",
+      "145222",
+      "144406",
+      "142845",
+      "146573",
+      "144530",
+      "145299",
+      "144191",
+      "142708",
+      "146095",
+      "142363",
+      "146129",
+      "145600",
+      "144971",
+      "146030",
+      "144463",
+      "144367",
+      "144959",
+      "146040"
+     ],
+     "roles": {
+      "captain": "145366",
+      "viceCaptain": "145054",
+      "longGK": "145312",
+      "shortGK": "145312",
+      "longPunt": "145312",
+      "shortPunt": "145054",
+      "kickoff": "145312"
+     }
+    }
+   }
+  },
+  "2007": {
+   "enabled": false,
+   "name": "New Zealand",
+   "type": "international",
+   "category": "",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "143122",
+    "viceCaptain": "143296",
+    "longGK": "143425",
+    "shortGK": "143425",
+    "longPunt": "143425",
+    "shortPunt": "143425",
+    "kickoff": "143425"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss",
+    "left": "miss_pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143296",
+    "147899",
+    "143529",
+    "143182",
+    "142614",
+    "142779",
+    "143122",
+    "143349",
+    "119718",
+    "143425",
+    "142717",
+    "147896",
+    "143135",
+    "147895",
+    "147894",
+    "142665",
+    "143309",
+    "143514",
+    "142800",
+    "143146",
+    "125043",
+    "142622",
+    "142821",
+    "103753",
+    "147897",
+    "143138",
+    "142852",
+    "143370",
+    "147898",
+    "147900",
+    "143721",
+    "147903",
+    "147904",
+    "143772",
+    "144041",
+    "147901",
+    "142484",
+    "147902",
+    "142547",
+    "143215",
+    "10820",
+    "144034"
+   ]
+  }
+ }
+}

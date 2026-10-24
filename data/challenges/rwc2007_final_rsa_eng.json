@@ -75,10 +75,10 @@
         "128476",
         "146842",
         "119169",
-        "146826",
+        "113330",
         "146840",
         "143168",
-        "146845",
+        "117922",
         "146846",
         "107085",
         "146835",
@@ -127,8 +127,23 @@
   "mission_mode_name": "PEN K",
   "mission_mode_time": 780,
   "mission_mode_period": 0,
-  "mission_nis": [{"script_name" : "penalty_general_TeamA", "controller": 0, "team": "home", "player": 10, "angle": null, "x": -29, "y": null, "z": 15}],
-  "restart_spot": {"metres_out": 50, "across": 20, "offender": 0},  
+  "mission_nis": [
+    {
+      "script_name": "penalty_general_TeamA",
+      "controller": 0,
+      "team": "home",
+      "player": 10,
+      "angle": null,
+      "x": -29,
+      "y": null,
+      "z": 15
+    }
+  ],
+  "restart_spot": {
+    "metres_out": 50,
+    "across": 20,
+    "offender": 0
+  },
   "score_events": [
     {
       "type": "SS_PENALTY",
@@ -137,8 +152,7 @@
       "time": 420
     }
   ],
-  "objectives": [
-  ],
+  "objectives": [],
   "match_objectives": [
     {
       "type": "score",

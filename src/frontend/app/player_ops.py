@@ -8,6 +8,7 @@ import os
 
 from app.game_data import (
     ATTRIBUTES, new_player_season, add_player, delete_player, save_team, _load_json,
+    user_record_id,
     SaveError,
 )
 from app import team_ops
@@ -33,6 +34,9 @@ def allocate_player_id(players_files, loaded_ids):
                 v = str(rec.get("id") or rec.get("player_id") or "")
                 if v.isdigit():
                     ids.add(int(v))
+    own = user_record_id(ids)       # a player the user creates: their own id block
+    if own:
+        return own
     return str(max(ids) + 1 if ids else 10001)
 
 

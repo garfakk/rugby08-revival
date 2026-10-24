@@ -7,6 +7,8 @@ DataStore loads teams/players/stadiums/tournaments once, at startup.
 import os
 import sys
 import argparse
+import threading
+import time
 from pathlib import Path
 
 # The project root, so `shared` imports below work however this is launched.
@@ -70,7 +72,7 @@ setup_logging()
 log = get_logger(__name__)
 
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QHBoxLayout, QSizePolicy
-from PyQt5.QtCore import Qt, QEvent, QTimer
+from PyQt5.QtCore import Qt, QEvent, QTimer, pyqtSignal
 from PyQt5.QtGui import QIcon, QSurfaceFormat
 
 # Scale the WHOLE UI with the display, not just the text. Every size in this UI
@@ -167,12 +169,14 @@ from screens.match_presentation import MatchPresentationScreen, Presentation, Si
 from screens.ingame import GameWidget
 from screens.post_match import PostMatchScreen
 from screens.tools import ToolsScreen
+from screens.user_edits import UserEditsScreen
+from screens.updates import UpdatesScreen
 from screens.challenge_editor import ChallengeEditorScreen
 from screens.squad_editor import SquadEditorScreen
 from screens.challenge_mode import ChallengeModeScreen
 from screens.challenge_result import ChallengeResultScreen
 from screens.tournament import (TournamentDashboardScreen, TournamentHubScreen,
-                                TournamentSquadScreen, TournamentWizardScreen)
+                                TournamentIntroScreen, TournamentWizardScreen)
 from screens.team_editor import TeamEditorScreen
 from screens.player_editor import PlayerEditorScreen
 from screens.roster_import import RosterImportScreen
@@ -207,14 +211,15 @@ class MainWindow(QMainWindow):
 
     fullscreen: bool = False
 
+    #: The screens are all built and the data loaded (see _boot_steps).
+    booted = pyqtSignal()
+
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Rugby 08 Revival")
         from shared.app_paths import assets_directory
         self.setWindowIcon(QIcon(os.path.join(assets_directory(), "app_icon.png")))
         self.setMinimumSize(1000, 640)
-
-        self.data = DataStore()
 
         self.screens = ScreenManager()
         self.screens.setMaximumWidth(MAX_CONTENT_WIDTH)
@@ -236,11 +241,83 @@ class MainWindow(QMainWindow):
         lb.addStretch(1)
         self.setCentralWidget(letterbox)
         self._intro = None
-        self._build_music()
-        self._build_screens()
-        self.show_main()
+        self.track_medal = None
+        self.music = None
+        self._menus_ready = False
+        self._intro_done = False
+        self._boot_done = False
+        self.tournament = None
+        self._tournament_fixture = None
+        # The window and the intro splash come up at once; the data and the
+        # screens are built behind it, one step per event-loop turn so the
+        # splash keeps animating (see _boot_steps).
         self.apply_windowed_mode(user_prefs.game_windowed)
         self._show_intro()
+        # The data files are parsed on a worker thread from the very start;
+        # the GUI steps below pick the result up (see _boot_steps).
+        self._raw_data = None
+        self._data_thread = threading.Thread(target=self._read_data, name="data-load", daemon=True)
+        self._data_thread.start()
+        self._step_ms = 150      # how long a step is expected to block (grows with the slowest seen)
+        self._boot = self._boot_steps()
+        QTimer.singleShot(30, self._boot_next)
+
+    # ── start-up: build everything behind the splash ───────────────────────
+    def _read_data(self):
+        try:
+            self._raw_data = DataStore.read_files()
+        except BaseException as e:      # re-raised on the GUI thread
+            self._raw_data = e
+
+    def _boot_steps(self):
+        """Generator: each `yield` hands control back to the event loop; a
+        `yield <ms>` also waits that long first."""
+        # First GL context + shader compile now, while only the splash is up,
+        # rather than when the match-setup 3D previews first appear.
+        self._warm_up_gl()
+        yield
+        while self._data_thread.is_alive():
+            yield 15
+        if isinstance(self._raw_data, BaseException):
+            raise self._raw_data
+        self.data = DataStore(self._raw_data)
+        self._raw_data = None
+        yield
+        self._build_music()
+        yield
+        yield from self._build_screens()
+        self.show_main()
+        # Park the menu tiles before the splash lifts, so the reveal never
+        # flashes a fully-drawn menu for a frame first.
+        for tile in self.screen_main._tiles:
+            tile.set_entrance(0.0)
+        self._connect_navigation()
+
+    def _boot_next(self):
+        # Steps freeze the GUI thread for as long as they run: hold them back
+        # while the splash is moving, and let them go in its still moments.
+        if self._intro is not None and not self._intro.quiet_for(self._step_ms):
+            QTimer.singleShot(20, self._boot_next)
+            return
+        started = time.perf_counter()
+        try:
+            delay = next(self._boot)
+        except StopIteration:
+            self._boot_done = True
+            self.booted.emit()
+            self._open_when_ready()
+            return
+        # What the slowest step so far needed, with some margin.
+        self._step_ms = min(300, max(self._step_ms, 1.2 * 1000 * (time.perf_counter() - started)))
+        QTimer.singleShot(delay or 0, self._boot_next)
+
+    def _open_when_ready(self):
+        """The menus open once the splash has lifted AND the build is over."""
+        if not (self._intro_done and self._boot_done) or self._menus_ready:
+            return
+        if not game_profile.has_resolution():
+            self._pick_resolution()
+        self._open_menus()
 
     # ── menu music ─────────────────────────────────────────────────────────
     def _build_music(self):
@@ -254,8 +331,10 @@ class MainWindow(QMainWindow):
         # Nothing plays until the intro splash lifts — the intro is its own
         # quiet piece, and the first track landing with the menu is the
         # point at which the medal is actually visible.
-        self._menus_ready = False
         self._alt_held = False   # see eventFilter: Alt-alone vs Alt+key
+
+    def _connect_navigation(self):
+        """Once every screen exists (these handlers look at screen_ingame)."""
         # Screen changes drive the music rather than each navigation method
         # doing it by hand: every route into and out of the match screen —
         # kick off, back, rematch, post-match — then behaves the same.
@@ -308,15 +387,10 @@ class MainWindow(QMainWindow):
         self._intro = IntroSplash(host)
         self._intro.setGeometry(host.rect())
         self._intro.finished.connect(self._on_intro_finished)
+        # Never lift the splash on a half-built app (it can end early: ESC).
+        self._intro.ready = lambda: self._boot_done
         self._intro.show()
         self._intro.raise_()
-        # First GL context + shader compile now, while only the splash is up,
-        # rather than when the match-setup 3D previews first appear.
-        QTimer.singleShot(0, self._warm_up_gl)
-        # Park the menu tiles before the splash covers them, so the reveal
-        # never flashes a fully-drawn menu for a frame first.
-        for tile in self.screen_main._tiles:
-            tile.set_entrance(0.0)
 
     @staticmethod
     def _warm_up_gl():
@@ -338,9 +412,8 @@ class MainWindow(QMainWindow):
 
     def _on_intro_finished(self):
         self._intro = None
-        if not game_profile.has_resolution():
-            self._pick_resolution()
-        self._open_menus()
+        self._intro_done = True
+        self._open_when_ready()
 
     def _pick_resolution(self):
         """First launch only: silently choose this screen's resolution (or the
@@ -364,6 +437,19 @@ class MainWindow(QMainWindow):
         self.screen_main.play_entrance()
         self.music.start()
         QTimer.singleShot(900, self._offer_music_download)
+        QTimer.singleShot(700, self._report_edits_after_update)
+
+    # ── the user's edits after a data update (app/user_edits.py) ──────────
+    def _report_edits_after_update(self):
+        """A new data release changed records the user had edited: written to the log only (no popup at
+        start); conflicts stay listed in Tools › My edits, and the user's version is used until settled."""
+        edits = self.data.edits
+        merged = sum(1 for n in edits.notes if n[0] == "merged")
+        integrated = sum(1 for n in edits.notes if n[0] == "integrated")
+        conflicts = len(edits.conflicts)
+        if merged or integrated or conflicts:
+            log.info(f"user edits after data update: {integrated} now part of the data pack, {merged} merged "
+                     f"with the release's changes, {conflicts} conflict(s) to settle in Tools > My edits")
 
     # ── missing menu music (dev runs only) ─────────────────────────────────
     def _offer_music_download(self):
@@ -429,7 +515,8 @@ class MainWindow(QMainWindow):
         super().resizeEvent(event)
         if self._intro is not None:
             self._intro.setGeometry(self.centralWidget().rect())
-        self.track_medal.reposition()
+        if self.track_medal is not None:
+            self.track_medal.reposition()
 
     def closeEvent(self, event):
         # screen_ingame.closeEvent never fires on its own here: it's a
@@ -440,7 +527,8 @@ class MainWindow(QMainWindow):
         # the same cleanup on_hide() gives every other way to navigate away
         # from that screen, just reached from window-close instead of
         # screen navigation.
-        self.screen_ingame.on_hide()
+        if hasattr(self, "screen_ingame"):
+            self.screen_ingame.on_hide()
         super().closeEvent(event)
 
     def apply_windowed_mode(self, windowed: bool):
@@ -520,15 +608,19 @@ class MainWindow(QMainWindow):
 
     # ── Screen construction ────────────────────────────────────────────────
     def _build_screens(self):
+        """Generator, like _boot_steps: yields between the heavier screens."""
         self.screen_main = MainMenuScreen(self)
         self.screen_match_setup = MatchSetupContainer(
             self.data, self.show_main, self.begin_match_launch, self.reveal_match)
+        yield
         self.screen_settings = SettingsScreen(self.show_main, on_windowed_mode_changed=self.apply_windowed_mode,
                                               music=self.music)
+        yield
         self.screen_about = AboutScreen(self.show_main)
         self.screen_game_modes = GameModesScreen(self.show_main, self.show_challenge_mode,
                                                  self.show_tournament_hub)
         self.screen_presentation = MatchPresentationScreen(self.data, self.begin_match_launch, self.reveal_match)
+        yield
         self.screen_ingame = GameWidget(self.show_main, self.show_match_setup,
                                          result_callback=self.show_post_match,
                                          on_loading_end=self.music.stop_loading)
@@ -542,18 +634,26 @@ class MainWindow(QMainWindow):
             on_challenges=self.show_challenge_mode_from_result,
             on_main_menu=self.show_main,
         )
+        yield
         self.screen_tools = ToolsScreen(
             self.data, self.show_main, self.show_team_editor, self.show_player_editor,
-            on_import=self.show_roster_import, on_challenge_editor=self.show_challenge_editor)
+            on_import=self.show_roster_import, on_challenge_editor=self.show_challenge_editor,
+            on_edits=self.show_user_edits, on_updates=self.show_updates)
         editor_back = lambda: self.screens.go_back(default=self.screen_tools)
+        self.screen_user_edits = UserEditsScreen(self.data, editor_back,
+                                                 open_team=self.open_team,
+                                                 open_player=self.open_player)
+        self.screen_updates = UpdatesScreen(editor_back)
         self.screen_team_editor = TeamEditorScreen(self.data, editor_back,
                                                    open_player=self.open_player)
         self.screen_player_editor = PlayerEditorScreen(self.data, editor_back,
                                                        open_team=self.open_team)
         self.screen_team_editor.on_import = self.show_roster_import
         self.screen_player_editor.on_import = self.show_roster_import
+        yield
         self.screen_challenge_editor = ChallengeEditorScreen(
             self.data, editor_back, on_edit_squad=self.edit_challenge_squad)
+        yield
         self.screen_challenge_mode = ChallengeModeScreen(
             self.data, lambda: self.screens.go_back(default=self.screen_game_modes),
             on_play=self.start_challenge, on_present=self.show_challenge_presentation)
@@ -562,20 +662,17 @@ class MainWindow(QMainWindow):
             on_open_player=self.show_player_editor)
         # Tournament mode. The session being played is self.tournament (None
         # outside the mode); self._tournament_fixture is set only while one of
-        # its matches is running in the game.
-        self.tournament = None
-        self._tournament_fixture = None
+        # its matches is running in the game (both start as None, in __init__).
+        yield
         self.screen_tournament_hub = TournamentHubScreen(
             self.data, self.show_main_game_modes, on_new=self.show_tournament_wizard,
             on_open=self.open_tournament)
         self.screen_tournament_wizard = TournamentWizardScreen(
             self.data, lambda: self.screens.go_back(default=self.screen_tournament_hub),
-            on_created=self.open_tournament)
+            on_created=self.begin_tournament)
+        self.screen_tournament_intro = TournamentIntroScreen(self.data, self._open_intro_session)
         self.screen_tournament = TournamentDashboardScreen(
-            self.data, self.show_tournament_hub, on_play=self.play_tournament_match,
-            on_squad=self.show_tournament_squad)
-        self.screen_tournament_squad = TournamentSquadScreen(
-            lambda: self.screens.go_back(default=self.screen_tournament))
+            self.data, self.leave_tournament, on_play=self.play_tournament_match)
 
         for screen in (
             self.screen_main,
@@ -588,6 +685,8 @@ class MainWindow(QMainWindow):
             self.screen_post_match,
             self.screen_challenge_result,
             self.screen_tools,
+            self.screen_user_edits,
+            self.screen_updates,
             self.screen_team_editor,
             self.screen_player_editor,
             self.screen_roster_import,
@@ -596,9 +695,10 @@ class MainWindow(QMainWindow):
             self.screen_tournament_hub,
             self.screen_tournament_wizard,
             self.screen_tournament,
-            self.screen_tournament_squad,
+            self.screen_tournament_intro,
         ):
             self.screens.addWidget(screen)
+            yield
 
     # ── Navigation ─────────────────────────────────────────────────────────
     def show_main(self):
@@ -631,6 +731,12 @@ class MainWindow(QMainWindow):
 
     def show_team_editor(self):
         self.screens.show_screen(self.screen_team_editor)
+
+    def show_user_edits(self):
+        self.screens.show_screen(self.screen_user_edits)
+
+    def show_updates(self):
+        self.screens.show_screen(self.screen_updates)
 
     def show_player_editor(self):
         self.screens.show_screen(self.screen_player_editor)
@@ -687,23 +793,32 @@ class MainWindow(QMainWindow):
         self.screens.show_screen(self.screen_tournament, push_history=False)
         self.screens.reset_history()
 
+    def begin_tournament(self, session):
+        """Wizard -> a short intro on the competition -> the dashboard."""
+        self._intro_session = session
+        self.screen_tournament_intro.set_session(session)
+        self.screens.show_screen(self.screen_tournament_intro, push_history=False)
+        self.screens.reset_history()
+
+    def _open_intro_session(self):
+        self.open_tournament(self._intro_session)
+
+    def leave_tournament(self):
+        """Dashboard -> main menu (the tournament is saved at every step)."""
+        self.tournament = None
+        self.show_main()
+
     def show_tournament(self, message=None):
         if message is not None:
             self.screen_tournament.set_message(message)
         self.screens.show_screen(self.screen_tournament, push_history=False)
         self.screens.reset_history()
 
-    def show_tournament_squad(self, session, team_id):
-        if not team_id:
-            return
-        self.screen_tournament_squad.set_team(session, team_id)
-        self.screens.show_screen(self.screen_tournament_squad)
-
     def play_tournament_match(self, session, fixture):
         """Dashboard PLAY -> the pre-match presentation (kits) -> kick off.
         BACK from the presentation drops the pre-match snapshot again."""
         from app.match_data_builder import build_match_data
-        from app.tournament import report
+        from app.tournament import calendar, report, weather
         cfg, repairs = session.begin_game(fixture)
         if repairs:
             log.info("Tournament: selection repaired before kick-off: %s", repairs)
@@ -743,6 +858,31 @@ class MainWindow(QMainWindow):
             session.abandon_game()
             self.show_tournament()
 
+        def edit_squad(name):
+            """EDIT SQUAD: the quick match squad editor on the tournament's
+            squad; confirm saves the selection and updates this match."""
+            from app.tournament import bridge
+            slot = cfg.home if name == "home" else cfg.away
+            tid = slot.team_id
+            players, lineup, to_pid = bridge.editable_squad(session.t, fixture, tid)
+
+            def close():
+                self.screens.go_back(default=self.screen_presentation)
+                QTimer.singleShot(0, lambda: (self.screens.removeWidget(widget), widget.deleteLater()))
+
+            def confirm(result):
+                pids = [to_pid[int(src)] for src in result.get("players_id", []) if int(src) in to_pid]
+                roles = {k: to_pid[int(v)] for k, v in (result.get("roles") or {}).items()
+                         if v is not None and int(v) in to_pid}
+                session.set_selection(tid, pids, roles=roles)
+                session.t.teams[tid].selection["set_plays"] = dict(result.get("set_plays") or {})
+                session.save()
+                slot.lineup, slot.players = bridge.side_lineup(session.t, fixture, tid)
+                close()
+            widget = SquadEditorScreen(name, session.t.team_name(tid), players, lineup,
+                                       on_confirm=confirm, on_discard=close)
+            self.screens.show_screen(widget)
+
         t = session.t
         venue = report.venue_name(self.data, fixture) or (cfg.stadium or {}).get("data", {}).get("name", "")
         stage = " · ".join(x for x in (fixture.label or fixture.round_name, fixture.group) if x)
@@ -750,13 +890,16 @@ class MainWindow(QMainWindow):
             title=t.name, breadcrumb="tournament · match",
             eyebrow=stage or t.template.get("name", "tournament"),
             heading=report.fixture_caption(t, fixture),
-            details=[f"Stadium: {venue}" if venue else "",
+            details=[f"Date: {calendar.short_date(calendar.fixture_date(t, fixture))}",
+                     f"Stadium: {venue}" if venue else "",
+                     f"Weather: {weather.forecast(t, fixture, self.data)['summary']}",
                      f"Difficulty: {cfg.difficulty}",
                      f"Half length: {cfg.halftime_length}",
                      _wind_detail(cfg)],
             home=side(cfg.home), away=side(cfg.away),
             on_kit=set_kit, on_kickoff=kickoff, on_back=back,
-            controlled=lambda: {c.get("zone") for c in cfg.controllers.values()}))
+            controlled=lambda: {c.get("zone") for c in cfg.controllers.values()},
+            on_edit_squad=edit_squad))
         self.screens.show_screen(self.screen_presentation)
 
     def _record_tournament_result(self, result):
@@ -885,10 +1028,13 @@ def main():
     window = MainWindow()  # __init__ already applies the current windowed-mode setting
 
     if args.selftest:
-        from PyQt5.QtCore import QTimer
-        QTimer.singleShot(3000, app.quit)
+        # The screens are built behind the splash: wait for that, then a
+        # moment more for the first paint of the finished UI.
+        window.booted.connect(lambda: QTimer.singleShot(1500, app.quit))
+        QTimer.singleShot(80000, lambda: (print("SELFTEST FAILED: UI not built"), app.exit(1)))
         code = app.exec_()
-        print("SELFTEST OK")
+        if code == 0:
+            print("SELFTEST OK")
         sys.exit(code)
 
     sys.exit(app.exec_())

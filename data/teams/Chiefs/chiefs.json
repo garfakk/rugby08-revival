@@ -1,0 +1,959 @@
+{
+ "10114": {
+  "2009": {
+   "name": "Chiefs",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "143917",
+    "shortGK": "143917",
+    "longPunt": "143917",
+    "shortPunt": "143917",
+    "kickoff": "143917"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "156124",
+    "129337",
+    "155596",
+    "156125",
+    "142738",
+    "142956",
+    "142760",
+    "143461",
+    "143200",
+    "143917",
+    "155610",
+    "155566",
+    "142856",
+    "143265",
+    "143135",
+    "153319",
+    "156153",
+    "156126",
+    "156127",
+    "156189",
+    "156129",
+    "153996",
+    "156051",
+    "156147",
+    "103753",
+    "155562",
+    "156128",
+    "156186",
+    "156161",
+    "156138"
+   ],
+   "enabled": false
+  },
+  "2010": {
+   "name": "Chiefs",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "143917",
+    "viceCaptain": "143917",
+    "longGK": "143917",
+    "shortGK": "143917",
+    "longPunt": "143917",
+    "shortPunt": "143917",
+    "kickoff": "143917"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "156124",
+    "153319",
+    "155495",
+    "156125",
+    "155496",
+    "142956",
+    "142760",
+    "156128",
+    "143200",
+    "143917",
+    "103753",
+    "155566",
+    "142856",
+    "155610",
+    "143135",
+    "129337",
+    "155506",
+    "155477",
+    "142738",
+    "143461",
+    "148057",
+    "153996",
+    "152892",
+    "155497",
+    "156147",
+    "155507",
+    "143265",
+    "155499",
+    "152746",
+    "155505",
+    "155523",
+    "155522",
+    "155525",
+    "156126",
+    "155009",
+    "156186"
+   ],
+   "enabled": true
+  },
+  "2022": {
+   "name": "Chiefs",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "155674",
+    "shortGK": "155674",
+    "longPunt": "146040",
+    "shortPunt": "142340",
+    "kickoff": "146040"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155666",
+    "145470",
+    "153317",
+    "153962",
+    "145600",
+    "144971",
+    "145366",
+    "142328",
+    "142340",
+    "155674",
+    "155767",
+    "153318",
+    "155675",
+    "146040",
+    "155653",
+    "155738",
+    "153957",
+    "155885",
+    "144302",
+    "155816",
+    "155765",
+    "153958",
+    "155812",
+    "155803",
+    "155802",
+    "155748",
+    "155684",
+    "155810",
+    "155886",
+    "155753",
+    "155637",
+    "155673",
+    "155623",
+    "155887",
+    "153308",
+    "155728",
+    "155647",
+    "155729",
+    "155734",
+    "155948",
+    "155956"
+   ],
+   "enabled": false
+  },
+  "2023": {
+   "name": "Chiefs",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2023/home_front.png",
+     "backKitFile": "kits_2023/home_back/home_back_%.png",
+     "previewFile": "kits_2023/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2023/away_front.png",
+     "backKitFile": "kits_2023/away_back/away_back_%.png",
+     "previewFile": "kits_2023/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144463",
+    "viceCaptain": "144463",
+    "longGK": "144463",
+    "shortGK": "144463",
+    "longPunt": "144463",
+    "shortPunt": "142340",
+    "kickoff": "144463"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155666",
+    "145470",
+    "155885",
+    "144302",
+    "145600",
+    "142328",
+    "145366",
+    "144971",
+    "142340",
+    "144463",
+    "155767",
+    "155748",
+    "155675",
+    "146040",
+    "155673",
+    "155887",
+    "153349",
+    "153957",
+    "153962",
+    "155816",
+    "153950",
+    "153958",
+    "155886",
+    "155803",
+    "155812",
+    "155738",
+    "155891",
+    "153308",
+    "155674",
+    "155718",
+    "155805",
+    "155884",
+    "155728",
+    "155679",
+    "155810",
+    "155911",
+    "155774",
+    "155752",
+    "155802",
+    "155878",
+    "155948"
+   ],
+   "enabled": true
+  },
+  "2024": {
+   "name": "Chiefs",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144463",
+    "viceCaptain": "144463",
+    "longGK": "144463",
+    "shortGK": "144463",
+    "longPunt": "144463",
+    "shortPunt": "144463",
+    "kickoff": "144463"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155666",
+    "145470",
+    "155885",
+    "155615",
+    "145600",
+    "155816",
+    "155810",
+    "144971",
+    "155886",
+    "144463",
+    "155767",
+    "155748",
+    "153308",
+    "146040",
+    "155673",
+    "155738",
+    "155679",
+    "155676",
+    "153962",
+    "155972",
+    "153950",
+    "153958",
+    "155765",
+    "155805",
+    "153318",
+    "155812",
+    "155891",
+    "155718",
+    "155803",
+    "155887",
+    "155884",
+    "155923",
+    "155905",
+    "155911",
+    "155729",
+    "155734",
+    "155878"
+   ],
+   "enabled": true
+  },
+  "2008": {
+   "name": "Chiefs",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "143917",
+    "shortGK": "143917",
+    "longPunt": "143917",
+    "shortPunt": "143917",
+    "kickoff": "143917"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "156124",
+    "129337",
+    "155596",
+    "156125",
+    "142738",
+    "142956",
+    "142760",
+    "143461",
+    "143200",
+    "143917",
+    "155610",
+    "155566",
+    "142856",
+    "143265",
+    "143135",
+    "153319",
+    "156153",
+    "156126",
+    "156127",
+    "156189",
+    "156129",
+    "153996",
+    "156051",
+    "156147",
+    "103753",
+    "155562",
+    "156128",
+    "156186",
+    "156161",
+    "156138"
+   ],
+   "enabled": false
+  },
+  "2018": {
+   "name": "Chiefs",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "144463",
+    "viceCaptain": "144463",
+    "longGK": "144463",
+    "shortGK": "144463",
+    "longPunt": "144463",
+    "shortPunt": "142340",
+    "kickoff": "144463"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155666",
+    "153657",
+    "153317",
+    "144302",
+    "153652",
+    "158605",
+    "145366",
+    "142956",
+    "142340",
+    "144463",
+    "158643",
+    "158621",
+    "153308",
+    "158609",
+    "155673",
+    "158624",
+    "158630",
+    "155701",
+    "158610",
+    "144971",
+    "153950",
+    "156812",
+    "158557",
+    "153660",
+    "158598",
+    "155632",
+    "142328",
+    "153818",
+    "146687",
+    "145470",
+    "158625",
+    "155675",
+    "155637",
+    "142363",
+    "158644",
+    "158569",
+    "144836",
+    "158631",
+    "155721",
+    "145498",
+    "153957",
+    "155660"
+   ],
+   "enabled": true
+  },
+  "2019": {
+   "name": "Chiefs",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2019/home_front.png",
+     "backKitFile": "kits_2019/home_back/home_back_%.png",
+     "previewFile": "kits_2019/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2019/away_front.png",
+     "backKitFile": "kits_2019/away_back/away_back_%.png",
+     "previewFile": "kits_2019/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "156812",
+    "viceCaptain": "156812",
+    "longGK": "156812",
+    "shortGK": "156812",
+    "longPunt": "145558",
+    "shortPunt": "142340",
+    "kickoff": "145558"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153957",
+    "153657",
+    "153317",
+    "144302",
+    "158610",
+    "144971",
+    "158605",
+    "142328",
+    "142340",
+    "156812",
+    "155767",
+    "153308",
+    "145558",
+    "158609",
+    "155673",
+    "145470",
+    "155783",
+    "155701",
+    "158598",
+    "153950",
+    "143917",
+    "145498",
+    "155675",
+    "146687",
+    "142363",
+    "158643",
+    "155637",
+    "155666",
+    "144463",
+    "158625",
+    "154587",
+    "145366",
+    "155639",
+    "158624",
+    "155721",
+    "158670",
+    "155730",
+    "158623",
+    "158557",
+    "144836",
+    "158630",
+    "158621",
+    "155738",
+    "158691",
+    "158644"
+   ],
+   "enabled": true
+  },
+  "2020": {
+   "name": "Chiefs",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "144463",
+    "shortGK": "144463",
+    "longPunt": "144463",
+    "shortPunt": "142340",
+    "kickoff": "144463"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155666",
+    "145470",
+    "153957",
+    "145498",
+    "155637",
+    "158605",
+    "145366",
+    "142328",
+    "142340",
+    "153672",
+    "158643",
+    "153308",
+    "153318",
+    "158609",
+    "144463",
+    "155738",
+    "142363",
+    "155676",
+    "155812",
+    "144971",
+    "155725",
+    "155753",
+    "155675",
+    "155492",
+    "158625",
+    "158598",
+    "155673",
+    "153950",
+    "145558",
+    "142376",
+    "153317",
+    "158623",
+    "158644",
+    "155730",
+    "155803"
+   ],
+   "enabled": false
+  },
+  "2021": {
+   "name": "Chiefs",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "144463",
+    "shortGK": "144463",
+    "longPunt": "144463",
+    "shortPunt": "142340",
+    "kickoff": "144463"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155666",
+    "145470",
+    "153957",
+    "145498",
+    "155637",
+    "158605",
+    "145366",
+    "142328",
+    "142340",
+    "153672",
+    "158643",
+    "153308",
+    "153318",
+    "158609",
+    "144463",
+    "155738",
+    "142363",
+    "155676",
+    "155812",
+    "144971",
+    "155725",
+    "155753",
+    "155675",
+    "155492",
+    "158625",
+    "158598",
+    "155673",
+    "153950",
+    "145558",
+    "142376",
+    "153317",
+    "158623",
+    "158644",
+    "155730",
+    "155803"
+   ],
+   "enabled": false
+  },
+  "2016": {
+   "name": "Chiefs",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "144463",
+    "shortGK": "144463",
+    "longPunt": "144463",
+    "shortPunt": "142340",
+    "kickoff": "144463"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155666",
+    "153657",
+    "153317",
+    "144302",
+    "145498",
+    "158605",
+    "145366",
+    "142956",
+    "142340",
+    "144463",
+    "158643",
+    "158621",
+    "153308",
+    "158609",
+    "153818",
+    "158630",
+    "156812",
+    "153950",
+    "158624",
+    "158557",
+    "153660",
+    "158610",
+    "144971",
+    "158598",
+    "155632",
+    "142328",
+    "155673",
+    "146687",
+    "145470",
+    "158625",
+    "155675",
+    "155637",
+    "142363",
+    "158644",
+    "158569",
+    "144836",
+    "158631",
+    "155721",
+    "153652",
+    "153957",
+    "155660",
+    "155701"
+   ],
+   "enabled": false
+  }
+ }
+}

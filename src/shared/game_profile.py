@@ -10,6 +10,11 @@ The user's choices live in game_profile.ini (next to user_prefs.ini). Only the
 values the user actually changed are stored: everything else keeps the
 setting's own `default` when it has one, else what the template holds.
 
+The game never writes user_profile.pro back (the patches DLL only loads it), so
+options changed in-game (pause menu: camera, audio, HUD...) live only in its
+memory. R08_handler reads the in-memory profile while the game runs and
+import_ingame() turns what differs from the deployed file into user settings.
+
 Format and field map: reR08 docs/findings/2026-09-25-profile-pro-settings-spec.md
 (offsets below are payload offsets; the file adds a 0x1C-byte header).
 """
@@ -33,6 +38,12 @@ _SECTION = "profile"
 _MAGIC = 0x4D433032
 _HEADER = 0x1C
 _PAYLOAD = 0x2D8
+
+# The live profile in the game's memory (CProfile, 0x2D8 bytes = the payload)
+# and its name field, set from the loaded file's name (reR08 patches_dll/profile.cpp)
+PROFILE_ADDRESS = 0x00A33320
+PROFILE_SIZE = _PAYLOAD
+_OFF_NAME, _NAME_LEN = 0x2B4, 0x20
 
 
 # ── file format (header + CRC) ───────────────────────────────────────────────
@@ -257,6 +268,8 @@ class GameProfile:
     def __init__(self):
         self._overrides = {}
         self._template = None       # payload of the template, read on demand
+        self._deployed = None       # payload written by the last deploy()
+        self.revision = 0           # bumped when import_ingame() changes settings
         self._load()
 
     # ── persistence ──
@@ -380,9 +393,43 @@ class GameProfile:
         except OSError as e:
             log.error(f"cannot write game profile {destination}: {e}")
             return False
+        self._deployed = bytes(payload)
         w, h = struct.unpack_from("<HH", payload, _OFF_RES_W)
         log.info(f"Game profile written to {destination}: {w}x{h}, {len(self._overrides)} user settings, difficulty {difficulty}")
         return True
+
+    # ── in-game changes ──
+    def import_ingame(self, payload: bytes) -> list:
+        """Keep the options the user changed in-game. `payload` = the game's
+        in-memory profile (PROFILE_ADDRESS, PROFILE_SIZE bytes); each setting
+        that differs from what deploy() wrote becomes a user setting. The
+        resolution and the difficulty are left alone: the mod manages them.
+        Returns the keys changed (saved to game_profile.ini when any)."""
+        if self._deployed is None or payload is None or len(payload) != PROFILE_SIZE:
+            return []
+        name = bytes(payload[_OFF_NAME:_OFF_NAME + _NAME_LEN]).split(b"\0", 1)[0]
+        expected = os.path.splitext(GAME_FILE_NAME)[0].encode()
+        if name != expected:
+            # Not the profile the mod deployed (the DLL rejected it, or the
+            # memory is not a profile yet): nothing to compare against.
+            log.warning(f"in-game profile is {name!r}, not {expected!r}: settings not imported")
+            return []
+        changed = []
+        for s in SETTINGS.values():
+            value = _clamp(s, _read(payload, s))
+            if value != _clamp(s, _read(self._deployed, s)):
+                self._overrides[s.key] = value
+                changed.append(s.key)
+        if not payload[_OFF_CAMERA_SYSTEM] & 1:
+            # Custom camera window (free zoom/height): the game itself drops it
+            # at every load (Settings::Apply re-applies the preset selection).
+            log.info("in-game custom camera not kept: only the camera presets persist")
+        if changed:
+            self._deployed = bytes(payload)
+            self.revision += 1
+            self.save()
+            log.info("In-game settings kept: " + ", ".join(f"{k}={self._overrides[k]}" for k in changed))
+        return changed
 
 
 game_profile = GameProfile()

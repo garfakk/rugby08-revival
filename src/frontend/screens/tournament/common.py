@@ -146,14 +146,18 @@ def clear_crest_cache():
 
 
 def competition_emblem(ds, template, size=72) -> QPixmap:
-    """The competition's branding logo when its data folder has one,
-    otherwise a painted roundel with its initials."""
+    """The competition's menu logo ("logo_frontend", else the in-game
+    "logo") when its data folder has one (an edition's own: a World Cup 2015
+    never shows the 2023 logo), otherwise a painted roundel with its
+    initials and year."""
     branding = template.get("branding")
     folder = ds.tournaments_folder_path.get(branding, "") if ds is not None and branding else ""
     seasons = ds.tournaments.get(branding, {}) if folder else {}
-    logo = next((s["logo"] for _, s in sorted(seasons.items(), reverse=True) if s.get("logo")), "")
-    path = os.path.join(folder, logo) if logo else ""
-    if path and os.path.exists(path):
+    edition = str(template.get("branding_season") or "")
+    entries = [seasons.get(edition) or {}] if edition else [s for _, s in sorted(seasons.items(), reverse=True)]
+    candidates = [os.path.join(folder, e[k]) for e in entries for k in ("logo_frontend", "logo") if e.get(k)]
+    path = next((c for c in candidates if os.path.isfile(c)), "")
+    if path:
         pix = QPixmap(path)
         if not pix.isNull():
             return pix.scaled(size, size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
@@ -181,9 +185,14 @@ def competition_emblem(ds, template, size=72) -> QPixmap:
     p.setPen(QColor("#f3e2b3"))
     p.setFont(tracked_font(FONT_DISPLAY, max(7, int(size * 0.24)), QFont.Bold, 1.0))
     name = template.get("name", "")
-    text = "".join(c for c in name if c.isdigit()) + _initials(name) if any(c.isdigit() for c in name) \
-        else _initials(name)
-    p.drawText(r, Qt.AlignCenter, text[:3])
+    year = next((w for w in name.split() if w.isdigit() and len(w) == 4), "")
+    words = " ".join(w for w in name.split() if w != year)
+    if year:
+        p.drawText(r.adjusted(0, 0, 0, -size * 0.16), Qt.AlignCenter, _initials(words)[:3])
+        p.setFont(tracked_font(FONT_DISPLAY, max(6, int(size * 0.13)), QFont.Bold, 1.0))
+        p.drawText(r.adjusted(0, size * 0.42, 0, 0), Qt.AlignCenter, year)
+    else:
+        p.drawText(r, Qt.AlignCenter, _initials(name)[:3])
     p.end()
     return pix
 
@@ -255,46 +264,6 @@ class FormStrip(QWidget):
                        | Qt.AlignVCenter, "NO FORM YET")
             return
         paint_form(p, QRectF(self.rect()), self._form, self._cell, align_right=self._right)
-
-
-class RatingCompare(QWidget):
-    """Two team ratings as a centred tug-of-war bar, values at both ends."""
-
-    def __init__(self, label="team rating", parent=None):
-        super().__init__(parent)
-        self.setFixedHeight(34)
-        self._label = label.upper()
-        self._a = self._b = 0.0
-
-    def set_values(self, a, b):
-        self._a, self._b = float(a or 0), float(b or 0)
-        self.update()
-
-    def paintEvent(self, event):
-        p = QPainter(self)
-        p.setRenderHint(QPainter.Antialiasing)
-        w = self.width()
-        p.setFont(tracked_font(FONT_DISPLAY, 9, QFont.DemiBold, 1.4))
-        p.setPen(QColor(FG_TERTIARY))
-        p.drawText(QRectF(0, 0, w, 14), Qt.AlignCenter, self._label)
-        p.setFont(tracked_font(FONT_DISPLAY, 13, QFont.Bold, 0.5))
-        p.setPen(QColor(HOME_TINT))
-        p.drawText(QRectF(0, 14, 48, 20), Qt.AlignLeft | Qt.AlignVCenter, f"{self._a:.1f}")
-        p.setPen(QColor(AWAY_TINT))
-        p.drawText(QRectF(w - 48, 14, 48, 20), Qt.AlignRight | Qt.AlignVCenter, f"{self._b:.1f}")
-        bar = QRectF(54, 21, w - 108, 6)
-        p.setPen(Qt.NoPen)
-        p.setBrush(QColor(BG_RAISED))
-        p.drawRoundedRect(bar, 3, 3)
-        total = self._a + self._b
-        share = 0.5 if total <= 0 else self._a / total
-        # Ratings sit close together: stretch the difference so it reads.
-        share = max(0.05, min(0.95, 0.5 + (share - 0.5) * 4))
-        split = bar.x() + bar.width() * share
-        p.setBrush(QColor(HOME_TINT))
-        p.drawRoundedRect(QRectF(bar.x(), bar.y(), split - bar.x() - 1, bar.height()), 3, 3)
-        p.setBrush(QColor(AWAY_TINT))
-        p.drawRoundedRect(QRectF(split + 1, bar.y(), bar.right() - split - 1, bar.height()), 3, 3)
 
 
 class ProgressStrip(QWidget):
@@ -595,17 +564,22 @@ class Section:
     """A header row inside a DataTable (e.g. MATCHDAY 3), spans all columns
     and can't be selected."""
 
-    def __init__(self, text, right=""):
+    def __init__(self, text, right="", gap=False):
         self.text, self.right = text, right
+        self.gap = gap          # room above the band: it starts a new block
 
 
 class _TableDelegate(QStyledItemDelegate):
+    SECTION_GAP = 18
+
     def paint(self, p, option, index):
         table = self.parent()
         r = QRectF(option.rect)
         if index.data(_SECTION_ROLE):
             if index.column() == 0:
                 full = QRectF(r.x(), r.y(), table.viewport().width(), r.height())
+                if index.data(Qt.UserRole + 6):
+                    full.setTop(full.top() + self.SECTION_GAP)
                 p.fillRect(full, QColor(BG_RAISED))
                 p.fillRect(QRectF(full.x(), full.y(), 3, full.height()), QColor(ACCENT))
                 p.setFont(tracked_font(FONT_DISPLAY, 10, QFont.Bold, 1.6))
@@ -672,10 +646,14 @@ class DataTable(QTableWidget):
 
     ROW_H = 34
 
-    def __init__(self, columns, stretch_col=1, parent=None, widths=None):
+    def __init__(self, columns, stretch_col=1, parent=None, widths=None, header_align=None):
         super().__init__(0, len(columns), parent)
         self.keys = []
         self.setHorizontalHeaderLabels([c.upper() for c in columns])
+        # {col: Qt.AlignHCenter / Qt.AlignRight}: line a header up with
+        # its column's cells (the default is left)
+        for c, align in (header_align or {}).items():
+            self.horizontalHeaderItem(c).setTextAlignment(align | Qt.AlignVCenter)
         self.verticalHeader().hide()
         self.verticalHeader().setDefaultSectionSize(self.ROW_H)
         self.setSelectionBehavior(QAbstractItemView.SelectRows)
@@ -727,6 +705,7 @@ class DataTable(QTableWidget):
                 item = QTableWidgetItem(row.text)
                 item.setData(_SECTION_ROLE, True)
                 item.setData(Qt.UserRole + 5, row.right)
+                item.setData(Qt.UserRole + 6, row.gap)
                 item.setFlags(Qt.ItemIsEnabled)
                 self.setItem(r, 0, item)
                 for c in range(1, self.columnCount()):
@@ -735,7 +714,7 @@ class DataTable(QTableWidget):
                     blank.setData(_SECTION_ROLE, True)
                     self.setItem(r, c, blank)
                 self.setSpan(r, 0, 1, self.columnCount())
-                self.setRowHeight(r, 30)
+                self.setRowHeight(r, 30 + (_TableDelegate.SECTION_GAP if row.gap else 0))
                 continue
             self.setRowHeight(r, self.ROW_H)
             for c, cell in enumerate(row):

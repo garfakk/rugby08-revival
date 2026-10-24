@@ -39,7 +39,9 @@ def _stock_image(entry):
 
 
 def _key(resolved):
-    parts = [resolved["tone"], str(resolved["gloved"]), resolved["custom_skin"] or ""]
+    # "doubled": stock tones now come from the 512x256 skins template, so
+    # composites cached from the stock 256x256 skin.fsh must not be reused
+    parts = ["doubled", resolved["tone"], str(resolved["gloved"]), resolved["custom_skin"] or ""]
     parts += resolved["layers"]
     for p in [resolved["custom_skin"]] + resolved["layers"]:
         if p:

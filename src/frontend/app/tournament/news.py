@@ -6,23 +6,21 @@ Injury, ban and return headlines are written by their own modules.
 from . import standings
 from .events import on
 
-UPSET_GAP = 5.0       # rating points between the sides
+UPSET_CHANCE = 0.30   # a win the winner had less than this chance of
 THRASHING = 40
 
 
 @on("pre_match", priority=90)
-def _ratings(t, fixture):
-    """Remember the sides' pre-match ratings for upset detection."""
-    from .strength import team_rating
-    t.components.setdefault("pre_ratings", {})[fixture.id] = {
-        fixture.home: round(team_rating(t, fixture.home), 1),
-        fixture.away: round(team_rating(t, fixture.away), 1),
-    }
+def _odds(t, fixture):
+    """Remember the home side's pre-match win chance for upset detection."""
+    from .simulator import win_probability
+    t.components.setdefault("pre_odds", {})[fixture.id] = round(win_probability(t, fixture), 3)
 
 
 @on("match_completed", priority=90)
 def _result(t, fixture, result, rng):
-    ratings = t.components.get("pre_ratings", {}).pop(fixture.id, None)
+    t.components.get("pre_ratings", {}).pop(fixture.id, None)     # older saves
+    home_chance = t.components.get("pre_odds", {}).pop(fixture.id, None)
     winner, loser = result.winner_id(), result.loser_id()
     home, away = t.team_name(fixture.home), t.team_name(fixture.away)
     score = result.score_text()
@@ -30,7 +28,8 @@ def _result(t, fixture, result, rng):
         t.add_news("champion", f"{t.team_name(winner)} win the {t.name}! Final: {home} {score} {away}",
                    [winner])
         return
-    if winner and ratings and ratings.get(loser, 0) - ratings.get(winner, 0) >= UPSET_GAP:
+    chance = None if home_chance is None else (home_chance if winner == fixture.home else 1 - home_chance)
+    if winner and chance is not None and chance < UPSET_CHANCE:
         t.add_news("upset", f"Upset! {t.team_name(winner)} beat {t.team_name(loser)} ({home} {score} {away})",
                    [winner, loser])
     elif abs(result.home.points - result.away.points) >= THRASHING:

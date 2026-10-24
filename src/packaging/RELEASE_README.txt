@@ -11,6 +11,11 @@ Where things live (everything is inside the one install folder; nothing in AppDa
                                R08Revival.log (attach it to bug reports). For more detail set
                                log_level = DEBUG in the [Options] section of config.ini
                                (levels: DEBUG, INFO (default), WARNING, ERROR).
+                               edits\ holds your changes made in the team and player editors:
+                               they are used instead of mod_data\ and a new data pack never
+                               overwrites them (Tools > My edits: turn them off/on, settle
+                               what a new data pack changed too, drop an edit, export your
+                               edits to send them to the mod's maintainers).
   game_files\                  the copy of Rugby 08 the mod works on (your original is untouched)
 
 The install folder must be writable: do not install under Program Files (setup refuses it).

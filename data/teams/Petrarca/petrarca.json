@@ -1,0 +1,144 @@
+{
+ "10163": {
+  "2009": {
+   "name": "Petrarca",
+   "type": "club",
+   "category": "Italy",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2009/home_front.png",
+     "backKitFile": "kits_2009/home_back/home_back_%.png",
+     "previewFile": "kits_2009/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2009/away_front.png",
+     "backKitFile": "kits_2009/away_back/away_back_%.png",
+     "previewFile": "kits_2009/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "158784",
+    "viceCaptain": "158784",
+    "longGK": "158784",
+    "shortGK": "158784",
+    "longPunt": "143362",
+    "shortPunt": "158784",
+    "kickoff": "143362"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "158766",
+    "158772",
+    "158292",
+    "158774",
+    "156060",
+    "158777",
+    "143362",
+    "158778",
+    "158782",
+    "158784",
+    "155110",
+    "158785",
+    "158786",
+    "158791",
+    "158795",
+    "158773",
+    "158767",
+    "158768",
+    "158775",
+    "158780",
+    "158783",
+    "147448",
+    "158769",
+    "158770",
+    "156839",
+    "158771",
+    "158776",
+    "147465",
+    "158779",
+    "158781",
+    "153272",
+    "155549",
+    "158787",
+    "158788",
+    "158789",
+    "156404",
+    "158790",
+    "158792",
+    "158793",
+    "158794",
+    "158796"
+   ],
+   "enabled": true
+  },
+  "2010": {
+   "name": "Petrarca",
+   "type": "club",
+   "category": "Italy",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "",
+    "shortGK": "",
+    "longPunt": "",
+    "shortPunt": "",
+    "kickoff": ""
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [],
+   "enabled": false
+  }
+ }
+}

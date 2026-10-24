@@ -1,0 +1,935 @@
+{
+ "10116": {
+  "2009": {
+   "name": "Highlanders",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "156107",
+    "shortGK": "156107",
+    "longPunt": "143138",
+    "shortPunt": "143138",
+    "kickoff": "143138"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153584",
+    "143312",
+    "155597",
+    "156108",
+    "156109",
+    "142376",
+    "156110",
+    "156114",
+    "143138",
+    "156107",
+    "156106",
+    "156105",
+    "156104",
+    "153669",
+    "153670",
+    "156112",
+    "154268",
+    "156113",
+    "153992",
+    "156111",
+    "156116",
+    "155565",
+    "156117",
+    "156115",
+    "152833",
+    "155481",
+    "156139"
+   ],
+   "enabled": false
+  },
+  "2010": {
+   "name": "Highlanders",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "155565",
+    "viceCaptain": "155565",
+    "longGK": "155565",
+    "shortGK": "155565",
+    "longPunt": "143138",
+    "shortPunt": "143138",
+    "kickoff": "143138"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153584",
+    "156112",
+    "155597",
+    "156108",
+    "156109",
+    "142376",
+    "156110",
+    "156111",
+    "143138",
+    "155565",
+    "156106",
+    "156104",
+    "156142",
+    "153669",
+    "153670",
+    "156131",
+    "156113",
+    "155609",
+    "153992",
+    "156139",
+    "156116",
+    "155479",
+    "155014",
+    "155485",
+    "153293",
+    "156115",
+    "156117",
+    "152833",
+    "155519",
+    "155016",
+    "156105"
+   ],
+   "enabled": true
+  },
+  "2022": {
+   "name": "Highlanders",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "155663",
+    "viceCaptain": "155663",
+    "longGK": "155663",
+    "shortGK": "155663",
+    "longPunt": "155663",
+    "shortPunt": "143263",
+    "kickoff": "155663"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "146095",
+    "144950",
+    "153102",
+    "143206",
+    "155642",
+    "146573",
+    "155651",
+    "155698",
+    "143263",
+    "155663",
+    "155763",
+    "153961",
+    "155027",
+    "152493",
+    "155723",
+    "155614",
+    "155630",
+    "155819",
+    "155912",
+    "155693",
+    "155759",
+    "155634",
+    "155532",
+    "155750",
+    "155703",
+    "153954",
+    "155705",
+    "155718",
+    "155731",
+    "155884",
+    "155799",
+    "155732",
+    "155772",
+    "155761",
+    "155752",
+    "155877",
+    "155883",
+    "155528",
+    "155711",
+    "155921",
+    "155920"
+   ],
+   "enabled": true
+  },
+  "2023": {
+   "name": "Highlanders",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2023/home_front.png",
+     "backKitFile": "kits_2023/home_back/home_back_%.png",
+     "previewFile": "kits_2023/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2023/away_front.png",
+     "backKitFile": "kits_2023/away_back/away_back_%.png",
+     "previewFile": "kits_2023/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "155663",
+    "viceCaptain": "155663",
+    "longGK": "155663",
+    "shortGK": "155663",
+    "longPunt": "155663",
+    "shortPunt": "143263",
+    "kickoff": "155663"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "146095",
+    "155703",
+    "153102",
+    "155694",
+    "155642",
+    "146573",
+    "155705",
+    "155693",
+    "143263",
+    "155663",
+    "155724",
+    "153961",
+    "155027",
+    "155684",
+    "146354",
+    "155614",
+    "155630",
+    "155819",
+    "155912",
+    "155698",
+    "155759",
+    "156190",
+    "155920",
+    "155772",
+    "155771",
+    "155731",
+    "155750",
+    "155649",
+    "155651",
+    "155921",
+    "155763",
+    "155799",
+    "155711",
+    "155918",
+    "155717",
+    "155817",
+    "155755",
+    "155901",
+    "155965",
+    "156108",
+    "155888",
+    "155922",
+    "155958",
+    "156003",
+    "156004"
+   ],
+   "enabled": true
+  },
+  "2024": {
+   "name": "Highlanders",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "152917",
+    "viceCaptain": "152917",
+    "longGK": "152917",
+    "shortGK": "152917",
+    "longPunt": "152917",
+    "shortPunt": "152917",
+    "kickoff": "152917"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "146095",
+    "155882",
+    "155819",
+    "155668",
+    "155921",
+    "155958",
+    "155705",
+    "155901",
+    "155759",
+    "152917",
+    "155724",
+    "155799",
+    "155756",
+    "155900",
+    "155848",
+    "156004",
+    "153102",
+    "155630",
+    "155771",
+    "155693",
+    "155817",
+    "156021",
+    "155711",
+    "155772",
+    "155920",
+    "155918",
+    "155965",
+    "155912",
+    "155694",
+    "155646",
+    "155684",
+    "155737",
+    "155755",
+    "156003",
+    "156036",
+    "156031",
+    "155973",
+    "155922",
+    "155731",
+    "155948"
+   ],
+   "enabled": true
+  },
+  "2008": {
+   "name": "Highlanders",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "156107",
+    "shortGK": "156107",
+    "longPunt": "143138",
+    "shortPunt": "143138",
+    "kickoff": "143138"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153584",
+    "143312",
+    "155597",
+    "156108",
+    "156109",
+    "142376",
+    "156110",
+    "156114",
+    "143138",
+    "156107",
+    "156106",
+    "156105",
+    "156104",
+    "153669",
+    "153670",
+    "156112",
+    "154268",
+    "156113",
+    "153992",
+    "156111",
+    "156116",
+    "155565",
+    "156117",
+    "156115",
+    "152833",
+    "155481",
+    "156139"
+   ],
+   "enabled": false
+  },
+  "2018": {
+   "name": "Highlanders",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "145006",
+    "viceCaptain": "145006",
+    "longGK": "145006",
+    "shortGK": "145006",
+    "longPunt": "145006",
+    "shortPunt": "145006",
+    "kickoff": "145006"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155630",
+    "144950",
+    "145473",
+    "153951",
+    "155527",
+    "155430",
+    "153953",
+    "145017",
+    "143263",
+    "145006",
+    "158589",
+    "155625",
+    "158591",
+    "153668",
+    "157744",
+    "158563",
+    "154682",
+    "145557",
+    "155642",
+    "155698",
+    "155528",
+    "153958",
+    "146573",
+    "156813",
+    "154683",
+    "146633",
+    "158592",
+    "153662",
+    "157393",
+    "157075",
+    "158652",
+    "155651",
+    "158561",
+    "158568",
+    "153669"
+   ],
+   "enabled": true
+  },
+  "2019": {
+   "name": "Highlanders",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "153958",
+    "shortGK": "153958",
+    "longPunt": "153958",
+    "shortPunt": "143263",
+    "kickoff": "153958"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155711",
+    "144950",
+    "145557",
+    "153951",
+    "155527",
+    "146573",
+    "155651",
+    "145017",
+    "143263",
+    "153958",
+    "158589",
+    "155625",
+    "158591",
+    "153668",
+    "153669",
+    "158563",
+    "145473",
+    "155528",
+    "155630",
+    "155642",
+    "155430",
+    "155634",
+    "153953",
+    "157393",
+    "156813",
+    "153961",
+    "155694",
+    "153662",
+    "158561",
+    "157744",
+    "155674",
+    "155759",
+    "158629",
+    "158667",
+    "145006",
+    "154682",
+    "154692",
+    "158672",
+    "155698",
+    "155400",
+    "154683",
+    "157666",
+    "158592",
+    "158568",
+    "157075",
+    "154668",
+    "155737"
+   ],
+   "enabled": false
+  },
+  "2020": {
+   "name": "Highlanders",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "153958",
+    "shortGK": "153958",
+    "longPunt": "153958",
+    "shortPunt": "143263",
+    "kickoff": "153958"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155711",
+    "144950",
+    "145473",
+    "158610",
+    "155642",
+    "146573",
+    "155651",
+    "155698",
+    "143263",
+    "155663",
+    "155724",
+    "153958",
+    "158591",
+    "157393",
+    "157049",
+    "158563",
+    "155630",
+    "157666",
+    "158667",
+    "156287",
+    "155528",
+    "157744",
+    "155625",
+    "153953",
+    "157238",
+    "155702",
+    "155718",
+    "158630",
+    "155694",
+    "155752",
+    "155750"
+   ],
+   "enabled": false
+  },
+  "2021": {
+   "name": "Highlanders",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "153958",
+    "shortGK": "153958",
+    "longPunt": "153958",
+    "shortPunt": "143263",
+    "kickoff": "153958"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155711",
+    "144950",
+    "145473",
+    "158610",
+    "155642",
+    "146573",
+    "155651",
+    "155698",
+    "143263",
+    "155663",
+    "155724",
+    "153958",
+    "158591",
+    "157393",
+    "157049",
+    "158563",
+    "155630",
+    "157666",
+    "158667",
+    "156287",
+    "155528",
+    "157744",
+    "155625",
+    "153953",
+    "157238",
+    "155702",
+    "155718",
+    "158630",
+    "155694",
+    "155752",
+    "155750"
+   ],
+   "enabled": false
+  },
+  "2016": {
+   "name": "Highlanders",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "145006",
+    "shortGK": "145006",
+    "longPunt": "145006",
+    "shortPunt": "145006",
+    "kickoff": "145006"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155630",
+    "144950",
+    "145473",
+    "153951",
+    "155527",
+    "155430",
+    "153953",
+    "145017",
+    "143263",
+    "145006",
+    "158589",
+    "155625",
+    "158591",
+    "153668",
+    "153669",
+    "154682",
+    "155528",
+    "146573",
+    "156813",
+    "154683",
+    "153958",
+    "158563",
+    "145557",
+    "146633",
+    "158592",
+    "153662",
+    "157393",
+    "155698",
+    "157075",
+    "158652",
+    "155651",
+    "155642",
+    "158561",
+    "158568",
+    "157744"
+   ],
+   "enabled": false
+  }
+ }
+}

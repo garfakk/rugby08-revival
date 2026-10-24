@@ -1,0 +1,272 @@
+{
+ "10147": {
+  "2018": {
+   "name": "Southern Kings",
+   "type": "club",
+   "category": "Pro14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "157764",
+    "shortGK": "157764",
+    "longPunt": "157764",
+    "shortPunt": "157764",
+    "kickoff": "157764"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "156154",
+    "157057",
+    "146480",
+    "156955",
+    "157524",
+    "157635",
+    "157180",
+    "157183",
+    "157192",
+    "157764",
+    "156963",
+    "156144",
+    "156802",
+    "154084",
+    "157705",
+    "157746",
+    "157147",
+    "157396",
+    "157188",
+    "157701",
+    "157771",
+    "157065",
+    "157798",
+    "157624",
+    "156577",
+    "158331",
+    "157700",
+    "157151",
+    "156972",
+    "157745",
+    "157787",
+    "156749",
+    "156973",
+    "157703",
+    "157397",
+    "157064",
+    "156605",
+    "155382",
+    "157168",
+    "157702",
+    "157163",
+    "157707",
+    "157706",
+    "157741"
+   ],
+   "enabled": false
+  },
+  "2019": {
+   "name": "Southern Kings",
+   "type": "club",
+   "category": "Pro14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2019/home_front.png",
+     "backKitFile": "kits_2019/home_back/home_back_%.png",
+     "previewFile": "kits_2019/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2019/away_front.png",
+     "backKitFile": "kits_2019/away_back/away_back_%.png",
+     "previewFile": "kits_2019/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "157183",
+    "viceCaptain": "157180",
+    "longGK": "157764",
+    "shortGK": "157764",
+    "longPunt": "157764",
+    "shortPunt": "157764",
+    "kickoff": "157764"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "156154",
+    "157057",
+    "156611",
+    "158331",
+    "157177",
+    "157598",
+    "157180",
+    "157183",
+    "157053",
+    "157764",
+    "153343",
+    "156802",
+    "157787",
+    "154084",
+    "157705",
+    "157741",
+    "157852",
+    "156955",
+    "157192",
+    "157906",
+    "156973",
+    "157635",
+    "157188",
+    "157275",
+    "157746",
+    "157847",
+    "157150",
+    "157924",
+    "156979",
+    "157851",
+    "157597",
+    "157706",
+    "155605",
+    "157624",
+    "157524",
+    "146480",
+    "157893",
+    "157850",
+    "157701",
+    "156577",
+    "156605",
+    "157151",
+    "157065",
+    "157855",
+    "157794",
+    "157064"
+   ],
+   "enabled": true
+  },
+  "2020": {
+   "name": "Southern Kings",
+   "type": "club",
+   "category": "Pro14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "157259",
+    "shortGK": "157259",
+    "longPunt": "157259",
+    "shortPunt": "157259",
+    "kickoff": "157259"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "156154",
+    "157054",
+    "156577",
+    "157035",
+    "157177",
+    "157180",
+    "157171",
+    "157183",
+    "157053",
+    "157259",
+    "157936",
+    "157069",
+    "156605",
+    "157935",
+    "157705",
+    "157855",
+    "157741",
+    "157524",
+    "157921",
+    "157961",
+    "157801",
+    "157938",
+    "157932",
+    "154089",
+    "146480",
+    "157702",
+    "156799",
+    "154084",
+    "156797",
+    "157794",
+    "157955",
+    "157924",
+    "157275",
+    "156611",
+    "155605",
+    "157621",
+    "157852"
+   ],
+   "enabled": false
+  }
+ }
+}

@@ -5,8 +5,10 @@ Points come from the template's "points" block:
   {"win": 4, "draw": 2, "loss": 0,
    "try_bonus": {"tries": 4}            # 4+ tries scored
              or {"margin": 3},          # 3+ tries more than the opponent
-   "losing_bonus": {"margin": 7}}       # lose by 7 or less
-A missing bonus block means no such bonus.
+   "losing_bonus": {"margin": 7},       # lose by 7 or less
+   "grand_slam": 3}                     # won every match of the group
+A missing bonus block means no such bonus. The Grand Slam bonus counts once
+every one of the team's matches in the group is played and won.
 
 Ties on points are broken by the template's "tiebreakers" chain, applied
 cluster by cluster (head-to-head is computed among the tied teams only):
@@ -35,6 +37,7 @@ class Row:
     tries_against: int = 0
     try_bonus: int = 0
     losing_bonus: int = 0
+    slam_bonus: int = 0
     points: int = 0
     yellow: int = 0
     red: int = 0
@@ -50,7 +53,7 @@ class Row:
 
     @property
     def bonus(self):
-        return self.try_bonus + self.losing_bonus
+        return self.try_bonus + self.losing_bonus + self.slam_bonus
 
 
 def match_points(rules, own, opp) -> tuple:
@@ -114,6 +117,25 @@ def _rows(fixtures, team_ids, rules) -> dict:
     return rows
 
 
+def has_bonus(rules) -> bool:
+    """Whether a "points" block gives any bonus point."""
+    rules = rules or DEFAULT_POINTS
+    return any(rules.get(k) for k in ("try_bonus", "losing_bonus", "grand_slam"))
+
+
+def _grand_slams(rows, fixtures, rules) -> None:
+    """The "grand_slam" bonus for each team that played and won all its
+    matches in these fixtures."""
+    bonus = int(rules.get("grand_slam") or 0)
+    if not bonus:
+        return
+    for row in rows.values():
+        own = [f for f in fixtures if f.involves(row.team_id) and f.home in rows and f.away in rows]
+        if own and all(f.result for f in own) and row.won == len(own):
+            row.slam_bonus = bonus
+            row.points += bonus
+
+
 def _key(criterion, row, h2h):
     if criterion == "head_to_head":
         sub = h2h.get(row.team_id)
@@ -165,6 +187,9 @@ def table(fixtures, team_ids, rules=None, tiebreakers=None, seed="") -> list:
     rules = rules or DEFAULT_POINTS
     chain = list(tiebreakers or DEFAULT_TIEBREAKERS)
     rows = _rows(fixtures, team_ids, rules)
+    _grand_slams(rows, fixtures, rules)
+    if not any(r.played for r in rows.values()):
+        return list(rows.values())          # nothing played: the draw's order
     rng = random.Random(f"lots:{seed}")
     by_points = sorted(rows.values(), key=lambda r: r.points, reverse=True)
     out, i = [], 0
