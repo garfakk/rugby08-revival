@@ -2,13 +2,11 @@
 ui/coin_toss.py — Coin toss overlay shown between KICK OFF and the match
 ============================================================================
 A compact modal panel over the calling screen that runs
-app/coin_toss.CoinToss step by step: the visiting captain's call is made
-and the coin spins on its own, then the result is told from the player's
-side (YOU WON THE TOSS / YOU LOST THE TOSS). The winner elects to kick off
-or to choose an end, then the end is picked. The player only gets the
-choice that is theirs (a button); a CPU captain's decision plays out after
-a short beat and is announced ("SAMOA CHOSE TO KICK OFF") with what it
-leaves the player.
+app/coin_toss.CoinToss step by step, with as little text as possible: the
+coin spins on its own (the call is made for the caller), the result reads
+YOU WON THE TOSS / YOU LOST THE TOSS, and after a short beat the other
+team's choice is announced ("SAMOA CHOSE TO KICK OFF"). The player only
+gets the choice that is theirs (a button).
 
 The coin is rugby-faced: heads carries the goalposts (the "H"), tails a
 ball. Under it, a small pitch shows both ends and the match wind — what the
@@ -26,17 +24,17 @@ from dataclasses import replace
 
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QApplication, QAbstractButton
 from PyQt5.QtGui import (
-    QPainter, QColor, QFont, QPen, QRadialGradient, QBrush, QPixmap, QIcon, QPolygonF,
+    QPainter, QColor, QFont, QPen, QRadialGradient, QBrush, QPolygonF,
     QPainterPath, QTransform, QLinearGradient, QFontMetrics,
 )
 from PyQt5.QtCore import Qt, QTimer, QVariantAnimation, QEasingCurve, QRectF, QPointF, QEvent, QSize
 
 from app.coin_toss import (
-    CoinToss, HEADS, TAILS, KICK_OFF, CHOOSE_END, LEFT, RIGHT, TOSSER, CALLER, other,
+    CoinToss, HEADS, TAILS, KICK_OFF, CHOOSE_END, LEFT, RIGHT,
 )
 from app.input import Action, KEYMAP
 from ui import StyledButton
-from ui.broadcast import Card, eyebrow_label, display_label, label_css
+from ui.broadcast import Card, eyebrow_label, label_css
 from ui.theme import (
     ACCENT, HOME_TINT, AWAY_TINT, FG_PRIMARY, FG_TERTIARY, GREEN, DANGER_LITE,
     FONT_DISPLAY, FONT_BODY, BTN_HEIGHT,
@@ -45,7 +43,7 @@ from ui.theme import (
 # How long a CPU captain "thinks" before each of its decisions, and how long
 # the coin spins.
 CPU_BEAT_MS = 1100
-CALL_BEAT_MS = 700      # the call on screen before the coin goes up
+CALL_BEAT_MS = 400      # the panel on screen before the coin goes up
 FLIP_MS = 2000
 FLIP_TURNS = 6          # full turns before it settles on its face
 
@@ -54,9 +52,7 @@ _TINT = {"home": HOME_TINT, "away": AWAY_TINT}
 _INK          = QColor("#4d3506")   # engraved line work
 _INK_SOFT     = QColor(94, 63, 8)    # relief drop shadow
 _LIGHT_KICK   = QColor(255, 243, 196)  # relief highlight
-_LEGEND_DARK  = QColor(74, 49, 7)
-_LEGEND_LIGHT = QColor(255, 240, 192)
-_GOLD_INK     = QColor("#5e440c")     # flat-glyph ink (kept for face_icon default)
+_GOLD_INK     = QColor("#5e440c")     # flat-glyph ink (paint_face default)
 
 # Pitch palette.
 _GRASS_A, _GRASS_B = (18, 116, 43), (21, 100, 37)   # mow stripes
@@ -207,17 +203,6 @@ def paint_face(p, face, r, ink=_GOLD_INK, relief=None):
           lens_fill=QColor("#a67c26"), cap_fill=QColor("#8a631c"))          # the mark
 
 
-def face_icon(face, size=26, color=FG_PRIMARY):
-    pix = QPixmap(size, size)
-    pix.fill(Qt.transparent)
-    p = QPainter(pix)
-    p.setRenderHint(QPainter.Antialiasing)
-    p.translate(size / 2, size / 2 + size * 0.04)
-    paint_face(p, face, size / 2, QColor(color))
-    p.end()
-    return QIcon(pix)
-
-
 class CoinWidget(QWidget):
     """A struck gold coin spinning about its vertical axis: `angle` 0 shows
     heads, 180 tails; `lift` (0..1) raises it above its shadow. The coin is
@@ -329,18 +314,11 @@ class CoinWidget(QWidget):
         p.setPen(QPen(QColor(255, 238, 175, 40), 1))
         p.drawEllipse(QRectF(-r * 0.72, -r * 0.72, r * 1.44, r * 1.44))
 
-        # The mark, embossed; legend engraved (light under-stroke, dark on top).
+        # The mark, embossed. No legend: the faces speak for themselves.
         p.save()
         p.translate(0, -1.0)
         paint_face(p, HEADS if cos >= 0 else TAILS, r * 0.6, relief="#d9a93a")
         p.restore()
-        legend = (HEADS if cos >= 0 else TAILS)
-        lr = r * 0.78
-        p.save()
-        p.setOpacity(0.55)
-        self._curved_text(p, legend, lr, _LEGEND_LIGHT)
-        p.restore()
-        self._curved_text(p, legend, lr, _LEGEND_DARK)
 
         # Specular crescent, top-left, where the light source sits.
         p.setPen(QPen(QColor(255, 255, 244, 128), 3, Qt.SolidLine, Qt.RoundCap))
@@ -356,25 +334,6 @@ class CoinWidget(QWidget):
         p.setBrush(QBrush(vign))
         p.drawEllipse(QRectF(-r + 2, -r + 2, 2 * r - 4, 2 * r - 4))
         p.restore()
-
-    @staticmethod
-    def _curved_text(p, text, radius, color):
-        font = QFont(FONT_DISPLAY, 7, QFont.Bold)
-        font.setLetterSpacing(QFont.AbsoluteSpacing, 1.9)
-        p.setFont(font)
-        fm = p.fontMetrics()
-        widths = [fm.horizontalAdvance(ch) + 1.9 for ch in text]
-        span = sum(widths) / radius             # radians the word covers
-        a = math.pi / 2 + span / 2              # start left of the bottom, run right
-        p.setPen(color)
-        for ch, w in zip(text, widths):
-            a -= (w / 2) / radius
-            p.save()
-            p.translate(math.cos(a) * radius, math.sin(a) * radius)
-            p.rotate(math.degrees(a) - 90)
-            p.drawText(QPointF(-w / 2 + 0.95, fm.ascent() * 0.42), ch)
-            p.restore()
-            a -= (w / 2) / radius
 
 
 # ── pitch: both ends + the wind ──────────────────────────────────────────
@@ -743,29 +702,27 @@ class CoinTossOverlay(QWidget):
         self._timer.start(ms)
 
     # ── flow ─────────────────────────────────────────────────────────────
-    # The coin is called and spun on its own; then the result is told from
-    # the player's side (YOU WON / YOU LOST THE TOSS), the player only
-    # gets the choice that is theirs to make, and every CPU decision is
-    # announced ("SAMOA CHOSE TO KICK OFF") before what it means for them.
+    # As little text as possible: the coin spins on its own, the result is
+    # YOU WON / YOU LOST THE TOSS, and after a short beat the other team's
+    # choice is announced. The player only gets the choice that is theirs.
     def _you(self):
         """The side the player controls, when exactly one is."""
         return next(iter(self.humans)) if len(self.humans) == 1 else None
 
     def _verdict(self, text, good):
-        color = GREEN if good else DANGER_LITE
-        return f"<span style='color:{color}'>{text}</span>"
+        return f"<span style='color:{GREEN if good else DANGER_LITE}'>{text}</span>"
+
+    def _side(self, side):
+        """YOU for the player's side, else the team's name."""
+        return "YOU" if side == self._you() else self._team(side)
 
     def start(self):
         self.screen.focus.push_scope(self)
         self.show()
         self.raise_()
         self.coin.set_pose(0.0)
-        call = self.toss.cpu_call()
-        self.toss.call = call
-        caller = "YOU" if self._you() == CALLER else self._team(CALLER)
-        self._show("COIN TOSS",
-                   f"{self._team(TOSSER)} toss  ·  {caller} {'call' if caller == 'YOU' else 'calls'} "
-                   f"<b>{call.upper()}</b>")
+        self.toss.call = self.toss.cpu_call()
+        self._show("")
         self._set_buttons([])
         self._later(self._spin, CALL_BEAT_MS)
 
@@ -786,65 +743,52 @@ class CoinTossOverlay(QWidget):
         if self._closed:
             return
         winner, you = self.toss.winner, self._you()
-        face = f"It's {self.toss.face}."
         if you is not None:
             won = winner == you
-            title = self._verdict("YOU WON THE TOSS" if won else "YOU LOST THE TOSS", won)
+            self._show(self._verdict("YOU WON THE TOSS" if won else "YOU LOST THE TOSS", won))
         else:
-            title = f"{self._team(winner)} WIN THE TOSS"
+            self._show(f"{self._team(winner)} WIN THE TOSS")
         if winner in self.humans:
-            self._show(title, f"{face} Kick off, or choose the end to defend in the first half?")
             self._set_buttons([("KICK OFF", lambda: self._on_decision(KICK_OFF), None),
                                ("CHOOSE END", lambda: self._on_decision(CHOOSE_END), None)])
         else:
-            self._show(title, f"{face} {self._team(winner)} {'are' if you else 'is'} deciding…")
             self._set_buttons([])
             self._later(lambda: self._on_decision(self.toss.cpu_decision()))
 
     def _on_decision(self, decision):
         self.toss.decision = decision
-        winner, chooser, you = self.toss.winner, self.toss.end_chooser, self._you()
-        if winner in self.humans:
-            # the player's own decision needs no announcing, only its effect
-            if decision == CHOOSE_END:
-                title = "PICK YOUR END" if chooser == you else f"{self._team(chooser)} PICK AN END"
-            elif you:
-                title = "YOU KICK OFF"
-            else:
-                title = f"{self._team(winner)} KICK OFF"
+        winner, chooser = self.toss.winner, self.toss.end_chooser
+        if winner not in self.humans:
+            self._show(f"{self._team(winner)} CHOSE " + ("TO KICK OFF" if decision == KICK_OFF
+                                                         else "THEIR END"))
+        elif decision == KICK_OFF:
+            self._show(f"{self._side(winner)} KICK OFF")
         else:
-            title = f"{self._team(winner)} CHOSE " + ("TO KICK OFF" if decision == KICK_OFF
-                                                      else "TO PICK AN END")
+            self._show("CHOOSE YOUR END" if chooser == self._you() else f"{self._team(chooser)} CHOOSE AN END")
         if chooser in self.humans:
-            sub = ("So you choose the end to defend in the first half."
-                   if chooser == you and winner not in self.humans
-                   else ("Which end do you defend in the first half?" if chooser == you
-                         else f"{self._team(chooser)}: which end do you defend in the first half?"))
-            self._show(title, sub + " The wind is shown on the pitch below.")
             self._set_buttons([("◀  LEFT END", lambda: self._on_end(LEFT), None),
                                ("RIGHT END  ▶", lambda: self._on_end(RIGHT), None)])
         else:
-            self._show(title, f"{self._team(chooser)} {'are' if you else 'is'} choosing an end…")
             self._set_buttons([])
             self._later(lambda: self._on_end(self.toss.cpu_end()))
 
     def _on_end(self, end):
         self.toss.end = end
         result = self.toss.resolved()
-        chooser, kicker, you = self.toss.end_chooser, result["kick_off"], self._you()
+        chooser, kicker = self.toss.end_chooser, result["kick_off"]
         home_end = result["home_team_side"]
         away_end = RIGHT if home_end == LEFT else LEFT
         self.pitch.set_ends({home_end: (self.names.get("home", "home"), HOME_TINT),
                              away_end: (self.names.get("away", "away"), AWAY_TINT)},
                             home_end=home_end)
-        kicks = "You kick off." if kicker == you else f"{self._team(kicker)} kick off."
         if chooser not in self.humans:
-            # say what the other team picked, then what it leaves the player
-            self._show(f"{self._team(chooser)} TOOK THE {end.upper()} END", kicks)
+            # the other team's pick, and who kicks off when that is news
+            # (the player chose to kick off: no need to say it again)
+            news = self.toss.winner not in self.humans
+            self._show(f"{self._team(chooser)} CHOSE THE {end.upper()} END",
+                       f"{self._side(kicker)} KICK OFF" if news else "")
         else:
-            defend = "You defend" if chooser == you else f"{self._team(chooser)} defend"
-            self._show("YOU KICK OFF" if kicker == you else f"{self._team(kicker)} KICK OFF",
-                       f"{defend} the {end} end in the first half.")
+            self._show(f"{self._side(kicker)} KICK OFF")
         self._set_buttons([("CONTINUE", lambda: self._finish(result), None)])
 
     def _finish(self, result):

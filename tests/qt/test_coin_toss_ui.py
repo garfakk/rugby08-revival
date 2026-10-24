@@ -1,6 +1,6 @@
-"""ui/coin_toss.py: the coin is called and spun on its own, the result is
-told from the player's side, the player only gets the choice that is
-theirs, and the other team's decisions are announced."""
+"""ui/coin_toss.py: the coin spins on its own, the result is YOU WON / YOU
+LOST THE TOSS, the player only gets the choice that is theirs, the other
+team's decisions are announced, and heads / tails is never mentioned."""
 import random
 
 import pytest
@@ -65,9 +65,11 @@ def _seed_where(predicate):
 def test_no_call_to_make_the_coin_spins_by_itself(qapp, host, fast):
     overlay, _done = _run(host, fast, 1, {"away"})        # the player is the caller
     assert overlay._buttons == []                          # no HEADS / TAILS to press
-    assert "call" in overlay.sub.text().lower()
+    texts = [overlay.title.text() + overlay.sub.text()]
     _wait_for_buttons(overlay)
+    texts.append(overlay.title.text() + overlay.sub.text())
     assert overlay.toss.face is not None
+    assert not any(w in t.lower() for t in texts for w in ("heads", "tails", "call"))
     overlay.cancel()
 
 
@@ -75,13 +77,12 @@ def test_won_the_toss_offers_kick_off_or_end(qapp, host, fast):
     seed = _seed_where(lambda t: t.winner == "home")
     overlay, done = _run(host, fast, seed, {"home"})
     assert _wait_for_buttons(overlay) == ["KICK OFF", "CHOOSE END"]
-    assert "YOU WON THE TOSS" in overlay.title.text()
+    assert "YOU WON THE TOSS" in overlay.title.text() and overlay.sub.text() == ""
     overlay._buttons[1].click()                            # choose an end
-    assert "PICK YOUR END" in overlay.title.text()
+    assert "CHOOSE YOUR END" in overlay.title.text()
     assert "LEFT END" in _labels(overlay)[0]
     overlay._buttons[0].click()
-    assert "Reds".upper() in overlay.title.text() and "KICK OFF" in overlay.title.text()
-    assert "You defend the left end" in overlay.sub.text()
+    assert "REDS" in overlay.title.text() and "KICK OFF" in overlay.title.text()
     overlay._buttons[0].click()                            # CONTINUE
     assert done == [{"kick_off": "away", "home_team_side": "left"}]
 
@@ -92,7 +93,6 @@ def test_lost_the_toss_announces_their_choice(qapp, host, fast):
     overlay, done = _run(host, fast, seed, {"home"})
     _wait_for_buttons(overlay)
     assert "REDS" in overlay.title.text() and "CHOSE TO KICK OFF" in overlay.title.text()
-    assert "you choose the end" in overlay.sub.text()
     assert "LEFT END" in _labels(overlay)[0]
     overlay._buttons[1].click()
     overlay._buttons[0].click()
@@ -103,8 +103,8 @@ def test_lost_the_toss_they_take_an_end(qapp, host, fast):
     seed = _seed_where(lambda t: t.winner == "away" and t.decision == "choose end")
     overlay, _done = _run(host, fast, seed, {"home"})
     assert _wait_for_buttons(overlay) == ["CONTINUE"]      # nothing left to choose
-    assert "REDS" in overlay.title.text() and "TOOK THE" in overlay.title.text()
-    assert overlay.sub.text() == "You kick off."
+    assert "REDS" in overlay.title.text() and "CHOSE THE" in overlay.title.text()
+    assert overlay.sub.text() == "YOU KICK OFF"
     overlay.cancel()
 
 
@@ -117,5 +117,5 @@ def test_lost_message_is_shown_while_they_decide(qapp, host, fast, monkeypatch):
         QTest.qWait(10)
         waited += 10
     assert "YOU LOST THE TOSS" in overlay.title.text()
-    assert "deciding" in overlay.sub.text()
+    assert overlay.sub.text() == "" and overlay._buttons == []     # their choice comes after a beat
     overlay.cancel()
