@@ -54,6 +54,7 @@
       "id": "league",
       "name": "Regular season",
       "kind": "round_robin",
+      "calendar": {"start": "09-02", "end": "05-25"},
       "legs": 2,
       "match_subtype": "none",
       "group_names": {
@@ -65,6 +66,7 @@
       "id": "playoffs",
       "name": "Play-offs",
       "kind": "knockout",
+      "calendar": {"start": "06-07", "offsets": [0, 7, 21]},
       "rounds": [
         {
           "id": "barrage",

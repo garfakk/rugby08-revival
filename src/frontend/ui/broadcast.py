@@ -61,7 +61,9 @@ def display_label(text, size, weight=QFont.Bold, track=1.0, color=FG_PRIMARY,
     return lbl
 
 
-def page_header(title: str, breadcrumb: str = None, right: str = None, on_back=None) -> QWidget:
+def page_header(title: str, breadcrumb: str = None, right: str = None, on_back=None,
+                icon=None) -> QWidget:
+    """`icon`: a QPixmap (a competition's logo…) drawn before the title."""
     header = QWidget()
     header.setFixedHeight(76)
     header.setObjectName("pageHeader")
@@ -88,6 +90,13 @@ def page_header(title: str, breadcrumb: str = None, right: str = None, on_back=N
         back_btn.clicked.connect(on_back)
         hl.addWidget(back_btn, alignment=Qt.AlignVCenter)
         hl.addSpacing(18)
+
+    if icon is not None and not icon.isNull():
+        logo = QLabel()
+        logo.setPixmap(icon)
+        logo.setStyleSheet("background: transparent;")
+        hl.addWidget(logo, alignment=Qt.AlignVCenter)
+        hl.addSpacing(14)
 
     tcol = QVBoxLayout()
     tcol.setSpacing(0)

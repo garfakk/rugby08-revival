@@ -1,0 +1,85 @@
+{
+ "10176": {
+  "2009": {
+   "name": "Viadana",
+   "type": "club",
+   "category": "Italy",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2009/home_front.png",
+     "backKitFile": "kits_2009/home_back/home_back_%.png",
+     "previewFile": "kits_2009/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2009/away_front.png",
+     "backKitFile": "kits_2009/away_back/away_back_%.png",
+     "previewFile": "kits_2009/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "158318",
+    "viceCaptain": "143371",
+    "longGK": "158813",
+    "shortGK": "158813",
+    "longPunt": "158813",
+    "shortPunt": "158813",
+    "kickoff": "158813"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "143164",
+    "158318",
+    "158798",
+    "142578",
+    "155277",
+    "143465",
+    "158806",
+    "156697",
+    "143371",
+    "158813",
+    "147447",
+    "155292",
+    "158814",
+    "156398",
+    "158819",
+    "158810",
+    "158811",
+    "158812",
+    "158808",
+    "158809",
+    "158815",
+    "158805",
+    "158807",
+    "158802",
+    "158803",
+    "158820",
+    "158816",
+    "158817",
+    "158818",
+    "158799",
+    "158801",
+    "158804",
+    "158797",
+    "158800"
+   ],
+   "enabled": true
+  }
+ }
+}

@@ -1,0 +1,266 @@
+{
+ "10125": {
+  "2022": {
+   "name": "Fijian Drua",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "146692",
+    "shortGK": "146692",
+    "longPunt": "146692",
+    "shortPunt": "146692",
+    "kickoff": "146692"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155757",
+    "154166",
+    "145471",
+    "146195",
+    "155626",
+    "146448",
+    "146710",
+    "146639",
+    "144549",
+    "146692",
+    "146708",
+    "146303",
+    "155928",
+    "146613",
+    "155696",
+    "146662",
+    "154138",
+    "155842",
+    "155841",
+    "154145",
+    "146473",
+    "145409",
+    "155943",
+    "155940",
+    "154172",
+    "155932",
+    "146026",
+    "146736",
+    "154169",
+    "155746",
+    "155927",
+    "155931",
+    "155933",
+    "155843",
+    "155533",
+    "155840",
+    "155929",
+    "155930",
+    "155645",
+    "155890",
+    "146188",
+    "155951"
+   ],
+   "enabled": false
+  },
+  "2023": {
+   "name": "Fijian Drua",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2023/home_front.png",
+     "backKitFile": "kits_2023/home_back/home_back_%.png",
+     "previewFile": "kits_2023/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2023/away_front.png",
+     "backKitFile": "kits_2023/away_back/away_back_%.png",
+     "previewFile": "kits_2023/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "146448",
+    "viceCaptain": "155927",
+    "longGK": "146692",
+    "shortGK": "146692",
+    "longPunt": "146692",
+    "shortPunt": "146692",
+    "kickoff": "146692"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "154169",
+    "146662",
+    "145471",
+    "146195",
+    "146639",
+    "155932",
+    "155927",
+    "146448",
+    "144549",
+    "146692",
+    "153869",
+    "146303",
+    "146194",
+    "146613",
+    "146188",
+    "146736",
+    "145045",
+    "155842",
+    "155931",
+    "155991",
+    "146473",
+    "146026",
+    "156012",
+    "154166",
+    "155974",
+    "155951",
+    "155990",
+    "146710",
+    "155995",
+    "155928",
+    "155975",
+    "155992",
+    "155840",
+    "155930",
+    "155994",
+    "155933",
+    "155696",
+    "155757",
+    "155841",
+    "155843",
+    "156017",
+    "155645"
+   ],
+   "enabled": true
+  },
+  "2024": {
+   "name": "Fijian Drua",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "146448",
+    "viceCaptain": "155927",
+    "longGK": "156024",
+    "shortGK": "156024",
+    "longPunt": "146188",
+    "shortPunt": "156024",
+    "kickoff": "146188"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "154169",
+    "146662",
+    "145045",
+    "156033",
+    "155931",
+    "155974",
+    "155927",
+    "146448",
+    "144549",
+    "156024",
+    "156027",
+    "155928",
+    "146194",
+    "146613",
+    "146188",
+    "146736",
+    "155990",
+    "145471",
+    "146639",
+    "155991",
+    "146473",
+    "145409",
+    "156012",
+    "146710",
+    "146195",
+    "155975",
+    "155995",
+    "155842",
+    "154166",
+    "155992",
+    "156026",
+    "156035",
+    "156017",
+    "156025",
+    "146026",
+    "155840",
+    "155930"
+   ],
+   "enabled": true
+  }
+ }
+}

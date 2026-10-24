@@ -1,0 +1,975 @@
+{
+ "10115": {
+  "2009": {
+   "name": "Crusaders",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "153597",
+    "shortGK": "153597",
+    "longPunt": "142547",
+    "shortPunt": "142547",
+    "kickoff": "142547"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "147906",
+    "156131",
+    "142499",
+    "142857",
+    "143923",
+    "143541",
+    "143122",
+    "155561",
+    "142547",
+    "155583",
+    "153597",
+    "153664",
+    "155594",
+    "156130",
+    "147894",
+    "152312",
+    "153987",
+    "155609",
+    "152610",
+    "155016",
+    "154660",
+    "152794",
+    "156149",
+    "156055",
+    "156058",
+    "156057",
+    "156208",
+    "152869",
+    "155559",
+    "156159",
+    "156174",
+    "156056",
+    "156176"
+   ],
+   "enabled": false
+  },
+  "2010": {
+   "name": "Crusaders",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "143425",
+    "viceCaptain": "143425",
+    "longGK": "143425",
+    "shortGK": "143425",
+    "longPunt": "143425",
+    "shortPunt": "143425",
+    "kickoff": "143425"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153987",
+    "124050",
+    "142499",
+    "142857",
+    "142845",
+    "143122",
+    "156208",
+    "143541",
+    "142547",
+    "143425",
+    "155480",
+    "153664",
+    "155553",
+    "152869",
+    "156130",
+    "152312",
+    "147906",
+    "156176",
+    "143182",
+    "155561",
+    "152361",
+    "156107",
+    "154660",
+    "156058",
+    "156149",
+    "153597",
+    "155594",
+    "143923",
+    "156174",
+    "153320",
+    "152794",
+    "147894"
+   ],
+   "enabled": true
+  },
+  "2022": {
+   "name": "Crusaders",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "144367",
+    "shortGK": "144367",
+    "longPunt": "145692",
+    "shortPunt": "144367",
+    "kickoff": "145692"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153313",
+    "144406",
+    "155692",
+    "145362",
+    "142845",
+    "144571",
+    "155739",
+    "153960",
+    "155613",
+    "144367",
+    "144959",
+    "144446",
+    "153307",
+    "153310",
+    "145692",
+    "155737",
+    "146703",
+    "146129",
+    "155894",
+    "146091",
+    "153955",
+    "155627",
+    "144579",
+    "155893",
+    "155800",
+    "155909",
+    "155704",
+    "155749",
+    "153671",
+    "155844",
+    "155892",
+    "153950",
+    "155814",
+    "155668",
+    "155726",
+    "155801",
+    "155709",
+    "156006",
+    "155955",
+    "155820"
+   ],
+   "enabled": false
+  },
+  "2023": {
+   "name": "Crusaders",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_2/ball_%.png",
+   "banners": "logos_2/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_2/logo.png",
+    "frontend": "logos_2/logo_frontend.png",
+    "small": "logos_2/logo_small.png",
+    "left": "logos_2/logo_left.png",
+    "right": "logos_2/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2023/home_front.png",
+     "backKitFile": "kits_2023/home_back/home_back_%.png",
+     "previewFile": "kits_2023/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2023/away_front.png",
+     "backKitFile": "kits_2023/away_back/away_back_%.png",
+     "previewFile": "kits_2023/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144367",
+    "viceCaptain": "144367",
+    "longGK": "144367",
+    "shortGK": "144367",
+    "longPunt": "144367",
+    "shortPunt": "144367",
+    "kickoff": "144367"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153671",
+    "144406",
+    "146703",
+    "145362",
+    "142845",
+    "155726",
+    "155739",
+    "155883",
+    "153955",
+    "144367",
+    "155917",
+    "144446",
+    "153307",
+    "155961",
+    "155800",
+    "153320",
+    "153313",
+    "146129",
+    "153960",
+    "146091",
+    "152361",
+    "155967",
+    "155955",
+    "155749",
+    "155909",
+    "155844",
+    "155969",
+    "156005",
+    "144738",
+    "155704",
+    "155894",
+    "144959",
+    "145692",
+    "155925",
+    "155692",
+    "155662",
+    "155893",
+    "155801",
+    "155676",
+    "153310",
+    "155892",
+    "155957",
+    "155852",
+    "155668",
+    "155908"
+   ],
+   "enabled": true
+  },
+  "2024": {
+   "name": "Crusaders",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_2/ball_%.png",
+   "banners": "logos_2/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_2/logo.png",
+    "frontend": "logos_2/logo_frontend.png",
+    "small": "logos_2/logo_small.png",
+    "left": "logos_2/logo_left.png",
+    "right": "logos_2/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "155809",
+    "viceCaptain": "155809",
+    "longGK": "155809",
+    "shortGK": "155809",
+    "longPunt": "155809",
+    "shortPunt": "155809",
+    "kickoff": "155809"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153313",
+    "156006",
+    "146129",
+    "145362",
+    "155704",
+    "146091",
+    "155739",
+    "155893",
+    "155925",
+    "155809",
+    "155917",
+    "155801",
+    "155660",
+    "153034",
+    "155844",
+    "144406",
+    "146703",
+    "142499",
+    "156005",
+    "155883",
+    "152361",
+    "155802",
+    "153955",
+    "153671",
+    "153664",
+    "155967",
+    "153310",
+    "144446",
+    "155894",
+    "153960",
+    "155749",
+    "155804",
+    "155800",
+    "155908",
+    "155971",
+    "156019",
+    "155957",
+    "155955",
+    "153320",
+    "155913",
+    "155969",
+    "155970",
+    "144126",
+    "154173",
+    "155909"
+   ],
+   "enabled": true
+  },
+  "2008": {
+   "name": "Crusaders",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "153597",
+    "shortGK": "153597",
+    "longPunt": "142547",
+    "shortPunt": "142547",
+    "kickoff": "142547"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "147906",
+    "156131",
+    "142499",
+    "142857",
+    "143923",
+    "143541",
+    "143122",
+    "155561",
+    "142547",
+    "155583",
+    "153597",
+    "153664",
+    "155594",
+    "156130",
+    "147894",
+    "152312",
+    "153987",
+    "155609",
+    "152610",
+    "155016",
+    "154660",
+    "152794",
+    "156149",
+    "156055",
+    "156058",
+    "156057",
+    "156208",
+    "152869",
+    "155559",
+    "156159",
+    "156174",
+    "156056",
+    "156176"
+   ],
+   "enabled": false
+  },
+  "2018": {
+   "name": "Crusaders",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "144367",
+    "viceCaptain": "144367",
+    "longGK": "144367",
+    "shortGK": "144367",
+    "longPunt": "144367",
+    "shortPunt": "144367",
+    "kickoff": "144367"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "147906",
+    "144406",
+    "145023",
+    "145362",
+    "142845",
+    "158597",
+    "153663",
+    "144835",
+    "155613",
+    "144367",
+    "144579",
+    "153664",
+    "144738",
+    "154173",
+    "153670",
+    "155703",
+    "156113",
+    "155692",
+    "153661",
+    "145257",
+    "153955",
+    "155663",
+    "152904",
+    "155554",
+    "155704",
+    "155594",
+    "153658",
+    "153996",
+    "155705",
+    "142499",
+    "155646",
+    "154655",
+    "155668",
+    "153307",
+    "144446",
+    "146091",
+    "153671",
+    "153956",
+    "158659",
+    "155702"
+   ],
+   "enabled": true
+  },
+  "2019": {
+   "name": "Crusaders",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2019/home_front.png",
+     "backKitFile": "kits_2019/home_back/home_back_%.png",
+     "previewFile": "kits_2019/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2019/away_front.png",
+     "backKitFile": "kits_2019/away_back/away_back_%.png",
+     "previewFile": "kits_2019/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "144367",
+    "viceCaptain": "144367",
+    "longGK": "144367",
+    "shortGK": "144367",
+    "longPunt": "144367",
+    "shortPunt": "144367",
+    "kickoff": "144367"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153671",
+    "144406",
+    "145023",
+    "145362",
+    "142845",
+    "144835",
+    "153663",
+    "143541",
+    "155613",
+    "144367",
+    "144579",
+    "153664",
+    "144738",
+    "154173",
+    "145692",
+    "155703",
+    "158659",
+    "142499",
+    "153661",
+    "146091",
+    "153955",
+    "155663",
+    "153307",
+    "153313",
+    "155554",
+    "157091",
+    "155704",
+    "144446",
+    "153658",
+    "153956",
+    "155692",
+    "155668",
+    "153310",
+    "155646",
+    "144500",
+    "155705",
+    "155667",
+    "155594",
+    "147906",
+    "158597",
+    "158663",
+    "155752",
+    "153670",
+    "154655",
+    "155749",
+    "144959"
+   ],
+   "enabled": true
+  },
+  "2020": {
+   "name": "Crusaders",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "144367",
+    "shortGK": "144367",
+    "longPunt": "144367",
+    "shortPunt": "144367",
+    "kickoff": "144367"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153671",
+    "144406",
+    "155692",
+    "145362",
+    "155668",
+    "153960",
+    "155739",
+    "155646",
+    "155613",
+    "144367",
+    "144579",
+    "144738",
+    "153307",
+    "153310",
+    "144446",
+    "155703",
+    "145023",
+    "155667",
+    "153661",
+    "143541",
+    "153955",
+    "153956",
+    "153313",
+    "155726",
+    "144959",
+    "157091",
+    "145692",
+    "155801",
+    "144500",
+    "155749",
+    "154173",
+    "142845",
+    "153663",
+    "142499",
+    "158566",
+    "144835",
+    "155800",
+    "156425"
+   ],
+   "enabled": false
+  },
+  "2021": {
+   "name": "Crusaders",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "144367",
+    "shortGK": "144367",
+    "longPunt": "144367",
+    "shortPunt": "144367",
+    "kickoff": "144367"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153671",
+    "144406",
+    "155692",
+    "145362",
+    "155668",
+    "153960",
+    "155739",
+    "155646",
+    "155613",
+    "144367",
+    "144579",
+    "144738",
+    "153307",
+    "153310",
+    "144446",
+    "155703",
+    "145023",
+    "155667",
+    "153661",
+    "143541",
+    "153955",
+    "153956",
+    "153313",
+    "155726",
+    "144959",
+    "157091",
+    "145692",
+    "155801",
+    "144500",
+    "155749",
+    "154173",
+    "142845",
+    "153663",
+    "142499",
+    "158566",
+    "144835",
+    "155800",
+    "156425"
+   ],
+   "enabled": false
+  },
+  "2016": {
+   "name": "Crusaders",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "144367",
+    "shortGK": "144367",
+    "longPunt": "144367",
+    "shortPunt": "144367",
+    "kickoff": "144367"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "147906",
+    "144406",
+    "145023",
+    "145362",
+    "142845",
+    "158597",
+    "153663",
+    "144835",
+    "155613",
+    "144367",
+    "144579",
+    "153664",
+    "144738",
+    "152904",
+    "144446",
+    "153955",
+    "155663",
+    "154173",
+    "156113",
+    "155703",
+    "153661",
+    "155554",
+    "155692",
+    "145257",
+    "155704",
+    "155594",
+    "153658",
+    "153996",
+    "155705",
+    "142499",
+    "155646",
+    "154655",
+    "155668",
+    "153307",
+    "153670",
+    "146091",
+    "153671",
+    "153956",
+    "158659",
+    "155702"
+   ],
+   "enabled": false
+  }
+ }
+}

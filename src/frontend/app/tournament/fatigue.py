@@ -56,7 +56,8 @@ def _weight(t, player, ctx):
             okey = f"{f.id}:{own}"
             if okey not in cache:
                 cache[okey] = team_rating(t, own)
-            if cache[okey] - cache[key] > 6:
+            from .simulator import class_gap
+            if cache[okey] - cache[key] + class_gap(t, own, opp) > 6:
                 strength = 2.0         # rest key men against minnows
         except Exception:
             pass

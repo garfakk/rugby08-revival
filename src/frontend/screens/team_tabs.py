@@ -29,7 +29,7 @@ from ui.editor_kit import (
     SEVERITY_COLOR, worst,
 )
 from ui.team_sheet import (
-    SHEET_ROWS, SUBSTITUTES, SlotAvatar, SubChip, PlayerPickerPopup, POSITION_NAMES,
+    MATCH_SHEET_ROWS, SUBSTITUTES, SlotAvatar, SubChip, PlayerPickerPopup, FITS, SEARCH, POSITION_NAMES,
     POSITION_SHORT, ROLE_SHORT, last_name,
 )
 from ui.widgets import StyledButton
@@ -156,8 +156,6 @@ class OverviewTab(TeamTab):
         self._wire_asset(self.crest_frontend, "logos.frontend")
         cgrid.add(self.crest_frontend)
         ccol.addWidget(cgrid)
-        ccol.addWidget(Note(ASSET_SPECS["logos.main"]["note"] + " Main crest: in-game, 256×256 PNG. "
-                            + ASSET_SPECS["logos.frontend"]["note"]))
         ccol.addStretch(1)
         crow.addLayout(ccol, stretch=1)
         crest.add_layout(crow)
@@ -249,8 +247,8 @@ class OverviewTab(TeamTab):
         players = self.screen.ds.players
         season = self.screen.season
         n = len(roster)
-        self._set_summary("squad", f"{n} / 22" + (f"  (+{n - 22} extra)" if n > 22 else ""),
-                          GREEN if n == 22 else (WARN if n > 22 else DANGER_LITE))
+        self._set_summary("squad", f"{n} players",
+                          GREEN if n >= 22 else DANGER_LITE)
         fit = sum(1 for i, pid in enumerate(roster[:15]) if T.fits(players.get(pid), season, i + 1))
         self._set_summary("starters", f"{fit} / 15 in position", GREEN if fit == 15 else WARN)
         starters = roster[:15]
@@ -485,6 +483,7 @@ class KitsTab(TeamTab):
         self.color.set_badge("UNUSED")
         self.color.edited.connect(lambda v: self._edit_kit("colour", lambda k: k.__setitem__("color", v)))
         ugrid.add(self.color)
+        ugrid.hide()        # the colour is unused by the game: hidden for now
         right.add(ugrid)
         right.v.addStretch(1)
         row.addWidget(right, stretch=1)
@@ -780,7 +779,7 @@ class SquadTab(TeamTab):
         sheet.v.setContentsMargins(14, 10, 14, 10)
         self.sheet_card = sheet
         self.slots = {}
-        for shirts in SHEET_ROWS:
+        for shirts in MATCH_SHEET_ROWS:
             hl = QHBoxLayout()
             hl.setSpacing(8)
             hl.addStretch(1)
@@ -790,10 +789,7 @@ class SquadTab(TeamTab):
                 hl.addWidget(slot)
             hl.addStretch(1)
             sheet.add_layout(hl)
-        rule = QWidget()
-        rule.setFixedHeight(1)
-        rule.setStyleSheet(f"background: {BORDER};")
-        sheet.add(rule)
+        sheet.add(self._rule())
         sheet.add(eyebrow_label("replacements", color=FG_SECONDARY, size=T_SMALL))
         bench = QGridLayout()
         bench.setHorizontalSpacing(6)
@@ -805,12 +801,35 @@ class SquadTab(TeamTab):
         sheet.add_layout(bench)
         self.extras = Note("", color=FG_TERTIARY)
         sheet.add(self.extras)
-        row.addWidget(sheet, stretch=1)
+        sheet_col = QVBoxLayout()
+        sheet_col.setSpacing(14)
+        sheet_col.addWidget(sheet)
+
+        # Extra players (past the 22): a squad pool beyond the 22 in a card
+        # of its own, one chip each (no number, a × to remove it). Chips are
+        # made as the roster grows and hidden when it shrinks.
+        self.extra_add_btn = _button("+ ADD", h=28)
+        self.extra_add_btn.clicked.connect(lambda: self.open_picker(len(self.roster()) + 1))
+        screen.focus.register(self.extra_add_btn)
+        extras_card = SectionCard("extra players", right=self.extra_add_btn)
+        extras_card.v.setContentsMargins(14, 10, 14, 12)
+        self.extras_card = extras_card
+        self.extras_grid = QGridLayout()
+        self.extras_grid.setHorizontalSpacing(6)
+        self.extras_grid.setVerticalSpacing(4)
+        extras_card.add_layout(self.extras_grid)
+        self.extras_empty = Note("No extra players: + ADD puts one in the squad pool.")
+        extras_card.add(self.extras_empty)
+        self.extra_chips = []
+        sheet_col.addWidget(extras_card)
+        sheet_col.addStretch(1)
+        row.addLayout(sheet_col, stretch=1)
+        self._hovered = None
 
         side = QVBoxLayout()
         side.setSpacing(10)
         self.side_col = side        # the team editor puts the squad variant picker on top
-        player_card = SectionCard("selected shirt")
+        player_card = SectionCard("selected player")
         player_card.setFixedWidth(390)
         player_card.v.setSpacing(6)
         self.sel_title = player_card.title_lbl
@@ -818,30 +837,19 @@ class SquadTab(TeamTab):
         player_card.add(self.sel_name)
         self.sel_meta = Note("", color=FG_SECONDARY, size=T_LABEL)
         player_card.add(self.sel_meta)
+        player_card.v.addStretch(1)
         prow = QHBoxLayout()
         prow.setSpacing(6)
-        self.pick_btn = _button("CHANGE", h=32)
-        self.pick_btn.clicked.connect(lambda: self.open_picker(self.selected_shirt))
         self.edit_player_btn = _button("EDIT PLAYER", h=32)
         self.edit_player_btn.clicked.connect(self._edit_player)
-        self.remove_btn = _button("REMOVE", "danger", 32)
-        self.remove_btn.clicked.connect(self._remove)
-        for b in (self.pick_btn, self.edit_player_btn, self.remove_btn):
-            screen.focus.register(b)
-            prow.addWidget(b)
+        screen.focus.register(self.edit_player_btn)
+        prow.addWidget(self.edit_player_btn)
+        prow.addStretch(1)
         player_card.add_layout(prow)
-        arow = QHBoxLayout()
-        arow.setSpacing(6)
-        self.add_btn = _button("+ ADD PLAYER", h=32)
-        self.add_btn.clicked.connect(lambda: self.open_picker(len(self.roster()) + 1))
-        self.sort_btn = _button("AUTO-SORT", h=32)
-        self.sort_btn.clicked.connect(self._auto_sort)
-        self.reverse_btn = _button("REVERSE ORDER", h=32)
-        self.reverse_btn.clicked.connect(self._reverse)
-        for b in (self.add_btn, self.sort_btn, self.reverse_btn):
-            screen.focus.register(b)
-            arow.addWidget(b)
-        player_card.add_layout(arow)
+        # fixed: the name and the wrapped details must not resize the card
+        # (and shift everything under it) as the hovered player changes
+        player_card.setFixedHeight(190)
+        self.sel_name.setMinimumWidth(1)
         side.addWidget(player_card)
 
         tactics = SectionCard("roles & set plays")
@@ -850,7 +858,7 @@ class SquadTab(TeamTab):
         self.tactics_tabs = TabStrip(["Roles", "Set plays"])
         screen.focus.register(self.tactics_tabs)
         tactics.add(self.tactics_tabs)
-        self.tactics_stack = QStackedWidget()
+        self.tactics_stack = _transparent(QStackedWidget(), "tacticsStack")
         roles_page = _transparent(QWidget(), "rolesPage")
         rg = FieldGrid(columns=1, v_spacing=2)
         QVBoxLayout(roles_page).addWidget(rg)
@@ -912,11 +920,47 @@ class SquadTab(TeamTab):
     def _wire_slot(self, slot):
         slot.enable_dnd(True)
         slot.activated.connect(self._on_slot_activated)
-        slot.hovered.connect(lambda n: None)
+        slot.hovered.connect(self._on_slot_hovered)
+        slot.unhovered.connect(self._on_slot_unhovered)
         slot.dropped.connect(self._on_drop)
         slot.double_clicked.connect(lambda n: self._edit_player(n))
         self.slots[slot.number] = slot
         self.register(f"players.{slot.number - 1}", slot)
+
+    @staticmethod
+    def _rule():
+        rule = QWidget()
+        rule.setFixedHeight(1)
+        rule.setStyleSheet(f"background: {BORDER};")
+        return rule
+
+    def _show_extras(self, count, shown):
+        """`count` extra chips; the card itself only once the 22 are filled."""
+        while len(self.extra_chips) < count:
+            i = len(self.extra_chips)
+            chip = SubChip(SQUAD_SIZE + 1 + i, HOME_TINT, size="compact", show_number=False)
+            chip.removable = True
+            chip.remove_requested.connect(self._remove)
+            self._wire_slot(chip)
+            self.extras_grid.addWidget(chip, i // 4, i % 4)
+            self.extra_chips.append(chip)
+        for i, chip in enumerate(self.extra_chips):
+            chip.setVisible(i < count)
+        self.extras_empty.setVisible(count == 0)
+        self.extras_card.setVisible(shown)
+
+    def _on_slot_hovered(self, number):
+        """The player under the mouse fills the info card; leaving him puts
+        the selected one back. Not while the picker is open."""
+        if self.picker.isVisible():
+            return
+        self._hovered = number
+        self._refresh_selection()
+
+    def _on_slot_unhovered(self, number):
+        if self._hovered == number:
+            self._hovered = None
+            self._refresh_selection()
 
     def on_focus(self, widget):
         if isinstance(widget, (SlotAvatar, SubChip)) and widget.number != self.selected_shirt:
@@ -960,7 +1004,7 @@ class SquadTab(TeamTab):
         roster = self.roster()
         if a - 1 >= len(roster):
             return
-        self.edit(f"swap shirts {a} and {b}", lambda i: T.swap(i, a - 1, b - 1), f"players.{b - 1}")
+        self.edit(f"swap players {a} and {b}", lambda i: T.swap(i, a - 1, b - 1), f"players.{b - 1}")
         self.selected_shirt = min(b, len(roster))
 
     def open_picker(self, number):
@@ -969,7 +1013,7 @@ class SquadTab(TeamTab):
         if index > len(roster):
             index = len(roster)
             number = index + 1
-        anchor = self.slots.get(number) or self.add_btn
+        anchor = self.slots.get(number) or self.extra_add_btn
         players = self.screen.ds.players
         season = self.screen.season
         current = roster[index] if index < len(roster) else None
@@ -983,12 +1027,22 @@ class SquadTab(TeamTab):
                 return (0, "")
             return (1 if pid in in_squad else 2, 0 if fits(pid) else 1, last_name(players.get(pid)))
 
-        pool = list(dict.fromkeys(roster + list(players)))
-        pool = [p for p in pool if p in players or p == current]
+        # SUGGESTED / ALL: this team's squad; SEARCH: every player in the data.
+        pool = [p for p in dict.fromkeys(roster) if p in players or p == current]
         pool.sort(key=rank)
-        entries = [(pid, (players.get(pid) or {}).get("display_name") or pid, fits(pid)) for pid in pool]
+        everyone = sorted((p for p in players if p not in in_squad),
+                          key=lambda p: last_name(players.get(p)))
+
+        def entry(pid):
+            return (pid, (players.get(pid) or {}).get("display_name") or pid, fits(pid))
+        if current is None and index >= SQUAD_SIZE:
+            # a new extra player: only the search, only players not in the squad
+            entries, search = [], [entry(pid) for pid in everyone]
+        else:
+            entries = [entry(pid) for pid in pool]
+            search = [entry(pid) for pid in pool + everyone]
         taken = {pid: s for pid, s in in_squad.items() if pid != current}
-        tags = {pid: ("NEW", FG_TERTIARY) for pid in pool if pid not in in_squad}
+        tags = {pid: ("NEW", FG_TERTIARY) for pid in everyone}
         def subtitle(pid):
             s = self.stats(pid)
             pos = POSITION_SHORT.get(s.get("position1", ""), s.get("position1", ""))
@@ -996,18 +1050,21 @@ class SquadTab(TeamTab):
             return f"{pos}  {ovr if ovr is not None else ''}"
         # Callables: the picker lists every player in the data, and only the
         # rows actually scrolled into view need their rating worked out.
-        subtitles = {pid: (lambda p=pid: subtitle(p)) for pid in pool}
-        title = f"SHIRT {number}"
+        subtitles = {pid: (lambda p=pid: subtitle(p)) for pid in pool + everyone}
+        title = f"PLAYER {number}"
         if number <= STARTING_XV:
             from app.game_data import SHIRT_POSITIONS
             title += " · " + POSITION_NAMES.get(SHIRT_POSITIONS[number], "").upper()
         elif number <= SQUAD_SIZE:
             title += " · REPLACEMENT"
+        elif index < len(roster):
+            title = "EXTRA PLAYER"
         else:
             title = "ADD TO SQUAD"
         self._picker_shirt = number
         self.picker.open_for(title, entries, current, taken, anchor, self.screen, tags=tags,
-                             subtitles=subtitles)
+                             subtitles=subtitles, search=search,
+                             mode=SEARCH if current is None else FITS)
 
     def _on_pick(self, pid):
         number = self._picker_shirt
@@ -1017,20 +1074,20 @@ class SquadTab(TeamTab):
         if number - 1 < len(roster) and roster[number - 1] == str(pid):
             return
         name = (self.player(pid) or {}).get("display_name", pid)
-        self.edit(f"put {name} in shirt {number}", lambda i: T.place(i, number - 1, pid),
+        self.edit(f"put {name} as player {number}", lambda i: T.place(i, number - 1, pid),
                   f"players.{number - 1}")
         self.selected_shirt = min(number, len(self.roster()) + 1)
-        QTimer.singleShot(0, lambda: self.slots.get(self.selected_shirt, self.add_btn).setFocus())
+        QTimer.singleShot(0, lambda: self.slots.get(self.selected_shirt, self.extra_add_btn).setFocus())
 
-    def _remove(self):
+    def _remove(self, number=None):
         roster = self.roster()
-        n = self.selected_shirt
+        n = number or self.selected_shirt
         if n - 1 >= len(roster):
             return
         name = (self.player(roster[n - 1]) or {}).get("display_name", roster[n - 1])
         self.edit(f"remove {name}", lambda i: T.remove(i, n - 1), f"players.{n - 1}")
         self.screen.shell.footer.set_status(
-            f"Removed {name} — later shirts moved up one (Ctrl+Z to undo)", FG_SECONDARY)
+            f"Removed {name} — later players moved up one (Ctrl+Z to undo)", FG_SECONDARY)
 
     def _auto_sort(self):
         moved = {}
@@ -1067,6 +1124,7 @@ class SquadTab(TeamTab):
             if key.startswith("players."):
                 idx = int(key.split(".")[1])
                 issue_by_index[idx] = worst([issue_by_index.get(idx), sev])
+        self._show_extras(max(0, len(roster) - SQUAD_SIZE), len(roster) >= SQUAD_SIZE)
         seen = set()
         for n, slot in self.slots.items():
             pid = roster[n - 1] if n - 1 < len(roster) else None
@@ -1088,14 +1146,8 @@ class SquadTab(TeamTab):
             if isinstance(slot, SlotAvatar):
                 slot.empty_label = "+" if n - 1 == len(roster) else ""
             seen.add(pid)
-        extras = roster[SQUAD_SIZE:]
-        if extras:
-            names = ", ".join(last_name(players.get(p)) for p in extras)
-            self.extras.setText(f"EXTRA PLAYERS ({len(extras)}): {names}")
-            self.extras.setStyleSheet(self.extras.styleSheet().replace(FG_TERTIARY, WARN))
-        else:
-            self.extras.setText(f"{len(roster)} / 22 players" if len(roster) < SQUAD_SIZE else "")
-        self.reverse_btn.setVisible(looks_reversed(roster, players, season))
+        self.extras.setText(f"{len(roster)} / 22 players" if len(roster) < SQUAD_SIZE else "")
+        self.extras.setVisible(len(roster) < SQUAD_SIZE)
 
         starters = roster[:STARTING_XV]
         for key, f in self.role_fields.items():
@@ -1125,7 +1177,8 @@ class SquadTab(TeamTab):
             name = (p or {}).get("display_name") or f"? {pid}"
             if pid in roster:
                 shirt = roster.index(pid) + 1
-                suffix = f"  #{shirt}" if shirt <= STARTING_XV else f"  #{shirt} · not starting"
+                suffix = (f"  #{shirt}" if shirt <= STARTING_XV else
+                          f"  #{shirt} · not starting" if shirt <= SQUAD_SIZE else "  · extra player")
             else:
                 suffix = "  · not in squad"
             return name + suffix
@@ -1133,32 +1186,33 @@ class SquadTab(TeamTab):
 
     def _refresh_selection(self):
         roster = self.roster()
-        n = self.selected_shirt
+        selected = self.selected_shirt
+        self.edit_player_btn.setEnabled(selected - 1 < len(roster))
+        # the card shows the player under the mouse, else the selected one;
+        # the buttons always act on the selected one
+        n = self._hovered if self._hovered is not None else selected
         pid = roster[n - 1] if n - 1 < len(roster) else None
         from app.game_data import SHIRT_POSITIONS
         pos_name = POSITION_NAMES.get(SHIRT_POSITIONS.get(n, ""), "")
         where = pos_name.lower() if n <= STARTING_XV else ("replacement" if n <= SQUAD_SIZE
-                                                            else "not loaded by the game")
-        self.sel_title.setText(f"SHIRT {n} · {where}".upper())
-        has = pid is not None
-        self.remove_btn.setEnabled(has)
-        self.edit_player_btn.setEnabled(has)
-        if not has:
+                                                            else "extra player")
+        self.sel_title.setText((f"PLAYER {n} · {where}" if n <= SQUAD_SIZE else "EXTRA PLAYER").upper())
+        if pid is None:
             self.sel_name.setText("Empty")
-            self.sel_meta.setText("Pick a player for this shirt, or drag one here."
-                                  if n - 1 <= len(roster) else "Fill the shirts before this one first.")
+            self.sel_meta.setText("Pick a player for this slot, or drag one here."
+                                  if n - 1 <= len(roster) else "Fill the slots before this one first.")
             return
         player = self.player(pid)
         s = self.stats(pid)
         self.sel_name.setText((player or {}).get("display_name") or f"Unknown player {pid}")
         if player is None:
-            self.sel_meta.setText(f"Id {pid} is not in the player files — the game drops this shirt.")
+            self.sel_meta.setText(f"Id {pid} is not in the player files — the game drops this player.")
             return
         positions = [POSITION_NAMES.get(p, p) for p in (s.get("position1"), s.get("position2"),
                                                          s.get("position3")) if p]
         ovr = position_overall(s, SHIRT_POSITIONS.get(n))
-        fit = "fits the shirt" if n > STARTING_XV or T.fits(player, self.screen.season, n) \
-            else "OUT OF POSITION for this shirt"
+        fit = "fits the position" if n > STARTING_XV or T.fits(player, self.screen.season, n) \
+            else "OUT OF POSITION"
         self.sel_meta.setText(f"{' / '.join(positions) or 'no position'}  ·  OVR {ovr}  ·  {fit}")
 
     def hints(self, focused):
@@ -1172,6 +1226,11 @@ class SquadTab(TeamTab):
 # ═════════════════════════════════════════════════════════════════════════
 # Match-day assets
 # ═════════════════════════════════════════════════════════════════════════
+# Stadium pads are switched off for now: no field in the editor, no issue
+# raised for them (the team editor checks the same flag).
+PADS_ENABLED = False
+
+
 class AssetsTab(TeamTab):
     def __init__(self, screen, index):
         super().__init__(screen, index)
@@ -1186,7 +1245,6 @@ class AssetsTab(TeamTab):
         ball.add(g)
         self.ball_strip = FrameStrip(2, thumb=(128, 64))
         ball.add(self.ball_strip)
-        ball.add(Note(ASSET_SPECS["ball"]["note"] + " ball_%.png: 2 images, 256×128."))
         grid.addWidget(ball, 0, 0)
 
         banners = SectionCard("banners")
@@ -1197,18 +1255,18 @@ class AssetsTab(TeamTab):
         banners.add(g)
         self.banner_strip = FrameStrip(4, thumb=(128, 32))
         banners.add(self.banner_strip)
-        banners.add(Note(ASSET_SPECS["banners"]["note"] + " banner_%.png: 4 images, 512×128."))
         grid.addWidget(banners, 0, 1)
 
-        pads = SectionCard("stadium pads")
-        g = FieldGrid(columns=1)
-        self.pads = self.register("pads", AssetField("Pads archive", ASSET_SPECS["pads"]))
-        self._wire(self.pads, "pads")
-        g.add(self.pads)
-        pads.add(g)
-        pads.add(Note(ASSET_SPECS["pads"]["note"] + " A .fsh texture archive, copied as-is."))
-        pads.v.addStretch(1)
-        grid.addWidget(pads, 1, 0)
+        self.pads = None
+        if PADS_ENABLED:
+            pads = SectionCard("stadium pads")
+            g = FieldGrid(columns=1)
+            self.pads = self.register("pads", AssetField("Pads archive", ASSET_SPECS["pads"]))
+            self._wire(self.pads, "pads")
+            g.add(self.pads)
+            pads.add(g)
+            pads.v.addStretch(1)
+            grid.addWidget(pads, 1, 1)
 
         logos = SectionCard("secondary logos")
         g = FieldGrid(columns=1)
@@ -1219,7 +1277,7 @@ class AssetsTab(TeamTab):
             g.add(f)
             self.logos[slot] = f
         logos.add(g)
-        grid.addWidget(logos, 1, 1)
+        grid.addWidget(logos, 1, 0)
         self.body.addLayout(grid)
         self.body.addStretch(1)
 
@@ -1233,6 +1291,8 @@ class AssetsTab(TeamTab):
         info = self.info()
         root = self.screen.team_folder()
         for f, key in ((self.ball, "ball"), (self.banners, "banners"), (self.pads, "pads")):
+            if f is None:
+                continue
             f.set_root(root)
             f.set_value(info.get(key, ""))
         for slot, f in self.logos.items():

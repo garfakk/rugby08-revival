@@ -1,10 +1,9 @@
 {
  "1016": {
   "2010": {
-   "enabled": false,
    "name": "Spain",
    "type": "international",
-   "category": "",
+   "category": "International",
    "ball": "ball/ball_%.png",
    "banners": "banners/banner_%.png",
    "pads": "",
@@ -17,16 +16,22 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2010/home_front.png",
-     "backKitFile": "kits_2010/home_back/home_back_%.png",
-     "previewFile": "kits_2010/home_preview.png",
-     "color": ""
+     "frontKitFile": "kits_2010_2/home_front.png",
+     "backKitFile": "kits_2010_2/home_back/home_back_%.png",
+     "previewFile": "kits_2010_2/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     },
     "away": {
-     "frontKitFile": "kits_2010/away_front.png",
-     "backKitFile": "kits_2010/away_back/away_back_%.png",
-     "previewFile": "kits_2010/away_preview.png",
-     "color": ""
+     "frontKitFile": "kits_2010_2/away_front.png",
+     "backKitFile": "kits_2010_2/away_back/away_back_%.png",
+     "previewFile": "kits_2010_2/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     }
    },
    "roles": {
@@ -155,6 +160,627 @@
    ]
   },
   "2025": {
+   "enabled": false,
+   "name": "Spain",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145870",
+    "viceCaptain": "146743",
+    "longGK": "145870",
+    "shortGK": "145870",
+    "longPunt": "145870",
+    "shortPunt": "145870",
+    "kickoff": "145870"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "146741",
+    "146743",
+    "146748",
+    "146740",
+    "146749",
+    "146751",
+    "146744",
+    "146754",
+    "145875",
+    "145870",
+    "146739",
+    "146745",
+    "145867",
+    "146746",
+    "146747",
+    "146750",
+    "146757",
+    "146753",
+    "146756",
+    "146742",
+    "145879",
+    "145871",
+    "145777",
+    "145857",
+    "145858",
+    "145860",
+    "145861",
+    "145864",
+    "146752",
+    "146755"
+   ]
+  },
+  "2009": {
+   "name": "Spain",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2009_3/away_front.png",
+     "backKitFile": "kits_2009_3/away_back/away_back_%.png",
+     "previewFile": "kits_2009_3/home_preview.png",
+     "color": "",
+     "model3d": {
+      "fit": "loose"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2009_3/away_front.png",
+     "backKitFile": "kits_2009_3/away_back/away_back_%.png",
+     "previewFile": "kits_2009_3/away_preview.png",
+     "color": "",
+     "model3d": {
+      "fit": "loose"
+     }
+    }
+   },
+   "roles": {
+    "captain": "143447",
+    "viceCaptain": "143447",
+    "longGK": "142801",
+    "shortGK": "142801",
+    "longPunt": "142801",
+    "shortPunt": "142801",
+    "kickoff": "142801"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "143475",
+    "143369",
+    "143754",
+    "142419",
+    "142922",
+    "143447",
+    "143432",
+    "142380",
+    "143181",
+    "142801",
+    "142453",
+    "143690",
+    "142480",
+    "142733",
+    "142965",
+    "143483",
+    "142439",
+    "142685",
+    "142452",
+    "142628",
+    "143452",
+    "142544",
+    "143079",
+    "142702",
+    "143970",
+    "143962",
+    "143812",
+    "143974",
+    "143688",
+    "143547"
+   ]
+  },
+  "2016": {
+   "enabled": false,
+   "name": "Spain",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145870",
+    "viceCaptain": "145860",
+    "longGK": "144379",
+    "shortGK": "144379",
+    "longPunt": "144379",
+    "shortPunt": "145870",
+    "kickoff": "144379"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145858",
+    "145860",
+    "145861",
+    "145878",
+    "145881",
+    "145857",
+    "145862",
+    "145864",
+    "145859",
+    "145870",
+    "145868",
+    "145867",
+    "145863",
+    "145876",
+    "144379",
+    "145874",
+    "145877",
+    "145882",
+    "145873",
+    "145869",
+    "145879",
+    "145871",
+    "145865",
+    "145866",
+    "145872",
+    "145875",
+    "145880",
+    "145883",
+    "145884",
+    "145885"
+   ]
+  },
+  "2018": {
+   "enabled": false,
+   "name": "Spain",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145870",
+    "viceCaptain": "145860",
+    "longGK": "144379",
+    "shortGK": "144379",
+    "longPunt": "144379",
+    "shortPunt": "145870",
+    "kickoff": "144379"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145858",
+    "145860",
+    "145861",
+    "145878",
+    "145881",
+    "145857",
+    "145862",
+    "145864",
+    "145859",
+    "145870",
+    "145868",
+    "145867",
+    "145863",
+    "145876",
+    "144379",
+    "145874",
+    "145877",
+    "145882",
+    "145873",
+    "145869",
+    "145879",
+    "145871",
+    "145865",
+    "145866",
+    "145872",
+    "145875",
+    "145880",
+    "145883",
+    "145884",
+    "145885"
+   ]
+  },
+  "2019": {
+   "enabled": false,
+   "name": "Spain",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145870",
+    "viceCaptain": "145860",
+    "longGK": "144379",
+    "shortGK": "144379",
+    "longPunt": "144379",
+    "shortPunt": "145870",
+    "kickoff": "144379"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145858",
+    "145860",
+    "145861",
+    "145878",
+    "145881",
+    "145857",
+    "145862",
+    "145864",
+    "145859",
+    "145870",
+    "145868",
+    "145867",
+    "145863",
+    "145876",
+    "144379",
+    "145874",
+    "145877",
+    "145882",
+    "145873",
+    "145869",
+    "145879",
+    "145871",
+    "145865",
+    "145866",
+    "145872",
+    "145875",
+    "145880",
+    "145883",
+    "145884",
+    "145885"
+   ]
+  },
+  "2020": {
+   "enabled": false,
+   "name": "Spain",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145870",
+    "viceCaptain": "145860",
+    "longGK": "144379",
+    "shortGK": "144379",
+    "longPunt": "144379",
+    "shortPunt": "145870",
+    "kickoff": "144379"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145858",
+    "145860",
+    "145861",
+    "145878",
+    "145881",
+    "145857",
+    "145862",
+    "145864",
+    "145859",
+    "145870",
+    "145868",
+    "145867",
+    "145863",
+    "145876",
+    "144379",
+    "145874",
+    "145877",
+    "145882",
+    "145873",
+    "145869",
+    "145879",
+    "145871",
+    "145865",
+    "145866",
+    "145872",
+    "145875",
+    "145880",
+    "145883",
+    "145884",
+    "145885"
+   ]
+  },
+  "2022": {
+   "enabled": false,
+   "name": "Spain",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145870",
+    "viceCaptain": "145860",
+    "longGK": "144379",
+    "shortGK": "144379",
+    "longPunt": "144379",
+    "shortPunt": "145870",
+    "kickoff": "144379"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145858",
+    "145860",
+    "145861",
+    "145878",
+    "145881",
+    "145857",
+    "145862",
+    "145864",
+    "145859",
+    "145870",
+    "145868",
+    "145867",
+    "145863",
+    "145876",
+    "144379",
+    "145874",
+    "145877",
+    "145882",
+    "145873",
+    "145869",
+    "145879",
+    "145871",
+    "145865",
+    "145866",
+    "145872",
+    "145875",
+    "145880",
+    "145883",
+    "145884",
+    "145885"
+   ]
+  },
+  "2023": {
+   "enabled": false,
+   "name": "Spain",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145870",
+    "viceCaptain": "145860",
+    "longGK": "144379",
+    "shortGK": "144379",
+    "longPunt": "144379",
+    "shortPunt": "145870",
+    "kickoff": "144379"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145858",
+    "145860",
+    "145861",
+    "145878",
+    "145881",
+    "145857",
+    "145862",
+    "145864",
+    "145859",
+    "145870",
+    "145868",
+    "145867",
+    "145863",
+    "145876",
+    "144379",
+    "145874",
+    "145877",
+    "145882",
+    "145873",
+    "145869",
+    "145879",
+    "145871",
+    "145865",
+    "145866",
+    "145872",
+    "145875",
+    "145880",
+    "145883",
+    "145884",
+    "145885"
+   ]
+  },
+  "2024": {
    "enabled": false,
    "name": "Spain",
    "type": "international",

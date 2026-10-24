@@ -1,0 +1,896 @@
+{
+ "10111": {
+  "2009": {
+   "name": "Brumbies",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "143848",
+    "shortGK": "143848",
+    "longPunt": "143848",
+    "shortPunt": "143848",
+    "kickoff": "143848"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "143228",
+    "143511",
+    "143941",
+    "156071",
+    "144029",
+    "155581",
+    "143081",
+    "142950",
+    "155579",
+    "144057",
+    "155598",
+    "153251",
+    "143848",
+    "147244",
+    "147224",
+    "154092",
+    "153247",
+    "156171",
+    "142381",
+    "156187",
+    "155602",
+    "153255",
+    "154096",
+    "155529",
+    "143650",
+    "155558",
+    "153252",
+    "155556",
+    "155577",
+    "156173",
+    "156181"
+   ],
+   "enabled": false
+  },
+  "2010": {
+   "name": "Brumbies",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "147247",
+    "viceCaptain": "147247",
+    "longGK": "142608",
+    "shortGK": "142608",
+    "longPunt": "142608",
+    "shortPunt": "142608",
+    "kickoff": "142608"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "143228",
+    "143511",
+    "153247",
+    "153252",
+    "142381",
+    "143878",
+    "143081",
+    "142950",
+    "142449",
+    "147247",
+    "155598",
+    "142608",
+    "153251",
+    "155483",
+    "155517",
+    "155529",
+    "155508",
+    "143941",
+    "156071",
+    "156187",
+    "155602",
+    "144057",
+    "153255",
+    "153949",
+    "155543",
+    "147244",
+    "143848",
+    "155509",
+    "145069",
+    "156173",
+    "155516",
+    "156181"
+   ],
+   "enabled": true
+  },
+  "2022": {
+   "name": "Brumbies",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145176",
+    "viceCaptain": "145176",
+    "longGK": "145176",
+    "shortGK": "145176",
+    "longPunt": "145176",
+    "shortPunt": "145176",
+    "kickoff": "145176"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "144830",
+    "142306",
+    "144138",
+    "153983",
+    "154009",
+    "145345",
+    "155727",
+    "145257",
+    "145194",
+    "145176",
+    "155657",
+    "142331",
+    "144970",
+    "145610",
+    "155981",
+    "153982",
+    "153087",
+    "155701",
+    "145167",
+    "155751",
+    "155713",
+    "154648",
+    "155781",
+    "155864",
+    "155868",
+    "155869",
+    "145539",
+    "155806",
+    "153604",
+    "154012",
+    "153984",
+    "155612",
+    "155695",
+    "155876",
+    "153975"
+   ],
+   "enabled": true
+  },
+  "2023": {
+   "name": "Brumbies",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2023/home_front.png",
+     "backKitFile": "kits_2023/home_back/home_back_%.png",
+     "previewFile": "kits_2023/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2023/away_front.png",
+     "backKitFile": "kits_2023/away_back/away_back_%.png",
+     "previewFile": "kits_2023/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145176",
+    "viceCaptain": "145176",
+    "longGK": "145176",
+    "shortGK": "145176",
+    "longPunt": "145176",
+    "shortPunt": "145176",
+    "kickoff": "145176"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "144830",
+    "153982",
+    "144138",
+    "145167",
+    "154009",
+    "145345",
+    "155869",
+    "145257",
+    "145194",
+    "145176",
+    "155982",
+    "155697",
+    "144970",
+    "155657",
+    "155981",
+    "153984",
+    "146466",
+    "155854",
+    "153983",
+    "155980",
+    "155713",
+    "155639",
+    "155868",
+    "155837",
+    "155806",
+    "155701",
+    "155727",
+    "145539",
+    "154012",
+    "155876",
+    "156002",
+    "153604",
+    "155710",
+    "155864",
+    "154092",
+    "155781",
+    "145610",
+    "155999"
+   ],
+   "enabled": true
+  },
+  "2024": {
+   "name": "Brumbies",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145176",
+    "viceCaptain": "145176",
+    "longGK": "145176",
+    "shortGK": "145176",
+    "longPunt": "145176",
+    "shortPunt": "145176",
+    "kickoff": "145176"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "144830",
+    "154012",
+    "144138",
+    "153983",
+    "145167",
+    "145345",
+    "155727",
+    "155980",
+    "155713",
+    "145176",
+    "155982",
+    "155697",
+    "144970",
+    "155657",
+    "155981",
+    "153984",
+    "146466",
+    "155854",
+    "154009",
+    "145539",
+    "155716",
+    "155639",
+    "155868",
+    "155701",
+    "145610",
+    "155806",
+    "155979",
+    "155869",
+    "153982",
+    "156040",
+    "155864",
+    "155999",
+    "155837",
+    "155876",
+    "156002"
+   ],
+   "enabled": true
+  },
+  "2008": {
+   "name": "Brumbies",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "143848",
+    "shortGK": "143848",
+    "longPunt": "143848",
+    "shortPunt": "143848",
+    "kickoff": "143848"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "143228",
+    "143511",
+    "143941",
+    "156071",
+    "144029",
+    "155581",
+    "143081",
+    "142950",
+    "155579",
+    "144057",
+    "155598",
+    "153251",
+    "143848",
+    "147244",
+    "147224",
+    "154092",
+    "153247",
+    "156171",
+    "142381",
+    "156187",
+    "155602",
+    "153255",
+    "154096",
+    "155529",
+    "143650",
+    "155558",
+    "153252",
+    "155556",
+    "155577",
+    "156173",
+    "156181"
+   ],
+   "enabled": false
+  },
+  "2018": {
+   "name": "Brumbies",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144057",
+    "viceCaptain": "144057",
+    "longGK": "144057",
+    "shortGK": "144057",
+    "longPunt": "144057",
+    "shortPunt": "144057",
+    "kickoff": "144057"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153087",
+    "142306",
+    "144138",
+    "142359",
+    "155550",
+    "155655",
+    "143404",
+    "153976",
+    "144811",
+    "144057",
+    "155657",
+    "144908",
+    "153092",
+    "153098",
+    "155981",
+    "158593",
+    "158579",
+    "143228",
+    "153983",
+    "145345",
+    "158567",
+    "158600",
+    "158565",
+    "158580",
+    "158649",
+    "155509",
+    "153105",
+    "158647",
+    "158614",
+    "158606",
+    "153984",
+    "158575",
+    "158578",
+    "158639",
+    "158634",
+    "158654",
+    "153975"
+   ],
+   "enabled": true
+  },
+  "2019": {
+   "name": "Brumbies",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2019/home_front.png",
+     "backKitFile": "kits_2019/home_back/home_back_%.png",
+     "previewFile": "kits_2019/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2019/away_front.png",
+     "backKitFile": "kits_2019/away_back/away_back_%.png",
+     "previewFile": "kits_2019/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144057",
+    "viceCaptain": "144057",
+    "longGK": "144057",
+    "shortGK": "144057",
+    "longPunt": "144057",
+    "shortPunt": "144057",
+    "kickoff": "144057"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153087",
+    "142306",
+    "144138",
+    "142359",
+    "155550",
+    "145345",
+    "158580",
+    "145257",
+    "144811",
+    "144057",
+    "155632",
+    "142331",
+    "153092",
+    "153098",
+    "155981",
+    "153984",
+    "158579",
+    "143228",
+    "153983",
+    "155655",
+    "158567",
+    "158600",
+    "144830",
+    "155860",
+    "145610",
+    "158575",
+    "155657",
+    "155727",
+    "153105",
+    "155713",
+    "143404",
+    "158614",
+    "155781",
+    "158639",
+    "158647",
+    "158565",
+    "144970",
+    "11816",
+    "155012",
+    "153975"
+   ],
+   "enabled": true
+  },
+  "2020": {
+   "name": "Brumbies",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "145176",
+    "shortGK": "145176",
+    "longPunt": "145176",
+    "shortPunt": "145176",
+    "kickoff": "145176"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "144830",
+    "153984",
+    "144138",
+    "155860",
+    "154009",
+    "145345",
+    "158611",
+    "145257",
+    "144811",
+    "145176",
+    "145610",
+    "142331",
+    "153092",
+    "145404",
+    "153975",
+    "153982",
+    "155781",
+    "153087",
+    "145167",
+    "155655",
+    "155713",
+    "155826",
+    "155780",
+    "155657",
+    "155784",
+    "158580",
+    "153983",
+    "142306",
+    "155632",
+    "144970"
+   ],
+   "enabled": false
+  },
+  "2021": {
+   "name": "Brumbies",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "145176",
+    "shortGK": "145176",
+    "longPunt": "145176",
+    "shortPunt": "145176",
+    "kickoff": "145176"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "144830",
+    "153984",
+    "144138",
+    "155860",
+    "154009",
+    "145345",
+    "158611",
+    "145257",
+    "144811",
+    "145176",
+    "145610",
+    "142331",
+    "153092",
+    "145404",
+    "153975",
+    "153982",
+    "155781",
+    "153087",
+    "145167",
+    "155655",
+    "155713",
+    "155826",
+    "155780",
+    "155657",
+    "155784",
+    "158580",
+    "153983",
+    "142306",
+    "155632",
+    "144970"
+   ],
+   "enabled": false
+  },
+  "2016": {
+   "name": "Brumbies",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "144057",
+    "shortGK": "144057",
+    "longPunt": "144057",
+    "shortPunt": "144057",
+    "kickoff": "144057"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153087",
+    "142306",
+    "144138",
+    "142359",
+    "155550",
+    "155655",
+    "143404",
+    "153976",
+    "144811",
+    "144057",
+    "155657",
+    "144908",
+    "153092",
+    "153098",
+    "153975",
+    "158567",
+    "158593",
+    "158579",
+    "158565",
+    "158580",
+    "158600",
+    "158649",
+    "155509",
+    "153105",
+    "158647",
+    "143228",
+    "158614",
+    "158606",
+    "153984",
+    "158575",
+    "145345",
+    "158578",
+    "158639",
+    "153983",
+    "158634",
+    "158654"
+   ],
+   "enabled": false
+  }
+ }
+}

@@ -17,16 +17,22 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2019/home_front.png",
-     "backKitFile": "kits_2019/home_back/home_back_%.png",
-     "previewFile": "kits_2019/home_preview.png",
-     "color": ""
+     "frontKitFile": "kits_2011/home_front.png",
+     "backKitFile": "kits_2011/home_back/home_back_%.png",
+     "previewFile": "kits_2011/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     },
     "away": {
-     "frontKitFile": "kits_2019/away_front.png",
-     "backKitFile": "kits_2019/away_back/away_back_%.png",
-     "previewFile": "kits_2019/away_preview.png",
-     "color": ""
+     "frontKitFile": "kits_2011/away_front.png",
+     "backKitFile": "kits_2011/away_back/away_back_%.png",
+     "previewFile": "kits_2011/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     }
    },
    "roles": {
@@ -112,13 +118,19 @@
      "frontKitFile": "kits_2019/home_front.png",
      "backKitFile": "kits_2019/home_back/home_back_%.png",
      "previewFile": "kits_2019/home_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     },
     "away": {
      "frontKitFile": "kits_2019/away_front.png",
      "backKitFile": "kits_2019/away_back/away_back_%.png",
      "previewFile": "kits_2019/away_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     }
    },
    "roles": {
@@ -137,10 +149,10 @@
     "right": "loop"
    },
    "players": [
-    "142490",
+    "152961",
     "148902",
     "11752",
-    "143514",
+    "153993",
     "146988",
     "145332",
     "143014",
@@ -203,13 +215,19 @@
      "frontKitFile": "kits_2019/home_front.png",
      "backKitFile": "kits_2019/home_back/home_back_%.png",
      "previewFile": "kits_2019/home_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     },
     "away": {
      "frontKitFile": "kits_2019/away_front.png",
      "backKitFile": "kits_2019/away_back/away_back_%.png",
      "previewFile": "kits_2019/away_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     }
    },
    "roles": {
@@ -228,10 +246,10 @@
     "right": "loop"
    },
    "players": [
-    "142490",
+    "152961",
     "150470",
     "11752",
-    "143514",
+    "153993",
     "146988",
     "145332",
     "148152",
@@ -241,7 +259,7 @@
     "144924",
     "144943",
     "149537",
-    "144602",
+    "152975",
     "149201",
     "148902",
     "148770",
@@ -263,7 +281,7 @@
     "150455",
     "150014",
     "145128",
-    "150472",
+    "155011",
     "148598",
     "149516",
     "148132",
@@ -281,7 +299,7 @@
    ]
   },
   "2017": {
-   "enabled": false,
+   "enabled": true,
    "name": "La Rochelle",
    "type": "club",
    "category": "Top 14",
@@ -297,26 +315,32 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2019/home_front.png",
+     "frontKitFile": "kits_2017/home_front.png",
      "backKitFile": "kits_2019/home_back/home_back_%.png",
-     "previewFile": "kits_2019/home_preview.png",
-     "color": ""
+     "previewFile": "kits_2017/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     },
     "away": {
-     "frontKitFile": "kits_2019/away_front.png",
+     "frontKitFile": "kits_2017/away_front.png",
      "backKitFile": "kits_2019/away_back/away_back_%.png",
-     "previewFile": "kits_2019/away_preview.png",
-     "color": ""
+     "previewFile": "kits_2017/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     }
    },
    "roles": {
-    "captain": "124750",
-    "viceCaptain": "142537",
-    "longGK": "124750",
-    "shortGK": "124750",
-    "longPunt": "124750",
-    "shortPunt": "124750",
-    "kickoff": "124750"
+    "captain": "124230",
+    "viceCaptain": "152967",
+    "longGK": "124230",
+    "shortGK": "124230",
+    "longPunt": "124230",
+    "shortPunt": "124230",
+    "kickoff": "124230"
    },
    "setPlays": {
     "up": "classic",
@@ -325,57 +349,57 @@
     "right": "loop"
    },
    "players": [
-    "150456",
-    "148902",
+    "152959",
+    "152956",
     "11752",
-    "143514",
+    "153993",
     "143014",
-    "145332",
-    "144909",
-    "142537",
+    "152965",
+    "152497",
+    "152967",
     "143652",
-    "124750",
+    "124230",
     "145659",
-    "149537",
-    "150482",
-    "144602",
-    "144924",
-    "150483",
+    "152970",
+    "152972",
+    "152975",
+    "152976",
+    "153799",
     "145621",
-    "146988",
-    "148152",
+    "158497",
+    "152895",
     "142362",
-    "150484",
-    "148775",
-    "146897",
+    "156286",
+    "152971",
+    "152958",
     "144943",
     "145128",
     "145738",
-    "149205",
+    "158491",
     "144976",
-    "142490",
-    "144143",
+    "152961",
+    "152745",
     "144520",
-    "149656",
-    "150470",
-    "150476",
-    "150461",
-    "150472",
-    "145776",
+    "155505",
+    "156260",
+    "153336",
+    "156256",
+    "155011",
+    "154854",
     "150455",
     "148817",
-    "145741",
+    "152966",
     "150462",
-    "147507",
-    "150485",
-    "150477",
-    "150486",
-    "150487",
+    "152865",
+    "154201",
+    "156283",
+    "156288",
+    "153796",
     "150478"
    ]
   },
   "2018": {
-   "enabled": false,
+   "enabled": true,
    "name": "La Rochelle",
    "type": "club",
    "category": "Top 14",
@@ -391,26 +415,32 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2019/home_front.png",
+     "frontKitFile": "kits_2018/home_front.png",
      "backKitFile": "kits_2019/home_back/home_back_%.png",
-     "previewFile": "kits_2019/home_preview.png",
-     "color": ""
+     "previewFile": "kits_2018/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     },
     "away": {
-     "frontKitFile": "kits_2019/away_front.png",
+     "frontKitFile": "kits_2018/away_front.png",
      "backKitFile": "kits_2019/away_back/away_back_%.png",
-     "previewFile": "kits_2019/away_preview.png",
-     "color": ""
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     }
    },
    "roles": {
-    "captain": "143514",
+    "captain": "144943",
     "viceCaptain": "145621",
-    "longGK": "144924",
-    "shortGK": "144924",
-    "longPunt": "144924",
-    "shortPunt": "144924",
-    "kickoff": "149537"
+    "longGK": "152745",
+    "shortGK": "152745",
+    "longPunt": "144828",
+    "shortPunt": "152745",
+    "kickoff": "144828"
    },
    "setPlays": {
     "up": "classic",
@@ -420,57 +450,54 @@
    },
    "players": [
     "145621",
-    "148902",
-    "11752",
-    "145332",
-    "143014",
-    "144943",
-    "144909",
-    "142537",
-    "144143",
-    "144828",
-    "144520",
-    "149537",
-    "150482",
-    "144602",
-    "144924",
     "145227",
-    "142490",
-    "100175",
-    "10523",
-    "150486",
-    "124750",
-    "148775",
-    "146897",
-    "145659",
-    "148152",
-    "143514",
-    "144585",
-    "145741",
+    "11752",
+    "152965",
     "145128",
+    "144943",
+    "152895",
+    "152967",
+    "152745",
+    "144828",
+    "152974",
+    "152970",
+    "152972",
+    "152975",
+    "145659",
+    "152958",
+    "100175",
+    "152961",
+    "152956",
+    "124230",
+    "152971",
+    "156288",
+    "156286",
+    "153993",
+    "152976",
+    "152497",
     "145547",
-    "143227",
-    "146893",
+    "144585",
+    "152966",
     "144976",
+    "152963",
     "142357",
-    "150483",
-    "150456",
-    "150484",
-    "146665",
+    "153799",
+    "156240",
+    "152969",
+    "152959",
+    "10523",
     "142362",
-    "150491",
-    "142555",
-    "145776",
-    "150461",
-    "150490",
-    "150477",
-    "150488",
-    "150489",
-    "150472"
+    "146665",
+    "152957",
+    "153990",
+    "156256",
+    "154854",
+    "156283",
+    "152962"
    ]
   },
   "2019": {
-   "enabled": false,
+   "enabled": true,
    "name": "La Rochelle",
    "type": "club",
    "category": "Top 14",
@@ -486,20 +513,26 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2019/home_front.png",
-     "backKitFile": "kits_2019/home_back/home_back_%.png",
-     "previewFile": "kits_2019/home_preview.png",
-     "color": ""
+     "frontKitFile": "kits_2019_2/home_front.png",
+     "backKitFile": "kits_2019_2/home_back/home_back_%.png",
+     "previewFile": "kits_2019_2/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     },
     "away": {
-     "frontKitFile": "kits_2019/away_front.png",
-     "backKitFile": "kits_2019/away_back/away_back_%.png",
-     "previewFile": "kits_2019/away_preview.png",
-     "color": ""
+     "frontKitFile": "kits_2019_2/away_front.png",
+     "backKitFile": "kits_2019_2/away_back/away_back_%.png",
+     "previewFile": "kits_2019_2/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     }
    },
    "roles": {
-    "captain": "142537",
+    "captain": "10523",
     "viceCaptain": "101588",
     "longGK": "144690",
     "shortGK": "144690",
@@ -515,55 +548,50 @@
    },
    "players": [
     "145621",
-    "150491",
+    "152957",
     "11752",
-    "145332",
+    "152965",
     "146665",
-    "145695",
-    "144909",
-    "142537",
+    "153798",
+    "152497",
+    "10523",
     "145547",
     "144690",
     "101588",
     "144828",
     "144585",
     "142362",
-    "145659",
+    "152976",
     "145227",
-    "150456",
-    "145128",
-    "145741",
-    "144143",
-    "145779",
-    "149537",
-    "143053",
-    "10523",
-    "144520",
-    "148902",
-    "144732",
-    "142490",
-    "148254",
-    "144943",
-    "144924",
-    "150488",
-    "143014",
-    "150486",
-    "146237",
-    "148110",
-    "148774",
-    "150482",
-    "145278",
-    "146897",
+    "152960",
+    "152959",
     "145014",
-    "150487",
-    "146893",
-    "150477",
-    "143227",
-    "145304",
-    "142357",
-    "11911",
-    "149534",
-    "148775"
+    "152966",
+    "146237",
+    "152968",
+    "153605",
+    "152961",
+    "152956",
+    "145128",
+    "152967",
+    "152745",
+    "152970",
+    "152974",
+    "144732",
+    "144943",
+    "145659",
+    "153797",
+    "156240",
+    "156288",
+    "152973",
+    "154661",
+    "152972",
+    "152964",
+    "152958",
+    "152963",
+    "153796",
+    "156283",
+    "152969"
    ]
   },
   "2020": {
@@ -586,13 +614,19 @@
      "frontKitFile": "kits_2019/home_front.png",
      "backKitFile": "kits_2019/home_back/home_back_%.png",
      "previewFile": "kits_2019/home_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     },
     "away": {
      "frontKitFile": "kits_2019/away_front.png",
      "backKitFile": "kits_2019/away_back/away_back_%.png",
      "previewFile": "kits_2019/away_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     }
    },
    "roles": {
@@ -613,51 +647,44 @@
    "players": [
     "145621",
     "145227",
-    "145296",
-    "146669",
+    "11752",
     "145128",
-    "144909",
-    "145741",
-    "142537",
+    "145014",
+    "152964",
+    "144943",
+    "10523",
     "145547",
     "142330",
     "142362",
-    "144943",
     "144585",
-    "145659",
     "144828",
+    "145659",
+    "152976",
     "144529",
     "146537",
-    "145304",
-    "145014",
-    "146237",
-    "124750",
-    "149537",
-    "144924",
-    "145695",
+    "152959",
+    "145705",
+    "152966",
+    "152745",
     "144690",
-    "148254",
-    "144143",
-    "145332",
-    "150491",
-    "10523",
-    "11752",
-    "148774",
-    "149534",
-    "144520",
-    "144732",
-    "11911",
-    "143053",
-    "101588",
-    "142490",
-    "145278",
-    "142357",
+    "153797",
+    "152960",
+    "152961",
+    "153605",
+    "153796",
+    "152957",
     "146665",
-    "150456",
-    "149228",
-    "143014",
-    "150492",
-    "150488"
+    "152965",
+    "152497",
+    "153798",
+    "152967",
+    "152968",
+    "144732",
+    "152970",
+    "152973",
+    "152974",
+    "101588",
+    "152975"
    ]
   },
   "2021": {
@@ -680,18 +707,24 @@
      "frontKitFile": "kits_2019/home_front.png",
      "backKitFile": "kits_2019/home_back/home_back_%.png",
      "previewFile": "kits_2019/home_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     },
     "away": {
      "frontKitFile": "kits_2019/away_front.png",
      "backKitFile": "kits_2019/away_back/away_back_%.png",
      "previewFile": "kits_2019/away_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     }
    },
    "roles": {
-    "captain": "144909",
-    "viceCaptain": "142537",
+    "captain": "",
+    "viceCaptain": "",
     "longGK": "142330",
     "shortGK": "142330",
     "longPunt": "142330",
@@ -709,36 +742,47 @@
     "144529",
     "11752",
     "145705",
-    "145332",
-    "142537",
-    "144909",
-    "10523",
-    "144775",
-    "142330",
-    "144602",
+    "145014",
+    "11911",
     "144943",
-    "144585",
+    "10523",
+    "145547",
+    "142330",
     "144460",
+    "144585",
+    "144732",
+    "144769",
     "144270",
     "145227",
-    "145296",
-    "145014",
-    "145695",
-    "145547",
+    "146537",
+    "152960",
+    "146669",
+    "152966",
+    "146237",
     "144690",
-    "144769",
-    "142490",
-    "145015",
+    "153797",
+    "153123",
+    "152961",
+    "154095",
+    "153796",
+    "154978",
     "145128",
-    "145304",
-    "145741",
-    "145278",
-    "144732",
-    "144828"
+    "155148",
+    "152965",
+    "152964",
+    "152497",
+    "153798",
+    "152967",
+    "155149",
+    "144828",
+    "152970",
+    "142357",
+    "152975",
+    "142362",
+    "155150"
    ]
   },
   "2022": {
-   "enabled": false,
    "name": "La Rochelle",
    "type": "club",
    "category": "Top 14",
@@ -754,21 +798,21 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2019/home_front.png",
-     "backKitFile": "kits_2019/home_back/home_back_%.png",
-     "previewFile": "kits_2019/home_preview.png",
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
      "color": ""
     },
     "away": {
-     "frontKitFile": "kits_2019/away_front.png",
-     "backKitFile": "kits_2019/away_back/away_back_%.png",
-     "previewFile": "kits_2019/away_preview.png",
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
      "color": ""
     }
    },
    "roles": {
-    "captain": "10523",
-    "viceCaptain": "145695",
+    "captain": "144690",
+    "viceCaptain": "144690",
     "longGK": "144270",
     "shortGK": "144270",
     "longPunt": "144270",
@@ -785,52 +829,47 @@
     "145621",
     "145227",
     "11752",
-    "145332",
+    "152965",
     "145705",
-    "145695",
-    "145278",
-    "10523",
+    "153798",
+    "152964",
+    "152967",
     "145547",
     "144690",
     "144769",
-    "144943",
+    "142283",
     "144828",
-    "144732",
+    "144460",
     "144270",
-    "150487",
-    "150488",
+    "153796",
+    "146155",
+    "146269",
     "146669",
-    "11911",
+    "10523",
     "146237",
     "145979",
-    "142357",
-    "146155",
-    "144460",
-    "147529",
+    "153797",
+    "153123",
+    "11911",
+    "144732",
     "146537",
-    "142537",
-    "150479",
+    "156296",
+    "152406",
     "144529",
-    "146269",
-    "142283",
+    "144943",
     "146547",
-    "145296",
+    "142357",
     "142362",
     "142330",
-    "144909",
-    "150462",
+    "152497",
+    "155149",
     "145128",
-    "150494",
-    "145097",
-    "150493",
-    "150495",
-    "150496",
-    "150497",
-    "150498"
+    "156313",
+    "153606",
+    "156334"
    ]
   },
   "2023": {
-   "enabled": false,
    "name": "La Rochelle",
    "type": "club",
    "category": "Top 14",
@@ -846,26 +885,26 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2024/home_front.png",
-     "backKitFile": "kits_2024/home_back/home_back_%.png",
-     "previewFile": "kits_2024/home_preview.png",
+     "frontKitFile": "kits_2023/home_front.png",
+     "backKitFile": "kits_2023/home_back/home_back_%.png",
+     "previewFile": "kits_2023/home_preview.png",
      "color": ""
     },
     "away": {
-     "frontKitFile": "kits_2024/away_front.png",
-     "backKitFile": "kits_2024/away_back/away_back_%.png",
-     "previewFile": "kits_2024/away_preview.png",
+     "frontKitFile": "kits_2023/away_front.png",
+     "backKitFile": "kits_2023/away_back/away_back_%.png",
+     "previewFile": "kits_2023/away_preview.png",
      "color": ""
     }
    },
    "roles": {
     "captain": "142283",
-    "viceCaptain": "10523",
+    "viceCaptain": "142289",
     "longGK": "142289",
     "shortGK": "142289",
     "longPunt": "142289",
     "shortPunt": "142289",
-    "kickoff": "148953"
+    "kickoff": "142289"
    },
    "setPlays": {
     "up": "classic",
@@ -877,51 +916,48 @@
     "146537",
     "145227",
     "11752",
-    "145332",
+    "152965",
     "145705",
-    "145278",
+    "152964",
     "11911",
-    "10523",
+    "142288",
     "145547",
     "142289",
     "144460",
     "142283",
-    "148953",
+    "142357",
     "144916",
     "144270",
     "145269",
-    "148948",
-    "150479",
-    "145625",
-    "146237",
-    "150462",
-    "144732",
+    "153797",
     "146137",
-    "142357",
-    "144769",
-    "142288",
-    "144943",
-    "146269",
     "146669",
-    "146297",
-    "150488",
-    "150487",
-    "147634",
-    "150494",
+    "10523",
+    "146237",
+    "145735",
+    "145625",
+    "146269",
+    "152889",
+    "156310",
+    "152406",
+    "144732",
+    "144769",
+    "144943",
+    "155149",
+    "153796",
+    "156313",
+    "156354",
     "145979",
-    "144665",
-    "148985",
-    "150497",
-    "149767",
-    "150500",
+    "155638",
+    "156348",
+    "156334",
     "146547",
-    "150501",
-    "150496",
-    "150502",
-    "150503",
-    "150504",
-    "150499",
-    "146908"
+    "153608",
+    "156353",
+    "156314",
+    "153606",
+    "156336",
+    "156362"
    ]
   },
   "2024": {
@@ -953,7 +989,7 @@
     }
    },
    "roles": {
-    "captain": "10523",
+    "captain": "142289",
     "viceCaptain": "11752",
     "longGK": "142289",
     "shortGK": "142289",
@@ -969,35 +1005,49 @@
    },
    "players": [
     "146537",
-    "145227",
+    "145269",
     "11752",
-    "145705",
     "146669",
-    "11911",
+    "145705",
+    "144707",
     "144943",
-    "10523",
+    "142288",
     "145547",
     "142289",
-    "144801",
-    "142283",
-    "145735",
-    "144916",
-    "144270",
-    "145269",
-    "146269",
-    "145625",
-    "146547",
-    "145544",
-    "144690",
     "144460",
-    "145554",
-    "146137",
-    "144707",
-    "142288",
-    "146237",
     "144732",
+    "142283",
+    "144801",
+    "144270",
+    "153084",
+    "152889",
+    "146137",
+    "152406",
+    "10523",
+    "146237",
+    "144690",
+    "146269",
+    "145544",
+    "156348",
+    "145625",
+    "144916",
+    "145735",
+    "11911",
+    "156336",
+    "152395",
+    "156354",
+    "146547",
+    "153606",
+    "156314",
+    "156335",
+    "146350",
+    "152398",
+    "145227",
+    "156362",
+    "156334",
+    "156353",
     "144769",
-    "146350"
+    "155867"
    ]
   },
   "2025": {
@@ -1020,13 +1070,19 @@
      "frontKitFile": "kits_2019/home_front.png",
      "backKitFile": "kits_2019/home_back/home_back_%.png",
      "previewFile": "kits_2019/home_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     },
     "away": {
      "frontKitFile": "kits_2019/away_front.png",
      "backKitFile": "kits_2019/away_back/away_back_%.png",
      "previewFile": "kits_2019/away_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     }
    },
    "roles": {
@@ -1116,13 +1172,19 @@
      "frontKitFile": "kits_2019/home_front.png",
      "backKitFile": "kits_2019/home_back/home_back_%.png",
      "previewFile": "kits_2019/home_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     },
     "away": {
      "frontKitFile": "kits_2019/away_front.png",
      "backKitFile": "kits_2019/away_back/away_back_%.png",
      "previewFile": "kits_2019/away_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     }
    },
    "roles": {
@@ -1191,6 +1253,189 @@
     "150509",
     "142283",
     "150516"
+   ]
+  },
+  "2009": {
+   "enabled": false,
+   "name": "La Rochelle",
+   "type": "club",
+   "category": "Pro D2",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2019/home_front.png",
+     "backKitFile": "kits_2019/home_back/home_back_%.png",
+     "previewFile": "kits_2019/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2019/away_front.png",
+     "backKitFile": "kits_2019/away_back/away_back_%.png",
+     "previewFile": "kits_2019/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "155100",
+    "shortGK": "155100",
+    "longPunt": "155100",
+    "shortPunt": "155100",
+    "kickoff": "155100"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "classic",
+    "left": "classic",
+    "right": "loop"
+   },
+   "players": [
+    "155080",
+    "155077",
+    "155081",
+    "155087",
+    "155088",
+    "155090",
+    "155091",
+    "155092",
+    "155097",
+    "155100",
+    "155106",
+    "155103",
+    "155104",
+    "155107",
+    "155111",
+    "155078",
+    "155082",
+    "155083",
+    "155089",
+    "153568",
+    "155098",
+    "153763",
+    "155084",
+    "155085",
+    "155086",
+    "155079",
+    "155093",
+    "155094",
+    "155095",
+    "155096",
+    "155099",
+    "155101",
+    "155102",
+    "155105",
+    "154311",
+    "155108",
+    "155109",
+    "155110",
+    "155112",
+    "155113"
+   ]
+  },
+  "2010": {
+   "enabled": true,
+   "name": "La Rochelle",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "155092",
+    "viceCaptain": "155090",
+    "longGK": "155100",
+    "shortGK": "155100",
+    "longPunt": "155100",
+    "shortPunt": "155100",
+    "kickoff": "155100"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "classic",
+    "left": "classic",
+    "right": "loop"
+   },
+   "players": [
+    "155080",
+    "155077",
+    "155081",
+    "155087",
+    "155088",
+    "155090",
+    "155091",
+    "155092",
+    "155097",
+    "155100",
+    "155106",
+    "155103",
+    "155107",
+    "155111",
+    "155078",
+    "155082",
+    "155089",
+    "155098",
+    "153763",
+    "155084",
+    "155085",
+    "155086",
+    "155079",
+    "155093",
+    "155094",
+    "155095",
+    "155096",
+    "155099",
+    "155101",
+    "155102",
+    "155105",
+    "154311",
+    "155108",
+    "155109",
+    "155110",
+    "155112",
+    "155113"
    ]
   }
  }

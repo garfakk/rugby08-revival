@@ -14,7 +14,7 @@ import shutil
 
 from app.game_data import (
     SHIRT_POSITIONS, ASSET_SPECS, STARTING_XV, SQUAD_SIZE,
-    blank_kit, new_team_season, create_json_file,
+    blank_kit, new_team_season, create_team_file, user_record_id, SaveError,
 )
 from app.ratings import position_overall
 from app import variants as V
@@ -483,6 +483,9 @@ def allocate_team_id(team_type, team_json_ids, loaded_ids):
     for values in team_json_ids.values():
         ids.update(v for v in values if str(v).isdigit())
     ids.update(str(t) for t in loaded_ids if str(t).isdigit())
+    own = user_record_id(ids)       # a team the user creates: their own id block
+    if own:
+        return own
     nums = {int(v) for v in ids}
     block = 1000 if team_type == "international" else 2000
     in_block = [n for n in nums if block <= n <= block + 999]
@@ -537,7 +540,9 @@ def create_team(teams_dir, folder_name, team_id, seasons, copy_from_folder=None)
                 else:
                     missing.append(rel)
         json_path = os.path.join(folder, folder_name.lower().replace(" ", "_") + ".json")
-        create_json_file(json_path, {str(team_id): seasons})
+        if os.path.exists(json_path):
+            raise SaveError(f"{os.path.basename(json_path)} already exists")
+        create_team_file(json_path, str(team_id), seasons)
     except Exception:
         shutil.rmtree(folder, ignore_errors=True)
         raise

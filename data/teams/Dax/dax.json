@@ -1,0 +1,162 @@
+{
+ "10157": {
+  "2008": {
+   "name": "Dax",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "158353",
+    "shortGK": "158353",
+    "longPunt": "131923",
+    "shortPunt": "146967",
+    "kickoff": "131923"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153999",
+    "158358",
+    "109220",
+    "142644",
+    "158367",
+    "158352",
+    "158364",
+    "158356",
+    "131923",
+    "158353",
+    "158346",
+    "152637",
+    "147138",
+    "143433",
+    "146967",
+    "158354",
+    "158361",
+    "158366",
+    "158423",
+    "158357",
+    "158359",
+    "158363",
+    "158360",
+    "158355",
+    "158362",
+    "158368",
+    "148061",
+    "158365",
+    "158422"
+   ],
+   "enabled": false
+  },
+  "2009": {
+   "name": "Dax",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2009/home_front.png",
+     "backKitFile": "kits_2009/home_back/home_back_%.png",
+     "previewFile": "kits_2009/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2009/away_front.png",
+     "backKitFile": "kits_2009/away_back/away_back_%.png",
+     "previewFile": "kits_2009/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "158353",
+    "viceCaptain": "158353",
+    "longGK": "158353",
+    "shortGK": "158353",
+    "longPunt": "131923",
+    "shortPunt": "146967",
+    "kickoff": "131923"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153999",
+    "158358",
+    "109220",
+    "142644",
+    "158367",
+    "158352",
+    "158364",
+    "158356",
+    "131923",
+    "158353",
+    "158346",
+    "158360",
+    "147138",
+    "143433",
+    "146967",
+    "158361",
+    "158359",
+    "158357",
+    "158354",
+    "158423",
+    "158366",
+    "158368",
+    "158363",
+    "152637",
+    "158355",
+    "158362",
+    "148061",
+    "158365",
+    "158422"
+   ],
+   "enabled": true
+  }
+ }
+}

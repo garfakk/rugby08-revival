@@ -6,6 +6,7 @@ config.ini
 .vscode
 .claude/
 assets/audio/menu/*.mp3
+src/packaging/build/
 
 # editor/import safety copies, per-user prefs
 *.bak
@@ -15,3 +16,7 @@ user_prefs.ini
 
 # per-user settings and saves, created at first launch (run.py)
 /user_data/
+
+# test coverage output
+.coverage
+htmlcov/

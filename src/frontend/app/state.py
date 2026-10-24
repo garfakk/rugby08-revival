@@ -14,10 +14,37 @@ from typing import Optional
 from PyQt5.QtCore import QObject, pyqtSignal
 
 from app import variants as V
+from app import game_data as G
+from app.user_edits import EditStore, KINDS
+from shared.user_prefs import user_prefs
 from team_data_loader import TeamDataLoader
 from stadium_data_loader import StadiumDataLoader
 from tournament_data_loader import TournamentDataLoader
 from shared.config import config
+
+# Order of the category list in match setup. Internal, not exposed to the
+# user. Categories not listed here follow, alphabetically.
+CATEGORY_ORDER = [
+    "International",
+    "European Cup",
+    "Top 14",
+    "Pro D2",
+    "Premiership",
+    "Championship",
+    "URC",
+    "Pro14",
+    "Pro12",
+    "Celtic League",
+    "Super Rugby",
+    "Super 14",
+]
+
+
+def _category_key(category):
+    try:
+        return (0, CATEGORY_ORDER.index(category), "")
+    except ValueError:
+        return (1, 0, category)
 
 
 class DataEvents(QObject):
@@ -30,32 +57,157 @@ class DataEvents(QObject):
     player_removed = pyqtSignal(str)
 
 
+def _apply_edits(loader, teams, players, edits):
+    """Lay the user's edits over what the loader read from the pack, and
+    register where the records the user created belong."""
+    for tid in edits.reconcile("teams", loader.teams_raw, loader.teams_file_path):
+        seasons = loader.teams_raw.get(tid)
+        live = TeamDataLoader.enabled_seasons(seasons or {})
+        if live:
+            teams[tid] = live
+        else:
+            teams.pop(tid, None)
+        if seasons is not None and tid not in loader.teams_file_path:
+            path = edits.pack.abspath(edits.get("teams", tid)["home"])
+            loader.teams_file_path[tid] = path
+            loader.teams_folder_path[tid] = os.path.dirname(path)
+            loader.team_json_ids.setdefault(path, []).append(tid)
+    for pid in edits.reconcile("players", players, loader.players_file_path):
+        if pid not in players:
+            loader.players_file_path.pop(pid, None)
+            loader.players_sources.pop(pid, None)
+        elif pid not in loader.players_file_path:
+            path = edits.pack.abspath(edits.get("players", pid)["home"])
+            loader.players_file_path[pid] = path
+            loader.players_sources[pid] = [path]
+
+
 class DataStore:
     """Loads once; every screen reads through this instead of re-loading."""
 
-    def __init__(self):
-        loader = TeamDataLoader(config.directory_teams, config.directory_players)
-        self.teams = loader.load_teams()
-        # older squad variants could carry kits: they now live in the kit
-        for seasons in self.teams.values():
-            for info in seasons.values():
-                V.migrate_season(info)
-        self.players = loader.load_players()
-        self.teams_folder_path = loader.teams_folder_path
-        # Where each record came from, so the editors can write it back to
-        # the file it was actually read from (see TeamDataLoader).
-        self.teams_file_path = loader.teams_file_path
-        self.players_file_path = loader.players_file_path
-        self.players_sources = loader.players_sources
-        self.team_json_ids = loader.team_json_ids
+    def __init__(self, raw=None):
+        """`raw` is what read_files() returned, possibly from another thread:
+        the JSON parsing is the slow part and needs no Qt, so start-up does
+        it behind the splash without stalling its animation."""
+        (self.teams, self.players, self.teams_folder_path, self.teams_file_path,
+         self.players_file_path, self.players_sources, self.team_json_ids,
+         self.stadiums, self.tournaments, self.tournaments_folder_path,
+         self.edits) = raw or self.read_files()
+        # saves go to the user's edits (or, maintainer, to the pack files)
+        G.set_edit_store(self.edits, into_pack=config.save_edits_to == "mod")
         self.events = DataEvents()
 
-        stadium_loader = StadiumDataLoader(config.directory_stadiums)
-        self.stadiums = stadium_loader.load_stadiums()
-
+    @staticmethod
+    def read_files():
+        """Every data file parsed; touches no Qt object, so it can run on a
+        worker thread."""
+        loader = TeamDataLoader(config.directory_teams, config.directory_players)
+        teams = loader.load_teams()
+        players = loader.load_players()
+        edits = EditStore(config.directory_user_edits, config.mod_data_directory,
+                          config.data_version).load()
+        edits.enabled = user_prefs.use_edits
+        if edits.enabled:
+            _apply_edits(loader, teams, players, edits)
+        # older squad variants could carry kits: they now live in the kit
+        for seasons in teams.values():
+            for info in seasons.values():
+                V.migrate_season(info)
+        stadiums = StadiumDataLoader(config.directory_stadiums).load_stadiums()
         tournament_loader = TournamentDataLoader(config.directory_competitions)
-        self.tournaments = tournament_loader.load_tournaments()
-        self.tournaments_folder_path = tournament_loader.tournaments_folder_path
+        tournaments = tournament_loader.load_tournaments()
+        # Where each record came from, so the editors can write it back to
+        # the file it was actually read from (see TeamDataLoader).
+        return (teams, players, loader.teams_folder_path, loader.teams_file_path,
+                loader.players_file_path, loader.players_sources, loader.team_json_ids,
+                stadiums, tournaments, tournament_loader.tournaments_folder_path, edits)
+
+    # ── the user's edits (app/user_edits.py) ──────────────────────────────
+    def promote_edits(self, keys):
+        """Write the edits `keys` [(kind, id)] into the data pack files (the
+        maintainer integrating them); each then leaves the user's edits.
+        Records with conflicts are skipped. Returns how many were written."""
+        written = 0
+        with G.writing_pack():
+            for kind, rid in keys:
+                env = self.edits.get(kind, rid)
+                if env is None or (kind, rid) in self.edits.conflicts:
+                    continue
+                path = self.edits.pack.abspath(env["home"])
+                if not path:
+                    raise G.SaveError(f"{kind} {rid}: no data pack file recorded")
+                # the user's record merged with the pack as installed (an
+                # imported edit's base can be an older release)
+                mine = self.edits.effective(kind, rid)
+                exists = os.path.isfile(path)
+                if kind == "players":
+                    if mine is None:
+                        if exists:
+                            G.delete_player(path, rid)
+                    elif exists:
+                        G.save_player(path, rid, mine)
+                    else:
+                        raise G.SaveError(f"player {rid}: {env['home']} is not in the data pack")
+                elif mine is None:
+                    if exists:
+                        G.delete_team(path, rid)
+                elif exists:
+                    G.save_team(path, rid, mine)
+                else:
+                    os.makedirs(os.path.dirname(path), exist_ok=True)
+                    G.create_team_file(path, rid, mine)
+                self.edits._drop(kind, rid)
+                self.refresh_record(kind, rid, home=env["home"])    # as written (edits off too)
+                written += 1
+        return written
+
+    def set_edits_enabled(self, on):
+        """Use the user's edits or not (kept either way), from now on and at
+        the next starts: every edited record is re-read and the screens told."""
+        on = bool(on)
+        user_prefs.use_edits = on
+        user_prefs.save()
+        if on == self.edits.enabled:
+            return
+        self.edits.enabled = on
+        self.edits.conflicts.clear()
+        for kind in KINDS:
+            for rid in list(self.edits.envelopes[kind]):
+                if on:
+                    self.edits._recheck(kind, rid)
+                self.refresh_record(kind, rid)
+
+    def refresh_record(self, kind, rid, home=""):
+        """Re-read one team or player as it is now (pack + the user's edit),
+        after its edit was resolved, reverted or imported, and tell the
+        screens. `home`: its pack file (pack-relative), when the edit that
+        knew it is gone."""
+        rid = str(rid)
+        env = self.edits.get(kind, rid)
+        home = home or (env["home"] if env else "")
+        if not self.edits.enabled:
+            env = None              # edits off: the pack's record
+        if kind == "players":
+            path = self.players_file_path.get(rid) or self.edits.pack.abspath(home)
+            record = (self.edits.effective(kind, rid) if env else
+                      self.edits.pack.record(self.edits.pack.relpath(path), rid))
+            if record is None:
+                if rid in self.players:
+                    self.unregister_player(rid)
+            else:
+                self.register_player(rid, record, path)
+            return
+        path = self.teams_file_path.get(rid) or self.edits.pack.abspath(home)
+        record = (self.edits.effective(kind, rid) if env else
+                  self.edits.pack.record(self.edits.pack.relpath(path), rid))
+        live = TeamDataLoader.enabled_seasons(record or {})
+        if not live:
+            if rid in self.teams:
+                self.unregister_team(rid)
+            return
+        for info in live.values():
+            V.migrate_season(info)
+        self.register_team(rid, live, os.path.dirname(path), path)
 
     # ── registry updates made by the editors ──────────────────────────────
     def players_files(self) -> list:
@@ -135,7 +287,7 @@ class DataStore:
         return sorted({
             info[season]["category"]
             for info in self.teams.values() if season in info
-        })
+        }, key=_category_key)
 
     def teams_in_season(self, season: str) -> list:
         """[(team_id, name)] for every team that exists in `season`, across
@@ -230,6 +382,18 @@ class TeamSlot:
         return kit
 
 
+# The game's four input devices, as (slot_id, kind, label). Slot n becomes the
+# .mis c(n-1) attribute (backend.game_files_processor.create_mission_file) the
+# reR08 controllers patch applies to device n-1: the keyboard is device 0, the
+# gamepads follow in the order the game finds them.
+CONTROLLER_SLOTS = (
+    (1, "kbd", "KEYBOARD"),
+    (2, "pad", "GAMEPAD 1"),
+    (3, "pad", "GAMEPAD 2"),
+    (4, "pad", "GAMEPAD 3"),
+)
+
+
 @dataclass
 class MatchConfig:
     """The in-progress match selection — the single source of truth the
@@ -269,7 +433,12 @@ class MatchConfig:
     stadium_graphics_choice: str = ""
 
     # slot_id -> {"kind": "kbd"|"pad", "label": str, "zone": "home"|"away"|"none"}
+    # (slot ids: CONTROLLER_SLOTS)
     controllers: dict = field(default_factory=dict)
+    # In the game, no device can join a team given no human above (reR08
+    # controller_lock: the pause-menu controller screen can't move anyone to
+    # the opponent). Tournament and challenge matches; quick match leaves it off.
+    lock_controllers: bool = False
 
     # ── Advanced/.mis fields (config.advanced_user) ─────────────────────
     # Only reachable from the ADVANCED pane's extra sections, which only
@@ -320,5 +489,5 @@ class MatchConfig:
         return home, away
 
     def is_ready(self) -> bool:
-        home, away = self.controller_counts()
-        return bool(self.home.team_id and self.away.team_id and (home + away) >= 1)
+        # No controller assigned is fine: CPU vs CPU.
+        return bool(self.home.team_id and self.away.team_id)

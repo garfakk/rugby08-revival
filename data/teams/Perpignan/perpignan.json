@@ -29,13 +29,475 @@
     }
    },
    "roles": {
+    "captain": "144787",
+    "viceCaptain": "144787",
+    "longGK": "144787",
+    "shortGK": "144787",
+    "longPunt": "144787",
+    "shortPunt": "144787",
+    "kickoff": "144787"
+   },
+   "setPlays": {
+    "up": "pivot",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pivot"
+   },
+   "players": [
+    "146591",
+    "145410",
+    "145229",
+    "146398",
+    "146413",
+    "145258",
+    "146161",
+    "146818",
+    "146648",
+    "144787",
+    "146330",
+    "144719",
+    "145928",
+    "146108",
+    "144957",
+    "153892",
+    "145719",
+    "145940",
+    "146667",
+    "145380",
+    "153903",
+    "152762",
+    "146349",
+    "146608",
+    "146569",
+    "145128",
+    "152440",
+    "145496",
+    "145749",
+    "144905",
+    "144208",
+    "152960",
+    "146315",
+    "143650",
+    "146483",
+    "153910",
+    "153896",
+    "153799",
+    "153945",
+    "156330",
+    "153924",
+    "153046"
+   ]
+  },
+  "2009": {
+   "name": "Perpignan",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2009/home_front.png",
+     "backKitFile": "kits_2009/home_back/home_back_%.png",
+     "previewFile": "kits_2009/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2009/away_front.png",
+     "backKitFile": "kits_2009/away_back/away_back_%.png",
+     "previewFile": "kits_2009/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "143967",
+    "viceCaptain": "153239",
+    "longGK": "153239",
+    "shortGK": "153239",
+    "longPunt": "143967",
+    "shortPunt": "143967",
+    "kickoff": "143967"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "dummy_switch",
+    "left": "loop",
+    "right": "pocket"
+   },
+   "players": [
+    "153224",
+    "142591",
+    "101381",
+    "153225",
+    "153226",
+    "153231",
+    "153232",
+    "153229",
+    "153233",
+    "153239",
+    "153240",
+    "143120",
+    "143967",
+    "153243",
+    "106652",
+    "153507",
+    "143088",
+    "143193",
+    "153228",
+    "117841",
+    "152314",
+    "153234",
+    "153245",
+    "142562",
+    "153244",
+    "153241",
+    "147133",
+    "143022",
+    "153238",
+    "156377",
+    "108075",
+    "148225",
+    "142907",
+    "153230",
+    "104324",
+    "143425",
+    "153236",
+    "153235",
+    "153083",
+    "153510",
+    "153246",
+    "108313"
+   ]
+  },
+  "2010": {
+   "name": "Perpignan",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "101381",
+    "viceCaptain": "153234",
+    "longGK": "153234",
+    "shortGK": "153234",
+    "longPunt": "153234",
+    "shortPunt": "106652",
+    "kickoff": "153234"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "dummy_switch",
+    "left": "loop",
+    "right": "pocket"
+   },
+   "players": [
+    "143088",
+    "117841",
+    "101381",
+    "153225",
+    "122741",
+    "142907",
+    "153232",
+    "143022",
+    "153233",
+    "153234",
+    "153240",
+    "142371",
+    "143967",
+    "153244",
+    "106652",
+    "142591",
+    "153223",
+    "143193",
+    "11924",
+    "153229",
+    "152314",
+    "153239",
+    "104324",
+    "153245",
+    "153083",
+    "153238",
+    "153228",
+    "153241",
+    "153226",
+    "147133",
+    "153231",
+    "153224",
+    "153246",
+    "153235",
+    "153507",
+    "153243",
+    "156217",
+    "153227",
+    "153230",
+    "155433",
+    "148225",
+    "153510",
+    "153508",
+    "108313"
+   ]
+  },
+  "2019": {
+   "enabled": true,
+   "name": "Perpignan",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2019/away_front.png",
+     "backKitFile": "kits_2019/away_back/away_back_%.png",
+     "previewFile": "kits_2019/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2019/home_front.png",
+     "backKitFile": "kits_2019/home_back/home_back_%.png",
+     "previewFile": "kits_2019/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "146161",
+    "viceCaptain": "145410",
+    "longGK": "153865",
+    "shortGK": "153865",
+    "longPunt": "153865",
+    "shortPunt": "153865",
+    "kickoff": "153865"
+   },
+   "setPlays": {
+    "up": "pivot",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pivot"
+   },
+   "players": [
+    "146098",
+    "145410",
+    "156239",
+    "146667",
+    "156247",
+    "153885",
+    "146161",
+    "153864",
+    "146648",
+    "153865",
+    "153889",
+    "153866",
+    "143650",
+    "153867",
+    "153890",
+    "153858",
+    "153897",
+    "146569",
+    "152316",
+    "146489",
+    "153862",
+    "152314",
+    "153141",
+    "145239",
+    "146413",
+    "153902",
+    "153227",
+    "155702",
+    "152853",
+    "156303",
+    "144155",
+    "153869",
+    "146349",
+    "146427",
+    "153861",
+    "144853",
+    "146315",
+    "156301",
+    "153853",
+    "156304",
+    "145928",
+    "153868",
+    "152592",
+    "153903"
+   ]
+  },
+  "2022": {
+   "name": "Perpignan",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
     "captain": "146349",
-    "viceCaptain": "144905",
-    "longGK": "145496",
-    "shortGK": "145496",
-    "longPunt": "145496",
-    "shortPunt": "145496",
-    "kickoff": "145496"
+    "viceCaptain": "142368",
+    "longGK": "142290",
+    "shortGK": "142290",
+    "longPunt": "144719",
+    "shortPunt": "144719",
+    "kickoff": "143650"
+   },
+   "setPlays": {
+    "up": "pivot",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pivot"
+   },
+   "players": [
+    "146591",
+    "145410",
+    "153893",
+    "146667",
+    "153915",
+    "142368",
+    "153229",
+    "153864",
+    "146648",
+    "153919",
+    "146349",
+    "144719",
+    "143650",
+    "152907",
+    "142290",
+    "153892",
+    "153631",
+    "154197",
+    "146413",
+    "146161",
+    "153903",
+    "153904",
+    "146330",
+    "146315",
+    "145928",
+    "146569",
+    "142332",
+    "153941",
+    "152960",
+    "145719",
+    "154141",
+    "145821",
+    "146818",
+    "146691",
+    "153889",
+    "145749",
+    "153112",
+    "153945",
+    "153896",
+    "153885",
+    "153907",
+    "153899",
+    "153944",
+    "153890",
+    "153910",
+    "156331"
+   ]
+  },
+  "2023": {
+   "enabled": true,
+   "name": "Perpignan",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2023/home_front.png",
+     "backKitFile": "kits_2023/away_back/away_back_%.png",
+     "previewFile": "kits_2023/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2023/away_front.png",
+     "backKitFile": "kits_2023/home_back/home_back_%.png",
+     "previewFile": "kits_2023/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144719",
+    "viceCaptain": "143650",
+    "longGK": "144787",
+    "shortGK": "144787",
+    "longPunt": "144787",
+    "shortPunt": "144787",
+    "kickoff": "144787"
    },
    "setPlays": {
     "up": "pivot",
@@ -46,203 +508,49 @@
    "players": [
     "145719",
     "145410",
-    "145940",
-    "146398",
-    "146483",
-    "146161",
-    "144905",
-    "145380",
-    "146569",
-    "145496",
-    "146349",
-    "144208",
-    "145928",
-    "146330",
-    "144957",
-    "146608",
-    "146591",
-    "145128",
-    "146315",
-    "146648",
-    "144787",
-    "144719",
-    "145749",
-    "145229",
+    "152960",
     "146667",
-    "146413",
-    "145258",
+    "142368",
+    "146315",
+    "144905",
+    "153864",
+    "146569",
+    "144787",
+    "146349",
+    "144719",
     "143650",
-    "146108",
-    "145924"
-   ]
-  },
-  "2009": {
-   "enabled": false,
-   "name": "Perpignan",
-   "type": "club",
-   "category": "Top 14",
-   "ball": "ball/ball_%.png",
-   "banners": "banners/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos/logo.png",
-    "frontend": "logos/logo_frontend.png",
-    "small": "logos/logo_small.png",
-    "left": "logos/logo_left.png",
-    "right": "logos/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2010/home_front.png",
-     "backKitFile": "kits_2010/home_back/home_back_%.png",
-     "previewFile": "kits_2010/home_preview.png",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "kits_2010/away_front.png",
-     "backKitFile": "kits_2010/away_back/away_back_%.png",
-     "previewFile": "kits_2010/away_preview.png",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "143967",
-    "viceCaptain": "144106",
-    "longGK": "144035",
-    "shortGK": "144035",
-    "longPunt": "144035",
-    "shortPunt": "144035",
-    "kickoff": "144035"
-   },
-   "setPlays": {
-    "up": "miss",
-    "down": "dummy_switch",
-    "left": "loop",
-    "right": "pocket"
-   },
-   "players": [
-    "151075",
-    "117841",
-    "101381",
-    "151727",
-    "108075",
-    "143273",
-    "151728",
-    "142962",
-    "142460",
-    "144035",
-    "144136",
-    "108313",
-    "143967",
-    "144106",
-    "142749",
-    "142574",
-    "143193",
-    "151729",
-    "143513",
-    "151726",
-    "142495",
-    "106652",
-    "144135",
-    "142591",
-    "147133",
-    "151732",
-    "142562",
-    "143088",
-    "150469",
-    "143022",
-    "151730",
-    "142907",
-    "143836",
-    "148225",
-    "146875",
-    "143425",
-    "151731",
-    "147155",
-    "149204",
-    "151734",
-    "151735",
-    "143887",
-    "151733",
-    "151736",
-    "151737"
-   ]
-  },
-  "2010": {
-   "enabled": false,
-   "name": "Perpignan",
-   "type": "club",
-   "category": "Top 14",
-   "ball": "ball/ball_%.png",
-   "banners": "banners/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos/logo.png",
-    "frontend": "logos/logo_frontend.png",
-    "small": "logos/logo_small.png",
-    "left": "logos/logo_left.png",
-    "right": "logos/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2010/home_front.png",
-     "backKitFile": "kits_2010/home_back/home_back_%.png",
-     "previewFile": "kits_2010/home_preview.png",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "kits_2010/away_front.png",
-     "backKitFile": "kits_2010/away_back/away_back_%.png",
-     "previewFile": "kits_2010/away_preview.png",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "101381",
-    "viceCaptain": "142910",
-    "longGK": "143070",
-    "shortGK": "143070",
-    "longPunt": "143070",
-    "shortPunt": "106652",
-    "kickoff": "143070"
-   },
-   "setPlays": {
-    "up": "miss",
-    "down": "dummy_switch",
-    "left": "loop",
-    "right": "pocket"
-   },
-   "players": [
-    "143088",
-    "117841",
-    "101381",
-    "143683",
-    "122741",
-    "143836",
-    "142910",
-    "143022",
-    "142495",
-    "143070",
-    "144136",
-    "108313",
-    "143967",
-    "144106",
-    "106652",
-    "142574",
-    "143193",
-    "143513",
-    "142962",
-    "143189",
-    "143580",
-    "142749",
-    "142591",
-    "104324",
-    "142915",
-    "142907",
-    "144035",
-    "142975",
-    "143887",
-    "144135"
+    "146330",
+    "146691",
+    "145821",
+    "153903",
+    "153046",
+    "153913",
+    "146591",
+    "145749",
+    "153892",
+    "146413",
+    "152907",
+    "153893",
+    "146818",
+    "153945",
+    "146648",
+    "146483",
+    "152485",
+    "153924",
+    "153910",
+    "145924",
+    "145928",
+    "146161",
+    "153915",
+    "153896",
+    "153768",
+    "156349",
+    "156355",
+    "156254",
+    "153919",
+    "156331",
+    "156350",
+    "153944"
    ]
   },
   "2011": {
@@ -265,13 +573,19 @@
      "frontKitFile": "kits_2010/home_front.png",
      "backKitFile": "kits_2010/home_back/home_back_%.png",
      "previewFile": "kits_2010/home_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     },
     "away": {
      "frontKitFile": "kits_2010/away_front.png",
      "backKitFile": "kits_2010/away_back/away_back_%.png",
      "previewFile": "kits_2010/away_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     }
    },
    "roles": {
@@ -313,7 +627,7 @@
     "143887",
     "143580",
     "148737",
-    "142962",
+    "153229",
     "146875",
     "144106",
     "143189",
@@ -357,13 +671,19 @@
      "frontKitFile": "kits_2010/home_front.png",
      "backKitFile": "kits_2010/home_back/home_back_%.png",
      "previewFile": "kits_2010/home_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     },
     "away": {
      "frontKitFile": "kits_2010/away_front.png",
      "backKitFile": "kits_2010/away_back/away_back_%.png",
      "previewFile": "kits_2010/away_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     }
    },
    "roles": {
@@ -389,7 +709,7 @@
     "122741",
     "143273",
     "151728",
-    "142962",
+    "153229",
     "149204",
     "142785",
     "144135",
@@ -453,13 +773,19 @@
      "frontKitFile": "kits_2010/home_front.png",
      "backKitFile": "kits_2010/home_back/home_back_%.png",
      "previewFile": "kits_2010/home_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     },
     "away": {
      "frontKitFile": "kits_2010/away_front.png",
      "backKitFile": "kits_2010/away_back/away_back_%.png",
      "previewFile": "kits_2010/away_preview.png",
-     "color": ""
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
     }
    },
    "roles": {
@@ -516,293 +842,6 @@
     "151747",
     "146648",
     "142915"
-   ]
-  },
-  "2019": {
-   "enabled": false,
-   "name": "Perpignan",
-   "type": "club",
-   "category": "Top 14",
-   "ball": "ball/ball_%.png",
-   "banners": "banners/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos/logo.png",
-    "frontend": "logos/logo_frontend.png",
-    "small": "logos/logo_small.png",
-    "left": "logos/logo_left.png",
-    "right": "logos/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "148253",
-    "viceCaptain": "143650",
-    "longGK": "145239",
-    "shortGK": "145239",
-    "longPunt": "145239",
-    "shortPunt": "145239",
-    "kickoff": "148253"
-   },
-   "setPlays": {
-    "up": "pivot",
-    "down": "loop",
-    "left": "pivot",
-    "right": "pivot"
-   },
-   "players": [
-    "146098",
-    "145410",
-    "151749",
-    "146667",
-    "148927",
-    "151751",
-    "146161",
-    "151756",
-    "146648",
-    "145239",
-    "151748",
-    "143650",
-    "148253",
-    "151754",
-    "151757",
-    "151752",
-    "151753",
-    "148960",
-    "151750",
-    "146569",
-    "142495",
-    "151089",
-    "148655",
-    "146413",
-    "151755",
-    "142915",
-    "148124",
-    "148276",
-    "144155",
-    "146489",
-    "144521",
-    "151111",
-    "146349",
-    "149005",
-    "144853",
-    "149507",
-    "151758",
-    "146315",
-    "151759",
-    "148966",
-    "145928",
-    "143783",
-    "147017",
-    "151762",
-    "151761",
-    "151760"
-   ]
-  },
-  "2022": {
-   "enabled": false,
-   "name": "Perpignan",
-   "type": "club",
-   "category": "Top 14",
-   "ball": "ball/ball_%.png",
-   "banners": "banners/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos/logo.png",
-    "frontend": "logos/logo_frontend.png",
-    "small": "logos/logo_small.png",
-    "left": "logos/logo_left.png",
-    "right": "logos/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2022/home_front.png",
-     "backKitFile": "kits_2022/home_back/home_back_%.png",
-     "previewFile": "kits_2022/home_preview.png",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "kits_2022/away_front.png",
-     "backKitFile": "kits_2022/away_back/away_back_%.png",
-     "previewFile": "kits_2022/away_preview.png",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "146349",
-    "viceCaptain": "142368",
-    "longGK": "142332",
-    "shortGK": "142332",
-    "longPunt": "144719",
-    "shortPunt": "144719",
-    "kickoff": "142332"
-   },
-   "setPlays": {
-    "up": "pivot",
-    "down": "loop",
-    "left": "pivot",
-    "right": "pivot"
-   },
-   "players": [
-    "146591",
-    "145410",
-    "148260",
-    "146667",
-    "144195",
-    "142368",
-    "146315",
-    "151756",
-    "146648",
-    "146691",
-    "146349",
-    "144719",
-    "143650",
-    "142332",
-    "142290",
-    "151763",
-    "145429",
-    "146413",
-    "146161",
-    "151760",
-    "148955",
-    "146330",
-    "142842",
-    "142962",
-    "145928",
-    "146569",
-    "145134",
-    "143053",
-    "145719",
-    "147201",
-    "145509",
-    "145821",
-    "149724",
-    "151748",
-    "145749",
-    "145083",
-    "151765",
-    "151766",
-    "151768",
-    "151769",
-    "151770",
-    "151751",
-    "151771",
-    "151764",
-    "151757",
-    "151767",
-    "144336",
-    "151772",
-    "151773",
-    "151774"
-   ]
-  },
-  "2023": {
-   "enabled": false,
-   "name": "Perpignan",
-   "type": "club",
-   "category": "Top 14",
-   "ball": "ball/ball_%.png",
-   "banners": "banners/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos/logo.png",
-    "frontend": "logos/logo_frontend.png",
-    "small": "logos/logo_small.png",
-    "left": "logos/logo_left.png",
-    "right": "logos/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "144719",
-    "viceCaptain": "143650",
-    "longGK": "144787",
-    "shortGK": "144787",
-    "longPunt": "144787",
-    "shortPunt": "144787",
-    "kickoff": "144787"
-   },
-   "setPlays": {
-    "up": "pivot",
-    "down": "loop",
-    "left": "pivot",
-    "right": "pivot"
-   },
-   "players": [
-    "145719",
-    "145410",
-    "143053",
-    "146667",
-    "142368",
-    "144307",
-    "146896",
-    "151756",
-    "146569",
-    "144787",
-    "146349",
-    "144719",
-    "143650",
-    "146330",
-    "146691",
-    "145821",
-    "146591",
-    "145752",
-    "146483",
-    "151763",
-    "151760",
-    "151765",
-    "145055",
-    "146315",
-    "145749",
-    "148955",
-    "148260",
-    "147201",
-    "146648",
-    "146413",
-    "151780",
-    "151772",
-    "145928",
-    "146161",
-    "145924",
-    "144195",
-    "151766",
-    "151778",
-    "151779",
-    "151781",
-    "151324",
-    "151783",
-    "149724",
-    "151767",
-    "151768",
-    "151777",
-    "151782",
-    "151784",
-    "151785",
-    "151786"
    ]
   },
   "2025": {
@@ -997,6 +1036,412 @@
     "150497",
     "151798",
     "144787"
+   ]
+  },
+  "2018": {
+   "enabled": false,
+   "name": "Perpignan",
+   "type": "club",
+   "category": "Pro D2",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "153865",
+    "shortGK": "153865",
+    "longPunt": "153865",
+    "shortPunt": "153865",
+    "kickoff": "153865"
+   },
+   "setPlays": {
+    "up": "pivot",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pivot"
+   },
+   "players": [
+    "153859",
+    "153858",
+    "153860",
+    "143955",
+    "146413",
+    "153885",
+    "153864",
+    "146161",
+    "146648",
+    "153865",
+    "153867",
+    "144155",
+    "153866",
+    "153869",
+    "153890",
+    "145410",
+    "146098",
+    "152316",
+    "144853",
+    "146569",
+    "152314",
+    "146349",
+    "153861",
+    "153862",
+    "152853",
+    "153141",
+    "153868",
+    "153888",
+    "153889"
+   ]
+  },
+  "2020": {
+   "enabled": false,
+   "name": "Perpignan",
+   "type": "club",
+   "category": "Pro D2",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "153865",
+    "shortGK": "153865",
+    "longPunt": "153865",
+    "shortPunt": "153865",
+    "kickoff": "153865"
+   },
+   "setPlays": {
+    "up": "pivot",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pivot"
+   },
+   "players": [
+    "153859",
+    "153858",
+    "153860",
+    "143955",
+    "146413",
+    "153885",
+    "153864",
+    "146161",
+    "146648",
+    "153865",
+    "153867",
+    "144155",
+    "153866",
+    "153869",
+    "153890",
+    "145410",
+    "146098",
+    "152316",
+    "144853",
+    "146569",
+    "152314",
+    "146349",
+    "153861",
+    "153862",
+    "152853",
+    "153141",
+    "153868",
+    "153888",
+    "153889"
+   ]
+  },
+  "2021": {
+   "enabled": false,
+   "name": "Perpignan",
+   "type": "club",
+   "category": "Pro D2",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144719",
+    "viceCaptain": "",
+    "longGK": "153904",
+    "shortGK": "153904",
+    "longPunt": "153904",
+    "shortPunt": "153904",
+    "kickoff": "153904"
+   },
+   "setPlays": {
+    "up": "pivot",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pivot"
+   },
+   "players": [
+    "153893",
+    "153507",
+    "146591",
+    "146667",
+    "153853",
+    "142368",
+    "146315",
+    "153885",
+    "146648",
+    "153904",
+    "146330",
+    "144719",
+    "145928",
+    "153907",
+    "153347",
+    "145410",
+    "146489",
+    "153631",
+    "146413",
+    "146161",
+    "146569",
+    "144322",
+    "153894",
+    "153895",
+    "153896",
+    "153897",
+    "153891",
+    "153892",
+    "153899",
+    "153901",
+    "153902",
+    "153864",
+    "153229",
+    "153903",
+    "146427",
+    "153905",
+    "143650",
+    "153906",
+    "152907",
+    "153889",
+    "146349",
+    "142290",
+    "153890"
+   ]
+  },
+  "2008": {
+   "name": "Perpignan",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "143967",
+    "viceCaptain": "",
+    "longGK": "153239",
+    "shortGK": "153239",
+    "longPunt": "143967",
+    "shortPunt": "143967",
+    "kickoff": "143967"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153224",
+    "142591",
+    "101381",
+    "153225",
+    "153226",
+    "153231",
+    "153232",
+    "153229",
+    "153233",
+    "153239",
+    "153240",
+    "108313",
+    "143967",
+    "153243",
+    "153245",
+    "106652",
+    "153228",
+    "152314",
+    "153507",
+    "117841",
+    "143193",
+    "142562",
+    "153234",
+    "153244",
+    "153241",
+    "147133",
+    "143022",
+    "153238",
+    "143088",
+    "156377",
+    "108075",
+    "148225",
+    "142907",
+    "153230",
+    "104324",
+    "143425",
+    "153236",
+    "153235",
+    "153083",
+    "153510",
+    "153246"
+   ],
+   "enabled": false
+  },
+  "2016": {
+   "enabled": false,
+   "name": "Perpignan",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "153865",
+    "shortGK": "153865",
+    "longPunt": "153865",
+    "shortPunt": "153865",
+    "kickoff": "153865"
+   },
+   "setPlays": {
+    "up": "pivot",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pivot"
+   },
+   "players": [
+    "153859",
+    "153858",
+    "153860",
+    "143955",
+    "146413",
+    "153885",
+    "153864",
+    "146161",
+    "146648",
+    "153865",
+    "153867",
+    "144155",
+    "153866",
+    "153869",
+    "153890",
+    "145410",
+    "146098",
+    "152316",
+    "144853",
+    "146569",
+    "152314",
+    "146349",
+    "153861",
+    "153862",
+    "152853",
+    "153141",
+    "153868",
+    "153888",
+    "153889"
    ]
   }
  }

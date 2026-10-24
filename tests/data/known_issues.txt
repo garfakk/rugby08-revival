@@ -1,0 +1,98 @@
+# Data problems present when the test suite was written (2026-10-18).
+# Listed tests are expected to fail (xfail). When one passes, the suite fails
+# and asks for its line to be removed: this list only ever shrinks.
+# A problem NOT listed here fails the suite: fix the data (or, if it is really
+# accepted, add the test id here with a comment).
+
+# kit fronts not 1024x1024 (resized at match time)
+test_data_assets.py::test_team_asset_sizes[Argentina/1001/2018]
+test_data_assets.py::test_team_asset_sizes[Argentina/1001/2019]
+test_data_assets.py::test_team_asset_sizes[Australia/1002/2010]
+test_data_assets.py::test_team_asset_sizes[Australia/1002/2018]
+test_data_assets.py::test_team_asset_sizes[Australia/1002/2019]
+test_data_assets.py::test_team_asset_sizes[Bayonne/2081/2009]
+test_data_assets.py::test_team_asset_sizes[Bordeaux/2082/2019]
+test_data_assets.py::test_team_asset_sizes[Bordeaux/2082/2022]
+test_data_assets.py::test_team_asset_sizes[Canada/1003/2008]
+test_data_assets.py::test_team_asset_sizes[Canada/1003/2018]
+test_data_assets.py::test_team_asset_sizes[Canada/1003/2019]
+test_data_assets.py::test_team_asset_sizes[Canada/1003/2024]
+test_data_assets.py::test_team_asset_sizes[Castres/2029/2018]
+test_data_assets.py::test_team_asset_sizes[Castres/2029/2019]
+test_data_assets.py::test_team_asset_sizes[Castres/2029/2022]
+test_data_assets.py::test_team_asset_sizes[Clermont/10103/2022]
+test_data_assets.py::test_team_asset_sizes[England/10002/2010]
+test_data_assets.py::test_team_asset_sizes[France/10001/2010]
+test_data_assets.py::test_team_asset_sizes[Georgia/1006/2008]
+test_data_assets.py::test_team_asset_sizes[Georgia/1006/2009]
+test_data_assets.py::test_team_asset_sizes[Ireland/10003/2010]
+test_data_assets.py::test_team_asset_sizes[Japan/1008/2008]
+test_data_assets.py::test_team_asset_sizes[Japan/1008/2009]
+test_data_assets.py::test_team_asset_sizes[La_Rochelle/2083/2022]
+test_data_assets.py::test_team_asset_sizes[Lyon/2084/2019]
+test_data_assets.py::test_team_asset_sizes[Lyon/2084/2022]
+test_data_assets.py::test_team_asset_sizes[Montpellier/2085/2022]
+test_data_assets.py::test_team_asset_sizes[Namibia/1009/2008]
+test_data_assets.py::test_team_asset_sizes[Namibia/1009/2009]
+test_data_assets.py::test_team_asset_sizes[New_Zealand/1010/2008]
+test_data_assets.py::test_team_asset_sizes[Oyonnax/2089/2019]
+test_data_assets.py::test_team_asset_sizes[Paris/10102/2009]
+test_data_assets.py::test_team_asset_sizes[Paris/10102/2010]
+test_data_assets.py::test_team_asset_sizes[Paris/10102/2022]
+test_data_assets.py::test_team_asset_sizes[Pau/2086/2022]
+test_data_assets.py::test_team_asset_sizes[Portugal/1011/2023]
+test_data_assets.py::test_team_asset_sizes[Racing_92/2087/2022]
+test_data_assets.py::test_team_asset_sizes[Romania/1012/2009]
+test_data_assets.py::test_team_asset_sizes[Samoa/1017/2009]
+test_data_assets.py::test_team_asset_sizes[Scotland/1014/2008]
+test_data_assets.py::test_team_asset_sizes[Scotland/1014/2009]
+test_data_assets.py::test_team_asset_sizes[Scotland/1014/2010]
+test_data_assets.py::test_team_asset_sizes[South_Africa/1015/2010]
+test_data_assets.py::test_team_asset_sizes[Tonga/1018/2009]
+test_data_assets.py::test_team_asset_sizes[Toulon/2088/2022]
+test_data_assets.py::test_team_asset_sizes[Toulouse/10101/2022]
+test_data_assets.py::test_team_asset_sizes[USA/1021/2008]
+test_data_assets.py::test_team_asset_sizes[USA/1021/2009]
+test_data_assets.py::test_team_asset_sizes[USA/1021/2024]
+
+# kit/ball files referenced but not on disk (misnamed wc files, missing back numbers, wc previews)
+test_data_assets.py::test_team_assets_exist[France/10001/2022]
+test_data_assets.py::test_team_assets_exist[France/10001/2023]
+test_data_assets.py::test_team_assets_exist[France/10001/2024]
+test_data_assets.py::test_team_assets_exist[France/10001/2025]
+test_data_assets.py::test_team_assets_exist[Portugal/1011/2024]
+test_data_assets.py::test_team_assets_exist[Samoa/1017/2024]
+test_data_assets.py::test_team_assets_exist[Scotland/1014/2024]
+test_data_assets.py::test_team_assets_exist[Toulon/2088/2024]
+
+# RWC 2007 challenges use England/France 2008, which are disabled
+test_data_challenges.py::test_challenge_playable[rwc2007_final_rsa_eng.json]
+test_data_challenges.py::test_challenge_playable[rwc2007_fra_nz.json]
+
+# templates whose default entrants are not (all) in this data pack
+test_data_competitions.py::test_template_runs_with_default_entrants[european_cup]
+test_data_competitions.py::test_template_runs_with_default_entrants[premiership]
+test_data_competitions.py::test_template_runs_with_default_entrants[rwc_2019]
+test_data_competitions.py::test_template_runs_with_default_entrants[rwc_2023]
+test_data_competitions.py::test_template_runs_with_default_entrants[top_14]
+test_data_competitions.py::test_template_runs_with_default_entrants[world_cup]
+
+# stock face ids missing from src/assets/data/stock_faces.json
+test_data_players.py::test_stock_faces_exist
+
+# same as above
+test_data_squads.py::ChallengeSquads::test_challenge_teams_and_variants_exist
+
+# team folder without <folder>.json: the team is silently skipped
+test_data_teams.py::test_folder_has_team_json[Agen]
+test_data_teams.py::test_folder_has_team_json[Bourgoin]
+test_data_teams.py::test_folder_has_team_json[Brive]
+test_data_teams.py::test_folder_has_team_json[Chile]
+
+# team season the game cannot use as is (e.g. fewer than 22 players)
+test_data_teams.py::test_team_season[Bath/10105/2023]
+
+# competition editions whose branding files (ball, logo, stadium graphics, pitch logos, adboards)
+# are not made yet: the match keeps its usual textures for those
+test_data_competitions.py::test_branding_assets_exist[competitions/six_nations]
+test_data_competitions.py::test_branding_assets_exist[competitions/world_cup]

@@ -1,0 +1,319 @@
+{
+ "1015": {
+  "2008": {
+   "name": "South Africa",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2008/home_front.png",
+     "backKitFile": "kits_2008/home_back/home_back_%.png",
+     "previewFile": "kits_2008/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2008/away_front.png",
+     "backKitFile": "kits_2008/away_back/away_back_%.png",
+     "previewFile": "kits_2008/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "143368",
+    "viceCaptain": "143852",
+    "longGK": "143560",
+    "shortGK": "143560",
+    "longPunt": "143560",
+    "shortPunt": "143560",
+    "kickoff": "143560"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss_pivot",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "148158",
+    "143368",
+    "148157",
+    "143955",
+    "142408",
+    "142879",
+    "143341",
+    "143852",
+    "143067",
+    "143361",
+    "143000",
+    "143560",
+    "142750",
+    "143882",
+    "148155",
+    "143798",
+    "143965",
+    "143355",
+    "148173",
+    "143639",
+    "148165",
+    "143926",
+    "148161",
+    "148176",
+    "143085",
+    "143652",
+    "148171",
+    "107905",
+    "142979",
+    "148177",
+    "128053",
+    "143221"
+   ]
+  },
+  "2024": {
+   "name": "South Africa",
+   "type": "international",
+   "category": "International",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": "",
+     "variants": {
+      "rwc_2023": {
+       "label": "RWC 2023",
+       "frontKitFile": "kits_2024/home_wc_front.png",
+       "backKitFile": "kits_2024/home_wc_back/home_wc_back_%.png",
+       "previewFile": "kits_2024/home_wc_preview.png"
+      }
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": "",
+     "variants": {
+      "rwc_2023": {
+       "label": "RWC 2023",
+       "frontKitFile": "kits_2024/away_wc_front.png",
+       "backKitFile": "kits_2024/away_wc_back/away_wc_back_%.png",
+       "previewFile": "kits_2024/away_wc_preview.png"
+      }
+     }
+    }
+   },
+   "roles": {
+    "captain": "145407",
+    "viceCaptain": "144824",
+    "longGK": "144824",
+    "shortGK": "144824",
+    "longPunt": "144824",
+    "shortPunt": "144824",
+    "kickoff": "144824"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "miss",
+    "right": "pocket"
+   },
+   "players": [
+    "145406",
+    "144289",
+    "144550",
+    "144501",
+    "144554",
+    "145407",
+    "144483",
+    "143824",
+    "145678",
+    "144824",
+    "145094",
+    "144434",
+    "144766",
+    "144785",
+    "144490",
+    "143310",
+    "145637",
+    "154080",
+    "145133",
+    "144928",
+    "144859",
+    "146229",
+    "145095",
+    "146398",
+    "145090",
+    "144170",
+    "144935",
+    "144937",
+    "146024",
+    "145694"
+   ],
+   "variant": {
+    "world_cup": {
+     "label": "Rugby World Cup 2023",
+     "players": [
+      "145406",
+      "144289",
+      "144550",
+      "144501",
+      "144554",
+      "145407",
+      "143310",
+      "143824",
+      "144395",
+      "144490",
+      "144785",
+      "144434",
+      "144766",
+      "145094",
+      "145694",
+      "154080",
+      "145095",
+      "144483",
+      "144928",
+      "145678",
+      "144170",
+      "146043",
+      "145637",
+      "145565",
+      "144764",
+      "146398",
+      "145133",
+      "145137",
+      "144859",
+      "146229",
+      "145090",
+      "144935",
+      "146024"
+     ],
+     "roles": {
+      "captain": "145407",
+      "viceCaptain": "144490",
+      "longGK": "145694",
+      "shortGK": "145694",
+      "longPunt": "144490",
+      "shortPunt": "144490",
+      "kickoff": "144490"
+     }
+    }
+   }
+  },
+  "2007": {
+   "enabled": false,
+   "name": "South Africa",
+   "type": "international",
+   "category": "",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "143368",
+    "viceCaptain": "142408",
+    "longGK": "143361",
+    "shortGK": "143361",
+    "longPunt": "143067",
+    "shortPunt": "143067",
+    "kickoff": "143361"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss_pivot",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "148158",
+    "143368",
+    "148157",
+    "143355",
+    "142408",
+    "143173",
+    "143341",
+    "142924",
+    "143067",
+    "143361",
+    "143000",
+    "143085",
+    "142750",
+    "143221",
+    "148155",
+    "143946",
+    "148160",
+    "148161",
+    "142745",
+    "143639",
+    "143926",
+    "148162",
+    "142979",
+    "143652",
+    "143852",
+    "143882",
+    "148165",
+    "143560",
+    "143399",
+    "143429",
+    "148167",
+    "148156",
+    "148159",
+    "148164",
+    "148166",
+    "148168",
+    "148169",
+    "148171",
+    "142879",
+    "143955",
+    "128053",
+    "142774",
+    "148163",
+    "143924",
+    "143250",
+    "148170",
+    "107905",
+    "148172",
+    "143798"
+   ]
+  }
+ }
+}

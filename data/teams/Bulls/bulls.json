@@ -1,0 +1,860 @@
+{
+ "10112": {
+  "2009": {
+   "name": "Bulls",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "143638",
+    "shortGK": "143638",
+    "longPunt": "142645",
+    "shortPunt": "143638",
+    "kickoff": "142645"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "107905",
+    "156046",
+    "156048",
+    "143955",
+    "143852",
+    "156047",
+    "155482",
+    "143173",
+    "143067",
+    "143638",
+    "143000",
+    "143926",
+    "155572",
+    "143221",
+    "142645",
+    "153406",
+    "109261",
+    "156177",
+    "142408",
+    "142769",
+    "154071",
+    "156049",
+    "154473",
+    "155548",
+    "156073",
+    "155588",
+    "154595",
+    "155592",
+    "156072"
+   ],
+   "enabled": false
+  },
+  "2010": {
+   "name": "Bulls",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "143638",
+    "viceCaptain": "143638",
+    "longGK": "143638",
+    "shortGK": "143638",
+    "longPunt": "142645",
+    "shortPunt": "143638",
+    "kickoff": "142645"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "107905",
+    "128053",
+    "156048",
+    "143955",
+    "142408",
+    "156047",
+    "155482",
+    "143173",
+    "143067",
+    "143638",
+    "143221",
+    "143926",
+    "155475",
+    "154595",
+    "142645",
+    "153419",
+    "156177",
+    "156099",
+    "153418",
+    "143852",
+    "154473",
+    "156497",
+    "155548",
+    "156096",
+    "156046",
+    "155541",
+    "155572",
+    "156045",
+    "156209",
+    "153406",
+    "154065",
+    "154071"
+   ],
+   "enabled": true
+  },
+  "2022": {
+   "name": "Bulls",
+   "type": "club",
+   "category": "URC",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "157926",
+    "viceCaptain": "157926",
+    "longGK": "157926",
+    "shortGK": "157926",
+    "longPunt": "146024",
+    "shortPunt": "157926",
+    "kickoff": "146024"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "156428",
+    "156421",
+    "158105",
+    "157844",
+    "154091",
+    "154078",
+    "153848",
+    "154089",
+    "158006",
+    "157926",
+    "145127",
+    "157182",
+    "157174",
+    "146024",
+    "154062",
+    "143798",
+    "157818",
+    "154077",
+    "158047",
+    "157922",
+    "154057",
+    "11168",
+    "143638",
+    "157978",
+    "158007",
+    "154075",
+    "157072",
+    "157981",
+    "157161",
+    "158015",
+    "158054",
+    "156434",
+    "158048",
+    "155066",
+    "155055",
+    "157456",
+    "154206",
+    "158053",
+    "157636",
+    "144935"
+   ],
+   "enabled": true
+  },
+  "2023": {
+   "name": "Bulls",
+   "type": "club",
+   "category": "URC",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2023/home_front.png",
+     "backKitFile": "kits_2023/home_back/home_back_%.png",
+     "previewFile": "kits_2023/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2023/away_front.png",
+     "backKitFile": "kits_2023/away_back/away_back_%.png",
+     "previewFile": "kits_2023/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "155055",
+    "viceCaptain": "155055",
+    "longGK": "155055",
+    "shortGK": "155055",
+    "longPunt": "155055",
+    "shortPunt": "155055",
+    "kickoff": "155055"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "157456",
+    "143798",
+    "157072",
+    "157844",
+    "154091",
+    "154078",
+    "154074",
+    "157922",
+    "158006",
+    "155055",
+    "154072",
+    "157981",
+    "157174",
+    "146024",
+    "154062",
+    "156421",
+    "156434",
+    "154077",
+    "158047",
+    "154089",
+    "154057",
+    "157926",
+    "158054",
+    "157818",
+    "157941",
+    "157795",
+    "156428",
+    "158007",
+    "144935",
+    "158048",
+    "143638",
+    "157978",
+    "154075",
+    "154083"
+   ],
+   "enabled": true
+  },
+  "2024": {
+   "name": "Bulls",
+   "type": "club",
+   "category": "URC",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "155055",
+    "viceCaptain": "155055",
+    "longGK": "155055",
+    "shortGK": "155055",
+    "longPunt": "155055",
+    "shortPunt": "155055",
+    "kickoff": "155055"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "156428",
+    "156421",
+    "154049",
+    "157917",
+    "154091",
+    "154074",
+    "154089",
+    "158173",
+    "154057",
+    "155055",
+    "144935",
+    "157981",
+    "158007",
+    "158040",
+    "154062",
+    "157818",
+    "157926",
+    "11168",
+    "158054",
+    "154047",
+    "157978",
+    "158006",
+    "157152",
+    "157182",
+    "146024",
+    "154078",
+    "157969",
+    "158047",
+    "157038",
+    "153790",
+    "156434",
+    "157795",
+    "158185",
+    "158186",
+    "157793",
+    "157161",
+    "157456",
+    "157174",
+    "155052",
+    "157059",
+    "157982",
+    "154075"
+   ],
+   "enabled": true
+  },
+  "2008": {
+   "name": "Bulls",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "143638",
+    "shortGK": "143638",
+    "longPunt": "142645",
+    "shortPunt": "143638",
+    "kickoff": "142645"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "107905",
+    "156046",
+    "156048",
+    "143955",
+    "143852",
+    "156047",
+    "155482",
+    "143173",
+    "143067",
+    "143638",
+    "143000",
+    "143926",
+    "155572",
+    "143221",
+    "142645",
+    "153406",
+    "109261",
+    "156177",
+    "142408",
+    "142769",
+    "154071",
+    "156049",
+    "154473",
+    "155548",
+    "156073",
+    "155588",
+    "154595",
+    "155592",
+    "156072"
+   ],
+   "enabled": false
+  },
+  "2018": {
+   "name": "Bulls",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "144824",
+    "viceCaptain": "144824",
+    "longGK": "144824",
+    "shortGK": "144824",
+    "longPunt": "144824",
+    "shortPunt": "144824",
+    "kickoff": "144824"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "146479",
+    "157107",
+    "145565",
+    "145133",
+    "154065",
+    "158590",
+    "157171",
+    "156257",
+    "154058",
+    "144824",
+    "158617",
+    "157178",
+    "144766",
+    "158582",
+    "144475",
+    "157162",
+    "154077",
+    "158619",
+    "154050",
+    "158602",
+    "156262",
+    "145090",
+    "143177",
+    "154057",
+    "154074",
+    "153776",
+    "157716",
+    "157250",
+    "156289",
+    "156497",
+    "158607",
+    "158615",
+    "156967",
+    "157719",
+    "157059",
+    "157061",
+    "157259",
+    "157818",
+    "158333",
+    "158679"
+   ],
+   "enabled": true
+  },
+  "2019": {
+   "name": "Bulls",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2019/home_front.png",
+     "backKitFile": "kits_2019/home_back/home_back_%.png",
+     "previewFile": "kits_2019/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2019/away_front.png",
+     "backKitFile": "kits_2019/away_back/away_back_%.png",
+     "previewFile": "kits_2019/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "144824",
+    "viceCaptain": "144824",
+    "longGK": "144824",
+    "shortGK": "144824",
+    "longPunt": "144824",
+    "shortPunt": "144824",
+    "kickoff": "144824"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "154077",
+    "142740",
+    "145565",
+    "154050",
+    "145133",
+    "154074",
+    "156257",
+    "143824",
+    "154058",
+    "144824",
+    "154085",
+    "157178",
+    "157250",
+    "158679",
+    "144475",
+    "157162",
+    "157818",
+    "157716",
+    "157059",
+    "158615",
+    "154057",
+    "145090",
+    "153776",
+    "155471",
+    "157171",
+    "157107",
+    "144766",
+    "158666",
+    "158680",
+    "157172",
+    "156262",
+    "157925",
+    "156421",
+    "157163",
+    "157259",
+    "157174",
+    "154065",
+    "158676",
+    "158602",
+    "158688",
+    "158690",
+    "158582",
+    "158590",
+    "154091",
+    "157926"
+   ],
+   "enabled": true
+  },
+  "2020": {
+   "name": "Bulls",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "143638",
+    "shortGK": "143638",
+    "longPunt": "143638",
+    "shortPunt": "143638",
+    "kickoff": "143638"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "154077",
+    "157107",
+    "145565",
+    "156949",
+    "154333",
+    "158712",
+    "157159",
+    "153286",
+    "154058",
+    "143638",
+    "154085",
+    "157178",
+    "157250",
+    "157174",
+    "153776",
+    "155471",
+    "156428",
+    "145090",
+    "154091",
+    "144475",
+    "158666",
+    "157162",
+    "154057",
+    "154074",
+    "158657",
+    "145328",
+    "155005",
+    "157922",
+    "158715",
+    "156421",
+    "158685",
+    "158620",
+    "157818"
+   ],
+   "enabled": false
+  },
+  "2016": {
+   "name": "Bulls",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "144824",
+    "shortGK": "144824",
+    "longPunt": "144824",
+    "shortPunt": "144824",
+    "kickoff": "144824"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "146479",
+    "143177",
+    "145565",
+    "145133",
+    "154065",
+    "158590",
+    "157171",
+    "156257",
+    "154058",
+    "144824",
+    "157250",
+    "157178",
+    "144766",
+    "158582",
+    "153776",
+    "145090",
+    "154077",
+    "158619",
+    "157107",
+    "158602",
+    "156262",
+    "154057",
+    "154074",
+    "144475",
+    "154050",
+    "157716",
+    "158617",
+    "156289",
+    "156497",
+    "158607",
+    "158615",
+    "156967",
+    "157719",
+    "157059",
+    "157061",
+    "157259",
+    "157818",
+    "158333"
+   ],
+   "enabled": false
+  }
+ }
+}

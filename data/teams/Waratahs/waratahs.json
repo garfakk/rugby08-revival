@@ -1,0 +1,941 @@
+{
+ "10119": {
+  "2009": {
+   "name": "Waratahs",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "142615",
+    "shortGK": "142615",
+    "longPunt": "107267",
+    "shortPunt": "142615",
+    "kickoff": "107267"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "143703",
+    "142803",
+    "147232",
+    "143510",
+    "155576",
+    "153595",
+    "143240",
+    "142902",
+    "107267",
+    "153091",
+    "143874",
+    "156063",
+    "155530",
+    "142615",
+    "155584",
+    "142674",
+    "153085",
+    "156166",
+    "156062",
+    "155564",
+    "142510",
+    "147249",
+    "156169",
+    "155607",
+    "156145",
+    "156182",
+    "156061",
+    "153253"
+   ],
+   "enabled": false
+  },
+  "2010": {
+   "name": "Waratahs",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "155607",
+    "viceCaptain": "155607",
+    "longGK": "155607",
+    "shortGK": "155607",
+    "longPunt": "143530",
+    "shortPunt": "142615",
+    "kickoff": "143530"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "143703",
+    "142803",
+    "147232",
+    "143510",
+    "143679",
+    "153253",
+    "143240",
+    "153595",
+    "107267",
+    "155607",
+    "156182",
+    "155530",
+    "156063",
+    "142615",
+    "143530",
+    "142674",
+    "153085",
+    "156145",
+    "153808",
+    "155655",
+    "155579",
+    "143710",
+    "155562",
+    "156169",
+    "155576",
+    "155488",
+    "156061",
+    "142902",
+    "155521",
+    "156062",
+    "155515",
+    "153091",
+    "157153"
+   ],
+   "enabled": true
+  },
+  "2022": {
+   "name": "Waratahs",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "155857",
+    "viceCaptain": "155857",
+    "longGK": "155857",
+    "shortGK": "155857",
+    "longPunt": "142318",
+    "shortPunt": "155857",
+    "kickoff": "142318"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "144147",
+    "144471",
+    "153977",
+    "146232",
+    "154890",
+    "145069",
+    "155825",
+    "155830",
+    "153974",
+    "155857",
+    "155795",
+    "144961",
+    "146199",
+    "146794",
+    "142318",
+    "155823",
+    "153101",
+    "155867",
+    "153978",
+    "146332",
+    "155856",
+    "155782",
+    "143015",
+    "155617",
+    "155747",
+    "144269",
+    "155714",
+    "155686",
+    "155858",
+    "155788",
+    "155860",
+    "155544",
+    "155797",
+    "155879",
+    "153089",
+    "155947",
+    "155859",
+    "155834"
+   ],
+   "enabled": true
+  },
+  "2023": {
+   "name": "Waratahs",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2023/home_front.png",
+     "backKitFile": "kits_2023/home_back/home_back_%.png",
+     "previewFile": "kits_2023/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2023/away_front.png",
+     "backKitFile": "kits_2023/away_back/away_back_%.png",
+     "previewFile": "kits_2023/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144269",
+    "viceCaptain": "144269",
+    "longGK": "144269",
+    "shortGK": "144269",
+    "longPunt": "144269",
+    "shortPunt": "144269",
+    "kickoff": "144269"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153101",
+    "144471",
+    "153977",
+    "146232",
+    "155686",
+    "146687",
+    "145069",
+    "146332",
+    "153974",
+    "155857",
+    "155795",
+    "144961",
+    "146199",
+    "146794",
+    "144269",
+    "153084",
+    "144147",
+    "155867",
+    "153978",
+    "155830",
+    "155716",
+    "156010",
+    "146376",
+    "155997",
+    "155825",
+    "155747",
+    "155861",
+    "154663",
+    "155824",
+    "153089",
+    "155926",
+    "155947",
+    "153374",
+    "155977",
+    "155978",
+    "156008",
+    "155834",
+    "156001",
+    "156016"
+   ],
+   "enabled": true
+  },
+  "2024": {
+   "name": "Waratahs",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "155857",
+    "viceCaptain": "155857",
+    "longGK": "155857",
+    "shortGK": "155857",
+    "longPunt": "155857",
+    "shortPunt": "155857",
+    "kickoff": "155857"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "144147",
+    "155747",
+    "153977",
+    "146232",
+    "155851",
+    "156008",
+    "155825",
+    "146332",
+    "153974",
+    "155857",
+    "155795",
+    "144961",
+    "155824",
+    "146794",
+    "155754",
+    "155838",
+    "145233",
+    "155686",
+    "155787",
+    "155856",
+    "155782",
+    "153089",
+    "155638",
+    "146199",
+    "156038",
+    "155947",
+    "155797",
+    "155781",
+    "155115",
+    "156039",
+    "156041",
+    "156010",
+    "156000",
+    "153978",
+    "155687",
+    "146376",
+    "155926",
+    "155997",
+    "156028",
+    "155544",
+    "155784",
+    "155710"
+   ],
+   "enabled": true
+  },
+  "2008": {
+   "name": "Waratahs",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "147249",
+    "viceCaptain": "147249",
+    "longGK": "142615",
+    "shortGK": "142615",
+    "longPunt": "107267",
+    "shortPunt": "142615",
+    "kickoff": "107267"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "143703",
+    "142803",
+    "147232",
+    "143510",
+    "155576",
+    "153595",
+    "143240",
+    "142902",
+    "107267",
+    "147249",
+    "143874",
+    "156063",
+    "155530",
+    "142615",
+    "155584",
+    "142674",
+    "153085",
+    "156166",
+    "156062",
+    "155564",
+    "142510",
+    "143710",
+    "153091",
+    "156169",
+    "155607",
+    "156145",
+    "156182",
+    "156061",
+    "153253",
+    "143679",
+    "143530",
+    "153808"
+   ],
+   "enabled": false
+  },
+  "2018": {
+   "name": "Waratahs",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "153090",
+    "viceCaptain": "153090",
+    "longGK": "153090",
+    "shortGK": "153090",
+    "longPunt": "146189",
+    "shortPunt": "153090",
+    "kickoff": "146189"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153086",
+    "156169",
+    "153085",
+    "146232",
+    "142307",
+    "158611",
+    "145069",
+    "155621",
+    "153974",
+    "153090",
+    "157153",
+    "153091",
+    "153093",
+    "155695",
+    "146189",
+    "158566",
+    "153977",
+    "154729",
+    "145585",
+    "153089",
+    "153097",
+    "155620",
+    "144961",
+    "142318",
+    "156261",
+    "153084",
+    "158632",
+    "158648",
+    "155652",
+    "145941",
+    "154139",
+    "155691",
+    "142331",
+    "157937"
+   ],
+   "enabled": true
+  },
+  "2019": {
+   "name": "Waratahs",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2019/home_front.png",
+     "backKitFile": "kits_2019/home_back/home_back_%.png",
+     "previewFile": "kits_2019/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2019/away_front.png",
+     "backKitFile": "kits_2019/away_back/away_back_%.png",
+     "previewFile": "kits_2019/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "153090",
+    "viceCaptain": "153090",
+    "longGK": "153090",
+    "shortGK": "153090",
+    "longPunt": "146189",
+    "shortPunt": "153090",
+    "kickoff": "146189"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153977",
+    "156169",
+    "153085",
+    "146232",
+    "142307",
+    "153089",
+    "145069",
+    "155621",
+    "153097",
+    "153090",
+    "155695",
+    "156223",
+    "147244",
+    "146189",
+    "153084",
+    "154889",
+    "153086",
+    "145585",
+    "144721",
+    "153974",
+    "158611",
+    "158671",
+    "153093",
+    "153978",
+    "153091",
+    "144961",
+    "158678",
+    "142318",
+    "154729",
+    "155686",
+    "156261",
+    "155691",
+    "158695",
+    "158648",
+    "157937"
+   ],
+   "enabled": true
+  },
+  "2020": {
+   "name": "Waratahs",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "155782",
+    "viceCaptain": "155782",
+    "longGK": "155782",
+    "shortGK": "155782",
+    "longPunt": "144780",
+    "shortPunt": "155782",
+    "kickoff": "144780"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "144147",
+    "158593",
+    "153977",
+    "145585",
+    "142307",
+    "155788",
+    "145069",
+    "144721",
+    "153974",
+    "155782",
+    "146794",
+    "156223",
+    "144961",
+    "155695",
+    "144780",
+    "156169",
+    "153101",
+    "153086",
+    "146232",
+    "155830",
+    "156261",
+    "154652",
+    "142318",
+    "155691",
+    "157937",
+    "153091",
+    "158671",
+    "158709",
+    "155786",
+    "154889",
+    "153978",
+    "153085"
+   ],
+   "enabled": false
+  },
+  "2021": {
+   "name": "Waratahs",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "155782",
+    "viceCaptain": "155782",
+    "longGK": "155782",
+    "shortGK": "155782",
+    "longPunt": "144780",
+    "shortPunt": "155782",
+    "kickoff": "144780"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "144147",
+    "158593",
+    "153977",
+    "145585",
+    "142307",
+    "155788",
+    "145069",
+    "144721",
+    "153974",
+    "155782",
+    "146794",
+    "156223",
+    "144961",
+    "155695",
+    "144780",
+    "156169",
+    "153101",
+    "153086",
+    "146232",
+    "155830",
+    "156261",
+    "154652",
+    "142318",
+    "155691",
+    "157937",
+    "153091",
+    "158671",
+    "158709",
+    "155786",
+    "154889",
+    "153978",
+    "144471"
+   ],
+   "enabled": false
+  },
+  "2016": {
+   "name": "Waratahs",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "153090",
+    "shortGK": "153090",
+    "longPunt": "146189",
+    "shortPunt": "153090",
+    "kickoff": "146189"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153086",
+    "156169",
+    "153085",
+    "153089",
+    "142307",
+    "158611",
+    "145069",
+    "155621",
+    "153974",
+    "153090",
+    "157153",
+    "153091",
+    "153093",
+    "155695",
+    "146189",
+    "153977",
+    "158566",
+    "146232",
+    "155620",
+    "145585",
+    "144961",
+    "154729",
+    "142318",
+    "153097",
+    "156261",
+    "153084",
+    "158632",
+    "158648",
+    "155652",
+    "145941",
+    "154139",
+    "155691",
+    "142331"
+   ],
+   "enabled": false
+  }
+ }
+}

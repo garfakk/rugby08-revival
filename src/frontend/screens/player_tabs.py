@@ -4,7 +4,9 @@ screens/player_tabs.py — the three tabs of the player editor
 Profile (identity + positions + physical), Ratings (24 ratings in six
 groups with season-on-season deltas), Appearance (cosmetics + preview).
 Identity keys live at the record's top level; everything else belongs to
-the season picked in the header.
+the season picked in the header. Each season-specific card has an ALL
+SEASONS box (on by default): while it is ticked, the card's edits are
+written to every season of the record, not only the one shown.
 """
 import os
 from datetime import datetime
@@ -18,6 +20,7 @@ from backend.mod_utils import stock_portrait_path
 from app import appearance as A
 from app import team_ops as T
 from app import player_ops as P
+from app import star_classes
 from app.game_data import (
     POSITIONS, POSITION_ALIASES, SKIN_TONES, TAPES, FEET, SOCKS, BOOT_STYLES,
     SHIRT_POSITIONS,
@@ -29,7 +32,7 @@ from ui.broadcast import tracked_font, display_label, eyebrow_label
 from ui.editor_kit import (
     FieldGrid, SectionCard, TextField, NumberField, RatingField, ChoiceField, SegmentField,
     Note, Thumb, compact_button, browse_assets, load_pixmap, Badge, ToggleGrid,
-    LayerStackField,
+    LayerStackField, ScopeCheck,
 )
 from ui.dropdown import PopupList
 from ui.face_picker import FacePicker
@@ -63,6 +66,11 @@ def normalise_birthdate(text):
 
 
 
+#: card name -> whether its ALL SEASONS box is ticked; kept for the whole
+#: run so the choice survives switching players
+_ALL_SEASONS = {}
+
+
 def _variant_label(ds, tid, season, variant):
     from app import variants as V
     return V.variant_label(ds.teams.get(tid, {}).get(season, {}), variant)
@@ -73,6 +81,7 @@ class PlayerTab:
         self.index = index
         self.page = screen.shell.page(index)
         self.body = self.page.layout_
+        self._scopes = {}       # stat key -> the ScopeCheck of its card
 
     def record(self):
         return self.screen.session.working if self.screen.session else {}
@@ -84,12 +93,46 @@ class PlayerTab:
         self.screen.edit(label, lambda r: r.__setitem__(key, value),
                          coalesce_key=key, view_hint={"tab": self.index, "field": key})
 
-    def edit_stat(self, label, key, value, coalesce=True):
+    def add_scope(self, card, name, keys, below=False):
+        """Put an ALL SEASONS box in `card`'s title row (or right under it,
+        `below`, for a narrow card); it decides which seasons an edit of any
+        of `keys` goes to."""
+        box = ScopeCheck(checked=_ALL_SEASONS.get(name, True))
+        box.key = f"scope.{name}"
+        box.toggled.connect(lambda on: _ALL_SEASONS.__setitem__(name, on))
+        self.screen.focus.register(box)
+        if below:
+            card.v.insertWidget(1, box)
+        else:
+            card.head.addWidget(box)
+        for key in keys:
+            self._scopes[key] = box
+        return box
+
+    def target_seasons(self, key):
+        """The seasons an edit of `key` is written to."""
+        box = self._scopes.get(key)
+        stats = self.record().get("stats") or {}
+        if box is not None and box.checked and len(stats) > 1:
+            return sorted(stats)
+        return [self.screen.season]
+
+    def edit_seasons(self, label, key, fn, coalesce=True):
+        """Apply fn(season_stats) to every season `key` targets."""
         season = self.screen.season
-        self.screen.edit(label, lambda r: r.setdefault("stats", {}).setdefault(season, {})
-                         .__setitem__(key, value),
-                         coalesce_key=f"{season}.{key}" if coalesce else None,
+        seasons = self.target_seasons(key)
+        many = len(seasons) > 1
+
+        def apply(r):
+            for s in seasons:
+                fn(r.setdefault("stats", {}).setdefault(s, {}))
+        self.screen.edit(label + (" (all seasons)" if many else ""), apply,
+                         coalesce_key=f"{'*' if many else season}.{key}" if coalesce else None,
                          view_hint={"season": season, "tab": self.index, "field": key})
+
+    def edit_stat(self, label, key, value, coalesce=True):
+        self.edit_seasons(label, key, lambda st: st.__setitem__(
+            key, list(value) if isinstance(value, list) else value), coalesce)
 
     def register(self, key, widget):
         return self.screen.register_field(key, widget, self.index)
@@ -166,8 +209,8 @@ class ProfileTab(PlayerTab):
         self.nationality.edited.connect(lambda v: self.edit_stat("nationality", "nationality", v))
         g.add(self.nationality)
         phys.add(g)
+        self.add_scope(phys, "physical", ("height", "weight", "foot", "nationality"))
         left.addWidget(phys)
-        left.addStretch(1)
 
         pos = SectionCard("positions")
         prow = QHBoxLayout()
@@ -197,6 +240,7 @@ class ProfileTab(PlayerTab):
         self.pitch = PitchFit()
         prow.addWidget(self.pitch, alignment=Qt.AlignTop)
         pos.add_layout(prow)
+        self.add_scope(pos, "positions", tuple(self.positions))
         right.addWidget(pos)
 
         squads = SectionCard("squads · every season")
@@ -213,7 +257,8 @@ class ProfileTab(PlayerTab):
             screen.focus.register(b)
             self.squad_buttons.addWidget(b)
             self._squad_btns.append(b)
-        right.addWidget(squads)
+        left.addWidget(squads)
+        left.addStretch(1)
 
         danger = SectionCard("player record")
         self.file_note = Note("", color=FG_TERTIARY)
@@ -229,15 +274,17 @@ class ProfileTab(PlayerTab):
         row.addLayout(right, stretch=4)
         self.body.addLayout(row)
 
+    @staticmethod
+    def _position_fixes(stats):
+        return {k: POSITION_ALIASES[stats.get(k)] for k in ("position1", "position2", "position3")
+                if stats.get(k) and stats.get(k) not in POSITIONS and stats.get(k) in POSITION_ALIASES}
+
     def _fix_positions(self):
-        stats = self.stats()
-        fixes = {k: POSITION_ALIASES[stats.get(k)] for k in ("position1", "position2", "position3")
-                 if stats.get(k) and stats.get(k) not in POSITIONS and stats.get(k) in POSITION_ALIASES}
+        fixes = self._position_fixes(self.stats())
         if not fixes:
             return
-        season = self.screen.season
-        self.screen.edit("fix positions", lambda r: r["stats"][season].update(fixes),
-                         view_hint={"season": season, "tab": self.index})
+        self.edit_seasons("fix positions", "position1",
+                          lambda st: st.update(self._position_fixes(st)), coalesce=False)
         self.screen.shell.footer.set_status(
             "Rewrote " + ", ".join(f"{k.replace('position', 'position ')} → {position_name(v)}"
                                    for k, v in fixes.items()) + " (Ctrl+Z to undo)", GREEN)
@@ -328,6 +375,7 @@ class RatingsTab(PlayerTab):
                 self.fields[key] = f
             card.add(fg)
             card.v.addStretch(1)
+            self.add_scope(card, f"ratings.{name}", keys, below=True)
             self.group_labels[name] = avg
             grid.addWidget(card, i // 3, i % 3)
         self.body.addLayout(grid)
@@ -366,8 +414,12 @@ class RatingsTab(PlayerTab):
             return False
         value = (self.record()["stats"][prev] or {}).get(field.key, "")
         if value:
-            self.edit_stat(f"{LABELS[field.key].lower()} from {season_label(prev)}", field.key, value,
-                           coalesce=False)
+            # always into the season shown: copying a season into all of
+            # them (that one included) means nothing
+            season = self.screen.season
+            self.screen.edit(f"{LABELS[field.key].lower()} from {season_label(prev)}",
+                             lambda r: r["stats"].setdefault(season, {}).__setitem__(field.key, value),
+                             view_hint={"season": season, "tab": self.index, "field": field.key})
         return True
 
     def refresh(self):
@@ -445,6 +497,7 @@ class AppearanceTab(PlayerTab):
         self.skin.edited.connect(self._on_skin)
         g.add(self.skin)
         skin_card.add(g)
+        self.add_scope(skin_card, "skin", ("skin", "skin_tone"))
 
         left.addWidget(skin_card)
 
@@ -461,6 +514,7 @@ class AppearanceTab(PlayerTab):
             stack.add_requested.connect(lambda z=zone: self._add_zone_layer(z))
             stack.row_activated.connect(lambda idx, z=zone: self._replace_zone_layer(z, idx))
             card.add(stack)
+            self.add_scope(card, f"layers.{zone}", (f"skin_overlay_{zone}",))
             left.addWidget(card)
             self.layer_stacks[zone] = stack
 
@@ -539,7 +593,9 @@ class AppearanceTab(PlayerTab):
             g3.add(f)
             self.tapes[key] = f
         gear.add(g3)
-        left.addWidget(gear)
+        self.add_scope(gear, "general", ("face", "boot_style", "goal_kicking_style", "headgear",
+                                         "socks", *self.tapes))
+        left.insertWidget(0, gear)      # General first, above the skin
         left.addStretch(1)
         self.body.addLayout(left)
 
@@ -578,20 +634,14 @@ class AppearanceTab(PlayerTab):
             self.refresh()
             return
         if value in SKIN_TONES:
-            season = self.screen.season
-            self.screen.edit("skin tone", lambda r: r.setdefault("stats", {}).setdefault(
-                                 season, {}).update({"skin_tone": value, "skin": ""}),
-                             view_hint={"season": season, "tab": self.index, "field": "skin"})
+            self.edit_seasons("skin tone", "skin",
+                              lambda st: st.update({"skin_tone": value, "skin": ""}), coalesce=False)
             return
         self.edit_stat("skin image", "skin", value, coalesce=False)
 
     # ── layers ───────────────────────────────────────────────────────────
-    def _on_layers(self, values):
-        self.edit_stat("skin layers", "skin_overlay", list(values), coalesce=False)
-        self.refresh()
-
-    def _layers(self):
-        return A.overlay_list(self.stats().get("skin_overlay"))
+    def _layers(self, stats=None):
+        return A.overlay_list((self.stats() if stats is None else stats).get("skin_overlay"))
 
     def _zone_info(self, zone):
         return next((label, kind) for z, label, kind in self.LAYER_SECTIONS if z == zone)
@@ -605,8 +655,8 @@ class AppearanceTab(PlayerTab):
             return f"baselayer_{A.baselayer_zone(rel)}"
         return kind if kind in ("straps", "gloves") else ""
 
-    def _zone_layers(self, zone):
-        return [rel for rel in self._layers() if self._overlay_zone(rel) == zone]
+    def _zone_layers(self, zone, stats=None):
+        return [rel for rel in self._layers(stats) if self._overlay_zone(rel) == zone]
 
     def _zone_options(self, zone):
         _, kind = self._zone_info(zone)
@@ -618,12 +668,17 @@ class AppearanceTab(PlayerTab):
         values, in LAYER_SECTIONS (bottom-to-top) order, with `zone`'s slice
         replaced by `values`. Anything already in the list that isn't under
         one of the four asset folders is preserved (prepended) rather than
-        silently dropped."""
+        silently dropped. With the zone's ALL SEASONS box ticked each season
+        gets the zone's slice replaced in its own list, its other zones kept."""
         zones = [z for z, *_ in self.LAYER_SECTIONS]
-        current = {z: self._zone_layers(z) for z in zones}
-        current[zone] = list(values)
-        other = [rel for rel in self._layers() if self._overlay_zone(rel) == ""]
-        self._on_layers(other + [rel for z in zones for rel in current[z]])
+
+        def rebuild(stats):
+            current = {z: self._zone_layers(z, stats) for z in zones}
+            current[zone] = list(values)
+            other = [rel for rel in self._layers(stats) if self._overlay_zone(rel) == ""]
+            stats["skin_overlay"] = other + [rel for z in zones for rel in current[z]]
+        self.edit_seasons("skin layers", f"skin_overlay_{zone}", rebuild, coalesce=False)
+        self.refresh()
 
     def _add_zone_layer(self, zone):
         label, kind = self._zone_info(zone)
@@ -795,23 +850,12 @@ class AppearanceTab(PlayerTab):
 TENDENCY_NAMES = ["default", "scrum", "lineout", "tackler", "runner", "passer", "kicker",
                   "crasher", "ruck", "goal kicker", "playmaker"]
 # Star player class, written to the roster record's star-flag byte (reR08
-# patches_dll ENABLE_STARPLAYERS, ~/dev/reR08/patches_dll/game.h). Flag 0 =
-# none, 1 = the generic base StarPlayer, 2-26 = named classes gated on that
-# byte value. Cross-referenced against game.h's flag->roster-id table by id
-# (STAR_ABILITIES.md's own "flag" column uses a different, inconsistent
-# numbering — not trusted here); 6 flags there (2, 4, 5, 7, 18, 23) have no
-# confirmed real-player identity yet, so they're left as "Class N".
-STAR_PLAYER_NAMES = {
-    0: "— none", 1: "Star player (generic)", 2: "Class 2", 3: "Wilkinson",
-    4: "Class 4", 5: "Class 5", 6: "Henson", 7: "Class 7", 8: "Carter",
-    9: "Dallaglio", 10: "Betsen", 11: "O'Driscoll", 12: "Larkham",
-    13: "Tuqiri", 14: "Spencer", 15: "Montgomery", 16: "Gregan",
-    17: "Collins", 18: "Class 18", 19: "Latham", 20: "Giteau", 21: "Umaga",
-    22: "McCaw", 23: "Class 23", 24: "G. Smith", 25: "Burger", 26: "Lewsey",
-}
-# Offered in the picker: "— none" plus only the confirmed-identity classes —
-# excludes 1 (generic base class) and the 6 "Class N" placeholders above.
-STAR_PLAYER_CHOICES = [0] + [i for i in range(2, 27) if not STAR_PLAYER_NAMES[i].startswith("Class")]
+# patches_dll ENABLE_STARPLAYERS). Names verified against the game's class
+# factory, see app/star_classes.py.
+STAR_PLAYER_NAMES = star_classes.NAMES
+# Offered in the picker: "— none" plus the 25 named classes (not 1, the
+# generic base class).
+STAR_PLAYER_CHOICES = [0] + list(range(2, 27))
 SKILLS = [
     ("ss_command", "Command"), ("ss_passer", "Passer"), ("ss_play_maker", "Playmaker"),
     ("ss_scoring", "Try scorer"), ("ss_goal_kicker", "Goal kicker"),
@@ -851,10 +895,8 @@ class SkillsTab(PlayerTab):
         g.add(self.tendency)
         # Star player class (reR08 ENABLE_STARPLAYERS, .rdf +0x4e) — grants
         # that class's query-dispatcher abilities (special kicks, tackle
-        # breaking, ruck dominance, ...) regardless of ratings. Only the
-        # confirmed-identity classes are offered — flag 1 (the generic base
-        # class) and the 6 flags with no confirmed real-player identity
-        # (see STAR_PLAYER_NAMES) are excluded so the list is never a guess.
+        # breaking, ruck dominance, ...) regardless of ratings. Flag 1 (the
+        # generic base class) is not offered.
         self.star_attribute = self.register("star_attribute", ChoiceField(
             "Star player ability", [str(i) for i in STAR_PLAYER_CHOICES], allow_blank=True,
             blank_label=STAR_PLAYER_NAMES[0],
@@ -863,6 +905,8 @@ class SkillsTab(PlayerTab):
             lambda v: self.edit_stat("star player ability", "star_attribute", v, coalesce=False))
         g.add(self.star_attribute)
         left.add(g)
+        self.add_scope(left, "extra ratings", ("crashball", "gap_defense", "special_ability",
+                                               "star_attribute"))
 
         left.v.addStretch(1)
         row.addWidget(left)
@@ -877,6 +921,7 @@ class SkillsTab(PlayerTab):
         self.skills.toggled.connect(self._toggle)
         right.add(self.skills)
         right.v.addStretch(1)
+        self.add_scope(right, "special skills", [k for k, _ in SKILLS])
         row.addWidget(right, stretch=1)
         self.body.addLayout(row)
         self.body.addStretch(1)

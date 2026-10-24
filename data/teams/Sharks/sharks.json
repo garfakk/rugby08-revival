@@ -1,0 +1,831 @@
+{
+ "10122": {
+  "2009": {
+   "name": "Sharks",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "143560",
+    "shortGK": "143560",
+    "longPunt": "143560",
+    "shortPunt": "143560",
+    "kickoff": "143560"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "142508",
+    "143798",
+    "143965",
+    "153327",
+    "143355",
+    "156043",
+    "156044",
+    "142506",
+    "142350",
+    "143560",
+    "143882",
+    "156134",
+    "142936",
+    "142668",
+    "155536",
+    "143368",
+    "153415",
+    "155618",
+    "148161",
+    "156170",
+    "143639",
+    "156135",
+    "156144",
+    "156175",
+    "154064",
+    "156158",
+    "153414",
+    "153416",
+    "155589",
+    "155591"
+   ],
+   "enabled": false
+  },
+  "2010": {
+   "name": "Sharks",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "120135",
+    "viceCaptain": "120135",
+    "longGK": "120135",
+    "shortGK": "120135",
+    "longPunt": "120135",
+    "shortPunt": "120135",
+    "kickoff": "120135"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "142508",
+    "143368",
+    "143965",
+    "153327",
+    "143355",
+    "156043",
+    "153638",
+    "142506",
+    "143639",
+    "120135",
+    "143882",
+    "156134",
+    "142668",
+    "155536",
+    "143798",
+    "153415",
+    "155471",
+    "121416",
+    "156170",
+    "142350",
+    "153762",
+    "142936",
+    "156205",
+    "155588",
+    "153414",
+    "153416",
+    "156044",
+    "155589",
+    "156206",
+    "155618",
+    "156175"
+   ],
+   "enabled": true
+  },
+  "2022": {
+   "name": "Sharks",
+   "type": "club",
+   "category": "URC",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "154061",
+    "viceCaptain": "154061",
+    "longGK": "154061",
+    "shortGK": "154061",
+    "longPunt": "154061",
+    "shortPunt": "154061",
+    "kickoff": "154061"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "154080",
+    "144289",
+    "154048",
+    "157719",
+    "154211",
+    "145407",
+    "157175",
+    "157796",
+    "146229",
+    "154061",
+    "145094",
+    "157622",
+    "144937",
+    "157655",
+    "157971",
+    "157792",
+    "154090",
+    "157272",
+    "157271",
+    "157969",
+    "146043",
+    "153711",
+    "157793",
+    "154086",
+    "154055",
+    "157670",
+    "144314",
+    "157268",
+    "156284",
+    "158074",
+    "156963",
+    "154072",
+    "143639",
+    "157790",
+    "156423",
+    "154084",
+    "144895",
+    "157910",
+    "153582",
+    "154082",
+    "157972",
+    "157977",
+    "156612",
+    "157176",
+    "157929",
+    "155471",
+    "157171"
+   ],
+   "enabled": true
+  },
+  "2023": {
+   "name": "Sharks",
+   "type": "club",
+   "category": "URC",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2023/home_front.png",
+     "backKitFile": "kits_2023/home_back/home_back_%.png",
+     "previewFile": "kits_2023/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2023/away_front.png",
+     "backKitFile": "kits_2023/away_back/away_back_%.png",
+     "previewFile": "kits_2023/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "155489",
+    "viceCaptain": "155489",
+    "longGK": "155489",
+    "shortGK": "155489",
+    "longPunt": "155489",
+    "shortPunt": "155489",
+    "kickoff": "155489"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "154080",
+    "144289",
+    "154048",
+    "144501",
+    "154211",
+    "145407",
+    "157920",
+    "154055",
+    "146229",
+    "155489",
+    "145094",
+    "144314",
+    "154069",
+    "157655",
+    "157971",
+    "157792",
+    "154090",
+    "157268",
+    "157796",
+    "157176",
+    "154061",
+    "144937",
+    "157067",
+    "146043",
+    "157977",
+    "154086",
+    "157929",
+    "158013",
+    "158104",
+    "157271",
+    "157793"
+   ],
+   "enabled": true
+  },
+  "2024": {
+   "name": "Sharks",
+   "type": "club",
+   "category": "URC",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "154061",
+    "viceCaptain": "154061",
+    "longGK": "154061",
+    "shortGK": "154061",
+    "longPunt": "154061",
+    "shortPunt": "154061",
+    "kickoff": "154061"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "154090",
+    "144289",
+    "154066",
+    "158176",
+    "157970",
+    "157790",
+    "157796",
+    "154055",
+    "146043",
+    "154061",
+    "145094",
+    "154069",
+    "144937",
+    "157655",
+    "157971",
+    "157929",
+    "154080",
+    "158013",
+    "144501",
+    "157991",
+    "157176",
+    "155489",
+    "154086",
+    "158074",
+    "157272",
+    "157910",
+    "157067",
+    "157920",
+    "154211",
+    "154060",
+    "157961",
+    "158177",
+    "157792",
+    "145637",
+    "156423",
+    "158104",
+    "157699",
+    "158107",
+    "157158",
+    "157972",
+    "157977",
+    "157271",
+    "157670",
+    "156000",
+    "154084",
+    "156963",
+    "157932"
+   ],
+   "enabled": true
+  },
+  "2008": {
+   "name": "Sharks",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "143560",
+    "shortGK": "143560",
+    "longPunt": "143560",
+    "shortPunt": "143560",
+    "kickoff": "143560"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "142508",
+    "143798",
+    "143965",
+    "153327",
+    "143355",
+    "156043",
+    "156044",
+    "142506",
+    "142350",
+    "143560",
+    "143882",
+    "156134",
+    "142936",
+    "142668",
+    "155536",
+    "143368",
+    "153415",
+    "155618",
+    "148161",
+    "156170",
+    "143639",
+    "156135",
+    "156144",
+    "156175",
+    "154064",
+    "156158",
+    "153414",
+    "153416",
+    "155589",
+    "155591"
+   ],
+   "enabled": false
+  },
+  "2018": {
+   "name": "Sharks",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "157052",
+    "viceCaptain": "157052",
+    "longGK": "157052",
+    "shortGK": "157052",
+    "longPunt": "144170",
+    "shortPunt": "144937",
+    "kickoff": "144170"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "142508",
+    "154047",
+    "154048",
+    "156960",
+    "157088",
+    "155518",
+    "154053",
+    "156044",
+    "156601",
+    "157052",
+    "156206",
+    "144170",
+    "144937",
+    "154072",
+    "157634",
+    "156975",
+    "156799",
+    "158651",
+    "157268",
+    "158559",
+    "157176",
+    "154061",
+    "157622",
+    "155492",
+    "156976",
+    "158638",
+    "157160",
+    "145094",
+    "153406",
+    "158657",
+    "157257",
+    "158626",
+    "156814",
+    "157571",
+    "146043"
+   ],
+   "enabled": true
+  },
+  "2019": {
+   "name": "Sharks",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2019/home_front.png",
+     "backKitFile": "kits_2019/home_back/home_back_%.png",
+     "previewFile": "kits_2019/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2019/away_front.png",
+     "backKitFile": "kits_2019/away_back/away_back_%.png",
+     "previewFile": "kits_2019/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "157052",
+    "viceCaptain": "157052",
+    "longGK": "157052",
+    "shortGK": "157052",
+    "longPunt": "144170",
+    "shortPunt": "144937",
+    "kickoff": "144170"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "142508",
+    "157792",
+    "154066",
+    "157719",
+    "157268",
+    "155518",
+    "157160",
+    "157257",
+    "156601",
+    "157052",
+    "145094",
+    "144170",
+    "144937",
+    "154072",
+    "157634",
+    "153406",
+    "156799",
+    "158651",
+    "157571",
+    "157796",
+    "157176",
+    "154061",
+    "154048",
+    "156976",
+    "157622",
+    "156284",
+    "154086",
+    "156960",
+    "158638",
+    "154047",
+    "158626",
+    "158693",
+    "156206",
+    "154053",
+    "146043",
+    "157910",
+    "158657",
+    "156205",
+    "158698",
+    "157158",
+    "157793",
+    "154219",
+    "156423"
+   ],
+   "enabled": true
+  },
+  "2020": {
+   "name": "Sharks",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "154061",
+    "shortGK": "154061",
+    "longPunt": "144170",
+    "shortPunt": "154061",
+    "kickoff": "144170"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "154080",
+    "157792",
+    "154048",
+    "157719",
+    "157268",
+    "157790",
+    "158638",
+    "154055",
+    "156601",
+    "154061",
+    "145094",
+    "144170",
+    "144937",
+    "145127",
+    "154086",
+    "156205",
+    "156799",
+    "158651",
+    "157670",
+    "157796",
+    "154082",
+    "157971",
+    "156284",
+    "157175",
+    "154072",
+    "156423",
+    "156206",
+    "158626",
+    "157622"
+   ],
+   "enabled": false
+  },
+  "2016": {
+   "name": "Sharks",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "154061",
+    "shortGK": "154061",
+    "longPunt": "144170",
+    "shortPunt": "154061",
+    "kickoff": "144170"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "142508",
+    "154047",
+    "154048",
+    "156960",
+    "157088",
+    "155518",
+    "154053",
+    "157257",
+    "156601",
+    "157052",
+    "156206",
+    "144170",
+    "144937",
+    "154072",
+    "154061",
+    "157622",
+    "156799",
+    "157176",
+    "158651",
+    "155492",
+    "157268",
+    "156975",
+    "156976",
+    "158638",
+    "157160",
+    "145094",
+    "153406",
+    "158559",
+    "158657",
+    "156044",
+    "158626",
+    "156814",
+    "157571",
+    "146043"
+   ],
+   "enabled": false
+  }
+ }
+}

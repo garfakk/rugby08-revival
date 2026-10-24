@@ -1,0 +1,664 @@
+{
+ "10121": {
+  "2009": {
+   "name": "Western Force",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "142608",
+    "shortGK": "142608",
+    "longPunt": "142608",
+    "shortPunt": "142608",
+    "kickoff": "142608"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "143157",
+    "155552",
+    "155683",
+    "156069",
+    "142440",
+    "153248",
+    "143404",
+    "155551",
+    "142449",
+    "142608",
+    "142563",
+    "142635",
+    "143120",
+    "147239",
+    "143530",
+    "156068",
+    "155578",
+    "156066",
+    "156178",
+    "142947",
+    "156065",
+    "153094",
+    "155590",
+    "156064",
+    "156151",
+    "156185",
+    "155580",
+    "156070",
+    "155585",
+    "156067",
+    "155582",
+    "156136"
+   ],
+   "enabled": false
+  },
+  "2010": {
+   "name": "Western Force",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "155289",
+    "viceCaptain": "155289",
+    "longGK": "142635",
+    "shortGK": "142635",
+    "longPunt": "142635",
+    "shortPunt": "142635",
+    "kickoff": "142635"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "143157",
+    "156185",
+    "156053",
+    "156069",
+    "142440",
+    "153248",
+    "143404",
+    "142947",
+    "142510",
+    "155289",
+    "156070",
+    "143120",
+    "153340",
+    "153094",
+    "142635",
+    "152891",
+    "143728",
+    "155558",
+    "153104",
+    "156151",
+    "156065",
+    "156148",
+    "155514",
+    "156178",
+    "155513",
+    "147239",
+    "155549",
+    "142563",
+    "155504",
+    "155590",
+    "156136",
+    "156064",
+    "155494"
+   ],
+   "enabled": true
+  },
+  "2022": {
+   "name": "Western Force",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "155826",
+    "viceCaptain": "155826",
+    "longGK": "155826",
+    "shortGK": "155826",
+    "longPunt": "144908",
+    "shortPunt": "155826",
+    "kickoff": "144908"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153086",
+    "153986",
+    "153108",
+    "156050",
+    "153088",
+    "155787",
+    "155656",
+    "155853",
+    "155531",
+    "155826",
+    "154173",
+    "155780",
+    "144908",
+    "155632",
+    "155794",
+    "155622",
+    "147230",
+    "155874",
+    "155952",
+    "155631",
+    "155669",
+    "144787",
+    "142856",
+    "155791",
+    "155792",
+    "155691",
+    "155784",
+    "155790",
+    "155629",
+    "155786",
+    "155833",
+    "155873",
+    "155793",
+    "155870",
+    "155953"
+   ],
+   "enabled": true
+  },
+  "2023": {
+   "name": "Western Force",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2023/home_front.png",
+     "backKitFile": "kits_2023/home_back/home_back_%.png",
+     "previewFile": "kits_2023/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2023_2/away_front.png",
+     "backKitFile": "kits_2023_2/away_back/away_back_%.png",
+     "previewFile": "kits_2023_2/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "155620",
+    "viceCaptain": "155620",
+    "longGK": "155620",
+    "shortGK": "155620",
+    "longPunt": "155620",
+    "shortPunt": "155620",
+    "kickoff": "155620"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153086",
+    "142306",
+    "153108",
+    "155960",
+    "155858",
+    "155621",
+    "155791",
+    "155714",
+    "155669",
+    "155620",
+    "154173",
+    "155715",
+    "155744",
+    "155421",
+    "155653",
+    "153986",
+    "156007",
+    "155988",
+    "153088",
+    "155790",
+    "155531",
+    "155989",
+    "155823",
+    "155691",
+    "155833",
+    "155853",
+    "155780",
+    "155632",
+    "155788",
+    "155815",
+    "156014",
+    "153976",
+    "155794",
+    "156050",
+    "155874",
+    "155987",
+    "155124",
+    "155773"
+   ],
+   "enabled": true
+  },
+  "2024": {
+   "name": "Western Force",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "155989",
+    "viceCaptain": "155989",
+    "longGK": "144269",
+    "shortGK": "144269",
+    "longPunt": "144269",
+    "shortPunt": "145194",
+    "kickoff": "144269"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155730",
+    "155823",
+    "153108",
+    "155858",
+    "155527",
+    "155830",
+    "155788",
+    "155659",
+    "145194",
+    "155989",
+    "156042",
+    "155715",
+    "155780",
+    "155821",
+    "144269",
+    "153986",
+    "156007",
+    "155834",
+    "153088",
+    "155621",
+    "155669",
+    "155620",
+    "153091",
+    "155935",
+    "156014",
+    "155744",
+    "155853",
+    "155554",
+    "155791",
+    "156018",
+    "155550",
+    "155956",
+    "155743",
+    "155987",
+    "155653",
+    "155859",
+    "155531",
+    "155632"
+   ],
+   "enabled": true
+  },
+  "2008": {
+   "name": "Western Force",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "142608",
+    "shortGK": "142608",
+    "longPunt": "142608",
+    "shortPunt": "142608",
+    "kickoff": "142608"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "143157",
+    "155552",
+    "155683",
+    "156069",
+    "142440",
+    "153248",
+    "143404",
+    "155551",
+    "142449",
+    "142608",
+    "142563",
+    "142635",
+    "143120",
+    "147239",
+    "143530",
+    "156068",
+    "155578",
+    "156066",
+    "156178",
+    "142947",
+    "156065",
+    "153094",
+    "155590",
+    "156064",
+    "156151",
+    "156185",
+    "155580",
+    "156070",
+    "155585",
+    "156067",
+    "155582",
+    "156136"
+   ],
+   "enabled": false
+  },
+  "2016": {
+   "name": "Western Force",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "147239",
+    "shortGK": "147239",
+    "longPunt": "147239",
+    "shortPunt": "147239",
+    "kickoff": "147239"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "143157",
+    "156185",
+    "156053",
+    "156069",
+    "142440",
+    "153248",
+    "143404",
+    "142947",
+    "142510",
+    "155289",
+    "156070",
+    "143120",
+    "153340",
+    "147239",
+    "142635",
+    "152891",
+    "143728",
+    "155558",
+    "153104",
+    "156151",
+    "156065",
+    "156148",
+    "155514",
+    "156178",
+    "155513",
+    "153094",
+    "155549",
+    "142563",
+    "155504",
+    "155590",
+    "156136",
+    "156064",
+    "155494"
+   ],
+   "enabled": false
+  },
+  "2018": {
+   "name": "Western Force",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "156148",
+    "viceCaptain": "156148",
+    "longGK": "156148",
+    "shortGK": "156148",
+    "longPunt": "142510",
+    "shortPunt": "142510",
+    "kickoff": "142510"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "143157",
+    "156185",
+    "156053",
+    "156069",
+    "156178",
+    "142947",
+    "153248",
+    "142510",
+    "156148",
+    "153094",
+    "143120",
+    "156070",
+    "155513",
+    "155558",
+    "153108",
+    "153104",
+    "156151",
+    "156065",
+    "155494",
+    "155514",
+    "142563",
+    "155504",
+    "155590",
+    "156136",
+    "156064",
+    "155952",
+    "153986",
+    "155787"
+   ],
+   "enabled": true
+  }
+ }
+}

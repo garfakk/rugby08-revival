@@ -1,0 +1,902 @@
+{
+ "10120": {
+  "2009": {
+   "name": "Reds",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "143710",
+    "shortGK": "143710",
+    "longPunt": "143710",
+    "shortPunt": "143710",
+    "kickoff": "143710"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "147230",
+    "147236",
+    "156078",
+    "155599",
+    "143784",
+    "147246",
+    "142457",
+    "152896",
+    "155601",
+    "142385",
+    "147248",
+    "143710",
+    "153250",
+    "156075",
+    "156080",
+    "142853",
+    "156163",
+    "156076",
+    "142307",
+    "156164",
+    "142792",
+    "156197",
+    "156079",
+    "153144",
+    "156077",
+    "155600",
+    "156074",
+    "156165",
+    "152905",
+    "155526",
+    "156172",
+    "153256",
+    "153254",
+    "156196",
+    "144314"
+   ],
+   "enabled": false
+  },
+  "2010": {
+   "name": "Reds",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "142385",
+    "viceCaptain": "142385",
+    "longGK": "142385",
+    "shortGK": "142385",
+    "longPunt": "142385",
+    "shortPunt": "142385",
+    "kickoff": "142385"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155526",
+    "142853",
+    "156078",
+    "156077",
+    "155599",
+    "153144",
+    "142457",
+    "152896",
+    "142792",
+    "142385",
+    "153250",
+    "156079",
+    "155487",
+    "152905",
+    "147248",
+    "147236",
+    "147230",
+    "144830",
+    "143784",
+    "156164",
+    "153254",
+    "156197",
+    "151611",
+    "155601",
+    "155500",
+    "142307",
+    "156165",
+    "156075",
+    "144314",
+    "155486",
+    "155557",
+    "156196",
+    "155501",
+    "155600",
+    "153177",
+    "153256"
+   ],
+   "enabled": true
+  },
+  "2022": {
+   "name": "Reds",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "155862",
+    "viceCaptain": "155862",
+    "longGK": "142635",
+    "shortGK": "142635",
+    "longPunt": "142635",
+    "shortPunt": "142635",
+    "kickoff": "142635"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155832",
+    "155827",
+    "145597",
+    "155836",
+    "155742",
+    "153096",
+    "144551",
+    "153979",
+    "145560",
+    "155862",
+    "153981",
+    "155715",
+    "155835",
+    "145483",
+    "142635",
+    "146365",
+    "154692",
+    "144539",
+    "155946",
+    "153103",
+    "155865",
+    "155937",
+    "155828",
+    "144806",
+    "155743",
+    "155866",
+    "155936",
+    "154010",
+    "153980",
+    "155741",
+    "155745",
+    "145743",
+    "155829",
+    "155872",
+    "155678",
+    "154681",
+    "155935",
+    "156009"
+   ],
+   "enabled": true
+  },
+  "2023": {
+   "name": "Reds",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2023/home_front.png",
+     "backKitFile": "kits_2023/home_back/home_back_%.png",
+     "previewFile": "kits_2023/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2023/away_front.png",
+     "backKitFile": "kits_2023/away_back/away_back_%.png",
+     "previewFile": "kits_2023/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "155862",
+    "viceCaptain": "155862",
+    "longGK": "142635",
+    "shortGK": "142635",
+    "longPunt": "142635",
+    "shortPunt": "142635",
+    "kickoff": "142635"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "145255",
+    "146365",
+    "145743",
+    "155836",
+    "155828",
+    "153103",
+    "144551",
+    "153979",
+    "145560",
+    "155862",
+    "153981",
+    "153980",
+    "155835",
+    "145483",
+    "142635",
+    "155745",
+    "154692",
+    "155986",
+    "155742",
+    "155789",
+    "155865",
+    "155937",
+    "155832",
+    "155996",
+    "144806",
+    "155946",
+    "154010",
+    "155866",
+    "155935",
+    "155872",
+    "155934",
+    "155985",
+    "156015"
+   ],
+   "enabled": true
+  },
+  "2024": {
+   "name": "Reds",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "155937",
+    "viceCaptain": "155937",
+    "longGK": "155937",
+    "shortGK": "155937",
+    "longPunt": "145483",
+    "shortPunt": "155937",
+    "kickoff": "145483"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153959",
+    "146365",
+    "153659",
+    "155828",
+    "155836",
+    "153103",
+    "144551",
+    "153979",
+    "145560",
+    "155937",
+    "155866",
+    "153980",
+    "155835",
+    "145483",
+    "142635",
+    "155827",
+    "145255",
+    "145743",
+    "155983",
+    "156022",
+    "155865",
+    "155862",
+    "154692",
+    "154520",
+    "156023",
+    "144806",
+    "155946",
+    "156013",
+    "155742",
+    "155996",
+    "155934",
+    "156015",
+    "154010",
+    "155872",
+    "156009"
+   ],
+   "enabled": true
+  },
+  "2008": {
+   "name": "Reds",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "143710",
+    "shortGK": "143710",
+    "longPunt": "143710",
+    "shortPunt": "143710",
+    "kickoff": "143710"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "147230",
+    "147236",
+    "156078",
+    "155599",
+    "143784",
+    "147246",
+    "142457",
+    "152896",
+    "155601",
+    "142385",
+    "147248",
+    "143710",
+    "153250",
+    "156075",
+    "156080",
+    "142853",
+    "156163",
+    "156076",
+    "142307",
+    "156164",
+    "142792",
+    "156197",
+    "156079",
+    "153144",
+    "156077",
+    "155600",
+    "156074",
+    "156165",
+    "152905",
+    "155526",
+    "156172",
+    "153256",
+    "153254",
+    "156196",
+    "144314"
+   ],
+   "enabled": false
+  },
+  "2018": {
+   "name": "Reds",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "156604",
+    "viceCaptain": "156604",
+    "longGK": "156604",
+    "shortGK": "156604",
+    "longPunt": "145405",
+    "shortPunt": "144467",
+    "kickoff": "145405"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "144830",
+    "144326",
+    "145597",
+    "153088",
+    "143679",
+    "155741",
+    "158608",
+    "152719",
+    "155601",
+    "156604",
+    "154010",
+    "144467",
+    "145405",
+    "153981",
+    "158560",
+    "155678",
+    "154692",
+    "155617",
+    "158655",
+    "143081",
+    "145560",
+    "158673",
+    "155715",
+    "153103",
+    "154171",
+    "155612",
+    "144806",
+    "153144",
+    "155658",
+    "146199",
+    "153096",
+    "155622",
+    "155743",
+    "158646",
+    "155742",
+    "152902"
+   ],
+   "enabled": true
+  },
+  "2019": {
+   "name": "Reds",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2019/home_front.png",
+     "backKitFile": "kits_2019/home_back/home_back_%.png",
+     "previewFile": "kits_2019/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2019/away_front.png",
+     "backKitFile": "kits_2019/away_back/away_back_%.png",
+     "previewFile": "kits_2019/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "155620",
+    "viceCaptain": "155620",
+    "longGK": "155620",
+    "shortGK": "155620",
+    "longPunt": "145405",
+    "shortPunt": "145405",
+    "kickoff": "145405"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155617",
+    "155678",
+    "145597",
+    "153088",
+    "155741",
+    "153103",
+    "153144",
+    "145560",
+    "155620",
+    "142358",
+    "145405",
+    "155612",
+    "153981",
+    "158696",
+    "144326",
+    "155743",
+    "144539",
+    "158655",
+    "154171",
+    "146692",
+    "144467",
+    "152719",
+    "155715",
+    "158608",
+    "154010",
+    "155742",
+    "158673",
+    "158694",
+    "144806",
+    "154678",
+    "144551",
+    "158697",
+    "158689",
+    "158560",
+    "153096",
+    "158646"
+   ],
+   "enabled": true
+  },
+  "2020": {
+   "name": "Reds",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "142635",
+    "shortGK": "142635",
+    "longPunt": "142635",
+    "shortPunt": "142635",
+    "kickoff": "142635"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155617",
+    "155678",
+    "145597",
+    "153088",
+    "158655",
+    "153096",
+    "153103",
+    "153979",
+    "145560",
+    "142635",
+    "153098",
+    "155715",
+    "153980",
+    "155612",
+    "154010",
+    "155827",
+    "158696",
+    "155832",
+    "144551",
+    "158713",
+    "155620",
+    "154171",
+    "155743",
+    "155741",
+    "155742",
+    "154678",
+    "153981",
+    "144806",
+    "158710",
+    "155828",
+    "144326",
+    "144539"
+   ],
+   "enabled": false
+  },
+  "2021": {
+   "name": "Reds",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "142635",
+    "shortGK": "142635",
+    "longPunt": "142635",
+    "shortPunt": "142635",
+    "kickoff": "142635"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155617",
+    "155678",
+    "145597",
+    "153088",
+    "158655",
+    "153096",
+    "153103",
+    "153979",
+    "145560",
+    "142635",
+    "153098",
+    "155715",
+    "153980",
+    "155612",
+    "154010",
+    "155827",
+    "158696",
+    "155832",
+    "144551",
+    "158713",
+    "155620",
+    "154171",
+    "155743",
+    "155741",
+    "155742",
+    "154678",
+    "153981",
+    "144806",
+    "158710",
+    "155828",
+    "144326",
+    "144539"
+   ],
+   "enabled": false
+  },
+  "2016": {
+   "name": "Reds",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "156604",
+    "shortGK": "156604",
+    "longPunt": "145405",
+    "shortPunt": "144467",
+    "kickoff": "145405"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "144830",
+    "144326",
+    "145597",
+    "153088",
+    "143679",
+    "155741",
+    "158608",
+    "152719",
+    "155601",
+    "156604",
+    "152902",
+    "144467",
+    "145405",
+    "153981",
+    "158560",
+    "155617",
+    "155678",
+    "158655",
+    "154692",
+    "155715",
+    "153103",
+    "145560",
+    "154171",
+    "155612",
+    "144806",
+    "143081",
+    "153144",
+    "155658",
+    "146199",
+    "153096",
+    "155622",
+    "155743",
+    "158646"
+   ],
+   "enabled": false
+  }
+ }
+}

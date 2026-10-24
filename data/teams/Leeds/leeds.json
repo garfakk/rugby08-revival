@@ -1,0 +1,269 @@
+{
+ "10136": {
+  "2008": {
+   "name": "Leeds",
+   "type": "club",
+   "category": "Premiership",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "157281",
+    "shortGK": "157281",
+    "longPunt": "157281",
+    "shortPunt": "157281",
+    "kickoff": "157281"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "144023",
+    "156656",
+    "157298",
+    "157540",
+    "157295",
+    "156816",
+    "152334",
+    "156791",
+    "157288",
+    "157281",
+    "156935",
+    "156834",
+    "157296",
+    "157284",
+    "157289",
+    "157291",
+    "157286",
+    "157292",
+    "156629",
+    "157282",
+    "157280",
+    "157285",
+    "157290",
+    "157279",
+    "156841",
+    "157278",
+    "156757",
+    "157294",
+    "108880",
+    "148072",
+    "156840",
+    "157293",
+    "157301",
+    "157277",
+    "157299",
+    "152348",
+    "157287",
+    "157300",
+    "157297",
+    "157283"
+   ],
+   "enabled": false
+  },
+  "2010": {
+   "name": "Leeds",
+   "type": "club",
+   "category": "Premiership",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "108880",
+    "viceCaptain": "147446",
+    "longGK": "157404",
+    "shortGK": "157404",
+    "longPunt": "146843",
+    "shortPunt": "146843",
+    "kickoff": "146843"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "144023",
+    "156788",
+    "156871",
+    "157295",
+    "156765",
+    "157290",
+    "108880",
+    "148062",
+    "146843",
+    "157404",
+    "156834",
+    "156511",
+    "147446",
+    "157293",
+    "157289",
+    "156512",
+    "156513",
+    "155578",
+    "152334",
+    "156656",
+    "156553",
+    "157298",
+    "156748",
+    "156791",
+    "156245",
+    "157296",
+    "157283",
+    "157282",
+    "156528",
+    "157389",
+    "152348",
+    "157300",
+    "156681",
+    "157278",
+    "155290",
+    "157288",
+    "157277",
+    "157329",
+    "156530"
+   ]
+  },
+  "2009": {
+   "name": "Leeds",
+   "type": "club",
+   "category": "Premiership",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2009/home_front.png",
+     "backKitFile": "kits_2009/home_back/home_back_%.png",
+     "previewFile": "kits_2009/home_preview.png",
+     "color": "",
+     "model3d": {
+      "fit": "loose",
+      "collar": "open"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2009/away_front.png",
+     "backKitFile": "kits_2009/away_back/away_back_%.png",
+     "previewFile": "kits_2009/away_preview.png",
+     "color": "",
+     "model3d": {
+      "fit": "loose",
+      "collar": "open"
+     }
+    }
+   },
+   "roles": {
+    "captain": "157281",
+    "viceCaptain": "157281",
+    "longGK": "157281",
+    "shortGK": "157281",
+    "longPunt": "157281",
+    "shortPunt": "157281",
+    "kickoff": "157281"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "144023",
+    "156656",
+    "157298",
+    "157295",
+    "156816",
+    "152334",
+    "156791",
+    "157288",
+    "157281",
+    "156935",
+    "152348",
+    "157296",
+    "157284",
+    "157289",
+    "157286",
+    "157280",
+    "157292",
+    "156629",
+    "156757",
+    "157285",
+    "157291",
+    "157282",
+    "157290",
+    "157279",
+    "156841",
+    "157278",
+    "157294",
+    "108880",
+    "148072",
+    "157293",
+    "157301",
+    "157277",
+    "157299",
+    "156834",
+    "157287",
+    "157300",
+    "157297",
+    "157283"
+   ],
+   "enabled": true
+  }
+ }
+}

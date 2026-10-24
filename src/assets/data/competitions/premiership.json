@@ -53,6 +53,7 @@
       "id": "league",
       "name": "League",
       "kind": "round_robin",
+      "calendar": {"start": "09-15", "end": "05-25"},
       "legs": 2,
       "match_subtype": "none",
       "group_names": {
@@ -64,6 +65,7 @@
       "id": "playoffs",
       "name": "Play-offs",
       "kind": "knockout",
+      "calendar": {"start": "06-01", "offsets": [0, 14]},
       "rounds": [
         {
           "id": "sf",

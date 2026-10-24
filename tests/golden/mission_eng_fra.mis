@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<MISSION name="user_mission" date="20061231" type="1" league="international" halflength="1" stadiumid="1" hometeamid="59" awayteamid="56" diff="2" matchtype="0" matchsubtype="0" control="0" side="left" c0="home" c1="off" c2="off" c3="off">
+    <GAME>
+        <ENVIRONMENT>
+            <WEATHER pitch="0" temp="0" precipitation="0" env="day" pitchtex="default">
+                <WIND power="2" x="1.0" y="0" z="0.0"/>
+            </WEATHER>
+        </ENVIRONMENT>
+        <STATE>
+            <SCORE/>
+            <MODE name="" offensiveteam="home" time="" period=""/>
+        </STATE>
+    </GAME>
+    <OBJECTIVES/>
+</MISSION>

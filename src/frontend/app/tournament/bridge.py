@@ -5,6 +5,9 @@ to_match_config()  fixture + both selections -> app.state.MatchConfig, fed
                    to build_match_data like any quick match. Players carry
                    their *effective* ratings (effects.effective_record), so
                    fatigue and future form/morale reach the game's roster.
+                   The fixture's weather (tournament/weather.py) sets the
+                   environment, pitch, rain/snow and breath. Baselayers
+                   and gloves are only the ones set on the players.
 from_game_result() R08_handler.read_match_result() dict -> MatchResult.
 
 The game reports per-player lines by roster id (gsv.players_roster_id:
@@ -13,10 +16,12 @@ the fixed ids the 22 slots of each team are written under), team_A = home.
 from backend import game_specific_variables as gsv
 from shared.log import get_logger
 
+from app import competition_branding
 from app.state import MatchConfig
 
+from . import weather
 from .engine import team_variant
-from .effects import MatchContext, effective_record, effective_stats
+from .effects import MatchContext, effective_record, effective_stats, is_available
 from .model import MatchResult, PlayerLine, SideResult
 from .simulator import settle_knockout_draw
 from .strength import SLOT_POSITIONS
@@ -33,6 +38,40 @@ def _source_pid(t, pid) -> int:
     return int(p.base.get("_source_pid", pid))
 
 
+def side_lineup(t, fixture, tid):
+    """(lineup, players) of a team's selection for the game: roster ids (the
+    data pack's), each player's record with the tournament's effects."""
+    sel = t.teams[tid].selection
+    positions = sel.get("positions") or SLOT_POSITIONS
+    ids, players = [], {}
+    for i, pid in enumerate(sel.get("players", [])[:22]):
+        if pid not in t.players:
+            continue
+        pos = positions[i] if i < len(positions) else SLOT_POSITIONS[i]
+        ctx = MatchContext(fixture=fixture, team_id=tid, position=pos, slot=i + 1)
+        src = _source_pid(t, pid)
+        ids.append(src)
+        players[src] = effective_record(t, t.players[pid], ctx)
+    roles = {k: _source_pid(t, v) for k, v in (sel.get("roles") or {}).items() if v in t.players}
+    lineup = {"players_id": ids, "roles": roles, "set_plays": dict(sel.get("set_plays") or {})}
+    return lineup, players
+
+
+def editable_squad(t, fixture, tid):
+    """What the squad editor offers before a match: (players, lineup,
+    to_pid). players = the selection first, then every other available
+    squad player, by roster id; to_pid maps a roster id back to the
+    tournament's player id (for TournamentSession.set_selection)."""
+    lineup, players = side_lineup(t, fixture, tid)
+    to_pid = {_source_pid(t, pid): pid for pid in t.teams[tid].squad if pid in t.players}
+    for src, pid in to_pid.items():
+        p = t.players[pid]
+        ctx = MatchContext(fixture=fixture, team_id=tid)
+        if src not in players and is_available(t, p, ctx):
+            players[src] = effective_record(t, p, ctx)
+    return players, lineup, to_pid
+
+
 def to_match_config(ds, t, fixture) -> MatchConfig:
     cfg = MatchConfig()
     humans = []
@@ -45,20 +84,7 @@ def to_match_config(ds, t, fixture) -> MatchConfig:
         # the competition's kit version (a World Cup patch) when the kit has
         # one — independent of whether the team has a squad for it
         slot.kit_variant = team_variant(t.template, tid)
-        sel = entry.selection
-        positions = sel.get("positions") or SLOT_POSITIONS
-        ids, players = [], {}
-        for i, pid in enumerate(sel.get("players", [])[:22]):
-            if pid not in t.players:
-                continue
-            pos = positions[i] if i < len(positions) else SLOT_POSITIONS[i]
-            ctx = MatchContext(fixture=fixture, team_id=tid, position=pos, slot=i + 1)
-            src = _source_pid(t, pid)
-            ids.append(src)
-            players[src] = effective_record(t, t.players[pid], ctx)
-        roles = {k: _source_pid(t, v) for k, v in (sel.get("roles") or {}).items() if v in t.players}
-        slot.lineup = {"players_id": ids, "roles": roles, "set_plays": dict(sel.get("set_plays") or {})}
-        slot.players = players
+        slot.lineup, slot.players = side_lineup(t, fixture, tid)
         if entry.human:
             humans.append(side)
 
@@ -71,6 +97,7 @@ def to_match_config(ds, t, fixture) -> MatchConfig:
         envs = info.get("environments") or []
         if envs:
             cfg.environment = envs[0] if isinstance(envs, list) else str(envs)
+    _apply_weather(ds, t, fixture, cfg)
 
     opts = t.options
     cfg.difficulty = opts.get("difficulty", "pro")
@@ -82,28 +109,44 @@ def to_match_config(ds, t, fixture) -> MatchConfig:
         cfg.trophy_lift = "on"
     branding = tpl.get("branding")
     if branding and branding in ds.tournaments:
-        # The template's own season's textures when it has one (e.g. the RWC
-        # 2023 template gets "world_cup:2023"), else the competition's first.
+        # The template's own season's textures (e.g. the RWC 2023 template
+        # gets "world_cup:2023"); a season without textures of its own gets
+        # none rather than another edition's. Each texture only when its
+        # file is on disk (ball, logo, stadium graphics, pitch logo, adboards).
         season = str(tpl.get("branding_season") or "")
-        choice = f"{branding}:{season}" if season in ds.tournaments[branding] and season else branding
-        cfg.tournament_logo_choice = choice
-        cfg.stadium_graphics_choice = choice
-        if any(s.get("pitch_logo") for s in ds.tournaments[branding].values()):
-            cfg.pitch_logo_choice = choice
+        if not season:
+            competition_branding.apply(ds, cfg, branding)
+        elif season in ds.tournaments[branding]:
+            competition_branding.apply(ds, cfg, f"{branding}:{season}")
 
     if len(humans) == 2:
         cfg.controllers = {1: {"kind": "kbd", "label": "KEYBOARD", "zone": "home"},
-                           2: {"kind": "pad", "label": "PAD 2", "zone": "away"}}
+                           2: {"kind": "pad", "label": "GAMEPAD 1", "zone": "away"}}
     else:
         cfg.controllers = {1: {"kind": "kbd", "label": "KEYBOARD", "zone": humans[0] if humans else "home"}}
+    cfg.lock_controllers = True
     return cfg
+
+
+def _apply_weather(ds, t, fixture, cfg):
+    fc = weather.forecast(t, fixture, ds)
+    envs = ((cfg.stadium or {}).get("data") or {}).get("environments") or []
+    if fc["environment"] in envs or not envs:
+        cfg.environment = fc["environment"]
+    cfg.pitch_texture = fc["pitch"]
+    cfg.rain = fc["precip"] == "rain"
+    cfg.precip_mode = fc["precip"]
+    if fc["precip"] == "snow":
+        cfg.snow_intensity = 18.0 if fc["heavy"] else 8.0
+    cfg.breath = fc["breath"]
 
 
 def from_game_result(t, fixture, result: dict, rng) -> MatchResult:
     """The game's result dict -> MatchResult. Players are matched to the
-    selection by roster id; bench players with nothing on the sheet are
-    assumed not to have come on (the game's substitutions aren't read yet),
-    starters to have played 80."""
+    selection by roster id. Minutes are the time each player spent on the
+    pitch when the game's lineups could be followed during the match
+    (result["lineup_events"] not None); otherwise bench players with nothing
+    on the sheet are assumed not to have come on, starters to have played 80."""
     sides = []
     raw_injury = {}
     for key, tid in (("team_A", fixture.home), ("team_B", fixture.away)):
@@ -111,15 +154,22 @@ def from_game_result(t, fixture, result: dict, rng) -> MatchResult:
         roster_ids = gsv.players_roster_id.get(key, [])
         lines = []
         raw = (result or {}).get(key, {}).get("players", [])
+        tracked = (result or {}).get("lineup_events") is not None
+        starters = set(((result or {}).get(key, {}).get("starting_lineup") or {}).values())
         for i, row in enumerate(raw):
             slot = roster_ids.index(row.get("id")) if row.get("id") in roster_ids else i
             if slot >= len(sel):
                 continue
-            started = slot < 15
-            did = any(row.get(k) for k in ("tries", "conversions_attempted", "penalties_attempted",
-                                           "drop_goals", "tackles", "yellow_cards", "red_cards"))
+            if tracked:
+                started = row.get("id") in starters
+                minutes = round(row.get("seconds_on_field", 0) / 60)
+            else:
+                started = slot < 15
+                did = any(row.get(k) for k in ("tries", "conversions_attempted", "penalties_attempted",
+                                               "drop_goals", "tackles", "yellow_cards", "red_cards"))
+                minutes = 80 if started else (20 if did else 0)
             lines.append(PlayerLine(
-                pid=sel[slot], started=started, minutes=80 if started else (20 if did else 0),
+                pid=sel[slot], started=started, minutes=minutes,
                 tries=row.get("tries", 0), conversions=row.get("conversions_scored", 0),
                 conversions_attempted=row.get("conversions_attempted", 0),
                 penalties=row.get("penalties_scored", 0),

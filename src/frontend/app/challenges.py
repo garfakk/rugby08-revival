@@ -414,6 +414,7 @@ def to_match_config(ds, data: dict) -> MatchConfig:
     cfg.cards = copy.deepcopy(data.get("cards") or [])
     cfg.objectives = copy.deepcopy(data["objectives"])
     cfg.controllers = {1: {"kind": "kbd", "label": "KEYBOARD", "zone": data["user_side"]}}
+    cfg.lock_controllers = True
     # Quick match's pickers default to the "default" competition (pitch logo,
     # tournament logo, stadium graphics = the advertising boards); a bare
     # MatchConfig leaves them unset ("none" pitch logo, the home team's own

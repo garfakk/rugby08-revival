@@ -53,6 +53,7 @@
       "id": "pools",
       "name": "Pool stage",
       "kind": "round_robin",
+      "calendar": {"start": "10-13", "offsets": [0, 7, 56, 63, 91, 98]},
       "legs": 2,
       "match_subtype": "pool",
       "group_names": {
@@ -68,6 +69,7 @@
       "id": "knockouts",
       "name": "Knockout stage",
       "kind": "knockout",
+      "calendar": {"start": "04-06", "offsets": [0, 21, 48]},
       "rounds": [
         {
           "id": "qf",

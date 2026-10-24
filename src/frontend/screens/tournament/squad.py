@@ -49,8 +49,11 @@ def rating_color(v):
 
 
 class TournamentSquadScreen(Screen):
-    def __init__(self, on_back):
+    def __init__(self, on_back, embedded=False):
+        """`embedded`: shown inside the dashboard's Manage your team tab —
+        no page header, DONE button or hint bar of its own."""
         super().__init__(on_back=on_back)
+        self.embedded = embedded
         self.session = None
         self.team_id = None
         self.ds = None
@@ -72,7 +75,7 @@ class TournamentSquadScreen(Screen):
         body.setObjectName("squadBody")
         body.setStyleSheet(f"QWidget#squadBody {{ background: {BG_BASE}; }}")
         bv = QVBoxLayout(body)
-        bv.setContentsMargins(50, 14, 50, 12)
+        bv.setContentsMargins(*((0, 0, 0, 0) if self.embedded else (50, 14, 50, 12)))
         bv.setSpacing(12)
 
         # team bar: crest, name, next match, team picker (two humans)
@@ -99,6 +102,7 @@ class TournamentSquadScreen(Screen):
         self.done_btn.clicked.connect(lambda: self.on_back_cb())
         bar.addWidget(self.auto_btn)
         bar.addWidget(self.done_btn)
+        self.done_btn.setVisible(not self.embedded)
         bv.addLayout(bar)
 
         cols = QHBoxLayout()
@@ -107,7 +111,7 @@ class TournamentSquadScreen(Screen):
         lv = QVBoxLayout(left)
         lv.setContentsMargins(0, 0, 0, 0)
         lv.setSpacing(8)
-        self.xv_title = SectionTitle("matchday 22")
+        self.xv_title = SectionTitle("matchday squad · 15 + 7")
         lv.addWidget(self.xv_title)
         self.pitch = LineupPitch(interactive=True, bench=True)
         self.pitch.slot_selected.connect(self._on_slot)
@@ -173,6 +177,7 @@ class TournamentSquadScreen(Screen):
         self.hints = HintBar()
         self.hints.set_hints([("A", "pick slot / place player"), ("X", "auto pick"), ("B", "done")])
         root.addWidget(self.hints)
+        self.hints.setVisible(not self.embedded)
 
     # ── entry ────────────────────────────────────────────────────────────
     def set_team(self, session, team_id):
@@ -188,15 +193,16 @@ class TournamentSquadScreen(Screen):
         self.team_id = team_id
         self.team.set_value(team_id)
         clear_layout(self.header_holder)
-        self.header_holder.addWidget(page_header(f"Squad · {self.t.team_name(team_id)}",
-                                                 breadcrumb=f"tournament · {self.t.name}",
-                                                 on_back=self.on_back_cb))
+        if not self.embedded:
+            self.header_holder.addWidget(page_header(f"Squad · {self.t.team_name(team_id)}",
+                                                     breadcrumb=f"tournament · {self.t.name}",
+                                                     on_back=self.on_back_cb))
         self.crest.set_pixmap(tournament_crest(self.ds, self.t, team_id, 52))
         self.team_name.setText(self.t.team_name(team_id).upper())
         nxt = next((f for f in sorted(self.t.fixtures, key=lambda f: f.day)
                     if not f.played and f.involves(team_id)), None)
         self.next_label.setText(
-            f"next: {report.fixture_caption(self.t, nxt)} · matchday {nxt.day + 1}".upper() if nxt
+            f"next: {report.fixture_caption(self.t, nxt)}".upper() if nxt
             else "no match left to play".upper())
         entry = self.t.teams[team_id]
         if not entry.selection.get("players") or len(entry.selection["players"]) < 22:
