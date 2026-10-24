@@ -34,6 +34,7 @@ from ui import motion
 from ui.broadcast import Card, HintBar, display_label, eyebrow_label, page_header
 from ui.dropdown import PopupList
 from ui.editor_kit import ConfirmDialog, Note, TabPage, TabStrip, compact_button
+from ui.stat_compare import StatComparison
 from ui.theme import (ACCENT, AWAY_TINT, BG_BASE, BTN_HEIGHT, DANGER_LITE, FG_MUTED, FG_PRIMARY,
                       FG_SECONDARY, FG_TERTIARY, GREEN, INFO, WARN)
 from ui.widgets import style_button
@@ -582,9 +583,16 @@ class TournamentDashboardScreen(Screen):
                 out.append(("Enter the result", "enter", "type in the score and events"))
         if not t.finished and self._human_ids() and (due or self._upcoming_human()):
             out.append(("Simulate to the end", "sim_end", "every match left, yours included"))
+        if self._my_played():
+            out.append(("Your matches", "mine", "results and stats of every match you played"))
         if self.session.can_undo():
             out.append(("Undo last step", "undo", "only one step back"))
         return out
+
+    def _my_played(self):
+        """Your teams' played fixtures, newest first."""
+        humans = set(self._human_ids())
+        return [f for f in reversed(self.t.fixtures) if f.played and (f.home in humans or f.away in humans)]
 
     def _refresh_home(self, animate=False):
         t = self.t
@@ -1077,7 +1085,7 @@ class TournamentDashboardScreen(Screen):
                           tag_color=DANGER_LITE if data == "undo" else None)
         popup.size_to(len(items))
         actions = {"simulate": self._simulate, "enter": self._enter_result,
-                   "sim_end": self._sim_to_end, "undo": self._undo}
+                   "sim_end": self._sim_to_end, "undo": self._undo, "mine": self._your_matches}
         # after the popup has closed: a dialog opened from inside the pick
         # would lose its focus to the popup's own teardown
         popup.picked.connect(lambda data: QTimer.singleShot(0, actions[data]))
@@ -1085,6 +1093,51 @@ class TournamentDashboardScreen(Screen):
         popup.open_at(self.more_btn, self)
         popup.set_highlight(0)
         self._more_popup = popup
+
+    def _your_matches(self):
+        """Every match your teams played, newest first; A opens its report
+        with the match stats."""
+        played = self._my_played()
+        if not played:
+            return
+        humans = set(self._human_ids())
+        table = DataTable(["Round", "Home", "", "Away", "", ""], stretch_col=1,
+                          widths={0: 170, 2: 90, 3: 220, 4: 74, 5: 96},
+                          header_align={1: Qt.AlignRight})
+        rows = []
+        for f in played:
+            r = f.result
+            win = r.winner_id()
+            me = f.home if f.home in humans else f.away
+            verdict, color = (("DRAW", WARN) if win is None else
+                              (("WIN", GREEN) if win == me else ("DEFEAT", DANGER_LITE)))
+            rows.append([
+                {"text": f.label, "color": FG_TERTIARY},
+                {"text": self.t.team_name(f.home), "icon": tournament_crest(self.ds, self.t, f.home, 22),
+                 "align": Qt.AlignRight, "bold": win == f.home,
+                 "color": YOU_TINT if f.home in humans else None},
+                {"text": f"{r.home.points} – {r.away.points}", "align": Qt.AlignHCenter, "bold": True},
+                {"text": self.t.team_name(f.away), "icon": tournament_crest(self.ds, self.t, f.away, 22),
+                 "bold": win == f.away, "color": YOU_TINT if f.away in humans else None},
+                {"text": verdict, "color": color, "bold": True, "align": Qt.AlignHCenter},
+                {"text": "played" if r.source == "game" else ("entered" if r.source == "manual"
+                                                             else r.source.replace("sim", "simulated")),
+                 "color": GREEN if r.source == "game" else FG_MUTED},
+            ])
+        table.set_rows(rows, keys=[f.id for f in played])
+        table.fit_height(max_rows=10)
+        dialog = ConfirmDialog(self, "Your matches", "A on a match shows its report and statistics.",
+                               [("CLOSE", "primary", "ok")], lambda _r: None, cancel_role="ok",
+                               content=table, width=900)
+
+        def open_report(row):
+            fid = table.keys[row]
+            dialog.choose("ok")
+            # once this dialog is gone: the report comes back here on CLOSE
+            QTimer.singleShot(0, lambda: self._report(fid, back=self._your_matches))
+        table.activated_row.connect(open_report)
+        table.selectRow(0)
+        table.setFocus()
 
     def _match_details(self):
         f = self._shown_fixture()
@@ -1106,12 +1159,15 @@ class TournamentDashboardScreen(Screen):
         else:
             self.squad.refresh()
 
-    def _report(self, fid):
+    def _report(self, fid, back=None):
+        """A played match's report and statistics; `back` reopens what it
+        was picked from on CLOSE."""
         f = self.t.fixture(fid) if fid else None
         if not f or not f.played:
             return
-        ConfirmDialog(self, f.label, "", [("CLOSE", "primary", "ok")], lambda _r: None,
-                      cancel_role="ok", content=MatchReportView(self.ds, self.t, f), width=760)
+        ConfirmDialog(self, f.label, "", [("CLOSE", "primary", "ok")],
+                      lambda _r: back and QTimer.singleShot(0, back),
+                      cancel_role="ok", content=MatchReportView(self.ds, self.t, f), width=820)
 
 
 class MatchPreviewView(QWidget):
@@ -1185,7 +1241,9 @@ def _ref(t, ref):
 
 class MatchReportView(QWidget):
     """A played match: crests, score, scorers side by side, cards, injuries,
-    player of the match."""
+    player of the match, then the match statistics (scoring, kicks,
+    tackles, cards; scrums and lineouts when it was played in the game)
+    and each side's top tacklers."""
 
     def __init__(self, ds, t, f, parent=None):
         super().__init__(parent)
@@ -1269,4 +1327,18 @@ class MatchReportView(QWidget):
             row.addWidget(Tag("player of the match", AWAY_TINT))
             row.addWidget(display_label(t.player_name(motm), 14, QFont.Bold, track=0.6, upper=False))
             row.addStretch(1)
+            v.addLayout(row)
+        v.addWidget(hline())
+        v.addWidget(eyebrow_label("match statistics", color=ACCENT, size=11))
+        table = StatComparison(report.match_stats(r), row_h=34)
+        v.addWidget(table)
+        tacklers = [report.top_tacklers(t, side) for side in (r.home, r.away)]
+        if any(tacklers):
+            row = QHBoxLayout()
+            row.setSpacing(24)
+            for i, text in enumerate(tacklers):
+                note = Note(f"Top tacklers: {text}" if text else "", color=FG_SECONDARY)
+                if i:
+                    note.setAlignment(Qt.AlignRight)
+                row.addWidget(note, stretch=1)
             v.addLayout(row)

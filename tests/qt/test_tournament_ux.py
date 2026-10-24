@@ -225,3 +225,69 @@ def test_hub_details_toggle(qapp, ds, session):
     hub.more_btn.click()
     assert not hub.d_more.isHidden() and hub.d_opts.text()
     hub.close()
+
+
+def test_match_stats_rows(ds, session):
+    from app.tournament import report
+    session.advance_to_human()
+    f = session.human_fixture()
+    session.simulate(f)
+    r = f.result
+    rows = {label: (h, a) for label, h, a in report.match_stats(r)}
+    assert rows["TRIES"] == (r.home.tries, r.away.tries)
+    assert rows["TACKLES"] == (sum(l.tackles for l in r.home.players), sum(l.tackles for l in r.away.players))
+    assert "SCRUMS WON" not in rows                     # simulated: the game's team stats are unknown
+    r.home.stats, r.away.stats = {"scrums_won": 5}, {"scrums_won": 3, "lineouts_won": 9}
+    rows = {label: (h, a) for label, h, a in report.match_stats(r)}
+    assert rows["SCRUMS WON"] == (5, 3) and rows["LINEOUTS WON"] == (0, 9)
+
+
+def test_your_matches_open_the_report_with_stats(qapp, dash, session):
+    from ui.editor_kit import ConfirmDialog
+    from ui.stat_compare import StatComparison
+    from screens.tournament.dashboard import MatchReportView
+    from screens.tournament.common import DataTable
+    session.advance_to_human()
+    dash.refresh()
+    assert "mine" not in [d for _l, d, _s in dash._more_items()]    # nothing played yet
+    f = session.human_fixture()
+    dash._run(lambda: session.simulate(f))
+    _close_all(qapp, dash)
+    assert "mine" in [d for _l, d, _s in dash._more_items()]
+    dash._your_matches()
+    dialog = [d for d in dash.findChildren(ConfirmDialog) if d.isVisible()][-1]
+    table = dialog.content
+    assert isinstance(table, DataTable) and table.keys == [f.id]
+    QTest.keyClick(table, Qt.Key_Return)
+    qapp.processEvents()
+    report = [d for d in dash.findChildren(ConfirmDialog) if d.isVisible()][-1]
+    assert isinstance(report.content, MatchReportView)
+    stats = report.content.findChildren(StatComparison)
+    assert stats and stats[0].rows and stats[0].progress == 1.0
+    report.choose("ok")                                   # CLOSE: back to the list
+    qapp.processEvents()
+    again = [d for d in dash.findChildren(ConfirmDialog) if d.isVisible()]
+    assert again and isinstance(again[-1].content, DataTable)
+    again[-1].choose("ok")
+
+
+def test_post_match_reveals_stats(qapp, no_motion):
+    from screens.post_match import PostMatchScreen
+    screen = PostMatchScreen(lambda: None, lambda: None, lambda: None)
+    screen.resize(1600, 900)
+    screen.show()
+    result = {"team_A": {"score": {"points": 12, "tries": 2}, "stats": {"scrums_won": 4}, "players": []},
+              "team_B": {"score": {"points": 3, "penalties": 1}, "stats": {}, "players": []}}
+    screen.set_result({"team_A": {"name": "A"}, "team_B": {"name": "B"}}, result)
+    assert not screen.stats_shown() and screen.stats_btn.isVisible()
+    QTest.keyClick(screen, Qt.Key_X)
+    assert screen.stats_shown() and screen.stats.progress == 1.0
+    assert ("TRIES", 2, 0) in screen.stats.rows
+    QTest.keyClick(screen, Qt.Key_X)
+    assert not screen.stats_shown()
+    screen.toggle_stats()
+    screen.set_result({"team_A": {}, "team_B": {}}, result)            # next match: hidden again
+    assert not screen.stats_shown()
+    screen.set_result({"team_A": {}, "team_B": {}}, None)              # no result: nothing to reveal
+    assert not screen.stats_btn.isVisible()
+    screen.close()
