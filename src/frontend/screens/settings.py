@@ -151,6 +151,14 @@ class SettingsScreen(QWidget):
 
         cl.addWidget(ToggleRow("3D Player Preview", user_prefs.preview_3d, _set_preview_3d))
 
+        # Once a day at startup, ask GitHub for a new program or data release
+        # (app/updater); Tools > Updates can always check by hand.
+        def _set_check_updates(on):
+            user_prefs.check_updates = bool(on)
+            user_prefs.save()
+
+        cl.addWidget(ToggleRow("Check For Updates", user_prefs.check_updates, _set_check_updates))
+
         # Screen ratio of the match picture, drawn as big as fits at that
         # ratio, black bars around it (screens.ingame). 4:3 = the game as
         # shipped (widescreen patch off); the others turn the widescreen patch

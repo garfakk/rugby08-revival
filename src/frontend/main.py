@@ -171,6 +171,7 @@ from screens.post_match import PostMatchScreen
 from screens.tools import ToolsScreen
 from screens.user_edits import UserEditsScreen
 from screens.updates import UpdatesScreen
+from ui.update_notice import UpdateNotice
 from screens.challenge_editor import ChallengeEditorScreen
 from screens.squad_editor import SquadEditorScreen
 from screens.challenge_mode import ChallengeModeScreen
@@ -328,6 +329,10 @@ class MainWindow(QMainWindow):
         self.track_medal = TrackMedal(self.centralWidget())
         self.track_medal.set_anchor(self.screens)     # the content column, not the screen edge
         self.music.track_started.connect(self.track_medal.show_track)
+        # "UPDATE AVAILABLE" on the main menu, from the startup check
+        self.update_notice = UpdateNotice(self.centralWidget())
+        self.update_notice.set_anchor(self.screens)
+        self.update_notice.clicked.connect(self.show_updates)
         # Nothing plays until the intro splash lifts — the intro is its own
         # quiet piece, and the first track landing with the menu is the
         # point at which the medal is actually visible.
@@ -349,6 +354,7 @@ class MainWindow(QMainWindow):
         # above it — so it has to be placed again on every change, not only on
         # resize.
         self.track_medal.reposition()
+        self._show_update_notice()
         if self.screens.currentWidget() is self.screen_ingame:
             self.track_medal.dismiss()
         else:
@@ -438,6 +444,42 @@ class MainWindow(QMainWindow):
         self.music.start()
         QTimer.singleShot(900, self._offer_music_download)
         QTimer.singleShot(700, self._report_edits_after_update)
+        QTimer.singleShot(2500, self._startup_update_check)
+
+    # ── online updates (app/updater) ───────────────────────────────────────
+    def _startup_update_check(self):
+        """Once a day (Settings > Check For Updates), in the background: a
+        new program or data release shows the notice on the main menu, and
+        Tools > Updates opens on what was found."""
+        from app.updater import schedule
+        from shared.version import APP_VERSION, DATA_SCHEMA
+        from ui.background import Job
+        updates = self.screen_updates.updates
+        if not user_prefs.check_updates or not schedule.due(updates.journal_dir):
+            return
+        mod_data = updates.roots["mod_data"]
+
+        def done(result):
+            self.screen_updates.set_result(result)
+            if result.anything:
+                log.info("Update available: program %s, data %s",
+                         getattr(getattr(result.program, "release", None), "version", "-"),
+                         getattr(getattr(result.data, "release", None), "version", "-"))
+                self.update_notice.set_result(result)
+                self._show_update_notice()
+        self._update_job = Job(lambda _r, _c: schedule.check_all(updates.journal_dir, mod_data,
+                                                                 APP_VERSION, DATA_SCHEMA),
+                               self, "update-check")
+        self._update_job.done.connect(done)
+        self._update_job.failed.connect(lambda err: log.info("Update check failed: %s", err))
+        self._update_job.start()
+
+    def _show_update_notice(self):
+        on_menu = self.screens.currentWidget() is self.screen_main and self.update_notice.has_news
+        self.update_notice.setVisible(on_menu)
+        if on_menu:
+            self.update_notice.reposition()
+            self.update_notice.raise_()
 
     # ── the user's edits after a data update (app/user_edits.py) ──────────
     def _report_edits_after_update(self):
@@ -517,6 +559,7 @@ class MainWindow(QMainWindow):
             self._intro.setGeometry(self.centralWidget().rect())
         if self.track_medal is not None:
             self.track_medal.reposition()
+            self.update_notice.reposition()
 
     def closeEvent(self, event):
         # screen_ingame.closeEvent never fires on its own here: it's a
@@ -643,7 +686,8 @@ class MainWindow(QMainWindow):
         self.screen_user_edits = UserEditsScreen(self.data, editor_back,
                                                  open_team=self.open_team,
                                                  open_player=self.open_player)
-        self.screen_updates = UpdatesScreen(editor_back)
+        # on_quit: the program update's installer takes over (it reopens the mod)
+        self.screen_updates = UpdatesScreen(editor_back, on_quit=self.close)
         self.screen_team_editor = TeamEditorScreen(self.data, editor_back,
                                                    open_player=self.open_player)
         self.screen_player_editor = PlayerEditorScreen(self.data, editor_back,
