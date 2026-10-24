@@ -3,8 +3,9 @@ screens/tournament/wizard.py — Setting up a new tournament, in two steps:
 
   1 COMPETITION  competition cards, one per competition
   2 SETUP        edition (its real editions, e.g. the Six Nations 2008; the
-                 season follows it), name, difficulty, half length,
-                 injuries, fatigue, suspensions, and the teams you control
+                 season follows it), name, difficulty; the match rules (half
+                 length, injuries, fatigue, suspensions) folded into one
+                 summary line until MATCH RULES opens them; the teams you control
                  (crest tiles: click to take a team, again to leave it; two
                  at most, P1 and P2). EDIT THE DRAW opens who plays in which
                  pool (crest + team per slot), default teams / shuffle.
@@ -27,6 +28,7 @@ from app.tournament import engine, formats
 from app import variants as V
 from app.tournament.session import TournamentSession
 from shared.log import get_logger
+from ui import motion
 from ui.broadcast import Card, HintBar, display_label, eyebrow_label, page_header, tracked_font
 from ui.editor_kit import ChoiceField, FieldGrid, Note, TextField, compact_button
 from ui.theme import (ACCENT, BG_BASE, BG_PANEL, BORDER, BTN_HEIGHT, FG_MUTED, FG_PRIMARY,
@@ -298,11 +300,28 @@ class TournamentWizardScreen(Screen):
         self.suspensions = ChoiceField("suspensions", ON_OFF, allow_blank=False)
         w, sv = section("tournament")
         grid = FieldGrid(columns=2)
-        for f in (self.edition, self.name, self.difficulty, self.half, self.injuries,
-                  self.fatigue, self.suspensions):
+        for f in (self.edition, self.name, self.difficulty):
             grid.add(f)
             self.focus.register(f)
         sv.addWidget(grid)
+        # the match rules: the competition's defaults suit most, so one
+        # summary line until MATCH RULES opens them
+        rules = QHBoxLayout()
+        rules.setSpacing(12)
+        self.rules_btn = compact_button("MATCH RULES  ▾", "ghost")
+        self.rules_btn.clicked.connect(self._toggle_rules)
+        self.focus.register(self.rules_btn)
+        rules.addWidget(self.rules_btn)
+        self.rules_summary = Note("", color=FG_TERTIARY)
+        rules.addWidget(self.rules_summary, stretch=1)
+        sv.addLayout(rules)
+        self.rules_grid = FieldGrid(columns=2)
+        for f in (self.half, self.injuries, self.fatigue, self.suspensions):
+            self.rules_grid.add(f)
+            self.focus.register(f)
+            f.edited.connect(lambda _v: self._update_rules_summary())
+        self.rules_grid.hide()
+        sv.addWidget(self.rules_grid)
         v.addWidget(w)
 
         top = QHBoxLayout()
@@ -319,6 +338,22 @@ class TournamentWizardScreen(Screen):
         v.addLayout(self.tiles_grid)
         v.addStretch(1)
         return page
+
+    def _toggle_rules(self):
+        show = self.rules_grid.isHidden()
+        self.rules_grid.setVisible(show)
+        self.rules_btn.setText("MATCH RULES  ▴" if show else "MATCH RULES  ▾")
+        if show:
+            motion.fade_in(self.rules_grid, ms=200)
+            self.half.setFocus()
+
+    def _update_rules_summary(self):
+        on = [k for k, f in (("injuries", self.injuries), ("fatigue", self.fatigue),
+                             ("suspensions", self.suspensions)) if f.value() == "on"]
+        off = [k for k, f in (("injuries", self.injuries), ("fatigue", self.fatigue),
+                              ("suspensions", self.suspensions)) if f.value() != "on"]
+        parts = [f"{self.half.value()} halves"] + on + [f"no {k}" for k in off]
+        self.rules_summary.setText(" · ".join(parts))
 
     def _page_draw(self):
         page = transparent(QWidget(), "wizP3")
@@ -377,6 +412,7 @@ class TournamentWizardScreen(Screen):
         self.humans = []
         self._pick_competition(keep if keep in self.templates else first)
         self._go(0)
+        motion.stagger_in(self._comp_cards[:12], step=40)
 
     def template(self):
         return self.templates.get(getattr(self, "_comp", ""), {})
@@ -407,6 +443,12 @@ class TournamentWizardScreen(Screen):
         name = seasons[s].get("name", tid)
         variant = engine.entry_variant(self.ds, self.template(), tid, s)
         return f"{name} · {V.variant_label(seasons[s], variant)}" if variant else name
+
+    def _plain_name(self, tid):
+        seasons = self.ds.teams.get(tid)
+        if not seasons:
+            return self._team_name(tid)
+        return seasons[engine.pick_season(seasons, self.season)].get("name", tid)
 
     def _crest(self, tid, size):
         if tid not in self.ds.teams:
@@ -442,6 +484,7 @@ class TournamentWizardScreen(Screen):
         self.injuries.set_value("on" if opts.get("injuries", True) else "off")
         self.suspensions.set_value("on" if opts.get("suspensions", True) else "off")
         self.fatigue.set_value("on" if opts.get("fatigue", True) else "off")
+        self._update_rules_summary()
         self.season = self._season_for(tpl)
         self._build_groups(self._installed(engine.default_participants(tpl, self.season)))
 
@@ -545,7 +588,8 @@ class TournamentWizardScreen(Screen):
         self._team_tiles = []
         known = sorted(dict.fromkeys(teams), key=lambda t: self._team_name(t).lower())
         for i, tid in enumerate(known):
-            tile = TeamTile(self._crest(tid, 64), self._team_name(tid))
+            # the plain name on the tile; its squad variant shows in the draw
+            tile = TeamTile(self._crest(tid, 64), self._plain_name(tid))
             tile.tid = tid
             tile.activated.connect(lambda tid=tid: self._toggle_human(tid))
             self.focus.register(tile)
@@ -606,8 +650,11 @@ class TournamentWizardScreen(Screen):
 
     # ── navigation ───────────────────────────────────────────────────────
     def _show_page(self, page):
+        changed = page != self._page or not self.stack.currentWidget()
         self._page = page
         self.stack.setCurrentIndex(page)
+        if changed and self.isVisible():
+            motion.fade_in(self.stack.currentWidget(), ms=200)
         self.prev_btn.setText("CANCEL" if page == 0 else "BACK")
         self._validate()
         first = {0: [c for c in self._comp_cards if c.selected][:1] or self._comp_cards[:1],

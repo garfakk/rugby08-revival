@@ -105,6 +105,10 @@ class UserPrefs:
         # The user's team/player edits (user_data/edits) laid over the data
         # pack. Off: the pack alone is used, the edits are kept. Tools › My edits.
         self.use_edits = True
+        # Tournament mode's transitions and recaps (matchday results, new
+        # stage, champions...). Not in Settings: opt out with
+        # `animations = false` in the prefs file.
+        self.animations = True
         self._load()
 
     def _load(self):
@@ -125,6 +129,7 @@ class UserPrefs:
             self.coin_toss = cp.getboolean(_SECTION, "coin_toss", fallback=self.coin_toss)
             self.expert_mode = cp.getboolean(_SECTION, "expert_mode", fallback=self.expert_mode)
             self.use_edits = cp.getboolean(_SECTION, "use_edits", fallback=self.use_edits)
+            self.animations = cp.getboolean(_SECTION, "animations", fallback=self.animations)
             mode = cp.get(_SECTION, "wind_mode", fallback=self.wind_mode).strip().lower()
             mode = "standard" if mode == "default" else mode      # older name
             if mode in ("standard", "advanced"):
@@ -155,6 +160,7 @@ class UserPrefs:
                         "coin_toss": str(self.coin_toss),
                         "expert_mode": str(self.expert_mode),
                         "use_edits": str(self.use_edits),
+                        "animations": str(self.animations),
                         "wind_mode": self._stored_wind_mode}
         try:
             with open(_PREFS_FILE, "w") as fh:
