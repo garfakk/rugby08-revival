@@ -8,19 +8,23 @@ never populates a team score field.
 
 Substitutions are parsed but the parser returns nothing usable, so they are
 deliberately not shown rather than shown wrong.
+
+The screen opens on the scoreline and the scorers; MATCH STATS (pad X)
+reveals the statistics, the bars growing out row by row.
 """
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel
-from PyQt5.QtGui import QPainter, QColor, QFont, QPixmap
-from PyQt5.QtCore import Qt, QRectF
+from PyQt5.QtGui import QFont, QPixmap
+from PyQt5.QtCore import Qt
 
+from app.input import KEYMAP, Action
 from app.screen_base import Screen
 from ui import StyledButton
 from ui.broadcast import (
-    Card, HintBar, page_header, eyebrow_label, display_label, label_css, tracked_font,
+    Card, HintBar, page_header, eyebrow_label, display_label, label_css,
 )
+from ui.stat_compare import StatComparison
 from ui.theme import (
-    BG_BASE, ACCENT, HOME_TINT, AWAY_TINT,
-    FG_PRIMARY, FG_SECONDARY, FG_MUTED, FONT_DISPLAY, BTN_HEIGHT,
+    BG_BASE, ACCENT, HOME_TINT, AWAY_TINT, FG_SECONDARY, FG_MUTED, FONT_DISPLAY, BTN_HEIGHT,
 )
 
 STAT_ROWS = [
@@ -34,42 +38,6 @@ STAT_ROWS = [
     ("YELLOW CARDS", lambda s, st: s.get("yellow_cards", 0)),
     ("RED CARDS", lambda s, st: s.get("red_cards", 0)),
 ]
-
-
-class StatComparison(QWidget):
-    """Home value | label | away value, with a split bar showing the share."""
-
-    def __init__(self, rows, parent=None):
-        super().__init__(parent)
-        self.rows = rows          # [(label, home_value, away_value)]
-        self.setMinimumHeight(len(rows) * 42)
-
-    def set_rows(self, rows):
-        self.rows = rows
-        self.setMinimumHeight(len(rows) * 42)
-        self.update()
-
-    def paintEvent(self, event):
-        p = QPainter(self)
-        mid = self.width() / 2
-        y = 0
-        for label, hv, av in self.rows:
-            p.setFont(tracked_font(FONT_DISPLAY, 12, QFont.DemiBold, track=2.0))
-            p.setPen(QColor(FG_SECONDARY))
-            p.drawText(QRectF(mid - 130, y, 260, 20), Qt.AlignCenter, label)
-
-            p.setFont(tracked_font(FONT_DISPLAY, 16, QFont.Bold, track=0.4))
-            p.setPen(QColor(FG_PRIMARY))
-            p.drawText(QRectF(mid - 260, y, 110, 20), Qt.AlignRight | Qt.AlignVCenter, str(hv))
-            p.setPen(QColor(FG_SECONDARY))
-            p.drawText(QRectF(mid + 150, y, 110, 20), Qt.AlignLeft | Qt.AlignVCenter, str(av))
-
-            total = max(hv + av, 1)
-            bar_w = 220
-            p.fillRect(QRectF(mid - 20 - bar_w * hv / total, y + 24, bar_w * hv / total, 5),
-                       QColor(HOME_TINT))
-            p.fillRect(QRectF(mid + 20, y + 24, bar_w * av / total, 5), QColor(AWAY_TINT))
-            y += 42
 
 
 class PostMatchScreen(Screen):
@@ -130,14 +98,15 @@ class PostMatchScreen(Screen):
         self.status_label.setAlignment(Qt.AlignCenter)
         bl.addWidget(self.status_label)
 
-        # ── statistics ───────────────────────────────────────────────────
-        stats_card = Card()
-        sv = QVBoxLayout(stats_card)
+        # ── statistics (revealed by MATCH STATS) ─────────────────────────
+        self.stats_card = Card()
+        sv = QVBoxLayout(self.stats_card)
         sv.setContentsMargins(24, 16, 24, 16)
         sv.addWidget(eyebrow_label("match statistics", color=ACCENT, size=13))
         self.stats = StatComparison([])
         sv.addWidget(self.stats)
-        bl.addWidget(stats_card, stretch=1)
+        self.stats_card.hide()
+        bl.addWidget(self.stats_card, stretch=1)
 
         # ── scorers ──────────────────────────────────────────────────────
         scorers = QHBoxLayout()
@@ -149,7 +118,13 @@ class PostMatchScreen(Screen):
         bl.addLayout(scorers, stretch=1)
 
         actions = QHBoxLayout()
+        self.stats_btn = StyledButton("MATCH STATS  ▾", "neutral")
+        self.stats_btn.setMinimumHeight(BTN_HEIGHT)
+        self.stats_btn.setMinimumWidth(220)
+        self.stats_btn.clicked.connect(self.toggle_stats)
+        self.focus.register(self.stats_btn)
         actions.addStretch(1)
+        actions.addWidget(self.stats_btn)
         self._continue = None
         self._buttons = []
         for text, variant, slot in (("RESTART", "neutral", lambda: self.on_rematch()),
@@ -166,8 +141,32 @@ class PostMatchScreen(Screen):
         root.addWidget(body, stretch=1)
 
         self.hintbar = HintBar()
-        self.hintbar.set_hints([("A", "select"), ("B", "main menu")])
         root.addWidget(self.hintbar)
+        self._update_hints()
+
+    def _update_hints(self):
+        back = "continue" if self._continue else "main menu"
+        stats = [("X", "hide stats" if self.stats_shown() else "match stats")] \
+            if self.stats_btn.isVisibleTo(self) else []
+        self.hintbar.set_hints([("A", "select")] + stats + [("B", back)])
+
+    def stats_shown(self):
+        return not self.stats_card.isHidden()
+
+    def toggle_stats(self):
+        show = not self.stats_shown()
+        self.stats_card.setVisible(show)
+        self.stats_btn.setText("HIDE STATS  ▴" if show else "MATCH STATS  ▾")
+        if show:
+            self.stats.reveal()
+        self._update_hints()
+
+    def keyPressEvent(self, event):
+        if KEYMAP.get(event.key()) == Action.ALT and self.stats_btn.isVisible():
+            self.toggle_stats()
+            event.accept()
+            return
+        super().keyPressEvent(event)
 
     def _scorer_card(self, title, tint):
         card = Card(stripe=tint)
@@ -190,7 +189,7 @@ class PostMatchScreen(Screen):
         restart.setVisible(on_continue is None)
         primary.setText("CONTINUE" if on_continue else "MAIN MENU")
         self.on_back_cb = on_continue or self.on_main_menu
-        self.hintbar.set_hints([("A", "select"), ("B", "continue" if on_continue else "main menu")])
+        self._update_hints()
 
     # ── data ─────────────────────────────────────────────────────────────
     def set_result(self, match_data, result):
@@ -206,6 +205,11 @@ class PostMatchScreen(Screen):
         self._set_crest(self.away_crest, away.get("logo_frontend") or away.get("logo"))
 
         self._set_status(result)
+        # every match opens on the scoreline; the stats wait for MATCH STATS
+        self.stats_card.hide()
+        self.stats_btn.setText("MATCH STATS  ▾")
+        self.stats_btn.setVisible(bool(result))
+        self._update_hints()
 
         if not result:
             self.home_score.setText("–")
