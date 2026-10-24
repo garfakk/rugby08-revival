@@ -206,6 +206,8 @@ def get_process_exit_code(process_handle):
     
     return exit_code
 
+_linux_mem_fds = {}
+
 # Read a memory area for a given process
 def read_memory(process_handle, address, size):
     if config.simulation_mode:
@@ -220,11 +222,18 @@ def read_memory(process_handle, address, size):
                 raise ctypes.WinError(ctypes.get_last_error())
             return buffer.raw
 
-        # Linux
+        # Linux: one /proc/<pid>/mem descriptor kept open per process (the
+        # match is polled ~70 times a second), dropped as soon as a read fails
         else:
-            with open(f"/proc/{process_handle.pid}/mem", "rb") as fd:
-                fd.seek(address)
-                return fd.read(size)
+            fd = _linux_mem_fds.get(process_handle.pid)
+            if fd is None:
+                fd = _linux_mem_fds[process_handle.pid] = os.open(f"/proc/{process_handle.pid}/mem", os.O_RDONLY)
+            try:
+                return os.pread(fd, size, address)
+            except OSError:
+                _linux_mem_fds.pop(process_handle.pid, None)
+                os.close(fd)
+                raise
 
     except Exception as e:
         log.debug(f"Failed to read memory: {e}")   # polled every 100 ms: expected while the game starts or exits

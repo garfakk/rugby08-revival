@@ -502,18 +502,24 @@ class PlayerView(QWidget):
         if self._image is None:
             self._frame()
 
+    def _target_size(self):
+        ratio = self.devicePixelRatioF()
+        return max(1, int(self.width() * ratio)), max(1, int(self.height() * ratio))
+
+    def _render(self):
+        """Render the current pose at the widget's present size into self._image."""
+        self._image = self._surface.render_image(*self._target_size())
+        if self._image is None and self._surface.failed and not self._unavailable_sent:
+            self._unavailable_sent = True
+            self._timer.stop()
+            self.unavailable.emit()
+
     def _frame(self):
         t0 = time.perf_counter()
         if self.spin:
             self.renderer.yaw += 0.6
         self.renderer.step_turn()
-        ratio = self.devicePixelRatioF()
-        self._image = self._surface.render_image(
-            max(1, int(self.width() * ratio)), max(1, int(self.height() * ratio)))
-        if self._image is None and self._surface.failed and not self._unavailable_sent:
-            self._unavailable_sent = True
-            self._timer.stop()
-            self.unavailable.emit()
+        self._render()
         self.update()
         self._adapt((time.perf_counter() - t0) * 1000.0)
 
@@ -547,6 +553,12 @@ class PlayerView(QWidget):
             self._frame()
 
     def paintEvent(self, event):
+        if self._image is not None:
+            # An image rendered at another size (prepared hidden at start-up, or before the screen
+            # settled its layout) would show the player stretched for a frame: render it at this size first.
+            w, h = self._target_size()
+            if (self._image.width(), self._image.height()) != (w, h):
+                self._render()
         if self._image is not None:
             QPainter(self).drawImage(self.rect(), self._image)
         elif GL_AVAILABLE is False or self._surface.failed:

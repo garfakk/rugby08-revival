@@ -9,6 +9,20 @@ Versions: program = `APP_VERSION` in `shared/version.py`; data = `DATA_VERSION` 
 (default: today). Bump `DATA_SCHEMA` there only when the data layout changes in a way
 old programs/new data (or vice versa) can't handle — the app warns on mismatch.
 
+## Kit previews
+Every build first regenerates each kit's preview image (`previewFile`, the
+picture the menus show without the live 3D player) from the 3D model: same
+mannequin for all, facing the camera, transparent background, 512×512. Existing
+previews are overwritten; a kit without one gets `<kit>_preview.png` beside its
+front texture, written into its team file. It writes into the data folder
+(`$DATA`), so commit the result in the data repo. Needs the game (generic
+textures from its `data.gob`, folder from `user_data/config.ini`) and OpenGL.
+
+    python3 src/packaging/gen_kit_previews.py                 # by hand, all teams
+    python3 src/packaging/gen_kit_previews.py --team England  # one team
+    python3 src/packaging/gen_kit_previews.py --dry-run -v    # list only
+    SKIP_KIT_PREVIEWS=1 ./release.sh                          # build without it
+
 ## Artifacts
 | file | for |
 |---|---|

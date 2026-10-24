@@ -16,16 +16,27 @@ from shared.config import *
 from backend.process_handler import *
 from backend.overlay import *
 
+from shared.game_profile import game_profile, PROFILE_ADDRESS, PROFILE_SIZE
+from backend import match_memory as mm
+from backend.lineup_tracker import LineupTracker
 from shared.log import get_logger
 
 log = get_logger(__name__)
 
-# Result block layout (offsets from memory_addresses['match_result_start']):
-# 22 player records per team, 0x64 bytes each, team B 0xC60 after team A.
-PLAYER_RECORDS = {'team_A': 0x110, 'team_B': 0x110 + 0xC60}
-PLAYER_RECORD_SIZE = 0x64
-# Scoring counters in a player record (bytes), by score type
-SCORING_COUNTERS = {'try': 0x48, 'conversion': 0x40, 'penalty': 0x3E, 'drop_goal': 0x42}
+# Displayed clock (seconds) at which each period ends: halves, then extra time
+# (two halves and the sudden-death period). The game stops the clock there
+# (FUN_00421aa0..FUN_00421ae0). Period 5 = the drop-goal shootout after it.
+PERIOD_ENDS = (2400, 4800, 5400, 6000, 6600)
+SHOOTOUT_PERIOD = 5
+
+# On the pitch (reR08 patches_dll/cards.cpp): world+0x68 / +0x6C = home / away
+# team; team+0xD0+i*4 = the Player in position i (1..15); Player+0x10 = its
+# record, Player+0x70 bit0 = off the pitch.
+WORLD_TEAMS = 0x68
+TEAM_POSITIONS = 0xD0
+PLAYER_RECORD_PTR = 0x10
+PLAYER_FLAGS = 0x70
+POSITIONS = range(1, 16)
 
 
 class R08_handler:
@@ -41,6 +52,21 @@ class R08_handler:
         self.score_timeline = []
         self._score_snapshot = None
         self._last_score_poll = 0.0
+        # Last match clock read during play (displayed seconds), its period and
+        # the real time played (seconds)
+        self.match_clock = None
+        self.match_period = None
+        self.match_real_time = None
+        # What the game zeroes when its menu comes back, from the last read
+        # during the match: {team: match_memory.read_score()}
+        self.live_score = None
+        # (team, roster slot) of the Man of the Match: the game names one at
+        # every final whistle, never on a quit
+        self.man_of_the_match = None
+        self.lineup = LineupTracker()
+        # Last read of the game's in-memory profile (in-game option changes)
+        self.profile_snapshot = None
+        self._last_profile_poll = 0.0
         self.R08_pid = None
         self.R08_handle = None
 
@@ -138,7 +164,14 @@ class R08_handler:
                     and current_screen_id != 0x0032 \
                     and time.time() - self._last_score_poll >= config.score_poll_interval:
                 self._last_score_poll = time.time()
-                self.poll_scores()
+                self.poll_match()
+
+            # The options can be changed during the match, then the game is
+            # killed (or crashes) with them only in memory: keep the latest.
+            if self.screen_controller_selection_reached \
+                    and time.time() - self._last_profile_poll >= config.profile_poll_interval:
+                self._last_profile_poll = time.time()
+                self.poll_profile()
 
             # DEBUG
             #edit_game_memory(self.R08_pid)
@@ -147,6 +180,11 @@ class R08_handler:
 
         exit_code = get_process_exit_code(self.R08_handle)
         log.info(f'Process ended with code {exit_code}')
+        if self.profile_snapshot is not None:
+            try:
+                game_profile.import_ingame(self.profile_snapshot)
+            except Exception as e:
+                log.warning(f"Could not import the in-game settings: {e}")
         try:
             from backend.mod_utils import log_game_session
             log_game_session(config.game_launcher_directory)
@@ -158,6 +196,14 @@ class R08_handler:
             # never ran and nothing got dumped from memory — by then the
             # process is gone and there is nothing left to read.
             log.warning("Rugby08 exited without returning to the game menu: no match result to read")
+            if exit_code is not None and (exit_code & 0xFFFFFFFF) == 0xC0000005:
+                # The patches DLL's crash handler logs the faulting address in
+                # rugby08_patches.log ("[crash] EXCEPTION"). When it is missing
+                # there, Windows' own record names the faulting module.
+                log.warning("Rugby08 crashed with an access violation (0xC0000005). If "
+                            "rugby08_patches.log has no '[crash] EXCEPTION' record, see Windows "
+                            "Event Viewer > Windows Logs > Application, 'Application Error' "
+                            "(event 1000) for Rugby08.exe: faulting module name and offset.")
 
         # WARNING needed ?
         if config.platform == "windows":
@@ -172,6 +218,15 @@ class R08_handler:
           return int.from_bytes(memory_value, byteorder='little')
         else:
           return None
+
+    # Read the game's in-memory profile (its options). Only kept once the
+    # match is set up: the boot has long loaded user_profile.pro by then.
+    def poll_profile(self):
+        if not config.import_ingame_settings:
+            return
+        data = read_memory(self.R08_handle, PROFILE_ADDRESS, PROFILE_SIZE)
+        if data is not None and len(data) == PROFILE_SIZE:
+            self.profile_snapshot = bytes(data)
 
     # Return the game's boot progress counter (dword at config.boot_counter_address)
     def get_boot_counter(self, R08_process_handle):
@@ -196,6 +251,12 @@ class R08_handler:
         self.match_finished = False
         self.score_timeline = []
         self._score_snapshot = None
+        self.match_clock = None
+        self.match_period = None
+        self.match_real_time = None
+        self.live_score = None
+        self.man_of_the_match = None
+        self.lineup = LineupTracker()
 
     #    if execute_when_ready:
     #        time.sleep(0.5)
@@ -209,87 +270,124 @@ class R08_handler:
     def action_on_match_finished(self):
         if self.screen_controller_selection_reached:
             log.info("Match finished")
-            self.poll_scores()      # a score in the last moments before the whistle
+            self.poll_match()       # a score in the last moments before the whistle
             self.match_finished = True
         else:
             log.warning("Full-time screen seen without any controller selection: ignored")
 
-        #match_result_dump = dump_memory(process_handle, memory_addresses['match_result_start'], memory_addresses['match_result_end'])
-        #self.read_match_result(match_result_dump)
-        #print(f"Match result dumped. Length: {len(match_result_dump)}")
 
     # True only if the current match was played to full time: the game went
-    # through controller selection (match set up) and then its full-time screen
-    # (0x0033), in that order. Reaching the menu alone is not enough, since
-    # quitting mid-match (or a crash back to the menu) lands there too.
+    # through controller selection (match set up) and named a Man of the Match,
+    # which it does at the final whistle and never on a quit (0x43E6D0, only
+    # reached from the referee's end-of-period handler 0x43BAFA). A match
+    # decided by the drop-goal shootout ends elsewhere, without one: there the
+    # full-time screen (0x0033) in the shootout period is all there is.
     def is_match_finished(self):
-        return bool(self.screen_controller_selection_reached and self.match_finished)
+        if not self.screen_controller_selection_reached:
+            return False
+        if self.man_of_the_match is not None:
+            return True
+        return bool(self.match_finished and self.match_period == SHOOTOUT_PERIOD)
 
-    # Minute of play from the 4-byte clock in the result block, or None when it
-    # does not look like a match clock. The unit is not documented: it is read
-    # as float32 seconds first, then as uint32 seconds, and accepted only if the
-    # result is within a plausible match length (<= 2 h). Unverified against a
-    # real interrupted match — check the "Match clock raw" DEBUG line.
-    @staticmethod
-    def decode_match_minute(raw):
-        import struct
-        if not raw or len(raw) < 4:
-            return None
-        raw = bytes(raw[:4])
-        log.debug(f"Match clock raw: {raw.hex()}")
-        candidates = []
-        try:
-            candidates.append(struct.unpack('<f', raw)[0])
-        except struct.error:
-            pass
-        candidates.append(float(int.from_bytes(raw, 'little')))
-        for seconds in candidates:
-            if seconds == seconds and 0 < seconds <= 7200:
-                return int(seconds // 60)
-        return None
-
-    # Match clock in seconds (float, as displayed), or None while there is
-    # no match object to read it from.
+    # (displayed clock in seconds, period, real seconds played) while a match
+    # is played, else None. The displayed clock is the one on screen (80-minute
+    # scale whatever the half length) and the one .mis start times and
+    # challenge minutes use; the match object's own clock counts real seconds.
     def read_match_clock(self):
         import struct
-        raw = read_memory(self.R08_handle, config.memory_addresses['world_ptr'], 4)
-        if not raw or len(raw) < 4:
-            return None
-        world = int.from_bytes(raw, 'little')
+        world = self.read_world()
         if not world:
             return None
         raw = read_memory(self.R08_handle, world + config.memory_addresses['world_clock_offset'], 4)
         if not raw or len(raw) < 4:
             return None
-        clock = struct.unpack('<f', raw)[0]
-        return clock if clock == clock and 0 <= clock <= 7200 else None
+        real = struct.unpack('<f', raw)[0]
+        if not real > 0:
+            return None
+        raw = read_memory(self.R08_handle, config.memory_addresses['match_clock'], 5)
+        if not raw or len(raw) < 5:
+            return None
+        clock, period = struct.unpack('<f', raw[:4])[0], raw[4]
+        if not (0 <= clock <= PERIOD_ENDS[-1]) or period > SHOOTOUT_PERIOD:
+            return None
+        return clock, period, real
 
-    # Scoring counters of every player: {(team, slot): (roster id, {type: count})}
-    @staticmethod
-    def scoring_snapshot(dump):
-        snapshot = {}
-        for team, base in PLAYER_RECORDS.items():
-            for slot in range(22):
-                pos = base + slot * PLAYER_RECORD_SIZE
-                if pos + PLAYER_RECORD_SIZE > len(dump):
-                    break
-                snapshot[(team, slot)] = (int.from_bytes(dump[pos:pos+2], 'little'),
-                                          {k: dump[pos + off] for k, off in SCORING_COUNTERS.items()})
-        return snapshot
+    # Read the match clock into match_clock / match_period / match_real_time
+    # and return the displayed clock (None before play). It only runs forward
+    # during a match: a lower reading is the game resetting it on the way out
+    # of the match, and is ignored.
+    def update_match_clock(self):
+        reading = self.read_match_clock()
+        if reading is not None and (self.match_clock is None or reading[0] >= self.match_clock):
+            self.match_clock, self.match_period, self.match_real_time = reading
+        return self.match_clock if reading is not None else None
 
-    # One read of the live scoring counters while the match is played: every
-    # counter that went up since the previous read is a score at the current
-    # clock. The first read (the clock just became readable) is the baseline,
-    # so the score a mission starts on is not counted as scored in play.
-    def poll_scores(self):
-        clock = self.read_match_clock()
+    def read_world(self):
+        raw = read_memory(self.R08_handle, config.memory_addresses['world_ptr'], 4)
+        return int.from_bytes(raw, 'little') if raw and len(raw) == 4 else None
+
+    def read_setup(self):
+        start = config.memory_addresses['match_setup']
+        return dump_memory(self.R08_handle, start, start + mm.SETUP_SIZE)
+
+    # Who is in each position: ({team: {pos: {"id", "off"}}}, {team: {id:
+    # {"red", "injury"}}}), or None. About 35 small reads.
+    def read_lineups(self, block):
+        world = self.read_world()
+        raw = read_memory(self.R08_handle, world + WORLD_TEAMS, 8) if world else None
+        if not raw or len(raw) < 8:
+            return None
+        setup = config.memory_addresses['match_setup']
+        lineups = {}
+        for i, team in enumerate(mm.TEAM_RECORDS):
+            team_ptr = int.from_bytes(raw[4 * i:4 * i + 4], 'little')
+            slots = read_memory(self.R08_handle, team_ptr + TEAM_POSITIONS, 4 * 16) if team_ptr else None
+            if not slots or len(slots) < 64:
+                return None
+            positions = {}
+            for pos in POSITIONS:
+                player = int.from_bytes(slots[4 * pos:4 * pos + 4], 'little')
+                data = read_memory(self.R08_handle, player + PLAYER_RECORD_PTR,
+                                   PLAYER_FLAGS - PLAYER_RECORD_PTR + 1) if player else None
+                if not data or len(data) < PLAYER_FLAGS - PLAYER_RECORD_PTR + 1:
+                    continue
+                where = mm.record_slot(setup, int.from_bytes(data[:4], 'little'))
+                if where is None:
+                    continue
+                pid = mm.read_player(block, *where)['id']
+                positions[pos] = {'id': pid, 'off': bool(data[PLAYER_FLAGS - PLAYER_RECORD_PTR] & 1)}
+            lineups[team] = positions
+        records = {}
+        for team in mm.TEAM_RECORDS:
+            records[team] = {}
+            for slot in range(mm.ROSTER_SLOTS):
+                player = mm.read_player(block, team, slot)
+                if player['id']:
+                    records[team][player['id']] = {'red': player['red_cards'],
+                                                   'injury': player['injury']}
+        return lineups, records
+
+    # One read of the match while it is played (every score_poll_interval):
+    # clock, scores (every counter that went up since the previous read is a
+    # score at the current clock; the first read is the baseline, so the score
+    # a mission starts on is not counted as scored in play), the team scores
+    # the game will zero, the Man of the Match and who plays where.
+    def poll_match(self):
+        clock = self.update_match_clock()
         if clock is None:
             return
-        dump = dump_memory(self.R08_handle, config.memory_addresses['match_result_start'],
-                           config.memory_addresses['match_result_end'])
-        if not dump:
+        block = self.read_setup()
+        if not block or len(block) < mm.SETUP_SIZE:
             return
-        snapshot = self.scoring_snapshot(dump)
+        self.live_score = {team: mm.read_score(block, team) for team in mm.TEAM_RECORDS}
+        self.man_of_the_match = mm.man_of_the_match(block) or self.man_of_the_match
+        self._track_scores(block, clock)
+        lineups = self.read_lineups(block)
+        if lineups is not None:
+            self.lineup.update(clock, self.match_period, self.match_real_time, *lineups)
+
+    def _track_scores(self, block, clock):
+        snapshot = mm.scoring_snapshot(block)
         previous, self._score_snapshot = self._score_snapshot, snapshot
         if previous is None:
             log.debug(f"Score tracking from {clock / 60:.1f} min")
@@ -309,6 +407,9 @@ class R08_handler:
 
         # Ensure this is the end of the match (we previously reached the team controller selection)
         if self.screen_controller_selection_reached:
+            block = self.read_setup()
+            if block and len(block) >= mm.SETUP_SIZE:
+                self.man_of_the_match = mm.man_of_the_match(block) or self.man_of_the_match
             finished = self.is_match_finished()
             if finished:
                 log.info("End of the match reached")
@@ -316,20 +417,13 @@ class R08_handler:
                 # Left the match before full time: the stats in memory are partial
                 log.warning("Back at the menu but the match was not played to full time: reading the partial result")
 
-            match_result_dump = dump_memory(self.R08_handle, config.memory_addresses['match_result_start'], config.memory_addresses['match_result_end'])
-            self.match_result = self.read_match_result(match_result_dump)
-
+            self.match_result = self.read_match_result(block)
             if self.match_result is not None:
                 self.match_result['finished'] = finished
-                # None = the clock was never readable, so nothing was timed
-                self.match_result['events'] = (list(self.score_timeline)
-                                               if self._score_snapshot is not None else None)
-                self.match_result['minute'] = self.decode_match_minute(self.match_result['time'])
                 if not finished:
                     log.info(f"Match interrupted at minute {self.match_result['minute']}")
 
-            if match_result_dump != None:
-              log.debug(f"Match result dumped. Length: {len(match_result_dump)}")
+            self.poll_profile()     # options changed since the last poll
 
             log.info("Exit game")
             if config.platform == "windows":
@@ -358,137 +452,56 @@ class R08_handler:
         except Exception as e:
             log.error(f"Error modifying memory: {e}")
 
-    # Parse the memory dump and return the match result
-    def read_match_result(self, memory_dump):
+    # The match result from the block read at the menu (players' and teams'
+    # counters survive there) and what was read during the match (scores,
+    # clock, Man of the Match, lineups). None without a readable block.
+    def read_match_result(self, block):
         if config.simulation_mode:
             return
-
-        if memory_dump == None:
+        if not block or len(block) < mm.SETUP_SIZE:
             log.warning("No memory dump")
             return
-        
-        def read_player(pos):
-            player = {
-                'id': int.from_bytes(memory_dump[pos:pos+2], byteorder='little'),
-                'name': memory_dump[pos+4:pos+4+16].decode('utf-8').rstrip('\x00'),
-                'penalties_scored': memory_dump[pos+0x3E],
-                'penalties_attempted': memory_dump[pos+0x3F],
-                'conversions_scored': memory_dump[pos+0x40],
-                'conversions_attempted': memory_dump[pos+0x41],
-                'drop_goals': memory_dump[pos+0x42],
-                'yellow_cards': memory_dump[pos+0x44],
-                'red_cards': memory_dump[pos+0x45],
-                'tries': memory_dump[pos+0x48],
-                'tackles': memory_dump[pos+0x4A],
-                'injury': memory_dump[pos+0x50],
-                }
-            
-            return player
-        
-        def read_scrums_and_lineouts(pos):
-            scrum_and_lineouts = {
-                'scrums_won_own': int.from_bytes(memory_dump[pos:pos+2], byteorder='little'),
-                'scrums_won_opp': int.from_bytes(memory_dump[pos+2:pos+4], byteorder='little'),
-                'lineouts_won_own': int.from_bytes(memory_dump[pos+4:pos+6], byteorder='little'),
-                'lineouts_won_opp': int.from_bytes(memory_dump[pos+6:pos+8], byteorder='little'),
-            }
-            
-            return scrum_and_lineouts
-        
-        def read_substitution(pos):
-            substitution = {
-                'player_in': 0,
-                'player_out': memory_dump[pos:pos+2],
-                'time': memory_dump[pos+4:pos+6],
-            }
-            
+
         with open(os.path.join(config.temp_directory, "dump.bin"), 'wb') as file:
-            file.write(memory_dump)
-            
-        # Team A
-        offsets = {
-            'time': 0x1A00,
-            'team_A': {
-                'players': 0x110,
-                'scrums_and_lineouts': 0xD64,
-                'substitutions': 0xD0C,
-            },
-            'team_B': {
-                'players': 0x110 + 0xC60,
-                'scrums_and_lineouts': 0xD64 + 0xC60,
-                'substitutions': 0xD0C + 0xC60,
-            },
-        }
-            
-        match_result = {
-            'time': memory_dump[offsets['time']:offsets['time']+4],
-            'half_time': memory_dump[offsets['time']+4],
-            'team_A': {
-                'score': None,
-                'players': [],
-                'substitutions': [],
-                'stats': {},
-            },
-            'team_B': {
-                 'score': None,
-                'players': [],
-                'substitutions': [],
-                'stats': {},
-            },
-        }
-        
-        for team in ['team_A', 'team_B']:
-            for index_player in range(22):
-                player_result = read_player(offsets[team]['players'] + index_player * 0x64)
-                match_result[team]['players'].append(player_result)
-                
-            for index_substitution in range(7):
-                subsitution = read_substitution(offsets[team]['substitutions'] + index_substitution * 0x64)
-                match_result[team]['substitutions'].append(subsitution)
-        
-            match_result[team]['stats'].update(read_scrums_and_lineouts(offsets[team]['scrums_and_lineouts']))
+            file.write(block)
 
-            # The game never populates a team score field, so derive it from
-            # the per-player scoring events. (This block also used to end in a
-            # stray comma, which made 'score' a 1-tuple rather than a dict.)
-            score = {
-                'points': 0,
-                'tries': 0,
-                'conversions': 0,
-                'penalties': 0,
-                'drop_goals': 0,
-                'yellow_cards': 0,
-                'red_cards': 0,
-                'tackles': 0,
-            }
-            for player in match_result[team]['players']:
-                score['tries'] += player['tries']
-                score['conversions'] += player['conversions_scored']
-                score['penalties'] += player['penalties_scored']
-                score['drop_goals'] += player['drop_goals']
-                score['yellow_cards'] += player['yellow_cards']
-                score['red_cards'] += player['red_cards']
-                score['tackles'] += player['tackles']
-            score['points'] = (score['tries'] * 5 + score['conversions'] * 2
-                               + score['penalties'] * 3 + score['drop_goals'] * 3)
-            match_result[team]['score'] = score
-
+        result = {team: mm.read_team(block, team, (self.live_score or {}).get(team))
+                  for team in mm.TEAM_RECORDS}
+        for team in mm.TEAM_RECORDS:
+            played = self.lineup.summary(team)
+            for player in result[team]['players']:
+                time_played = played.get(player['id'], {})
+                player['seconds_on_field'] = time_played.get('seconds', 0.0)
+                player['real_seconds_on_field'] = time_played.get('real_seconds', 0.0)
+                player['positions'] = time_played.get('positions', {})
+                player['real_positions'] = time_played.get('real_positions', {})
+            result[team]['starting_lineup'] = {pos: p['id'] for pos, p in
+                                               sorted(((self.lineup.starting or {}).get(team) or {}).items())}
+        motm = None
+        if self.man_of_the_match is not None:
+            team, slot = self.man_of_the_match
+            player = mm.read_player(block, team, slot)
+            motm = {'team': team, 'id': player['id'], 'name': player['name']}
+        result.update({
+            # None = the clock was never readable, so nothing was timed
+            'events': list(self.score_timeline) if self._score_snapshot is not None else None,
+            'lineup_events': list(self.lineup.events) if self.lineup.lineups is not None else None,
+            'man_of_the_match': motm,
+            'clock': self.match_clock,
+            'period': self.match_period,
+            'real_time': self.match_real_time,
+            'minute': int(self.match_clock // 60) if self.match_clock is not None else None,
+        })
 
         log.info("===== RESULT =====")
-        log.info(f"Time: {match_result['time']} halftime:{match_result['half_time']}")
-        for team in ['team_A', 'team_B']:
-            log.info(f"== {team}:")
-            log.info(f"stats: {match_result[team]['stats']}")
-            #for stats in match_result[team]['stats']:
-                #team_stats_str = ", ".join("{}: {}".format(k, v) for k, v in stats.items())
-                #print(f"{team_stats_str}")
-            for player in match_result[team]['players']:
-                player_stats = {x: player[x] for x in player if x not in ['name']}
-                player_stats_str = ", ".join("{}: {}".format(k, v) for k, v in player_stats.items())
-                log.debug(f"{player['name']} \t {player_stats_str}")
-            log.debug("Substitutions:")
-            for sub in match_result[team]['substitutions']:
-                log.debug(f"{sub}")
-
-        return match_result
-
+        for team in mm.TEAM_RECORDS:
+            log.info(f"== {team}: {result[team]['score']}")
+            log.info(f"stats: {result[team]['stats']}")
+            for player in result[team]['players']:
+                player_stats = {x: player[x] for x in player if x not in ('name',)}
+                log.debug(f"{player['name']} \t {player_stats}")
+            log.debug(f"Substitutions: {result[team]['substitutions']}")
+        log.info(f"Man of the Match: {motm}")
+        for event in result['lineup_events'] or []:
+            log.info(f"Lineup: {event}")
+        return result

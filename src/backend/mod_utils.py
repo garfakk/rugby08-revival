@@ -12,7 +12,7 @@ import struct
 import io
 import hashlib
 from shared.config import config
-from shared.user_prefs import user_prefs
+from shared.user_prefs import user_prefs, fit_rect
 
 # Custom modules
 from backend.game_specific_variables import *
@@ -180,10 +180,18 @@ def _encode_dxt_color(blocks):
   p0 = _unpack_565(c0)
   p1 = _unpack_565(c1)
   palette = np.stack([p0, p1, (2 * p0 + p1) // 3, (p0 + 2 * p1) // 3], axis=1)  # (N, 4, 3)
-  dist = ((rgb[:, :, None, :] - palette[:, None, :, :]) ** 2).sum(axis=3)       # (N, 16, 4)
+  # Squared distance to each palette color, summed channel by channel: same
+  # result as a broadcast over the channel axis + sum(axis=3), ~2x faster.
+  dist = None
+  for ch in range(3):
+    d = rgb[:, :, None, ch] - palette[:, None, :, ch]
+    d *= d
+    dist = d if dist is None else dist + d                                      # (N, 16, 4)
   indices = dist.argmin(axis=2).astype(np.uint32)                               # (N, 16)
-  shifts = np.arange(16, dtype=np.uint32) * 2
-  index_bits = np.bitwise_or.reduce(indices << shifts, axis=1)
+  # The 2-bit fields never overlap, so a dot product with the field weights
+  # packs them like a bitwise OR of the shifted indices.
+  weights = np.uint32(1) << (np.arange(16, dtype=np.uint32) * 2)
+  index_bits = (indices @ weights).astype(np.uint32)
   return c0, c1, index_bits
 
 
@@ -323,9 +331,9 @@ def is_custom_asset(value):
 
 
 # Composite one or more transparent overlay images on top of a base skin
-# image and save the result as a PNG. `overlay_paths` are pasted in order,
-# so the last one ends up on top. Returns the output path.
-def composite_baselayers_on_image(base_image, overlay_paths, output_path):
+# image. `overlay_paths` are pasted in order, so the last one ends up on top.
+# Returns the composited RGBA image, also saved as a PNG when `output_path` is given.
+def composite_baselayers_on_image(base_image, overlay_paths, output_path=None):
   result = base_image.convert('RGBA')
   for layer_path in overlay_paths:
     layer = Image.open(layer_path).convert('RGBA')
@@ -333,8 +341,9 @@ def composite_baselayers_on_image(base_image, overlay_paths, output_path):
       log.warning(f"Baselayer {layer_path} size {layer.size} != skin {result.size}, resizing")
       layer = layer.resize(result.size, Image.LANCZOS)
     result = Image.alpha_composite(result, layer)
-  result.save(output_path)
-  return output_path
+  if output_path:
+    result.save(output_path)
+  return result
 
 
 def _read_fsh_directory(fsh_file):
@@ -352,7 +361,8 @@ def _read_fsh_directory(fsh_file):
   ]
 
 
-# Replace a bitmap asset inside a .FSH file with a new image, in place.
+# Replace a bitmap asset inside a .FSH file with a new image (a file path or
+# a PIL image), in place.
 # The target entry can be selected by `tag` (4-char directory name, e.g. 'loga'),
 # by `index` (position in the directory), or by `position` (the pixel-data
 # offset used by fsh_files_offsets, i.e. entry offset + 16). The bitmap format
@@ -394,7 +404,8 @@ def replace_asset_in_fsh_file(fsh_file_path, image_file_path, dimensions=None, p
         log.warning(f"Requested dimensions {dimensions} differ from FSH entry {(width, height)}, "
                         f"using the entry's own dimensions")
 
-      rgba = _image_to_rgba_array(Image.open(image_file_path), (width, height))
+      image = image_file_path if isinstance(image_file_path, Image.Image) else Image.open(image_file_path)
+      rgba = _image_to_rgba_array(image, (width, height))
       if code == FSH_CODE_A8R8G8B8:
         pixel_data = _encode_a8r8g8b8(rgba)
       elif code == FSH_CODE_DXT1:
@@ -853,11 +864,12 @@ def stock_kit_paths(cache_dir):
 
 # The generic body / skin tones / boots / head every 3D player preview wears (only
 # the kit is team-specific). body.o is the mod's own (split left/right skin UVs)
-# and ships in assets/static_files; the two .fsh are stock data.gob entries, and
-# the head is the stock face 21543 archive (model.o + textures.fsh).
+# and ships in assets/static_files; the skin tones are the mod's doubled 512x256
+# skins template (one half per side, what the game wears once the mod is
+# installed, not the stock 256x256 data.gob entry), the boots a stock data.gob
+# entry, and the head the stock face 21543 archive (model.o + textures.fsh).
 _BODY_ENTRY = "dc6975fd9498de7faa1f5b263a690e5e.o"
-_PREVIEW_FSH = {"skin.fsh": "e6032b2303f4b08e2765786e39b6a5f0.fsh",
-                "boots.fsh": "5f1c1437ecb6fb9c7f280f5b54e47f7e.fsh"}
+_PREVIEW_FSH = {"boots.fsh": "5f1c1437ecb6fb9c7f280f5b54e47f7e.fsh"}
 _GENERIC_HEAD_FACE = 21543
 _preview_assets_failed = set()
 
@@ -878,7 +890,7 @@ def player_preview_assets(cache_dir):
     (body, skin, boots) is unavailable; the head is optional. A failed attempt is
     not repeated during this run (each one scans the ~450MB data.gob)."""
     out = {"body": os.path.join(cache_dir, "body.o"),
-           "skin": os.path.join(cache_dir, "skin.fsh"),
+           "skin": os.path.join(config.templates_directory, template_filenames["skins"]),
            "boots": os.path.join(cache_dir, "boots.fsh")}
     missing = [k for k, v in out.items() if not os.path.isfile(v)]
     # body.o ships with the mod and changes between versions (it once got split
@@ -1155,10 +1167,18 @@ def log_game_session(game_dir, max_lines=150):
       start = i
   session = lines[start:]
   log.info(f"Game log {path}: {len(session)} lines in the last session")
-  for line in session[:max_lines]:
+  # Keep the tail: a crash is logged last, so a head-only cut hides it.
+  if len(session) <= max_lines:
+    head, skipped, tail = session, 0, []
+  else:
+    n_tail = max_lines // 2
+    head, skipped, tail = session[:max_lines - n_tail], len(session) - max_lines, session[-n_tail:]
+  for line in head:
     log.info(f"  game| {line}")
-  if len(session) > max_lines:
-    log.info(f"  game| ... {len(session) - max_lines} more lines in the file")
+  if skipped:
+    log.info(f"  game| ... {skipped} lines omitted ...")
+  for line in tail:
+    log.info(f"  game| {line}")
 
 
 def configure_game_logging(game_dir):
@@ -1174,6 +1194,50 @@ def configure_game_logging(game_dir):
   if enabled:
     log.info(f"Game logs on: {os.path.join(game_dir, 'rugby08_patches.log')}")
   return enabled
+
+
+def _widescreen_aspect(value):
+  """config.widescreen_aspect -> the DLL's [widescreen] aspect: 0 = auto, else a
+  ratio. Accepts "auto", "1.7777778" or "16:9"; anything unreadable is auto."""
+  text = str(value).strip().lower()
+  try:
+    if ":" in text:
+      w, h = (float(part) for part in text.split(":", 1))
+      return w / h
+    return max(0.0, float(text))
+  except (ValueError, ZeroDivisionError):
+    if text not in ("", "auto", "0"):
+      log.warning(f"widescreen_aspect {value!r} not understood, using auto")
+    return 0.0
+
+
+def configure_game_widescreen(game_dir):
+  """Switch the rugby08patches.dll widescreen patch on/off in rugby08patches.ini
+  (the user's other lines are kept)."""
+  ini = os.path.join(game_dir, "rugby08patches.ini")
+  aspect = _widescreen_aspect(user_prefs.widescreen_aspect)
+  try:
+    _set_ini_value(ini, "patches", "widescreen", "1" if user_prefs.widescreen else "0")
+    _set_ini_value(ini, "widescreen", "aspect", f"{aspect:.7g}" if aspect else "0")
+  except OSError as e:
+    log.warning(f"cannot update {ini}: {e}")
+    return
+  log.info(f"Widescreen: {'on' if user_prefs.widescreen else 'off'}, aspect "
+           f"{f'{aspect:.4f}' if aspect else 'auto'}")
+
+
+def configure_controller_lock(game_dir, locked):
+  """rugby08patches.dll controller_lock for this match: on, no input device can
+  join a team the mission gave no human (no switching to the opponent from the
+  pause menu; moving to/from "none" stays free); off, the game's stock
+  controller screen works as usual."""
+  ini = os.path.join(game_dir, "rugby08patches.ini")
+  try:
+    _set_ini_value(ini, "patches", "controller_lock", "1" if locked else "0")
+  except OSError as e:
+    log.warning(f"cannot update {ini}: {e}")
+    return
+  log.info(f"Controller lock: {'on' if locked else 'off'}")
 
 
 def configure_d3d8_proxy():
@@ -1198,6 +1262,8 @@ def configure_d3d8_proxy():
       return False
 
   game_log = configure_game_logging(game_dir)
+  if config.use_rugby08patches:
+    configure_game_widescreen(game_dir)
   if game_log:
     _describe_game_files(game_dir, ["d3d8.dll", "rugby08patches.dll", "user_profile.pro",
                                     "rugby08patches.ini"])
@@ -1229,15 +1295,21 @@ def configure_d3d8_proxy():
   linux_embedded = (config.platform == "linux" and getattr(config, "embed_frontend_size", False)
                     and monitor)
   if linux_embedded:
-    # Linux: the game is embedded and stretched to fill its host (the fullscreen
-    # mod window, or the game screen of a windowed one) — same idea, the size the
-    # game must render at is that host's physical size.
+    # Linux: the game is embedded in its host (the fullscreen mod window, or
+    # the game screen of a windowed one) — same idea, the size the game must
+    # render at is that host's physical size, cut to the Screen Ratio (it
+    # renders 1:1, so a window shrunk afterwards would crop the picture).
     left, top, right, bottom = monitor
-    frontend_w, frontend_h = right - left, bottom - top
-  elif (config.platform == "windows" and getattr(config, "reveal_fullscreen", False)
+    _x, _y, frontend_w, frontend_h = fit_rect(left, top, right - left, bottom - top,
+                                              user_prefs.picture_ratio())
+  elif (config.platform == "windows" and getattr(config, "reveal_own_window", False)
           and monitor):
+    # Windows: the game keeps its own window, revealed over the monitor
+    # (fullscreen mod) or over the mod's game area (windowed mod) — the
+    # frontend put that rect in reveal_monitor_rect — cut to the Screen Ratio.
     left, top, right, bottom = monitor
-    frontend_w, frontend_h = right - left, bottom - top
+    _x, _y, frontend_w, frontend_h = fit_rect(left, top, right - left, bottom - top,
+                                              user_prefs.picture_ratio())
     # The proxy runs inside the game, so it compares sizes in the GAME's
     # coordinates. Rugby08.exe has no dpiAware manifest: unless the exe is
     # marked HIGHDPIAWARE, Windows hides the real resolution from it and scales

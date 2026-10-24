@@ -7,7 +7,8 @@
 #   ./release.sh full         only the full installer (no program-only/data installers, zip or smoke test)
 #
 # Env: DATA_VERSION (default: today, e.g. 2026.09.19)  R08_DATA (data folder)
-#      OUT (default ~/r08-build/out)  SKIP_SMOKE=1
+#      OUT (default ~/r08-build/out)  SKIP_SMOKE=1  SKIP_KIT_PREVIEWS=1
+#      R08_PYTHON (host python for the kit previews; default: the repo's .venv, else python3)
 # Program version comes from shared/version.py (APP_VERSION).
 #
 # One-time setup of the isolated wine prefix: see packaging/README.md.
@@ -42,6 +43,14 @@ if git -C "$SRC" rev-parse --git-dir >/dev/null 2>&1; then
 fi
 mkdir -p "$OUT"
 PROG="$OUT/R08Revival"; DATASTAGE="$OUT/data_pack"; INC="$OUT/inc"
+
+# Every kit's preview image, rendered from the 3D player (overwrites them in
+# $DATA; needs the game for the generic player textures, see gen_kit_previews.py).
+if [ -z "${SKIP_KIT_PREVIEWS:-}" ]; then
+  step "kit previews"
+  if [ -x "$SRC/../.venv/bin/python" ]; then HOSTPY="$SRC/../.venv/bin/python"; else HOSTPY=python3; fi
+  "${R08_PYTHON:-$HOSTPY}" "$HERE/gen_kit_previews.py" --data "$DATA" || die "kit previews failed (SKIP_KIT_PREVIEWS=1 to build without them)"
+fi
 
 if [ "$TARGET" != data ]; then
   step "game-copy includes"

@@ -1,16 +1,17 @@
 """
-screens/tournament/wizard.py — Setting up a new tournament, in four steps:
+screens/tournament/wizard.py — Setting up a new tournament, in two steps:
 
-  1 COMPETITION  competition cards, season, the tournament's name
-  2 THE DRAW     who plays in which pool (crest + team per slot), default
-                 teams / shuffle the draw
-  3 YOUR TEAM    pick the team you manage from crest tiles; optional second
-                 player's team
-  4 RULES        difficulty, half length, realism (injuries, fatigue...)
+  1 COMPETITION  competition cards, one per competition
+  2 SETUP        edition (its real editions, e.g. the Six Nations 2008; the
+                 season follows it), name, difficulty, half length,
+                 injuries, fatigue, suspensions, and the teams you control
+                 (crest tiles: click to take a team, again to leave it; two
+                 at most, P1 and P2). EDIT THE DRAW opens who plays in which
+                 pool (crest + team per slot), default teams / shuffle.
 
-A step bar on top (click a step, or LB / RB), a summary rail on the right
-and BACK / NEXT at the bottom; the last step's NEXT is START TOURNAMENT,
-which creates and saves it and opens the dashboard.
+A step bar on top (click a step, or LB / RB) and BACK / NEXT at the bottom;
+the last step's NEXT is START TOURNAMENT, which creates and saves it and
+opens the dashboard.
 """
 import random
 
@@ -22,7 +23,6 @@ from PyQt5.QtWidgets import (QGridLayout, QHBoxLayout, QScrollArea, QStackedWidg
 from app.challenges import DIFFICULTIES, HALF_LENGTHS
 from app.input import KEYMAP, Action
 from app.screen_base import Screen
-from app.season import season_label
 from app.tournament import engine, formats
 from app import variants as V
 from app.tournament.session import TournamentSession
@@ -30,17 +30,17 @@ from shared.log import get_logger
 from ui.broadcast import Card, HintBar, display_label, eyebrow_label, page_header, tracked_font
 from ui.editor_kit import ChoiceField, FieldGrid, Note, TextField, compact_button
 from ui.theme import (ACCENT, BG_BASE, BG_PANEL, BORDER, BTN_HEIGHT, FG_MUTED, FG_PRIMARY,
-                      FG_SECONDARY, FG_TERTIARY, FONT_BODY, FONT_DISPLAY, GREEN, WARN)
+                      FG_SECONDARY, FG_TERTIARY, FONT_DISPLAY, GREEN, WARN)
 
-from .common import (ActivatableCard, PixmapLabel, SectionTitle, Tag, YOU_TINT, clear_layout,
+from .common import (ActivatableCard, PixmapLabel, SectionTitle, YOU_TINT, clear_layout,
                      competition_emblem, placeholder_crest, section, team_crest, transparent)
 
 log = get_logger(__name__)
 
 ON_OFF = ["on", "off"]
-VARIANCE = {"predictable": 0.6, "normal": 1.0, "chaotic": 1.6}
-INJURY_RATES = {"rare": 0.5, "normal": 1.0, "frequent": 1.8}
-STEPS = ["competition", "the draw", "your team", "rules"]
+STEPS = ["competition", "setup"]
+DRAW_PAGE = len(STEPS)      # the stack page EDIT THE DRAW opens (part of setup)
+MAX_HUMANS = 2
 
 
 def _format_line(tpl) -> str:
@@ -60,7 +60,7 @@ def _format_line(tpl) -> str:
 
 
 class StepBar(QWidget):
-    """① COMPETITION ── ② THE DRAW ── ③ YOUR TEAM ── ④ RULES"""
+    """① COMPETITION ── ② SETUP"""
 
     picked = pyqtSignal(int)
 
@@ -115,34 +115,50 @@ class StepBar(QWidget):
                        self.steps[i].upper())
 
 
+def family_of(tid, tpl) -> str:
+    """The competition a template belongs to: its branding's (the RWC 2015
+    template is a "world_cup"), else its own id."""
+    return str(tpl.get("branding") or tid)
+
+
+def edition_label(tpl) -> str:
+    """"2015" for a real edition, "custom" for the open template (today's squads)."""
+    if tpl.get("season") or tpl.get("branding_season"):
+        return str(tpl.get("branding_season") or tpl.get("name", ""))
+    return "custom"
+
+
 class CompetitionCard(ActivatableCard):
-    def __init__(self, ds, tid, tpl, parent=None):
+    """One competition; `editions` = how many real editions it has."""
+
+    def __init__(self, ds, tid, tpl, editions=0, parent=None):
         super().__init__(parent)
-        self.tid, self.tpl = tid, tpl
-        self.setFixedHeight(118)
-        self._emblem = competition_emblem(ds, tpl, 80)
+        self.ds, self.tid, self.editions = ds, tid, editions
+        self.setFixedHeight(96)
+        self.set_template(tpl)
+
+    def set_template(self, tpl):
+        self.tpl = tpl
+        self._emblem = competition_emblem(self.ds, tpl, 72)
         self._format = _format_line(tpl)
+        if self.editions:
+            self._format += f" · {self.editions} real edition{'s' if self.editions != 1 else ''}"
+        self.update()
 
     def paintEvent(self, event):
         p = QPainter(self)
         p.setRenderHint(QPainter.Antialiasing)
         self.paint_background(p)
         w, h = self.width(), self.height()
-        p.drawPixmap(18, (h - 80) // 2, self._emblem)
-        x = 116
+        p.drawPixmap(14, (h - 72) // 2, self._emblem)
+        x = 104
         p.setFont(tracked_font(FONT_DISPLAY, 19, QFont.Bold, 1.0))
         p.setPen(QColor(FG_PRIMARY))
-        p.drawText(QRectF(x, 12, w - x - 14, 28), Qt.AlignLeft | Qt.AlignVCenter,
+        p.drawText(QRectF(x, 20, w - x - 40, 28), Qt.AlignLeft | Qt.AlignVCenter,
                    self.tpl.get("name", self.tid).upper())
         p.setFont(tracked_font(FONT_DISPLAY, 10, QFont.Bold, 1.4))
         p.setPen(QColor(ACCENT if self.selected else FG_TERTIARY))
-        p.drawText(QRectF(x, 40, w - x - 14, 16), Qt.AlignLeft | Qt.AlignVCenter, self._format.upper())
-        f = QFont(FONT_BODY)
-        f.setPointSize(9)
-        p.setFont(f)
-        p.setPen(QColor(FG_SECONDARY))
-        p.drawText(QRectF(x, 60, w - x - 14, h - 66), Qt.AlignLeft | Qt.AlignTop | Qt.TextWordWrap,
-                   self.tpl.get("description", ""))
+        p.drawText(QRectF(x, 50, w - x - 14, 16), Qt.AlignLeft | Qt.AlignVCenter, self._format.upper())
         if self.selected:
             p.setPen(Qt.NoPen)
             p.setBrush(QColor(ACCENT))
@@ -153,13 +169,13 @@ class CompetitionCard(ActivatableCard):
 
 
 class TeamTile(ActivatableCard):
-    """Crest + name: picking the team you manage."""
+    """Crest + name: a team you can control; `tag` = "P1" / "P2" when you do."""
 
     def __init__(self, crest, name, parent=None):
         super().__init__(parent)
         self.setFixedSize(150, 132)
         self._crest, self._name = crest, name
-        self.player2 = False
+        self.tag = ""
 
     def paintEvent(self, event):
         p = QPainter(self)
@@ -168,14 +184,14 @@ class TeamTile(ActivatableCard):
         w = self.width()
         p.drawPixmap(int((w - 64) / 2), 14, self._crest)
         p.setFont(tracked_font(FONT_DISPLAY, 12, QFont.Bold, 0.8))
-        p.setPen(QColor(YOU_TINT if self.selected else FG_PRIMARY))
+        p.setPen(QColor(YOU_TINT if self.tag else FG_PRIMARY))
         p.drawText(QRectF(6, 84, w - 12, 22), Qt.AlignCenter,
                    p.fontMetrics().elidedText(self._name.upper(), Qt.ElideRight, w - 12))
-        tag = "YOU" if self.selected else ("P2" if self.player2 else "")
+        tag = self.tag
         if tag:
             r = QRectF((w - 44) / 2, 108, 44, 16)
             p.setPen(Qt.NoPen)
-            p.setBrush(QColor(YOU_TINT if self.selected else GREEN))
+            p.setBrush(QColor(YOU_TINT if tag == "P1" else GREEN))
             p.drawRoundedRect(r, 2, 2)
             p.setPen(QColor(BG_BASE))
             p.setFont(tracked_font(FONT_DISPLAY, 9, QFont.Bold, 1.2))
@@ -203,8 +219,11 @@ class TournamentWizardScreen(Screen):
         self.slot_crests = {}      # same key -> PixmapLabel
         self._comp_cards = []
         self._team_tiles = []
+        self.humans = []           # team ids you control, P1 first
+        self.season = ""           # follows the edition (see _season_for)
         self._building = False
         self._step = 0
+        self._page = 0
         self._build()
 
     # ── layout ───────────────────────────────────────────────────────────
@@ -224,16 +243,11 @@ class TournamentWizardScreen(Screen):
         self.steps.picked.connect(self._go)
         bv.addWidget(self.steps)
 
-        cols = QHBoxLayout()
-        cols.setSpacing(24)
         self.stack = QStackedWidget()
         self.stack.addWidget(_scroll(self._page_competition()))
+        self.stack.addWidget(_scroll(self._page_setup()))
         self.stack.addWidget(_scroll(self._page_draw()))
-        self.stack.addWidget(_scroll(self._page_team()))
-        self.stack.addWidget(_scroll(self._page_rules()))
-        cols.addWidget(self.stack, stretch=3)
-        cols.addWidget(self._summary_rail(), stretch=1)
-        bv.addLayout(cols, stretch=1)
+        bv.addWidget(self.stack, stretch=1)
 
         foot = QHBoxLayout()
         foot.setSpacing(12)
@@ -264,24 +278,50 @@ class TournamentWizardScreen(Screen):
         self.comp_grid.setHorizontalSpacing(12)
         self.comp_grid.setVerticalSpacing(12)
         v.addLayout(self.comp_grid)
-        v.addSpacing(6)
-        v.addWidget(SectionTitle("details"))
-        grid = FieldGrid(columns=2)
-        self.season = ChoiceField("season", allow_blank=False, display=season_label)
-        self.season.edited.connect(lambda _v: self._season_changed())
+        v.addStretch(1)
+        return page
+
+    def _page_setup(self):
+        page = transparent(QWidget(), "wizP2")
+        v = QVBoxLayout(page)
+        v.setContentsMargins(0, 4, 8, 4)
+        v.setSpacing(14)
+        self.edition = ChoiceField("edition", allow_blank=False,
+                                   display=lambda tid: edition_label(self.templates.get(tid, {})))
+        self.edition.popup_title = "edition"
+        self.edition.edited.connect(lambda tid: self._pick_competition(tid))
         self.name = TextField("name", max_bytes=60)
-        self.name.edited.connect(lambda _v: self._refresh_summary())
-        for f in (self.season, self.name):
+        self.difficulty = ChoiceField("difficulty", DIFFICULTIES, allow_blank=False)
+        self.half = ChoiceField("half length", HALF_LENGTHS, allow_blank=False)
+        self.injuries = ChoiceField("injuries", ON_OFF, allow_blank=False)
+        self.fatigue = ChoiceField("fatigue", ON_OFF, allow_blank=False)
+        self.suspensions = ChoiceField("suspensions", ON_OFF, allow_blank=False)
+        w, sv = section("tournament")
+        grid = FieldGrid(columns=2)
+        for f in (self.edition, self.name, self.difficulty, self.half, self.injuries,
+                  self.fatigue, self.suspensions):
             grid.add(f)
             self.focus.register(f)
-        v.addWidget(grid)
-        v.addWidget(Note("The season picks each team's squad, kits and ratings (the closest season a "
-                         "team has when it lacks that one).", color=FG_TERTIARY))
+        sv.addWidget(grid)
+        v.addWidget(w)
+
+        top = QHBoxLayout()
+        self.teams_title = SectionTitle("teams you control")
+        top.addWidget(self.teams_title, stretch=1)
+        self.draw_btn = compact_button("EDIT THE DRAW", "neutral")
+        self.draw_btn.clicked.connect(lambda: self._show_page(DRAW_PAGE))
+        top.addWidget(self.draw_btn)
+        self.focus.register(self.draw_btn)
+        v.addLayout(top)
+        self.tiles_grid = QGridLayout()
+        self.tiles_grid.setHorizontalSpacing(10)
+        self.tiles_grid.setVerticalSpacing(10)
+        v.addLayout(self.tiles_grid)
         v.addStretch(1)
         return page
 
     def _page_draw(self):
-        page = transparent(QWidget(), "wizP2")
+        page = transparent(QWidget(), "wizP3")
         v = QVBoxLayout(page)
         v.setContentsMargins(0, 4, 8, 4)
         v.setSpacing(12)
@@ -303,131 +343,56 @@ class TournamentWizardScreen(Screen):
         v.addStretch(1)
         return page
 
-    def _page_team(self):
-        page = transparent(QWidget(), "wizP3")
-        v = QVBoxLayout(page)
-        v.setContentsMargins(0, 4, 8, 4)
-        v.setSpacing(12)
-        v.addWidget(SectionTitle("pick the team you manage"))
-        self.tiles_grid = QGridLayout()
-        self.tiles_grid.setHorizontalSpacing(10)
-        self.tiles_grid.setVerticalSpacing(10)
-        v.addLayout(self.tiles_grid)
-        v.addSpacing(6)
-        v.addWidget(SectionTitle("second player (optional)"))
-        grid = FieldGrid(columns=2)
-        self.human1 = ChoiceField("your team", allow_blank=False)
-        self.human2 = ChoiceField("second player's team", allow_blank=True, blank_label="— none —")
-        for f in (self.human1, self.human2):
-            f.edited.connect(lambda _v: self._humans_changed())
-        self.human1.hide()      # driven by the tiles; kept for its value/options
-        grid.add(self.human2)
-        self.focus.register(self.human2)
-        v.addWidget(grid)
-        v.addWidget(Note("A second player manages another team with the second controller — "
-                         "every other team is run by the computer.", color=FG_TERTIARY))
-        v.addStretch(1)
-        return page
-
-    def _page_rules(self):
-        page = transparent(QWidget(), "wizP4")
-        v = QVBoxLayout(page)
-        v.setContentsMargins(0, 4, 8, 4)
-        v.setSpacing(14)
-        self.difficulty = ChoiceField("difficulty", DIFFICULTIES, allow_blank=False)
-        self.half = ChoiceField("half length", HALF_LENGTHS, allow_blank=False)
-        self.variance = ChoiceField("simulated results", list(VARIANCE), allow_blank=False)
-        self.injuries = ChoiceField("injuries", ON_OFF, allow_blank=False)
-        self.injury_rate = ChoiceField("injury frequency", list(INJURY_RATES), allow_blank=False)
-        self.suspensions = ChoiceField("suspensions", ON_OFF, allow_blank=False)
-        self.fatigue = ChoiceField("fatigue", ON_OFF, allow_blank=False)
-        self.seed = TextField("seed (blank = random)", max_bytes=10)
-        self.seed.edited.connect(lambda _v: self._validate())
-        for title, fields, note in (
-                ("your matches", (self.difficulty, self.half),
-                 "How hard the computer plays and how long each half lasts in the game."),
-                ("realism", (self.injuries, self.injury_rate, self.suspensions, self.fatigue),
-                 "Injuries and bans keep players out; fatigue lowers ratings of players who play "
-                 "every match — rotate your squad."),
-                ("simulation", (self.variance, self.seed),
-                 "How surprising simulated results are. A seed replays the same tournament.")):
-            w, sv = section(title)
-            grid = FieldGrid(columns=2)
-            for f in fields:
-                grid.add(f)
-                self.focus.register(f)
-                f.edited.connect(lambda _v: self._refresh_summary())
-            sv.addWidget(grid)
-            sv.addWidget(Note(note, color=FG_TERTIARY))
-            v.addWidget(w)
-        v.addStretch(1)
-        return page
-
-    def _summary_rail(self):
-        card = Card(stripe=ACCENT, translucent=True)
-        v = QVBoxLayout(card)
-        v.setContentsMargins(22, 18, 22, 18)
-        v.setSpacing(10)
-        v.addWidget(eyebrow_label("summary", color=ACCENT, size=12))
-        self.s_emblem = PixmapLabel(96)
-        v.addWidget(self.s_emblem, alignment=Qt.AlignHCenter)
-        self.s_name = display_label("", 20, QFont.Bold, track=0.8)
-        self.s_name.setAlignment(Qt.AlignCenter)
-        self.s_name.setWordWrap(True)
-        v.addWidget(self.s_name)
-        self.s_comp = eyebrow_label("", color=FG_TERTIARY, size=10)
-        self.s_comp.setAlignment(Qt.AlignCenter)
-        v.addWidget(self.s_comp)
-        v.addSpacing(6)
-        self.s_lines = QVBoxLayout()
-        self.s_lines.setSpacing(6)
-        v.addLayout(self.s_lines)
-        v.addStretch(1)
-        you = QHBoxLayout()
-        you.setSpacing(12)
-        self.s_crest = PixmapLabel(56)
-        you.addWidget(self.s_crest)
-        yv = QVBoxLayout()
-        yv.setSpacing(0)
-        yv.addWidget(eyebrow_label("you manage", color=FG_TERTIARY, size=10))
-        self.s_team = display_label("", 16, QFont.Bold, track=0.8, color=YOU_TINT)
-        self.s_team.setWordWrap(True)
-        yv.addWidget(self.s_team)
-        you.addLayout(yv, stretch=1)
-        v.addLayout(you)
-        return card
-
     # ── data ─────────────────────────────────────────────────────────────
     def on_show(self):
         super().on_show()
         self.templates = formats.load_templates()
+        # one card per competition, its open template first, then its
+        # editions in the templates' order (newest first)
+        self.families = {}
+        for tid, tpl in self.templates.items():
+            self.families.setdefault(family_of(tid, tpl), []).append(tid)
+        for tids in self.families.values():
+            tids.sort(key=lambda t: bool(edition_label(self.templates[t]) != "custom"))
+        self._picked_in = {}
         keep = getattr(self, "_comp", None)
         for c in self._comp_cards:
             self.focus.unregister(c)
         clear_layout(self.comp_grid)
         self._comp_cards = []
-        for i, (tid, tpl) in enumerate(self.templates.items()):
-            card = CompetitionCard(self.ds, tid, tpl)
-            card.activated.connect(lambda tid=tid: self._pick_competition(tid))
+        for i, (fam, tids) in enumerate(self.families.items()):
+            editions = sum(1 for t in tids if edition_label(self.templates[t]) != "custom")
+            card = CompetitionCard(self.ds, fam, self.templates[tids[0]],
+                                   editions if len(tids) > 1 else 0)
+            card.activated.connect(lambda fam=fam: self._pick_family(fam))
             self.focus.register(card)
             self.comp_grid.addWidget(card, i // 2, i % 2)
             self._comp_cards.append(card)
+        # the season most teams have (the latest of those): the fewest sides
+        # borrowing a squad from another era — for a template without its own
         seasons = sorted({s for seasons in self.ds.teams.values() for s in seasons}, reverse=True)
-        self.season.set_options(seasons)
-        if not self.season.value() and seasons:
-            self.season.set_value("2010" if "2010" in seasons else seasons[0])
-        self._pick_competition(keep if keep in self.templates else next(iter(self.templates), ""))
+        count = {s: sum(1 for ts in self.ds.teams.values() if s in ts) for s in seasons}
+        self._default_season = max(seasons, key=lambda s: (count[s], s)) if seasons else ""
+        first = next(iter(self.families.values()), [""])[0]
+        self.humans = []
+        self._pick_competition(keep if keep in self.templates else first)
         self._go(0)
 
     def template(self):
         return self.templates.get(getattr(self, "_comp", ""), {})
 
+    def _season_for(self, tpl):
+        """A historical edition (e.g. a World Cup) names the season its squads
+        were entered for — its own even when no team has that one (Six
+        Nations 2017: each team then plays its nearest squad); the open
+        template takes the usual season."""
+        return str(tpl.get("season") or "") or self._default_season
+
     def _team_options(self):
-        season = self.season.value()
         tpl = self.template()
         out = []
         for tid, seasons in self.ds.teams.items():
-            s = engine.pick_season(seasons, season)
+            s = engine.pick_season(seasons, self.season)
             variant = engine.entry_variant(self.ds, tpl, tid, s)
             if len(engine.usable_squad(self.ds, tid, s, variant)) >= 22:
                 out.append((seasons[s].get("name", tid), tid))
@@ -438,7 +403,7 @@ class TournamentWizardScreen(Screen):
         seasons = self.ds.teams.get(tid)
         if not seasons:
             return f"missing team {tid}" if tid else "—"
-        s = engine.pick_season(seasons, self.season.value())
+        s = engine.pick_season(seasons, self.season)
         name = seasons[s].get("name", tid)
         variant = engine.entry_variant(self.ds, self.template(), tid, s)
         return f"{name} · {V.variant_label(seasons[s], variant)}" if variant else name
@@ -446,16 +411,30 @@ class TournamentWizardScreen(Screen):
     def _crest(self, tid, size):
         if tid not in self.ds.teams:
             return placeholder_crest(size)
-        s = engine.pick_season(self.ds.teams[tid], self.season.value())
+        s = engine.pick_season(self.ds.teams[tid], self.season)
         return team_crest(self.ds, tid, s, size,
                           variant=engine.entry_variant(self.ds, self.template(), tid, s))
 
+    def _pick_family(self, fam):
+        """A competition card: its edition picked last, else its first."""
+        tids = self.families.get(fam) or []
+        if tids:
+            self._pick_competition(self._picked_in.get(fam) or tids[0])
+
     def _pick_competition(self, tid):
         self._comp = tid
-        for c in self._comp_cards:
-            c.selected = c.tid == tid
-            c.update()
         tpl = self.template()
+        fam = family_of(tid, tpl)
+        self._picked_in[fam] = tid
+        for c in self._comp_cards:
+            c.selected = c.tid == fam
+            if c.selected:
+                c.set_template(tpl)
+            c.update()
+        tids = self.families.get(fam, [tid])
+        self.edition.set_options(tids)
+        self.edition.set_value(tid)
+        self.edition.setEnabled(len(tids) > 1)
         self.name.set_value(tpl.get("name", ""))
         opts = tpl.get("default_options") or {}
         self.difficulty.set_value(opts.get("difficulty", "pro"))
@@ -463,17 +442,33 @@ class TournamentWizardScreen(Screen):
         self.injuries.set_value("on" if opts.get("injuries", True) else "off")
         self.suspensions.set_value("on" if opts.get("suspensions", True) else "off")
         self.fatigue.set_value("on" if opts.get("fatigue", True) else "off")
-        self.variance.set_value("normal")
-        self.injury_rate.set_value("normal")
-        # A historical competition (e.g. a World Cup edition) names the
-        # season its squads were entered for.
-        season = str(tpl.get("season") or "")
-        if season and any(season in s for s in self.ds.teams.values()):
-            self.season.set_value(season)
-        self._build_groups(engine.default_participants(tpl, self.season.value()))
+        self.season = self._season_for(tpl)
+        self._build_groups(self._installed(engine.default_participants(tpl, self.season)))
 
-    def _season_changed(self):
-        self._build_groups(self.participants())
+    def _installed(self, participants):
+        """A template's draw with every team the data doesn't have replaced
+        by an unused team that has a squad (a nation for a nation, a club
+        for a club where possible), so the default draw can be started as
+        it is."""
+        options = self._team_options()
+        used = {tid for groups in participants.values() for ts in groups.values() for tid in ts}
+        spare = [tid for tid in options if tid not in used]
+
+        def kind(tid):
+            seasons = self.ds.teams.get(tid) or {}
+            info = seasons.get(engine.pick_season(seasons, self.season)) if seasons else None
+            return str((info or {}).get("type") or "")
+
+        for groups in participants.values():
+            for gid, teams in groups.items():
+                kinds = {kind(t) for t in teams if t in self.ds.teams}
+                for i, tid in enumerate(teams):
+                    if tid in self.ds.teams or not spare:
+                        continue
+                    pick = next((s for s in spare if kind(s) in kinds), spare[0])
+                    spare.remove(pick)
+                    teams[i] = pick
+        return participants
 
     def _build_groups(self, participants):
         self._building = True
@@ -506,6 +501,7 @@ class TournamentWizardScreen(Screen):
                     crest = PixmapLabel(30, self._crest(tid, 30))
                     row.addWidget(crest)
                     f = ChoiceField("", options, display=self._team_name, allow_blank=False)
+                    f.label_width = 0           # the crest is the label
                     f.set_value(tid)
                     f.edited.connect(lambda _v, k=(spec["id"], gid, i): self._slot_changed(k))
                     row.addWidget(f, stretch=1)
@@ -536,17 +532,9 @@ class TournamentWizardScreen(Screen):
     def _participants_changed(self):
         if self._building:
             return
-        teams = [tid for groups in self.participants().values() for ts in groups.values() for tid in ts]
-        for f in (self.human1, self.human2):
-            keep = f.value()
-            f.display = self._team_name
-            f.set_options([t for t in teams if t in self.ds.teams])
-            if keep in teams:
-                f.set_value(keep)
-            elif f is self.human1 and teams:
-                f.set_value(next((t for t in teams if t in self.ds.teams), ""))
-            else:
-                f.set_value("")
+        teams = [tid for groups in self.participants().values() for ts in groups.values() for tid in ts
+                 if tid in self.ds.teams]
+        self.humans = [h for h in self.humans if h in teams] or teams[:1]
         self._build_tiles(teams)
         self._humans_changed()
 
@@ -555,24 +543,33 @@ class TournamentWizardScreen(Screen):
             self.focus.unregister(tile)
         clear_layout(self.tiles_grid)
         self._team_tiles = []
-        known = sorted((t for t in dict.fromkeys(teams) if t in self.ds.teams), key=lambda t: self._team_name(t).lower())
+        known = sorted(dict.fromkeys(teams), key=lambda t: self._team_name(t).lower())
         for i, tid in enumerate(known):
             tile = TeamTile(self._crest(tid, 64), self._team_name(tid))
             tile.tid = tid
-            tile.activated.connect(lambda tid=tid: (self.human1.set_value(tid), self._humans_changed()))
+            tile.activated.connect(lambda tid=tid: self._toggle_human(tid))
             self.focus.register(tile)
             self.tiles_grid.addWidget(tile, i // 6, i % 6)
             self._team_tiles.append(tile)
 
+    def _toggle_human(self, tid):
+        """Take a team, or leave it; with both taken, a third replaces P2."""
+        if tid in self.humans:
+            self.humans.remove(tid)
+        elif len(self.humans) < MAX_HUMANS:
+            self.humans.append(tid)
+        else:
+            self.humans[-1] = tid
+        self._humans_changed()
+
     def _humans_changed(self):
         for tile in self._team_tiles:
-            tile.selected = tile.tid == self.human1.value()
-            tile.player2 = tile.tid == self.human2.value()
+            tile.tag = f"P{self.humans.index(tile.tid) + 1}" if tile.tid in self.humans else ""
             tile.update()
         self._validate()
 
     def _fill_defaults(self):
-        self._build_groups(engine.default_participants(self.template(), self.season.value()))
+        self._build_groups(self._installed(engine.default_participants(self.template(), self.season)))
 
     def _shuffle(self):
         parts = self.participants()
@@ -585,74 +582,55 @@ class TournamentWizardScreen(Screen):
                 i += len(ts)
         self._build_groups(parts)
 
-    # ── validation / summary ─────────────────────────────────────────────
+    # ── validation ───────────────────────────────────────────────────────
     def _step_problems(self):
         """Problems per step: {step index: [text]}."""
-        found = formats.problems(self.ds, self.template(), self.season.value(), self.participants())
-        out = {0: [] if self.template() else ["choose a competition"], 1: found, 2: [], 3: []}
-        if not self.human1.value():
-            out[2].append("pick the team you manage")
-        if self.human2.value() and self.human2.value() == self.human1.value():
-            out[2].append("the two players must manage different teams")
-        seed = self.seed.value().strip()
-        if seed and not seed.isdigit():
-            out[3].append("the seed must be a number")
+        found = formats.problems(self.ds, self.template(), self.season, self.participants())
+        out = {0: [] if self.template() else ["choose a competition"], 1: list(found)}
+        if not self.humans:
+            out[1].append("pick a team to control")
         return out
 
     def _validate(self):
         probs = self._step_problems()
         all_found = [p for i in sorted(probs) for p in probs[i]]
         here = probs.get(self._step, [])
-        shown = here or (all_found if self._step == len(STEPS) - 1 else [])
-        self.problems.setText(("⚠  " + "; ".join(shown[:3]) + (" …" if len(shown) > 3 else "")) if shown else "")
         last = self._step == len(STEPS) - 1
-        self.next_btn.setText("START TOURNAMENT" if last else "NEXT")
-        self.next_btn.setEnabled(not all_found if last else True)
+        shown = here or (all_found if last else [])
+        self.problems.setText(("⚠  " + "; ".join(shown[:3]) + (" …" if len(shown) > 3 else "")) if shown else "")
+        self.next_btn.setText("DONE" if self._page == DRAW_PAGE else
+                              ("START TOURNAMENT" if last else "NEXT"))
+        self.next_btn.setEnabled(self._page == DRAW_PAGE or (not all_found if last else True))
         self.steps.set_state(self._step, {i for i in range(len(STEPS)) if i < self._step and not probs.get(i)})
-        self._refresh_summary()
         return not all_found
 
-    def _refresh_summary(self):
-        tpl = self.template()
-        self.s_emblem.set_pixmap(competition_emblem(self.ds, tpl, 96) if tpl else None)
-        self.s_name.setText((self.name.value() or tpl.get("name", "")).upper())
-        self.s_comp.setText(f"{tpl.get('name', '')} · {season_label(self.season.value())}".upper()
-                            if tpl else "")
-        clear_layout(self.s_lines)
-        parts = self.participants()
-        n = sum(len(ts) for g in parts.values() for ts in g.values())
-        for label, value in (("format", _format_line(tpl)), ("teams", str(n)),
-                             ("difficulty", self.difficulty.value()), ("halves", self.half.value()),
-                             ("injuries", self.injuries.value()), ("fatigue", self.fatigue.value())):
-            row = QHBoxLayout()
-            row.addWidget(eyebrow_label(label, color=FG_TERTIARY, size=9))
-            row.addStretch(1)
-            row.addWidget(eyebrow_label(str(value), color=FG_SECONDARY, size=10))
-            self.s_lines.addLayout(row)
-        tid = self.human1.value()
-        self.s_crest.set_pixmap(self._crest(tid, 56) if tid else None)
-        self.s_team.setText(self._team_name(tid).upper() if tid else "—")
-
     # ── navigation ───────────────────────────────────────────────────────
-    def _go(self, i):
-        self._step = max(0, min(len(STEPS) - 1, i))
-        self.stack.setCurrentIndex(self._step)
-        self.prev_btn.setText("CANCEL" if self._step == 0 else "BACK")
+    def _show_page(self, page):
+        self._page = page
+        self.stack.setCurrentIndex(page)
+        self.prev_btn.setText("CANCEL" if page == 0 else "BACK")
         self._validate()
-        first = {0: self._comp_cards[:1], 1: list(self.slot_fields.values())[:1],
-                 2: [t for t in self._team_tiles if t.selected][:1] or self._team_tiles[:1],
-                 3: [self.difficulty]}.get(self._step) or []
+        first = {0: [c for c in self._comp_cards if c.selected][:1] or self._comp_cards[:1],
+                 1: [self.edition], DRAW_PAGE: list(self.slot_fields.values())[:1]}.get(page) or []
         if first:
             first[0].setFocus()
 
+    def _go(self, i):
+        self._step = max(0, min(len(STEPS) - 1, i))
+        self._show_page(self._step)
+
     def _next_step(self):
-        if self._step == len(STEPS) - 1:
+        if self._page == DRAW_PAGE:
+            self._show_page(self._step)
+        elif self._step == len(STEPS) - 1:
             self._start()
         else:
             self._go(self._step + 1)
 
     def _back_step(self):
-        if self._step == 0:
+        if self._page == DRAW_PAGE:
+            self._show_page(self._step)
+        elif self._step == 0:
             self.on_back_cb()
         else:
             self._go(self._step - 1)
@@ -670,21 +648,18 @@ class TournamentWizardScreen(Screen):
     def _start(self):
         if not self._validate():
             return
-        humans = [h for h in (self.human1.value(), self.human2.value()) if h]
         options = {
             "difficulty": self.difficulty.value(),
             "halftime_length": self.half.value(),
             "injuries": self.injuries.value() == "on",
-            "injury_rate": INJURY_RATES.get(self.injury_rate.value(), 1.0),
+            "injury_rate": 1.0,
             "suspensions": self.suspensions.value() == "on",
             "fatigue": self.fatigue.value() == "on",
-            "sim_variance": VARIANCE.get(self.variance.value(), 1.0),
+            "sim_variance": 1.0,
         }
-        seed = self.seed.value().strip()
         try:
-            session = TournamentSession.new(self.ds, self.template(), self.season.value(),
-                                            self.participants(), humans, options,
-                                            seed=int(seed) if seed else None,
+            session = TournamentSession.new(self.ds, self.template(), self.season,
+                                            self.participants(), list(self.humans), options,
                                             name=self.name.value().strip() or None)
         except Exception as e:
             log.exception("creating tournament")

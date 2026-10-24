@@ -6,19 +6,20 @@ The game only knows club/pro/elite (the .mis diff= attribute). "legend" and
 team's roster records before they are written: ratings raised and floored,
 mental/physical ratings floored higher, position special skills switched on,
 position AI tendencies set, forwards made slightly bigger and star player
-classes (reR08 ENABLE_STARPLAYERS) handed out by position. The human team's
-stamina/fitness is capped so it tires while the CPU doesn't.
+classes (reR08 ENABLE_STARPLAYERS) handed out to the players they suit, with
+the star over their heads hidden. The human team's stamina/fitness is capped
+so it tires while the CPU doesn't.
 
 Only applies to a CPU side against a human side; with humans on both sides
 (or none) nothing is changed, the match is plain elite.
 """
 import copy
 
+from app import star_classes as SC
+
 # .mis diff= value each level runs the stock AI at.
 MISSION_DIFFICULTY = {"club": 0, "pro": 1, "elite": 2, "legend": 2, "immortal": 2}
-# Temporarily keep the boosted levels out of every difficulty selector while
-# retaining their mappings and profiles for existing saved data.
-LEVELS = ["club", "pro", "elite"]
+LEVELS = ["club", "pro", "elite", "legend", "immortal"]
 
 RATING_KEYS = [
     "attack", "defense", "speed", "acceleration", "agility", "handling", "passing",
@@ -68,24 +69,23 @@ POSITION_SKILLS = {
     "fullback": ["ss_scoring", "ss_tactical_kicking", "ss_defensive_organisation", "ss_goal_kicker"],
 }
 
-# Star player classes (see screens/player_tabs.STAR_PLAYER_NAMES) whose real
-# player played that position. Cycled through per team so two players of the
-# same position get different classes while the pool lasts.
-POSITION_STARS = {
-    "fly_half": [8, 14, 3, 12],            # Carter, Spencer, Wilkinson, Larkham
-    "scrum_half": [16],                    # Gregan
-    "centre": [11, 21, 20],                # O'Driscoll, Umaga, Giteau
-    "winger": [13, 26],                    # Tuqiri, Lewsey
-    "fullback": [19, 15],                  # Latham, Montgomery
-    "openside_flanker": [22, 24, 10],      # McCaw, G. Smith, Betsen
-    "blindside_flanker": [25, 17, 10],     # Burger, Collins, Betsen
-    "number_eight": [9, 25],               # Dallaglio, Burger
-    # No front-five star in the game: the ball-carrying back-row classes are
-    # the closest fit, only handed out by levels with stars_front_five.
-    "loosehead_prop": [17, 9],
-    "tighthead_prop": [17, 9],
-    "hooker": [17, 9],
-    "second_row": [9, 17],
+# Who gets a star first when a level hands out fewer stars than it could:
+# the decision makers, then the breakdown, then the outside backs. A second
+# player of a position only comes after every position had its first.
+STAR_PRIORITY = ["fly_half", "scrum_half", "openside_flanker", "number_eight", "centre",
+                 "fullback", "winger", "blindside_flanker", "second_row", "hooker",
+                 "loosehead_prop", "tighthead_prop"]
+# Ranking terms: a class in its own position always beats a better-rated
+# player out of position; a class already used in the team loses to any
+# fitting unused one, so a team gets as many different classes as it can.
+FIT_WEIGHT = 100
+REUSE_PENALTY = 150
+GOAL_KICKER_BONUS = 40
+
+# Immortal attackers: much better attack, faster, harder to bring down.
+ATTACK_FLOORS = {
+    "attack": 97, "speed": 96, "acceleration": 96, "agility": 95,
+    "strength": 93, "crashball": 95, "handling": 92, "passing": 90,
 }
 
 PROFILES = {
@@ -95,7 +95,8 @@ PROFILES = {
         "mental_floor": 85,
         "endurance_floor": 85,
         "skills": 2,              # position special skills switched on
-        "stars": "starters",      # starters | all
+        "stars": 8,               # how many players get a star class
+        "star_pool": "starters",  # starters | all
         "stars_front_five": False,
         # Kept small: the body model scales with height/weight.
         "forward_weight_kg": 2,
@@ -105,10 +106,13 @@ PROFILES = {
     "immortal": {
         "rating_boost": 15,
         "rating_floor": 82,
+        "key_floor": ATTACK_FLOORS,   # raised further for the attacking ratings
         "mental_floor": 96,
         "endurance_floor": 99,
         "skills": 99,
-        "stars": "all",
+        "all_skills": ["ss_tackle_breaker", "ss_scoring"],   # every player, any position
+        "stars": 99,
+        "star_pool": "all",
         "stars_front_five": True,
         "forward_weight_kg": 4,
         "forward_height_cm": 2,
@@ -141,11 +145,15 @@ def boost_player(player: dict, profile: dict, star_class: int = 0,
     p = copy.deepcopy(player)
     for key in RATING_KEYS:
         p[key] = _clamp(max(p.get(key, 0) + profile["rating_boost"], profile["rating_floor"]))
+    for key, floor in profile.get("key_floor", {}).items():
+        p[key] = _clamp(max(p[key], floor))
     for key in MENTAL_KEYS:
         p[key] = _clamp(max(p[key], profile["mental_floor"]))
     for key in ENDURANCE_KEYS:
         p[key] = _clamp(max(p[key], profile["endurance_floor"]))
     for skill in POSITION_SKILLS.get(p.get("pos1"), [])[:profile["skills"]]:
+        p[skill] = True
+    for skill in profile.get("all_skills", []):
         p[skill] = True
     if p.get("pos1") in FORWARDS:
         p["weight"] = p.get("weight", 0) + profile["forward_weight_kg"]
@@ -157,17 +165,67 @@ def boost_player(player: dict, profile: dict, star_class: int = 0,
             p["special_ability"] = POSITION_TENDENCY.get(p.get("pos1"), 0)
     if star_class and not p.get("star_attribute"):
         p["star_attribute"] = star_class
+        # The abilities stay a surprise: no star over the head (rugby08patches.dll)
+        p["hide_star"] = True
     return p
 
 
-def _star_for(position, profile, used):
-    if position in FRONT_FIVE and not profile["stars_front_five"]:
-        return 0
-    pool = POSITION_STARS.get(position, [])
-    for star in pool:
-        if star not in used:
-            return star
-    return pool[0] if pool else 0
+def _star_score(player, flag, goal_kicker):
+    fit = SC.position_fit(flag, player.get("pos1"))
+    if not fit:
+        return None
+    ratings = SC.CLASSES[flag][1]
+    score = fit * FIT_WEIGHT + sum(player.get(k, 0) for k in ratings) / len(ratings)
+    if goal_kicker and flag in SC.GOAL_KICKERS:
+        score += GOAL_KICKER_BONUS
+    return score
+
+
+def _star_candidates(players, profile):
+    """Indices of the players a level gives a star to, best first."""
+    pool = len(players) if profile["star_pool"] == "all" else STARTERS
+    eligible = [i for i, p in enumerate(players[:pool])
+                if not p.get("star_attribute")
+                and (profile["stars_front_five"] or p.get("pos1") not in FRONT_FIVE)]
+    seen = {}
+
+    def rank(i):
+        pos = players[i].get("pos1")
+        nth = seen[pos] = seen.get(pos, -1) + 1
+        order = STAR_PRIORITY.index(pos) if pos in STAR_PRIORITY else len(STAR_PRIORITY)
+        return (nth, order, i)
+
+    ranked = sorted((rank(i) for i in eligible))
+    return [i for _, _, i in ranked][:profile["stars"]]
+
+
+def assign_stars(players, profile, kicker_index):
+    """{player index: star class}. Each step takes the best remaining
+    (player, class) pair: the class that plays the player's position and
+    rewards his strongest ratings, used once per team while unused ones fit."""
+    candidates = _star_candidates(players, profile)
+    uses = {}
+    for p in players:
+        if p.get("star_attribute"):
+            uses[p["star_attribute"]] = uses.get(p["star_attribute"], 0) + 1
+    assigned = {}
+    while candidates:
+        best = None
+        for i in candidates:
+            for flag in SC.CLASSES:
+                score = _star_score(players[i], flag, i == kicker_index)
+                if score is None:
+                    continue
+                score -= REUSE_PENALTY * uses.get(flag, 0)
+                if best is None or score > best[0]:
+                    best = (score, i, flag)
+        if best is None:
+            break
+        _, i, flag = best
+        assigned[i] = flag
+        uses[flag] = uses.get(flag, 0) + 1
+        candidates.remove(i)
+    return assigned
 
 
 def boost_team(team: dict, level: str) -> dict:
@@ -178,18 +236,11 @@ def boost_team(team: dict, level: str) -> dict:
         return team
     team = dict(team)
     players = team.get("players", [])
-    used = {p.get("star_attribute") for p in players if p.get("star_attribute")}
     # roles hold shirt numbers (1-15)
     kicker_index = team.get("roles", {}).get("long_GK", 10) - 1
-    boosted = []
-    for index, player in enumerate(players):
-        star = 0
-        if not player.get("star_attribute") and (profile["stars"] == "all" or index < STARTERS):
-            star = _star_for(player.get("pos1"), profile, used)
-            if star:
-                used.add(star)
-        boosted.append(boost_player(player, profile, star, index == kicker_index))
-    team["players"] = boosted
+    stars = assign_stars(players, profile, kicker_index)
+    team["players"] = [boost_player(player, profile, stars.get(index, 0), index == kicker_index)
+                       for index, player in enumerate(players)]
     return team
 
 

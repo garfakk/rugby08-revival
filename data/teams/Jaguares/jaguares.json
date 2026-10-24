@@ -1,0 +1,424 @@
+{
+ "10159": {
+  "2018": {
+   "name": "Jaguares",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_2/ball_%.png",
+   "banners": "logos_2/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_2/logo.png",
+    "frontend": "logos_2/logo_frontend.png",
+    "small": "logos_2/logo_small.png",
+    "left": "logos_2/logo_left.png",
+    "right": "logos_2/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144571",
+    "viceCaptain": "142598",
+    "longGK": "146092",
+    "shortGK": "146092",
+    "longPunt": "146092",
+    "shortPunt": "145186",
+    "kickoff": "146092"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "156408",
+    "142598",
+    "145200",
+    "144615",
+    "142308",
+    "144571",
+    "142310",
+    "153110",
+    "144576",
+    "145186",
+    "146092",
+    "144719",
+    "153114",
+    "142332",
+    "153116",
+    "144794",
+    "153112",
+    "153106",
+    "153710",
+    "145024",
+    "147134",
+    "153712",
+    "153111",
+    "153109",
+    "153117",
+    "157165",
+    "153115",
+    "158660",
+    "153108",
+    "127813",
+    "142366",
+    "153711",
+    "153964",
+    "145103",
+    "153713"
+   ],
+   "enabled": true
+  },
+  "2019": {
+   "name": "Jaguares",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_2/ball_%.png",
+   "banners": "logos_2/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_2/logo.png",
+    "frontend": "logos_2/logo_frontend.png",
+    "small": "logos_2/logo_small.png",
+    "left": "logos_2/logo_left.png",
+    "right": "logos_2/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2019/home_front.png",
+     "backKitFile": "kits_2019/home_back/home_back_%.png",
+     "previewFile": "kits_2019/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2019/away_front.png",
+     "backKitFile": "kits_2019/away_back/away_back_%.png",
+     "previewFile": "kits_2019/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144571",
+    "viceCaptain": "142598",
+    "longGK": "146092",
+    "shortGK": "146092",
+    "longPunt": "146092",
+    "shortPunt": "145514",
+    "kickoff": "146092"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "145139",
+    "142598",
+    "153108",
+    "144615",
+    "142308",
+    "144571",
+    "142310",
+    "153110",
+    "145514",
+    "153711",
+    "153117",
+    "144719",
+    "145103",
+    "153115",
+    "146092",
+    "144794",
+    "153119",
+    "145200",
+    "145024",
+    "145279",
+    "153964",
+    "142366",
+    "153114",
+    "144466",
+    "153109",
+    "147134",
+    "153116",
+    "145367",
+    "153112",
+    "142332",
+    "153710",
+    "144994",
+    "156408",
+    "153712",
+    "144576",
+    "158660",
+    "153138",
+    "153709",
+    "153126",
+    "153106"
+   ],
+   "enabled": true
+  },
+  "2020": {
+   "name": "Jaguares",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "146092",
+    "shortGK": "146092",
+    "longPunt": "146092",
+    "shortPunt": "145514",
+    "kickoff": "146092"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "145139",
+    "144794",
+    "153108",
+    "144615",
+    "144994",
+    "153109",
+    "142310",
+    "145279",
+    "145514",
+    "153711",
+    "146092",
+    "144719",
+    "145103",
+    "153115",
+    "145367",
+    "153963",
+    "153119",
+    "146269",
+    "142308",
+    "144571",
+    "144576",
+    "144466",
+    "142370",
+    "145200",
+    "153110",
+    "142598",
+    "153138",
+    "142366",
+    "142332",
+    "145024",
+    "153964",
+    "153114",
+    "153972",
+    "153117",
+    "153116",
+    "153709",
+    "147134",
+    "153106",
+    "145392"
+   ],
+   "enabled": false
+  },
+  "2024": {
+   "name": "Jaguares",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_2/ball_%.png",
+   "banners": "logos_2/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_2/logo.png",
+    "frontend": "logos_2/logo_frontend.png",
+    "small": "logos_2/logo_small.png",
+    "left": "logos_2/logo_left.png",
+    "right": "logos_2/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "158739",
+    "viceCaptain": "158739",
+    "longGK": "158739",
+    "shortGK": "158739",
+    "longPunt": "158739",
+    "shortPunt": "158739",
+    "kickoff": "158739"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "158719",
+    "158717",
+    "145139",
+    "158727",
+    "158728",
+    "146478",
+    "158731",
+    "158732",
+    "152753",
+    "158739",
+    "158745",
+    "158741",
+    "158742",
+    "158746",
+    "146354",
+    "158718",
+    "158720",
+    "158722",
+    "158729",
+    "158733",
+    "158736",
+    "158075",
+    "158723",
+    "158724",
+    "158725",
+    "158726",
+    "158730",
+    "158734",
+    "158735",
+    "158737",
+    "158738",
+    "158740",
+    "158743",
+    "158744",
+    "158747",
+    "153971"
+   ],
+   "enabled": false
+  },
+  "2017": {
+   "name": "Jaguares",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_2/ball_%.png",
+   "banners": "logos_2/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_2/logo.png",
+    "frontend": "logos_2/logo_frontend.png",
+    "small": "logos_2/logo_small.png",
+    "left": "logos_2/logo_left.png",
+    "right": "logos_2/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2017/away_front.png",
+     "backKitFile": "kits_2017/away_back/away_back_%.png",
+     "previewFile": "kits_2017/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "142598",
+    "viceCaptain": "144571",
+    "longGK": "146092",
+    "shortGK": "146092",
+    "longPunt": "146092",
+    "shortPunt": "145186",
+    "kickoff": "146092"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "156408",
+    "142598",
+    "145200",
+    "144615",
+    "142308",
+    "144571",
+    "142310",
+    "153110",
+    "144576",
+    "145186",
+    "146092",
+    "144719",
+    "153114",
+    "142332",
+    "153116",
+    "144794",
+    "153112",
+    "153106",
+    "153710",
+    "145024",
+    "147134",
+    "153712",
+    "153111",
+    "153109",
+    "153117",
+    "157165",
+    "153115",
+    "158660",
+    "153108",
+    "127813",
+    "142366",
+    "153711",
+    "153964",
+    "145103",
+    "153713"
+   ],
+   "enabled": false
+  }
+ }
+}

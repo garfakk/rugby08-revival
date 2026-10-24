@@ -62,7 +62,10 @@ class TournamentSession:
     # ── simulation ──
     def advance_to_human(self) -> list:
         """Simulate AI fixtures until a user's match is due; returns them."""
-        if self.t.finished or self.human_fixture():
+        f = self.human_fixture()
+        if self.t.finished or (f and not any(
+                not g.played and g.ready and g.date and f.date and g.date < f.date
+                and not engine.is_human_fixture(self.t, g) for g in self.today())):
             return []        # nothing to do: keep the undo point we have
         self._checkpoint()
         done = engine.simulate_until_human(self.t)
@@ -73,7 +76,7 @@ class TournamentSession:
         """Simulate a (user) fixture, then the rest of its matchday."""
         self._checkpoint()
         engine.simulate_fixture(self.t, fixture)
-        done = [fixture] + engine.simulate_day(self.t)
+        done = [fixture] + engine.simulate_day(self.t) + engine.simulate_earlier(self.t)
         self.save()
         return done
 
@@ -105,7 +108,7 @@ class TournamentSession:
         result = bridge.from_game_result(self.t, fixture, game_result,
                                          engine.fixture_rng(self.t, fixture, "game"))
         engine.record_result(self.t, fixture, result)
-        done = [fixture] + engine.simulate_day(self.t)
+        done = [fixture] + engine.simulate_day(self.t) + engine.simulate_earlier(self.t)
         persistence.drop_snapshot(self.t.id, "prematch")
         self.save()
         return done
@@ -120,7 +123,7 @@ class TournamentSession:
         """Record a result typed in by hand, then simulate the rest of the day."""
         self._checkpoint()
         engine.record_result(self.t, fixture, result)
-        done = [fixture] + engine.simulate_day(self.t)
+        done = [fixture] + engine.simulate_day(self.t) + engine.simulate_earlier(self.t)
         self.save()
         return done
 
@@ -130,7 +133,7 @@ class TournamentSession:
     def forfeit(self, fixture, losing_team) -> list:
         self._checkpoint()
         engine.record_result(self.t, fixture, bridge.forfeit_result(self.t, fixture, losing_team))
-        done = [fixture] + engine.simulate_day(self.t)
+        done = [fixture] + engine.simulate_day(self.t) + engine.simulate_earlier(self.t)
         persistence.drop_snapshot(self.t.id, "prematch")
         self.save()
         return done

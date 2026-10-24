@@ -268,6 +268,7 @@ class Fixture:
     stadium_id: str = ""
     match_subtype: str = "none"
     final: bool = False
+    date: str = ""                  # ISO; see tournament/calendar.py
     result: Optional[MatchResult] = None
 
     @property
@@ -388,7 +389,10 @@ class Tournament:
         return self.champion is not None
 
     def add_news(self, kind, text, teams=(), pid=None):
-        self.news.append({"day": self.day, "kind": kind, "text": text,
+        # after the last matchday t.day has moved past it: file the closing
+        # news (awards) under the final's day, not a matchday that never was
+        day = min(self.day, max(0, self.last_day()))
+        self.news.append({"day": day, "kind": kind, "text": text,
                           "teams": list(teams), "pid": pid})
 
     # ── serialisation ──

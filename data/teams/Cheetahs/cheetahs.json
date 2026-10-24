@@ -1,0 +1,786 @@
+{
+ "10113": {
+  "2009": {
+   "name": "Cheetahs",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "153417",
+    "shortGK": "153417",
+    "longPunt": "143177",
+    "shortPunt": "143177",
+    "kickoff": "143177"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153413",
+    "143177",
+    "156102",
+    "155547",
+    "156100",
+    "153412",
+    "143341",
+    "155546",
+    "156098",
+    "156096",
+    "143123",
+    "153417",
+    "156095",
+    "156097",
+    "156094",
+    "156101",
+    "156156",
+    "142421",
+    "153418",
+    "154500",
+    "155605",
+    "156188",
+    "156103",
+    "155574",
+    "147840",
+    "156099",
+    "156160",
+    "153343",
+    "149584",
+    "156137",
+    "156195"
+   ],
+   "enabled": false
+  },
+  "2010": {
+   "name": "Cheetahs",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "156188",
+    "viceCaptain": "156188",
+    "longGK": "156188",
+    "shortGK": "156188",
+    "longPunt": "143177",
+    "shortPunt": "143177",
+    "kickoff": "143177"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153413",
+    "156201",
+    "142421",
+    "155474",
+    "155490",
+    "155546",
+    "143341",
+    "149584",
+    "155605",
+    "156188",
+    "143123",
+    "143177",
+    "153056",
+    "156097",
+    "156094",
+    "155591",
+    "154066",
+    "156102",
+    "156100",
+    "154500",
+    "156098",
+    "153417",
+    "153412",
+    "156204",
+    "155606",
+    "155574",
+    "156095",
+    "155518",
+    "155510",
+    "154075",
+    "155603",
+    "153343",
+    "155512",
+    "156210",
+    "155547"
+   ],
+   "enabled": true
+  },
+  "2018": {
+   "name": "Cheetahs",
+   "type": "club",
+   "category": "Pro14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018_2/home_front.png",
+     "backKitFile": "kits_2018_2/home_back/home_back_%.png",
+     "previewFile": "kits_2018_2/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2018_2/away_front.png",
+     "backKitFile": "kits_2018_2/away_back/away_back_%.png",
+     "previewFile": "kits_2018_2/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "157070",
+    "viceCaptain": "157070",
+    "longGK": "157070",
+    "shortGK": "157070",
+    "longPunt": "157070",
+    "shortPunt": "157070",
+    "kickoff": "157070"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "154080",
+    "154612",
+    "144255",
+    "157693",
+    "157271",
+    "157172",
+    "154054",
+    "145622",
+    "156610",
+    "157070",
+    "145094",
+    "156971",
+    "154069",
+    "157768",
+    "156980",
+    "157054",
+    "157042",
+    "157181",
+    "157158",
+    "157155",
+    "157175",
+    "156612",
+    "157623",
+    "157609",
+    "157184",
+    "157092",
+    "157718",
+    "157050",
+    "157038",
+    "157753",
+    "157274",
+    "157179",
+    "154085",
+    "144859",
+    "155055",
+    "157263",
+    "157275",
+    "157712",
+    "157695",
+    "157265",
+    "157157",
+    "153639",
+    "157784",
+    "157055",
+    "157266"
+   ],
+   "enabled": true
+  },
+  "2019": {
+   "name": "Cheetahs",
+   "type": "club",
+   "category": "Pro14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2019/home_front.png",
+     "backKitFile": "kits_2019/home_back/home_back_%.png",
+     "previewFile": "kits_2019/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2019/away_front.png",
+     "backKitFile": "kits_2019/away_back/away_back_%.png",
+     "previewFile": "kits_2019/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "152898",
+    "viceCaptain": "152898",
+    "longGK": "152898",
+    "shortGK": "152898",
+    "longPunt": "152898",
+    "shortPunt": "152898",
+    "kickoff": "152898"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "154080",
+    "153639",
+    "144255",
+    "157844",
+    "157252",
+    "157266",
+    "157623",
+    "157175",
+    "156610",
+    "152898",
+    "157718",
+    "157609",
+    "157061",
+    "157050",
+    "157263",
+    "157694",
+    "157155",
+    "157055",
+    "157636",
+    "144859",
+    "154068",
+    "155382",
+    "156811",
+    "157845",
+    "156612",
+    "157159",
+    "157693",
+    "157054",
+    "157784",
+    "157265",
+    "157695",
+    "157142",
+    "157634",
+    "154833",
+    "157060",
+    "157692",
+    "157753",
+    "154054",
+    "157712",
+    "157928",
+    "156971",
+    "157157"
+   ],
+   "enabled": true
+  },
+  "2020": {
+   "name": "Cheetahs",
+   "type": "club",
+   "category": "Pro14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "143639",
+    "shortGK": "143639",
+    "longPunt": "143639",
+    "shortPunt": "143639",
+    "kickoff": "143639"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "157928",
+    "153639",
+    "144255",
+    "157636",
+    "157844",
+    "157914",
+    "157623",
+    "144859",
+    "143639",
+    "152898",
+    "156963",
+    "155382",
+    "156971",
+    "156980",
+    "157634",
+    "157252",
+    "156612",
+    "157055",
+    "157940",
+    "157941",
+    "156811",
+    "157039",
+    "157695",
+    "157266",
+    "154833",
+    "157768",
+    "157718",
+    "157155",
+    "157942",
+    "157845",
+    "157061",
+    "154080",
+    "157694",
+    "157784"
+   ],
+   "enabled": false
+  },
+  "2008": {
+   "name": "Cheetahs",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": "",
+     "model3d": {
+      "fit": "loose"
+     }
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "153417",
+    "shortGK": "153417",
+    "longPunt": "143177",
+    "shortPunt": "143177",
+    "kickoff": "143177"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153413",
+    "143177",
+    "156102",
+    "155547",
+    "156100",
+    "153412",
+    "143341",
+    "155546",
+    "156098",
+    "156096",
+    "143123",
+    "153417",
+    "156095",
+    "156097",
+    "156094",
+    "156101",
+    "156156",
+    "142421",
+    "153418",
+    "154500",
+    "155605",
+    "156188",
+    "156103",
+    "155574",
+    "147840",
+    "156099",
+    "156160",
+    "153343",
+    "149584",
+    "156137",
+    "156195"
+   ],
+   "enabled": false
+  },
+  "2016": {
+   "name": "Cheetahs",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018_2/home_front.png",
+     "backKitFile": "kits_2018_2/home_back/home_back_%.png",
+     "previewFile": "kits_2018_2/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2018_2/away_front.png",
+     "backKitFile": "kits_2018_2/away_back/away_back_%.png",
+     "previewFile": "kits_2018_2/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "157070",
+    "shortGK": "157070",
+    "longPunt": "157070",
+    "shortPunt": "157070",
+    "kickoff": "157070"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "154080",
+    "154612",
+    "144255",
+    "157693",
+    "157271",
+    "157172",
+    "154054",
+    "145622",
+    "156610",
+    "157070",
+    "145094",
+    "156971",
+    "154069",
+    "157768",
+    "156980",
+    "157054",
+    "157042",
+    "157181",
+    "157158",
+    "157155",
+    "157175",
+    "156612",
+    "157623",
+    "157609",
+    "157184",
+    "157092",
+    "157718",
+    "157050",
+    "157038",
+    "157753",
+    "157274",
+    "157179",
+    "154085",
+    "144859",
+    "155055",
+    "157263",
+    "157275",
+    "157712",
+    "157695",
+    "144769",
+    "157265",
+    "157157",
+    "153639",
+    "157784",
+    "157055",
+    "157266"
+   ],
+   "enabled": false
+  },
+  "2023": {
+   "name": "Cheetahs",
+   "type": "club",
+   "category": "Italy",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "143639",
+    "shortGK": "143639",
+    "longPunt": "143639",
+    "shortPunt": "143639",
+    "kickoff": "143639"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "157928",
+    "153639",
+    "144255",
+    "157636",
+    "157844",
+    "157914",
+    "157623",
+    "144859",
+    "143639",
+    "152898",
+    "156963",
+    "155382",
+    "156971",
+    "156980",
+    "157634",
+    "157252",
+    "156612",
+    "157055",
+    "157940",
+    "157941",
+    "156811",
+    "157039",
+    "157695",
+    "157266",
+    "154833",
+    "157768",
+    "157718",
+    "157155",
+    "157942",
+    "157845",
+    "157061",
+    "154080",
+    "157694",
+    "157784"
+   ],
+   "enabled": false
+  },
+  "2024": {
+   "name": "Cheetahs",
+   "type": "club",
+   "category": "Italy",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "143639",
+    "shortGK": "143639",
+    "longPunt": "143639",
+    "shortPunt": "143639",
+    "kickoff": "143639"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "157928",
+    "153639",
+    "144255",
+    "157636",
+    "157844",
+    "157914",
+    "157623",
+    "144859",
+    "143639",
+    "152898",
+    "156963",
+    "155382",
+    "156971",
+    "156980",
+    "157634",
+    "157252",
+    "156612",
+    "157055",
+    "157940",
+    "157941",
+    "156811",
+    "157039",
+    "157695",
+    "157266",
+    "154833",
+    "157768",
+    "157718",
+    "157155",
+    "157942",
+    "157845",
+    "157061",
+    "154080",
+    "157694",
+    "157784"
+   ],
+   "enabled": false
+  }
+ }
+}

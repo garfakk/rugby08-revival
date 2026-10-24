@@ -32,7 +32,6 @@ from shared.config import *
 from backend.R08_handler import *
 import backend.game_files_processor as game_files_processor
 import backend.mod_utils as mod_utils
-from backend import audio_patch
 from shared.game_profile import game_profile
 
 from shared.log import get_logger, setup_logging
@@ -135,10 +134,6 @@ def start_match(match_data, copy_static_files = True, create_mission_file = True
     else:
         log.debug("Statics files not copied")
 
-    # aems.big is not shipped: the game's own copy gets its loop music
-    # silenced in place (one directory read when already done).
-    audio_patch.ensure_patched()
-    
     # The game's settings: profile template copied to the game folder and edited
     # with the user's choices from Settings. Runs after the static files so it
     # always wins over a user_profile.pro shipped there. The match's AI
@@ -177,6 +172,9 @@ def start_match(match_data, copy_static_files = True, create_mission_file = True
     report('proxy', "Deploying windowing patches")
     if config.use_d3d8_proxy:
         mod_utils.configure_d3d8_proxy()
+        if config.use_rugby08patches:
+            mod_utils.configure_controller_lock(config.game_launcher_directory,
+                                                bool(match_data.get("lock_controllers")))
     else:
         log.debug("No windowing helper used (d3d8 proxy off)")
             

@@ -30,11 +30,19 @@ class TeamDataLoader:
         # Every team id found in ANY *.json under a team folder, loaded or
         # not — a new team must not reuse an id an ignored file already has.
         self.team_json_ids: dict[str, list] = {}
+        # Every team as stored in its file, disabled seasons included: what
+        # the user's edits (app/user_edits.py) are compared with.
+        self.teams_raw: dict[str, dict] = {}
 
     @staticmethod
     def team_json_name(folder_name: str) -> str:
         """The only file a team folder is loaded from."""
         return f"{folder_name.lower().replace(' ', '_')}.json"
+
+    @staticmethod
+    def enabled_seasons(seasons: dict) -> dict:
+        return {s: info for s, info in seasons.items()
+                if not (isinstance(info, dict) and info.get("enabled") is False)}
 
     def load_teams(self) -> dict:
         """Return {team_id: {season: {...}}} for every team folder found."""
@@ -69,8 +77,8 @@ class TeamDataLoader:
                 # loaded, so no screen offers it. A team with no enabled
                 # season is left out altogether.
                 for tid, seasons in data.items():
-                    live = {s: info for s, info in seasons.items()
-                            if not (isinstance(info, dict) and info.get("enabled") is False)}
+                    self.teams_raw[tid] = seasons
+                    live = self.enabled_seasons(seasons)
                     if live:
                         teams[tid] = live
             except Exception as e:

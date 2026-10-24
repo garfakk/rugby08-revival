@@ -23,13 +23,14 @@ from PyQt5.QtCore import QTimer
 from app import team_ops as T
 from app import variants as V
 from app.game_data import (
-    check_team_detailed, check_team_variants, save_team, soft_delete_file, SaveError,
+    check_team_detailed, check_team_variants, save_team, delete_team, save_target, saves_to_user_edits, SaveError,
     TEAM_TYPES, ASSET_SPECS, country_label, frontend_logo,
 )
 from app.season import season_label
 from screens.editor_base import EditorScreen
 from screens.team_tabs import (
     OverviewTab, KitsTab, SquadTab, AssetsTab, TAB_OVERVIEW, TAB_KITS, TAB_SQUAD, TAB_ASSETS,
+    PADS_ENABLED,
 )
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QWidget
 from ui.broadcast import Card, eyebrow_label
@@ -39,7 +40,7 @@ from ui.editor_kit import (
     SegmentField, asset_status, load_pixmap,
 )
 from ui.theme import (
-    ACCENT, WARN, GREEN, INFO, DANGER_LITE, FG_SECONDARY, FG_TERTIARY, HOME_TINT,
+    ACCENT, GREEN, INFO, DANGER_LITE, FG_SECONDARY, FG_TERTIARY, HOME_TINT,
 )
 from shared.config import config
 
@@ -131,7 +132,8 @@ class TeamEditorScreen(EditorScreen):
             tag = f"{errors} ERR" if errors else f"{n} players"
             rows.append({
                 "id": tid, "text": info.get("name") or tid, "tag": tag,
-                "color": DANGER_LITE if errors else (WARN if issues else FG_TERTIARY),
+                # the player count is not a warning: any size from 22 up is fine
+                "color": DANGER_LITE if errors else FG_TERTIARY,
                 "search": f"{tid} {info.get('category', '')} {' '.join(seasons)}",
                 "errors": errors, "issues": len(issues), "group": info.get("category", ""),
                 "sort": {"squad": n},
@@ -283,7 +285,7 @@ class TeamEditorScreen(EditorScreen):
             elif state == "partial":
                 issues.append((key, f"{key}: {detail}", "info"))
 
-        for key in ("ball", "banners", "pads"):
+        for key in ("ball", "banners") + (("pads",) if PADS_ENABLED else ()):
             check(key, info.get(key, ""), key)
         for slot, rel in (info.get("logos") or {}).items():
             check(f"logos.{slot}", rel, f"logos.{slot}")
@@ -339,7 +341,7 @@ class TeamEditorScreen(EditorScreen):
 
     def incomplete_squads(self):
         """[(season, first problem, count)] for every season whose squad was
-        changed here and is not a complete, valid 22: an empty shirt, a player
+        changed here and is not a complete, valid 22: an empty slot, a player
         who is not in the player files, a repeated player, or fewer than 22.
         A squad left exactly as it is on disk is not held against a save of
         something else (old data may already be incomplete)."""
@@ -369,11 +371,11 @@ class TeamEditorScreen(EditorScreen):
             other = (f"; also {', '.join(where(s) for s, _, _ in bad[1:])}"
                     if len(bad) > 1 else "")
             raise SaveError(f"squad {where(season)} is incomplete — {first}{more}{other}. "
-                            "Fill every shirt 1-22 before saving.")
+                            "Fill every player slot 1-22 before saving.")
         path = self.ds.teams_file_path.get(self.record_id)
         save_team(path, self.record_id, self.session.working)
         self.ds.teams[self.record_id] = copy.deepcopy(self.session.working)
-        return f"Saved {os.path.basename(path)}"
+        return f"Saved to {save_target(path)}"
 
     def after_save(self):
         self.ds.events.team_changed.emit(self.record_id)
@@ -399,7 +401,7 @@ class TeamEditorScreen(EditorScreen):
             "chips": chips,
             "pixmap": load_pixmap(os.path.join(root, crest), 128) if crest else None,
             "initials": "".join(w[:1] for w in name.split()[:2]) or "?",
-            "target": f"→ {os.path.basename(self.ds.teams_file_path.get(self.record_id, ''))}",
+            "target": f"→ {save_target(self.ds.teams_file_path.get(self.record_id, ''))}",
         }
 
     def tab_hints(self, focused):
@@ -691,7 +693,7 @@ class TeamEditorScreen(EditorScreen):
 
         def do_delete():
             try:
-                renamed = soft_delete_file(path)
+                outcome = delete_team(path, tid)
             except SaveError as e:
                 self.shell.footer.set_status(f"Delete failed: {e}", DANGER_LITE)
                 return
@@ -707,10 +709,12 @@ class TeamEditorScreen(EditorScreen):
             else:
                 self.refresh_all()
             self.shell.footer.set_status(
-                f"Deleted {name} — file renamed to {os.path.basename(renamed)}", FG_SECONDARY)
+                f"Deleted {name} — {outcome}", FG_SECONDARY)
 
-        self.confirm(f"Delete team {name}?",
-                     f"{os.path.basename(path)} is renamed to …deleted-<date> so the game and "
-                     f"this tool stop loading it. Image files in the team folder are kept, and "
-                     f"the file can be restored by renaming it back.{memberships}",
-                     "DELETE TEAM", do_delete)
+        text = ("The team is deleted in your edits: the game and this tool stop loading "
+                "it, the data pack is not changed. Restore it from Tools › My edits."
+                if saves_to_user_edits() else
+                f"{os.path.basename(path)} is renamed to …deleted-<date> so the game and "
+                f"this tool stop loading it. Image files in the team folder are kept, and "
+                f"the file can be restored by renaming it back.")
+        self.confirm(f"Delete team {name}?", text + memberships, "DELETE TEAM", do_delete)

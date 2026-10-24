@@ -1,0 +1,1059 @@
+{
+ "10149": {
+  "2008": {
+   "name": "Wasps",
+   "type": "club",
+   "category": "Premiership",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "113608",
+    "shortGK": "113608",
+    "longPunt": "113608",
+    "shortPunt": "113608",
+    "kickoff": "113608"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "102258",
+    "13651",
+    "157495",
+    "101071",
+    "117861",
+    "124676",
+    "127594",
+    "146846",
+    "121641",
+    "113608",
+    "156736",
+    "124484",
+    "156737",
+    "113330",
+    "146838",
+    "157421",
+    "156843",
+    "157313",
+    "157317",
+    "157492",
+    "143435",
+    "157554",
+    "156725",
+    "157497",
+    "156941",
+    "157494",
+    "126500",
+    "107085",
+    "157514",
+    "157401",
+    "157318",
+    "146869",
+    "100021",
+    "157316",
+    "157314",
+    "157315",
+    "157312"
+   ],
+   "enabled": false
+  },
+  "2009": {
+   "name": "Wasps",
+   "type": "club",
+   "category": "Premiership",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2009/home_front.png",
+     "backKitFile": "kits_2009/home_back/home_back_%.png",
+     "previewFile": "kits_2009/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2009/away_front.png",
+     "backKitFile": "kits_2009/away_back/away_back_%.png",
+     "previewFile": "kits_2009/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "113608",
+    "viceCaptain": "113608",
+    "longGK": "113608",
+    "shortGK": "113608",
+    "longPunt": "113608",
+    "shortPunt": "113608",
+    "kickoff": "113608"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "102258",
+    "157492",
+    "157495",
+    "101071",
+    "156941",
+    "107085",
+    "156642",
+    "157497",
+    "121641",
+    "113608",
+    "156736",
+    "146838",
+    "13651",
+    "157496",
+    "156843",
+    "131418",
+    "157312",
+    "100021",
+    "157494",
+    "157314",
+    "126500",
+    "156687",
+    "156725",
+    "157316",
+    "157493",
+    "143435",
+    "127594",
+    "156672",
+    "157317",
+    "124484",
+    "124676",
+    "113330",
+    "157315",
+    "117861",
+    "158303",
+    "146869",
+    "157318",
+    "158313",
+    "158251",
+    "158227"
+   ],
+   "enabled": true
+  },
+  "2010": {
+   "name": "Wasps",
+   "type": "club",
+   "category": "Premiership",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "113608",
+    "viceCaptain": "113608",
+    "longGK": "113608",
+    "shortGK": "113608",
+    "longPunt": "113608",
+    "shortPunt": "113608",
+    "kickoff": "113608"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "102258",
+    "157492",
+    "156824",
+    "101071",
+    "156941",
+    "157497",
+    "156642",
+    "155284",
+    "157493",
+    "113608",
+    "155322",
+    "153184",
+    "158312",
+    "113330",
+    "156843",
+    "158313",
+    "143435",
+    "156725",
+    "143272",
+    "155325",
+    "156677",
+    "13651",
+    "158286",
+    "126500",
+    "143113",
+    "153637",
+    "107085",
+    "157494",
+    "158303",
+    "157496",
+    "158251",
+    "157312",
+    "157314",
+    "127594",
+    "100021",
+    "156672",
+    "156850",
+    "158227"
+   ],
+   "enabled": true
+  },
+  "2017": {
+   "name": "Wasps",
+   "type": "club",
+   "category": "Premiership",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2017/home_front.png",
+     "backKitFile": "kits_2017/home_back/home_back_%.png",
+     "previewFile": "kits_2017/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2017/away_front.png",
+     "backKitFile": "kits_2017/away_back/away_back_%.png",
+     "previewFile": "kits_2017/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "113608",
+    "viceCaptain": "155603",
+    "longGK": "155569",
+    "shortGK": "155569",
+    "longPunt": "113608",
+    "shortPunt": "113608",
+    "kickoff": "113608"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "157508",
+    "152358",
+    "156729",
+    "157073",
+    "157290",
+    "155603",
+    "153002",
+    "152351",
+    "144474",
+    "113608",
+    "152477",
+    "155569",
+    "10433",
+    "153782",
+    "153091",
+    "157493",
+    "154650",
+    "156643",
+    "145702",
+    "158229",
+    "156982",
+    "156512",
+    "157082",
+    "157083",
+    "157307",
+    "157399",
+    "156908",
+    "153600",
+    "152481",
+    "154062",
+    "156997",
+    "124676",
+    "142360",
+    "156685",
+    "156585",
+    "156658",
+    "156660",
+    "155341",
+    "142524",
+    "157014"
+   ],
+   "enabled": true
+  },
+  "2018": {
+   "name": "Wasps",
+   "type": "club",
+   "category": "Premiership",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018_2/home_front.png",
+     "backKitFile": "kits_2018_2/home_back/home_back_%.png",
+     "previewFile": "kits_2018_2/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "113608",
+    "viceCaptain": "113608",
+    "longGK": "113608",
+    "shortGK": "113608",
+    "longPunt": "113608",
+    "shortPunt": "113608",
+    "kickoff": "113608"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "156643",
+    "156997",
+    "157082",
+    "152481",
+    "145702",
+    "124676",
+    "153002",
+    "157083",
+    "144474",
+    "113608",
+    "152477",
+    "143373",
+    "153410",
+    "153782",
+    "154062",
+    "157565",
+    "156729",
+    "157290",
+    "142360",
+    "157493",
+    "155569",
+    "157307",
+    "157508",
+    "155603",
+    "158229",
+    "10433",
+    "156550",
+    "152351",
+    "156585",
+    "156908",
+    "157197",
+    "157720",
+    "157399",
+    "157073",
+    "156660",
+    "156658",
+    "156523",
+    "11859",
+    "157245",
+    "152433"
+   ],
+   "enabled": true
+  },
+  "2019": {
+   "name": "Wasps",
+   "type": "club",
+   "category": "Premiership",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2019_2/home_front.png",
+     "backKitFile": "kits_2019_2/home_back/home_back_%.png",
+     "previewFile": "kits_2019_2/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2019_2/away_front.png",
+     "backKitFile": "kits_2019_2/away_back/away_back_%.png",
+     "previewFile": "kits_2019_2/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "145006",
+    "viceCaptain": "145006",
+    "longGK": "10433",
+    "shortGK": "10433",
+    "longPunt": "10433",
+    "shortPunt": "145006",
+    "kickoff": "10433"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "157565",
+    "156997",
+    "152345",
+    "145702",
+    "158229",
+    "152485",
+    "156817",
+    "152351",
+    "157493",
+    "145006",
+    "152477",
+    "143373",
+    "10433",
+    "156550",
+    "154062",
+    "156660",
+    "157117",
+    "155415",
+    "155224",
+    "155405",
+    "155603",
+    "157307",
+    "11859",
+    "153410",
+    "157290",
+    "157816",
+    "152358",
+    "153002",
+    "157082",
+    "144474",
+    "152481",
+    "157200",
+    "152878",
+    "157720",
+    "156643",
+    "153782",
+    "157245",
+    "157674",
+    "152433",
+    "142360",
+    "156258",
+    "152475",
+    "155569",
+    "157568",
+    "152471"
+   ],
+   "enabled": true
+  },
+  "2020": {
+   "name": "Wasps",
+   "type": "club",
+   "category": "Premiership",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "155569",
+    "shortGK": "155569",
+    "longPunt": "152475",
+    "shortPunt": "152475",
+    "kickoff": "152475"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155224",
+    "152358",
+    "152345",
+    "158229",
+    "155405",
+    "142360",
+    "153002",
+    "156817",
+    "144474",
+    "152475",
+    "152477",
+    "155569",
+    "144257",
+    "155421",
+    "156550",
+    "155690",
+    "152471",
+    "157674",
+    "157565",
+    "155381",
+    "153659",
+    "156997",
+    "153410",
+    "157816",
+    "11885",
+    "145478",
+    "152485",
+    "145006",
+    "145702",
+    "152832",
+    "156258",
+    "157245",
+    "155415",
+    "157246",
+    "156643",
+    "145248",
+    "155603",
+    "157117",
+    "155744",
+    "152481",
+    "157307",
+    "152433"
+   ],
+   "enabled": false
+  },
+  "2021": {
+   "name": "Wasps",
+   "type": "club",
+   "category": "Premiership",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "155569",
+    "shortGK": "155569",
+    "longPunt": "152475",
+    "shortPunt": "152475",
+    "kickoff": "152475"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "157245",
+    "152358",
+    "152345",
+    "145702",
+    "158229",
+    "152485",
+    "153002",
+    "152433",
+    "144474",
+    "152475",
+    "152477",
+    "155569",
+    "144257",
+    "155421",
+    "152832",
+    "153659",
+    "153793",
+    "152471",
+    "145478",
+    "157816",
+    "157565",
+    "156643",
+    "155690",
+    "156997",
+    "152510",
+    "157307",
+    "157117",
+    "145248",
+    "152481",
+    "145006",
+    "154375",
+    "142360",
+    "157892",
+    "155381",
+    "153410",
+    "157674",
+    "156550",
+    "156258",
+    "156726",
+    "157213",
+    "157246",
+    "155378",
+    "157720",
+    "155744",
+    "157891"
+   ],
+   "enabled": false
+  },
+  "2022": {
+   "name": "Wasps",
+   "type": "club",
+   "category": "Premiership",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.png",
+     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "152475",
+    "viceCaptain": "152475",
+    "longGK": "152475",
+    "shortGK": "152475",
+    "longPunt": "152475",
+    "shortPunt": "152475",
+    "kickoff": "152475"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "157245",
+    "152471",
+    "156258",
+    "152481",
+    "156253",
+    "152485",
+    "142360",
+    "152433",
+    "144474",
+    "152475",
+    "152477",
+    "144257",
+    "155744",
+    "155421",
+    "157307",
+    "157604",
+    "156699",
+    "156420",
+    "155690",
+    "157892",
+    "157674",
+    "152510",
+    "156817",
+    "153659",
+    "158229",
+    "145248",
+    "145924",
+    "156997",
+    "145632",
+    "153002",
+    "154071",
+    "155569",
+    "157816",
+    "157117",
+    "156550",
+    "157565",
+    "155381",
+    "156726",
+    "157927",
+    "156801",
+    "152832",
+    "146480",
+    "156602",
+    "157891",
+    "158022",
+    "153027",
+    "153965",
+    "156440"
+   ],
+   "enabled": true
+  },
+  "2023": {
+   "name": "Wasps",
+   "type": "club",
+   "category": "Premiership",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2023/home_front.png",
+     "backKitFile": "kits_2023/home_back/home_back_%.png",
+     "previewFile": "kits_2023/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2023/away_front.png",
+     "backKitFile": "kits_2023/away_back/away_back_%.png",
+     "previewFile": "kits_2023/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "158031",
+    "viceCaptain": "158031",
+    "longGK": "158031",
+    "shortGK": "158031",
+    "longPunt": "144474",
+    "shortPunt": "144474",
+    "kickoff": "144474"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "156258",
+    "156440",
+    "152481",
+    "153794",
+    "142360",
+    "157892",
+    "144474",
+    "158031",
+    "157178",
+    "157307",
+    "156801",
+    "153965",
+    "156420",
+    "155690",
+    "155381",
+    "157117",
+    "152832",
+    "156817",
+    "158229",
+    "157816",
+    "157565",
+    "157927",
+    "157891",
+    "158022"
+   ],
+   "enabled": true
+  },
+  "2024": {
+   "name": "Wasps",
+   "type": "club",
+   "category": "Premiership",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "152475",
+    "viceCaptain": "152475",
+    "longGK": "155421",
+    "shortGK": "155421",
+    "longPunt": "155421",
+    "shortPunt": "155421",
+    "kickoff": "155421"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153349",
+    "157720",
+    "156420",
+    "153794",
+    "152481",
+    "156817",
+    "142360",
+    "152433",
+    "144474",
+    "152475",
+    "155421",
+    "157178",
+    "145248",
+    "152832",
+    "157307",
+    "157492",
+    "153965",
+    "156954",
+    "155690",
+    "157892",
+    "154071",
+    "152485",
+    "157117",
+    "145924",
+    "153021",
+    "155744",
+    "156258",
+    "158229",
+    "157816",
+    "157565",
+    "156726"
+   ],
+   "enabled": false
+  },
+  "2016": {
+   "name": "Wasps",
+   "type": "club",
+   "category": "Premiership",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "155569",
+    "shortGK": "155569",
+    "longPunt": "113608",
+    "shortPunt": "113608",
+    "kickoff": "113608"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "157508",
+    "152358",
+    "156729",
+    "157073",
+    "157290",
+    "155603",
+    "153002",
+    "152351",
+    "144474",
+    "113608",
+    "152477",
+    "155569",
+    "10433",
+    "153782",
+    "153091",
+    "157493",
+    "154650",
+    "156643",
+    "145702",
+    "158229",
+    "156982",
+    "156512",
+    "157082",
+    "157083",
+    "157307",
+    "157399",
+    "156908",
+    "153600",
+    "152481",
+    "154062",
+    "156997",
+    "124676",
+    "142360",
+    "156685",
+    "156585",
+    "156658",
+    "156660",
+    "155341",
+    "142524",
+    "157014"
+   ],
+   "enabled": false
+  }
+ }
+}

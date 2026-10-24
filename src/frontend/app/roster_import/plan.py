@@ -15,8 +15,8 @@ import re
 
 from app import team_ops as T
 from app.game_data import (
-    ATTRIBUTES, ROLE_KEYS, new_player_season, new_team_season, save_team, _load_json,
-    _write_json, SaveError, STARTING_XV,
+    ATTRIBUTES, ROLE_KEYS, new_player_season, new_team_season, save_team, save_players,
+    SaveError, STARTING_XV,
 )
 from app.player_ops import allocate_player_id
 from app.roster_import import names as N
@@ -616,11 +616,7 @@ def apply_import(plan, progress=None):
     for path, records in by_file.items():
         if not path:
             raise SaveError("no players file chosen for new players")
-        data = _load_json(path)
-        if not isinstance(data, dict):
-            raise SaveError(f"{os.path.basename(path)} is a list, not a player map")
-        data.update(records)
-        _write_json(path, data)
+        save_players(path, records)
         result["files"].add(path)
         for pid, record in records.items():
             ds.register_player(pid, record, path)

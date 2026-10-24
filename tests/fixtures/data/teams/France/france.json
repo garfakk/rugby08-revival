@@ -1,0 +1,330 @@
+{
+ "10001": {
+  "2008": {
+   "enabled": false,
+   "name": "France",
+   "type": "international",
+   "category": "International",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "stadium": "",
+   "primaryStadium": "70",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2009/home_wc_front.png",
+     "backKitFile": "kits_2009/home_back/home_back_%.png",
+     "previewFile": "kits_2009/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2009/away_wc_front.png",
+     "backKitFile": "kits_2009/away_back/away_back_%.png",
+     "previewFile": "kits_2009/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "146869",
+    "viceCaptain": "128022",
+    "longGK": "130833",
+    "shortGK": "130833",
+    "longPunt": "130833",
+    "shortPunt": "130833",
+    "kickoff": "130833"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "111538",
+    "146869",
+    "146868",
+    "123556",
+    "130109",
+    "143912",
+    "114161",
+    "128022",
+    "103728",
+    "124648",
+    "102125",
+    "125333",
+    "143967",
+    "107479",
+    "104686",
+    "118634",
+    "124596",
+    "129510",
+    "103625",
+    "114310",
+    "146867",
+    "121078",
+    "130833",
+    "130792",
+    "127595",
+    "143488",
+    "142954",
+    "146870",
+    "101381",
+    "110542"
+   ]
+  },
+  "2024": {
+   "name": "France",
+   "type": "international",
+   "category": "International",
+   "ball": "ball_2/ball_%.png",
+   "banners": "banners_2/banner_%.png",
+   "pads": "",
+   "primaryStadium": "70",
+   "logos": {
+    "main": "logos_2/logo.png",
+    "frontend": "logos_2/logo_frontend.png",
+    "small": "logos_2/logo_small.png",
+    "left": "logos_2/logo_left.png",
+    "right": "logos_2/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": "",
+     "variants": {
+      "rwc_2023": {
+       "label": "RWC 2023",
+       "frontKitFile": "kits_2024/home_front_wc.png"
+      }
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": "",
+     "variants": {
+      "rwc_2023": {
+       "label": "RWC 2023",
+       "frontKitFile": "kits_2024/away_front_wc.png"
+      }
+     }
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "142289",
+    "shortGK": "142289",
+    "longPunt": "142289",
+    "shortPunt": "142289",
+    "kickoff": "142289"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss",
+    "left": "miss_pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "142284",
+    "146136",
+    "142287",
+    "152392",
+    "142336",
+    "144707",
+    "152394",
+    "146483",
+    "142286",
+    "142289",
+    "146330",
+    "144242",
+    "146099",
+    "142342",
+    "142290",
+    "145469",
+    "152391",
+    "145502",
+    "152390",
+    "146273",
+    "11910",
+    "146167",
+    "144564",
+    "152396",
+    "152393",
+    "146371",
+    "152395",
+    "152397",
+    "142309",
+    "144888",
+    "144306",
+    "142322",
+    "144947",
+    "146318",
+    "152400",
+    "142316",
+    "152398",
+    "144732",
+    "152399",
+    "152401",
+    "11927",
+    "142317"
+   ],
+   "variant": {
+    "world_cup": {
+     "label": "Rugby World Cup 2023",
+     "players": [
+      "10224",
+      "10775",
+      "11752",
+      "144419",
+      "146187",
+      "10297",
+      "10473",
+      "10523",
+      "11823",
+      "11886",
+      "10392",
+      "142283",
+      "10541",
+      "152363",
+      "11695",
+      "146537",
+      "145227",
+      "11885",
+      "142285",
+      "11129",
+      "144242",
+      "11932",
+      "11925",
+      "10336",
+      "145381",
+      "142284",
+      "11924",
+      "11911",
+      "11705",
+      "142286",
+      "142289",
+      "11934",
+      "142290"
+     ],
+     "roles": {
+      "captain": "11823",
+      "viceCaptain": "11886",
+      "longGK": "11695",
+      "shortGK": "11695",
+      "longPunt": "11823",
+      "shortPunt": "11823",
+      "kickoff": "11823"
+     }
+    }
+   }
+  },
+  "2007": {
+   "enabled": false,
+   "name": "France",
+   "type": "international",
+   "category": "International",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "stadium": "",
+   "primaryStadium": "70",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2009/home_front.png",
+     "backKitFile": "kits_2009/home_back/home_back_%.png",
+     "previewFile": "kits_2009/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2009/away_front.png",
+     "backKitFile": "kits_2009/away_back/away_back_%.png",
+     "previewFile": "kits_2009/away_preview.png",
+     "color": ""
+    },
+    "home WC": {
+     "frontKitFile": "kits_2009/home_wc_front.png",
+     "backKitFile": "kits_2009/home_back/home_back_%.png",
+     "previewFile": "kits_2009/home_preview.png",
+     "color": ""
+    },
+    "away WC": {
+     "frontKitFile": "kits_2009/away_wc_front.png",
+     "backKitFile": "kits_2009/away_back/away_back_%.png",
+     "previewFile": "kits_2009/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "146869",
+    "viceCaptain": "123556",
+    "longGK": "110542",
+    "shortGK": "110542",
+    "longPunt": "146867",
+    "shortPunt": "146867",
+    "kickoff": "146867"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "111538",
+    "146869",
+    "146868",
+    "130792",
+    "130109",
+    "143912",
+    "128022",
+    "129510",
+    "127595",
+    "110542",
+    "146867",
+    "125333",
+    "143967",
+    "107479",
+    "104686",
+    "101381",
+    "115834",
+    "102330",
+    "103625",
+    "124855",
+    "114310",
+    "102125",
+    "100788",
+    "121078",
+    "106617",
+    "130833",
+    "118634",
+    "103728",
+    "143488",
+    "143725",
+    "114161",
+    "123556",
+    "146870",
+    "146871",
+    "142935",
+    "100175"
+   ]
+  }
+ }
+}

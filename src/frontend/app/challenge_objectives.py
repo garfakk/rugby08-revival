@@ -35,6 +35,10 @@ POINTS = {"try": 5, "conversion": 2, "penalty": 3, "drop_goal": 3}
 _MIS_TYPE = {"SS_TRY": "try", "SS_CONVERSION": "conversion",
              "SS_PENALTY": "penalty", "SS_DROPGOAL": "drop_goal"}
 _KEY = {"home": "team_A", "away": "team_B"}
+# Score clocks are the displayed match clock (seconds, 80-minute scale). The
+# game stops it at each half's end while play goes on until the ball is dead,
+# so a score in that added time carries the half's end exactly.
+_HALF_ENDS = (40 * 60, 80 * 60)
 _NOUN = {"any": ("score", "scores"), "try": ("try", "tries"),
          "conversion": ("conversion", "conversions"), "penalty": ("penalty", "penalties"),
          "drop_goal": ("drop goal", "drop goals"), "points": ("point", "points")}
@@ -198,7 +202,9 @@ def judge(obj: dict, challenge: dict, result: dict, scores=None, timed=None):
     if kind == "lead_at":
         if not timed:
             return None, "match clock not read"
-        pts = _score_at(challenge, scores, float(obj.get("minute") or 0) * 60)
+        at = float(obj.get("minute") or 0) * 60
+        # leading "at half-time": the added time at the end of the half counts
+        pts = _score_at(challenge, scores, at + 0.01 if at in _HALF_ENDS else at)
         diff = pts[me] - pts[opp]
         return diff >= int(obj.get("margin") or 1), f"{pts[me]}-{pts[opp]} then"
     if kind == "never_trail":

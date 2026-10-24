@@ -7,6 +7,7 @@
       "ball": "2007/ball/ball_%.png",
       "pads": "2007/stadium_graphics.fsh",
       "logo": "2007/tournament_logo.png",
+      "logo_frontend": "2007/logo_frontend.png",
       "pitch_logo": "2007/pitch_logos/pitch_logo_%.png",
       "template": {
         "id": "rwc_2007",
@@ -15,7 +16,6 @@
         "description": "France (with matches in Cardiff and Edinburgh), 7 September – 20 October 2007. The real draw, calendar and venues, played with each nation's season 2008 squad (the original Rugby 08 rosters). Four pools of five, quarter-finals to the final at the Stade de France.",
         "season": "2008",
         "match_type": "world_cup",
-        "branding": "5001",
         "venue": "neutral",
         "venues": [
           "70",
@@ -662,17 +662,1440 @@
         ]
       }
     },
+    "2015": {
+      "ball": "2015/ball/ball_%.png",
+      "pads": "2015/stadium_graphics.fsh",
+      "adboards": "2015/adboards.fsh",
+      "logo": "2015/tournament_logo.png",
+      "logo_frontend": "2015/logo_frontend.png",
+      "pitch_logo": "2015/pitch_logos/pitch_logo_%.png",
+      "template": {
+        "id": "rwc_2015",
+        "name": "Rugby World Cup 2015",
+        "order": 7,
+        "description": "England (with matches in Cardiff), 18 September – 31 October 2015. The real draw, calendar and venues, played with each nation's season 2016 squad. Four pools of five, quarter-finals to the final at Twickenham.",
+        "season": "2016",
+        "match_type": "world_cup",
+        "venue": "neutral",
+        "venues": [
+          "1",
+          "6",
+          "7",
+          "8",
+          "10",
+          "11",
+          "12",
+          "14",
+          "32",
+          "75",
+          "76"
+        ],
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "tries": 4
+          },
+          "losing_bonus": {
+            "margin": 7
+          }
+        },
+        "tiebreakers": [
+          "head_to_head",
+          "points_diff",
+          "tries_diff",
+          "points_for",
+          "tries_for",
+          "lots"
+        ],
+        "knockout_draw": "kicks",
+        "discipline": {
+          "red_ban": [
+            1,
+            3
+          ],
+          "yellow_accumulation": 3,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "pools",
+            "name": "Pool stage",
+            "kind": "round_robin",
+            "legs": 1,
+            "match_subtype": "pool",
+            "group_names": {
+              "A": "Pool A",
+              "B": "Pool B",
+              "C": "Pool C",
+              "D": "Pool D"
+            },
+            "qualify": 2,
+            "fixtures": [
+              {
+                "date": "2015-09-18",
+                "time": "20:00",
+                "group": "A",
+                "home": "10002",
+                "away": "1005",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "35–11"
+              },
+              {
+                "date": "2015-09-20",
+                "time": "14:30",
+                "group": "A",
+                "home": "1022",
+                "away": "1020",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "54–9"
+              },
+              {
+                "date": "2015-09-23",
+                "time": "16:45",
+                "group": "A",
+                "home": "1002",
+                "away": "1005",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "28–13"
+              },
+              {
+                "date": "2015-09-26",
+                "time": "20:00",
+                "group": "A",
+                "home": "10002",
+                "away": "1022",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "25–28"
+              },
+              {
+                "date": "2015-09-27",
+                "time": "12:00",
+                "group": "A",
+                "home": "1002",
+                "away": "1020",
+                "stadium": "76",
+                "venue": "Villa Park, Birmingham",
+                "real_score": "65–3"
+              },
+              {
+                "date": "2015-10-01",
+                "time": "16:45",
+                "group": "A",
+                "home": "1022",
+                "away": "1005",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "23–13"
+              },
+              {
+                "date": "2015-10-03",
+                "time": "20:00",
+                "group": "A",
+                "home": "10002",
+                "away": "1002",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "13–33"
+              },
+              {
+                "date": "2015-10-06",
+                "time": "20:00",
+                "group": "A",
+                "home": "1005",
+                "away": "1020",
+                "stadium": "10",
+                "venue": "Stadium mk, Milton Keynes",
+                "real_score": "47–15"
+              },
+              {
+                "date": "2015-10-10",
+                "time": "16:45",
+                "group": "A",
+                "home": "1002",
+                "away": "1022",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "15–6"
+              },
+              {
+                "date": "2015-10-10",
+                "time": "20:00",
+                "group": "A",
+                "home": "10002",
+                "away": "1020",
+                "stadium": "75",
+                "venue": "City of Manchester Stadium, Manchester",
+                "real_score": "60–3"
+              },
+              {
+                "date": "2015-09-19",
+                "time": "16:45",
+                "group": "B",
+                "home": "1015",
+                "away": "1008",
+                "stadium": "7",
+                "venue": "Brighton Community Stadium, Brighton",
+                "real_score": "32–34"
+              },
+              {
+                "date": "2015-09-20",
+                "time": "12:00",
+                "group": "B",
+                "home": "1017",
+                "away": "1021",
+                "stadium": "7",
+                "venue": "Brighton Community Stadium, Brighton",
+                "real_score": "25–16"
+              },
+              {
+                "date": "2015-09-23",
+                "time": "14:30",
+                "group": "B",
+                "home": "1014",
+                "away": "1008",
+                "stadium": "12",
+                "venue": "Kingsholm, Gloucester",
+                "real_score": "45–10"
+              },
+              {
+                "date": "2015-09-26",
+                "time": "16:45",
+                "group": "B",
+                "home": "1015",
+                "away": "1017",
+                "stadium": "76",
+                "venue": "Villa Park, Birmingham",
+                "real_score": "46–6"
+              },
+              {
+                "date": "2015-09-27",
+                "time": "14:30",
+                "group": "B",
+                "home": "1014",
+                "away": "1021",
+                "stadium": "75",
+                "venue": "Elland Road, Leeds",
+                "real_score": "39–16"
+              },
+              {
+                "date": "2015-10-03",
+                "time": "14:30",
+                "group": "B",
+                "home": "1017",
+                "away": "1008",
+                "stadium": "10",
+                "venue": "Stadium mk, Milton Keynes",
+                "real_score": "5–26"
+              },
+              {
+                "date": "2015-10-03",
+                "time": "16:45",
+                "group": "B",
+                "home": "1015",
+                "away": "1014",
+                "stadium": "11",
+                "venue": "St. James' Park, Newcastle",
+                "real_score": "34–16"
+              },
+              {
+                "date": "2015-10-07",
+                "time": "16:45",
+                "group": "B",
+                "home": "1015",
+                "away": "1021",
+                "stadium": "1",
+                "venue": "Olympic Stadium, London",
+                "real_score": "64–0"
+              },
+              {
+                "date": "2015-10-10",
+                "time": "14:30",
+                "group": "B",
+                "home": "1017",
+                "away": "1014",
+                "stadium": "11",
+                "venue": "St. James' Park, Newcastle",
+                "real_score": "33–36"
+              },
+              {
+                "date": "2015-10-11",
+                "time": "20:00",
+                "group": "B",
+                "home": "1021",
+                "away": "1008",
+                "stadium": "12",
+                "venue": "Kingsholm, Gloucester",
+                "real_score": "18–28"
+              },
+              {
+                "date": "2015-09-19",
+                "time": "12:00",
+                "group": "C",
+                "home": "1018",
+                "away": "1006",
+                "stadium": "12",
+                "venue": "Kingsholm, Gloucester",
+                "real_score": "10–17"
+              },
+              {
+                "date": "2015-09-20",
+                "time": "16:45",
+                "group": "C",
+                "home": "1010",
+                "away": "1001",
+                "stadium": "14",
+                "venue": "Wembley Stadium, London",
+                "real_score": "26–16"
+              },
+              {
+                "date": "2015-09-24",
+                "time": "20:00",
+                "group": "C",
+                "home": "1010",
+                "away": "1009",
+                "stadium": "1",
+                "venue": "Olympic Stadium, London",
+                "real_score": "58–14"
+              },
+              {
+                "date": "2015-09-25",
+                "time": "16:45",
+                "group": "C",
+                "home": "1001",
+                "away": "1006",
+                "stadium": "12",
+                "venue": "Kingsholm, Gloucester",
+                "real_score": "54–9"
+              },
+              {
+                "date": "2015-09-29",
+                "time": "16:45",
+                "group": "C",
+                "home": "1018",
+                "away": "1009",
+                "stadium": "6",
+                "venue": "Sandy Park, Exeter",
+                "real_score": "35–21"
+              },
+              {
+                "date": "2015-10-02",
+                "time": "20:00",
+                "group": "C",
+                "home": "1010",
+                "away": "1006",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "43–10"
+              },
+              {
+                "date": "2015-10-04",
+                "time": "14:30",
+                "group": "C",
+                "home": "1001",
+                "away": "1018",
+                "stadium": "8",
+                "venue": "Leicester City Stadium, Leicester",
+                "real_score": "45–16"
+              },
+              {
+                "date": "2015-10-07",
+                "time": "20:00",
+                "group": "C",
+                "home": "1009",
+                "away": "1006",
+                "stadium": "6",
+                "venue": "Sandy Park, Exeter",
+                "real_score": "16–17"
+              },
+              {
+                "date": "2015-10-09",
+                "time": "20:00",
+                "group": "C",
+                "home": "1010",
+                "away": "1018",
+                "stadium": "11",
+                "venue": "St. James' Park, Newcastle",
+                "real_score": "47–9"
+              },
+              {
+                "date": "2015-10-11",
+                "time": "12:00",
+                "group": "C",
+                "home": "1001",
+                "away": "1009",
+                "stadium": "8",
+                "venue": "Leicester City Stadium, Leicester",
+                "real_score": "64–19"
+              },
+              {
+                "date": "2015-09-19",
+                "time": "14:30",
+                "group": "D",
+                "home": "10003",
+                "away": "1003",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "50–7"
+              },
+              {
+                "date": "2015-09-19",
+                "time": "20:00",
+                "group": "D",
+                "home": "10001",
+                "away": "1007",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "32–10"
+              },
+              {
+                "date": "2015-09-23",
+                "time": "20:00",
+                "group": "D",
+                "home": "10001",
+                "away": "1012",
+                "stadium": "1",
+                "venue": "Olympic Stadium, London",
+                "real_score": "38–11"
+              },
+              {
+                "date": "2015-09-26",
+                "time": "14:30",
+                "group": "D",
+                "home": "1007",
+                "away": "1003",
+                "stadium": "75",
+                "venue": "Elland Road, Leeds",
+                "real_score": "23–18"
+              },
+              {
+                "date": "2015-09-27",
+                "time": "16:45",
+                "group": "D",
+                "home": "10003",
+                "away": "1012",
+                "stadium": "14",
+                "venue": "Wembley Stadium, London",
+                "real_score": "44–10"
+              },
+              {
+                "date": "2015-10-01",
+                "time": "20:00",
+                "group": "D",
+                "home": "10001",
+                "away": "1003",
+                "stadium": "10",
+                "venue": "Stadium mk, Milton Keynes",
+                "real_score": "41–18"
+              },
+              {
+                "date": "2015-10-04",
+                "time": "16:45",
+                "group": "D",
+                "home": "10003",
+                "away": "1007",
+                "stadium": "1",
+                "venue": "Olympic Stadium, London",
+                "real_score": "16–9"
+              },
+              {
+                "date": "2015-10-06",
+                "time": "16:45",
+                "group": "D",
+                "home": "1003",
+                "away": "1012",
+                "stadium": "8",
+                "venue": "Leicester City Stadium, Leicester",
+                "real_score": "15–17"
+              },
+              {
+                "date": "2015-10-11",
+                "time": "14:30",
+                "group": "D",
+                "home": "1007",
+                "away": "1012",
+                "stadium": "6",
+                "venue": "Sandy Park, Exeter",
+                "real_score": "32–22"
+              },
+              {
+                "date": "2015-10-11",
+                "time": "16:45",
+                "group": "D",
+                "home": "10001",
+                "away": "10003",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "9–24"
+              }
+            ]
+          },
+          {
+            "id": "knockouts",
+            "name": "Knockout stage",
+            "kind": "knockout",
+            "rounds": [
+              {
+                "id": "qf",
+                "name": "Quarter-final",
+                "ties": [
+                  {
+                    "id": "qf1",
+                    "teams": [
+                      "pools:B1",
+                      "pools:A2"
+                    ],
+                    "date": "2015-10-17",
+                    "time": "16:00",
+                    "stadium": "14",
+                    "venue": "Twickenham Stadium, London",
+                    "real_score": "23–19"
+                  },
+                  {
+                    "id": "qf2",
+                    "teams": [
+                      "pools:C1",
+                      "pools:D2"
+                    ],
+                    "date": "2015-10-17",
+                    "time": "20:00",
+                    "stadium": "32",
+                    "venue": "Millennium Stadium, Cardiff",
+                    "real_score": "62–13"
+                  },
+                  {
+                    "id": "qf3",
+                    "teams": [
+                      "pools:D1",
+                      "pools:C2"
+                    ],
+                    "date": "2015-10-18",
+                    "time": "13:00",
+                    "stadium": "32",
+                    "venue": "Millennium Stadium, Cardiff",
+                    "real_score": "20–43"
+                  },
+                  {
+                    "id": "qf4",
+                    "teams": [
+                      "pools:A1",
+                      "pools:B2"
+                    ],
+                    "date": "2015-10-18",
+                    "time": "16:00",
+                    "stadium": "14",
+                    "venue": "Twickenham Stadium, London",
+                    "real_score": "35–34"
+                  }
+                ],
+                "match_subtype": "quarter_final"
+              },
+              {
+                "id": "sf",
+                "name": "Semi-final",
+                "ties": [
+                  {
+                    "id": "sf1",
+                    "teams": [
+                      "W:qf1",
+                      "W:qf2"
+                    ],
+                    "date": "2015-10-24",
+                    "time": "16:00",
+                    "stadium": "14",
+                    "venue": "Twickenham Stadium, London",
+                    "real_score": "18–20"
+                  },
+                  {
+                    "id": "sf2",
+                    "teams": [
+                      "W:qf3",
+                      "W:qf4"
+                    ],
+                    "date": "2015-10-25",
+                    "time": "16:00",
+                    "stadium": "14",
+                    "venue": "Twickenham Stadium, London",
+                    "real_score": "15–29"
+                  }
+                ],
+                "match_subtype": "semi_final"
+              },
+              {
+                "id": "bronze",
+                "name": "Bronze final",
+                "ties": [
+                  {
+                    "id": "bronze",
+                    "teams": [
+                      "L:sf1",
+                      "L:sf2"
+                    ],
+                    "date": "2015-10-30",
+                    "time": "20:00",
+                    "stadium": "1",
+                    "venue": "Olympic Stadium, London",
+                    "real_score": "24–13"
+                  }
+                ]
+              },
+              {
+                "id": "final",
+                "name": "Final",
+                "ties": [
+                  {
+                    "id": "final",
+                    "teams": [
+                      "W:sf1",
+                      "W:sf2"
+                    ],
+                    "date": "2015-10-31",
+                    "time": "16:00",
+                    "stadium": "14",
+                    "venue": "Twickenham Stadium, London",
+                    "real_score": "34–17"
+                  }
+                ],
+                "match_subtype": "final",
+                "final": true
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "2016": {
+            "pools": {
+              "A": [
+                "1002",
+                "1022",
+                "10002",
+                "1005",
+                "1020"
+              ],
+              "B": [
+                "1015",
+                "1014",
+                "1008",
+                "1017",
+                "1021"
+              ],
+              "C": [
+                "1010",
+                "1001",
+                "1006",
+                "1018",
+                "1009"
+              ],
+              "D": [
+                "10003",
+                "10001",
+                "1007",
+                "1012",
+                "1003"
+              ]
+            }
+          },
+          "default": {
+            "pools": {
+              "A": [
+                "1002",
+                "1022",
+                "10002",
+                "1005",
+                "1020"
+              ],
+              "B": [
+                "1015",
+                "1014",
+                "1008",
+                "1017",
+                "1021"
+              ],
+              "C": [
+                "1010",
+                "1001",
+                "1006",
+                "1018",
+                "1009"
+              ],
+              "D": [
+                "10003",
+                "10001",
+                "1007",
+                "1012",
+                "1003"
+              ]
+            }
+          }
+        },
+        "variant": "world_cup",
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "1010",
+          "runner_up": "1002",
+          "third": "1015",
+          "fourth": "1001",
+          "pool_winners": {
+            "A": "1002",
+            "B": "1015",
+            "C": "1010",
+            "D": "10003"
+          },
+          "pool_runners_up": {
+            "A": "1022",
+            "B": "1014",
+            "C": "1001",
+            "D": "10001"
+          }
+        },
+        "_venue_note": "Game stadium stand-ins: Brighton → Madejski Stadium (7); City of Manchester Stadium → Edgeley Park (75); Elland Road, Leeds → Edgeley Park (75); Leicester City Stadium → Welford Road (8); Olympic Stadium, London → Australia Stadium (1); Sandy Park, Exeter → Memorial Stadium (6); St James' Park, Newcastle → Kingston Park (11); Stadium MK, Milton Keynes → Franklin's Gardens (10); Villa Park, Birmingham → Sixways (76); Wembley → Twickenham (14).",
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2015_Rugby_World_Cup",
+          "https://en.wikipedia.org/wiki/2015_Rugby_World_Cup_knockout_stage"
+        ],
+        "climate": "uk"
+      }
+    },
+    "2019": {
+      "ball": "2019/ball/ball_%.png",
+      "pads": "2019/stadium_graphics.fsh",
+      "adboards": "2019/adboards.fsh",
+      "logo": "2019/tournament_logo.png",
+      "logo_frontend": "2019/logo_frontend.png",
+      "pitch_logo": "2019/pitch_logos/pitch_logo_%.png",
+      "template": {
+        "id": "rwc_2019",
+        "name": "Rugby World Cup 2019",
+        "order": 6,
+        "description": "Japan, 20 September – 2 November 2019. The real draw, calendar and kick-off order, played with each nation's season 2020 squad; the game has no Japanese grounds, so stand-ins are used (the weather stays Japan's). The three matches cancelled by Typhoon Hagibis are played. Four pools of five, quarter-finals to the final in Yokohama.",
+        "season": "2020",
+        "match_type": "world_cup",
+        "venue": "neutral",
+        "venues": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "31",
+          "48",
+          "49",
+          "50",
+          "51",
+          "52",
+          "62"
+        ],
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "tries": 4
+          },
+          "losing_bonus": {
+            "margin": 7
+          }
+        },
+        "tiebreakers": [
+          "head_to_head",
+          "points_diff",
+          "tries_diff",
+          "points_for",
+          "tries_for",
+          "lots"
+        ],
+        "knockout_draw": "kicks",
+        "discipline": {
+          "red_ban": [
+            1,
+            3
+          ],
+          "yellow_accumulation": 3,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "pools",
+            "name": "Pool stage",
+            "kind": "round_robin",
+            "legs": 1,
+            "match_subtype": "pool",
+            "group_names": {
+              "A": "Pool A",
+              "B": "Pool B",
+              "C": "Pool C",
+              "D": "Pool D"
+            },
+            "qualify": 2,
+            "fixtures": [
+              {
+                "date": "2019-09-20",
+                "time": "19:45",
+                "group": "A",
+                "home": "1008",
+                "away": "1013",
+                "stadium": "49",
+                "venue": "Tokyo Stadium, Chōfu",
+                "real_score": "30–10"
+              },
+              {
+                "date": "2019-09-22",
+                "time": "16:45",
+                "group": "A",
+                "home": "10003",
+                "away": "1014",
+                "stadium": "1",
+                "venue": "International Stadium Yokohama, Yokohama",
+                "real_score": "27–3"
+              },
+              {
+                "date": "2019-09-24",
+                "time": "19:15",
+                "group": "A",
+                "home": "1013",
+                "away": "1017",
+                "stadium": "4",
+                "venue": "Kumagaya Rugby Stadium, Kumagaya",
+                "real_score": "9–34"
+              },
+              {
+                "date": "2019-09-28",
+                "time": "16:15",
+                "group": "A",
+                "home": "1008",
+                "away": "10003",
+                "stadium": "3",
+                "venue": "Shizuoka Stadium Ecopa, Fukuroi",
+                "real_score": "19–12"
+              },
+              {
+                "date": "2019-09-30",
+                "time": "19:15",
+                "group": "A",
+                "home": "1014",
+                "away": "1017",
+                "stadium": "51",
+                "venue": "Kobe Misaki Stadium, Kobe",
+                "real_score": "34–0"
+              },
+              {
+                "date": "2019-10-03",
+                "time": "19:15",
+                "group": "A",
+                "home": "10003",
+                "away": "1013",
+                "stadium": "51",
+                "venue": "Kobe Misaki Stadium, Kobe",
+                "real_score": "35–0"
+              },
+              {
+                "date": "2019-10-05",
+                "time": "19:30",
+                "group": "A",
+                "home": "1008",
+                "away": "1017",
+                "stadium": "2",
+                "venue": "City of Toyota Stadium, Toyota",
+                "real_score": "38–19"
+              },
+              {
+                "date": "2019-10-09",
+                "time": "16:15",
+                "group": "A",
+                "home": "1014",
+                "away": "1013",
+                "stadium": "3",
+                "venue": "Shizuoka Stadium Ecopa, Fukuroi",
+                "real_score": "61–0"
+              },
+              {
+                "date": "2019-10-12",
+                "time": "19:45",
+                "group": "A",
+                "home": "10003",
+                "away": "1017",
+                "stadium": "52",
+                "venue": "Fukuoka Hakatanomori Stadium, Fukuoka",
+                "real_score": "47–5"
+              },
+              {
+                "date": "2019-10-13",
+                "time": "19:45",
+                "group": "A",
+                "home": "1008",
+                "away": "1014",
+                "stadium": "1",
+                "venue": "International Stadium Yokohama, Yokohama",
+                "real_score": "28–21"
+              },
+              {
+                "date": "2019-09-21",
+                "time": "18:45",
+                "group": "B",
+                "home": "1010",
+                "away": "1015",
+                "stadium": "1",
+                "venue": "International Stadium Yokohama, Yokohama",
+                "real_score": "23–13"
+              },
+              {
+                "date": "2019-09-22",
+                "time": "14:15",
+                "group": "B",
+                "home": "1007",
+                "away": "1009",
+                "stadium": "48",
+                "venue": "Hanazono Rugby Stadium, Higashiōsaka",
+                "real_score": "47–22"
+              },
+              {
+                "date": "2019-09-26",
+                "time": "16:45",
+                "group": "B",
+                "home": "1007",
+                "away": "1003",
+                "stadium": "52",
+                "venue": "Fukuoka Hakatanomori Stadium, Fukuoka",
+                "real_score": "48–7"
+              },
+              {
+                "date": "2019-09-28",
+                "time": "18:45",
+                "group": "B",
+                "home": "1015",
+                "away": "1009",
+                "stadium": "2",
+                "venue": "City of Toyota Stadium, Toyota",
+                "real_score": "57–3"
+              },
+              {
+                "date": "2019-10-02",
+                "time": "19:15",
+                "group": "B",
+                "home": "1010",
+                "away": "1003",
+                "stadium": "50",
+                "venue": "Oita Stadium, Ōita",
+                "real_score": "63–0"
+              },
+              {
+                "date": "2019-10-04",
+                "time": "18:45",
+                "group": "B",
+                "home": "1015",
+                "away": "1007",
+                "stadium": "3",
+                "venue": "Shizuoka Stadium Ecopa, Fukuroi",
+                "real_score": "49–3"
+              },
+              {
+                "date": "2019-10-06",
+                "time": "13:45",
+                "group": "B",
+                "home": "1010",
+                "away": "1009",
+                "stadium": "49",
+                "venue": "Tokyo Stadium, Chōfu",
+                "real_score": "71–9"
+              },
+              {
+                "date": "2019-10-08",
+                "time": "19:15",
+                "group": "B",
+                "home": "1015",
+                "away": "1003",
+                "stadium": "51",
+                "venue": "Kobe Misaki Stadium, Kobe",
+                "real_score": "66–7"
+              },
+              {
+                "date": "2019-10-12",
+                "time": "13:45",
+                "group": "B",
+                "home": "1010",
+                "away": "1007",
+                "stadium": "2",
+                "venue": "City of Toyota Stadium, Toyota",
+                "real_score": "cancelled (Typhoon Hagibis), 0–0 draw awarded"
+              },
+              {
+                "date": "2019-10-13",
+                "time": "12:15",
+                "group": "B",
+                "home": "1009",
+                "away": "1003",
+                "stadium": "62",
+                "venue": "Kamaishi Recovery Memorial Stadium, Kamaishi",
+                "real_score": "cancelled (Typhoon Hagibis), 0–0 draw awarded"
+              },
+              {
+                "date": "2019-09-21",
+                "time": "16:15",
+                "group": "C",
+                "home": "10001",
+                "away": "1001",
+                "stadium": "49",
+                "venue": "Tokyo Stadium, Chōfu",
+                "real_score": "23–21"
+              },
+              {
+                "date": "2019-09-22",
+                "time": "19:15",
+                "group": "C",
+                "home": "10002",
+                "away": "1018",
+                "stadium": "51",
+                "venue": "Sapporo Dome, Sapporo",
+                "real_score": "35–3"
+              },
+              {
+                "date": "2019-09-26",
+                "time": "19:45",
+                "group": "C",
+                "home": "10002",
+                "away": "1021",
+                "stadium": "51",
+                "venue": "Kobe Misaki Stadium, Kobe",
+                "real_score": "45–7"
+              },
+              {
+                "date": "2019-09-28",
+                "time": "13:45",
+                "group": "C",
+                "home": "1001",
+                "away": "1018",
+                "stadium": "48",
+                "venue": "Hanazono Rugby Stadium, Higashiōsaka",
+                "real_score": "28–12"
+              },
+              {
+                "date": "2019-10-02",
+                "time": "16:45",
+                "group": "C",
+                "home": "10001",
+                "away": "1021",
+                "stadium": "52",
+                "venue": "Fukuoka Hakatanomori Stadium, Fukuoka",
+                "real_score": "33–9"
+              },
+              {
+                "date": "2019-10-05",
+                "time": "17:00",
+                "group": "C",
+                "home": "10002",
+                "away": "1001",
+                "stadium": "49",
+                "venue": "Tokyo Stadium, Chōfu",
+                "real_score": "39–10"
+              },
+              {
+                "date": "2019-10-06",
+                "time": "16:45",
+                "group": "C",
+                "home": "10001",
+                "away": "1018",
+                "stadium": "31",
+                "venue": "Kumamoto Stadium, Kumamoto",
+                "real_score": "23–21"
+              },
+              {
+                "date": "2019-10-09",
+                "time": "13:45",
+                "group": "C",
+                "home": "1001",
+                "away": "1021",
+                "stadium": "4",
+                "venue": "Kumagaya Rugby Stadium, Kumagaya",
+                "real_score": "47–17"
+              },
+              {
+                "date": "2019-10-12",
+                "time": "17:15",
+                "group": "C",
+                "home": "10002",
+                "away": "10001",
+                "stadium": "1",
+                "venue": "International Stadium Yokohama, Yokohama",
+                "real_score": "cancelled (Typhoon Hagibis), 0–0 draw awarded"
+              },
+              {
+                "date": "2019-10-13",
+                "time": "14:45",
+                "group": "C",
+                "home": "1021",
+                "away": "1018",
+                "stadium": "48",
+                "venue": "Hanazono Rugby Stadium, Higashiōsaka",
+                "real_score": "19–31"
+              },
+              {
+                "date": "2019-09-21",
+                "time": "13:45",
+                "group": "D",
+                "home": "1002",
+                "away": "1005",
+                "stadium": "51",
+                "venue": "Sapporo Dome, Sapporo",
+                "real_score": "39–21"
+              },
+              {
+                "date": "2019-09-23",
+                "time": "19:15",
+                "group": "D",
+                "home": "1022",
+                "away": "1006",
+                "stadium": "2",
+                "venue": "City of Toyota Stadium, Toyota",
+                "real_score": "43–14"
+              },
+              {
+                "date": "2019-09-25",
+                "time": "14:15",
+                "group": "D",
+                "home": "1005",
+                "away": "1020",
+                "stadium": "62",
+                "venue": "Kamaishi Recovery Memorial Stadium, Kamaishi",
+                "real_score": "27–30"
+              },
+              {
+                "date": "2019-09-29",
+                "time": "14:15",
+                "group": "D",
+                "home": "1006",
+                "away": "1020",
+                "stadium": "4",
+                "venue": "Kumagaya Rugby Stadium, Kumagaya",
+                "real_score": "33–7"
+              },
+              {
+                "date": "2019-09-29",
+                "time": "16:45",
+                "group": "D",
+                "home": "1002",
+                "away": "1022",
+                "stadium": "49",
+                "venue": "Tokyo Stadium, Chōfu",
+                "real_score": "25–29"
+              },
+              {
+                "date": "2019-10-03",
+                "time": "14:15",
+                "group": "D",
+                "home": "1006",
+                "away": "1005",
+                "stadium": "48",
+                "venue": "Hanazono Rugby Stadium, Higashiōsaka",
+                "real_score": "10–45"
+              },
+              {
+                "date": "2019-10-05",
+                "time": "14:15",
+                "group": "D",
+                "home": "1002",
+                "away": "1020",
+                "stadium": "50",
+                "venue": "Oita Stadium, Ōita",
+                "real_score": "45–10"
+              },
+              {
+                "date": "2019-10-09",
+                "time": "18:45",
+                "group": "D",
+                "home": "1022",
+                "away": "1005",
+                "stadium": "50",
+                "venue": "Oita Stadium, Ōita",
+                "real_score": "29–17"
+              },
+              {
+                "date": "2019-10-11",
+                "time": "19:15",
+                "group": "D",
+                "home": "1002",
+                "away": "1006",
+                "stadium": "3",
+                "venue": "Shizuoka Stadium Ecopa, Fukuroi",
+                "real_score": "27–8"
+              },
+              {
+                "date": "2019-10-13",
+                "time": "17:15",
+                "group": "D",
+                "home": "1022",
+                "away": "1020",
+                "stadium": "31",
+                "venue": "Kumamoto Stadium, Kumamoto",
+                "real_score": "35–13"
+              }
+            ]
+          },
+          {
+            "id": "knockouts",
+            "name": "Knockout stage",
+            "kind": "knockout",
+            "rounds": [
+              {
+                "id": "qf",
+                "name": "Quarter-final",
+                "ties": [
+                  {
+                    "id": "qf1",
+                    "teams": [
+                      "pools:C1",
+                      "pools:D2"
+                    ],
+                    "date": "2019-10-19",
+                    "time": "16:15",
+                    "stadium": "50",
+                    "venue": "Ōita Stadium, Ōita",
+                    "real_score": "40–16"
+                  },
+                  {
+                    "id": "qf2",
+                    "teams": [
+                      "pools:B1",
+                      "pools:A2"
+                    ],
+                    "date": "2019-10-19",
+                    "time": "19:15",
+                    "stadium": "49",
+                    "venue": "Tokyo Stadium, Chōfu",
+                    "real_score": "46–14"
+                  },
+                  {
+                    "id": "qf3",
+                    "teams": [
+                      "pools:D1",
+                      "pools:C2"
+                    ],
+                    "date": "2019-10-20",
+                    "time": "16:15",
+                    "stadium": "50",
+                    "venue": "Ōita Stadium, Ōita",
+                    "real_score": "20–19"
+                  },
+                  {
+                    "id": "qf4",
+                    "teams": [
+                      "pools:A1",
+                      "pools:B2"
+                    ],
+                    "date": "2019-10-20",
+                    "time": "19:15",
+                    "stadium": "49",
+                    "venue": "Tokyo Stadium, Chōfu",
+                    "real_score": "3–26"
+                  }
+                ],
+                "match_subtype": "quarter_final"
+              },
+              {
+                "id": "sf",
+                "name": "Semi-final",
+                "ties": [
+                  {
+                    "id": "sf1",
+                    "teams": [
+                      "W:qf1",
+                      "W:qf2"
+                    ],
+                    "date": "2019-10-26",
+                    "time": "17:00",
+                    "stadium": "1",
+                    "venue": "International Stadium Yokohama, Yokohama",
+                    "real_score": "19–7"
+                  },
+                  {
+                    "id": "sf2",
+                    "teams": [
+                      "W:qf3",
+                      "W:qf4"
+                    ],
+                    "date": "2019-10-27",
+                    "time": "18:00",
+                    "stadium": "1",
+                    "venue": "International Stadium Yokohama, Yokohama",
+                    "real_score": "16–19"
+                  }
+                ],
+                "match_subtype": "semi_final"
+              },
+              {
+                "id": "bronze",
+                "name": "Bronze final",
+                "ties": [
+                  {
+                    "id": "bronze",
+                    "teams": [
+                      "L:sf1",
+                      "L:sf2"
+                    ],
+                    "date": "2019-11-01",
+                    "time": "18:00",
+                    "stadium": "49",
+                    "venue": "Tokyo Stadium, Chōfu",
+                    "real_score": "40–17"
+                  }
+                ]
+              },
+              {
+                "id": "final",
+                "name": "Final",
+                "ties": [
+                  {
+                    "id": "final",
+                    "teams": [
+                      "W:sf1",
+                      "W:sf2"
+                    ],
+                    "date": "2019-11-02",
+                    "time": "18:00",
+                    "stadium": "1",
+                    "venue": "International Stadium Yokohama, Yokohama",
+                    "real_score": "12–32"
+                  }
+                ],
+                "match_subtype": "final",
+                "final": true
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "2020": {
+            "pools": {
+              "A": [
+                "1008",
+                "10003",
+                "1014",
+                "1017",
+                "1013"
+              ],
+              "B": [
+                "1015",
+                "1010",
+                "1007",
+                "1009",
+                "1003"
+              ],
+              "C": [
+                "10002",
+                "10001",
+                "1001",
+                "1018",
+                "1021"
+              ],
+              "D": [
+                "1022",
+                "1002",
+                "1005",
+                "1006",
+                "1020"
+              ]
+            }
+          },
+          "default": {
+            "pools": {
+              "A": [
+                "1008",
+                "10003",
+                "1014",
+                "1017",
+                "1013"
+              ],
+              "B": [
+                "1015",
+                "1010",
+                "1007",
+                "1009",
+                "1003"
+              ],
+              "C": [
+                "10002",
+                "10001",
+                "1001",
+                "1018",
+                "1021"
+              ],
+              "D": [
+                "1022",
+                "1002",
+                "1005",
+                "1006",
+                "1020"
+              ]
+            }
+          }
+        },
+        "variant": "world_cup",
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "1015",
+          "runner_up": "10002",
+          "third": "1010",
+          "fourth": "1022",
+          "pool_winners": {
+            "A": "1008",
+            "B": "1010",
+            "C": "10002",
+            "D": "1022"
+          },
+          "pool_runners_up": {
+            "A": "10003",
+            "B": "1015",
+            "C": "10001",
+            "D": "1002"
+          }
+        },
+        "_venue_note": "Game stadium stand-ins: Fukuoka → Hamilton (52); Hanazono, Higashiōsaka → Christchurch (48); Kamaishi → Suva (62); Kobe Misaki (roofed) → Dunedin (51); Kumagaya → Canberra (4); Kumamoto → Perth (31); Sapporo Dome → Dunedin (51); Shizuoka Ecopa → Sydney (3); Tokyo Stadium → Auckland (49); Toyota → Brisbane (2); Yokohama → Australia Stadium (1); Ōita → Wellington (50).",
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2019_Rugby_World_Cup",
+          "https://en.wikipedia.org/wiki/2019_Rugby_World_Cup_knockout_stage"
+        ],
+        "climate": "japan"
+      }
+    },
     "2023": {
       "ball": "2023/ball/ball_%.png",
       "pads": "2023/stadium_graphics.fsh",
       "adboards": "2023/adboards.fsh",
       "logo": "2023/tournament_logo.png",
+      "logo_frontend": "2023/logo_frontend.png",
       "pitch_logo": "2023/pitch_logos/pitch_logo_%.png",
       "template": {
         "id": "rwc_2023",
         "name": "Rugby World Cup 2023",
-        "order": 9,
-        "description": "",
+        "order": 5,
+        "description": "France, 8 September – 28 October 2023. The real draw, calendar and venues, played with each nation's season 2024 squad (its World Cup squad where the data has one). Four pools of five, quarter-finals to the final at the Stade de France.",
         "season": "2024",
         "match_type": "world_cup",
         "branding": "world_cup",

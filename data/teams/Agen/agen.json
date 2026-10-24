@@ -1,0 +1,429 @@
+{
+ "10152": {
+  "2018": {
+   "name": "Agen",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "logos_3/ball_%.png",
+   "banners": "logos_3/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_3/logo.png",
+    "frontend": "logos_3/logo_frontend.png",
+    "small": "logos_3/logo_small.png",
+    "left": "logos_3/logo_left.png",
+    "right": "logos_3/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144787",
+    "viceCaptain": "144787",
+    "longGK": "144374",
+    "shortGK": "144374",
+    "longPunt": "143652",
+    "shortPunt": "143652",
+    "kickoff": "143652"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "154194",
+    "144529",
+    "158320",
+    "145617",
+    "153496",
+    "142288",
+    "153594",
+    "145949",
+    "143652",
+    "144787",
+    "144555",
+    "142324",
+    "152428",
+    "152907",
+    "144374",
+    "152960",
+    "155210",
+    "145749",
+    "158510",
+    "145747",
+    "158499",
+    "158489",
+    "145246",
+    "158500",
+    "158492",
+    "155233",
+    "143037",
+    "158508",
+    "153236",
+    "158512",
+    "158513",
+    "158501",
+    "158511",
+    "158330",
+    "158502",
+    "158497",
+    "158506",
+    "158504",
+    "158507",
+    "152962",
+    "153468"
+   ],
+   "enabled": true
+  },
+  "2019": {
+   "name": "Agen",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "logos_3/ball_%.png",
+   "banners": "logos_3/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_3/logo.png",
+    "frontend": "logos_3/logo_frontend.png",
+    "small": "logos_3/logo_small.png",
+    "left": "logos_3/logo_left.png",
+    "right": "logos_3/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2019/home_front.png",
+     "backKitFile": "kits_2019/home_back/home_back_%.png",
+     "previewFile": "kits_2019/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2019/away_front.png",
+     "backKitFile": "kits_2019/away_back/away_back_%.png",
+     "previewFile": "kits_2019/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144787",
+    "viceCaptain": "144787",
+    "longGK": "144787",
+    "shortGK": "144787",
+    "longPunt": "144787",
+    "shortPunt": "144787",
+    "kickoff": "144787"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "145749",
+    "145246",
+    "158320",
+    "155210",
+    "145617",
+    "145949",
+    "158500",
+    "142288",
+    "145747",
+    "144787",
+    "158504",
+    "152428",
+    "158518",
+    "158515",
+    "158489",
+    "158499",
+    "158501",
+    "146318",
+    "144529",
+    "158534",
+    "158527",
+    "143652",
+    "158516",
+    "144374",
+    "131172",
+    "154194",
+    "158529",
+    "158492",
+    "152393",
+    "158502",
+    "158521",
+    "154151",
+    "144203",
+    "158510",
+    "158512",
+    "155233",
+    "158330",
+    "153496",
+    "158513",
+    "153551"
+   ],
+   "enabled": true
+  },
+  "2020": {
+   "name": "Agen",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "146318",
+    "shortGK": "146318",
+    "longPunt": "146318",
+    "shortPunt": "146318",
+    "kickoff": "146318"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "145749",
+    "158538",
+    "158320",
+    "155210",
+    "158527",
+    "158529",
+    "152393",
+    "157190",
+    "153654",
+    "146318",
+    "158504",
+    "145771",
+    "158492",
+    "154659",
+    "158489",
+    "144203",
+    "145986",
+    "158535",
+    "158539",
+    "158536",
+    "153551",
+    "158540",
+    "152864",
+    "158512",
+    "154151",
+    "158510",
+    "158518",
+    "157724",
+    "145747",
+    "158499",
+    "158513",
+    "145246",
+    "158500",
+    "158501"
+   ],
+   "enabled": false
+  },
+  "2021": {
+   "name": "Agen",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "146318",
+    "shortGK": "146318",
+    "longPunt": "146318",
+    "shortPunt": "146318",
+    "kickoff": "146318"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "145749",
+    "158538",
+    "158320",
+    "155210",
+    "158527",
+    "158529",
+    "152393",
+    "157190",
+    "153654",
+    "146318",
+    "158504",
+    "145771",
+    "158492",
+    "154659",
+    "158489",
+    "144203",
+    "145986",
+    "158535",
+    "158539",
+    "158536",
+    "153551",
+    "158540",
+    "152864",
+    "158512",
+    "154151",
+    "158510",
+    "158518",
+    "157724",
+    "145747",
+    "158499",
+    "158513",
+    "145246",
+    "158500",
+    "158501"
+   ],
+   "enabled": false
+  },
+  "2016": {
+   "name": "Agen",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "144374",
+    "shortGK": "144374",
+    "longPunt": "143652",
+    "shortPunt": "143652",
+    "kickoff": "143652"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "154194",
+    "144529",
+    "158320",
+    "145617",
+    "153496",
+    "142288",
+    "153594",
+    "145949",
+    "143652",
+    "144787",
+    "144555",
+    "142324",
+    "152428",
+    "152907",
+    "144374",
+    "152960",
+    "155210",
+    "145749",
+    "158510",
+    "145747",
+    "158499",
+    "158489",
+    "145246",
+    "158500",
+    "158492",
+    "155233",
+    "143037",
+    "158508",
+    "153236",
+    "158512",
+    "158513",
+    "158501",
+    "158511",
+    "158330",
+    "158502",
+    "158497",
+    "158506",
+    "158504",
+    "158507",
+    "152962",
+    "153468"
+   ],
+   "enabled": false
+  }
+ }
+}

@@ -1,0 +1,259 @@
+{
+ "10161": {
+  "2008": {
+   "name": "Montauban",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "153573",
+    "shortGK": "153573",
+    "longPunt": "143608",
+    "shortPunt": "153573",
+    "kickoff": "143608"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "147553",
+    "158425",
+    "148024",
+    "153460",
+    "154002",
+    "153048",
+    "153461",
+    "158336",
+    "153333",
+    "158369",
+    "142890",
+    "158435",
+    "158370",
+    "143608",
+    "153573",
+    "152886",
+    "158430",
+    "158424",
+    "148019",
+    "154003",
+    "158374",
+    "158372",
+    "157401",
+    "158429",
+    "158371",
+    "158344",
+    "158343",
+    "158428",
+    "158334",
+    "158433",
+    "158441",
+    "142982",
+    "158373",
+    "156818",
+    "158436",
+    "152965",
+    "158439",
+    "152851"
+   ],
+   "enabled": false
+  },
+  "2009": {
+   "name": "Montauban",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2009/home_front.png",
+     "backKitFile": "kits_2009/home_back/home_back_%.png",
+     "previewFile": "kits_2009/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2009/away_front.png",
+     "backKitFile": "kits_2009/away_back/away_back_%.png",
+     "previewFile": "kits_2009/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "158369",
+    "viceCaptain": "158369",
+    "longGK": "158369",
+    "shortGK": "158369",
+    "longPunt": "158369",
+    "shortPunt": "158369",
+    "kickoff": "158369"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "148019",
+    "158425",
+    "152886",
+    "153460",
+    "154002",
+    "153048",
+    "153461",
+    "158336",
+    "153333",
+    "158369",
+    "142890",
+    "158435",
+    "158370",
+    "158372",
+    "156818",
+    "148024",
+    "157401",
+    "158429",
+    "158374",
+    "158371",
+    "158424",
+    "153573",
+    "158430",
+    "147553",
+    "154003",
+    "143608",
+    "158344",
+    "158343",
+    "158428",
+    "158334",
+    "158433",
+    "158441",
+    "142982",
+    "158373",
+    "158436",
+    "152965",
+    "158439",
+    "152851"
+   ],
+   "enabled": true
+  },
+  "2010": {
+   "name": "Montauban",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "158441",
+    "shortGK": "158441",
+    "longPunt": "158441",
+    "shortPunt": "158441",
+    "kickoff": "158441"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "148019",
+    "158430",
+    "148024",
+    "142982",
+    "154002",
+    "154003",
+    "122018",
+    "158371",
+    "153333",
+    "158441",
+    "142890",
+    "158435",
+    "158370",
+    "158372",
+    "156818",
+    "158373",
+    "147553",
+    "156269",
+    "114723",
+    "158433",
+    "158429",
+    "158355",
+    "156392",
+    "152851",
+    "158374",
+    "158344",
+    "158476",
+    "152965",
+    "158480",
+    "158436",
+    "158486",
+    "158469",
+    "158369",
+    "153274",
+    "152886",
+    "158471",
+    "157401",
+    "158428"
+   ],
+   "enabled": false
+  }
+ }
+}

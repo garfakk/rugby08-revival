@@ -1,0 +1,139 @@
+{
+ "10171": {
+  "2020": {
+   "name": "Calvisano",
+   "type": "club",
+   "category": "Italy",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "",
+    "shortGK": "",
+    "longPunt": "",
+    "shortPunt": "",
+    "kickoff": ""
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [],
+   "enabled": false
+  },
+  "2009": {
+   "name": "Calvisano",
+   "type": "club",
+   "category": "Italy",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2009/home_front.png",
+     "backKitFile": "kits_2009/home_back/home_back_%.png",
+     "previewFile": "kits_2009/home_preview.png",
+     "color": "",
+     "model3d": {
+      "fit": "loose",
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2009/away_front.png",
+     "backKitFile": "kits_2009/away_back/away_back_%.png",
+     "previewFile": "kits_2009/away_preview.png",
+     "color": "",
+     "model3d": {
+      "fit": "loose",
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "158760",
+    "viceCaptain": "158760",
+    "longGK": "158760",
+    "shortGK": "158760",
+    "longPunt": "143743",
+    "shortPunt": "143743",
+    "kickoff": "143743"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "156677",
+    "158256",
+    "158748",
+    "158750",
+    "143035",
+    "158752",
+    "158753",
+    "158754",
+    "158758",
+    "158760",
+    "158763",
+    "158762",
+    "143743",
+    "158764",
+    "158765",
+    "156682",
+    "158253",
+    "158749",
+    "156681",
+    "153322",
+    "142882",
+    "158751",
+    "143017",
+    "158755",
+    "158756",
+    "158757",
+    "146953",
+    "158759",
+    "158761",
+    "158252",
+    "143840",
+    "153669",
+    "146968",
+    "143080"
+   ],
+   "enabled": true
+  }
+ }
+}

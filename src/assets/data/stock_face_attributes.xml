@@ -86,7 +86,7 @@
     <attr name="beard">no</attr>
   </face>
   <face id="475">
-    <attr name="skin_tone">d_medium</attr>
+    <attr name="skin_tone">light</attr>
     <attr name="headgear">none</attr>
     <attr name="hair_color">black</attr>
     <attr name="hair_length">short</attr>
@@ -94,8 +94,8 @@
     <attr name="beard">no</attr>
   </face>
   <face id="491">
-    <attr name="skin_tone">light</attr>
-    <attr name="headgear">present</attr>
+    <attr name="skin_tone">dark</attr>
+    <attr name="headgear">none</attr>
     <attr name="tape">none</attr>
     <attr name="beard">no</attr>
   </face>
@@ -127,7 +127,7 @@
     <attr name="hair_color">black</attr>
     <attr name="hair_length">long</attr>
     <attr name="tape">none</attr>
-    <attr name="beard">no</attr>
+    <attr name="beard">yes</attr>
   </face>
   <face id="666">
     <attr name="headgear">none</attr>
@@ -198,7 +198,7 @@
   </face>
   <face id="1340">
     <attr name="skin_tone">light</attr>
-    <attr name="headgear">none</attr>
+    <attr name="headgear">present</attr>
     <attr name="hair_color">black</attr>
     <attr name="hair_length">short</attr>
     <attr name="tape">none</attr>
@@ -290,7 +290,7 @@
   </face>
   <face id="2607">
     <attr name="skin_tone">dark</attr>
-    <attr name="headgear">present</attr>
+    <attr name="headgear">none</attr>
     <attr name="tape">none</attr>
     <attr name="beard">no</attr>
   </face>
@@ -519,8 +519,8 @@
   <face id="5049">
     <attr name="skin_tone">d_medium</attr>
     <attr name="headgear">none</attr>
-    <attr name="hair_color">bald</attr>
-    <attr name="hair_length">bald</attr>
+    <attr name="hair_color">black</attr>
+    <attr name="hair_length">short</attr>
     <attr name="tape">none</attr>
     <attr name="beard">no</attr>
   </face>
@@ -548,7 +548,7 @@
   </face>
   <face id="5602">
     <attr name="skin_tone">light</attr>
-    <attr name="headgear">present</attr>
+    <attr name="headgear">none</attr>
     <attr name="tape">none</attr>
     <attr name="beard">no</attr>
   </face>
@@ -561,7 +561,7 @@
     <attr name="beard">no</attr>
   </face>
   <face id="5686">
-    <attr name="skin_tone">light</attr>
+    <attr name="skin_tone">dark</attr>
     <attr name="headgear">none</attr>
     <attr name="hair_color">black</attr>
     <attr name="hair_length">short</attr>
@@ -661,8 +661,8 @@
   <face id="6962">
     <attr name="skin_tone">d_medium</attr>
     <attr name="headgear">none</attr>
-    <attr name="hair_color">bald</attr>
-    <attr name="hair_length">bald</attr>
+    <attr name="hair_color">black</attr>
+    <attr name="hair_length">short</attr>
     <attr name="tape">present</attr>
     <attr name="beard">no</attr>
   </face>
@@ -689,7 +689,7 @@
     <attr name="beard">no</attr>
   </face>
   <face id="7372">
-    <attr name="skin_tone">d_medium</attr>
+    <attr name="skin_tone">dark</attr>
     <attr name="headgear">none</attr>
     <attr name="hair_color">black</attr>
     <attr name="hair_length">short</attr>
@@ -736,9 +736,7 @@
   </face>
   <face id="7864">
     <attr name="skin_tone">light</attr>
-    <attr name="headgear">none</attr>
-    <attr name="hair_color">blonde</attr>
-    <attr name="hair_length">semi_long</attr>
+    <attr name="headgear">present</attr>
     <attr name="tape">none</attr>
     <attr name="beard">no</attr>
   </face>
@@ -868,7 +866,7 @@
     <attr name="hair_color">black</attr>
     <attr name="hair_length">semi_long</attr>
     <attr name="tape">none</attr>
-    <attr name="beard">no</attr>
+    <attr name="beard">yes</attr>
   </face>
   <face id="10697">
     <attr name="skin_tone">light</attr>
@@ -1029,7 +1027,7 @@
     <attr name="beard">no</attr>
   </face>
   <face id="12859">
-    <attr name="skin_tone">light</attr>
+    <attr name="skin_tone">l_medium</attr>
     <attr name="headgear">none</attr>
     <attr name="hair_color">brown</attr>
     <attr name="hair_length">short</attr>
@@ -1584,7 +1582,7 @@
   </face>
   <face id="19866">
     <attr name="skin_tone">light</attr>
-    <attr name="headgear">present</attr>
+    <attr name="headgear">none</attr>
     <attr name="tape">none</attr>
     <attr name="beard">no</attr>
   </face>
@@ -1661,7 +1659,7 @@
     <attr name="beard">no</attr>
   </face>
   <face id="20450">
-    <attr name="skin_tone">d_medium</attr>
+    <attr name="skin_tone">light</attr>
     <attr name="headgear">none</attr>
     <attr name="hair_color">black</attr>
     <attr name="hair_length">semi_long</attr>
@@ -2028,7 +2026,7 @@
   </face>
   <face id="25205">
     <attr name="skin_tone">light</attr>
-    <attr name="headgear">present</attr>
+    <attr name="headgear">none</attr>
     <attr name="tape">none</attr>
     <attr name="beard">no</attr>
   </face>
@@ -2130,7 +2128,7 @@
   </face>
   <face id="27067">
     <attr name="skin_tone">light</attr>
-    <attr name="headgear">present</attr>
+    <attr name="headgear">none</attr>
     <attr name="tape">none</attr>
     <attr name="beard">no</attr>
   </face>
@@ -2175,8 +2173,8 @@
   <face id="27611">
     <attr name="skin_tone">d_medium</attr>
     <attr name="headgear">none</attr>
-    <attr name="hair_color">bald</attr>
-    <attr name="hair_length">bald</attr>
+    <attr name="hair_color">black</attr>
+    <attr name="hair_length">medium</attr>
     <attr name="tape">none</attr>
     <attr name="beard">no</attr>
   </face>
@@ -2203,8 +2201,8 @@
     <attr name="beard">no</attr>
   </face>
   <face id="28022">
-    <attr name="skin_tone">light</attr>
-    <attr name="headgear">present</attr>
+    <attr name="skin_tone">d_medium</attr>
+    <attr name="headgear">none</attr>
     <attr name="tape">none</attr>
     <attr name="beard">no</attr>
   </face>
@@ -2450,7 +2448,7 @@
   </face>
   <face id="30502">
     <attr name="skin_tone">d_medium</attr>
-    <attr name="headgear">present</attr>
+    <attr name="headgear">none</attr>
     <attr name="tape">none</attr>
     <attr name="beard">no</attr>
   </face>
@@ -3120,6 +3118,11 @@
   </face>
   <face id="41083">
     <attr name="skin_tone">light</attr>
+    <attr name="headgear">none</attr>
+    <attr name="hair_color">black</attr>
+    <attr name="hair_length">long</attr>
+    <attr name="beard">no</attr>
+    <attr name="tape">none</attr>
   </face>
   <face id="41084">
     <attr name="skin_tone">light</attr>
@@ -3227,7 +3230,7 @@
   </face>
   <face id="41101">
     <attr name="skin_tone">dark</attr>
-    <attr name="headgear">present</attr>
+    <attr name="headgear">none</attr>
     <attr name="tape">none</attr>
     <attr name="beard">no</attr>
   </face>
@@ -3401,7 +3404,7 @@
   </face>
   <face id="41126">
     <attr name="skin_tone">l_medium</attr>
-    <attr name="headgear">present</attr>
+    <attr name="headgear">none</attr>
     <attr name="tape">none</attr>
     <attr name="beard">no</attr>
   </face>
@@ -3521,11 +3524,13 @@
   </face>
   <face id="41146">
     <attr name="skin_tone">light</attr>
-    <attr name="headgear">present</attr>
+    <attr name="headgear">none</attr>
+    <attr name="tape">present</attr>
   </face>
   <face id="41147">
     <attr name="skin_tone">light</attr>
-    <attr name="headgear">present</attr>
+    <attr name="headgear">none</attr>
+    <attr name="tape">present</attr>
   </face>
   <face id="41148">
     <attr name="skin_tone">light</attr>
@@ -3598,11 +3603,16 @@
   </face>
   <face id="41166">
     <attr name="skin_tone">dark</attr>
-    <attr name="headgear">present</attr>
+    <attr name="headgear">none</attr>
+    <attr name="tape">present</attr>
   </face>
   <face id="41167">
     <attr name="skin_tone">dark</attr>
-    <attr name="headgear">present</attr>
+    <attr name="headgear">none</attr>
+    <attr name="hair_color">bald</attr>
+    <attr name="hair_length">bald</attr>
+    <attr name="beard">no</attr>
+    <attr name="tape">present</attr>
   </face>
   <face id="41168">
     <attr name="skin_tone">dark</attr>
@@ -3652,8 +3662,10 @@
     <attr name="headgear">none</attr>
   </face>
   <face id="41180">
-    <attr name="skin_tone">l_medium</attr>
-    <attr name="headgear">present</attr>
+    <attr name="skin_tone">d_medium</attr>
+    <attr name="headgear">none</attr>
+    <attr name="beard">no</attr>
+    <attr name="tape">present</attr>
   </face>
   <face id="41181">
     <attr name="skin_tone">l_medium</attr>
@@ -3675,7 +3687,11 @@
   </face>
   <face id="41186">
     <attr name="skin_tone">l_medium</attr>
-    <attr name="headgear">present</attr>
+    <attr name="headgear">none</attr>
+    <attr name="hair_color">black</attr>
+    <attr name="hair_length">medium</attr>
+    <attr name="beard">no</attr>
+    <attr name="tape">present</attr>
   </face>
   <face id="41187">
     <attr name="skin_tone">l_medium</attr>
@@ -3706,12 +3722,13 @@
     <attr name="headgear">none</attr>
   </face>
   <face id="41194">
-    <attr name="skin_tone">d_medium</attr>
+    <attr name="skin_tone">light</attr>
     <attr name="headgear">none</attr>
   </face>
   <face id="41195">
     <attr name="skin_tone">d_medium</attr>
-    <attr name="headgear">present</attr>
+    <attr name="headgear">none</attr>
+    <attr name="tape">present</attr>
   </face>
   <face id="41196">
     <attr name="skin_tone">d_medium</attr>
@@ -3728,19 +3745,22 @@
     <attr name="headgear">none</attr>
   </face>
   <face id="41200">
-    <attr name="skin_tone">d_medium</attr>
+    <attr name="skin_tone">light</attr>
     <attr name="headgear">none</attr>
   </face>
   <face id="41201">
-    <attr name="skin_tone">d_medium</attr>
-    <attr name="headgear">present</attr>
+    <attr name="skin_tone">l_medium</attr>
+    <attr name="headgear">none</attr>
+    <attr name="hair_length">medium</attr>
+    <attr name="beard">no</attr>
+    <attr name="tape">present</attr>
   </face>
   <face id="41202">
     <attr name="skin_tone">d_medium</attr>
     <attr name="headgear">none</attr>
   </face>
   <face id="41203">
-    <attr name="skin_tone">d_medium</attr>
+    <attr name="skin_tone">light</attr>
     <attr name="headgear">none</attr>
   </face>
   <face id="41204">
@@ -3756,10 +3776,20 @@
     <attr name="headgear">none</attr>
   </face>
   <face id="41207">
-    <attr name="skin_tone">d_medium</attr>
+    <attr name="skin_tone">l_medium</attr>
+    <attr name="headgear">none</attr>
+    <attr name="hair_color">black</attr>
+    <attr name="hair_length">semi_long</attr>
+    <attr name="beard">no</attr>
+    <attr name="tape">none</attr>
   </face>
   <face id="41208">
     <attr name="skin_tone">d_medium</attr>
+    <attr name="headgear">none</attr>
+    <attr name="hair_color">black</attr>
+    <attr name="hair_length">semi_long</attr>
+    <attr name="beard">no</attr>
+    <attr name="tape">none</attr>
   </face>
   <face id="41210">
     <attr name="headgear">none</attr>
@@ -3830,5 +3860,25 @@
   <face id="45018">
     <attr name="skin_tone">light</attr>
     <attr name="headgear">none</attr>
+  </face>
+  <face id="6747">
+    <attr name="skin_tone">l_medium</attr>
+    <attr name="headgear">none</attr>
+    <attr name="hair_color">black</attr>
+    <attr name="hair_length">short</attr>
+    <attr name="beard">no</attr>
+    <attr name="tape">none</attr>
+  </face>
+  <face id="41209">
+    <attr name="skin_tone">light</attr>
+    <attr name="headgear">present</attr>
+    <attr name="beard">no</attr>
+    <attr name="tape">none</attr>
+  </face>
+  <face id="41217">
+    <attr name="skin_tone">light</attr>
+    <attr name="headgear">present</attr>
+    <attr name="beard">no</attr>
+    <attr name="tape">none</attr>
   </face>
 </faces>

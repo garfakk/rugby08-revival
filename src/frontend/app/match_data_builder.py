@@ -153,6 +153,8 @@ def _player_to_match_data(player: dict, season=None) -> dict:
         "special_ability": to_int(player.get("special_ability", 0), 0),
         "goal_kicking_style": str(player.get("goal_kicking_style") or "default"),
         "star_attribute": to_int(player.get("star_attribute", 0), 0),
+        # Hidden (no UI): roster-only switch for the star above the head
+        "hide_star": to_bool(player.get("hide_star", False)),
         "attack": to_int(player.get("attack", 0), 0),
         "defense": to_int(player.get("defense", 0), 0),
         "speed": to_int(player.get("speed", 0), 0),
@@ -370,6 +372,7 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
             if c["zone"] in ("home", "away") else "cpu"
             for slot_id, c in cfg.controllers.items()
         },
+        "lock_controllers": cfg.lock_controllers,
         "stadium": stadium_id,
         "stadium_graphics": stadium_graphics,
         "adboards": _relative_to_mod_data(adboards) if adboards else "",

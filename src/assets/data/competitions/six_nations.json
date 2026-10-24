@@ -47,6 +47,7 @@
       "id": "table",
       "name": "Championship",
       "kind": "round_robin",
+      "calendar": {"start": "02-03", "offsets": [0, 7, 21, 35, 42]},
       "legs": 1,
       "match_subtype": "none",
       "group_names": {

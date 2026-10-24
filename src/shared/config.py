@@ -170,6 +170,9 @@ class Config:
     self.directory_challenges = os.path.join(self.mod_data_directory, "challenges")
     # Tournament saves are the user's progress, not data: user_data/.
     self.directory_tournament_saves = os.path.join(user_data_directory(), "tournaments")
+    # The user's own edits of teams and players, laid over the data pack
+    # (frontend/app/user_edits.py): a new data pack never overwrites them.
+    self.directory_user_edits = os.path.join(user_data_directory(), "edits")
     self.data_version, self.data_schema = self._read_data_version()
     self._check_data_installed()
     self.static_files_directory = os.path.join(self.mod_src_directory, "assets", "static_files")
@@ -210,17 +213,33 @@ class Config:
 
     # Memory addresses
     self.memory_addresses = {
-      'match_result_start': 0x009B6720,
-      'match_result_end': 0x009B8125,
+      # MatchSetup: both team records (players' match counters, substitution
+      # log, set-piece counters), the scores, clock and period
+      # (backend/match_memory.py)
+      'match_setup': 0x009B6830,
       'screen_id': 0x009F9CB8,
-      # *(world_ptr) = the match object; +world_clock_offset = match clock,
-      # float seconds as displayed (reR08 patches_dll/cards.cpp, FUN_004233d0)
+      # *(world_ptr) = the match object; +world_clock_offset = time played,
+      # float REAL seconds (scales with the half length; FUN_0062ed50 adds the
+      # frame time). Non-zero once play has started.
       'world_ptr': 0x00A31988,
       'world_clock_offset': 0x58,
+      # The match clock as displayed (float seconds on the 80-min scale: real
+      # time x 40 / half length in minutes, FUN_00632f10), stopped by the game
+      # at each period end, and the current period (byte: 0-1 halves, 2-4
+      # extra time). Match-setup block 0x9B6830 +0x18f0 / +0x18f4. Zeroed when
+      # the game's menu comes back, so it must be read during the match.
+      'match_clock': 0x009B8120,
+      'match_period': 0x009B8124,
     }
     # Seconds between two reads of the live scoring counters during a match
     # (timestamps the scores for challenge objectives).
     self.score_poll_interval = 0.5
+    # Keep the options changed in-game (pause menu: camera, audio, HUD...):
+    # the game's in-memory profile is read every profile_poll_interval seconds
+    # during the match and what changed is saved as the user's game settings
+    # (shared.game_profile.import_ingame).
+    self.import_ingame_settings = True
+    self.profile_poll_interval = 1.0
 
     # Front end options
     self.loading_image_filepath = "img.jpg"
@@ -253,6 +272,12 @@ class Config:
     # Reveal unfinished and data-editing tools in the Tools menu.
     self.developper_mode = False
 
+    # Where the team and player editors save: "user" keeps every change as
+    # the user's own edit in user_data/edits/ (the data pack is never
+    # written, a new release can't overwrite the edits); "mod" writes the
+    # data pack files themselves (the maintainer preparing a release).
+    self.save_edits_to = "user"
+
     # d3d8.dll proxy: forces the game windowed and blocks the monitor resolution
     # switch, which is what makes the game window embeddable.
     self.use_d3d8_proxy = True
@@ -261,6 +286,14 @@ class Config:
     # Rugby08Launcher injection when launching Rugby08.exe directly).
     self.use_rugby08patches = True
     self.rugby08patches_dll_filepath = self._bundled_dll("rugby08patches.dll")
+    # rugby08patches.dll "widescreen" patch: the 3D view uses the game window's
+    # aspect ratio instead of the stock 4:3 stretched to the screen. The 2D HUD
+    # keeps its 4:3 layout. widescreen_aspect: "auto" (follow the window) or a
+    # fixed ratio such as 1.7777778 (16:9) or 16:9. widescreen is only the
+    # default: Settings > Screen Ratio saves the user's choice to user_prefs.ini,
+    # which wins from then on (see shared.user_prefs.UserPrefs).
+    self.widescreen = False
+    self.widescreen_aspect = "auto"
 
     # d3d8 proxy runtime config (written to rugby08_windowed.ini next to the exe)
     self.d3d8_mode = "all"            # "all" or "frontend-fullscreen"
@@ -280,14 +313,19 @@ class Config:
     # How the game window is shown once the match has loaded (Windows only;
     # Linux always embeds through xdotool, into a container that fills the mod
     # window — fullscreen when the mod is):
-    #   "auto"       - follow the mod window: fullscreen mod -> "fullscreen",
-    #                  windowed mod -> "embed". Decided when the match starts.
-    #   "fullscreen" - the game keeps its own top-level window, kept off-screen
+    #   "auto"       - the game keeps its own top-level window, kept off-screen
     #                  and off the taskbar while it boots, then revealed
-    #                  borderless fullscreen on the monitor the mod window is on.
-    #   "embed"      - reparented into the mod window, filling it.
+    #                  borderless over the monitor the mod window is on
+    #                  (fullscreen mod) or over the mod's game area, owned by
+    #                  the mod window (windowed mod). Decided when the match starts.
+    #   "fullscreen" - as "auto", always over the monitor.
+    #   "embed"      - reparented into the mod window as a WS_CHILD, filling it.
+    #                  Crashes the game: DirectInput refuses a child window.
     # Set by the frontend at kick-off: True when this match's reveal is fullscreen.
     self.reveal_fullscreen = False
+    # Set by the frontend at kick-off: True when the game keeps its own window
+    # (Windows, reveal_mode not "embed"); reveal_monitor_rect is then its rect.
+    self.reveal_own_window = False
     # Linux: set by the frontend at kick-off when the game is embedded — the game
     # must then render at reveal_monitor_rect's size (the embedding host's).
     self.embed_frontend_size = False

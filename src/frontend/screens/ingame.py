@@ -31,13 +31,13 @@ import psutil
 from PyQt5.QtWidgets import (
     QApplication, QVBoxLayout, QHBoxLayout, QWidget, QLabel, QGraphicsOpacityEffect,
 )
-from PyQt5.QtCore import (QThread, pyqtSignal, QTimer, Qt, QRect, QPoint,
+from PyQt5.QtCore import (QThread, pyqtSignal, QTimer, Qt, QRect, QPoint, QEvent,
                           QPropertyAnimation, QEasingCurve, QVariantAnimation)
 from PyQt5.QtGui import QWindow, QPixmap, QFont
 
 sys.path.append(str(Path(__file__).parent.parent.parent))
 from shared.config import config
-from shared.user_prefs import user_prefs
+from shared.user_prefs import user_prefs, fit_rect
 from shared.log import get_logger
 from ui.loading_ring import CircularLoadingRing
 from ui.broadcast import display_label
@@ -337,7 +337,9 @@ class GameWidget(QWidget):
         self._on_loading_end = on_loading_end
         self._worker: GameLauncherThread | None = None
         self._r08_pid: int | None = None
-        self._reveal_fullscreen: bool | None = None   # decided per match, see _decide_reveal_mode
+        self._own_window: bool | None = None   # decided per match, see _decide_reveal_mode
+        self._reveal_in_window = False          # own window placed over the mod's game area
+        self._move_filter_installed = False
         self.match_data: dict | None = None
 
         # Embedding state
@@ -349,6 +351,7 @@ class GameWidget(QWidget):
         # letterboxed on wide monitors — see _embed_host.
         self._linux_fullscreen = False
         self._fs_host: QWidget | None = None
+        self._bars: QWidget | None = None         # black behind a ratio-kept own window (_show_bars)
         self._embedded_qwindow: QWindow | None = None
         self._embedded_container: QWidget | None = None
         self._embed_timer: QTimer | None = None
@@ -694,6 +697,15 @@ class GameWidget(QWidget):
         # Monitor the game is revealed on (reveal_mode "fullscreen"). Read here,
         # in the GUI thread, before the backend writes the proxy ini from it.
         config.reveal_monitor_rect = self._target_monitor_rect()
+        if self._reveal_in_window:
+            # Windowed mod on Windows: the game renders at its game area's size.
+            try:
+                config.reveal_monitor_rect = self._window_area_rect()
+            except Exception as e:
+                log.warning(f"Could not read the mod's game area: {e}")
+            if not self._move_filter_installed:
+                self.window().installEventFilter(self)
+                self._move_filter_installed = True
         # Linux: the game is embedded and stretched to fill its host (the whole
         # mod window when fullscreen, else this screen). It only RENDERS at the
         # size its d3d8 proxy is told (FrontendWidth/Height) — enlarging its
@@ -966,6 +978,7 @@ class GameWidget(QWidget):
         self._stop_boot_watch()
         self._loading_w = 0
         self._revealed = False
+        self._hide_bars()
         self._finishing = False
         self._screen_id_seen = False
         self._screen_id_reached = False
@@ -1041,10 +1054,10 @@ class GameWidget(QWidget):
         """The d3d8 proxy boots the game window off-screen (d3d8_offscreen_boot)
         so it never flashes before embedding. If embedding fails, bring the
         window back into view — best-effort, never raises."""
-        if self._fullscreen_reveal():
+        if self._own_window_reveal():
             # Never leave the game stranded off-screen: show it as it would
             # have been shown after loading.
-            self._reveal_fullscreen_win32()
+            self._reveal_own_window_win32()
             return
         if not (getattr(config, "use_d3d8_proxy", False)
                 and getattr(config, "d3d8_offscreen_boot", True)):
@@ -1274,11 +1287,17 @@ class GameWidget(QWidget):
             host.setGeometry(self.window().rect())
         # xdotool sizes in device pixels; Qt's are logical once high-DPI scaling
         # is on (same conversion as _resize_embedded_win32).
-        ratio = host.devicePixelRatioF()
-        w = max(1, int(host.width() * ratio))
-        h = max(1, int(host.height() * ratio))
-        self._xdotool("windowmove", str(self._x11_wid), "0", "0")
+        x, y, w, h = self._x11_target(host)
+        self._xdotool("windowmove", str(self._x11_wid), str(x), str(y))
         self._xdotool("windowsize", str(self._x11_wid), str(w), str(h))
+
+    @staticmethod
+    def _x11_target(host):
+        """Where the embedded game window goes in its host, device pixels:
+        all of it, or the picture ratio centred in it (black bars)."""
+        ratio = host.devicePixelRatioF()
+        return fit_rect(0, 0, max(1, int(host.width() * ratio)), max(1, int(host.height() * ratio)),
+                        user_prefs.picture_ratio())
 
     # ── Embedding: Windows ─────────────────────────────────────────────────────
 
@@ -1326,7 +1345,7 @@ class GameWidget(QWidget):
             self._embed_timer.stop()
             self._embed_timer = None
             self._hwnd = hwnd
-            if self._fullscreen_reveal():
+            if self._own_window_reveal():
                 self._adopt_win32()
             else:
                 self._embed_win32()
@@ -1401,35 +1420,51 @@ class GameWidget(QWidget):
             # Qt geometry is in logical pixels once high-DPI scaling is on
             # (see main.py); MoveWindow wants the physical ones.
             ratio = self.container.devicePixelRatioF()
-            win32gui.MoveWindow(self._hwnd, 0, 0,
-                                int(r.width() * ratio), int(r.height() * ratio), True)
+            x, y, w, h = fit_rect(0, 0, int(r.width() * ratio), int(r.height() * ratio),
+                                  user_prefs.picture_ratio())
+            win32gui.MoveWindow(self._hwnd, x, y, w, h, True)
 
     # ── Fullscreen reveal: Windows (reveal_mode "fullscreen") ──────────────────
 
     def _decide_reveal_mode(self):
-        """Fix, for the match about to start, whether the game is revealed
-        fullscreen (its own borderless window over the monitor) or embedded in
-        the mod window: config.reveal_mode "auto" follows the mod window —
-        fullscreen mod, fullscreen game; windowed mod, game embedded and filling
-        it. Also published as config.reveal_fullscreen for the backend (proxy
-        ini). Windows only: Linux always embeds, into a container that fills the
-        mod window (fullscreen when the mod is)."""
+        """Fix, for the match about to start, how the game is revealed. Windows:
+        the game keeps its own top-level window (borderless), placed over the
+        monitor when the mod is fullscreen, else over the mod's game area —
+        config.reveal_mode "auto" follows the mod window. It is never made a
+        WS_CHILD of the mod window by default: DirectInput refuses a child
+        window (SetCooperativeLevel -> E_HANDLE), the game then drops its
+        keyboard device and crashes on the first read. Also published as
+        config.reveal_own_window / reveal_fullscreen for the backend (proxy
+        ini). Linux always embeds, into a container that fills the mod window
+        (fullscreen when the mod is): the X reparent is invisible to Wine."""
         mode = str(getattr(config, "reveal_mode", "auto")).strip().lower()
-        if not (IS_WINDOWS and WIN32_AVAILABLE):
-            fullscreen = False
-        elif mode == "fullscreen":
-            fullscreen = True
-        elif mode == "embed":
-            fullscreen = False
+        if not (IS_WINDOWS and WIN32_AVAILABLE) or mode == "embed":
+            own_window = fullscreen = False
         else:
-            fullscreen = self.window().isFullScreen()
-        self._reveal_fullscreen = fullscreen
+            own_window = True
+            fullscreen = mode == "fullscreen" or self.window().isFullScreen()
+        self._own_window = own_window
+        self._reveal_in_window = own_window and not fullscreen
+        config.reveal_own_window = own_window
         config.reveal_fullscreen = fullscreen
 
-    def _fullscreen_reveal(self) -> bool:
-        if self._reveal_fullscreen is None:
+    def _own_window_reveal(self) -> bool:
+        """True when the game keeps its own top-level window (Windows)."""
+        if self._own_window is None:
             self._decide_reveal_mode()
-        return self._reveal_fullscreen
+        return self._own_window
+
+    def _window_area_rect(self):
+        """(left, top, right, bottom) in physical screen pixels of the mod's
+        game area (the screen stack, as Linux embeds into), for the windowed
+        reveal."""
+        target = self.parentWidget() or self
+        ratio = target.devicePixelRatioF()
+        origin = target.mapTo(self.window(), QPoint(0, 0))
+        x, y = win32gui.ClientToScreen(int(self.window().winId()), (0, 0))
+        left, top = x + round(origin.x() * ratio), y + round(origin.y() * ratio)
+        return (left, top, left + round(target.width() * ratio),
+                top + round(target.height() * ratio))
 
     def _target_monitor_rect(self):
         """(left, top, right, bottom) of the monitor the mod window is on, in
@@ -1507,22 +1542,44 @@ class GameWidget(QWidget):
             log.warning(f"Could not hide the game window: {e}")
             self._stop_progress(hide=True)
             self._show_message("Game is running.")
-            self._reveal_fullscreen_win32()
+            self._reveal_own_window_win32()
             return
         self._force_foreground(int(self.window().winId()))
         self._start_frontend_watch()
 
-    def _reveal_fullscreen_win32(self, activate=True):
-        """Cover the target monitor with the game window (borderless: the
-        proxy already strips the frame), put it back on the taskbar and, on the
-        first call, bring it to the front. Also used for the re-asserts."""
+    def _reveal_own_window_win32(self, activate=True):
+        """Cover the target monitor (fullscreen mod) or the mod's game area
+        (windowed mod) with the game window (borderless: the proxy already
+        strips the frame), put it back on the taskbar when fullscreen and, on
+        the first call, bring it to the front. Also used for the re-asserts."""
         hwnd = self._live_game_hwnd()
-        rect = getattr(config, "reveal_monitor_rect", None) or self._target_monitor_rect()
+        if self._reveal_in_window:
+            try:
+                rect = self._window_area_rect()
+            except Exception as e:
+                log.warning(f"Could not read the mod's game area: {e}")
+                rect = None
+        else:
+            rect = getattr(config, "reveal_monitor_rect", None) or self._target_monitor_rect()
         if not hwnd or not rect:
             return
         left, top, right, bottom = rect
+        picture = user_prefs.picture_ratio()
+        if picture:
+            # Black bars: the game window at the picture ratio, centred, the
+            # mod's black behind it (_show_bars).
+            x, y, w, h = fit_rect(left, top, right - left, bottom - top, picture)
+            left, top, right, bottom = x, y, x + w, y + h
+            self._show_bars()
         try:
-            self._set_taskbar_button(True)
+            if self._reveal_in_window:
+                # Owned by the mod window (not its child — see
+                # _decide_reveal_mode): stays above it, minimises with it, and
+                # the mod's taskbar button stands for both.
+                mod_hwnd = int(self.window().winId())
+                if win32gui.GetWindowLong(hwnd, win32con.GWL_HWNDPARENT) != mod_hwnd:
+                    win32gui.SetWindowLong(hwnd, win32con.GWL_HWNDPARENT, mod_hwnd)
+            self._set_taskbar_button(not self._reveal_in_window)
             if win32gui.IsIconic(hwnd):
                 win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
             if win32gui.GetWindowRect(hwnd) != (left, top, right, bottom):
@@ -1548,7 +1605,7 @@ class GameWidget(QWidget):
         """Called at kick-off while the mod still owns the foreground: stop the
         game (started by us, so allowed to) from grabbing focus for its
         hidden windows. Pressing Alt or clicking always lifts it."""
-        if self._fullscreen_reveal():
+        if self._own_window_reveal():
             self._foreground_locked = bool(ctypes.windll.user32.LockSetForegroundWindow(LSFW_LOCK))
 
     def _release_foreground_lock(self):
@@ -1735,7 +1792,7 @@ class GameWidget(QWidget):
 
         # Fullscreen mode: if the game replaced its window, keep the new one
         # hidden too.
-        if self._fullscreen_reveal():
+        if self._own_window_reveal():
             adopted = self._hwnd
             if self._live_game_hwnd() not in (None, adopted):
                 try:
@@ -1860,7 +1917,7 @@ class GameWidget(QWidget):
 
         gap = 1.0 - self._progress_shown
         finish_ms = min(FINISH_MS_MAX, FINISH_MS + gap * FINISH_MS_PER_GAP)
-        if self._fullscreen_reveal():
+        if self._own_window_reveal():
             # The stadium flyover starts ~0.6 s after loading ends and runs
             # on its own clock: the floor only, so little of it is missed.
             finish_ms = FINISH_MS
@@ -1912,13 +1969,13 @@ class GameWidget(QWidget):
         self._revealed = True
         self._finishing = False
         self._bar_log("show_game")
-        if self._fullscreen_reveal():
+        if self._own_window_reveal():
             # The game covers the monitor in its own window; the mod stays
             # behind it on the finished loading screen.
-            self._reveal_fullscreen_win32()
+            self._reveal_own_window_win32()
             QTimer.singleShot(MATCH_MESSAGE_DELAY_MS, self._show_match_message)
             for delay_ms in REVEAL_REASSERT_MS:
-                QTimer.singleShot(delay_ms, self._reassert_fullscreen)
+                QTimer.singleShot(delay_ms, self._reassert_own_window)
             return
         self._loading_panel.hide()
         host = self._embed_host()
@@ -1992,30 +2049,58 @@ class GameWidget(QWidget):
             self._x11_mapped_at = now
             self._x11_map_deadline = now + X11_MAP_SETTLE_S
             log.debug(f"Embedded game window mapped at {x},{y} {w}x{h}")
-        host = self._embed_host()
-        ratio = host.devicePixelRatioF()
-        want_w = max(1, int(host.width() * ratio))
-        want_h = max(1, int(host.height() * ratio))
-        if (x, y, w, h) != (0, 0, want_w, want_h):
-            log.debug(f"Re-pinning embedded game window: {x},{y} {w}x{h} "
-                      f"-> 0,0 {want_w}x{want_h}")
+        want = self._x11_target(self._embed_host())
+        if (x, y, w, h) != want:
+            log.debug(f"Re-pinning embedded game window: {x},{y} {w}x{h} -> {want}")
             self._resize_embedded_x11()
 
     def _apply_embedded_geometry(self):
         """Fit the embedded game window to the container (windowed host resize,
         reveal, and post-reveal re-asserts all funnel through here)."""
-        if not self._revealed or self._fullscreen_reveal():
+        if not self._revealed:
+            return
+        if self._own_window_reveal():
+            if self._reveal_in_window:
+                self._reveal_own_window_win32(activate=False)
             return
         if IS_LINUX and self._x11_wid:
             self._resize_embedded_x11()
         elif IS_WINDOWS and self._hwnd:
             self._resize_embedded_win32()
 
-    def _reassert_fullscreen(self):
-        if self._revealed and self._fullscreen_reveal():
-            self._reveal_fullscreen_win32(activate=False)
+    def _show_bars(self):
+        """Own-window reveal with black bars: what shows around the game window
+        is the mod, so make it black there — the game area (windowed reveal),
+        or the whole fullscreen mod window, whose screen stack stops at
+        MAX_CONTENT_WIDTH (fullscreen reveal)."""
+        self._loading_panel.hide()
+        if self._reveal_in_window:
+            return
+        if self._bars is None:
+            self._bars = QWidget(self.window())
+            self._bars.setAttribute(Qt.WA_StyledBackground, True)
+            self._bars.setStyleSheet("background: #000000; border: none;")
+        self._bars.setGeometry(self.window().rect())
+        self._bars.show()
+        self._bars.raise_()
+
+    def _hide_bars(self):
+        if self._bars is not None:
+            self._bars.hide()
+
+    def _reassert_own_window(self):
+        if self._revealed and self._own_window_reveal():
+            self._reveal_own_window_win32(activate=False)
 
     # ── Qt events ──────────────────────────────────────────────────────────────
+
+    def eventFilter(self, obj, event):
+        # Windowed reveal: the game's own window is placed over the mod's game
+        # area, so it has to follow the mod window when that moves.
+        if (event.type() == QEvent.Move and obj is self.window()
+                and self._revealed and self._reveal_in_window):
+            QTimer.singleShot(0, self._apply_embedded_geometry)
+        return super().eventFilter(obj, event)
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
@@ -2065,7 +2150,7 @@ class GameWidget(QWidget):
             return
         self._game_active = False
         self._reset_embed_state()
-        if self._fullscreen_reveal():
+        if self._own_window_reveal():
             # The fullscreen game window just went away: bring the mod (and
             # the full-time screen) back to the front.
             self._force_foreground(int(self.window().winId()))

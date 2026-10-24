@@ -33,6 +33,15 @@ class SettingsScreen(QWidget):
         self._music = music
         self._game_pages = []       # (TabPage, settings) — rebuilt by "reset"
         self._init_ui()
+        self._profile_revision = game_profile.revision
+
+    def showEvent(self, event):
+        # Options changed in-game since the pages were built (game_profile.import_ingame)
+        if self._profile_revision != game_profile.revision:
+            self._profile_revision = game_profile.revision
+            self._build_game_pages()
+            self._enlarge_text()
+        super().showEvent(event)
 
     def _init_ui(self):
         root = QVBoxLayout(self)
@@ -141,6 +150,24 @@ class SettingsScreen(QWidget):
             user_prefs.save()
 
         cl.addWidget(ToggleRow("3D Player Preview", user_prefs.preview_3d, _set_preview_3d))
+
+        # Screen ratio of the match picture, drawn as big as fits at that
+        # ratio, black bars around it (screens.ingame). 4:3 = the game as
+        # shipped (widescreen patch off); the others turn the widescreen patch
+        # on, its 3D view at that ratio (Auto: the window's own, no bars).
+        # Written to rugby08patches.ini at the next match start
+        # (backend.mod_utils.configure_game_widescreen).
+        ratio_choices = ["Auto", "4:3", "16:10", "16:9", "21:9"]
+
+        def _set_ratio(label):
+            user_prefs.widescreen = label != "4:3"
+            user_prefs.widescreen_aspect = label.lower()
+            user_prefs.save()
+
+        aspect = user_prefs.widescreen_aspect.strip().lower()
+        selected_ratio = ("4:3" if not user_prefs.widescreen or aspect == "4:3" else
+                          next((c for c in ratio_choices if c.lower() == aspect), "Auto"))
+        cl.addWidget(ChoiceRow("Screen Ratio", ratio_choices, selected_ratio, _set_ratio))
         cl.addSpacing(16)
 
         # MATCH > Wind (Standard / Advanced): temporarily hidden, and

@@ -1,0 +1,255 @@
+{
+ "10155": {
+  "2009": {
+   "name": "Bourgoin",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2009/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2009/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2009/away_front.png",
+     "backKitFile": "kits_2009/home_back/home_back_%.png",
+     "previewFile": "kits_2009/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "158347",
+    "viceCaptain": "158347",
+    "longGK": "124021",
+    "shortGK": "124021",
+    "longPunt": "124021",
+    "shortPunt": "124021",
+    "kickoff": "124021"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "154487",
+    "158348",
+    "154967",
+    "158412",
+    "158414",
+    "158420",
+    "101650",
+    "158419",
+    "124021",
+    "158347",
+    "158407",
+    "152327",
+    "158351",
+    "153466",
+    "153468",
+    "158415",
+    "158339",
+    "158421",
+    "154537",
+    "158417",
+    "158350",
+    "158416",
+    "158409",
+    "158349",
+    "158410",
+    "158411",
+    "158418",
+    "158442",
+    "158408",
+    "158413",
+    "158342",
+    "158427",
+    "158338",
+    "158443",
+    "153334",
+    "152961"
+   ],
+   "enabled": true
+  },
+  "2010": {
+   "name": "Bourgoin",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "158347",
+    "viceCaptain": "158347",
+    "longGK": "147840",
+    "shortGK": "147840",
+    "longPunt": "158347",
+    "shortPunt": "158347",
+    "kickoff": "158347"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "158411",
+    "154537",
+    "154967",
+    "158412",
+    "158414",
+    "158420",
+    "101650",
+    "158416",
+    "158350",
+    "158347",
+    "158349",
+    "158351",
+    "147840",
+    "158407",
+    "153468",
+    "158408",
+    "153861",
+    "158339",
+    "158442",
+    "158419",
+    "119877",
+    "158421",
+    "158409",
+    "158415",
+    "154005",
+    "158410",
+    "158338",
+    "158348",
+    "158417",
+    "111538",
+    "158342",
+    "158478",
+    "158468",
+    "152961",
+    "157281",
+    "154006",
+    "153334",
+    "158443"
+   ],
+   "enabled": true
+  },
+  "2008": {
+   "name": "Bourgoin",
+   "type": "club",
+   "category": "Top 14",
+   "ball": "",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "124021",
+    "shortGK": "124021",
+    "longPunt": "124021",
+    "shortPunt": "124021",
+    "kickoff": "124021"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "154487",
+    "158348",
+    "154967",
+    "158412",
+    "158414",
+    "158420",
+    "101650",
+    "158419",
+    "124021",
+    "158347",
+    "158407",
+    "152327",
+    "158351",
+    "153466",
+    "153468",
+    "158415",
+    "158339",
+    "158421",
+    "154537",
+    "158417",
+    "158350",
+    "158416",
+    "158409",
+    "158349",
+    "158410",
+    "158411",
+    "158418",
+    "158442",
+    "158408",
+    "158413",
+    "158342",
+    "158427",
+    "158338",
+    "158443",
+    "153334",
+    "152961"
+   ],
+   "enabled": false
+  }
+ }
+}

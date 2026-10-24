@@ -1,0 +1,192 @@
+{
+  "name": "RWC 2007 Quarter-Final: New Zealand v France",
+  "description": "Millennium Stadium, Cardiff - Saturday 6 October 2007. Rugby World Cup quarter-final, 71,669 in the stands, Wayne Barnes refereeing.\n\nNew Zealand, the tournament favourites, have dominated the first half. Dan Carter kicked two penalties and Luke McAlister crossed for a converted try; Lionel Beauxis answered with a single penalty on the stroke of half-time. The All Blacks lead 13-3.\n\nIt is the 46th minute. McAlister has just been sin-binned for an illegal block that stopped a French player, and Beauxis lines up the penalty. France, with Bernard Laporte's side playing for their World Cup lives, have fourteen men to face for ten minutes.\n\nYou are France. Kick the points, make the extra man count, and finish what the French XV started. No team has ever overturned a 10-point deficit against the All Blacks at a World Cup.",
+  "win_text": "France 20 - 18 New Zealand. Tries from Dusautoir and Jauzion, and the greatest upset in World Cup history - exactly as it happened in Cardiff.",
+  "draw_text": "Level at the final whistle. In Cardiff, France found the two points more.",
+  "loss_text": "The All Blacks hold on. In real life, France turned this match around and won 20-18 - try again.",
+  "order": 1,
+  "user_side": "away",
+  "home": {
+    "team_id": "1010",
+    "season": "2008",
+    "variant": "",
+    "kit": "home",
+    "squad": {
+      "players": [
+        "143296",
+        "147899",
+        "143529",
+        "147901",
+        "142614",
+        "142779",
+        "143122",
+        "143349",
+        "119718",
+        "143425",
+        "142717",
+        "125043",
+        "143135",
+        "103753",
+        "147894",
+        "142665",
+        "143309",
+        "143182",
+        "142800",
+        "143200",
+        "144034",
+        "142622"
+      ],
+      "roles": {
+        "captain": "143122",
+        "viceCaptain": "142779",
+        "longGK": "143425",
+        "shortGK": "143425",
+        "longPunt": "143425",
+        "shortPunt": "143425",
+        "kickoff": "143425"
+      },
+      "set_plays": {
+        "up": "classic",
+        "down": "miss",
+        "left": "miss_pivot",
+        "right": "pocket"
+      }
+    }
+  },
+  "away": {
+    "team_id": "10001",
+    "season": "2008",
+    "variant": "",
+    "kit": "home",
+    "custom_kit": {
+      "frontKitFile": "kits_specials/fra_nz_rwc2007_front.png"
+     },
+    "kit_variant": "",
+    "squad": {
+      "players": [
+        "111538",
+        "146869",
+        "146868",
+        "123556",
+        "130109",
+        "143912",
+        "114161",
+        "128022",
+        "103728",
+        "114310",
+        "102125",
+        "125333",
+        "143967",
+        "107479",
+        "130833",
+        "118634",
+        "124596",
+        "129510",
+        "103625",
+        "124648",
+        "146867",
+        "104686"
+      ],
+      "roles": {
+        "captain": "146869",
+        "viceCaptain": "123556",
+        "longGK": "114310",
+        "shortGK": "114310",
+        "longPunt": "114310",
+        "shortPunt": "114310",
+        "kickoff": "114310"
+      },
+      "set_plays": {
+        "left": "",
+        "up": "",
+        "right": "",
+        "down": ""
+      }
+    }
+  },
+  "stadium_id": "32",
+  "difficulty": "elite",
+  "halftime_length": "10m",
+  "home_team_side": "left",
+  "kick_off": "away",
+  "match_type": "world_cup",
+  "match_subtype": "quarter_final",
+  "branding": "world_cup:2007",
+  "environment": "night",
+  "pitch_texture": "reg2_08_norm_n",
+  "rain": false,
+  "precip_mode": "stock",
+  "snow_intensity": null,
+  "wind_power": 6,
+  "wind_dir_deg": 10,
+  "breath": null,
+  "anthem": "stock",
+  "haka_home": true,
+  "haka_away": false,
+  "trophy_lift": "stock",
+  "stadium_flags": false,
+  "kick_assist": false,
+  "mission_mode_name": "PEN K",
+  "mission_mode_time": 2760,
+  "mission_mode_period": 1,
+  "mission_nis": [{"script_name" : "Penalty_kick_chosen_01", "controller": 0, "team": "home", "player": 10, "angle": null, "x": -29, "y": null, "z": 15}],
+  "restart_spot": {"metres_out": 35, "across": 20, "offender": 0},
+  "score_events": [
+    {
+      "type": "SS_PENALTY",
+      "team": "home",
+      "player": 10,
+      "time": 840
+    },
+    {
+      "type": "SS_TRY",
+      "team": "home",
+      "player": 12,
+      "time": 1020
+    },
+    {
+      "type": "SS_CONVERSION",
+      "team": "home",
+      "player": 10,
+      "time": 1020
+    },
+    {
+      "type": "SS_PENALTY",
+      "team": "home",
+      "player": 10,
+      "time": 1860
+    },
+    {
+      "type": "SS_PENALTY",
+      "team": "away",
+      "player": 10,
+      "time": 2400
+    }
+  ],
+  "objectives": [
+  ],
+  "match_objectives": [
+    {
+      "type": "score",
+      "event": "penalty",
+      "player": 10
+    },
+    {
+      "type": "score",
+      "event": "try",
+      "player": 7
+    },
+    {
+      "type": "score",
+      "event": "try",
+      "player": 12
+    },
+    {
+      "type": "restrict",
+      "event": "try",
+      "max": 1
+    }
+  ],
+  "unlockables": [],
+  "user_choice": []
+}

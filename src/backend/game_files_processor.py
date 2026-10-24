@@ -448,59 +448,55 @@ def edit_graphics_files(match_data):
             kit_back_image = os.path.join(config.mod_data_directory, match_data[team]['kit_back'].replace("%", str(index_file+1)))
             replace_asset_in_fsh_file(kit_back_fsh_filepath, kit_back_image, index = index_file)
 
-    # Create custom boots for players
-    template_boots_filepath = os.path.join(config.templates_directory, template_filenames['boots'])
-    boots_fsh_filepath = os.path.join(config.game_launcher_directory, game_filenames['boots'])
-    if copy_file(template_boots_filepath, boots_fsh_filepath):
+  # Create custom boots for players
+  template_boots_filepath = os.path.join(config.templates_directory, template_filenames['boots'])
+  boots_fsh_filepath = os.path.join(config.game_launcher_directory, game_filenames['boots'])
+  if copy_file(template_boots_filepath, boots_fsh_filepath):
 
-        for team in ['team_A', 'team_B']:
-                team_offset = 0 if team == 'team_A' else len(match_data['team_A']['players'])
-                for player_index, player in enumerate(match_data[team]['players']):
-                    if has_custom_boots(player):
-                        custom_boot_filepath = os.path.join(config.mod_data_directory, str(player["boot_style"]))
-                        replace_asset_in_fsh_file(boots_fsh_filepath, custom_boot_filepath, index = 10 + player_index + team_offset) # hardcoded offset value (10), to be replaced by variable in game_specific_variables.py
+      for team in ['team_A', 'team_B']:
+              team_offset = 0 if team == 'team_A' else len(match_data['team_A']['players'])
+              for player_index, player in enumerate(match_data[team]['players']):
+                  if has_custom_boots(player):
+                      custom_boot_filepath = os.path.join(config.mod_data_directory, str(player["boot_style"]))
+                      replace_asset_in_fsh_file(boots_fsh_filepath, custom_boot_filepath, index = 10 + player_index + team_offset) # hardcoded offset value (10), to be replaced by variable in game_specific_variables.py
 
 
-    # Create custom skins for players (custom skin textures, overlays and/or gloves)
-    template_skins_filepath = os.path.join(config.templates_directory, template_filenames['skins'])
-    skins_fsh_filepath = os.path.join(config.game_launcher_directory, game_filenames['skins'])
-    if copy_file(template_skins_filepath, skins_fsh_filepath):
+  # Create custom skins for players (custom skin textures, overlays and/or gloves)
+  template_skins_filepath = os.path.join(config.templates_directory, template_filenames['skins'])
+  skins_fsh_filepath = os.path.join(config.game_launcher_directory, game_filenames['skins'])
+  if copy_file(template_skins_filepath, skins_fsh_filepath):
 
-        for team in ['team_A', 'team_B']:
-                team_offset = 0 if team == 'team_A' else len(match_data['team_A']['players'])
-                for player_index, player in enumerate(match_data[team]['players']):
-                    dest_index = 8 + player_index + team_offset # hardcoded offset value (8), to be replaced by variable in game_specific_variables.py
-                    # Textures to superpose, from bottom to top: the skin_overlay list (first item
-                    # at the bottom), then custom gloves on top. Missing files are already dropped.
-                    custom_skin_filepath, overlay_paths = resolve_player_skin_layers(player, config.mod_data_directory, skin_texture_id)
+      for team in ['team_A', 'team_B']:
+              team_offset = 0 if team == 'team_A' else len(match_data['team_A']['players'])
+              for player_index, player in enumerate(match_data[team]['players']):
+                  dest_index = 8 + player_index + team_offset # hardcoded offset value (8), to be replaced by variable in game_specific_variables.py
+                  # Textures to superpose, from bottom to top: the skin_overlay list (first item
+                  # at the bottom), then custom gloves on top. Missing files are already dropped.
+                  custom_skin_filepath, overlay_paths = resolve_player_skin_layers(player, config.mod_data_directory, skin_texture_id)
 
-                    if overlay_paths:
-                        # Determine the base skin image to superpose the overlays on
-                        base_image = None
-                        if custom_skin_filepath:
-                            base_image = Image.open(custom_skin_filepath)
-                        elif player["skin"] in skin_texture_id:
-                            # Stock skin tone: extract it from the skins template FSH file.
-                            # A custom glove overlay replaces the stock glove, so use the no-glove stock tone as the base.
-                            stock_index = skin_texture_id[player["skin"]] + (1 if wears_stock_gloves(player) else 0) - 1
-                            base_image = extract_asset_from_fsh_file(template_skins_filepath, stock_index)
-                        else:
-                            log.warning(f"Invalid skin for player {player['name']} ({player['skin']}), cannot apply overlays")
+                  if overlay_paths:
+                      # Determine the base skin image to superpose the overlays on
+                      base_image = None
+                      if custom_skin_filepath:
+                          base_image = Image.open(custom_skin_filepath)
+                      elif player["skin"] in skin_texture_id:
+                          # Stock skin tone: extract it from the skins template FSH file.
+                          # A custom glove overlay replaces the stock glove, so use the no-glove stock tone as the base.
+                          stock_index = skin_texture_id[player["skin"]] + (1 if wears_stock_gloves(player) else 0) - 1
+                          base_image = extract_asset_from_fsh_file(template_skins_filepath, stock_index)
+                      else:
+                          log.warning(f"Invalid skin for player {player['name']} ({player['skin']}), cannot apply overlays")
 
-                        if base_image is not None:
-                            temp_skin_filepath = os.path.join(config.temp_directory, f"skin_{team}_{player_index}.png")
-                            composite_baselayers_on_image(base_image, overlay_paths, temp_skin_filepath)
-                            replace_asset_in_fsh_file(skins_fsh_filepath, temp_skin_filepath, index = dest_index)
-                            try:
-                                os.remove(temp_skin_filepath)
-                            except OSError as e:
-                                log.warning(f"could not remove temp file {temp_skin_filepath}: {e}")
+                      if base_image is not None:
+                          # Composited in memory: no temporary PNG to encode, write and read back
+                          skin_image = composite_baselayers_on_image(base_image, overlay_paths)
+                          replace_asset_in_fsh_file(skins_fsh_filepath, skin_image, index = dest_index)
 
-                    elif custom_skin_filepath:
-                        replace_asset_in_fsh_file(skins_fsh_filepath, custom_skin_filepath, index = dest_index)
+                  elif custom_skin_filepath:
+                      replace_asset_in_fsh_file(skins_fsh_filepath, custom_skin_filepath, index = dest_index)
 
-    else:
-        log.error(f"Error while copying skins template file")
+  else:
+      log.error(f"Error while copying skins template file")
 
 
     
@@ -831,8 +827,8 @@ def write_players_data_to_roster(roster_filepath, match_data):
         file.write(bytes([player.get("star_attribute", 0)]))
         # file.write(b"\x03")
 
-        # Skip empty space
-        file.seek(file.tell() + 1)
+        # Write hidden star marker flag (1 = no star above the player's head, read by rugby08patches.dll)
+        file.write(bytes([1 if player.get("hide_star") else 0]))
 
         # Write player goal kicking style value
         goal_kicking_style_value = goal_kicking_style_values.get(player.get("goal_kicking_style"), 0)

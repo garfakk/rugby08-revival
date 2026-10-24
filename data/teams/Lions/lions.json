@@ -1,0 +1,870 @@
+{
+ "10118": {
+  "2009": {
+   "name": "Lions",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "148165",
+    "shortGK": "148165",
+    "longPunt": "148165",
+    "shortPunt": "148165",
+    "kickoff": "148165"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153633",
+    "156087",
+    "154488",
+    "155540",
+    "109876",
+    "156088",
+    "155586",
+    "153638",
+    "152318",
+    "148165",
+    "155555",
+    "156085",
+    "142750",
+    "148171",
+    "155593",
+    "156090",
+    "152316",
+    "156152",
+    "121416",
+    "142699",
+    "156092",
+    "156086",
+    "156089",
+    "156168",
+    "156179",
+    "156093",
+    "156180",
+    "156192",
+    "156193",
+    "156167",
+    "156199",
+    "156091",
+    "156198"
+   ],
+   "enabled": false
+  },
+  "2010": {
+   "name": "Lions",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2010/home_front.png",
+     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "previewFile": "kits_2010/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.png",
+     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "155534",
+    "viceCaptain": "155534",
+    "longGK": "155534",
+    "shortGK": "155534",
+    "longPunt": "155534",
+    "shortPunt": "155534",
+    "kickoff": "155534"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "156152",
+    "155491",
+    "155492",
+    "156212",
+    "156089",
+    "156088",
+    "155472",
+    "142699",
+    "152318",
+    "155534",
+    "155498",
+    "156085",
+    "156198",
+    "155563",
+    "156193",
+    "155493",
+    "152316",
+    "153321",
+    "156203",
+    "155587",
+    "155473",
+    "156049",
+    "153633",
+    "156202",
+    "156060",
+    "155520",
+    "156179",
+    "156086",
+    "156211",
+    "155592",
+    "155539",
+    "153868",
+    "155476",
+    "156090",
+    "155538",
+    "156180",
+    "155524",
+    "156092",
+    "156199"
+   ],
+   "enabled": true
+  },
+  "2022": {
+   "name": "Lions",
+   "type": "club",
+   "category": "URC",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "157070",
+    "viceCaptain": "157070",
+    "longGK": "157070",
+    "shortGK": "157070",
+    "longPunt": "157070",
+    "shortPunt": "157070",
+    "kickoff": "157070"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "157058",
+    "157107",
+    "144565",
+    "157968",
+    "157915",
+    "156620",
+    "157920",
+    "157965",
+    "156262",
+    "157070",
+    "157911",
+    "157178",
+    "154083",
+    "157967",
+    "158137",
+    "145587",
+    "158014",
+    "158055",
+    "157916",
+    "154070",
+    "158141",
+    "157918",
+    "155617",
+    "157718",
+    "158050",
+    "157193",
+    "158049",
+    "157964",
+    "158008",
+    "144475",
+    "158012",
+    "158005",
+    "143965",
+    "158056",
+    "155260",
+    "153638",
+    "158138",
+    "156978"
+   ],
+   "enabled": false
+  },
+  "2023": {
+   "name": "Lions",
+   "type": "club",
+   "category": "URC",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2023/home_front.png",
+     "backKitFile": "kits_2023/home_back/home_back_%.png",
+     "previewFile": "kits_2023/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2023/away_front.png",
+     "backKitFile": "kits_2023/away_back/away_back_%.png",
+     "previewFile": "kits_2023/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "157791",
+    "viceCaptain": "157791",
+    "longGK": "157791",
+    "shortGK": "157791",
+    "longPunt": "158137",
+    "shortPunt": "158137",
+    "kickoff": "158137"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155617",
+    "158014",
+    "157964",
+    "157968",
+    "153807",
+    "157965",
+    "158050",
+    "158057",
+    "146229",
+    "157791",
+    "157718",
+    "155260",
+    "157918",
+    "157967",
+    "158137",
+    "158056",
+    "154070",
+    "144565",
+    "157915",
+    "158055",
+    "157916",
+    "157070",
+    "158008",
+    "158141",
+    "157107",
+    "153638",
+    "158138",
+    "158181",
+    "158175",
+    "154082",
+    "157622",
+    "158053",
+    "158017",
+    "157911",
+    "157936",
+    "158016",
+    "156798",
+    "157716",
+    "158064",
+    "156956",
+    "157058",
+    "156620",
+    "156262"
+   ],
+   "enabled": true
+  },
+  "2024": {
+   "name": "Lions",
+   "type": "club",
+   "category": "URC",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "157791",
+    "viceCaptain": "157791",
+    "longGK": "157791",
+    "shortGK": "157791",
+    "longPunt": "158137",
+    "shortPunt": "158137",
+    "kickoff": "158137"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155617",
+    "158014",
+    "157964",
+    "157968",
+    "158181",
+    "158175",
+    "158050",
+    "157965",
+    "157916",
+    "157791",
+    "157911",
+    "157622",
+    "155260",
+    "158053",
+    "158137",
+    "157107",
+    "158008",
+    "157716",
+    "157915",
+    "158017",
+    "146229",
+    "157070",
+    "158141",
+    "158057",
+    "154070",
+    "157936",
+    "158016",
+    "156798",
+    "157718",
+    "153807",
+    "154082",
+    "158064",
+    "158055",
+    "156956",
+    "157918",
+    "157967",
+    "158138",
+    "158056"
+   ],
+   "enabled": true
+  },
+  "2008": {
+   "name": "Lions",
+   "type": "club",
+   "category": "Super 14",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "148165",
+    "shortGK": "148165",
+    "longPunt": "148165",
+    "shortPunt": "148165",
+    "kickoff": "148165"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153633",
+    "156087",
+    "154488",
+    "155540",
+    "109876",
+    "156088",
+    "155586",
+    "153638",
+    "152318",
+    "148165",
+    "155555",
+    "156085",
+    "142750",
+    "148171",
+    "155593",
+    "156090",
+    "152316",
+    "156152",
+    "121416",
+    "142699",
+    "156092",
+    "156086",
+    "156089",
+    "156168",
+    "156179",
+    "156093",
+    "156180",
+    "156192",
+    "156193",
+    "156167",
+    "156199",
+    "156091",
+    "156198"
+   ],
+   "enabled": false
+  },
+  "2018": {
+   "name": "Lions",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "154059",
+    "viceCaptain": "154059",
+    "longGK": "154059",
+    "shortGK": "154059",
+    "longPunt": "154059",
+    "shortPunt": "154059",
+    "kickoff": "154059"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "157072",
+    "145095",
+    "154070",
+    "156949",
+    "146398",
+    "144928",
+    "156180",
+    "154073",
+    "154064",
+    "154059",
+    "154060",
+    "157182",
+    "154075",
+    "154206",
+    "156956",
+    "158584",
+    "157456",
+    "158572",
+    "158633",
+    "157710",
+    "158641",
+    "158571",
+    "155064",
+    "157069",
+    "157067",
+    "158628",
+    "157161",
+    "145127",
+    "158618",
+    "158620",
+    "156798",
+    "158656",
+    "158636",
+    "144554",
+    "157058",
+    "154063"
+   ],
+   "enabled": true
+  },
+  "2019": {
+   "name": "Lions",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2019/home_front.png",
+     "backKitFile": "kits_2019/home_back/home_back_%.png",
+     "previewFile": "kits_2019/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2019/away_front.png",
+     "backKitFile": "kits_2019/away_back/away_back_%.png",
+     "previewFile": "kits_2019/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "154059",
+    "viceCaptain": "154059",
+    "longGK": "154059",
+    "shortGK": "154059",
+    "longPunt": "154059",
+    "shortPunt": "154059",
+    "kickoff": "154059"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "157456",
+    "145095",
+    "144565",
+    "157088",
+    "146398",
+    "144928",
+    "157161",
+    "154073",
+    "154064",
+    "154059",
+    "154063",
+    "157182",
+    "154075",
+    "154206",
+    "156956",
+    "155064",
+    "158571",
+    "157710",
+    "157058",
+    "158692",
+    "158619",
+    "156770",
+    "157909",
+    "154060",
+    "158687",
+    "157920",
+    "158628",
+    "158641",
+    "157791",
+    "157919",
+    "158685",
+    "156978",
+    "158618",
+    "154083",
+    "157917",
+    "158682",
+    "154070",
+    "158584",
+    "158633",
+    "157915",
+    "158572",
+    "157069",
+    "157790",
+    "156180"
+   ],
+   "enabled": true
+  },
+  "2020": {
+   "name": "Lions",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "154059",
+    "shortGK": "154059",
+    "longPunt": "154059",
+    "shortPunt": "154059",
+    "kickoff": "154059"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "157456",
+    "158682",
+    "143965",
+    "157968",
+    "146398",
+    "158571",
+    "157920",
+    "158656",
+    "156262",
+    "154059",
+    "154063",
+    "144766",
+    "157918",
+    "157909",
+    "156956",
+    "158692",
+    "157058",
+    "144565",
+    "156978",
+    "157710",
+    "157916",
+    "158641",
+    "153638",
+    "158676",
+    "158618",
+    "154083",
+    "157917",
+    "158617",
+    "158619",
+    "157161",
+    "145587"
+   ],
+   "enabled": false
+  },
+  "2016": {
+   "name": "Lions",
+   "type": "club",
+   "category": "Super Rugby",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "154059",
+    "shortGK": "154059",
+    "longPunt": "154059",
+    "shortPunt": "154059",
+    "kickoff": "154059"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "157072",
+    "145095",
+    "154070",
+    "156949",
+    "146398",
+    "144928",
+    "144554",
+    "154073",
+    "154064",
+    "154059",
+    "154060",
+    "157182",
+    "154075",
+    "154206",
+    "156956",
+    "158633",
+    "158571",
+    "157456",
+    "158584",
+    "158572",
+    "155064",
+    "157710",
+    "157069",
+    "157067",
+    "158628",
+    "157161",
+    "145127",
+    "156770",
+    "158618",
+    "158620",
+    "156798",
+    "158641",
+    "158656",
+    "158636",
+    "156180",
+    "157058",
+    "154063"
+   ],
+   "enabled": false
+  }
+ }
+}

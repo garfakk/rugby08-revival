@@ -1,0 +1,3470 @@
+{
+  "id": "six_nations",
+  "name": "Six Nations",
+  "seasonal": true,
+  "seasons": {
+    "2008": {
+      "ball": "2008/ball/ball_%.png",
+      "pads": "2008/stadium_graphics.fsh",
+      "adboards": "2008/adboards.fsh",
+      "logo": "2008/tournament_logo.png",
+      "logo_frontend": "2008/logo_frontend.png",
+      "pitch_logo": "2008/pitch_logos/pitch_logo_%.png",
+      "template": {
+        "id": "six_nations_2008",
+        "name": "Six Nations 2008",
+        "order": 20.14,
+        "description": "The 2008 championship as it was played: the real fixtures, dates and grounds, with each nation's season 2008 squad (or the nearest one in the data). Points: 2 points a win, 1 a draw, no bonus points (they came in 2017).",
+        "season": "2008",
+        "match_type": "six_nations",
+        "variant": "six_nations",
+        "venue": "home",
+        "points": {
+          "win": 2,
+          "draw": 1,
+          "loss": 0
+        },
+        "tiebreakers": [
+          "points_diff",
+          "tries_for",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            3
+          ],
+          "yellow_accumulation": 0,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "table",
+            "name": "Championship",
+            "kind": "round_robin",
+            "legs": 1,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Table"
+            },
+            "fixtures": [
+              {
+                "date": "2008-02-02",
+                "time": "14:00",
+                "group": "A",
+                "home": "10003",
+                "away": "1007",
+                "stadium": "25",
+                "venue": "Croke Park, Dublin",
+                "real_score": "16–11"
+              },
+              {
+                "date": "2008-02-02",
+                "time": "16:30",
+                "group": "A",
+                "home": "10002",
+                "away": "1022",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "19–26"
+              },
+              {
+                "date": "2008-02-03",
+                "time": "15:00",
+                "group": "A",
+                "home": "1014",
+                "away": "10001",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "6–27"
+              },
+              {
+                "date": "2008-02-09",
+                "time": "14:00",
+                "group": "A",
+                "home": "1022",
+                "away": "1014",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "30–15"
+              },
+              {
+                "date": "2008-02-09",
+                "time": "16:00",
+                "group": "A",
+                "home": "10001",
+                "away": "10003",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "26–21"
+              },
+              {
+                "date": "2008-02-10",
+                "time": "14:30",
+                "group": "A",
+                "home": "1007",
+                "away": "10002",
+                "stadium": "39",
+                "venue": "Stadio Flaminio, Rome",
+                "real_score": "19–23"
+              },
+              {
+                "date": "2008-02-23",
+                "time": "15:00",
+                "group": "A",
+                "home": "1022",
+                "away": "1007",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "47–8"
+              },
+              {
+                "date": "2008-02-23",
+                "time": "17:00",
+                "group": "A",
+                "home": "10003",
+                "away": "1014",
+                "stadium": "25",
+                "venue": "Croke Park, Dublin",
+                "real_score": "34–13"
+              },
+              {
+                "date": "2008-02-23",
+                "time": "20:00",
+                "group": "A",
+                "home": "10001",
+                "away": "10002",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "13–24"
+              },
+              {
+                "date": "2008-03-08",
+                "time": "13:15",
+                "group": "A",
+                "home": "10003",
+                "away": "1022",
+                "stadium": "25",
+                "venue": "Croke Park, Dublin",
+                "real_score": "12–16"
+              },
+              {
+                "date": "2008-03-08",
+                "time": "15:15",
+                "group": "A",
+                "home": "1014",
+                "away": "10002",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "15–9"
+              },
+              {
+                "date": "2008-03-09",
+                "time": "15:00",
+                "group": "A",
+                "home": "10001",
+                "away": "1007",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "25–13"
+              },
+              {
+                "date": "2008-03-15",
+                "time": "13:00",
+                "group": "A",
+                "home": "1007",
+                "away": "1014",
+                "stadium": "39",
+                "venue": "Stadio Flaminio, Rome",
+                "real_score": "23–20"
+              },
+              {
+                "date": "2008-03-15",
+                "time": "15:00",
+                "group": "A",
+                "home": "10002",
+                "away": "10003",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "33–10"
+              },
+              {
+                "date": "2008-03-15",
+                "time": "17:00",
+                "group": "A",
+                "home": "1022",
+                "away": "10001",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "29–12"
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "table": {
+              "A": [
+                "10003",
+                "1007",
+                "10002",
+                "1022",
+                "1014",
+                "10001"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "1022",
+          "table": [
+            "1022",
+            "10002",
+            "10001",
+            "10003",
+            "1014",
+            "1007"
+          ],
+          "grand_slam": "1022"
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2008_Six_Nations_Championship"
+        ],
+        "_venue_note": "Game stadium stand-ins: Croke Park → Lansdowne Road (25)."
+      }
+    },
+    "2009": {
+      "ball": "2009/ball/ball_%.png",
+      "pads": "2009/stadium_graphics.fsh",
+      "adboards": "2009/adboards.fsh",
+      "logo": "2009/tournament_logo.png",
+      "logo_frontend": "2009/logo_frontend.png",
+      "pitch_logo": "2009/pitch_logos/pitch_logo_%.png",
+      "template": {
+        "id": "six_nations_2009",
+        "name": "Six Nations 2009",
+        "order": 20.13,
+        "description": "The 2009 championship as it was played: the real fixtures, dates and grounds, with each nation's season 2009 squad (or the nearest one in the data). Points: 2 points a win, 1 a draw, no bonus points (they came in 2017).",
+        "season": "2009",
+        "match_type": "six_nations",
+        "variant": "six_nations",
+        "venue": "home",
+        "points": {
+          "win": 2,
+          "draw": 1,
+          "loss": 0
+        },
+        "tiebreakers": [
+          "points_diff",
+          "tries_for",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            3
+          ],
+          "yellow_accumulation": 0,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "table",
+            "name": "Championship",
+            "kind": "round_robin",
+            "legs": 1,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Table"
+            },
+            "fixtures": [
+              {
+                "date": "2009-02-07",
+                "time": "15:00",
+                "group": "A",
+                "home": "10002",
+                "away": "1007",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "36–11"
+              },
+              {
+                "date": "2009-02-07",
+                "time": "17:00",
+                "group": "A",
+                "home": "10003",
+                "away": "10001",
+                "stadium": "25",
+                "venue": "Croke Park, Dublin",
+                "real_score": "30–21"
+              },
+              {
+                "date": "2009-02-08",
+                "time": "15:00",
+                "group": "A",
+                "home": "1014",
+                "away": "1022",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "13–26"
+              },
+              {
+                "date": "2009-02-14",
+                "time": "16:00",
+                "group": "A",
+                "home": "10001",
+                "away": "1014",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "22–13"
+              },
+              {
+                "date": "2009-02-14",
+                "time": "17:30",
+                "group": "A",
+                "home": "1022",
+                "away": "10002",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "23–15"
+              },
+              {
+                "date": "2009-02-15",
+                "time": "15:30",
+                "group": "A",
+                "home": "1007",
+                "away": "10003",
+                "stadium": "39",
+                "venue": "Stadio Flaminio, Rome",
+                "real_score": "9–38"
+              },
+              {
+                "date": "2009-02-27",
+                "time": "21:00",
+                "group": "A",
+                "home": "10001",
+                "away": "1022",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "21–16"
+              },
+              {
+                "date": "2009-02-28",
+                "time": "15:00",
+                "group": "A",
+                "home": "1014",
+                "away": "1007",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "26–6"
+              },
+              {
+                "date": "2009-02-28",
+                "time": "17:30",
+                "group": "A",
+                "home": "10003",
+                "away": "10002",
+                "stadium": "25",
+                "venue": "Croke Park, Dublin",
+                "real_score": "14–13"
+              },
+              {
+                "date": "2009-03-14",
+                "time": "16:00",
+                "group": "A",
+                "home": "1007",
+                "away": "1022",
+                "stadium": "39",
+                "venue": "Stadio Flaminio, Rome",
+                "real_score": "15–20"
+              },
+              {
+                "date": "2009-03-14",
+                "time": "17:00",
+                "group": "A",
+                "home": "1014",
+                "away": "10003",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "15–22"
+              },
+              {
+                "date": "2009-03-15",
+                "time": "15:00",
+                "group": "A",
+                "home": "10002",
+                "away": "10001",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "34–10"
+              },
+              {
+                "date": "2009-03-21",
+                "time": "14:15",
+                "group": "A",
+                "home": "1007",
+                "away": "10001",
+                "stadium": "39",
+                "venue": "Stadio Flaminio, Rome",
+                "real_score": "8–50"
+              },
+              {
+                "date": "2009-03-21",
+                "time": "15:30",
+                "group": "A",
+                "home": "10002",
+                "away": "1014",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "26–12"
+              },
+              {
+                "date": "2009-03-21",
+                "time": "17:30",
+                "group": "A",
+                "home": "1022",
+                "away": "10003",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "15–17"
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "table": {
+              "A": [
+                "10002",
+                "1007",
+                "10003",
+                "10001",
+                "1014",
+                "1022"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "10003",
+          "table": [
+            "10003",
+            "10002",
+            "10001",
+            "1022",
+            "1014",
+            "1007"
+          ],
+          "grand_slam": "10003"
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2009_Six_Nations_Championship"
+        ],
+        "_venue_note": "Game stadium stand-ins: Croke Park → Lansdowne Road (25)."
+      }
+    },
+    "2010": {
+      "ball": "2010/ball/ball_%.png",
+      "pads": "2010/stadium_graphics.fsh",
+      "adboards": "2010/adboards.fsh",
+      "logo": "2010/tournament_logo.png",
+      "logo_frontend": "2010/logo_frontend.png",
+      "pitch_logo": "2010/pitch_logos/pitch_logo_%.png",
+      "template": {
+        "id": "six_nations_2010",
+        "name": "Six Nations 2010",
+        "order": 20.12,
+        "description": "The 2010 championship as it was played: the real fixtures, dates and grounds, with each nation's season 2010 squad (or the nearest one in the data). Points: 2 points a win, 1 a draw, no bonus points (they came in 2017).",
+        "season": "2010",
+        "match_type": "six_nations",
+        "variant": "six_nations",
+        "venue": "home",
+        "points": {
+          "win": 2,
+          "draw": 1,
+          "loss": 0
+        },
+        "tiebreakers": [
+          "points_diff",
+          "tries_for",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            3
+          ],
+          "yellow_accumulation": 0,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "table",
+            "name": "Championship",
+            "kind": "round_robin",
+            "legs": 1,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Table"
+            },
+            "fixtures": [
+              {
+                "date": "2010-02-06",
+                "time": "14:30",
+                "group": "A",
+                "home": "10003",
+                "away": "1007",
+                "stadium": "25",
+                "venue": "Croke Park, Dublin",
+                "real_score": "29–11"
+              },
+              {
+                "date": "2010-02-06",
+                "time": "17:00",
+                "group": "A",
+                "home": "10002",
+                "away": "1022",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "30–17"
+              },
+              {
+                "date": "2010-02-07",
+                "time": "15:00",
+                "group": "A",
+                "home": "1014",
+                "away": "10001",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "9–18"
+              },
+              {
+                "date": "2010-02-13",
+                "time": "14:00",
+                "group": "A",
+                "home": "1022",
+                "away": "1014",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "31–24"
+              },
+              {
+                "date": "2010-02-13",
+                "time": "16:30",
+                "group": "A",
+                "home": "10001",
+                "away": "10003",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "33–10"
+              },
+              {
+                "date": "2010-02-14",
+                "time": "14:30",
+                "group": "A",
+                "home": "1007",
+                "away": "10002",
+                "stadium": "39",
+                "venue": "Stadio Flaminio, Rome",
+                "real_score": "12–17"
+              },
+              {
+                "date": "2010-02-26",
+                "time": "20:00",
+                "group": "A",
+                "home": "1022",
+                "away": "10001",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "20–26"
+              },
+              {
+                "date": "2010-02-27",
+                "time": "13:30",
+                "group": "A",
+                "home": "1007",
+                "away": "1014",
+                "stadium": "39",
+                "venue": "Stadio Flaminio, Rome",
+                "real_score": "16–12"
+              },
+              {
+                "date": "2010-02-27",
+                "time": "16:00",
+                "group": "A",
+                "home": "10002",
+                "away": "10003",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "16–20"
+              },
+              {
+                "date": "2010-03-13",
+                "time": "14:30",
+                "group": "A",
+                "home": "10003",
+                "away": "1022",
+                "stadium": "25",
+                "venue": "Croke Park, Dublin",
+                "real_score": "27–12"
+              },
+              {
+                "date": "2010-03-13",
+                "time": "17:00",
+                "group": "A",
+                "home": "1014",
+                "away": "10002",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "15–15"
+              },
+              {
+                "date": "2010-03-14",
+                "time": "14:30",
+                "group": "A",
+                "home": "10001",
+                "away": "1007",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "46–20"
+              },
+              {
+                "date": "2010-03-20",
+                "time": "14:30",
+                "group": "A",
+                "home": "1022",
+                "away": "1007",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "33–10"
+              },
+              {
+                "date": "2010-03-20",
+                "time": "17:00",
+                "group": "A",
+                "home": "10003",
+                "away": "1014",
+                "stadium": "25",
+                "venue": "Croke Park, Dublin",
+                "real_score": "20–23"
+              },
+              {
+                "date": "2010-03-20",
+                "time": "19:45",
+                "group": "A",
+                "home": "10001",
+                "away": "10002",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "12–10"
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "table": {
+              "A": [
+                "10003",
+                "1007",
+                "10002",
+                "1022",
+                "1014",
+                "10001"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "10001",
+          "table": [
+            "10001",
+            "10003",
+            "10002",
+            "1022",
+            "1014",
+            "1007"
+          ],
+          "grand_slam": "10001"
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2010_Six_Nations_Championship"
+        ],
+        "_venue_note": "Game stadium stand-ins: Croke Park → Lansdowne Road (25)."
+      }
+    },
+    "2015": {
+      "ball": "2015/ball/ball_%.png",
+      "pads": "2015/stadium_graphics.fsh",
+      "adboards": "2015/adboards.fsh",
+      "logo": "2015/tournament_logo.png",
+      "logo_frontend": "2015/logo_frontend.png",
+      "pitch_logo": "2015/pitch_logos/pitch_logo_%.png",
+      "template": {
+        "id": "six_nations_2015",
+        "name": "Six Nations 2015",
+        "order": 20.11,
+        "description": "The 2015 championship as it was played: the real fixtures, dates and grounds, with each nation's season 2015 squad (or the nearest one in the data). Points: 2 points a win, 1 a draw, no bonus points (they came in 2017).",
+        "season": "2015",
+        "match_type": "six_nations",
+        "variant": "six_nations",
+        "venue": "home",
+        "points": {
+          "win": 2,
+          "draw": 1,
+          "loss": 0
+        },
+        "tiebreakers": [
+          "points_diff",
+          "tries_for",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            3
+          ],
+          "yellow_accumulation": 0,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "table",
+            "name": "Championship",
+            "kind": "round_robin",
+            "legs": 1,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Table"
+            },
+            "fixtures": [
+              {
+                "date": "2015-02-06",
+                "time": "20:05",
+                "group": "A",
+                "home": "1022",
+                "away": "10002",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "16–21"
+              },
+              {
+                "date": "2015-02-07",
+                "time": "15:30",
+                "group": "A",
+                "home": "1007",
+                "away": "10003",
+                "stadium": "39",
+                "venue": "Stadio Olimpico, Rome",
+                "real_score": "3–26"
+              },
+              {
+                "date": "2015-02-07",
+                "time": "18:00",
+                "group": "A",
+                "home": "10001",
+                "away": "1014",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "15–8"
+              },
+              {
+                "date": "2015-02-14",
+                "time": "14:30",
+                "group": "A",
+                "home": "10002",
+                "away": "1007",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "47–17"
+              },
+              {
+                "date": "2015-02-14",
+                "time": "17:00",
+                "group": "A",
+                "home": "10003",
+                "away": "10001",
+                "stadium": "25",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "18–11"
+              },
+              {
+                "date": "2015-02-15",
+                "time": "15:00",
+                "group": "A",
+                "home": "1014",
+                "away": "1022",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "23–26"
+              },
+              {
+                "date": "2015-02-28",
+                "time": "14:30",
+                "group": "A",
+                "home": "1014",
+                "away": "1007",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "19–22"
+              },
+              {
+                "date": "2015-02-28",
+                "time": "18:00",
+                "group": "A",
+                "home": "10001",
+                "away": "1022",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "13–20"
+              },
+              {
+                "date": "2015-03-01",
+                "time": "15:00",
+                "group": "A",
+                "home": "10003",
+                "away": "10002",
+                "stadium": "25",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "19–9"
+              },
+              {
+                "date": "2015-03-14",
+                "time": "14:30",
+                "group": "A",
+                "home": "1022",
+                "away": "10003",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "23–16"
+              },
+              {
+                "date": "2015-03-14",
+                "time": "17:00",
+                "group": "A",
+                "home": "10002",
+                "away": "1014",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "25–13"
+              },
+              {
+                "date": "2015-03-15",
+                "time": "16:00",
+                "group": "A",
+                "home": "1007",
+                "away": "10001",
+                "stadium": "39",
+                "venue": "Stadio Olimpico, Rome",
+                "real_score": "0–29"
+              },
+              {
+                "date": "2015-03-21",
+                "time": "13:30",
+                "group": "A",
+                "home": "1007",
+                "away": "1022",
+                "stadium": "39",
+                "venue": "Stadio Olimpico, Rome",
+                "real_score": "20–61"
+              },
+              {
+                "date": "2015-03-21",
+                "time": "14:30",
+                "group": "A",
+                "home": "1014",
+                "away": "10003",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "10–40"
+              },
+              {
+                "date": "2015-03-21",
+                "time": "17:00",
+                "group": "A",
+                "home": "10002",
+                "away": "10001",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "55–35"
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "table": {
+              "A": [
+                "1022",
+                "10002",
+                "1007",
+                "10003",
+                "10001",
+                "1014"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "10003",
+          "table": [
+            "10003",
+            "10002",
+            "1022",
+            "10001",
+            "1007",
+            "1014"
+          ],
+          "grand_slam": null
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2015_Six_Nations_Championship"
+        ]
+      }
+    },
+    "2017": {
+      "ball": "2017/ball/ball_%.png",
+      "pads": "2017/stadium_graphics.fsh",
+      "adboards": "2017/adboards.fsh",
+      "logo": "2017/tournament_logo.png",
+      "logo_frontend": "2017/logo_frontend.png",
+      "pitch_logo": "2017/pitch_logos/pitch_logo_%.png",
+      "template": {
+        "id": "six_nations_2017",
+        "name": "Six Nations 2017",
+        "order": 20.1,
+        "description": "The 2017 championship as it was played: the real fixtures, dates and grounds, with each nation's season 2017 squad (or the nearest one in the data). Points: 4 a win, 2 a draw, a bonus point for 4 tries and for losing by 7 or less, 3 more for a Grand Slam.",
+        "season": "2017",
+        "match_type": "six_nations",
+        "variant": "six_nations",
+        "venue": "home",
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "tries": 4
+          },
+          "losing_bonus": {
+            "margin": 7
+          },
+          "grand_slam": 3
+        },
+        "tiebreakers": [
+          "points_diff",
+          "tries_for",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            3
+          ],
+          "yellow_accumulation": 0,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "table",
+            "name": "Championship",
+            "kind": "round_robin",
+            "legs": 1,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Table"
+            },
+            "fixtures": [
+              {
+                "date": "2017-02-04",
+                "time": "14:25",
+                "group": "A",
+                "home": "1014",
+                "away": "10003",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "27–22"
+              },
+              {
+                "date": "2017-02-04",
+                "time": "16:50",
+                "group": "A",
+                "home": "10002",
+                "away": "10001",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "19–16"
+              },
+              {
+                "date": "2017-02-05",
+                "time": "15:00",
+                "group": "A",
+                "home": "1007",
+                "away": "1022",
+                "stadium": "39",
+                "venue": "Stadio Olimpico, Rome",
+                "real_score": "7–33"
+              },
+              {
+                "date": "2017-02-11",
+                "time": "15:25",
+                "group": "A",
+                "home": "1007",
+                "away": "10003",
+                "stadium": "39",
+                "venue": "Stadio Olimpico, Rome",
+                "real_score": "10–63"
+              },
+              {
+                "date": "2017-02-11",
+                "time": "16:50",
+                "group": "A",
+                "home": "1022",
+                "away": "10002",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "16–21"
+              },
+              {
+                "date": "2017-02-12",
+                "time": "16:00",
+                "group": "A",
+                "home": "10001",
+                "away": "1014",
+                "stadium": "70",
+                "venue": "Stade de France, Paris",
+                "real_score": "22–16"
+              },
+              {
+                "date": "2017-02-25",
+                "time": "14:25",
+                "group": "A",
+                "home": "1014",
+                "away": "1022",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "29–13"
+              },
+              {
+                "date": "2017-02-25",
+                "time": "16:50",
+                "group": "A",
+                "home": "10003",
+                "away": "10001",
+                "stadium": "25",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "19–9"
+              },
+              {
+                "date": "2017-02-26",
+                "time": "15:00",
+                "group": "A",
+                "home": "10002",
+                "away": "1007",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "36–15"
+              },
+              {
+                "date": "2017-03-10",
+                "time": "20:05",
+                "group": "A",
+                "home": "1022",
+                "away": "10003",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "22–9"
+              },
+              {
+                "date": "2017-03-11",
+                "time": "14:30",
+                "group": "A",
+                "home": "1007",
+                "away": "10001",
+                "stadium": "39",
+                "venue": "Stadio Olimpico, Rome",
+                "real_score": "18–40"
+              },
+              {
+                "date": "2017-03-11",
+                "time": "16:00",
+                "group": "A",
+                "home": "10002",
+                "away": "1014",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "61–21"
+              },
+              {
+                "date": "2017-03-18",
+                "time": "12:30",
+                "group": "A",
+                "home": "1014",
+                "away": "1007",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "29–0"
+              },
+              {
+                "date": "2017-03-18",
+                "time": "15:45",
+                "group": "A",
+                "home": "10001",
+                "away": "1022",
+                "stadium": "70",
+                "venue": "Stade de France, Paris",
+                "real_score": "20–18"
+              },
+              {
+                "date": "2017-03-18",
+                "time": "17:00",
+                "group": "A",
+                "home": "10003",
+                "away": "10002",
+                "stadium": "25",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "13–9"
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "table": {
+              "A": [
+                "1014",
+                "10003",
+                "10002",
+                "10001",
+                "1007",
+                "1022"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "10002",
+          "table": [
+            "10002",
+            "10003",
+            "10001",
+            "1014",
+            "1022",
+            "1007"
+          ],
+          "grand_slam": null
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2017_Six_Nations_Championship"
+        ]
+      }
+    },
+    "2018": {
+      "ball": "2018/ball/ball_%.png",
+      "pads": "2018/stadium_graphics.fsh",
+      "adboards": "2018/adboards.fsh",
+      "logo": "2018/tournament_logo.png",
+      "logo_frontend": "2018/logo_frontend.png",
+      "pitch_logo": "2018/pitch_logos/pitch_logo_%.png",
+      "template": {
+        "id": "six_nations_2018",
+        "name": "Six Nations 2018",
+        "order": 20.09,
+        "description": "The 2018 championship as it was played: the real fixtures, dates and grounds, with each nation's season 2018 squad (or the nearest one in the data). Points: 4 a win, 2 a draw, a bonus point for 4 tries and for losing by 7 or less, 3 more for a Grand Slam.",
+        "season": "2018",
+        "match_type": "six_nations",
+        "variant": "six_nations",
+        "venue": "home",
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "tries": 4
+          },
+          "losing_bonus": {
+            "margin": 7
+          },
+          "grand_slam": 3
+        },
+        "tiebreakers": [
+          "points_diff",
+          "tries_for",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            3
+          ],
+          "yellow_accumulation": 0,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "table",
+            "name": "Championship",
+            "kind": "round_robin",
+            "legs": 1,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Table"
+            },
+            "fixtures": [
+              {
+                "date": "2018-02-03",
+                "time": "14:15",
+                "group": "A",
+                "home": "1022",
+                "away": "1014",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "34–7"
+              },
+              {
+                "date": "2018-02-03",
+                "time": "17:45",
+                "group": "A",
+                "home": "10001",
+                "away": "10003",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "13–15"
+              },
+              {
+                "date": "2018-02-04",
+                "time": "16:00",
+                "group": "A",
+                "home": "1007",
+                "away": "10002",
+                "stadium": "39",
+                "venue": "Stadio Olimpico, Rome",
+                "real_score": "15–46"
+              },
+              {
+                "date": "2018-02-10",
+                "time": "14:15",
+                "group": "A",
+                "home": "10003",
+                "away": "1007",
+                "stadium": "25",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "56–19"
+              },
+              {
+                "date": "2018-02-10",
+                "time": "16:45",
+                "group": "A",
+                "home": "10002",
+                "away": "1022",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "12–6"
+              },
+              {
+                "date": "2018-02-11",
+                "time": "15:00",
+                "group": "A",
+                "home": "1014",
+                "away": "10001",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "32–26"
+              },
+              {
+                "date": "2018-02-23",
+                "time": "21:00",
+                "group": "A",
+                "home": "10001",
+                "away": "1007",
+                "stadium": "68",
+                "venue": "Stade Vélodrome, Marseille",
+                "real_score": "34–17"
+              },
+              {
+                "date": "2018-02-24",
+                "time": "14:15",
+                "group": "A",
+                "home": "10003",
+                "away": "1022",
+                "stadium": "25",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "37–27"
+              },
+              {
+                "date": "2018-02-24",
+                "time": "16:45",
+                "group": "A",
+                "home": "1014",
+                "away": "10002",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "25–13"
+              },
+              {
+                "date": "2018-03-10",
+                "time": "14:15",
+                "group": "A",
+                "home": "10003",
+                "away": "1014",
+                "stadium": "25",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "28–8"
+              },
+              {
+                "date": "2018-03-10",
+                "time": "17:45",
+                "group": "A",
+                "home": "10001",
+                "away": "10002",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "22–16"
+              },
+              {
+                "date": "2018-03-11",
+                "time": "15:00",
+                "group": "A",
+                "home": "1022",
+                "away": "1007",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "38–14"
+              },
+              {
+                "date": "2018-03-17",
+                "time": "13:30",
+                "group": "A",
+                "home": "1007",
+                "away": "1014",
+                "stadium": "39",
+                "venue": "Stadio Olimpico, Rome",
+                "real_score": "27–29"
+              },
+              {
+                "date": "2018-03-17",
+                "time": "14:45",
+                "group": "A",
+                "home": "10002",
+                "away": "10003",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "15–24"
+              },
+              {
+                "date": "2018-03-17",
+                "time": "17:00",
+                "group": "A",
+                "home": "1022",
+                "away": "10001",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "14–13"
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "table": {
+              "A": [
+                "1022",
+                "1014",
+                "10001",
+                "10003",
+                "1007",
+                "10002"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "10003",
+          "table": [
+            "10003",
+            "1022",
+            "1014",
+            "10001",
+            "10002",
+            "1007"
+          ],
+          "grand_slam": "10003"
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2018_Six_Nations_Championship"
+        ]
+      }
+    },
+    "2019": {
+      "ball": "2019/ball/ball_%.png",
+      "pads": "2019/stadium_graphics.fsh",
+      "adboards": "2019/adboards.fsh",
+      "logo": "2019/tournament_logo.png",
+      "logo_frontend": "2019/logo_frontend.png",
+      "pitch_logo": "2019/pitch_logos/pitch_logo_%.png",
+      "template": {
+        "id": "six_nations_2019",
+        "name": "Six Nations 2019",
+        "order": 20.08,
+        "description": "The 2019 championship as it was played: the real fixtures, dates and grounds, with each nation's season 2019 squad (or the nearest one in the data). Points: 4 a win, 2 a draw, a bonus point for 4 tries and for losing by 7 or less, 3 more for a Grand Slam.",
+        "season": "2019",
+        "match_type": "six_nations",
+        "variant": "six_nations",
+        "venue": "home",
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "tries": 4
+          },
+          "losing_bonus": {
+            "margin": 7
+          },
+          "grand_slam": 3
+        },
+        "tiebreakers": [
+          "points_diff",
+          "tries_for",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            3
+          ],
+          "yellow_accumulation": 0,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "table",
+            "name": "Championship",
+            "kind": "round_robin",
+            "legs": 1,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Table"
+            },
+            "fixtures": [
+              {
+                "date": "2019-02-01",
+                "time": "21:00",
+                "group": "A",
+                "home": "10001",
+                "away": "1022",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "19–24"
+              },
+              {
+                "date": "2019-02-02",
+                "time": "14:15",
+                "group": "A",
+                "home": "1014",
+                "away": "1007",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "33–20"
+              },
+              {
+                "date": "2019-02-02",
+                "time": "16:45",
+                "group": "A",
+                "home": "10003",
+                "away": "10002",
+                "stadium": "25",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "20–32"
+              },
+              {
+                "date": "2019-02-09",
+                "time": "14:15",
+                "group": "A",
+                "home": "1014",
+                "away": "10003",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "13–22"
+              },
+              {
+                "date": "2019-02-09",
+                "time": "17:45",
+                "group": "A",
+                "home": "1007",
+                "away": "1022",
+                "stadium": "39",
+                "venue": "Stadio Olimpico, Rome",
+                "real_score": "15–26"
+              },
+              {
+                "date": "2019-02-10",
+                "time": "15:00",
+                "group": "A",
+                "home": "10002",
+                "away": "10001",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "44–8"
+              },
+              {
+                "date": "2019-02-23",
+                "time": "15:15",
+                "group": "A",
+                "home": "10001",
+                "away": "1014",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "27–10"
+              },
+              {
+                "date": "2019-02-23",
+                "time": "16:45",
+                "group": "A",
+                "home": "1022",
+                "away": "10002",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "21–13"
+              },
+              {
+                "date": "2019-02-24",
+                "time": "16:00",
+                "group": "A",
+                "home": "1007",
+                "away": "10003",
+                "stadium": "39",
+                "venue": "Stadio Olimpico, Rome",
+                "real_score": "16–26"
+              },
+              {
+                "date": "2019-03-09",
+                "time": "14:15",
+                "group": "A",
+                "home": "1014",
+                "away": "1022",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "11–18"
+              },
+              {
+                "date": "2019-03-09",
+                "time": "16:45",
+                "group": "A",
+                "home": "10002",
+                "away": "1007",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "57–14"
+              },
+              {
+                "date": "2019-03-10",
+                "time": "15:00",
+                "group": "A",
+                "home": "10003",
+                "away": "10001",
+                "stadium": "25",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "26–14"
+              },
+              {
+                "date": "2019-03-16",
+                "time": "13:30",
+                "group": "A",
+                "home": "1007",
+                "away": "10001",
+                "stadium": "39",
+                "venue": "Stadio Olimpico, Rome",
+                "real_score": "14–25"
+              },
+              {
+                "date": "2019-03-16",
+                "time": "14:45",
+                "group": "A",
+                "home": "1022",
+                "away": "10003",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "25–7"
+              },
+              {
+                "date": "2019-03-16",
+                "time": "17:00",
+                "group": "A",
+                "home": "10002",
+                "away": "1014",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "38–38"
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "table": {
+              "A": [
+                "10001",
+                "1022",
+                "1014",
+                "1007",
+                "10003",
+                "10002"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "1022",
+          "table": [
+            "1022",
+            "10002",
+            "10003",
+            "10001",
+            "1014",
+            "1007"
+          ],
+          "grand_slam": "1022"
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2019_Six_Nations_Championship"
+        ]
+      }
+    },
+    "2020": {
+      "ball": "2020/ball/ball_%.png",
+      "pads": "2020/stadium_graphics.fsh",
+      "adboards": "2020/adboards.fsh",
+      "logo": "2020/tournament_logo.png",
+      "logo_frontend": "2020/logo_frontend.png",
+      "pitch_logo": "2020/pitch_logos/pitch_logo_%.png",
+      "template": {
+        "id": "six_nations_2020",
+        "name": "Six Nations 2020",
+        "order": 20.07,
+        "description": "The 2020 championship as it was played: the real fixtures, dates and grounds, with each nation's season 2020 squad (or the nearest one in the data). Points: 4 a win, 2 a draw, a bonus point for 4 tries and for losing by 7 or less, 3 more for a Grand Slam.",
+        "season": "2020",
+        "match_type": "six_nations",
+        "variant": "six_nations",
+        "venue": "home",
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "tries": 4
+          },
+          "losing_bonus": {
+            "margin": 7
+          },
+          "grand_slam": 3
+        },
+        "tiebreakers": [
+          "points_diff",
+          "tries_for",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            3
+          ],
+          "yellow_accumulation": 0,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "table",
+            "name": "Championship",
+            "kind": "round_robin",
+            "legs": 1,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Table"
+            },
+            "fixtures": [
+              {
+                "date": "2020-02-01",
+                "time": "14:15",
+                "group": "A",
+                "home": "1022",
+                "away": "1007",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "42–0"
+              },
+              {
+                "date": "2020-02-01",
+                "time": "16:45",
+                "group": "A",
+                "home": "10003",
+                "away": "1014",
+                "stadium": "25",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "19–12"
+              },
+              {
+                "date": "2020-02-02",
+                "time": "16:00",
+                "group": "A",
+                "home": "10001",
+                "away": "10002",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "24–17"
+              },
+              {
+                "date": "2020-02-08",
+                "time": "14:15",
+                "group": "A",
+                "home": "10003",
+                "away": "1022",
+                "stadium": "25",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "24–14"
+              },
+              {
+                "date": "2020-02-08",
+                "time": "16:45",
+                "group": "A",
+                "home": "1014",
+                "away": "10002",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "6–13"
+              },
+              {
+                "date": "2020-02-09",
+                "time": "16:00",
+                "group": "A",
+                "home": "10001",
+                "away": "1007",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "35–22"
+              },
+              {
+                "date": "2020-02-22",
+                "time": "15:15",
+                "group": "A",
+                "home": "1007",
+                "away": "1014",
+                "stadium": "39",
+                "venue": "Stadio Olimpico, Rome",
+                "real_score": "0–17"
+              },
+              {
+                "date": "2020-02-22",
+                "time": "16:45",
+                "group": "A",
+                "home": "1022",
+                "away": "10001",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "23–27"
+              },
+              {
+                "date": "2020-02-23",
+                "time": "15:00",
+                "group": "A",
+                "home": "10002",
+                "away": "10003",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "24–12"
+              },
+              {
+                "date": "2020-03-07",
+                "time": "16:45",
+                "group": "A",
+                "home": "10002",
+                "away": "1022",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "33–30"
+              },
+              {
+                "date": "2020-03-08",
+                "time": "15:00",
+                "group": "A",
+                "home": "1014",
+                "away": "10001",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "28–17"
+              },
+              {
+                "date": "2020-10-24",
+                "time": "15:30",
+                "group": "A",
+                "home": "10003",
+                "away": "1007",
+                "stadium": "25",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "50–17"
+              },
+              {
+                "date": "2020-10-31",
+                "time": "14:15",
+                "group": "A",
+                "home": "1022",
+                "away": "1014",
+                "stadium": "34",
+                "venue": "Parc y Scarlets, Llanelli",
+                "real_score": "10–14"
+              },
+              {
+                "date": "2020-10-31",
+                "time": "17:45",
+                "group": "A",
+                "home": "1007",
+                "away": "10002",
+                "stadium": "39",
+                "venue": "Stadio Olimpico, Rome",
+                "real_score": "5–34"
+              },
+              {
+                "date": "2020-10-31",
+                "time": "21:10",
+                "group": "A",
+                "home": "10001",
+                "away": "10003",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "35–27"
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "table": {
+              "A": [
+                "1022",
+                "1007",
+                "10003",
+                "1014",
+                "10001",
+                "10002"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "10002",
+          "table": [
+            "10002",
+            "10001",
+            "10003",
+            "1014",
+            "1022",
+            "1007"
+          ],
+          "grand_slam": null
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2020_Six_Nations_Championship"
+        ]
+      }
+    },
+    "2021": {
+      "ball": "2021/ball/ball_%.png",
+      "pads": "2021/stadium_graphics.fsh",
+      "adboards": "2021/adboards.fsh",
+      "logo": "2021/tournament_logo.png",
+      "logo_frontend": "2021/logo_frontend.png",
+      "pitch_logo": "2021/pitch_logos/pitch_logo_%.png",
+      "template": {
+        "id": "six_nations_2021",
+        "name": "Six Nations 2021",
+        "order": 20.06,
+        "description": "The 2021 championship as it was played: the real fixtures, dates and grounds, with each nation's season 2021 squad (or the nearest one in the data). Points: 4 a win, 2 a draw, a bonus point for 4 tries and for losing by 7 or less, 3 more for a Grand Slam.",
+        "season": "2021",
+        "match_type": "six_nations",
+        "variant": "six_nations",
+        "venue": "home",
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "tries": 4
+          },
+          "losing_bonus": {
+            "margin": 7
+          },
+          "grand_slam": 3
+        },
+        "tiebreakers": [
+          "points_diff",
+          "tries_for",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            3
+          ],
+          "yellow_accumulation": 0,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "table",
+            "name": "Championship",
+            "kind": "round_robin",
+            "legs": 1,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Table"
+            },
+            "fixtures": [
+              {
+                "date": "2021-02-06",
+                "time": "15:15",
+                "group": "A",
+                "home": "1007",
+                "away": "10001",
+                "stadium": "39",
+                "venue": "Stadio Olimpico, Rome",
+                "real_score": "10–50"
+              },
+              {
+                "date": "2021-02-06",
+                "time": "16:45",
+                "group": "A",
+                "home": "10002",
+                "away": "1014",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "6–11"
+              },
+              {
+                "date": "2021-02-07",
+                "time": "15:00",
+                "group": "A",
+                "home": "1022",
+                "away": "10003",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "21–16"
+              },
+              {
+                "date": "2021-02-13",
+                "time": "14:15",
+                "group": "A",
+                "home": "10002",
+                "away": "1007",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "41–18"
+              },
+              {
+                "date": "2021-02-13",
+                "time": "16:45",
+                "group": "A",
+                "home": "1014",
+                "away": "1022",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "24–25"
+              },
+              {
+                "date": "2021-02-14",
+                "time": "15:00",
+                "group": "A",
+                "home": "10003",
+                "away": "10001",
+                "stadium": "25",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "13–15"
+              },
+              {
+                "date": "2021-02-27",
+                "time": "15:15",
+                "group": "A",
+                "home": "1007",
+                "away": "10003",
+                "stadium": "39",
+                "venue": "Stadio Olimpico, Rome",
+                "real_score": "10–48"
+              },
+              {
+                "date": "2021-02-27",
+                "time": "16:45",
+                "group": "A",
+                "home": "1022",
+                "away": "10002",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "40–24"
+              },
+              {
+                "date": "2021-03-13",
+                "time": "15:15",
+                "group": "A",
+                "home": "1007",
+                "away": "1022",
+                "stadium": "39",
+                "venue": "Stadio Olimpico, Rome",
+                "real_score": "7–48"
+              },
+              {
+                "date": "2021-03-13",
+                "time": "16:45",
+                "group": "A",
+                "home": "10002",
+                "away": "10001",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "23–20"
+              },
+              {
+                "date": "2021-03-14",
+                "time": "15:00",
+                "group": "A",
+                "home": "1014",
+                "away": "10003",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "24–27"
+              },
+              {
+                "date": "2021-03-20",
+                "time": "14:15",
+                "group": "A",
+                "home": "1014",
+                "away": "1007",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "52–10"
+              },
+              {
+                "date": "2021-03-20",
+                "time": "16:45",
+                "group": "A",
+                "home": "10003",
+                "away": "10002",
+                "stadium": "25",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "32–18"
+              },
+              {
+                "date": "2021-03-20",
+                "time": "21:00",
+                "group": "A",
+                "home": "10001",
+                "away": "1022",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "32–30"
+              },
+              {
+                "date": "2021-03-26",
+                "time": "21:00",
+                "group": "A",
+                "home": "10001",
+                "away": "1014",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "23–27"
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "table": {
+              "A": [
+                "1007",
+                "10001",
+                "10002",
+                "1014",
+                "1022",
+                "10003"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "1022",
+          "table": [
+            "1022",
+            "10001",
+            "10003",
+            "1014",
+            "10002",
+            "1007"
+          ],
+          "grand_slam": null
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2021_Six_Nations_Championship"
+        ]
+      }
+    },
+    "2022": {
+      "ball": "2022/ball/ball_%.png",
+      "pads": "2022/stadium_graphics.fsh",
+      "adboards": "2022/adboards.fsh",
+      "logo": "2022/tournament_logo.png",
+      "logo_frontend": "2022/logo_frontend.png",
+      "pitch_logo": "2022/pitch_logos/pitch_logo_%.png",
+      "template": {
+        "id": "six_nations_2022",
+        "name": "Six Nations 2022",
+        "order": 20.05,
+        "description": "The 2022 championship as it was played: the real fixtures, dates and grounds, with each nation's season 2022 squad (or the nearest one in the data). Points: 4 a win, 2 a draw, a bonus point for 4 tries and for losing by 7 or less, 3 more for a Grand Slam.",
+        "season": "2022",
+        "match_type": "six_nations",
+        "variant": "six_nations",
+        "venue": "home",
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "tries": 4
+          },
+          "losing_bonus": {
+            "margin": 7
+          },
+          "grand_slam": 3
+        },
+        "tiebreakers": [
+          "points_diff",
+          "tries_for",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            3
+          ],
+          "yellow_accumulation": 0,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "table",
+            "name": "Championship",
+            "kind": "round_robin",
+            "legs": 1,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Table"
+            },
+            "fixtures": [
+              {
+                "date": "2022-02-05",
+                "time": "14:15",
+                "group": "A",
+                "home": "10003",
+                "away": "1022",
+                "stadium": "25",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "29–7"
+              },
+              {
+                "date": "2022-02-05",
+                "time": "16:45",
+                "group": "A",
+                "home": "1014",
+                "away": "10002",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "20–17"
+              },
+              {
+                "date": "2022-02-06",
+                "time": "16:00",
+                "group": "A",
+                "home": "10001",
+                "away": "1007",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "37–10"
+              },
+              {
+                "date": "2022-02-12",
+                "time": "14:15",
+                "group": "A",
+                "home": "1022",
+                "away": "1014",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "20–17"
+              },
+              {
+                "date": "2022-02-12",
+                "time": "17:45",
+                "group": "A",
+                "home": "10001",
+                "away": "10003",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "30–24"
+              },
+              {
+                "date": "2022-02-13",
+                "time": "16:00",
+                "group": "A",
+                "home": "1007",
+                "away": "10002",
+                "stadium": "39",
+                "venue": "Stadio Olimpico, Rome",
+                "real_score": "0–33"
+              },
+              {
+                "date": "2022-02-26",
+                "time": "14:15",
+                "group": "A",
+                "home": "1014",
+                "away": "10001",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "17–36"
+              },
+              {
+                "date": "2022-02-26",
+                "time": "16:45",
+                "group": "A",
+                "home": "10002",
+                "away": "1022",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "23–19"
+              },
+              {
+                "date": "2022-02-27",
+                "time": "15:00",
+                "group": "A",
+                "home": "10003",
+                "away": "1007",
+                "stadium": "25",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "57–6"
+              },
+              {
+                "date": "2022-03-11",
+                "time": "20:00",
+                "group": "A",
+                "home": "1022",
+                "away": "10001",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "9–13"
+              },
+              {
+                "date": "2022-03-12",
+                "time": "15:15",
+                "group": "A",
+                "home": "1007",
+                "away": "1014",
+                "stadium": "39",
+                "venue": "Stadio Olimpico, Rome",
+                "real_score": "22–33"
+              },
+              {
+                "date": "2022-03-12",
+                "time": "16:45",
+                "group": "A",
+                "home": "10002",
+                "away": "10003",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "15–32"
+              },
+              {
+                "date": "2022-03-19",
+                "time": "14:15",
+                "group": "A",
+                "home": "1022",
+                "away": "1007",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "21–22"
+              },
+              {
+                "date": "2022-03-19",
+                "time": "16:45",
+                "group": "A",
+                "home": "10003",
+                "away": "1014",
+                "stadium": "25",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "26–5"
+              },
+              {
+                "date": "2022-03-19",
+                "time": "21:00",
+                "group": "A",
+                "home": "10001",
+                "away": "10002",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "25–13"
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "table": {
+              "A": [
+                "10003",
+                "1022",
+                "1014",
+                "10002",
+                "10001",
+                "1007"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "10001",
+          "table": [
+            "10001",
+            "10003",
+            "10002",
+            "1014",
+            "1022",
+            "1007"
+          ],
+          "grand_slam": "10001"
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2022_Six_Nations_Championship"
+        ]
+      }
+    },
+    "2023": {
+      "ball": "2023/ball/ball_%.png",
+      "pads": "2023/stadium_graphics.fsh",
+      "adboards": "2023/adboards.fsh",
+      "logo": "2023/tournament_logo.png",
+      "logo_frontend": "2023/logo_frontend.png",
+      "pitch_logo": "2023/pitch_logos/pitch_logo_%.png",
+      "template": {
+        "id": "six_nations_2023",
+        "name": "Six Nations 2023",
+        "order": 20.04,
+        "description": "The 2023 championship as it was played: the real fixtures, dates and grounds, with each nation's season 2023 squad (or the nearest one in the data). Points: 4 a win, 2 a draw, a bonus point for 4 tries and for losing by 7 or less, 3 more for a Grand Slam.",
+        "season": "2023",
+        "match_type": "six_nations",
+        "variant": "six_nations",
+        "venue": "home",
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "tries": 4
+          },
+          "losing_bonus": {
+            "margin": 7
+          },
+          "grand_slam": 3
+        },
+        "tiebreakers": [
+          "points_diff",
+          "tries_for",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            3
+          ],
+          "yellow_accumulation": 0,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "table",
+            "name": "Championship",
+            "kind": "round_robin",
+            "legs": 1,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Table"
+            },
+            "fixtures": [
+              {
+                "date": "2023-02-04",
+                "time": "14:15",
+                "group": "A",
+                "home": "1022",
+                "away": "10003",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "10–34"
+              },
+              {
+                "date": "2023-02-04",
+                "time": "16:45",
+                "group": "A",
+                "home": "10002",
+                "away": "1014",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "23–29"
+              },
+              {
+                "date": "2023-02-05",
+                "time": "16:00",
+                "group": "A",
+                "home": "1007",
+                "away": "10001",
+                "stadium": "39",
+                "venue": "Stadio Olimpico, Rome",
+                "real_score": "24–29"
+              },
+              {
+                "date": "2023-02-11",
+                "time": "14:15",
+                "group": "A",
+                "home": "10003",
+                "away": "10001",
+                "stadium": "25",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "32–19"
+              },
+              {
+                "date": "2023-02-11",
+                "time": "16:45",
+                "group": "A",
+                "home": "1014",
+                "away": "1022",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "35–7"
+              },
+              {
+                "date": "2023-02-12",
+                "time": "15:00",
+                "group": "A",
+                "home": "10002",
+                "away": "1007",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "31–14"
+              },
+              {
+                "date": "2023-02-25",
+                "time": "15:15",
+                "group": "A",
+                "home": "1007",
+                "away": "10003",
+                "stadium": "39",
+                "venue": "Stadio Olimpico, Rome",
+                "real_score": "20–34"
+              },
+              {
+                "date": "2023-02-25",
+                "time": "16:45",
+                "group": "A",
+                "home": "1022",
+                "away": "10002",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "10–20"
+              },
+              {
+                "date": "2023-02-26",
+                "time": "16:00",
+                "group": "A",
+                "home": "10001",
+                "away": "1014",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "32–21"
+              },
+              {
+                "date": "2023-03-11",
+                "time": "15:15",
+                "group": "A",
+                "home": "1007",
+                "away": "1022",
+                "stadium": "39",
+                "venue": "Stadio Olimpico, Rome",
+                "real_score": "17–29"
+              },
+              {
+                "date": "2023-03-11",
+                "time": "16:45",
+                "group": "A",
+                "home": "10002",
+                "away": "10001",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "10–53"
+              },
+              {
+                "date": "2023-03-12",
+                "time": "15:00",
+                "group": "A",
+                "home": "1014",
+                "away": "10003",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "7–22"
+              },
+              {
+                "date": "2023-03-18",
+                "time": "12:30",
+                "group": "A",
+                "home": "1014",
+                "away": "1007",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "26–14"
+              },
+              {
+                "date": "2023-03-18",
+                "time": "15:45",
+                "group": "A",
+                "home": "10001",
+                "away": "1022",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "41–28"
+              },
+              {
+                "date": "2023-03-18",
+                "time": "17:00",
+                "group": "A",
+                "home": "10003",
+                "away": "10002",
+                "stadium": "25",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "29–16"
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "table": {
+              "A": [
+                "1022",
+                "10003",
+                "10002",
+                "1014",
+                "1007",
+                "10001"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "10003",
+          "table": [
+            "10003",
+            "10001",
+            "1014",
+            "10002",
+            "1022",
+            "1007"
+          ],
+          "grand_slam": "10003"
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2023_Six_Nations_Championship"
+        ]
+      }
+    },
+    "2024": {
+      "ball": "2024/ball/ball_%.png",
+      "pads": "2024/stadium_graphics.fsh",
+      "adboards": "2024/adboards.fsh",
+      "logo": "2024/tournament_logo.png",
+      "logo_frontend": "2024/logo_frontend.png",
+      "pitch_logo": "2024/pitch_logos/pitch_logo_%.png",
+      "template": {
+        "id": "six_nations_2024",
+        "name": "Six Nations 2024",
+        "order": 20.03,
+        "description": "The 2024 championship as it was played: the real fixtures, dates and grounds, with each nation's season 2024 squad (or the nearest one in the data). Points: 4 a win, 2 a draw, a bonus point for 4 tries and for losing by 7 or less, 3 more for a Grand Slam.",
+        "season": "2024",
+        "match_type": "six_nations",
+        "variant": "six_nations",
+        "venue": "home",
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "tries": 4
+          },
+          "losing_bonus": {
+            "margin": 7
+          },
+          "grand_slam": 3
+        },
+        "tiebreakers": [
+          "points_diff",
+          "tries_for",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            3
+          ],
+          "yellow_accumulation": 0,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "table",
+            "name": "Championship",
+            "kind": "round_robin",
+            "legs": 1,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Table"
+            },
+            "fixtures": [
+              {
+                "date": "2024-02-02",
+                "time": "21:00",
+                "group": "A",
+                "home": "10001",
+                "away": "10003",
+                "stadium": "68",
+                "venue": "Stade Vélodrome, Marseille",
+                "real_score": "17–38"
+              },
+              {
+                "date": "2024-02-03",
+                "time": "15:15",
+                "group": "A",
+                "home": "1007",
+                "away": "10002",
+                "stadium": "39",
+                "venue": "Stadio Olimpico, Rome",
+                "real_score": "24–27"
+              },
+              {
+                "date": "2024-02-03",
+                "time": "16:45",
+                "group": "A",
+                "home": "1022",
+                "away": "1014",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "26–27"
+              },
+              {
+                "date": "2024-02-10",
+                "time": "14:15",
+                "group": "A",
+                "home": "1014",
+                "away": "10001",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "16–20"
+              },
+              {
+                "date": "2024-02-10",
+                "time": "16:45",
+                "group": "A",
+                "home": "10002",
+                "away": "1022",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "16–14"
+              },
+              {
+                "date": "2024-02-11",
+                "time": "15:00",
+                "group": "A",
+                "home": "10003",
+                "away": "1007",
+                "stadium": "25",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "36–0"
+              },
+              {
+                "date": "2024-02-24",
+                "time": "14:15",
+                "group": "A",
+                "home": "10003",
+                "away": "1022",
+                "stadium": "25",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "31–7"
+              },
+              {
+                "date": "2024-02-24",
+                "time": "16:45",
+                "group": "A",
+                "home": "1014",
+                "away": "10002",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "30–21"
+              },
+              {
+                "date": "2024-02-25",
+                "time": "16:00",
+                "group": "A",
+                "home": "10001",
+                "away": "1007",
+                "stadium": "69",
+                "venue": "Stade Pierre-Mauroy, Villeneuve-d'Ascq",
+                "real_score": "13–13"
+              },
+              {
+                "date": "2024-03-09",
+                "time": "15:15",
+                "group": "A",
+                "home": "1007",
+                "away": "1014",
+                "stadium": "39",
+                "venue": "Stadio Olimpico, Rome",
+                "real_score": "31–29"
+              },
+              {
+                "date": "2024-03-09",
+                "time": "16:45",
+                "group": "A",
+                "home": "10002",
+                "away": "10003",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "23–22"
+              },
+              {
+                "date": "2024-03-10",
+                "time": "15:00",
+                "group": "A",
+                "home": "1022",
+                "away": "10001",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "24–45"
+              },
+              {
+                "date": "2024-03-16",
+                "time": "14:15",
+                "group": "A",
+                "home": "1022",
+                "away": "1007",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "21–24"
+              },
+              {
+                "date": "2024-03-16",
+                "time": "16:45",
+                "group": "A",
+                "home": "10003",
+                "away": "1014",
+                "stadium": "25",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "17–13"
+              },
+              {
+                "date": "2024-03-16",
+                "time": "21:00",
+                "group": "A",
+                "home": "10001",
+                "away": "10002",
+                "stadium": "72",
+                "venue": "Parc Olympique Lyonnais, Décines-Charpieu",
+                "real_score": "33–31"
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "table": {
+              "A": [
+                "10001",
+                "10003",
+                "1007",
+                "10002",
+                "1022",
+                "1014"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "10003",
+          "table": [
+            "10003",
+            "10001",
+            "10002",
+            "1014",
+            "1007",
+            "1022"
+          ],
+          "grand_slam": null
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2024_Six_Nations_Championship"
+        ],
+        "_venue_note": "Game stadium stand-ins: Stade Pierre-Mauroy, Lille → Lens (69)."
+      }
+    },
+    "2025": {
+      "ball": "2025/ball/ball_%.png",
+      "pads": "2025/stadium_graphics.fsh",
+      "adboards": "2025/adboards.fsh",
+      "logo": "2025/tournament_logo.png",
+      "logo_frontend": "2025/logo_frontend.png",
+      "pitch_logo": "2025/pitch_logos/pitch_logo_%.png",
+      "template": {
+        "id": "six_nations_2025",
+        "name": "Six Nations 2025",
+        "order": 20.02,
+        "description": "The 2025 championship as it was played: the real fixtures, dates and grounds, with each nation's season 2025 squad (or the nearest one in the data). Points: 4 a win, 2 a draw, a bonus point for 4 tries and for losing by 7 or less, 3 more for a Grand Slam.",
+        "season": "2025",
+        "match_type": "six_nations",
+        "variant": "six_nations",
+        "venue": "home",
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "tries": 4
+          },
+          "losing_bonus": {
+            "margin": 7
+          },
+          "grand_slam": 3
+        },
+        "tiebreakers": [
+          "points_diff",
+          "tries_for",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            3
+          ],
+          "yellow_accumulation": 0,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "table",
+            "name": "Championship",
+            "kind": "round_robin",
+            "legs": 1,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Table"
+            },
+            "fixtures": [
+              {
+                "date": "2025-01-31",
+                "time": "21:15",
+                "group": "A",
+                "home": "10001",
+                "away": "1022",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "43–0"
+              },
+              {
+                "date": "2025-02-01",
+                "time": "14:15",
+                "group": "A",
+                "home": "1014",
+                "away": "1007",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "31–19"
+              },
+              {
+                "date": "2025-02-01",
+                "time": "16:45",
+                "group": "A",
+                "home": "10003",
+                "away": "10002",
+                "stadium": "25",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "27–22"
+              },
+              {
+                "date": "2025-02-08",
+                "time": "15:15",
+                "group": "A",
+                "home": "1007",
+                "away": "1022",
+                "stadium": "39",
+                "venue": "Stadio Olimpico, Rome",
+                "real_score": "22–15"
+              },
+              {
+                "date": "2025-02-08",
+                "time": "16:45",
+                "group": "A",
+                "home": "10002",
+                "away": "10001",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "26–25"
+              },
+              {
+                "date": "2025-02-09",
+                "time": "15:00",
+                "group": "A",
+                "home": "1014",
+                "away": "10003",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "18–32"
+              },
+              {
+                "date": "2025-02-22",
+                "time": "14:15",
+                "group": "A",
+                "home": "1022",
+                "away": "10003",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "18–27"
+              },
+              {
+                "date": "2025-02-22",
+                "time": "16:45",
+                "group": "A",
+                "home": "10002",
+                "away": "1014",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "16–15"
+              },
+              {
+                "date": "2025-02-23",
+                "time": "16:00",
+                "group": "A",
+                "home": "1007",
+                "away": "10001",
+                "stadium": "39",
+                "venue": "Stadio Olimpico, Rome",
+                "real_score": "24–73"
+              },
+              {
+                "date": "2025-03-08",
+                "time": "14:15",
+                "group": "A",
+                "home": "10003",
+                "away": "10001",
+                "stadium": "25",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "27–42"
+              },
+              {
+                "date": "2025-03-08",
+                "time": "16:45",
+                "group": "A",
+                "home": "1014",
+                "away": "1022",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "35–29"
+              },
+              {
+                "date": "2025-03-09",
+                "time": "15:00",
+                "group": "A",
+                "home": "10002",
+                "away": "1007",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "47–24"
+              },
+              {
+                "date": "2025-03-15",
+                "time": "15:15",
+                "group": "A",
+                "home": "1007",
+                "away": "10003",
+                "stadium": "39",
+                "venue": "Stadio Olimpico, Rome",
+                "real_score": "17–22"
+              },
+              {
+                "date": "2025-03-15",
+                "time": "16:45",
+                "group": "A",
+                "home": "1022",
+                "away": "10002",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "14–68"
+              },
+              {
+                "date": "2025-03-15",
+                "time": "21:00",
+                "group": "A",
+                "home": "10001",
+                "away": "1014",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "35–16"
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "table": {
+              "A": [
+                "10001",
+                "1022",
+                "1014",
+                "1007",
+                "10003",
+                "10002"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "10001",
+          "table": [
+            "10001",
+            "10002",
+            "10003",
+            "1014",
+            "1007",
+            "1022"
+          ],
+          "grand_slam": null
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2025_Six_Nations_Championship"
+        ]
+      }
+    },
+    "2026": {
+      "ball": "2026/ball/ball_%.png",
+      "pads": "2026/stadium_graphics.fsh",
+      "adboards": "2026/adboards.fsh",
+      "logo": "2026/tournament_logo.png",
+      "logo_frontend": "2026/logo_frontend.png",
+      "pitch_logo": "2026/pitch_logos/pitch_logo_%.png",
+      "template": {
+        "id": "six_nations_2026",
+        "name": "Six Nations 2026",
+        "order": 20.01,
+        "description": "The 2026 championship as it was played: the real fixtures, dates and grounds, with each nation's season 2026 squad (or the nearest one in the data). Points: 4 a win, 2 a draw, a bonus point for 4 tries and for losing by 7 or less, 3 more for a Grand Slam.",
+        "season": "2026",
+        "match_type": "six_nations",
+        "variant": "six_nations",
+        "venue": "home",
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "tries": 4
+          },
+          "losing_bonus": {
+            "margin": 7
+          },
+          "grand_slam": 3
+        },
+        "tiebreakers": [
+          "points_diff",
+          "tries_for",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            3
+          ],
+          "yellow_accumulation": 0,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "table",
+            "name": "Championship",
+            "kind": "round_robin",
+            "legs": 1,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Table"
+            },
+            "fixtures": [
+              {
+                "date": "2026-02-05",
+                "time": "21:10",
+                "group": "A",
+                "home": "10001",
+                "away": "10003",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "36–14"
+              },
+              {
+                "date": "2026-02-07",
+                "time": "15:10",
+                "group": "A",
+                "home": "1007",
+                "away": "1014",
+                "stadium": "39",
+                "venue": "Stadio Olimpico, Rome",
+                "real_score": "18–15"
+              },
+              {
+                "date": "2026-02-07",
+                "time": "16:40",
+                "group": "A",
+                "home": "10002",
+                "away": "1022",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "48–7"
+              },
+              {
+                "date": "2026-02-14",
+                "time": "14:10",
+                "group": "A",
+                "home": "10003",
+                "away": "1007",
+                "stadium": "25",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "20–13"
+              },
+              {
+                "date": "2026-02-14",
+                "time": "16:40",
+                "group": "A",
+                "home": "1014",
+                "away": "10002",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "31–20"
+              },
+              {
+                "date": "2026-02-15",
+                "time": "15:10",
+                "group": "A",
+                "home": "1022",
+                "away": "10001",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "12–54"
+              },
+              {
+                "date": "2026-02-21",
+                "time": "14:10",
+                "group": "A",
+                "home": "10002",
+                "away": "10003",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "21–42"
+              },
+              {
+                "date": "2026-02-21",
+                "time": "16:40",
+                "group": "A",
+                "home": "1022",
+                "away": "1014",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "23–26"
+              },
+              {
+                "date": "2026-02-22",
+                "time": "16:10",
+                "group": "A",
+                "home": "10001",
+                "away": "1007",
+                "stadium": "69",
+                "venue": "Stade Pierre-Mauroy, Villeneuve-d'Ascq",
+                "real_score": "33–8"
+              },
+              {
+                "date": "2026-03-06",
+                "time": "20:10",
+                "group": "A",
+                "home": "10003",
+                "away": "1022",
+                "stadium": "25",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "27–17"
+              },
+              {
+                "date": "2026-03-07",
+                "time": "14:10",
+                "group": "A",
+                "home": "1014",
+                "away": "10001",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "50–40"
+              },
+              {
+                "date": "2026-03-07",
+                "time": "17:40",
+                "group": "A",
+                "home": "1007",
+                "away": "10002",
+                "stadium": "39",
+                "venue": "Stadio Olimpico, Rome",
+                "real_score": "23–18"
+              },
+              {
+                "date": "2026-03-14",
+                "time": "14:10",
+                "group": "A",
+                "home": "10003",
+                "away": "1014",
+                "stadium": "25",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "43–21"
+              },
+              {
+                "date": "2026-03-14",
+                "time": "16:40",
+                "group": "A",
+                "home": "1022",
+                "away": "1007",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "31–17"
+              },
+              {
+                "date": "2026-03-14",
+                "time": "21:10",
+                "group": "A",
+                "home": "10001",
+                "away": "10002",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "48–46"
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "table": {
+              "A": [
+                "10001",
+                "10003",
+                "1007",
+                "1014",
+                "10002",
+                "1022"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "10001",
+          "table": [
+            "10001",
+            "10003",
+            "1014",
+            "1007",
+            "10002",
+            "1022"
+          ],
+          "grand_slam": null
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2026_Six_Nations_Championship"
+        ],
+        "_venue_note": "Game stadium stand-ins: Stade Pierre-Mauroy, Lille → Lens (69)."
+      }
+    }
+  }
+}

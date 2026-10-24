@@ -17,7 +17,7 @@ from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QWidget
 from app import appearance as A
 from app import player_ops as P
 from app.game_data import (
-    check_player_detailed, save_player, SaveError, POSITIONS, SHIRT_POSITIONS,
+    check_player_detailed, save_player, save_target, saves_to_user_edits, SaveError, POSITIONS, SHIRT_POSITIONS,
 )
 from app.ratings import position_overall
 from app.season import season_label
@@ -32,7 +32,7 @@ from screens.player_tabs import (
 from ui.broadcast import Card, display_label, eyebrow_label, tracked_font
 from ui.editor_kit import (
     Avatar, Badge, FormDialog, ConfirmDialog, TextField, NumberField, ChoiceField,
-    SegmentField, RatingField, Note, compact_button, open_season_menu,
+    SegmentField, RatingField, Note, compact_button, open_season_menu, ScopeCheck,
 )
 from ui.form import SearchList
 from ui.skin_preview import compose as skin_compose
@@ -163,11 +163,15 @@ class PlayerEditorScreen(EditorScreen):
         # own validation assumes it (str.strip()) — but height_cm/weight_kg
         # come back from Wikidata as ints.
         stats = {stat_map[k]: str(v) for k, v in fields.items() if k in stat_map}
+        # each field goes to the seasons its card's ALL SEASONS box picks
+        targets = {k: self.tabs[TAB_PROFILE].target_seasons(k) for k in stats}
 
         def mutate(r):
             r.update(identity)
             if stats and season:
-                r.setdefault("stats", {}).setdefault(season, {}).update(stats)
+                for k, v in stats.items():
+                    for s in targets[k]:
+                        r.setdefault("stats", {}).setdefault(s, {})[k] = v
 
         self.edit("search online", mutate, view_hint={"tab": TAB_PROFILE, "season": season})
         self.refresh_all()
@@ -671,7 +675,7 @@ class PlayerEditorScreen(EditorScreen):
         path = self.ds.players_file_path.get(self.record_id)
         save_player(path, self.record_id, self.session.working)
         self.ds.players[self.record_id] = copy.deepcopy(self.session.working)
-        return f"Saved {os.path.basename(path)}"
+        return f"Saved to {save_target(path)}"
 
     def after_save(self):
         self.ds.events.player_changed.emit(self.record_id)
@@ -689,7 +693,7 @@ class PlayerEditorScreen(EditorScreen):
             "chips": [],
             "pixmap": None,
             "initials": "",
-            "target": f"→ {os.path.basename(path)}" if path else "",
+            "target": f"→ {save_target(path)}" if path else "",
         }
 
     def tab_hints(self, focused):
@@ -705,6 +709,8 @@ class PlayerEditorScreen(EditorScreen):
             return [("↕", "browse"), ("A", "load season")]
         if focused in (self.season_add_btn, self.season_menu_btn):
             return [("A", "open")]
+        if isinstance(focused, ScopeCheck):
+            return [("A", "edit every season" if not focused.checked else "edit this season only")]
         if isinstance(focused, NumberField):
             return [("0-9", "type"), ("←→", "adjust"), ("Del", "clear")]
         if isinstance(focused, TextField):
@@ -849,7 +855,9 @@ class PlayerEditorScreen(EditorScreen):
         self.show_dialog(FormDialog(
             self, "Duplicate player" if duplicate else "New player",
             ("A copy of every season of this player under a new id. Squads are not changed."
-             if duplicate else "The player is written to the chosen file straight away."),
+             if duplicate else "The player is kept in your edits straight away, as part of the "
+             "chosen file." if saves_to_user_edits() else
+             "The player is written to the chosen file straight away."),
             fields, [("CANCEL", "neutral", "cancel"), ("CREATE", "primary", "ok")], done))
 
     def _create_player(self, name, path, year, position, duplicate):
@@ -870,7 +878,7 @@ class PlayerEditorScreen(EditorScreen):
 
         def go():
             self.open_record(pid)
-            self.shell.footer.set_status(f"Created {name} · id {pid} in {os.path.basename(path)}", GREEN)
+            self.shell.footer.set_status(f"Created {name} · id {pid} in {save_target(path)}", GREEN)
         self.guard_dirty(go)
 
     def delete_record(self):

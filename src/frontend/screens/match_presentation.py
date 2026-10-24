@@ -75,6 +75,9 @@ class Presentation:
     on_kickoff: Optional[Callable] = None    # fn()
     on_back: Optional[Callable] = None       # fn()
     controlled: Optional[Callable] = None    # fn() -> sides the player controls
+    # fn(side): EDIT SQUAD on each side the player controls (as in quick
+    # match); the mode opens the squad editor and presents again after it
+    on_edit_squad: Optional[Callable] = None
 
 
 def _kit_assets(ds, team_id, season, key, kit_variant="", kit_override=None):
@@ -148,9 +151,20 @@ class _SideCard(QWidget):
         screen.focus.register(self.kit_row)
         v.addWidget(self.kit_row)
 
+        self.squad_btn = StyledButton("EDIT SQUAD", "neutral")
+        self.squad_btn.setMinimumHeight(BTN_HEIGHT)
+        self.squad_btn.clicked.connect(self._on_squad)
+        screen.focus.register(self.squad_btn)
+        v.addWidget(self.squad_btn)
+        self.squad_btn.hide()
+
     def chrome(self):
         """What the kickoff sequence fades out around the stage and crest."""
-        return [self.eyebrow, self.name, self.rule, self.kit_row]
+        return [self.eyebrow, self.name, self.rule, self.kit_row, self.squad_btn]
+
+    def _on_squad(self):
+        if self.screen.p and self.screen.p.on_edit_squad:
+            self.screen.p.on_edit_squad(self.side)
 
     def restore_stage(self):
         """Puts the stage back in the card after the kickoff sequence took it
@@ -188,6 +202,8 @@ class _SideCard(QWidget):
 
     def set_controlled(self, controlled):
         self.eyebrow.setText(f"{self.side} · you".upper() if controlled else self.side.upper())
+        p = self.screen.p
+        self.squad_btn.setVisible(bool(controlled and p and p.on_edit_squad))
 
     def _on_kit(self):
         key = self.kit_row.current()

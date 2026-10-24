@@ -15,6 +15,12 @@ agree with what backend/game_files_processor actually writes.
 Skin textures (custom skins, layers, gloves) share the game's 512×256 skin
 UV layout; boots use the 256×256 "clet" layout. Paths are stored with "/"
 relative to the mod data folder, like `face`.
+
+Baselayers are images of players/baselayers/ in skin_overlay, named
+baselayer_<top|bottom>_[<brand>_]<colour>.png (colour last). A baselayer
+or gloves set on a player are final: anything that may dress players
+automatically (weather, team rules) must leave a player who has one as is
+and only add to players with none (baselayers under their straps).
 """
 import os
 
@@ -205,9 +211,7 @@ def asset_problems(mod_dir, rel, spec_key):
         return [(f"{os.path.basename(rel)} can't be read as an image", "error")]
     w, h, alpha = info
     out = []
-    if spec["size"] and (w, h) != spec["size"]:
-        tw, th = spec["size"]
-        out.append((f"{os.path.basename(rel)} is {w}×{h}, scaled to {tw}×{th}", "info"))
+    # an image of another size is scaled by the game's pack step: nothing to report
     if spec["alpha"] and not alpha:
         out.append((f"{os.path.basename(rel)} has no transparency — it covers the whole skin",
                     "warn"))
