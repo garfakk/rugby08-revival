@@ -164,6 +164,23 @@ def _no_system_side_effects(monkeypatch):
 
 
 @pytest.fixture(autouse=True)
+def _no_update_checks(monkeypatch):
+    """No test asks GitHub for updates: the startup check is off, and the
+    updater's network layer refuses (tests/unit/test_updater.py serves its
+    own fake answers)."""
+    from shared.user_prefs import user_prefs
+    monkeypatch.setattr(user_prefs, "check_updates", False)
+    try:
+        from app.updater import net
+    except ImportError:
+        return
+
+    def offline(request, timeout):
+        raise AssertionError(f"a test tried to reach {request.full_url}")
+    monkeypatch.setattr(net, "opener", offline)
+
+
+@pytest.fixture(autouse=True)
 def _fresh_globals():
     """Module-level caches that would leak between tests."""
     yield

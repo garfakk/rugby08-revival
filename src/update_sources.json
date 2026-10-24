@@ -1,0 +1,6 @@
+{
+  "program": {"repo": "garfakk/rugby08-revival", "tag_prefix": "v",
+              "installer": "R08Revival_{version}_program_only.exe", "checksums": "SHA256SUMS"},
+  "data":    {"repo": "garfakk/rugby08-revival", "tag_prefix": "data-",
+              "manifest": "data_manifest.json"}
+}

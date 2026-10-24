@@ -64,6 +64,7 @@ if [ "$TARGET" != data ]; then
   mkdir -p "$PROG/app_data"
   rsync -a --exclude='*_old.dll' --exclude='__pycache__' --exclude='*.example' "$SRC/assets" "$PROG/app_data/"
   cp "$SRC/config.ini.example" "$PROG/app_data/config.ini.example"
+  cp "$SRC/update_sources.json" "$PROG/app_data/update_sources.json"      # where online updates come from
   cp "$SRC/CREDITS.MD" "$PROG/app_data/CREDITS.MD"
   cp "$HERE/RELEASE_README.txt" "$PROG/app_data/README.txt"
 fi
@@ -75,6 +76,10 @@ if [ "$TARGET" != app ]; then
   rsync -a --exclude='other/' --exclude='*.bak' --exclude='*(copy)*' --exclude='user_prefs.ini' --exclude='game_profile.ini' \
     --exclude='_backup/' --exclude='__pycache__' "$DATA/" "$DATASTAGE/"
   printf 'data_version=%s\nschema=%s\n' "$DATA_VERSION" "$DATA_SCHEMA" > "$DATASTAGE/VERSION"
+  # MANIFEST.json (in the pack: what an install has) + data_manifest.json (release asset) for
+  # online data updates; refuses data that isn't committed (see gen_data_manifest.py)
+  python3 "$HERE/gen_data_manifest.py" "$DATASTAGE" "$OUT" --data "$DATA" --version "$DATA_VERSION" \
+    --schema "$DATA_SCHEMA" --min-program "${DATA_MIN_PROGRAM:-}" || die "data manifest (commit the data first)"
   python3 "$HERE/gen_data_inc.py" "$DATASTAGE" "$INC"
 fi
 [ -d "$DATASTAGE" ] || DATASTAGE="$OUT/data_pack"
@@ -111,4 +116,5 @@ cat > "$OUT/manifest.json" <<JSON
 {"program_version": "$APP_VERSION", "data_version": "$DATA_VERSION", "data_schema": $DATA_SCHEMA,
  "built": "$(date -u +%FT%TZ)", "git": "$(git -C "$SRC" rev-parse --short HEAD 2>/dev/null || echo none)"}
 JSON
-echo; ls -la "$OUT"/R08Revival_*.exe "$OUT"/R08Revival_*.zip 2>/dev/null
+echo; ls -la "$OUT"/R08Revival_*.exe "$OUT"/R08Revival_*.zip "$OUT"/data_manifest.json 2>/dev/null
+echo; echo "Publish (GitHub Releases, online updates): $HERE/publish.sh program|data"

@@ -109,6 +109,9 @@ class UserPrefs:
         # stage, champions...). Not in Settings: opt out with
         # `animations = false` in the prefs file.
         self.animations = True
+        # Look on GitHub for a new program or data release at startup, at
+        # most once a day (app/updater). Settings > Check For Updates.
+        self.check_updates = True
         self._load()
 
     def _load(self):
@@ -130,6 +133,7 @@ class UserPrefs:
             self.expert_mode = cp.getboolean(_SECTION, "expert_mode", fallback=self.expert_mode)
             self.use_edits = cp.getboolean(_SECTION, "use_edits", fallback=self.use_edits)
             self.animations = cp.getboolean(_SECTION, "animations", fallback=self.animations)
+            self.check_updates = cp.getboolean(_SECTION, "check_updates", fallback=self.check_updates)
             mode = cp.get(_SECTION, "wind_mode", fallback=self.wind_mode).strip().lower()
             mode = "standard" if mode == "default" else mode      # older name
             if mode in ("standard", "advanced"):
@@ -161,6 +165,7 @@ class UserPrefs:
                         "expert_mode": str(self.expert_mode),
                         "use_edits": str(self.use_edits),
                         "animations": str(self.animations),
+                        "check_updates": str(self.check_updates),
                         "wind_mode": self._stored_wind_mode}
         try:
             with open(_PREFS_FILE, "w") as fh:

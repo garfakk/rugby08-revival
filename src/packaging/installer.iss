@@ -37,6 +37,8 @@ Uninstallable=no
 ; saves, the game copy). So it is a per-user install with no elevation offered, and
 ; protected folders such as Program Files are refused (see InstallDirProblem).
 PrivilegesRequired=lowest
+; A copy of the mod still running is asked to close (Restart Manager), never killed.
+CloseApplications=yes
 OutputDir={#OutDir}
 #if Variant == "full"
 OutputBaseFilename=R08Revival_{#AppVersion}_setup
@@ -92,6 +94,9 @@ Root: HKCU; Subkey: "Software\R08Revival"; ValueType: string; ValueName: "Instal
 ; installer's process context, and the game it spawns then ran WITHOUT the d3d8 proxy (stock
 ; fullscreen, profile not applied) for that whole UI session. Explorer as parent = a normal start.
 Filename: "{win}\explorer.exe"; Parameters: """{app}\R08Revival.exe"""; Description: "Launch Rugby 08 Revival"; Flags: nowait postinstall skipifsilent
+; An update started from the mod (Tools > Updates, app/updater/program.py) runs silently with
+; /RELAUNCH=1: the mod closed itself for it, so it is opened again once the update is in.
+Filename: "{win}\explorer.exe"; Parameters: """{app}\R08Revival.exe"""; Flags: nowait; Check: RelaunchWanted
 
 ; Uninstall removes the whole install folder content: program, app_data, mod_data (edits and
 ; _backup included) and game_files (the game copy; the original game is never touched).
@@ -237,6 +242,11 @@ end;
   a private copy of the installation and the original is never touched. }
 
 #ifdef WithApp
+function RelaunchWanted: Boolean;
+begin
+  Result := ExpandConstant('{param:RELAUNCH|0}') = '1';
+end;
+
 function Upgrading: Boolean;
 begin
   { program-only upgrade of an existing install: game folder is already configured }

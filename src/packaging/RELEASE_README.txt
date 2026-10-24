@@ -18,6 +18,17 @@ Where things live (everything is inside the one install folder; nothing in AppDa
                                edits to send them to the mod's maintainers).
   game_files\                  the copy of Rugby 08 the mod works on (your original is untouched)
 
+Updates
+  Tools > Updates looks on GitHub for a new program version and a new data pack (also once a
+  day at startup; Settings > Check For Updates turns that off). The program and the data are
+  updated separately:
+    - program: DOWNLOAD & INSTALL fetches the program-only installer, checks it, closes the mod
+      and runs it on this folder; the mod reopens when it is done. Your data, settings, edits
+      and tournaments are kept. Or download the installer from the release page yourself.
+    - data: only the files that changed are downloaded (checked one by one) and installed;
+      the files replaced are kept so the update can be undone (UNDO THE LAST UPDATE).
+  It only talks to github.com over HTTPS and never runs anything without asking.
+
 The install folder must be writable: do not install under Program Files (setup refuses it).
 Default: Documents\R08Revival.
 
