@@ -287,7 +287,7 @@ class SquadEditorScreen(Screen):
         self.discard_btn.clicked.connect(self._discard)
         self.focus.register(self.discard_btn)
         buttons.addWidget(self.discard_btn, stretch=1)
-        self.save_btn = StyledButton("SAVE SQUAD", "primary")
+        self.save_btn = StyledButton("APPLY", "primary")
         self.save_btn.setMinimumHeight(BTN_HEIGHT)
         self.save_btn.clicked.connect(self._save)
         self.focus.register(self.save_btn)
