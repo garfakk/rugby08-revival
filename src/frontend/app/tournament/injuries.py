@@ -66,6 +66,8 @@ def roll_injury(rng, duration_scale=1.0) -> tuple:
 def _injuries(t, fixture, result, rng):
     if not t.options.get("injuries", True):
         return
+    if result.source == "real":       # reality mode: only what really happened (reality.py)
+        return
     scale = float(t.options.get("injury_duration", 1.0))
     for side in (result.home, result.away):
         entry = t.teams.get(side.team_id)

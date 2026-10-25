@@ -37,13 +37,16 @@ def _ban(t, p, team, matches, why):
 def _discipline(t, fixture, result, rng):
     if not t.options.get("suspensions", True):
         return
+    # reality mode: the real bans come from reality.py, only the real
+    # yellows still add up toward a yellow-card ban
+    real = result.source == "real"
     r = rules(t)
     for side in (result.home, result.away):
         for line in side.players:
             p = t.players.get(line.pid)
             if not p:
                 continue
-            if line.red_cards:
+            if line.red_cards and not real:
                 lo, hi = r["red_ban"]
                 _ban(t, p, side.team_id, lo + int(round((hi - lo) * rng.random() ** 2)), "red card")
                 continue
@@ -54,7 +57,7 @@ def _discipline(t, fixture, result, rng):
                     d["yellows"] = 0
                     _ban(t, p, side.team_id, r["yellow_ban"], f"{r['yellow_accumulation']} yellow cards")
         # a citing for something the referee missed
-        if r["citing_chance"] and rng.random() < r["citing_chance"]:
+        if r["citing_chance"] and not real and rng.random() < r["citing_chance"]:
             played = [t.players[l.pid] for l in side.players
                       if l.minutes > 0 and not l.red_cards and l.pid in t.players]
             if played:
