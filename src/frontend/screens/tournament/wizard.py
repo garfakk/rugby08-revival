@@ -24,7 +24,7 @@ from PyQt5.QtWidgets import (QGridLayout, QHBoxLayout, QScrollArea, QStackedWidg
 from app.challenges import DIFFICULTIES, HALF_LENGTHS
 from app.input import KEYMAP, Action
 from app.screen_base import Screen
-from app.tournament import engine, formats
+from app.tournament import engine, formats, reality
 from app import variants as V
 from app.tournament.session import TournamentSession
 from shared.log import get_logger
@@ -322,6 +322,22 @@ class TournamentWizardScreen(Screen):
             f.edited.connect(lambda _v: self._update_rules_summary())
         self.rules_grid.hide()
         sv.addWidget(self.rules_grid)
+        # Reality mode (app/tournament/reality.py): only for an edition with
+        # real results whose real draw can be played with this data
+        self.reality_row = transparent(QWidget(), "wizReality")
+        rr = QHBoxLayout(self.reality_row)
+        rr.setContentsMargins(0, 4, 0, 0)
+        rr.setSpacing(14)
+        self.reality = ChoiceField("reality mode", ON_OFF, allow_blank=False)
+        self.reality.set_value("off")
+        self.reality.setFixedWidth(330)
+        self.reality.edited.connect(lambda _v: self._validate())
+        self.focus.register(self.reality)
+        rr.addWidget(self.reality)
+        self.reality_note = Note("The other teams' matches get their real results, with the real "
+                                 "injuries and bans. Yours are played as usual.", color=FG_TERTIARY)
+        rr.addWidget(self.reality_note, stretch=1)
+        sv.addWidget(self.reality_row)
         v.addWidget(w)
 
         top = QHBoxLayout()
@@ -485,6 +501,11 @@ class TournamentWizardScreen(Screen):
         self.suspensions.set_value("on" if opts.get("suspensions", True) else "off")
         self.fatigue.set_value("on" if opts.get("fatigue", True) else "off")
         self._update_rules_summary()
+        offered, why = reality.available(tpl, known_teams=self.ds.teams)
+        self._reality_offered = offered
+        self.reality_row.setVisible(offered)
+        if not offered:
+            self.reality.set_value("off")
         self.season = self._season_for(tpl)
         self._build_groups(self._installed(engine.default_participants(tpl, self.season)))
 
@@ -627,12 +648,19 @@ class TournamentWizardScreen(Screen):
         self._build_groups(parts)
 
     # ── validation ───────────────────────────────────────────────────────
+    def _reality_wanted(self):
+        return getattr(self, "_reality_offered", False) and self.reality.value() == "on"
+
     def _step_problems(self):
         """Problems per step: {step index: [text]}."""
         found = formats.problems(self.ds, self.template(), self.season, self.participants())
         out = {0: [] if self.template() else ["choose a competition"], 1: list(found)}
         if not self.humans:
             out[1].append("pick a team to control")
+        if self._reality_wanted():
+            ok, why = reality.available(self.template(), self.participants(), self.season, self.ds.teams)
+            if not ok:
+                out[1].append(why[0].lower() + why[1:] + " (turn reality mode off, or DEFAULT TEAMS)")
         return out
 
     def _validate(self):
@@ -703,6 +731,7 @@ class TournamentWizardScreen(Screen):
             "suspensions": self.suspensions.value() == "on",
             "fatigue": self.fatigue.value() == "on",
             "sim_variance": 1.0,
+            "reality": self._reality_wanted(),
         }
         try:
             session = TournamentSession.new(self.ds, self.template(), self.season,

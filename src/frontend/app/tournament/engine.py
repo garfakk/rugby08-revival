@@ -14,7 +14,7 @@ from shared.log import get_logger
 
 from app import variants as V
 
-from . import calendar, reputation, scheduler, selection, simulator, standings, weather
+from . import calendar, reality, reputation, scheduler, selection, simulator, standings, weather
 from .events import bus
 from .model import SCHEMA_VERSION, PlayerState, TeamEntry, Tournament
 
@@ -123,6 +123,9 @@ def create_tournament(ds, template, season, participants=None, humans=(), option
 
     for tid in t.teams:
         t.teams[tid].selection = selection.auto_select(t, tid)
+    if t.options.get("reality"):
+        # who really met in every fixture, and how it went (reality.py)
+        t.components["reality"] = reality.real_schedule(t)
     simulator.field_par(t)
     bus.emit("tournament_created", t=t)
     return t
@@ -206,7 +209,14 @@ def simulate_fixture(t, fixture):
     if fixture.played or not fixture.ready:
         return None
     prepare_fixture(t, fixture)
-    result = simulator.simulate(t, fixture, fixture_rng(t, fixture))
+    real = reality.real_entry(t, fixture)
+    if real:
+        # Reality mode: two AI teams that really met get the real result
+        result = reality.real_result(t, fixture, real, fixture_rng(t, fixture))
+    else:
+        result = simulator.simulate(t, fixture, fixture_rng(t, fixture))
+        if reality.would_be_real(t, fixture):
+            result.extra["reality"] = {"diverged": True}
     record_result(t, fixture, result)
     return result
 

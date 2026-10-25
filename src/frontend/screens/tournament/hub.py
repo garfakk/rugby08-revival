@@ -55,6 +55,8 @@ def _options_line(opts) -> str:
         parts.append("fatigue")
     if opts.get("suspensions", True):
         parts.append("suspensions")
+    if opts.get("reality"):
+        parts.append("reality mode")
     return " · ".join(p for p in parts if p.strip())
 
 
@@ -90,6 +92,8 @@ class SaveCard(ActivatableCard):
         sub = self._comp.upper() if self._comp.upper() != name else ""
         if s.get("season"):
             sub += ("  ·  " if sub else "") + season_label(s["season"])
+        if (s.get("options") or {}).get("reality"):
+            sub += ("  ·  " if sub else "") + "REALITY MODE"
         p.drawText(QRectF(x, 44, w - x - 230, 18), Qt.AlignLeft | Qt.AlignVCenter, sub)
         if self._err:
             p.setPen(QColor(WARN))

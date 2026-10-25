@@ -773,7 +773,20 @@
                 "away": "1005",
                 "stadium": "32",
                 "venue": "Millennium Stadium, Cardiff",
-                "real_score": "28–13"
+                "real_score": "28–13",
+                "real_events": [
+                  {
+                    "kind": "suspension",
+                    "team": "1005",
+                    "player": "Nemani Nadolo",
+                    "matches": 1,
+                    "reason": "cited for foul play"
+                  }
+                ],
+                "_sources": [
+                  "https://www.fijirugby.com/?p=1785",
+                  "https://itv.com/news/wales/2015-09-28/nandolo-to-miss-wales-game"
+                ]
               },
               {
                 "date": "2015-09-26",
@@ -783,7 +796,19 @@
                 "away": "1022",
                 "stadium": "14",
                 "venue": "Twickenham Stadium, London",
-                "real_score": "25–28"
+                "real_score": "25–28",
+                "real_events": [
+                  {
+                    "kind": "injury",
+                    "team": "1022",
+                    "player": "Scott Williams",
+                    "matches": "tournament",
+                    "type": "knee injury"
+                  }
+                ],
+                "_sources": [
+                  "https://www.rnz.co.nz/news/sport/285515/live-sport"
+                ]
               },
               {
                 "date": "2015-09-27",
@@ -823,7 +848,22 @@
                 "away": "1020",
                 "stadium": "10",
                 "venue": "Stadium mk, Milton Keynes",
-                "real_score": "47–15"
+                "real_score": "47–15",
+                "real_events": [
+                  {
+                    "kind": "yellow",
+                    "team": "1020",
+                    "player": "Agustin Ormaechea"
+                  },
+                  {
+                    "kind": "red",
+                    "team": "1020",
+                    "player": "Agustin Ormaechea"
+                  }
+                ],
+                "_sources": [
+                  "https://www.world.rugby/news/108073"
+                ]
               },
               {
                 "date": "2015-10-10",
@@ -833,7 +873,19 @@
                 "away": "1022",
                 "stadium": "14",
                 "venue": "Twickenham Stadium, London",
-                "real_score": "15–6"
+                "real_score": "15–6",
+                "real_events": [
+                  {
+                    "kind": "injury",
+                    "team": "1022",
+                    "player": "Liam Williams",
+                    "matches": "tournament",
+                    "type": "foot injury"
+                  }
+                ],
+                "_sources": [
+                  "https://www.rnz.co.nz/news/sport/285515/live-sport"
+                ]
               },
               {
                 "date": "2015-10-10",
@@ -883,7 +935,20 @@
                 "away": "1017",
                 "stadium": "76",
                 "venue": "Villa Park, Birmingham",
-                "real_score": "46–6"
+                "real_score": "46–6",
+                "real_events": [
+                  {
+                    "kind": "injury",
+                    "team": "1015",
+                    "player": "Jean de Villiers",
+                    "matches": "tournament",
+                    "type": "broken jaw"
+                  }
+                ],
+                "_sources": [
+                  "https://www.world.rugby/news/100922",
+                  "https://www.sarugbymag.co.za/jean-out-of-world-cup/"
+                ]
               },
               {
                 "date": "2015-09-27",
@@ -1063,7 +1128,20 @@
                 "away": "1007",
                 "stadium": "14",
                 "venue": "Twickenham Stadium, London",
-                "real_score": "32–10"
+                "real_score": "32–10",
+                "real_events": [
+                  {
+                    "kind": "injury",
+                    "team": "10001",
+                    "player": "Yoann Huget",
+                    "matches": "tournament",
+                    "type": "ruptured knee ligament"
+                  }
+                ],
+                "_sources": [
+                  "https://www.world.rugby/news/95213",
+                  "https://irishtimes.com/sport/rugby/international/france-wing-yoann-huget-out-of-world-cup-with-knee-injury-1.2358851"
+                ]
               },
               {
                 "date": "2015-09-23",
@@ -1143,7 +1221,35 @@
                 "away": "10003",
                 "stadium": "32",
                 "venue": "Millennium Stadium, Cardiff",
-                "real_score": "9–24"
+                "real_score": "9–24",
+                "real_events": [
+                  {
+                    "kind": "injury",
+                    "team": "10003",
+                    "player": "Paul O'Connell",
+                    "matches": "tournament",
+                    "type": "hamstring injury"
+                  },
+                  {
+                    "kind": "injury",
+                    "team": "10003",
+                    "player": "Peter O'Mahony",
+                    "matches": "tournament",
+                    "type": "knee ligament damage"
+                  },
+                  {
+                    "kind": "injury",
+                    "team": "10003",
+                    "player": "Johnny Sexton",
+                    "matches": 1,
+                    "type": "groin strain"
+                  }
+                ],
+                "_sources": [
+                  "https://gulfnews.com/sport/rugby/paul-oconnell-ruled-out-of-rest-of-rugby-world-cup-1.1600030",
+                  "https://www.munsterrugby.ie/2015/10/12/omahony-ruled-out-2/",
+                  "https://www.thepapare.com/rugby-world-cup-2015-sexton-ruled-out-of-argentina-match/"
+                ]
               }
             ]
           },
@@ -1347,7 +1453,7 @@
         },
         "variant": "world_cup",
         "history": {
-          "_comment": "What really happened — reference only, the engine ignores it.",
+          "_comment": "What really happened. history and each fixture's real_score / real_tries / real_events (injuries, bans, cards, scorers) are used by the tournament's reality mode (app/tournament/reality.py); real_events are only the ones verified (see _sources).",
           "champion": "1010",
           "runner_up": "1002",
           "third": "1015",

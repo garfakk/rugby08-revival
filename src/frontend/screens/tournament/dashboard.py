@@ -812,7 +812,9 @@ class TournamentDashboardScreen(Screen):
         humans = bool(self._human_ids())
         for b in (self.fx_all, self.fx_mine):
             b.setVisible(self._view == FIXTURES and humans)
-        self.comp_note.setText({TABLE: "", FIXTURES: "A on a played match opens its report.",
+        real = bool((self.t.options or {}).get("reality"))
+        self.comp_note.setText({TABLE: "", FIXTURES: "A on a played match opens its report."
+                                + ("  Blue scores: real results." if real else ""),
                                 BRACKET: "A on a played tie opens its report."}[self._view])
         if self._view == TABLE:
             self._refresh_standings()
@@ -852,7 +854,7 @@ class TournamentDashboardScreen(Screen):
                  "align": Qt.AlignRight, "bold": win is not None and win == f.home,
                  "color": YOU_TINT if f.home in humans else (FG_MUTED if not f.home else None)},
                 {"text": score, "align": Qt.AlignHCenter, "bold": bool(f.result),
-                 "color": FG_PRIMARY if f.result else FG_MUTED},
+                 "color": (INFO if f.result.source == "real" else FG_PRIMARY) if f.result else FG_MUTED},
                 {"text": away_name, "icon": tournament_crest(self.ds, t, f.away, 22),
                  "bold": win is not None and win == f.away,
                  "color": YOU_TINT if f.away in humans else (FG_MUTED if not f.away else None)},
@@ -1239,6 +1241,19 @@ def _ref(t, ref):
     return ref_label(t, ref)
 
 
+def _source_label(r):
+    """How a result came about, for the report's meta line."""
+    real = (r.extra or {}).get("reality") or {}
+    if r.source == "real":
+        if real.get("cancelled"):
+            return "real result: cancelled, draw awarded"
+        return "real result" + (" (scorers generated)" if real.get("scorers") == "generated" else "")
+    if real.get("diverged"):
+        return "simulated: this match didn't happen in reality"
+    return {"game": "played in the game", "forfeit": "awarded (forfeit)",
+            "manual": "entered manually"}.get(r.source, "simulated")
+
+
 class MatchReportView(QWidget):
     """A played match: crests, score, scorers side by side, cards, injuries,
     player of the match, then the match statistics (scoring, kicks,
@@ -1277,11 +1292,12 @@ class MatchReportView(QWidget):
         v.addLayout(top)
         meta = [calendar.short_date(calendar.fixture_date(t, f)), report.venue_name(ds, f),
                 weather.forecast(t, f, ds)["summary"] if f.stadium_id else "",
-                {"game": "played in the game", "forfeit": "awarded (forfeit)",
-                 "manual": "entered manually"}.get(r.source, "simulated")]
+                _source_label(r)]
         if r.decided_by:
             meta.append(r.score_text().split(" ", 1)[-1].strip("()"))
-        v.addWidget(eyebrow_label("  ·  ".join(m for m in meta if m), color=FG_TERTIARY, size=10))
+        meta_label = eyebrow_label("  ·  ".join(m for m in meta if m), color=FG_TERTIARY, size=10)
+        meta_label.setWordWrap(True)
+        v.addWidget(meta_label)
         v.addWidget(hline())
         cols = QHBoxLayout()
         cols.setSpacing(24)

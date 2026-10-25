@@ -501,8 +501,9 @@ class MatchdayRecap(MomentOverlay):
             return
         y += 14
         a = _ease(_phase(ms, self._others_start - 100, 300))
-        self.text(p, QRectF(0, y, w, 20), "OTHER RESULTS" if self.mine else "", 11, FG_MUTED,
-                  track=2.4, opacity=a)
+        real = all(f.result.source == "real" for f in shown)
+        head = ("REAL RESULTS" if real else "OTHER RESULTS") if self.mine else ("REAL RESULTS" if real else "")
+        self.text(p, QRectF(0, y, w, 20), head, 11, INFO if real else FG_MUTED, track=2.4, opacity=a)
         y += 28
         cols = 2 if len(shown) > 3 else 1
         row_w, row_h = 500, 40
@@ -545,7 +546,7 @@ class MatchdayRecap(MomentOverlay):
                        p.fontMetrics().elidedText(self.t.team_name(tid).upper(), Qt.ElideRight,
                                                   int(box.width())))
         p.setFont(tracked_font(FONT_DISPLAY, 15, QFont.Bold, 0.5))
-        p.setPen(QColor(FG_PRIMARY))
+        p.setPen(QColor(INFO if r.source == "real" else FG_PRIMARY))
         p.drawText(QRectF(mid - 44, rect.y(), 88, rect.height()), Qt.AlignCenter,
                    f"{r.home.points} – {r.away.points}")
         p.restore()

@@ -393,9 +393,11 @@ class ScoreCard(ActivatableCard):
         p.setFont(tracked_font(FONT_DISPLAY, 8, QFont.DemiBold, 1.4))
         p.setPen(QColor(FG_TERTIARY))
         p.drawText(QRectF(14, 4, w - 28, 14), Qt.AlignLeft | Qt.AlignVCenter, (f.label or "").upper())
-        if f.result and f.result.source == "game":
-            p.setPen(QColor(GREEN))
-            p.drawText(QRectF(14, 4, w - 28, 14), Qt.AlignRight | Qt.AlignVCenter, "PLAYED")
+        if f.result and f.result.source in ("game", "real"):
+            # PLAYED: in the game; REAL: reality mode's real result
+            p.setPen(QColor(GREEN if f.result.source == "game" else INFO))
+            p.drawText(QRectF(14, 4, w - 28, 14), Qt.AlignRight | Qt.AlignVCenter,
+                       "PLAYED" if f.result.source == "game" else "REAL")
         winner = f.result.winner_id() if f.result else None
         y, h = 20, 36
         score_w = 74
