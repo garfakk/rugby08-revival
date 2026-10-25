@@ -7,6 +7,7 @@
 - Extra kits (third kit etc)
 - Full customization of the match parameters (ball, logos, textures, kickoff...)
 - Per player customization: tatoo, baselayer, strap, gloves, boots
+- Player names on the back of the shirts, configured per team in the team editor (*Shirt names* tab): font, size, spacing, arch, name area (automatic or dragged), colours per kit, with 2D and 3D previews
 
 The possibilities are infinite, and future updates will include:
 - Extra difficulty modes

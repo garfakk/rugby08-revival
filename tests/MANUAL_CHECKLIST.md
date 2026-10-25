@@ -19,3 +19,4 @@ points at the game side.
 | 10 | Difficulty legend/immortal: CPU side visibly stronger, human side tires | Legend vs a weak team | `unit/test_difficulty.py` |
 | 11 | Challenge restart (penalty/lineout) starts at the right spot and half | Penalty challenge | `unit/test_challenges.py` (geometry) |
 | 12 | Installer: silent install, data pack backup/restore, uninstall keeps user_data | `src/packaging/smoke_test.sh` (Wine) | `qt/test_startup.py::test_selftest_subprocess` |
+| 13 | Shirt names show on every player's back, the right name on the right shirt (also subs coming on) | Team editor > Shirt names on for England, quick match, look at shirts 1, 10, 22 | `pipeline/test_match_pipeline.py::test_shirt_names_lettered_on_the_back_textures` |
