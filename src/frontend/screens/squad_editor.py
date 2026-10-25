@@ -140,7 +140,7 @@ class SquadEditorScreen(Screen):
         root.setContentsMargins(0, 0, 0, 0)
         root.setSpacing(0)
         header = page_header("Squad", breadcrumb=f"{self.team_name} · {self.side}",
-                             right=self._count_text(), on_back=self._on_back_clicked)
+                             right=self._count_text())
         self._count_lbl = header.findChild(QLabel, "pageHeaderRight")
         root.addWidget(header)
 
@@ -280,11 +280,19 @@ class SquadEditorScreen(Screen):
         self.save_note.hide()
         v.addWidget(self.save_note)
 
+        buttons = QHBoxLayout()
+        buttons.setSpacing(8)
+        self.discard_btn = StyledButton("DISCARD", "neutral")
+        self.discard_btn.setMinimumHeight(BTN_HEIGHT)
+        self.discard_btn.clicked.connect(self._discard)
+        self.focus.register(self.discard_btn)
+        buttons.addWidget(self.discard_btn, stretch=1)
         self.save_btn = StyledButton("SAVE SQUAD", "primary")
         self.save_btn.setMinimumHeight(BTN_HEIGHT)
         self.save_btn.clicked.connect(self._save)
         self.focus.register(self.save_btn)
-        v.addWidget(self.save_btn)
+        buttons.addWidget(self.save_btn, stretch=1)
+        v.addLayout(buttons)
         return card
 
     def _build_roles_panel(self):
@@ -576,11 +584,14 @@ class SquadEditorScreen(Screen):
         else:
             self.on_confirm(lineup)
 
+    def _discard(self):
+        """DISCARD button: leave without saving, whatever panel is open."""
+        if self.on_discard:
+            self.on_discard()
+
     def _on_back_clicked(self):
-        """The header's mouse-clickable back button. Closing the roles
-        panel or picker takes precedence — handled by their own BACK
-        branches above this in keyPressEvent, and by the caller checking
-        them before invoking this directly from the header click."""
+        """The B key / pad BACK. Closing the roles panel or picker takes
+        precedence; otherwise it leaves without saving."""
         if self._roles_open:
             self.toggle_roles()
         elif self.picker.isVisible():
@@ -613,7 +624,7 @@ class SquadEditorScreen(Screen):
         else:
             self.hintbar.set_hints([
                 ("A", "pick player"), ("X", "auto-fill"), ("F", "roles & plays"),
-                ("B", "back · discard"),
+                ("B", "discard"),
             ])
 
     def _picker_key(self, action):
