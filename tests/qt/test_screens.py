@@ -206,6 +206,69 @@ def test_settings_keyboard(window, qapp):
     window.show_main()
 
 
+def _pad(window, qapp, key):
+    """A pad button: its key, sent where app.gamepad sends it."""
+    from app.gamepad import send_key
+    send_key(key, window.screens.currentWidget)
+    for _ in range(3):
+        qapp.processEvents()
+
+
+def test_pad_leaves_a_card_list_inside_a_scroll_area(window, qapp):
+    """Down moves from card to card instead of scrolling the list holding them."""
+    from PyQt5.QtCore import Qt
+    from PyQt5.QtWidgets import QApplication
+    window.show_challenge_mode()
+    qapp.processEvents()
+    screen = window.screen_challenge_mode
+    tiles = [t for t in screen._tiles if t.isVisible()]
+    assert len(tiles) >= 2
+    tiles[0].setFocus()
+    _pad(window, qapp, Qt.Key_Down)
+    assert QApplication.focusWidget() is tiles[1]
+    _pad(window, qapp, Qt.Key_Escape)
+    assert window.screens.currentWidget() is not screen
+    window.show_main()
+
+
+def test_pad_about_goes_back(window, qapp):
+    from PyQt5.QtCore import Qt
+    window.show_main()
+    window.show_about()
+    qapp.processEvents()
+    _pad(window, qapp, Qt.Key_Down)                         # scrolls, stays
+    assert window.screens.currentWidget() is window.screen_about
+    _pad(window, qapp, Qt.Key_Escape)
+    assert window.screens.currentWidget() is not window.screen_about
+    window.show_main()
+
+
+def test_pad_y_removes_the_focused_row(window, qapp):
+    """A row's ✕ is past fields that keep Left/Right: Y presses it."""
+    from PyQt5.QtCore import Qt
+    from PyQt5.QtWidgets import QApplication, QAbstractButton
+    window.show_challenge_editor()
+    qapp.processEvents()
+    screen = window.screen_challenge_editor
+
+    def removers():
+        return [b for b in screen.findChildren(QAbstractButton)
+                if b.property("removesRow") and b.isVisible()]
+    next(b for b in screen.findChildren(QAbstractButton)
+         if b.text() == "+ CHALLENGE OBJECTIVE").click()     # the row Y takes away again
+    qapp.processEvents()
+    before = removers()
+    assert before
+    row = before[0].parentWidget()
+    field = next(w for w in screen.focus.alive() if row.isAncestorOf(w) and w is not before[0])
+    field.setFocus()
+    _pad(window, qapp, Qt.Key_Y)
+    assert len(removers()) == len(before) - 1
+    focus = QApplication.focusWidget()
+    assert focus is not None and focus.isVisible() and screen.isAncestorOf(focus)
+    window.show_main()
+
+
 def test_updates_screen_installs_and_undoes(window, qapp, tmp_path):
     """Install shows what the update changes, then writes it; undo puts it back."""
     import zipfile

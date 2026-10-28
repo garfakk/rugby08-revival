@@ -712,7 +712,7 @@ class PlayerEditorScreen(EditorScreen):
         if isinstance(focused, ScopeCheck):
             return [("A", "edit every season" if not focused.checked else "edit this season only")]
         if isinstance(focused, NumberField):
-            return [("0-9", "type"), ("←→", "adjust"), ("Del", "clear")]
+            return [("0-9", "type"), ("←→", "adjust"), ("SELECT", "clear")]
         if isinstance(focused, TextField):
             return [("A", "edit")]
         return self.tabs[self.shell.tabs.index()].hints(focused)

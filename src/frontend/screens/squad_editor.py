@@ -612,7 +612,7 @@ class SquadEditorScreen(Screen):
             self.hintbar.set_hints([("A", "change"), ("B", "close panel")])
         else:
             self.hintbar.set_hints([
-                ("A", "pick player"), ("X", "auto-fill"), ("F", "roles & plays"),
+                ("A", "pick player"), ("X", "auto-fill"), ("START", "roles & plays"),
                 ("B", "back · discard"),
             ])
 

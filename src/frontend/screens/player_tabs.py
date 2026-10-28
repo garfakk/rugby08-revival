@@ -337,7 +337,7 @@ class ProfileTab(PlayerTab):
 
     def hints(self, focused):
         if isinstance(focused, NumberField):
-            return [("0-9", "type"), ("←→", "adjust"), ("Del", "clear")]
+            return [("0-9", "type"), ("←→", "adjust"), ("SELECT", "clear")]
         if isinstance(focused, (TextField,)):
             return [("A", "edit")]
         return []
@@ -838,7 +838,7 @@ class AppearanceTab(PlayerTab):
 
     def hints(self, focused):
         if isinstance(focused, LayerStackField):
-            return [("↑↓", "pick"), ("⇧↑↓", "move"), ("DEL", "remove"), ("A", "add / replace")]
+            return [("↑↓", "pick"), ("X", "move"), ("SELECT", "remove"), ("A", "add / replace")]
         if isinstance(focused, SegmentField):
             return [("←→", "change")]
         if isinstance(focused, ChoiceField):

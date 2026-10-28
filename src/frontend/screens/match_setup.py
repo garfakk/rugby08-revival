@@ -1257,7 +1257,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
         else:
             self.hintbar.set_hints([
                 ("A", "select"), ("X", "home squad"), ("Y", "away squad"),
-                ("F", "advanced"), ("B", "back"),
+                ("START", "advanced"), ("B", "back"),
             ])
 
     def keyPressEvent(self, event):
