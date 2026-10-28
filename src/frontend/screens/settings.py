@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtGui import QFont
 
 sys.path.append(str(Path(__file__).parent.parent.parent))
-from shared.user_prefs import user_prefs
+from shared.user_prefs import user_prefs, SCREEN_RATIOS
 from shared.game_profile import game_profile, SECTIONS, RESOLUTIONS, UNSAFE_RESOLUTIONS
 
 import logging
@@ -156,18 +156,12 @@ class SettingsScreen(QWidget):
         # shipped (widescreen patch off); the others turn the widescreen patch
         # on, its 3D view at that ratio (Auto: the window's own, no bars).
         # Written to rugby08patches.ini at the next match start
-        # (backend.mod_utils.configure_game_widescreen).
-        ratio_choices = ["Auto", "4:3", "16:10", "16:9", "21:9"]
-
-        def _set_ratio(label):
-            user_prefs.widescreen = label != "4:3"
-            user_prefs.widescreen_aspect = label.lower()
-            user_prefs.save()
-
-        aspect = user_prefs.widescreen_aspect.strip().lower()
-        selected_ratio = ("4:3" if not user_prefs.widescreen or aspect == "4:3" else
-                          next((c for c in ratio_choices if c.lower() == aspect), "Auto"))
-        cl.addWidget(ChoiceRow("Screen Ratio", ratio_choices, selected_ratio, _set_ratio))
+        # (backend.mod_utils.configure_game_widescreen). First launch: the
+        # screen's own, closest preset (main.MainWindow._pick_screen_ratio).
+        ratio_choices = ["Auto", *SCREEN_RATIOS]
+        selected_ratio = user_prefs.screen_ratio_label()
+        cl.addWidget(ChoiceRow("Screen Ratio", ratio_choices, selected_ratio,
+                              user_prefs.set_screen_ratio))
         cl.addSpacing(16)
 
         # MATCH > Wind (Standard / Advanced): temporarily hidden, and
