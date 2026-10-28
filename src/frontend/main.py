@@ -181,7 +181,7 @@ from screens.team_editor import TeamEditorScreen
 from screens.player_editor import PlayerEditorScreen
 from screens.roster_import import RosterImportScreen
 from shared.config import config
-from shared.user_prefs import user_prefs
+from shared.user_prefs import user_prefs, nearest_screen_ratio
 from shared.game_profile import game_profile, resolution_choices
 from ui.theme import BG_BASE
 from ui.music import MenuMusic, TrackMedal
@@ -317,6 +317,8 @@ class MainWindow(QMainWindow):
             return
         if not game_profile.has_resolution():
             self._pick_resolution()
+        if not user_prefs.screen_ratio_set:
+            self._pick_screen_ratio()
         self._open_menus()
 
     # ── menu music ─────────────────────────────────────────────────────────
@@ -426,6 +428,15 @@ class MainWindow(QMainWindow):
         game_profile.set_resolution(w, h)
         game_profile.save()
         log.info(f"first launch: game resolution set to {w}x{h}")
+
+    def _pick_screen_ratio(self):
+        """First launch only (no ratio in user_prefs.ini or config.ini): match
+        the picture to this screen's shape, the closest Screen Ratio preset.
+        The user can change it later in Settings."""
+        size = QApplication.primaryScreen().size()
+        label = nearest_screen_ratio(size.width(), size.height())
+        user_prefs.set_screen_ratio(label)
+        log.info(f"first launch: screen ratio set to {label} ({size.width()}x{size.height()})")
 
     def _open_menus(self):
         # Idle-time preparation of the match-setup 3D previews (see
