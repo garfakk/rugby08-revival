@@ -181,8 +181,9 @@ from screens.team_editor import TeamEditorScreen
 from screens.player_editor import PlayerEditorScreen
 from screens.roster_import import RosterImportScreen
 from shared.config import config
-from shared.user_prefs import user_prefs, nearest_screen_ratio
-from shared.game_profile import game_profile, resolution_choices
+from shared.user_prefs import user_prefs
+from shared.game_profile import game_profile
+from app.display import native_resolution, native_screen_ratio, screen_pixels
 from ui.theme import BG_BASE
 from ui.music import MenuMusic, TrackMedal
 
@@ -420,11 +421,7 @@ class MainWindow(QMainWindow):
     def _pick_resolution(self):
         """First launch only: silently choose this screen's resolution (or the
         closest offered one). The user can change it later in Settings."""
-        screen = QApplication.primaryScreen()
-        ratio = screen.devicePixelRatio()
-        _sizes, recommended = resolution_choices(round(screen.size().width() * ratio),
-                                                 round(screen.size().height() * ratio))
-        w, h = recommended
+        w, h = native_resolution()
         game_profile.set_resolution(w, h)
         game_profile.save()
         log.info(f"first launch: game resolution set to {w}x{h}")
@@ -433,10 +430,9 @@ class MainWindow(QMainWindow):
         """First launch only (no ratio in user_prefs.ini or config.ini): match
         the picture to this screen's shape, the closest Screen Ratio preset.
         The user can change it later in Settings."""
-        size = QApplication.primaryScreen().size()
-        label = nearest_screen_ratio(size.width(), size.height())
+        label = native_screen_ratio()
         user_prefs.set_screen_ratio(label)
-        log.info(f"first launch: screen ratio set to {label} ({size.width()}x{size.height()})")
+        log.info(f"first launch: screen ratio set to {label} (screen %dx%d)" % screen_pixels())
 
     def _open_menus(self):
         # Idle-time preparation of the match-setup 3D previews (see

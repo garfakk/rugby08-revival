@@ -139,6 +139,73 @@ def test_settings_screen_ratio_rows(window, qapp, monkeypatch):
     window.show_main()
 
 
+def _settings_rows(screen, tab):
+    from screens.settings import TABS
+    return {row.label.text(): row for row, _changed in screen._rows[TABS.index(tab)]}
+
+
+def test_settings_tabs_tags_and_reset(window, qapp):
+    """Tabs by topic; IN-GAME tags on the rows that only change the game; a
+    dot on a changed row until its tab is reset."""
+    from PyQt5.QtWidgets import QLabel
+    from shared.game_profile import game_profile
+    from screens.settings import TABS
+    s = window.screen_settings
+    window.show_settings()
+    qapp.processEvents()
+    assert s.tabs.titles == list(TABS)
+
+    def tagged(row):
+        return any(l.text() == "IN-GAME" for l in row.findChildren(QLabel))
+    display = _settings_rows(s, "Display")
+    assert list(display)[:3] == ["Windowed Mode", "Resolution", "Screen Ratio"]
+    assert {"Shadows", "Gamma"} <= set(display)
+    assert tagged(display["Resolution"]) and tagged(display["Screen Ratio"])
+    assert not tagged(display["Windowed Mode"])
+    audio = _settings_rows(s, "Audio")
+    assert tagged(audio["Crowd"]) and not tagged(audio["Music"])   # menu music follows it
+    assert not any(tagged(r) for r in _settings_rows(s, "Advanced").values())
+
+    default = game_profile.default("vol_crowd")
+    audio["Crowd"].set_value(default - 10 if default >= 10 else default + 10)
+    assert game_profile.get("vol_crowd") != default and audio["Crowd"].is_changed()
+    s.reset_tab(TABS.index("Audio"))
+    assert game_profile.get("vol_crowd") == default
+    assert not _settings_rows(s, "Audio")["Crowd"].is_changed()
+    window.show_main()
+
+
+def test_settings_keyboard(window, qapp):
+    """Left/Right change the row, Q/E switch tabs, Y asks before resetting, Esc goes back."""
+    from PyQt5.QtCore import Qt
+    from PyQt5.QtTest import QTest
+    from shared.game_profile import game_profile
+    from screens.settings import TABS
+    from ui.editor_kit import ConfirmDialog
+    s = window.screen_settings
+    window.show_settings()
+    qapp.processEvents()
+    s.tabs.set_index(TABS.index("Audio"))
+    row = _settings_rows(s, "Audio")["Crowd"]
+    before = game_profile.get("vol_crowd")
+    QTest.keyClick(row, Qt.Key_Left if before else Qt.Key_Right)
+    assert game_profile.get("vol_crowd") == (before - 5 if before else 5)
+    QTest.keyClick(row, Qt.Key_E)
+    assert s.tabs.index() == TABS.index("Gameplay")
+    QTest.keyClick(s.tabs, Qt.Key_Q)
+    assert s.tabs.index() == TABS.index("Audio")
+
+    QTest.keyClick(s.tabs, Qt.Key_Y)
+    dialog = next(d for d in s.findChildren(ConfirmDialog) if d.isVisible())
+    dialog.choose("reset")
+    assert game_profile.get("vol_crowd") == game_profile.default("vol_crowd")
+
+    row = _settings_rows(s, "Audio")["Crowd"]
+    QTest.keyClick(row, Qt.Key_Escape)
+    assert window.screens.currentWidget() is not s
+    window.show_main()
+
+
 def test_updates_screen_installs_and_undoes(window, qapp, tmp_path):
     """Install shows what the update changes, then writes it; undo puts it back."""
     import zipfile
