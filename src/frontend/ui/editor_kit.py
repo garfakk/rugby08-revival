@@ -1382,6 +1382,7 @@ class LayerStackField(QWidget):
         self.base = {"label": "stock skin", "thumb": "", "swatch": None}
         self.top = None           # gloves row, same shape as a layer
         self.cursor = 0           # index into self._rows()
+        self.carrying = False     # X: Up/Down move the layer (a pad has no Shift)
         self._hover = -1
         self._fit()
 
@@ -1513,12 +1514,21 @@ class LayerStackField(QWidget):
         if kind is not None:
             self.row_activated.emit(kind)
 
+    def focusOutEvent(self, event):
+        self.carrying = False
+        self.update()
+        super().focusOutEvent(event)
+
     # ── keys ─────────────────────────────────────────────────────────────
     def keyPressEvent(self, event):
         k, mods = event.key(), event.modifiers()
         rows = self._rows()
-        shift = bool(mods & Qt.ShiftModifier)
-        if k in (Qt.Key_Up, Qt.Key_Down) and shift:
+        shift = bool(mods & Qt.ShiftModifier) or self.carrying
+        if k == Qt.Key_X and not mods:
+            self.carrying = not self.carrying and self.selected_layer() is not None
+        elif self.carrying and k in (Qt.Key_Return, Qt.Key_Enter, Qt.Key_Space, Qt.Key_Escape):
+            self.carrying = False
+        elif k in (Qt.Key_Up, Qt.Key_Down) and shift:
             if self.move(1 if k == Qt.Key_Up else -1):
                 event.accept()
                 return
@@ -1555,6 +1565,10 @@ class LayerStackField(QWidget):
             p.fillRect(r, QColor(BG_HIGHLIGHT if (on and focused) else
                                  (BG_RAISED if (on or hovered) else BG_CARD)))
             draw_frame(p, r, ACCENT if (on and focused) else BORDER)
+            if on and self.carrying:
+                p.setPen(QPen(QColor(ACCENT), 2, Qt.DashLine))
+                p.setBrush(Qt.NoBrush)
+                p.drawRect(r.adjusted(2, 2, -2, -2))
             if kind == self.ADD:
                 p.setFont(small)
                 p.setPen(QColor(ACCENT if (on and focused) else FG_SECONDARY))

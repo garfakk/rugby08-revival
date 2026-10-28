@@ -68,6 +68,7 @@ class ScoreEventRow(QWidget):
         focus_register(self.time_field)
 
         rm = compact_button("✕")
+        rm.setProperty("removesRow", True)      # Y on the row presses it (app.screen_base)
         rm.setFixedWidth(32)
         rm.clicked.connect(lambda: on_remove(self))
         h.addWidget(rm)
@@ -111,6 +112,7 @@ class NisRow(Card):
         focus_register(self.player_field)
 
         rm = compact_button("✕")
+        rm.setProperty("removesRow", True)      # Y on the row presses it (app.screen_base)
         rm.setFixedWidth(32)
         rm.clicked.connect(lambda: on_remove(self))
         top.addWidget(rm)
@@ -171,6 +173,7 @@ class ParameterRow(QWidget):
         focus_register(self.value_field)
 
         rm = compact_button("✕")
+        rm.setProperty("removesRow", True)      # Y on the row presses it (app.screen_base)
         rm.setFixedWidth(32)
         rm.clicked.connect(lambda: on_remove(self))
         h.addWidget(rm)
@@ -357,7 +360,7 @@ class MissionEditorScreen(Screen):
         root.addWidget(scroll, stretch=1)
 
         self.hintbar = HintBar()
-        self.hintbar.set_hints([("B", "back")])
+        self.hintbar.set_hints([("A", "edit"), ("Y", "remove row"), ("B", "back")])
         root.addWidget(self.hintbar)
 
     # ── binding ──────────────────────────────────────────────────────────

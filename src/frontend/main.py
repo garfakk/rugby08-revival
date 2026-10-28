@@ -184,6 +184,7 @@ from shared.config import config
 from shared.user_prefs import user_prefs
 from shared.game_profile import game_profile
 from app.display import native_resolution, native_screen_ratio, screen_pixels
+from app.gamepad import GamepadNavigator, open_source as open_gamepads, key_target
 from ui.theme import BG_BASE
 from ui.music import MenuMusic, TrackMedal
 
@@ -441,10 +442,39 @@ class MainWindow(QMainWindow):
         # Same for the player editor's list (thousands of players).
         QTimer.singleShot(1500, self.screen_player_editor.prewarm)
         self._menus_ready = True
+        self._start_gamepads()
         self.screen_main.play_entrance()
         self.music.start()
         QTimer.singleShot(900, self._offer_music_download)
         QTimer.singleShot(700, self._report_edits_after_update)
+
+    # ── gamepads (app/gamepad.py) ─────────────────────────────────────────
+    def _start_gamepads(self):
+        source = open_gamepads()
+        if source is not None:
+            self._gamepads = GamepadNavigator(source, fallback=self.screens.currentWidget,
+                                              enabled=self._gamepads_drive_menus, parent=self)
+
+    def _gamepads_drive_menus(self):
+        """Not during a match (the game reads the pads itself), nor while
+        another application is in front."""
+        return (QApplication.activeWindow() is not None
+                and self.screens.currentWidget() is not self.screen_ingame)
+
+    def keyPressEvent(self, event):
+        # Nothing in the screen focused (one that never took the focus, or
+        # the window itself has it): the keys still reach the current screen.
+        screen = self.screens.currentWidget()
+        if (self._menus_ready and screen is not None and screen is not self.screen_ingame
+                and key_target() in (None, self, self.centralWidget())
+                and not getattr(self, "_forwarding_key", False)):
+            self._forwarding_key = True        # an ignored key bubbles back up here
+            try:
+                QApplication.sendEvent(screen, event)
+            finally:
+                self._forwarding_key = False
+            return
+        super().keyPressEvent(event)
 
     # ── the user's edits after a data update (app/user_edits.py) ──────────
     def _report_edits_after_update(self):

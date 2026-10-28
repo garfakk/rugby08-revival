@@ -11,18 +11,37 @@ from PyQt5.QtGui import QColor, QPalette
 sys.path.append(str(Path(__file__).parent.parent.parent))
 from shared.config import config
 from shared.version import APP_VERSION
+from app.input import Action, KEYMAP
+from app.screen_base import Screen
 from ui import make_page_header, make_separator, make_label, StyledButton
+from ui.broadcast import HintBar
 from ui.theme import AWAY_TINT, BTN_HEIGHT_BACK
+
+SCROLL_STEP = 120       # px per Up/Down
 
 
 CREDITS_PATH = Path(config.mod_src_directory) / "CREDITS.MD"
 
 
-class AboutScreen(QWidget):
+class AboutScreen(Screen):
+    """Up/Down scroll the credits; A or B goes back."""
+
     def __init__(self, back_callback):
-        super().__init__()
+        super().__init__(on_back=back_callback)
         self.back_callback = back_callback
         self._init_ui()
+
+    def keyPressEvent(self, event):
+        action = KEYMAP.get(event.key())
+        if action in (Action.NAV_UP, Action.NAV_DOWN):
+            bar = self.scroll.verticalScrollBar()
+            bar.setValue(bar.value() + (SCROLL_STEP if action == Action.NAV_DOWN else -SCROLL_STEP))
+        elif action == Action.CONFIRM:
+            self.back_callback()
+        else:
+            super().keyPressEvent(event)
+            return
+        event.accept()
 
     def _init_ui(self):
         root = QVBoxLayout(self)
@@ -33,7 +52,8 @@ class AboutScreen(QWidget):
         root.addWidget(header)
         root.addWidget(bar)
 
-        scroll = QScrollArea()
+        scroll = self.scroll = QScrollArea()
+        scroll.setFocusPolicy(Qt.NoFocus)       # the screen takes the keys
         scroll.setWidgetResizable(True)
         scroll.setFrameShape(QScrollArea.NoFrame)
 
@@ -60,6 +80,7 @@ class AboutScreen(QWidget):
         credits_view.setHtml(credits_html)
         credits_view.setOpenExternalLinks(True)
         credits_view.setReadOnly(True)
+        credits_view.setFocusPolicy(Qt.NoFocus)  # Up/Down scroll the page (keyPressEvent)
         credits_view.setFrameShape(QTextBrowser.NoFrame)
         credits_view.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         credits_view.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -93,6 +114,9 @@ class AboutScreen(QWidget):
 
         scroll.setWidget(inner)
         root.addWidget(scroll, stretch=1)
+        hints = HintBar()
+        hints.set_hints([("↕", "scroll"), ("B", "back")])
+        root.addWidget(hints)
 
 
 AboutMenu = AboutScreen
