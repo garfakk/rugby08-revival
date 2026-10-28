@@ -1893,16 +1893,16 @@ class TabStrip(QWidget):
 
     changed = pyqtSignal(int)
 
-    def __init__(self, titles, parent=None):
+    def __init__(self, titles, parent=None, font_size=13):
         super().__init__(parent)
         self.setFocusPolicy(Qt.StrongFocus)
-        self.setFixedHeight(42)
+        self.setFixedHeight(42 + 2 * (font_size - 13))
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         self.titles = list(titles)
         self.counts = [None] * len(self.titles)   # (n, severity)
         self.hidden = set()                       # tabs not offered (see set_hidden)
         self._index = 0
-        self._font = tracked_font(FONT_DISPLAY, 13, QFont.Bold, track=1.4)
+        self._font = tracked_font(FONT_DISPLAY, font_size, QFont.Bold, track=1.4)
 
     def index(self):
         return self._index

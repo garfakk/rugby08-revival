@@ -171,6 +171,12 @@ T_SMALL   = 10
 
 EDITOR_ROW_H = 40
 
+# Settings screen type scale (points): row labels, values, tabs, row tags.
+T_SETTING_LABEL = 12
+T_SETTING_VALUE = 11
+T_SETTING_TAB   = 15
+T_SETTING_TAG   = 8
+
 # Focus ring — applied to every focusable widget by the focus system.
 FOCUS_RING = f"2px solid {ACCENT}"
 

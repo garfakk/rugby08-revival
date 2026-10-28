@@ -114,6 +114,21 @@ def test_settings_persist(profile, tmp_path, monkeypatch):
     assert bad.get("vol_crowd") == GP.GameProfile().get("vol_crowd")
 
 
+def test_reset_some_keys(profile):
+    """Settings resets one tab at a time: the other settings keep their values."""
+    profile.set("vol_crowd", 35)
+    profile.set("radar", 0 if profile.default("radar") else 1)
+    profile.set_resolution(1600, 900)
+    profile.reset(["vol_crowd"])
+    assert profile.get("vol_crowd") == profile.default("vol_crowd")
+    assert profile.get("radar") != profile.default("radar")
+    assert profile.get_resolution() == (1600, 900)
+    profile.reset([GP.RESOLUTION_KEY])
+    assert not profile.has_resolution()
+    profile.reset()
+    assert profile.get("radar") == profile.default("radar")
+
+
 def test_import_ingame_keeps_changed_settings(profile, game_dir):
     profile.deploy(game_dir)
     payload = bytearray(profile._deployed)

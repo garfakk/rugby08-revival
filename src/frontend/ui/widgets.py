@@ -38,6 +38,7 @@ from ui.theme import (
     HEADER_HEIGHT, HEADER_BAR_H,
     GRAD_HEADER, GRAD_ACCENT_BTN, GRAD_ACCENT_BTN_HOVER,
     F_HUGE, F_H1, F_H2, F_H3, F_BODY, F_SMALL, F_MONO,
+    T_SETTING_LABEL, T_SETTING_VALUE, T_SETTING_TAG,
 )
 
 # ── Button variant stylesheets ─────────────────────────────────────────────────
@@ -230,35 +231,140 @@ class HoverComboBox(QComboBox):
         return any(self.itemData(i) == value for i in range(self.count()))
 
 
-# ── ToggleRow ─────────────────────────────────────────────────────────────────
+# ── Setting rows (Settings screen) ────────────────────────────────────────────
 
-class ToggleRow(QWidget):
-    def __init__(self, label: str, initial: bool, on_toggle, parent=None):
+def make_in_game_tag() -> QLabel:
+    """The IN-GAME tag: the setting changes only the game itself, not the menus."""
+    tag = QLabel("IN-GAME")
+    tag.setToolTip("Changes only the game itself, not these menus")
+    tag.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+    tag.setStyleSheet(
+        f"color: {FG_MUTED}; border: 1px solid {FG_MUTED}; padding: 1px 5px;"
+        f" font-family: '{FONT_DISPLAY}'; font-size: {T_SETTING_TAG}pt; font-weight: bold;"
+        f" letter-spacing: 1px; background: transparent;"
+    )
+    return tag
+
+
+def make_changed_mark() -> QLabel:
+    """The dot of a setting that differs from its default."""
+    mark = QLabel("●")
+    mark.setToolTip("Changed from its default")
+    mark.setFixedWidth(12)
+    mark.setStyleSheet(f"color: {ACCENT}; font-size: {T_SETTING_TAG}pt;"
+                       f" background: transparent; border: none;")
+    return mark
+
+
+class SettingRow(QWidget):
+    """A Settings row: the label on the left (a dot while the value differs
+    from its default, an IN-GAME tag when it changes only the game itself),
+    its control on the right. The row takes the keyboard focus, not the
+    control: Left/Right change the value (adjust), Enter/Space activate it;
+    every other key goes on to the screen."""
+
+    def __init__(self, label: str, in_game: bool = False, parent=None):
         super().__init__(parent)
+        self.setObjectName("settingRow")
+        self.setAttribute(Qt.WA_StyledBackground, True)
+        self.setFocusPolicy(Qt.StrongFocus)
+        self.row = QHBoxLayout(self)
+        self.row.setContentsMargins(10, 10, 16, 10)
+        self.row.setSpacing(8)
+
+        self._mark = make_changed_mark()
+        policy = self._mark.sizePolicy()
+        policy.setRetainSizeWhenHidden(True)        # labels stay aligned
+        self._mark.setSizePolicy(policy)
+        self._mark.hide()
+        self.row.addWidget(self._mark)
+
+        self.label = QLabel(label)
+        self.label.setStyleSheet(
+            f"color: {FG_SECONDARY}; font-family: '{FONT_DISPLAY}'; font-size: {T_SETTING_LABEL}pt;"
+            f" background: transparent; border: none;"
+        )
+        self.row.addWidget(self.label)
+        if in_game:
+            self.row.addWidget(make_in_game_tag())
+        self.row.addStretch()
+        self._paint_focus(False)
+
+    def set_changed(self, changed: bool):
+        self._mark.setVisible(bool(changed))
+
+    def is_changed(self) -> bool:
+        return not self._mark.isHidden()
+
+    def _own(self, control):
+        """Add the row's control: driven through the row, never focused itself;
+        a click on it focuses the row."""
+        control.setFocusPolicy(Qt.NoFocus)
+        control.installEventFilter(self)
+        self.row.addWidget(control)
+
+    def eventFilter(self, obj, event):
+        if event.type() == QEvent.MouseButtonPress:
+            self.setFocus(Qt.MouseFocusReason)
+        return False
+
+    def mousePressEvent(self, event):
+        self.setFocus(Qt.MouseFocusReason)
+        super().mousePressEvent(event)
+
+    def _paint_focus(self, focused):
+        self.setStyleSheet(
+            f"QWidget#settingRow {{ background-color: {BG_RAISED if focused else BG_CARD};"
+            f" border: 1px solid {ACCENT if focused else BORDER}; }}"
+        )
+
+    def focusInEvent(self, event):
+        self._paint_focus(True)
+        super().focusInEvent(event)
+
+    def focusOutEvent(self, event):
+        self._paint_focus(False)
+        super().focusOutEvent(event)
+
+    def keyPressEvent(self, event):
+        k = event.key()
+        if k in (Qt.Key_Left, Qt.Key_Right):
+            self.adjust(-1 if k == Qt.Key_Left else 1)
+        elif k in (Qt.Key_Return, Qt.Key_Enter, Qt.Key_Space):
+            self.activate()
+        else:
+            super().keyPressEvent(event)
+            return
+        event.accept()
+
+    def adjust(self, delta: int):
+        """Left (-1) / Right (+1)."""
+
+    def activate(self):
+        """Enter / Space."""
+        self.adjust(1)
+
+
+def _value_button_style(extra=""):
+    return (f"QPushButton {{ font-family: '{FONT_DISPLAY}'; font-size: {T_SETTING_VALUE}pt;"
+            f"  font-weight: bold; letter-spacing: 2px; {extra} }}")
+
+
+class ToggleRow(SettingRow):
+    def __init__(self, label: str, initial: bool, on_toggle, parent=None, in_game=False):
+        super().__init__(label, in_game, parent)
         self._on_toggle = on_toggle
         self._state = initial
 
-        self.setStyleSheet(
-            f"background-color: {BG_CARD}; border: 1px solid {BORDER};"
-        )
-
-        row = QHBoxLayout(self)
-        row.setContentsMargins(16, 12, 16, 12)
-
-        lbl = QLabel(label)
-        lbl.setStyleSheet(
-            f"color: {FG_SECONDARY}; font-family: '{FONT_DISPLAY}'; font-size: 10pt;"
-            f" background: transparent; border: none;"
-        )
-        row.addWidget(lbl)
-        row.addStretch()
-
         self._btn = QPushButton()
-        self._btn.setFixedSize(76, 30)
+        self._btn.setFixedSize(84, 32)
         self._btn.setCursor(Qt.PointingHandCursor)
         self._btn.clicked.connect(self._toggle)
-        row.addWidget(self._btn)
+        self._own(self._btn)
         self._refresh()
+
+    def adjust(self, delta):
+        self._toggle()
 
     def _toggle(self):
         self._state = not self._state
@@ -269,113 +375,81 @@ class ToggleRow(QWidget):
         self._btn.setText("ON" if self._state else "OFF")
         if self._state:
             self._btn.setStyleSheet(
-                f"QPushButton {{ background: {ACCENT}; color: {BG_BASE}; border: none;"
-                f"  font-family: '{FONT_DISPLAY}'; font-size: 9pt; font-weight: bold;"
-                f"  letter-spacing: 2px; }}"
-                f"QPushButton:hover {{ background: {ACCENT_LITE}; }}"
+                _value_button_style(f"background: {ACCENT}; color: {BG_BASE}; border: none;")
+                + f"QPushButton:hover {{ background: {ACCENT_LITE}; }}"
             )
         else:
             self._btn.setStyleSheet(
-                f"QPushButton {{ background: {BG_RAISED}; color: {FG_MUTED};"
-                f"  border: 1px solid {BORDER};"
-                f"  font-family: '{FONT_DISPLAY}'; font-size: 9pt; font-weight: bold;"
-                f"  letter-spacing: 2px; }}"
-                f"QPushButton:hover {{ border-color: {DANGER}; color: {DANGER_LITE}; }}"
+                _value_button_style(f"background: {BG_RAISED}; color: {FG_MUTED};"
+                                    f" border: 1px solid {BORDER};")
+                + f"QPushButton:hover {{ border-color: {DANGER}; color: {DANGER_LITE}; }}"
             )
 
 
-class ChoiceRow(QWidget):
-    """ToggleRow's look, for a choice among several values: a dropdown list.
-    on_change is called with the selected label."""
+class ChoiceRow(SettingRow):
+    """A choice among several values: a dropdown list (Left/Right step through
+    it, Enter opens it). on_change is called with the selected label."""
 
-    def __init__(self, label: str, values, initial, on_change, parent=None):
-        super().__init__(parent)
-        row = QHBoxLayout(self)
-        row.setContentsMargins(16, 6, 16, 6)
-
-        lbl = QLabel(label)
-        lbl.setStyleSheet(
-            f"color: {FG_SECONDARY}; font-family: '{FONT_DISPLAY}'; font-size: 10pt;"
-            f" background: transparent; border: none;"
-        )
-        row.addWidget(lbl)
-        row.addStretch()
+    def __init__(self, label: str, values, initial, on_change, parent=None, in_game=False):
+        super().__init__(label, in_game, parent)
+        self.row.setContentsMargins(10, 6, 16, 6)
 
         self.combo = HoverComboBox()
-        self.combo.setFixedSize(180, 36)
+        self.combo.setFixedSize(190, 38)
+        self.combo.setStyleSheet(f"QComboBox {{ font-size: {T_SETTING_VALUE}pt; }}")
         self.combo.addItems([str(v) for v in values])
         if str(initial) in [str(v) for v in values]:
             self.combo.setCurrentText(str(initial))
         self.combo.currentTextChanged.connect(on_change)
-        row.addWidget(self.combo)
+        self._own(self.combo)
+        self.combo.lineEdit().setFocusPolicy(Qt.NoFocus)
+        self.combo.lineEdit().installEventFilter(self)
+
+    def adjust(self, delta):
+        i = self.combo.currentIndex() + delta
+        if 0 <= i < self.combo.count():
+            self.combo.setCurrentIndex(i)
+
+    def activate(self):
+        self.combo.showPopup()
 
 
-class CycleRow(QWidget):
-    """ToggleRow's look, for a choice among several values: the button shows the
-    current one and each click steps to the next."""
+class CycleRow(SettingRow):
+    """A choice among a few values: the button shows the current one and each
+    click steps to the next."""
 
-    def __init__(self, label: str, values, initial, on_change, parent=None):
-        super().__init__(parent)
+    def __init__(self, label: str, values, initial, on_change, parent=None, in_game=False):
+        super().__init__(label, in_game, parent)
         self._values = list(values)
         self._on_change = on_change
         self._index = self._values.index(initial) if initial in self._values else 0
 
-        self.setStyleSheet(
-            f"background-color: {BG_CARD}; border: 1px solid {BORDER};"
-        )
-        row = QHBoxLayout(self)
-        row.setContentsMargins(16, 12, 16, 12)
-
-        lbl = QLabel(label)
-        lbl.setStyleSheet(
-            f"color: {FG_SECONDARY}; font-family: '{FONT_DISPLAY}'; font-size: 10pt;"
-            f" background: transparent; border: none;"
-        )
-        row.addWidget(lbl)
-        row.addStretch()
-
         self._btn = QPushButton(str(self._values[self._index]))
-        self._btn.setFixedSize(110, 30)
+        self._btn.setFixedSize(130, 32)
         self._btn.setCursor(Qt.PointingHandCursor)
         self._btn.setStyleSheet(
-            f"QPushButton {{ background: {BG_RAISED}; color: {FG_SECONDARY};"
-            f"  border: 1px solid {BORDER};"
-            f"  font-family: '{FONT_DISPLAY}'; font-size: 9pt; font-weight: bold;"
-            f"  letter-spacing: 2px; }}"
-            f"QPushButton:hover {{ border-color: {ACCENT}; color: {ACCENT_LITE}; }}"
+            _value_button_style(f"background: {BG_RAISED}; color: {FG_SECONDARY};"
+                                f" border: 1px solid {BORDER};")
+            + f"QPushButton:hover {{ border-color: {ACCENT}; color: {ACCENT_LITE}; }}"
         )
-        self._btn.clicked.connect(self._step)
-        row.addWidget(self._btn)
+        self._btn.clicked.connect(lambda: self.adjust(1))
+        self._own(self._btn)
 
-    def _step(self):
-        self._index = (self._index + 1) % len(self._values)
+    def adjust(self, delta):
+        self._index = (self._index + delta) % len(self._values)
         value = self._values[self._index]
         self._btn.setText(str(value))
         self._on_change(value)
 
 
-class SliderRow(QWidget):
-    """ToggleRow's look, for an integer in [minimum, maximum]: a slider and its
-    current value. on_change is called with the value as the slider moves."""
+class SliderRow(SettingRow):
+    """An integer in [minimum, maximum]: a slider and its current value.
+    on_change is called with the value as the slider moves."""
 
     def __init__(self, label: str, minimum: int, maximum: int, initial: int,
-                 on_change, step: int = 1, parent=None):
-        super().__init__(parent)
+                 on_change, step: int = 1, parent=None, in_game=False):
+        super().__init__(label, in_game, parent)
         self._on_change = on_change
-
-        self.setStyleSheet(
-            f"background-color: {BG_CARD}; border: 1px solid {BORDER};"
-        )
-        row = QHBoxLayout(self)
-        row.setContentsMargins(16, 12, 16, 12)
-
-        lbl = QLabel(label)
-        lbl.setStyleSheet(
-            f"color: {FG_SECONDARY}; font-family: '{FONT_DISPLAY}'; font-size: 10pt;"
-            f" background: transparent; border: none;"
-        )
-        row.addWidget(lbl)
-        row.addStretch()
 
         self._slider = QSlider(Qt.Horizontal)
         self._slider.setRange(minimum, maximum)
@@ -395,16 +469,22 @@ class SliderRow(QWidget):
         self._step = step
         self._slider.setValue(initial)
         self._slider.valueChanged.connect(self._changed)
-        row.addWidget(self._slider)
+        self._own(self._slider)
 
         self._value = QLabel(str(initial))
-        self._value.setFixedWidth(40)
+        self._value.setFixedWidth(44)
         self._value.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         self._value.setStyleSheet(
-            f"color: {FG_PRIMARY}; font-family: '{FONT_DISPLAY}'; font-size: 10pt;"
+            f"color: {FG_PRIMARY}; font-family: '{FONT_DISPLAY}'; font-size: {T_SETTING_LABEL}pt;"
             f" font-weight: bold; background: transparent; border: none;"
         )
-        row.addWidget(self._value)
+        self.row.addWidget(self._value)
+
+    def adjust(self, delta):
+        self._slider.setValue(self._slider.value() + delta * self._step)
+
+    def activate(self):
+        pass
 
     def _changed(self, value: int):
         if self._step > 1:
