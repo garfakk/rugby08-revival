@@ -176,6 +176,19 @@ class SettingsScreen(QWidget):
         selected_ratio = ("4:3" if not user_prefs.widescreen or aspect == "4:3" else
                           next((c for c in ratio_choices if c.lower() == aspect), "Auto"))
         cl.addWidget(ChoiceRow("Screen Ratio", ratio_choices, selected_ratio, _set_ratio))
+
+        # How Quick Match picks teams (app/team_browse.py): the classic
+        # season > category > team, or one of the team-first alternatives.
+        # Takes effect the next time Quick Match opens.
+        from app.team_browse import STYLES, style_label
+        labels = [label for _id, label in STYLES]
+
+        def _set_picker(label):
+            user_prefs.match_picker = next(i for i, l in STYLES if l == label)
+            user_prefs.save()
+
+        cl.addWidget(ChoiceRow("Quick Match Picker", labels, style_label(user_prefs.match_picker),
+                               _set_picker))
         cl.addSpacing(16)
 
         # MATCH > Wind (Standard / Advanced): temporarily hidden, and

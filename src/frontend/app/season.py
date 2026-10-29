@@ -18,3 +18,20 @@ def season_label(season) -> str:
     except ValueError:
         return str(season)
     return f"{year - 1}-{year}"
+
+
+def nearest_season(seasons, wanted):
+    """The season of `seasons` (stored years, as text) closest to `wanted`;
+    on a tie the newer one. `wanted` itself when it is there, "" when
+    `seasons` is empty."""
+    have = sorted(str(s) for s in seasons)
+    if not have:
+        return ""
+    wanted = str(wanted or "")
+    if wanted in have:
+        return wanted
+    try:
+        target = int(wanted)
+    except ValueError:
+        return have[-1]
+    return min(have, key=lambda s: (abs(int(s) - target), -int(s)))
