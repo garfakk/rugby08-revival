@@ -381,6 +381,7 @@ class Config:
     }
 
     # Attempt to load overrides from section [Options] in config file
+    self._options_set = set()     # the attributes config.ini itself set
     self._load_config_file(config_filepath, 'Options')
 
     # Build launcher environment from OS env + config overrides + optional .env file
@@ -591,6 +592,7 @@ class Config:
             newval = val
 
           setattr(self, attr, newval)
+          self._options_set.add(attr)
 
         except Exception:
           # if conversion fails, skip and keep default
@@ -598,6 +600,10 @@ class Config:
 
     return True
   
+  def is_set(self, attr):
+    """True when config.ini's [Options] gave `attr` a value (not the default)."""
+    return attr in self._options_set
+
   def _serialize_value(self, value):
     # Recursively convert values to simple serializable types for printing
     if isinstance(value, dict):

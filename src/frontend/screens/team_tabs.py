@@ -279,7 +279,7 @@ class OverviewTab(TeamTab):
 
     def hints(self, focused):
         if isinstance(focused, AssetField):
-            return [("A", "browse"), ("X", "type path"), ("Del", "clear")]
+            return [("A", "browse"), ("X", "type path"), ("SELECT", "clear")]
         return []
 
 
@@ -310,6 +310,7 @@ class KitList(QWidget):
         self.names = []
         self.status = {}
         self.index = 0
+        self.carrying = False       # X: Up/Down move the kit (a pad has no Alt)
         self._press = None
         self._drag_row = None
 
@@ -348,12 +349,27 @@ class KitList(QWidget):
         self._drag_row = None
         self.update()
 
+    def focusOutEvent(self, event):
+        self.carrying = False
+        self.update()
+        super().focusOutEvent(event)
+
     def keyPressEvent(self, event):
         k = event.key()
+        if k == Qt.Key_X and not event.modifiers() and self.names:
+            self.carrying = not self.carrying
+            self.update()
+            event.accept()
+            return
+        if self.carrying and k in (Qt.Key_Return, Qt.Key_Enter, Qt.Key_Space, Qt.Key_Escape):
+            self.carrying = False
+            self.update()
+            event.accept()
+            return
         if k in (Qt.Key_Up, Qt.Key_Down) and self.names:
             step = -1 if k == Qt.Key_Up else 1
             target = max(0, min(len(self.names) - 1, self.index + step))
-            if event.modifiers() & Qt.AltModifier:
+            if event.modifiers() & Qt.AltModifier or self.carrying:
                 if target != self.index:
                     self.moved.emit(self.index, target)
             elif target != self.index:
@@ -377,6 +393,10 @@ class KitList(QWidget):
             if on:
                 p.fillRect(r, QColor(BG_HIGHLIGHT))
                 p.fillRect(QRectF(0, r.y(), 3, r.height()), QColor(ACCENT if focused else BORDER_EM))
+            if on and self.carrying:
+                p.setPen(QPen(QColor(ACCENT), 2, Qt.DashLine))
+                p.setBrush(Qt.NoBrush)
+                p.drawRect(r.adjusted(1, 1, -1, -1))
             if self._drag_row == i and self._press is not None and self._press != i:
                 p.fillRect(QRectF(0, r.y(), r.width(), 2), QColor(ACCENT))
             p.setFont(tracked_font(FONT_DISPLAY, T_LABEL, QFont.Bold, 0.4))
@@ -758,9 +778,9 @@ class KitsTab(TeamTab):
 
     def hints(self, focused):
         if focused is self.kit_list:
-            return [("↕", "select kit"), ("Alt ↕", "reorder"), ("drag", "reorder")]
+            return [("↕", "select kit"), ("X", "move kit"), ("drag", "reorder")]
         if isinstance(focused, AssetField):
-            return [("A", "browse"), ("X", "type path"), ("Del", "clear")]
+            return [("A", "browse"), ("X", "type path"), ("SELECT", "clear")]
         return []
 
 
@@ -1756,5 +1776,5 @@ class AssetsTab(TeamTab):
 
     def hints(self, focused):
         if isinstance(focused, AssetField):
-            return [("A", "browse"), ("X", "type path"), ("Del", "clear")]
+            return [("A", "browse"), ("X", "type path"), ("SELECT", "clear")]
         return []

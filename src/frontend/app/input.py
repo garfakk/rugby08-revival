@@ -51,7 +51,7 @@ HINT_GLYPH = {
     Action.AUX: "Y",
     Action.TAB_PREV: "LB",
     Action.TAB_NEXT: "RB",
-    Action.ADVANCED: "F",
+    Action.ADVANCED: "START",
 }
 
 _DIRECTION_VEC = {
@@ -111,6 +111,18 @@ def nearest_in_direction(current, candidates, direction: Action):
         if best_score is None or score < best_score:
             best, best_score = w, score
     return best
+
+
+def reveal(widget, margin=20):
+    """Scroll every scroll area holding `widget` so it is in view: focus moved
+    by the arrows or a pad lands on widgets a mouse user would scroll to."""
+    from PyQt5.QtWidgets import QScrollArea
+    parent = widget.parentWidget()
+    while parent is not None:
+        if isinstance(parent, QScrollArea) and parent.widget() is not None \
+                and parent.widget().isAncestorOf(widget):
+            parent.ensureWidgetVisible(widget, margin, margin)
+        parent = parent.parentWidget()
 
 
 def _is_deleted(widget):
@@ -188,6 +200,7 @@ class FocusManager:
         alive = self.alive(within)
         if alive:
             alive[0].setFocus()
+            reveal(alive[0])
 
     def move(self, direction: Action):
         alive = self.alive()
@@ -199,6 +212,7 @@ class FocusManager:
         target = nearest_in_direction(current, alive, direction)
         if target is not None:
             target.setFocus()
+            reveal(target)
         elif current is None:
             self.focus_first()
         return target
