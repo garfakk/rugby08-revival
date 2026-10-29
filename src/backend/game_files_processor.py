@@ -38,6 +38,33 @@ from shared.log import get_logger
 log = get_logger(__name__)
 
 
+# Players' names on the back of the shirts (shared/shirt_names.py): the
+# printer that letters them onto the kit's back textures, and the name for
+# each texture (index 0 = shirt 1), or (None, []) when the team has none.
+def shirt_name_printer(team_data, kit_back_pattern):
+  spec = team_data.get('shirt_names')
+  if not spec or not spec.get('names'):
+    return None, []
+  if '%' not in kit_back_pattern:
+    log.info(f"{team_data.get('name')}: shirt names need a PNG back-number series, not {kit_back_pattern}")
+    return None, []
+  try:
+    from shared import shirt_names
+    # the style arrives already merged (season + kit keys): one dict serves as both
+    style = shirt_names.normalise_style(spec.get('style'), spec.get('style'))
+    style['enabled'] = True
+    font_path = spec.get('font_path') or ''
+    variation = spec.get('font_variation')
+    if not os.path.isfile(font_path):
+      font_path, variation, _ = shirt_names.resolve_font(spec.get('style', {}).get('font'))
+    printer = shirt_names.BackPrinter(style, font_path, shirt_names.expand_back_paths(kit_back_pattern),
+                                      variation)
+    return printer, list(spec['names'])
+  except Exception as e:
+    log.warning(f"{team_data.get('name')}: shirt names disabled: {e}")
+    return None, []
+
+
 # This function creates a mission file into the game directory with the match configuration (teams, stadium, environment, etc.)
 def create_mission_file(match_data):
 
@@ -444,9 +471,16 @@ def edit_graphics_files(match_data):
       # Create .fsh file from images
         copy_file(kit_back_fsh_template_filepath, kit_back_fsh_filepath)
 
+        printer, names = shirt_name_printer(match_data[team], kit_back_source_filepath)
         for index_file in range(0, 22):
             kit_back_image = os.path.join(config.mod_data_directory, match_data[team]['kit_back'].replace("%", str(index_file+1)))
-            replace_asset_in_fsh_file(kit_back_fsh_filepath, kit_back_image, index = index_file)
+            image = kit_back_image
+            if printer is not None and index_file < len(names) and names[index_file]:
+                try:
+                    image = printer.render(index_file, names[index_file]) or kit_back_image
+                except Exception as e:
+                    log.warning(f"shirt name {names[index_file]!r} not printed: {e}")
+            replace_asset_in_fsh_file(kit_back_fsh_filepath, image, index = index_file)
 
   # Create custom boots for players
   template_boots_filepath = os.path.join(config.templates_directory, template_filenames['boots'])

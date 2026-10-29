@@ -109,18 +109,12 @@ class UserPrefs:
                                  or config.is_set("widescreen_aspect"))
         # Coin toss before each quick/tournament match (World Rugby Law 6.3):
         # decides kick-off and ends, so match setup locks those two rows.
-        # Off, and not in Settings: expert opt-in via `coin_toss = true` in
-        # the prefs file.
+        # Settings > Coin Toss; off by default.
         self.coin_toss = False
         # "standard" = the game's stock random wind (rolled by the backend);
         # "advanced" = the reR08 wind patch, set per match (match setup,
-        # challenge file, tournament fixture).
-        # Temporarily forced to "standard" (Settings row hidden, never loaded
-        # from disk); the stored choice is kept in _stored_wind_mode and still
-        # saved. To bring it back: default "advanced", load into wind_mode,
-        # restore the Settings row.
-        self.wind_mode = "standard"
-        self._stored_wind_mode = "advanced"
+        # challenge file, tournament fixture). Settings > Wind.
+        self.wind_mode = "advanced"
         # The user's team/player edits (user_data/edits) laid over the data
         # pack. Off: the pack alone is used, the edits are kept. Tools › My edits.
         self.use_edits = True
@@ -149,7 +143,7 @@ class UserPrefs:
             mode = cp.get(_SECTION, "wind_mode", fallback=self.wind_mode).strip().lower()
             mode = "standard" if mode == "default" else mode      # older name
             if mode in ("standard", "advanced"):
-                self._stored_wind_mode = mode
+                self.wind_mode = mode
 
     def screen_ratio_label(self):
         """The Settings > Screen Ratio choice: "Auto" or a SCREEN_RATIOS label."""
@@ -191,7 +185,7 @@ class UserPrefs:
                         "coin_toss": str(self.coin_toss),
                         "expert_mode": str(self.expert_mode),
                         "use_edits": str(self.use_edits),
-                        "wind_mode": self._stored_wind_mode}
+                        "wind_mode": self.wind_mode}
         if not self.screen_ratio_set:
             # left out until chosen, so the first launch still detects it
             del cp[_SECTION]["widescreen"], cp[_SECTION]["widescreen_aspect"]

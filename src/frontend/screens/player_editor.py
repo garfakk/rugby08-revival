@@ -41,6 +41,7 @@ from ui.theme import (
     ACCENT, GREEN, DANGER_LITE, INFO, FG_SECONDARY, FG_TERTIARY, T_LABEL, FONT_DISPLAY,
 )
 from shared.config import config
+from shared import shirt_names
 
 from shared.log import get_logger
 
@@ -143,6 +144,17 @@ class PlayerEditorScreen(EditorScreen):
         self.edit(label, lambda r: r.__setitem__(key, value), coalesce_key=key,
                  view_hint={"tab": TAB_PROFILE, "field": key})
 
+    def _edit_shirt_name(self, value):
+        value = (value or "").strip()
+
+        def mutate(r):
+            if value:
+                r["shirt_name"] = value
+            else:
+                r.pop("shirt_name", None)      # blank: the generated text, no key in the file
+        self.edit("shirt name", mutate, coalesce_key="shirt_name",
+                  view_hint={"tab": TAB_PROFILE, "field": "shirt_name"})
+
     def _open_bio_search(self):
         plugin = plugin_lookup.get()
         if plugin is None or self.session is None:
@@ -233,6 +245,14 @@ class PlayerEditorScreen(EditorScreen):
         self.display_name.label_width = 98
         self.display_name.edited.connect(lambda v: self._edit_identity("in-game name", "display_name", v))
         small_row.addWidget(self.display_name, stretch=1)
+
+        # What a team with shirt names prints on this player's back instead
+        # of the generated text (shared/shirt_names.py).
+        self.shirt_name = self.register_field(
+            "shirt_name", TextField("Shirt name"), TAB_PROFILE)
+        self.shirt_name.label_width = 88
+        self.shirt_name.edited.connect(self._edit_shirt_name)
+        small_row.addWidget(self.shirt_name, stretch=1)
 
         self.commentary = self.register_field(
             "commentary", NumberField("Commentary id", 0, 65535), TAB_PROFILE)
@@ -568,6 +588,9 @@ class PlayerEditorScreen(EditorScreen):
         self.birthdate.set_value(record.get("birthdate", ""))
         self.display_name.set_value(record.get("display_name", ""))
         self.display_name.set_hint(_display_name_default(record))
+        self.shirt_name.set_value(record.get("shirt_name", ""))
+        self.shirt_name.set_hint(f"shirts read {shirt_names.shirt_text(record)}"
+                                 if record.get("last_name") or record.get("display_name") else "")
         self.commentary.set_value(record.get("commentary", ""))
 
     def _refresh_seasons(self, stats):

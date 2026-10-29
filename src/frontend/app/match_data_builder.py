@@ -12,6 +12,7 @@ import random
 
 from backend import game_specific_variables as gsv
 from shared.config import config
+from shared import shirt_names
 from app import appearance, competition_branding, difficulty
 from app.game_data import frontend_logo, normalise_position, wind_world_xz
 from app.state import DataStore, MatchConfig, TeamSlot
@@ -202,7 +203,9 @@ def _build_team_match_data(ds: DataStore, slot: TeamSlot, is_home: bool) -> dict
     lineup = slot.lineup or {}
     selected_player_ids = list(lineup.get("players_id", []))[:22]
     selected_players = []
+    shirt_texts = []      # the name on each back, same order as selected_players
 
+    style = shirt_names.season_style_for(team_info, slot.kit(ds))
     for player_id in selected_player_ids:
         # A source roster can carry an empty "" slot (a reserve jersey with
         # no valid player behind it) rather than dropping the slot outright
@@ -214,6 +217,8 @@ def _build_team_match_data(ds: DataStore, slot: TeamSlot, is_home: bool) -> dict
         if player is None:
             continue
         selected_players.append(_player_to_match_data(player, slot.season))
+        if style["enabled"]:
+            shirt_texts.append(shirt_names.shirt_text(player, style["text"], style["case"]))
 
     role_key_map = {
         "captain": "captain",
@@ -243,7 +248,7 @@ def _build_team_match_data(ds: DataStore, slot: TeamSlot, is_home: bool) -> dict
     selected_kit = _selected_kit_data(ds, slot)
     logos = team_info.get("logos", {})
 
-    return {
+    team = {
         "name": team_info.get("name", "team_A" if is_home else "team_B"),
         "kit_front": _team_asset_path(ds, slot.team_id, selected_kit.get("frontKitFile", "")),
         "kit_back": _team_asset_path(ds, slot.team_id, selected_kit.get("backKitFile", "")),
@@ -257,6 +262,12 @@ def _build_team_match_data(ds: DataStore, slot: TeamSlot, is_home: bool) -> dict
         "set_plays": set_plays,
         "players": selected_players,
     }
+    if style["enabled"] and any(shirt_texts):
+        font_path, variation, _found = shirt_names.resolve_font(
+            style["font"], ds.teams_folder_path.get(slot.team_id, ""))
+        team["shirt_names"] = {"style": style, "font_path": font_path,
+                               "font_variation": variation, "names": shirt_texts}
+    return team
 
 
 def build_match_data(ds: DataStore, cfg: MatchConfig):
