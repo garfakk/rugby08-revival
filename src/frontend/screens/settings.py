@@ -25,6 +25,7 @@ from shared.game_profile import game_profile, SECTIONS, RESOLUTIONS, UNSAFE_RESO
 
 from shared.log import ROOT as LOG_ROOT, setup_logging
 from app.display import native_resolution, native_screen_ratio
+from app.team_browse import DEFAULT_STYLE, STYLES, style_label
 from app.input import Action, KEYMAP, HINT_GLYPH
 from ui import make_page_header, make_separator, StyledButton, ToggleRow, ChoiceRow, CycleRow, SliderRow
 from ui.widgets import make_in_game_tag, make_changed_mark
@@ -269,6 +270,10 @@ class SettingsScreen(QWidget):
             user_prefs.coin_toss = bool(on)
             user_prefs.save()
 
+        def _set_picker(label):
+            user_prefs.match_picker = next(i for i, l in STYLES if l == label)
+            user_prefs.save()
+
         # Wind: Standard = the game's own random wind; Advanced = the reR08
         # wind patch, strength and direction set in match setup.
         # Coin toss before each quick/tournament match: decides kick-off and
@@ -279,11 +284,23 @@ class SettingsScreen(QWidget):
              lambda: user_prefs.wind_mode != "standard"),
             (ToggleRow("Coin Toss", user_prefs.coin_toss, self._saved(_set_coin_toss)),
              lambda: user_prefs.coin_toss),
+            # How Quick Match picks teams (app/team_browse.py): the classic
+            # season > category > team, or one of the team-first ones.
+            # Takes effect the next time Quick Match opens.
+            (ChoiceRow("Quick Match Picker", [label for _id, label in STYLES],
+                       style_label(user_prefs.match_picker), self._saved(_set_picker)),
+             lambda: user_prefs.match_picker != DEFAULT_STYLE),
         ]
 
     def _advanced_rows(self):
         def _set_preview_3d(on):
             user_prefs.preview_3d = bool(on)
+            user_prefs.save()
+
+        # Once a day at startup, ask GitHub for a new program or data release
+        # (app/updater); Tools > Updates can always check by hand.
+        def _set_check_updates(on):
+            user_prefs.check_updates = bool(on)
             user_prefs.save()
 
         def _set_log_level(name):
@@ -295,6 +312,8 @@ class SettingsScreen(QWidget):
         return [
             (ToggleRow("3D Player Preview", user_prefs.preview_3d, self._saved(_set_preview_3d)),
              lambda: not user_prefs.preview_3d),
+            (ToggleRow("Check For Updates", user_prefs.check_updates, self._saved(_set_check_updates)),
+             lambda: not user_prefs.check_updates),
             (ChoiceRow("Log Level", LOG_LEVELS, user_prefs.log_level or current,
                        self._saved(_set_log_level)),
              lambda: bool(user_prefs.log_level)),
@@ -321,6 +340,7 @@ class SettingsScreen(QWidget):
         tab = TABS[index]
         if tab == "Advanced":
             user_prefs.preview_3d = True
+            user_prefs.check_updates = True
             user_prefs.log_level = ""
             user_prefs.save()
             setup_logging()
@@ -328,6 +348,7 @@ class SettingsScreen(QWidget):
             if tab == "Gameplay":
                 user_prefs.wind_mode = "standard"
                 user_prefs.coin_toss = False
+                user_prefs.match_picker = DEFAULT_STYLE
                 user_prefs.save()
             game_profile.reset([s.key for s in dict(SECTIONS)[GAME_SECTION[tab]]])
             if tab == "Audio" and self._music is not None:

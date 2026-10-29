@@ -6,7 +6,10 @@ author just puts each file where it goes:
 
     update.json                       {"format": 1, "name": "Kits 2026",
                                        "version": "1", "description": "...",
-                                       "min_program": "0.2"}       (optional)
+                                       "min_program": "0.2",
+                                       "kind": "data",           (shown in the journal)
+                                       "remove": ["mod_data/<path>", ...]}
+                                                                 (all optional)
     mod_data/<path>                   a data pack file to add or replace
                                       (kits, logos, heads, a whole team file...)
     app_data/assets/<path>            a program asset to add or replace
@@ -20,6 +23,10 @@ author just puts each file where it goes:
 Running from source, mod_data is data/ and app_data is src/. Anything else in
 the archive (user_data, game_files, the program itself, paths leaving the
 folder, links) is ignored and listed.
+
+`remove` lists data pack files the update deletes (an online data update
+dropping files the new release no longer has); each is backed up first like
+a replaced file, so undo puts it back.
 
 Installing backs up every file it replaces into user_data/updates/backups/
 first, and keeps a journal (user_data/updates/installed.json), so the last
@@ -56,11 +63,12 @@ class Plan:
     """What an update would do here. `files`: [(name, target, action)],
     `records`: [(name, kind, id, target, action)] with action "add",
     "replace", "same" (files) / "add", "replace", "delete" (records);
+    `removed`: [(name, target)] files the update deletes;
     `ignored`: names left out."""
 
     def __init__(self, manifest):
         self.manifest = manifest
-        self.files, self.records, self.ignored = [], [], []
+        self.files, self.records, self.removed, self.ignored = [], [], [], []
 
     @property
     def name(self):
@@ -78,6 +86,8 @@ class Plan:
         for action, word in (("add", "new"), ("replace", "replaced")):
             if self.count(action):
                 parts.append(f"{self.count(action)} {word} file(s)")
+        if self.removed:
+            parts.append(f"{len(self.removed)} removed file(s)")
         changed = len(self.records)
         if changed:
             parts.append(f"{changed} team / player record(s)")
@@ -193,6 +203,15 @@ class Updates:
             else:
                 action = "add"
             plan.files.append((name, target, action))
+        removes = manifest.get("remove") or []
+        if not isinstance(removes, list):
+            raise UpdateError(f"{MANIFEST}: remove is not a list")
+        for name in removes:
+            target = self._target(str(name)) if str(name).startswith("mod_data/") else None
+            if target is None:
+                plan.ignored.append(str(name))
+            elif os.path.isfile(target):
+                plan.removed.append((str(name), target))
         return plan
 
     def _read_record(self, bundle, name):
@@ -220,7 +239,7 @@ class Updates:
                 plan = self._read(bundle)
                 stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
                 entry = {"id": f"{stamp}_{_slug(plan.name)}", "name": plan.name,
-                         "version": plan.version,
+                         "version": plan.version, "kind": str(plan.manifest.get("kind") or ""),
                          "description": str(plan.manifest.get("description") or ""),
                          "source": os.path.basename(os.path.normpath(path)),
                          "installed": datetime.now().isoformat(timespec="seconds"),
@@ -235,6 +254,9 @@ class Updates:
                         env = json.loads(bundle.read(name).decode("utf-8"))
                         self._keep_original(entry, backups, target)
                         _write_record(kind, rid, target, env["mine"])
+                    for name, target in plan.removed:
+                        self._keep_original(entry, backups, target)
+                        os.remove(target)
                 except Exception:
                     self._restore(entry)
                     shutil.rmtree(backups, ignore_errors=True)

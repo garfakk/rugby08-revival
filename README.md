@@ -34,6 +34,23 @@ The possibilities are infinite, and future updates will include:
 Please note that it is still in development, so expect to find bugs.
 The kits/heads/textures used are from [MUP Patch 2009](https://www.therugbyforum.com/threads/mup-v-1-2-season-2008-09.15872), [TRF Patch 10](https://www.therugbyforum.com/threads/trf-rugby-10-patch.18881) and [jim546](https://github.com/jimw546/jimw546-s-Rugby-08-stuff)'s creations for this demo, a big thanks for their work.
 
+## Tournament: reality mode
+Historical editions (Six Nations, Rugby World Cup) can be started in **reality mode** (New tournament › Setup › reality mode): every match between two teams you don't control gets its real score, with the real injuries and bans, and the real knockout bracket follows; your own matches are played (or simulated) as usual, and a knockout tie that only exists because of your results is simulated. It is offered only for an edition whose every fixture has a real result in the data, and whose real teams are all in the data (with the real draw).
+
+The data lives in the competition file, per fixture (all optional except `real_score`):
+```
+"real_score": "27–10",
+"real_tries": [3, 1],                    // bonus points then match reality
+"real_winner": "1015",                   // a level knockout match: who went through
+"real_events": [
+  {"kind": "injury", "team": "10003", "player": "Paul O'Connell", "matches": "tournament", "type": "hamstring injury"},
+  {"kind": "suspension", "team": "1005", "player": "Nemani Nadolo", "matches": 1, "reason": "cited for foul play"},
+  {"kind": "yellow" | "red" | "try" | "conversion" | "penalty" | "drop", "team": "...", "player": "..."}
+],
+"_sources": ["https://..."]
+```
+`player` is matched in that team's squad (a `pid` works too). Scorers are generated when the data has none. Rugby World Cup 2015 is filled in as the reference.
+
 ## Installation
 You can find the installer exe in the releases. Alternatively you can run the program directly with python:
 ```

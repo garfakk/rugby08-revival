@@ -118,6 +118,17 @@ class UserPrefs:
         # The user's team/player edits (user_data/edits) laid over the data
         # pack. Off: the pack alone is used, the edits are kept. Tools › My edits.
         self.use_edits = True
+        # Tournament mode's transitions and recaps (matchday results, new
+        # stage, champions...). Not in Settings: opt out with
+        # `animations = false` in the prefs file.
+        self.animations = True
+        # Look on GitHub for a new program or data release at startup, at
+        # most once a day (app/updater). Settings > Check For Updates.
+        self.check_updates = True
+        # How Quick Match picks a team (app/team_browse.py STYLES): "classic"
+        # (season, category, team), "team_first", "browser", "timeline",
+        # "era", "leagues". Settings > Quick Match Picker.
+        self.match_picker = "classic"
         self._load()
 
     def _load(self):
@@ -140,6 +151,10 @@ class UserPrefs:
             self.coin_toss = cp.getboolean(_SECTION, "coin_toss", fallback=self.coin_toss)
             self.expert_mode = cp.getboolean(_SECTION, "expert_mode", fallback=self.expert_mode)
             self.use_edits = cp.getboolean(_SECTION, "use_edits", fallback=self.use_edits)
+            self.animations = cp.getboolean(_SECTION, "animations", fallback=self.animations)
+            self.check_updates = cp.getboolean(_SECTION, "check_updates", fallback=self.check_updates)
+            self.match_picker = cp.get(_SECTION, "match_picker", fallback=self.match_picker).strip().lower() \
+                or "classic"
             mode = cp.get(_SECTION, "wind_mode", fallback=self.wind_mode).strip().lower()
             mode = "standard" if mode == "default" else mode      # older name
             if mode in ("standard", "advanced"):
@@ -185,6 +200,9 @@ class UserPrefs:
                         "coin_toss": str(self.coin_toss),
                         "expert_mode": str(self.expert_mode),
                         "use_edits": str(self.use_edits),
+                        "animations": str(self.animations),
+                        "check_updates": str(self.check_updates),
+                        "match_picker": self.match_picker,
                         "wind_mode": self.wind_mode}
         if not self.screen_ratio_set:
             # left out until chosen, so the first launch still detects it

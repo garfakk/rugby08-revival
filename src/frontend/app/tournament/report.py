@@ -119,3 +119,40 @@ def campaign_summary(t, team_id) -> str:
                     where = g.name if len(stage.groups) > 1 else stage.name
                     return f"{_ordinal(i + 1)} in {where} ({row.points} pts)"
     return ""
+
+
+def match_stats(result) -> list:
+    """[(label, home, away)] comparing the two sides of a recorded match:
+    scoring, kicks made/attempted, tackles, cards; scrums and lineouts only
+    when the game reported them (matches played in it)."""
+    h, a = result.home, result.away
+
+    def total(side, key):
+        return sum(getattr(line, key) for line in side.players)
+
+    def kicks(side, made, tried):
+        n, of = total(side, made), total(side, tried)
+        return f"{n}/{of}" if of else n
+
+    rows = [("TRIES", h.tries, a.tries)]
+    if h.penalty_tries or a.penalty_tries:
+        rows.append(("PENALTY TRIES", h.penalty_tries, a.penalty_tries))
+    rows += [("CONVERSIONS", kicks(h, "conversions", "conversions_attempted"),
+              kicks(a, "conversions", "conversions_attempted")),
+             ("PENALTIES", kicks(h, "penalties", "penalties_attempted"),
+              kicks(a, "penalties", "penalties_attempted")),
+             ("DROP GOALS", total(h, "drop_goals"), total(a, "drop_goals")),
+             ("TACKLES", total(h, "tackles"), total(a, "tackles"))]
+    for key, label in (("scrums_won", "SCRUMS WON"), ("lineouts_won", "LINEOUTS WON")):
+        if key in h.stats or key in a.stats:
+            rows.append((label, h.stats.get(key, 0), a.stats.get(key, 0)))
+    rows += [("YELLOW CARDS", h.yellow_cards, a.yellow_cards),
+             ("RED CARDS", h.red_cards, a.red_cards)]
+    return rows
+
+
+def top_tacklers(t, side, n=3) -> str:
+    """ "J.Smith 14, A.Jones 11, ..." for one side of a recorded match."""
+    lines = sorted((line for line in side.players if line.tackles and line.pid),
+                   key=lambda line: -line.tackles)[:n]
+    return ", ".join(f"{t.player_name(line.pid)} {line.tackles}" for line in lines)

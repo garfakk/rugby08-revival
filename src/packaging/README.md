@@ -52,9 +52,59 @@ embedding) — test on the Win10 VM before publishing.
 Wine quirk: always run with `</dev/null` and pipe output (`| cat`), never `> file`
 (python fails with "Invalid handle").
 
+## Publishing updates (online updates in the mod)
+The mod checks GitHub Releases (Tools › Updates, and once a day at startup: Settings ›
+Check For Updates). Program and data have separate life cycles and tags:
+
+| channel | tag | assets | what the mod does |
+|---|---|---|---|
+| program | `v<APP_VERSION>` | `R08Revival_<v>_program_only.exe`, `SHA256SUMS`, `manifest.json` (+ full setup, portable zip) | downloads the program-only installer, checks it against `SHA256SUMS`, closes itself and runs it visibly (`/SILENT /DIR=<install> /RELAUNCH=1`); the installer reopens the mod |
+| data | `data-<DATA_VERSION>` | `data_manifest.json` (+ data setup) | downloads **only the files that differ** from the install, each verified against its sha256, from `raw.githubusercontent.com/<repo>/<commit>/<prefix>/<path>`, then applies them with backups (undoable) |
+
+    ./release.sh                 # builds; the data step writes data_manifest.json + mod_data/MANIFEST.json
+    ./publish.sh program         # gh release create v<ver> ...
+    ./publish.sh data            # gh release create data-<ver> ... --target <data commit>
+
+- `gen_data_manifest.py` refuses data that is not exactly the committed data (git blob ids
+  compared with `git ls-tree`): commit **and push** the data before building, since users fetch
+  files from that commit. `publish.sh` checks the commits are pushed.
+- A data release is offered only to programs with the same `DATA_SCHEMA`; set
+  `DATA_MIN_PROGRAM=<ver>` for `release.sh` when a data release needs a newer program.
+  Bumping `DATA_SCHEMA` means: publish the program first, then the data for it.
+- An install's `mod_data/MANIFEST.json` records what it has; installs from before it are hashed
+  once by the mod (only files of the expected size).
+- Data updates never write executables or scripts (`.exe .dll .bat .ps1 ...` are refused) nor
+  outside `mod_data/`; program DLLs/assets only travel with the program installer.
+- **Splitting the data into its own repository**: change `data.repo` in
+  `src/update_sources.json` (shipped with the next program; users can also set
+  `[Updates] data_repo = owner/name` in `user_data/config.ini`) and point `release.sh` at it
+  (`R08_DATA=`). The manifest's `source` (repo, commit, prefix = the data folder's path inside
+  its repo, "" at the root) is written from that repository, and the mod follows the manifest.
+- Draft and pre-release releases are never offered: `DRAFT=1 ./publish.sh ...` to check a
+  release before making it public.
+
+### Antivirus
+What the updater does to stay clear of heuristics: the running exe never rewrites itself or
+drops scripts/helpers; program updates run the same Inno installer users run by hand, visibly,
+after a click and a SHA-256 check; only HTTPS to GitHub, with an honest User-Agent; nothing
+written outside the install folder; no PowerShell, scheduled task or Run key. PyInstaller
+is already built without UPX and with a version resource. What only you can do, in order of
+effect:
+1. **Sign** `R08Revival.exe` and the installers (Authenticode): free for open source through
+   SignPath.io (Foundation) or a Certum Open Source certificate; add `SignTool=` to
+   `installer.iss` so Inno signs the setup and the uninstaller.
+2. Submit each new release to the Microsoft Defender false-positive portal
+   (https://www.microsoft.com/wdsi/filesubmission) before announcing it.
+3. Optionally build PyInstaller's bootloader from source (generic "PyInstaller" signatures
+   target the prebuilt one).
+
+Test on the Win10 VM: an in-app program update (installer runs, mod reopens) and a data
+update + undo, with Defender on.
+
 ## Layout
 `R08Revival.spec` PyInstaller · `installer.iss` one Inno script, 3 variants ·
-`gen_data_inc.py` staged-data-pack file list · `gen_game_includes.py` game-copy includes ·
+`gen_data_inc.py` staged-data-pack file list · `gen_data_manifest.py` online data-update manifest ·
+`publish.sh` GitHub Releases · `gen_game_includes.py` game-copy includes ·
 `fetch_audio.sh`/`pack_audio.sh` menu music (release asset, not in git) ·
 `smoke_test.sh` · `RELEASE_README.txt` (shipped)
 

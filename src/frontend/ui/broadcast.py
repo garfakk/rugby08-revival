@@ -584,6 +584,9 @@ class TeamNamePicker(QWidget):
     header treatment."""
 
     changed = pyqtSignal()
+    # A / Enter / a click on the name itself (not the arrows): the match
+    # setup's team browser opens on it (Settings > Quick Match Picker)
+    activated = pyqtSignal()
 
     def __init__(self, values=None, display=str, subtitle=str, parent=None):
         super().__init__(parent)
@@ -623,6 +626,8 @@ class TeamNamePicker(QWidget):
             self._step(-1); event.accept(); return
         if event.key() == Qt.Key_Right:
             self._step(1); event.accept(); return
+        if event.key() in (Qt.Key_Return, Qt.Key_Enter, Qt.Key_Space):
+            self.activated.emit(); event.accept(); return
         super().keyPressEvent(event)
 
     def mousePressEvent(self, event):
@@ -632,6 +637,8 @@ class TeamNamePicker(QWidget):
             self._step(-1)
         elif event.x() > 2 * third:
             self._step(1)
+        else:
+            self.activated.emit()
 
     def paintEvent(self, event):
         p = QPainter(self)
