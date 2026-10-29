@@ -537,3 +537,36 @@ def test_dialog_ok_is_one_click_while_typing(qapp):
     assert got == ["ok"]
     assert field.value() == "away 2009"
     screen.close()
+
+
+def test_team_editor_shirt_names_tab(window, qapp):
+    """The Shirt names tab: switching names on, dragging the name area and
+    picking a kit colour edit the season through the undo stack, and save."""
+    from screens.team_tabs import TAB_NAMES
+    window.open_team("10001", "2024")
+    _wait(qapp, lambda: window.screen_team_editor.record_id == "10001", 10)
+    editor = window.screen_team_editor
+    editor.shell.tabs.set_index(TAB_NAMES)
+    tab = editor.tabs[TAB_NAMES]
+    for _ in range(10):
+        qapp.processEvents()
+    assert not editor.session.working["2024"].get("shirtNames")
+    assert not editor.session.is_dirty()             # looking edits nothing
+
+    tab.enabled.edited.emit("on")
+    assert editor.session.working["2024"]["shirtNames"] == {"enabled": True}
+    tab.font.edited.emit("Oswald")
+    tab.canvas.area_changed.emit([0.2, 0.15, 0.6, 0.08])
+    block = editor.session.working["2024"]["shirtNames"]
+    assert block["placement"] == "custom" and block["area"] == [0.2, 0.15, 0.6, 0.08]
+    kit = tab.kit_name
+    tab.color.edited.emit("#ffffff")
+    assert editor.session.working["2024"]["kits"][kit]["shirtName"] == {"color": "#ffffff"}
+    tab._render()                                    # the preview copes with the fixture's backs
+    editor.undo()
+    assert "shirtName" not in editor.session.working["2024"]["kits"][kit]
+    assert editor.save()
+    # saved (into the data pack or the user's edits, as the save target says)
+    assert window.data.teams["10001"]["2024"]["shirtNames"]["font"] == "Oswald"
+    editor.edit("names off", lambda w: w["2024"].pop("shirtNames"))
+    assert editor.save()

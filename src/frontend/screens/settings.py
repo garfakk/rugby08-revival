@@ -162,13 +162,9 @@ class SettingsScreen(QWidget):
         elif tab == "Advanced":
             rows = self._advanced_rows()
         else:
-            # Gameplay > Wind (Standard / Advanced): temporarily hidden, and
-            # user_prefs.wind_mode forced to "standard" (see shared/user_prefs.py).
-            # To bring it back, add to the Gameplay rows:
-            #   CycleRow("Wind", ["Standard", "Advanced"], user_prefs.wind_mode.capitalize(),
-            #            lambda label: (setattr(user_prefs, "wind_mode", label.lower()),
-            #                           user_prefs.save()))
             rows = self._game_rows(GAME_SECTION[tab])
+            if tab == "Gameplay":
+                rows += self._match_rows()
         for row, _changed in rows:
             row.installEventFilter(self)
             layout.addWidget(row)
@@ -262,6 +258,29 @@ class SettingsScreen(QWidget):
             rows.append((row, lambda k=s.key: game_profile.get(k) != game_profile.default(k)))
         return rows
 
+    def _match_rows(self):
+        """The mod's own match options (not the game's profile): applied by
+        match setup, so not tagged IN-GAME."""
+        def _set_wind_mode(label):
+            user_prefs.wind_mode = label.lower()
+            user_prefs.save()
+
+        def _set_coin_toss(on):
+            user_prefs.coin_toss = bool(on)
+            user_prefs.save()
+
+        # Wind: Standard = the game's own random wind; Advanced = the reR08
+        # wind patch, strength and direction set in match setup.
+        # Coin toss before each quick/tournament match: decides kick-off and
+        # ends (match setup locks those two rows while it is on).
+        return [
+            (CycleRow("Wind", ["Standard", "Advanced"], user_prefs.wind_mode.capitalize(),
+                      self._saved(_set_wind_mode)),
+             lambda: user_prefs.wind_mode != "standard"),
+            (ToggleRow("Coin Toss", user_prefs.coin_toss, self._saved(_set_coin_toss)),
+             lambda: user_prefs.coin_toss),
+        ]
+
     def _advanced_rows(self):
         def _set_preview_3d(on):
             user_prefs.preview_3d = bool(on)
@@ -306,6 +325,10 @@ class SettingsScreen(QWidget):
             user_prefs.save()
             setup_logging()
         else:
+            if tab == "Gameplay":
+                user_prefs.wind_mode = "standard"
+                user_prefs.coin_toss = False
+                user_prefs.save()
             game_profile.reset([s.key for s in dict(SECTIONS)[GAME_SECTION[tab]]])
             if tab == "Audio" and self._music is not None:
                 self._music.set_volume(game_profile.get("vol_music"))
