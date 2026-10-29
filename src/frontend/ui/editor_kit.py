@@ -1068,6 +1068,194 @@ class SegmentField(FieldBase):
                        p.fontMetrics().elidedText(text, Qt.ElideRight, int(tx.width() - 4)))
 
 
+class ColorField(FieldBase):
+    """A colour stored as "#rrggbb", or blank ("" — shown as `blank_label`,
+    e.g. AUTO). The current colour on the left (click it, Enter or F2 to type
+    a hex value), a row of common kit colours on the right (one click);
+    Left/Right step through them, Delete goes back to blank."""
+
+    PRESETS = ("#ffffff", "#111111", "#0b1f4b", "#c8102e", "#f2b700", "#00704a", "#6cace4",
+               "#6d1a36")
+    SWATCH = 16
+    _HEX = re.compile(r"^#?([0-9a-fA-F]{6})$")
+
+    def __init__(self, label, blank_label="auto", presets=None, parent=None):
+        super().__init__(label, parent)
+        self.blank_label = blank_label
+        self.presets = list(presets or self.PRESETS)
+        self._value = ""
+        self._hover = None
+        self._edit = QLineEdit(self)
+        self._edit.setFrame(False)
+        self._edit.setMaxLength(7)
+        self._edit.setStyleSheet(
+            f"QLineEdit {{ background: {BG_HIGHLIGHT}; color: {FG_PRIMARY}; border: none;"
+            f" font-family: '{FONT_DISPLAY}'; font-size: {T_VALUE}pt; font-weight: 600; }}")
+        self._edit.hide()
+        self._edit.returnPressed.connect(self.commit)
+        self._edit.installEventFilter(self)
+
+    @classmethod
+    def normalise(cls, text):
+        m = cls._HEX.match(str(text or "").strip())
+        return f"#{m.group(1).lower()}" if m else ""
+
+    def value(self):
+        return self._value
+
+    def set_value(self, value):
+        self._value = self.normalise(value)
+        self.update()
+
+    def is_editing(self):
+        return self._edit.isVisible()
+
+    # ── geometry ─────────────────────────────────────────────────────────
+    def _chips(self):
+        """[(value, rect)] for the blank chip and the preset swatches."""
+        box = self.value_rect()
+        s, gap = self.SWATCH, 5
+        x = box.right() - 10
+        out = []
+        for v in reversed(self.presets):
+            x -= s
+            out.append((v, QRectF(x, box.center().y() - s / 2, s, s)))
+            x -= gap
+        fm = QFontMetrics(tracked_font(FONT_DISPLAY, T_SMALL - 1, QFont.DemiBold, 0.8))
+        bw = fm.horizontalAdvance(self.blank_label.upper()) + 12
+        x -= bw
+        out.append(("", QRectF(x, box.center().y() - s / 2, bw, s)))
+        return list(reversed(out))
+
+    def _current_rect(self):
+        box = self.value_rect()
+        chips = self._chips()
+        right = chips[0][1].left() - 10 if chips else box.right()
+        return QRectF(box.x() + 8, box.y(), max(40, right - box.x() - 8), box.height())
+
+    def _chip_at(self, pos):
+        for v, r in self._chips():
+            if r.adjusted(-2, -3, 2, 3).contains(QPointF(pos)):
+                return v
+        return None
+
+    # ── editing ──────────────────────────────────────────────────────────
+    def _emit(self, value):
+        if value != self._value:
+            self._value = value
+            self.edited.emit(value)
+        self.update()
+
+    def begin_edit(self):
+        r = self._current_rect().adjusted(self.SWATCH + 10, 5, 0, -5)
+        self._edit.setGeometry(r.toRect())
+        self._edit.setText(self._value or "#")
+        self._edit.show()
+        self._edit.setFocus()
+        self._edit.selectAll()
+        self.update()
+
+    def commit(self):
+        if not self.is_editing():
+            return
+        text = self._edit.text()
+        self._edit.hide()
+        self.setFocus()
+        new = self.normalise(text)
+        if new or not text.strip("# "):
+            self._emit(new)
+        self.update()
+
+    def eventFilter(self, watched, event):
+        if watched is self._edit:
+            if event.type() == QEvent.KeyPress and event.key() == Qt.Key_Escape:
+                self._edit.hide()
+                self.setFocus()
+                self.update()
+                return True
+            if event.type() == QEvent.FocusOut and self.is_editing():
+                QTimer.singleShot(0, lambda: self.commit() if self.is_editing()
+                                  and not self._edit.hasFocus() else None)
+        return False
+
+    def step(self, delta):
+        options = [""] + self.presets
+        i = options.index(self._value) if self._value in options else 0
+        self._emit(options[max(0, min(len(options) - 1, i + delta))])
+
+    def mousePressEvent(self, event):
+        self.setFocus()
+        chip = self._chip_at(event.pos())
+        if chip is not None:
+            self._emit(chip)
+        elif self._current_rect().contains(QPointF(event.pos())):
+            self.begin_edit()
+
+    def mouseMoveEvent(self, event):
+        chip = self._chip_at(event.pos())
+        if chip != self._hover:
+            self._hover = chip
+            self.update()
+        super().mouseMoveEvent(event)
+
+    def leaveEvent(self, event):
+        self._hover = None
+        self.update()
+        super().leaveEvent(event)
+
+    def keyPressEvent(self, event):
+        k = event.key()
+        if k in (Qt.Key_Left, Qt.Key_Right):
+            self.step(-1 if k == Qt.Key_Left else 1)
+        elif k in (Qt.Key_Return, Qt.Key_Enter, Qt.Key_F2):
+            self.begin_edit()
+        elif k == Qt.Key_Delete:
+            self._emit("")
+        else:
+            super().keyPressEvent(event)
+            return
+        event.accept()
+
+    # ── painting ─────────────────────────────────────────────────────────
+    def paint_value(self, p, rect, focused):
+        p.setRenderHint(QPainter.Antialiasing, True)
+        cur = self._current_rect()
+        s = self.SWATCH
+        sw = QRectF(cur.x(), cur.center().y() - s / 2, s, s)
+        if self._value:
+            p.fillRect(sw, QColor(self._value))
+        else:
+            # blank: a diagonal "no fixed colour" mark
+            p.fillRect(sw, QColor(BG_BASE))
+            p.setPen(QPen(QColor(FG_TERTIARY), 1.2))
+            p.drawLine(sw.bottomLeft(), sw.topRight())
+        p.setPen(QPen(QColor(BORDER_EM), 1))
+        p.setBrush(Qt.NoBrush)
+        p.drawRect(sw)
+        if not self.is_editing():
+            p.setFont(self._value_font)
+            p.setPen(QColor(FG_PRIMARY if self._value else FG_TERTIARY))
+            text = self._value.upper() if self._value else self.blank_label.upper()
+            p.drawText(cur.adjusted(s + 10, 0, 0, 0), Qt.AlignLeft | Qt.AlignVCenter, text)
+        small = tracked_font(FONT_DISPLAY, T_SMALL - 1, QFont.DemiBold, 0.8)
+        for v, r in self._chips():
+            on = v == self._value
+            hot = v == self._hover
+            if v:
+                p.fillRect(r, QColor(v))
+                p.setPen(QPen(QColor(ACCENT if on else (FG_SECONDARY if hot else BORDER_EM)),
+                              2 if on else 1))
+                p.drawRect(r.adjusted(-1, -1, 1, 1) if on else r)
+            else:
+                p.fillRect(r, QColor(ACCENT if on and focused else (BORDER_EM if on else BG_BASE)))
+                p.setPen(QPen(QColor(FG_SECONDARY if hot else BORDER), 1))
+                p.drawRect(r)
+                p.setFont(small)
+                p.setPen(QColor(BG_BASE if on and focused else (FG_PRIMARY if on else FG_TERTIARY)))
+                p.drawText(r, Qt.AlignCenter, self.blank_label.upper())
+        p.setRenderHint(QPainter.Antialiasing, False)
+
+
 class AssetField(FieldBase):
     """A path relative to a folder: thumbnail, status (OK / MISSING / SIZE),
     and a browse popup over the files that actually exist. Enter or click

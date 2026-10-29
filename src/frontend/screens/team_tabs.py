@@ -24,7 +24,7 @@ from ui.broadcast import Card, draw_frame, tracked_font, display_label, eyebrow_
 from app import variants as V
 from ui.editor_kit import (
     VariantPicker, FormDialog,
-    FieldGrid, SectionCard, TextField, ChoiceField, SegmentField, AssetField,
+    FieldGrid, SectionCard, TextField, NumberField, ChoiceField, SegmentField, AssetField, ColorField,
     FrameStrip, Thumb, Note, Badge, TabStrip, browse_assets, load_pixmap, compact_button,
     SEVERITY_COLOR, worst,
 )
@@ -33,6 +33,9 @@ from ui.team_sheet import (
     POSITION_SHORT, ROLE_SHORT, last_name,
 )
 from ui.widgets import StyledButton
+from ui.shirt_name_canvas import NameAreaCanvas
+from shared import shirt_names as SN
+from shared.config import config
 from ui.theme import (
     BG_BASE, BG_CARD, BG_RAISED, BG_HIGHLIGHT, BORDER, BORDER_EM, ACCENT, WARN,
     GREEN, INFO, DANGER_LITE, HOME_TINT, FG_PRIMARY, FG_SECONDARY, FG_TERTIARY,
@@ -45,7 +48,7 @@ ROLE_LABELS = {
     "kickoff": "Kick-offs",
 }
 SET_PLAY_DEFAULTS = {"up": "classic", "down": "pivot", "left": "pocket", "right": "dummy_switch"}
-TAB_OVERVIEW, TAB_KITS, TAB_SQUAD, TAB_ASSETS = range(4)
+TAB_OVERVIEW, TAB_KITS, TAB_NAMES, TAB_SQUAD, TAB_ASSETS = range(5)
 
 
 from shared.log import get_logger
@@ -759,6 +762,424 @@ class KitsTab(TeamTab):
         if isinstance(focused, AssetField):
             return [("A", "browse"), ("X", "type path"), ("Del", "clear")]
         return []
+
+
+# ═════════════════════════════════════════════════════════════════════════
+# Shirt names
+# ═════════════════════════════════════════════════════════════════════════
+TEXT_MODE_LABELS = {"surname": "surname", "initial": "j. surname", "display": "in-game",
+                    "full": "full name"}
+CASE_LABELS = {"upper": "capitals", "asis": "as typed"}
+PLACEMENT_LABELS = {"auto": "auto", "above": "above no.", "below": "below no.", "custom": "custom"}
+
+
+class ShirtNamesTab(TeamTab):
+    """The player's name on the back of the shirt (shared/shirt_names.py).
+    The lettering is the season's, the colours each kit's own. The back is
+    shown as the game gets it — flat, with the name area to drag, and on the
+    3D player seen from behind."""
+
+    def __init__(self, screen, index):
+        super().__init__(screen, index)
+        self.kit_name = None          # kit shown (and whose colours are edited)
+        self.preview_shirt = 10       # whose back is shown
+        self.try_name = ""            # a name typed to test the lettering (not stored)
+        self._printer = None
+        self._render_timer = QTimer()
+        self._render_timer.setSingleShot(True)
+        self._render_timer.setInterval(15)
+        self._render_timer.timeout.connect(self._render)
+        self._stage_timer = QTimer()
+        self._stage_timer.setSingleShot(True)
+        self._stage_timer.setInterval(280)
+        self._stage_timer.timeout.connect(self._refresh_stage)
+        self._live_area = None        # area while it is dragged (not stored yet)
+        self._last_image = None
+        row = QHBoxLayout()
+        row.setSpacing(14)
+
+        # left: the flat back, name area to drag
+        left = SectionCard("back of the shirt")
+        left.setMinimumWidth(440)
+        self.canvas = NameAreaCanvas()
+        self.canvas.setMinimumSize(400, 400)
+        self.canvas.area_changing.connect(self._area_changing)
+        self.canvas.area_changed.connect(self._area_changed)
+        screen.focus.register(self.canvas)
+        left.add(self.canvas, stretch=1)
+        pgrid = FieldGrid(columns=1)
+        self.kit_pick = ChoiceField("Kit", allow_blank=False, display=lambda v: str(v).upper())
+        self.kit_pick.popup_title = "kit to preview"
+        self.kit_pick.edited.connect(self._pick_kit)
+        pgrid.add(self.kit_pick)
+        self.shirt_pick = ChoiceField("Preview shirt", [str(n) for n in range(1, SQUAD_SIZE + 1)],
+                                      allow_blank=False, display=self._shirt_label)
+        self.shirt_pick.popup_title = "whose back"
+        self.shirt_pick.edited.connect(self._pick_shirt)
+        pgrid.add(self.shirt_pick)
+        self.try_field = TextField("Try a name", placeholder="type to test a long name")
+        self.try_field.edited.connect(self._try)
+        pgrid.add(self.try_field)
+        for w in (self.kit_pick, self.shirt_pick, self.try_field):
+            screen.focus.register(w)
+        left.add(pgrid)
+        self.left_note = Note("", color=FG_TERTIARY)
+        left.add(self.left_note)
+        row.addWidget(left, stretch=5)
+
+        # middle: the 3D player from behind
+        mid = SectionCard("3d preview")
+        mid.setFixedWidth(300)
+        from ui.player_stage import KitStage
+        self.stage = KitStage(default_yaw=180.0)
+        self.stage.setFixedHeight(470)
+        mid.add(self.stage)
+        mid.add(Note("Drag to turn the player.", color=FG_TERTIARY))
+        mid.v.addStretch(1)
+        row.addWidget(mid)
+
+        # right: settings
+        right = QVBoxLayout()
+        right.setSpacing(12)
+        lettering = SectionCard("lettering · this season")
+        lgrid = FieldGrid(columns=1)
+        self.enabled = self.register("shirtNames.enabled",
+                                     SegmentField("Shirt names", ["off", "on"]))
+        self.enabled.edited.connect(lambda v: self._set("enabled", True if v == "on" else None,
+                                                        "shirt names " + v))
+        lgrid.add(self.enabled)
+        self.text_mode = self.register("shirtNames.text", SegmentField(
+            "Text", list(SN.TEXT_MODES), display=lambda v: TEXT_MODE_LABELS.get(v, v)))
+        self.text_mode.edited.connect(lambda v: self._set("text", v, "name text"))
+        lgrid.add(self.text_mode)
+        self.case = self.register("shirtNames.case", SegmentField(
+            "Case", list(SN.CASES), display=lambda v: CASE_LABELS.get(v, v)))
+        self.case.edited.connect(lambda v: self._set("case", v, "name case"))
+        lgrid.add(self.case)
+        self.font = self.register("shirtNames.font", ChoiceField(
+            "Font", allow_blank=False, display=self._font_label))
+        self.font.popup_title = "font"
+        self.font.subtitle_for = lambda v: ("your font file in the team folder" if SN.is_font_file(v)
+                                            else "bundled")
+        self.font.edited.connect(lambda v: self._set("font", v, "name font"))
+        lgrid.add(self.font)
+        self.size = self.register("shirtNames.size", NumberField("Letter height", 8, 120))
+        self.size.edited.connect(lambda v: self._set_number("size", v, "name size"))
+        lgrid.add(self.size)
+        self.spacing = self.register("shirtNames.spacing", NumberField("Letter spacing %", -20, 60))
+        self.spacing.edited.connect(lambda v: self._set_number("spacing", v, "letter spacing"))
+        lgrid.add(self.spacing)
+        self.arch = self.register("shirtNames.arch", NumberField("Arch %", -60, 60))
+        self.arch.edited.connect(lambda v: self._set_number("arch", v, "name arch"))
+        lgrid.add(self.arch)
+        self.placement = self.register("shirtNames.placement", SegmentField(
+            "Placement", list(SN.PLACEMENTS), display=lambda v: PLACEMENT_LABELS.get(v, v)))
+        self.placement.edited.connect(self._set_placement)
+        lgrid.add(self.placement)
+        self.gap = self.register("shirtNames.gap", NumberField("Gap to number", -40, 120))
+        self.gap.edited.connect(lambda v: self._set_number("gap", v, "name gap"))
+        lgrid.add(self.gap)
+        lettering.add(lgrid)
+        brow = QHBoxLayout()
+        brow.setSpacing(8)
+        self.copy_btn = _button("COPY TO OTHER SEASONS")
+        self.copy_btn.clicked.connect(self._copy_to_seasons)
+        screen.focus.register(self.copy_btn)
+        brow.addWidget(self.copy_btn)
+        brow.addStretch(1)
+        lettering.add_layout(brow)
+        right.addWidget(lettering)
+
+        colours = SectionCard("colours · kit")
+        self.colours_card = colours
+        cgrid = FieldGrid(columns=1)
+        self.color = self.register("shirtName.color", ColorField("Text", blank_label="auto"))
+        self.color.edited.connect(lambda v: self._set_kit("color", v, "name colour"))
+        cgrid.add(self.color)
+        self.outline = self.register("shirtName.outline", ColorField("Outline", blank_label="none"))
+        self.outline.edited.connect(lambda v: self._set_kit("outline", v, "name outline"))
+        cgrid.add(self.outline)
+        self.outline_w = self.register("shirtName.outlineWidth", NumberField("Outline width", 0, 12))
+        self.outline_w.edited.connect(lambda v: self._set_kit(
+            "outlineWidth", int(v) if str(v).lstrip("-").isdigit() and int(v) else None,
+            "name outline width"))
+        cgrid.add(self.outline_w)
+        colours.add(cgrid)
+        colours.add(Note("AUTO takes the colour of the kit's own numbers.", color=FG_TERTIARY))
+        right.addWidget(colours)
+        self.help = Note(
+            "Each player's name is printed on their own back-number texture when the match "
+            "starts: shirt N gets the name of player N of the squad. A player's \"shirt name\" "
+            "(player editor) replaces the generated text. Your own .ttf/.otf files in the team "
+            "folder appear in the font list.", color=FG_TERTIARY)
+        right.addWidget(self.help)
+        right.addStretch(1)
+        row.addLayout(right, stretch=4)
+        self.body.addLayout(row)
+
+    # ── helpers ──────────────────────────────────────────────────────────
+    def _season_block(self):
+        return self.info().get("shirtNames") or {}
+
+    def _kits(self):
+        return self.info().get("kits") or {}
+
+    def _current_kit(self):
+        kits = self._kits()
+        if self.kit_name not in kits:
+            kits_tab = self.screen.tabs[TAB_KITS] if hasattr(self.screen, "tabs") else None
+            name = kits_tab.current_kit_name() if kits_tab else None
+            self.kit_name = name if name in kits else next(iter(kits), None)
+        return self.kit_name
+
+    def _kit_dict(self):
+        name = self._current_kit()
+        return V.resolve_kit(self._kits().get(name) or {}) if name else {}
+
+    def _style(self):
+        return SN.season_style_for(self.info(), self._kit_dict())
+
+    def _player(self, shirt):
+        roster = [str(p) for p in self.info().get("players", [])]
+        if 1 <= shirt <= len(roster):
+            return self.screen.ds.players.get(roster[shirt - 1])
+        return None
+
+    def _shirt_label(self, value):
+        try:
+            n = int(value)
+        except (TypeError, ValueError):
+            return str(value)
+        style = self._style()
+        text = SN.shirt_text(self._player(n), style["text"], style["case"])
+        return f"{n} · {text}" if text else f"{n} · —"
+
+    def _font_label(self, value):
+        if SN.is_font_file(value):
+            return f"{os.path.basename(value)}  (team folder)"
+        return value
+
+    def _set(self, key, value, label):
+        self.edit(label, lambda i: T.set_shirt_names(i, key, value), f"shirtNames.{key}")
+
+    def _set_number(self, key, value, label):
+        try:
+            n = int(value)
+        except (TypeError, ValueError):
+            n = None
+        self._set(key, n, label)
+
+    def _set_kit(self, key, value, label):
+        name = self._current_kit()
+        if name is None:
+            return
+        self.edit(f"{name} kit {label}",
+                  lambda i: T.set_kit_shirt_name(i["kits"][name], key, value),
+                  f"shirtName.{key}")
+
+    def _set_placement(self, value):
+        if value == "custom":
+            area = self._printer.area if self._printer else None
+            self.edit("name placement", lambda i: T.set_shirt_name_area(i, area),
+                      "shirtNames.placement")
+        else:
+            self._set("placement", value, "name placement")
+
+    def _pick_kit(self, name):
+        self.kit_name = name
+        self.refresh()
+
+    def _pick_shirt(self, value):
+        try:
+            self.preview_shirt = int(value)
+        except (TypeError, ValueError):
+            return
+        self._schedule()
+
+    def _try(self, text):
+        self.try_name = (text or "").strip()
+        self._schedule()
+
+    def _area_changing(self, area):
+        self._live_area = area
+        self._schedule(stage=False)
+
+    def _area_changed(self, area):
+        self._live_area = None
+        self.edit("name area", lambda i: T.set_shirt_name_area(i, area), "shirtNames.area")
+
+    def _copy_to_seasons(self):
+        season = self.screen.season
+        others = [s for s in self.screen.session.working if s != season]
+        if not others:
+            self.screen.shell.footer.set_status("this team has only one season", DANGER_LITE)
+            return
+
+        def go():
+            self.screen.edit("copy shirt names to every season",
+                             lambda w: T.copy_shirt_names(w, season),
+                             view_hint={"season": season, "tab": self.index})
+            self.screen.shell.footer.set_status(
+                f"Shirt names of {season_label(season)} copied to {len(others)} other season(s)",
+                GREEN)
+        self.screen.confirm(f"Copy these shirt names to the {len(others)} other season(s)?",
+                            "The lettering and each kit's name colours (matched by kit name) "
+                            "replace theirs. Ctrl+Z to undo until you save.", "COPY", go)
+
+    # ── refresh / render ─────────────────────────────────────────────────
+    def refresh(self):
+        kits = self._kits()
+        name = self._current_kit()
+        style = self._style()
+        block = self._season_block()
+        on = style["enabled"]
+        self.kit_pick.set_options(list(kits))
+        self.kit_pick.set_value(name or "")
+        self.shirt_pick.set_value(str(self.preview_shirt))
+        self.enabled.set_value("on" if on else "off")
+        self.text_mode.set_value(style["text"])
+        self.case.set_value(style["case"])
+        root = self.screen.team_folder()
+        fonts = list(SN.BUILTIN_FONTS) + SN.team_font_files(root)
+        if block.get("font") and block["font"] not in fonts:
+            fonts.append(block["font"])         # shown off-list until fixed
+        self.font.set_options(fonts)
+        self.font.set_value(block.get("font") or SN.DEFAULT_FONT)
+        for w, key in ((self.size, "size"), (self.spacing, "spacing"), (self.arch, "arch"),
+                       (self.gap, "gap")):
+            w.set_value(str(int(style[key])))
+            w.set_hint("")
+        self.placement.set_value(style["placement"])
+        kit_block = (kits.get(name) or {}).get("shirtName") or {}
+        self.color.set_value(kit_block.get("color", ""))
+        self.outline.set_value(kit_block.get("outline", ""))
+        self.outline_w.set_value(str(int(style["outlineWidth"])) if style["outlineWidth"] else "")
+        self.outline_w.set_hint("none")
+        self.colours_card.set_title(f"colours · {name} kit" if name else "colours")
+        for w in (self.text_mode, self.case, self.font, self.size, self.spacing, self.arch,
+                  self.placement, self.color, self.outline, self.outline_w):
+            w.setEnabled(on)
+        self.gap.setEnabled(on and style["placement"] != "custom")
+        self.copy_btn.setEnabled(bool(block))
+        self.canvas.set_editable(on)
+        self._schedule()
+
+    def _schedule(self, stage=True):
+        self._render_timer.start()
+        if stage:
+            self._stage_timer.start()
+
+    def _back_pattern(self):
+        back = self._kit_dict().get("backKitFile", "")
+        root = self.screen.team_folder()
+        return os.path.join(root, back) if back else ""
+
+    def _render(self):
+        """Letter the previewed shirt's back and show it."""
+        style = self._style()
+        pattern = self._back_pattern()
+        self._printer = None
+        self._last_image = None
+        if not pattern or "%" not in pattern:
+            self.canvas.set_image(None)
+            self.canvas.set_placeholder(
+                "SHIRT NAMES NEED THE KIT'S BACK NUMBERS AS A PNG SERIES (KIT_BACK_%.PNG)"
+                if pattern else "THIS KIT HAS NO BACK NUMBERS")
+            self.left_note.setText("")
+            return
+        if self._live_area:
+            style = dict(style, placement="custom", area=self._live_area)
+        font_path, variation, found = SN.resolve_font(style["font"], self.screen.team_folder())
+        try:
+            printer = SN.BackPrinter(style, font_path, SN.expand_back_paths(pattern), variation)
+            text = (self.try_name or SN.shirt_text(self._player(self.preview_shirt), style["text"],
+                                                   style["case"])) if style["enabled"] else ""
+            if self.try_name and style["case"] == "upper":
+                text = text.upper()
+            image = printer.render(self.preview_shirt - 1, text)
+        except Exception as e:         # a preview must never break editing
+            log.warning(f"shirt name preview failed: {e}")
+            self.canvas.set_image(None)
+            self.canvas.set_placeholder("PREVIEW FAILED — SEE THE LOG")
+            return
+        self._printer = printer
+        if image is None:
+            self.canvas.set_image(None)
+            self.canvas.set_placeholder(f"BACK NUMBER {self.preview_shirt} IS MISSING")
+            return
+        self._last_image = image
+        self.canvas.set_image(_pil_to_qimage(image))
+        self.canvas.set_area(printer.area if style["enabled"] else None)
+        self.canvas.set_number_box(printer.analysis.get("box"))
+        self.canvas.set_caption("NAME AREA" + {"auto": " · AUTO", "above": " · ABOVE NUMBER",
+                                               "below": " · BELOW NUMBER"}.get(style["placement"], ""))
+        notes = []
+        if not found:
+            notes.append(f"Font \"{style['font']}\" not found: {SN.DEFAULT_FONT} is used.")
+        if style["enabled"] and SN.area_overlap(printer.area, printer.analysis) > 0.25:
+            notes.append("The name runs over a logo here: drag the box to a free spot, or "
+                         "try another placement.")
+        if style["enabled"]:
+            notes.append("Drag the box to move the name, its handles to resize it "
+                         "(arrows / Alt+arrows with the box focused).")
+        else:
+            notes.append("Turn shirt names on to print each player's name on their back.")
+        self.left_note.setText(" ".join(notes))
+
+    def _refresh_stage(self):
+        if self._render_timer.isActive():
+            self._render()
+            self._render_timer.stop()
+        kit = self._kit_dict()
+        root = self.screen.team_folder()
+        front = os.path.join(root, kit["frontKitFile"]) if kit.get("frontKitFile") else ""
+        numbers = ""
+        if self._last_image is not None and self._printer is not None:
+            folder = os.path.join(config.temp_directory, "shirt_names")
+            try:
+                os.makedirs(folder, exist_ok=True)
+                numbers = os.path.join(folder, self._printer.cache_name(
+                    self.preview_shirt - 1, repr((self.try_name, self._style()))))
+                if not os.path.isfile(numbers):
+                    _prune(folder)
+                    self._last_image.save(numbers)
+            except OSError as e:
+                log.warning(f"shirt name preview: {e}")
+                numbers = ""
+        else:
+            pattern = self._back_pattern()
+            numbers = pattern.replace("%", str(self.preview_shirt), 1) if pattern else ""
+        preview = kit.get("previewFile", "")
+        pix = load_pixmap(os.path.join(root, preview), 512) if preview else None
+        try:
+            self.stage.update_kit(pix if pix is not None and not pix.isNull() else None,
+                                  front, numbers, kit.get("model3d"))
+        except Exception as e:     # preview must never break editing
+            log.warning(f"shirt name 3D preview failed: {e}")
+
+    def hints(self, focused):
+        if focused is self.canvas:
+            return [("drag", "move / resize"), ("←→↑↓", "move"), ("Alt ←→↑↓", "resize"),
+                    ("Shift", "bigger steps")]
+        return []
+
+
+def _pil_to_qimage(image):
+    from PyQt5.QtGui import QImage
+    rgba = image.convert("RGBA")
+    data = rgba.tobytes("raw", "RGBA")
+    q = QImage(data, rgba.width, rgba.height, rgba.width * 4, QImage.Format_RGBA8888)
+    return q.copy()        # own the pixels: `data` goes away with this frame
+
+
+def _prune(folder, keep=40):
+    """Drop the oldest preview images, so the folder never grows past `keep`."""
+    try:
+        files = sorted((os.path.join(folder, f) for f in os.listdir(folder)), key=os.path.getmtime)
+        for path in files[:-keep]:
+            os.remove(path)
+    except OSError:
+        pass
 
 
 # ═════════════════════════════════════════════════════════════════════════
