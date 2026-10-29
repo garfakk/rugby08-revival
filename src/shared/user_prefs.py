@@ -112,6 +112,10 @@ class UserPrefs:
         # Look on GitHub for a new program or data release at startup, at
         # most once a day (app/updater). Settings > Check For Updates.
         self.check_updates = True
+        # How Quick Match picks a team (app/team_browse.py STYLES): "classic"
+        # (season, category, team), "team_first", "browser", "timeline",
+        # "era", "leagues". Settings > Quick Match Picker.
+        self.match_picker = "classic"
         self._load()
 
     def _load(self):
@@ -134,6 +138,8 @@ class UserPrefs:
             self.use_edits = cp.getboolean(_SECTION, "use_edits", fallback=self.use_edits)
             self.animations = cp.getboolean(_SECTION, "animations", fallback=self.animations)
             self.check_updates = cp.getboolean(_SECTION, "check_updates", fallback=self.check_updates)
+            self.match_picker = cp.get(_SECTION, "match_picker", fallback=self.match_picker).strip().lower() \
+                or "classic"
             mode = cp.get(_SECTION, "wind_mode", fallback=self.wind_mode).strip().lower()
             mode = "standard" if mode == "default" else mode      # older name
             if mode in ("standard", "advanced"):
@@ -166,6 +172,7 @@ class UserPrefs:
                         "use_edits": str(self.use_edits),
                         "animations": str(self.animations),
                         "check_updates": str(self.check_updates),
+                        "match_picker": self.match_picker,
                         "wind_mode": self._stored_wind_mode}
         try:
             with open(_PREFS_FILE, "w") as fh:
