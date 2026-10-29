@@ -182,7 +182,9 @@ from screens.player_editor import PlayerEditorScreen
 from screens.roster_import import RosterImportScreen
 from shared.config import config
 from shared.user_prefs import user_prefs
-from shared.game_profile import game_profile, resolution_choices
+from shared.game_profile import game_profile
+from app.display import native_resolution, native_screen_ratio, screen_pixels
+from app.gamepad import GamepadNavigator, open_source as open_gamepads, key_target
 from ui.theme import BG_BASE
 from ui.music import MenuMusic, TrackMedal
 
@@ -317,6 +319,8 @@ class MainWindow(QMainWindow):
             return
         if not game_profile.has_resolution():
             self._pick_resolution()
+        if not user_prefs.screen_ratio_set:
+            self._pick_screen_ratio()
         self._open_menus()
 
     # ── menu music ─────────────────────────────────────────────────────────
@@ -418,14 +422,18 @@ class MainWindow(QMainWindow):
     def _pick_resolution(self):
         """First launch only: silently choose this screen's resolution (or the
         closest offered one). The user can change it later in Settings."""
-        screen = QApplication.primaryScreen()
-        ratio = screen.devicePixelRatio()
-        _sizes, recommended = resolution_choices(round(screen.size().width() * ratio),
-                                                 round(screen.size().height() * ratio))
-        w, h = recommended
+        w, h = native_resolution()
         game_profile.set_resolution(w, h)
         game_profile.save()
         log.info(f"first launch: game resolution set to {w}x{h}")
+
+    def _pick_screen_ratio(self):
+        """First launch only (no ratio in user_prefs.ini or config.ini): match
+        the picture to this screen's shape, the closest Screen Ratio preset.
+        The user can change it later in Settings."""
+        label = native_screen_ratio()
+        user_prefs.set_screen_ratio(label)
+        log.info(f"first launch: screen ratio set to {label} (screen %dx%d)" % screen_pixels())
 
     def _open_menus(self):
         # Idle-time preparation of the match-setup 3D previews (see
@@ -434,10 +442,39 @@ class MainWindow(QMainWindow):
         # Same for the player editor's list (thousands of players).
         QTimer.singleShot(1500, self.screen_player_editor.prewarm)
         self._menus_ready = True
+        self._start_gamepads()
         self.screen_main.play_entrance()
         self.music.start()
         QTimer.singleShot(900, self._offer_music_download)
         QTimer.singleShot(700, self._report_edits_after_update)
+
+    # ── gamepads (app/gamepad.py) ─────────────────────────────────────────
+    def _start_gamepads(self):
+        source = open_gamepads()
+        if source is not None:
+            self._gamepads = GamepadNavigator(source, fallback=self.screens.currentWidget,
+                                              enabled=self._gamepads_drive_menus, parent=self)
+
+    def _gamepads_drive_menus(self):
+        """Not during a match (the game reads the pads itself), nor while
+        another application is in front."""
+        return (QApplication.activeWindow() is not None
+                and self.screens.currentWidget() is not self.screen_ingame)
+
+    def keyPressEvent(self, event):
+        # Nothing in the screen focused (one that never took the focus, or
+        # the window itself has it): the keys still reach the current screen.
+        screen = self.screens.currentWidget()
+        if (self._menus_ready and screen is not None and screen is not self.screen_ingame
+                and key_target() in (None, self, self.centralWidget())
+                and not getattr(self, "_forwarding_key", False)):
+            self._forwarding_key = True        # an ignored key bubbles back up here
+            try:
+                QApplication.sendEvent(screen, event)
+            finally:
+                self._forwarding_key = False
+            return
+        super().keyPressEvent(event)
 
     # ── the user's edits after a data update (app/user_edits.py) ──────────
     def _report_edits_after_update(self):

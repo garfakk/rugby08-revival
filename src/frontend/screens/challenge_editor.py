@@ -83,6 +83,7 @@ class MatchObjectiveRow(QWidget):
         for f in (self.shirt, self.minute, self.number, self.text):
             f.edited.connect(lambda _v: self._write())
         rm = compact_button("✕")
+        rm.setProperty("removesRow", True)      # Y on the row presses it (app.screen_base)
         rm.setFixedWidth(32)
         rm.clicked.connect(lambda: on_remove(self))
         h.addWidget(rm)
@@ -135,6 +136,7 @@ class CardRow(QWidget):
             h.addWidget(w, stretch=stretch)
             focus_register(w)
         rm = compact_button("✕")
+        rm.setProperty("removesRow", True)      # Y on the row presses it (app.screen_base)
         rm.setFixedWidth(32)
         rm.clicked.connect(lambda: on_remove(self))
         h.addWidget(rm)
@@ -162,6 +164,7 @@ class UnlockableRow(QWidget):
         h.addWidget(self.id_field, stretch=1)
         focus_register(self.id_field)
         rm = compact_button("✕")
+        rm.setProperty("removesRow", True)      # Y on the row presses it (app.screen_base)
         rm.setFixedWidth(32)
         rm.clicked.connect(lambda: on_remove(self))
         h.addWidget(rm)
@@ -368,7 +371,7 @@ class ChallengeEditorScreen(Screen):
         scroll.setWidget(body)
         root.addWidget(scroll, stretch=1)
         self.hintbar = HintBar()
-        self.hintbar.set_hints([("A", "edit"), ("B", "back")])
+        self.hintbar.set_hints([("A", "edit"), ("Y", "remove row"), ("B", "back")])
         root.addWidget(self.hintbar)
 
     # ── field factories ──────────────────────────────────────────────────
