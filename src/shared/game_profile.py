@@ -324,10 +324,14 @@ class GameProfile:
 
     # ── values ──
     def get(self, key: str) -> int:
-        """Current value: the user's override, else the setting's default,
-        else the template's."""
+        """Current value: the user's override, else default(key)."""
         if key in self._overrides:
             return self._overrides[key]
+        return self.default(key)
+
+    def default(self, key: str) -> int:
+        """Value without the user's override: the setting's default, else the
+        template's."""
         setting = SETTINGS[key]
         if setting.default is not None:
             return _clamp(setting, setting.default)
@@ -359,9 +363,14 @@ class GameProfile:
             return
         self._overrides[RESOLUTION_KEY] = size
 
-    def reset(self):
-        """Back to the defaults (the settings' own, else the template's)."""
-        self._overrides.clear()
+    def reset(self, keys=None):
+        """Back to the defaults (the settings' own, else the template's): every
+        setting, or only those in `keys` (RESOLUTION_KEY: the resolution)."""
+        if keys is None:
+            self._overrides.clear()
+        else:
+            for key in keys:
+                self._overrides.pop(key, None)
         self.save()
 
     # ── deployment ──

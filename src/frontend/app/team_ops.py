@@ -432,6 +432,69 @@ def set_model3d(kit, key, value):
         kit.pop("model3d", None)
 
 
+# ── shirt names (shared/shirt_names.py) ──────────────────────────────────
+def _set_in_block(owner, block_key, key, value):
+    """None or "" removes `key`; an empty block goes too."""
+    block = dict(owner.get(block_key) or {})
+    if value is None or value == "":
+        block.pop(key, None)
+    else:
+        block[key] = value
+    if block:
+        owner[block_key] = block
+    else:
+        owner.pop(block_key, None)
+
+
+def set_shirt_names(info, key, value):
+    """One setting of the season's lettering ("shirtNames")."""
+    _set_in_block(info, "shirtNames", key, value)
+
+
+def set_shirt_name_area(info, area):
+    """A dragged name area: stored with placement "custom"; None goes back to
+    automatic placement."""
+    if area:
+        set_shirt_names(info, "area", [round(float(v), 4) for v in area])
+        set_shirt_names(info, "placement", "custom")
+    else:
+        set_shirt_names(info, "area", None)
+        if (info.get("shirtNames") or {}).get("placement") == "custom":
+            set_shirt_names(info, "placement", None)
+
+
+def set_kit_shirt_name(kit, key, value):
+    """One of a kit's own name colours ("shirtName")."""
+    _set_in_block(kit, "shirtName", key, value)
+
+
+def copy_shirt_names(seasons, source):
+    """The lettering (and every kit's colours, by kit name) of season `source`
+    copied to the team's other seasons. Returns how many seasons changed."""
+    src = seasons.get(source) or {}
+    lettering = src.get("shirtNames")
+    colours = {name: kit.get("shirtName") for name, kit in (src.get("kits") or {}).items()}
+    changed = 0
+    for season, info in seasons.items():
+        if season == source:
+            continue
+        before = repr((info.get("shirtNames"),
+                       [(k.get("shirtName")) for k in (info.get("kits") or {}).values()]))
+        if lettering:
+            info["shirtNames"] = copy.deepcopy(lettering)
+        else:
+            info.pop("shirtNames", None)
+        for name, kit in (info.get("kits") or {}).items():
+            if colours.get(name):
+                kit["shirtName"] = copy.deepcopy(colours[name])
+            elif name in colours:
+                kit.pop("shirtName", None)
+        after = repr((info.get("shirtNames"),
+                      [(k.get("shirtName")) for k in (info.get("kits") or {}).values()]))
+        changed += before != after
+    return changed
+
+
 # ── seasons ──────────────────────────────────────────────────────────────
 def sort_seasons(seasons):
     ordered = dict(sorted(seasons.items(), key=lambda kv: kv[0]))

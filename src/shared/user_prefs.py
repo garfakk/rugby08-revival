@@ -49,6 +49,20 @@ def fit_rect(left, top, width, height, ratio):
     return left + (width - w) // 2, top + (height - h) // 2, w, h
 
 
+# Settings > Screen Ratio presets (besides "Auto"), as width / height.
+SCREEN_RATIOS = {"4:3": 4 / 3, "16:10": 16 / 10, "16:9": 16 / 9, "21:9": 21 / 9}
+
+
+def nearest_screen_ratio(width, height):
+    """The SCREEN_RATIOS label closest to a width x height screen (4:3 when
+    the size is unknown): 1920x1080 -> "16:9", 2560x1080 / 3440x1440 ->
+    "21:9", 5120x1440 (32:9) -> "21:9", the widest preset."""
+    if width <= 0 or height <= 0:
+        return "4:3"
+    ratio = width / height
+    return min(SCREEN_RATIOS, key=lambda label: abs(SCREEN_RATIOS[label] - ratio))
+
+
 class UserPrefs:
     def __init__(self):
         # 3D preview is the plan's confirmed default ("replacing the kit
@@ -88,20 +102,19 @@ class UserPrefs:
         # Aspect ratio of that 3D view: "auto" (follow the window) or "W:H".
         # Settings > Screen Ratio; config.ini's widescreen_aspect is the default.
         self.widescreen_aspect = str(config.widescreen_aspect)
+        # Whether a screen ratio was ever chosen (Settings, user_prefs.ini or
+        # config.ini). Not yet: the first launch picks the screen's own
+        # (main.MainWindow._pick_screen_ratio).
+        self.screen_ratio_set = (config.is_set("widescreen")
+                                 or config.is_set("widescreen_aspect"))
         # Coin toss before each quick/tournament match (World Rugby Law 6.3):
         # decides kick-off and ends, so match setup locks those two rows.
-        # Off, and not in Settings: expert opt-in via `coin_toss = true` in
-        # the prefs file.
+        # Settings > Coin Toss; off by default.
         self.coin_toss = False
         # "standard" = the game's stock random wind (rolled by the backend);
         # "advanced" = the reR08 wind patch, set per match (match setup,
-        # challenge file, tournament fixture).
-        # Temporarily forced to "standard" (Settings row hidden, never loaded
-        # from disk); the stored choice is kept in _stored_wind_mode and still
-        # saved. To bring it back: default "advanced", load into wind_mode,
-        # restore the Settings row.
-        self.wind_mode = "standard"
-        self._stored_wind_mode = "advanced"
+        # challenge file, tournament fixture). Settings > Wind.
+        self.wind_mode = "advanced"
         # The user's team/player edits (user_data/edits) laid over the data
         # pack. Off: the pack alone is used, the edits are kept. Tools › My edits.
         self.use_edits = True
@@ -133,6 +146,8 @@ class UserPrefs:
             self.widescreen = cp.getboolean(_SECTION, "widescreen", fallback=self.widescreen)
             self.widescreen_aspect = cp.get(_SECTION, "widescreen_aspect",
                                             fallback=self.widescreen_aspect).strip() or "auto"
+            if cp.has_option(_SECTION, "widescreen") or cp.has_option(_SECTION, "widescreen_aspect"):
+                self.screen_ratio_set = True
             self.coin_toss = cp.getboolean(_SECTION, "coin_toss", fallback=self.coin_toss)
             self.expert_mode = cp.getboolean(_SECTION, "expert_mode", fallback=self.expert_mode)
             self.use_edits = cp.getboolean(_SECTION, "use_edits", fallback=self.use_edits)
@@ -143,7 +158,22 @@ class UserPrefs:
             mode = cp.get(_SECTION, "wind_mode", fallback=self.wind_mode).strip().lower()
             mode = "standard" if mode == "default" else mode      # older name
             if mode in ("standard", "advanced"):
-                self._stored_wind_mode = mode
+                self.wind_mode = mode
+
+    def screen_ratio_label(self):
+        """The Settings > Screen Ratio choice: "Auto" or a SCREEN_RATIOS label."""
+        aspect = str(self.widescreen_aspect).strip().lower()
+        if not self.widescreen or aspect == "4:3":
+            return "4:3"
+        return next((label for label in SCREEN_RATIOS if label == aspect), "Auto")
+
+    def set_screen_ratio(self, label):
+        """Settings > Screen Ratio: 4:3 = the game as shipped (widescreen patch
+        off); "Auto" or any other ratio turns the patch on. Saved."""
+        self.widescreen = label != "4:3"
+        self.widescreen_aspect = label.lower()
+        self.screen_ratio_set = True
+        self.save()
 
     def picture_ratio(self):
         """Width / height the match picture keeps inside the window, as big
@@ -173,7 +203,10 @@ class UserPrefs:
                         "animations": str(self.animations),
                         "check_updates": str(self.check_updates),
                         "match_picker": self.match_picker,
-                        "wind_mode": self._stored_wind_mode}
+                        "wind_mode": self.wind_mode}
+        if not self.screen_ratio_set:
+            # left out until chosen, so the first launch still detects it
+            del cp[_SECTION]["widescreen"], cp[_SECTION]["widescreen_aspect"]
         try:
             with open(_PREFS_FILE, "w") as fh:
                 cp.write(fh)

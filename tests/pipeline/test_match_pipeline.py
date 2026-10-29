@@ -253,3 +253,44 @@ def test_read_files_works_on_a_thread_without_qt():
     th.start()
     th.join(60)
     assert out["raw"][0]
+
+
+# ── shirt names ──────────────────────────────────────────────────────────
+def test_shirt_names_lettered_on_the_back_textures(tmp_path, monkeypatch, run_match):
+    """Names on: each back-number texture of the home kit gets its player's
+    name (the fixture's 8x8 placeholders are swapped for real 512 px backs
+    first), the away kit's stay as they were."""
+    import shutil
+    from PIL import Image, ImageDraw
+    from app.state import DataStore
+    from conftest import FIXTURE_DATA, point_config
+    from shared.omodel.fshlib import Fsh
+
+    data = tmp_path / "data"
+    shutil.copytree(FIXTURE_DATA, data)
+    back = data / "teams" / "England" / "kits_2024" / "home_back"
+    for n in range(1, 23):
+        im = Image.new("RGB", (512, 512), (235, 235, 235))
+        ImageDraw.Draw(im).rectangle([200, 220, 200 + 5 * n, 380], fill=(10, 10, 10))  # the "number"
+        im.save(back / f"home_back_{n}.png")
+    point_config(monkeypatch, data_dir=str(data))
+
+    def backs(shirt_names):
+        ds = DataStore(DataStore.read_files())
+        if shirt_names:
+            ds.teams["10002"]["2024"]["shirtNames"] = shirt_names
+        md = build_match_data(ds, make_match_config(ds))
+        files = run_match(md)
+        out = {}
+        for team in ("team_A", "team_B"):
+            fsh = Fsh(open(files[gsv.game_filenames[team]["kit_back"]], "rb").read())
+            out[team] = [e.decode() for e in fsh.entries]
+        return md, out
+
+    _, plain = backs(None)
+    md, named = backs({"enabled": True, "font": "Anton"})
+    names = md["team_A"]["shirt_names"]["names"]
+    assert len(names) == 22 and all(names)
+    for i in range(22):
+        assert plain["team_A"][i].tobytes() != named["team_A"][i].tobytes(), f"shirt {i + 1}"
+        assert plain["team_B"][i].tobytes() == named["team_B"][i].tobytes()
