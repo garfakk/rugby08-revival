@@ -41,9 +41,11 @@ WIND_POWER_MAX = 10
 # against home, 270° toward home's left. match_data_builder turns that into
 # the world vector once the sides are known (wind_world_xz).
 WIND_BEARINGS = list(range(0, 360, 45))
-# Match setup's wind strength choices (a subset of the 0..WIND_POWER_MAX
-# bands), by name.
-WIND_POWER_NAMES = {0: "none", 1: "calm", 2: "medium", 3: "strong", 4: "very strong"}
+# Match setup's wind strength choices: every reR08 ENABLE_WIND band (the
+# .mis <WIND power>: 0 = calm, 1..3 = the stock bands, 4..10 = extended).
+WIND_POWER_NAMES = {0: "calm", 1: "light", 2: "moderate", 3: "strong", 4: "very strong",
+                    5: "gale", 6: "strong gale", 7: "storm", 8: "violent storm",
+                    9: "hurricane", 10: "extreme"}
 
 
 # Weather-like spread for a generated wind: mostly the stock bands (1-3),
