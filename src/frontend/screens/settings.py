@@ -170,15 +170,25 @@ class SettingsScreen(QWidget):
         cl.addWidget(ChoiceRow("Screen Ratio", ratio_choices, selected_ratio, _set_ratio))
         cl.addSpacing(16)
 
-        # MATCH > Wind (Standard / Advanced): temporarily hidden, and
-        # user_prefs.wind_mode forced to "standard" (see shared/user_prefs.py).
-        # To bring it back:
-        #   def _set_wind_mode(label):
-        #       user_prefs.wind_mode = label.lower(); user_prefs.save()
-        #   cl.addWidget(make_label("MATCH", role="muted"))
-        #   cl.addWidget(CycleRow("Wind", ["Standard", "Advanced"],
-        #                         user_prefs.wind_mode.capitalize(), _set_wind_mode))
-        #   cl.addSpacing(16)
+        cl.addWidget(make_label("MATCH", role="muted"))
+
+        # Wind: Standard = the game's own random wind; Advanced = the reR08
+        # wind patch, strength and direction set in match setup.
+        def _set_wind_mode(label):
+            user_prefs.wind_mode = label.lower()
+            user_prefs.save()
+
+        cl.addWidget(CycleRow("Wind", ["Standard", "Advanced"],
+                              user_prefs.wind_mode.capitalize(), _set_wind_mode))
+
+        # Coin toss before each quick/tournament match: decides kick-off and
+        # ends (match setup locks those two rows while it is on).
+        def _set_coin_toss(on):
+            user_prefs.coin_toss = bool(on)
+            user_prefs.save()
+
+        cl.addWidget(ToggleRow("Coin Toss", user_prefs.coin_toss, _set_coin_toss))
+        cl.addSpacing(16)
 
         cl.addWidget(make_label("DEBUG", role="muted"))
 
