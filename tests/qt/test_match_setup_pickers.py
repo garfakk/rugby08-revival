@@ -65,6 +65,7 @@ def test_team_change_falls_back_to_the_nearest_season_and_says_so(setup, qapp):
     col = setup.home_col
     ds = setup.ds
     short = next((t for t in ds.teams if len(ds.teams[t]) < len(ds.seasons())
+                  and t != setup.cfg.home.team_id
                   and col.index.category(t) == col.index.category(setup.cfg.home.team_id)), None)
     if short is None:
         pytest.skip("fixture pack has no team missing a season")
