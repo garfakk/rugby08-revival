@@ -536,12 +536,12 @@ class EditorScreen(Screen):
         if self._dialog is not None:
             hints = [("↕", "move"), ("A", "choose"), ("B", "cancel")]
         elif self.pane() == "list":
-            hints = [("↕", f"browse"), ("A", "open"), ("/", "filter"),
+            hints = [("↕", f"browse"), ("A", "open"), ("X", "filter"),
                      ("→", "edit"), ("B", "back")]
         else:
             focused = QApplication.focusWidget()
             hints = self.tab_hints(focused) or [("↕←→", "move"), ("A", "edit")]
-            hints = hints + [("Q E", "tabs"), ("B", "list")]
+            hints = hints + [("LB RB", "tabs"), ("B", "list")]
         self.shell.footer.hints.set_hints(hints)
 
     def on_show(self):

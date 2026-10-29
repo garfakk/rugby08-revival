@@ -31,7 +31,8 @@ from app import difficulty
 from app import variants as V
 from app.match_data_builder import build_match_data
 from app.game_data import (
-    SNOW_INTENSITY_MAX, WIND_BEARINGS, WIND_POWER_NAMES, frontend_logo, wind_direction_label,
+    SNOW_INTENSITY_MAX, WIND_BEARINGS, WIND_POWER_NAMES, frontend_logo, random_wind,
+    wind_direction_label,
 )
 from app.season import nearest_season, season_label
 from app.shell import present
@@ -909,11 +910,11 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self._apply_expert_mode()      # picks up a Settings toggle flipped meanwhile
         self._apply_picker_style()     # same, for Settings > Quick Match Picker
         self._apply_coin_toss_lock()   # same, for Settings > Coin Toss Before Match
-        # Settings > Wind: Advanced = a fresh random strength each time the
-        # screen opens (editable); Standard = no row, the game's own wind.
-        self.wind_power_row.setVisible(user_prefs.wind_mode == "advanced")
-        self.wind_power_row.set_values(
-            list(WIND_POWER_NAMES), index=random.randrange(len(WIND_POWER_NAMES)))
+        # Settings > Wind: Advanced = strength and direction rows (each on
+        # "random" until picked); Standard = no rows, the game's own wind.
+        advanced = user_prefs.wind_mode == "advanced"
+        self.wind_power_row.setVisible(advanced)
+        self.wind_dir_row.setVisible(advanced)
         self._on_wind_changed()
         # Re-roll which two mannequins wear the kits each time the screen is
         # opened — except the first, which uses the ones already picked (and
@@ -947,14 +948,27 @@ class MatchSetupScreen(KickoffTransition, Screen):
 
     def _on_wind_changed(self):
         """Strength None = the game's stock random wind (rolled by the
-        backend), 0 = none. The direction (relative to home, see
-        app.game_data) only matters for a set strength."""
+        backend), 0 = calm. A row left on "random" is rolled at kick-off
+        (_roll_wind). The direction (relative to home, see app.game_data)
+        only matters for a set strength."""
         power = self.wind_power_row.current() if user_prefs.wind_mode == "advanced" else None
         self.cfg.wind_power = power
-        # wind_dir_row stays hidden (random direction each match)
         direction = self.wind_dir_row.current()
         if direction is not None:
             self.cfg.wind_dir_deg = float(direction)
+
+    def _roll_wind(self):
+        """Settle the rows left on "random" for this match: the strength
+        with the weather-like spread of app.game_data.random_wind, the
+        direction any of WIND_BEARINGS."""
+        if user_prefs.wind_mode != "advanced":
+            self.cfg.wind_power = None
+            return
+        power, bearing = random_wind(random)
+        if self.wind_power_row.current() is None:
+            self.cfg.wind_power = power
+        if self.wind_dir_row.current() is None:
+            self.cfg.wind_dir_deg = bearing
 
     # ── kickoff transition hooks (ui/kickoff_transition.py) ──────────────
     def kt_columns(self):
@@ -1076,12 +1090,13 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self.focus.register(self.environment_row)
         v.addWidget(self.environment_row)
 
-        # Wind (the reR08 wind patch): strength and direction, each can be
-        # left on "random" (strength: the game's own wind; direction: a fresh
-        # one at each kick-off, see _play).
+        # Wind (the reR08 wind patch, Settings > Wind: Advanced): strength =
+        # the .mis <WIND power> band 0..10, direction relative to home. Each
+        # can be left on "random", rolled afresh at each kick-off (_roll_wind).
         self.wind_power_row = SelectorRow("wind")
-        self.wind_power_row.set_values(list(WIND_POWER_NAMES), index=0)   # re-rolled in on_show
-        self.wind_power_row._display = lambda n: WIND_POWER_NAMES.get(n, str(n))
+        self.wind_power_row.set_values([None] + list(WIND_POWER_NAMES), index=0)
+        self.wind_power_row._display = lambda n: "random" if n is None else \
+            f"{n} · {WIND_POWER_NAMES.get(n, '')}"
         self.wind_power_row.changed.connect(self._on_wind_changed)
         self.focus.register(self.wind_power_row)
         v.addWidget(self.wind_power_row)
@@ -1089,11 +1104,8 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self.wind_dir_row.set_values([None] + list(WIND_BEARINGS), index=0)
         self.wind_dir_row._display = lambda d: "random" if d is None else wind_direction_label(d)
         self.wind_dir_row.changed.connect(self._on_wind_changed)
-        # Temporarily hidden: direction stays on "random" (rolled per match
-        # in _play). Re-enable: register in focus + restore setVisible in
-        # _on_wind_changed.
+        self.focus.register(self.wind_dir_row)
         v.addWidget(self.wind_dir_row)
-        self.wind_dir_row.setVisible(False)
 
         # Only in the team-first pickers (Settings > Quick Match Picker): the
         # era both teams follow, and the two shortcuts.
@@ -1580,7 +1592,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
         else:
             self.hintbar.set_hints([
                 ("A", "select"), ("X", "home squad"), ("Y", "away squad"),
-                ("F", "advanced"), ("B", "back"),
+                ("START", "advanced"), ("B", "back"),
             ])
 
     def keyPressEvent(self, event):
@@ -1618,9 +1630,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
     def _play(self):
         if self._kickoff_running or self._toss is not None:
             return
-        # Direction left on "random": a fresh one each match.
-        if self.wind_dir_row.current() is None:
-            self.cfg.wind_dir_deg = float(random.choice(WIND_BEARINGS))
+        self._roll_wind()
         if user_prefs.coin_toss:
             from ui.coin_toss import toss_for_match
             self._toss = toss_for_match(self, self.ds, self.cfg,

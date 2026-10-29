@@ -139,6 +139,136 @@ def test_settings_screen_ratio_rows(window, qapp, monkeypatch):
     window.show_main()
 
 
+def _settings_rows(screen, tab):
+    from screens.settings import TABS
+    return {row.label.text(): row for row, _changed in screen._rows[TABS.index(tab)]}
+
+
+def test_settings_tabs_tags_and_reset(window, qapp):
+    """Tabs by topic; IN-GAME tags on the rows that only change the game; a
+    dot on a changed row until its tab is reset."""
+    from PyQt5.QtWidgets import QLabel
+    from shared.game_profile import game_profile
+    from screens.settings import TABS
+    s = window.screen_settings
+    window.show_settings()
+    qapp.processEvents()
+    assert s.tabs.titles == list(TABS)
+
+    def tagged(row):
+        return any(l.text() == "IN-GAME" for l in row.findChildren(QLabel))
+    display = _settings_rows(s, "Display")
+    assert list(display)[:3] == ["Windowed Mode", "Resolution", "Screen Ratio"]
+    assert {"Shadows", "Gamma"} <= set(display)
+    assert tagged(display["Resolution"]) and tagged(display["Screen Ratio"])
+    assert not tagged(display["Windowed Mode"])
+    audio = _settings_rows(s, "Audio")
+    assert tagged(audio["Crowd"]) and not tagged(audio["Music"])   # menu music follows it
+    assert not any(tagged(r) for r in _settings_rows(s, "Advanced").values())
+
+    default = game_profile.default("vol_crowd")
+    audio["Crowd"].set_value(default - 10 if default >= 10 else default + 10)
+    assert game_profile.get("vol_crowd") != default and audio["Crowd"].is_changed()
+    s.reset_tab(TABS.index("Audio"))
+    assert game_profile.get("vol_crowd") == default
+    assert not _settings_rows(s, "Audio")["Crowd"].is_changed()
+    window.show_main()
+
+
+def test_settings_keyboard(window, qapp):
+    """Left/Right change the row, Q/E switch tabs, Y asks before resetting, Esc goes back."""
+    from PyQt5.QtCore import Qt
+    from PyQt5.QtTest import QTest
+    from shared.game_profile import game_profile
+    from screens.settings import TABS
+    from ui.editor_kit import ConfirmDialog
+    s = window.screen_settings
+    window.show_settings()
+    qapp.processEvents()
+    s.tabs.set_index(TABS.index("Audio"))
+    row = _settings_rows(s, "Audio")["Crowd"]
+    before = game_profile.get("vol_crowd")
+    QTest.keyClick(row, Qt.Key_Left if before else Qt.Key_Right)
+    assert game_profile.get("vol_crowd") == (before - 5 if before else 5)
+    QTest.keyClick(row, Qt.Key_E)
+    assert s.tabs.index() == TABS.index("Gameplay")
+    QTest.keyClick(s.tabs, Qt.Key_Q)
+    assert s.tabs.index() == TABS.index("Audio")
+
+    QTest.keyClick(s.tabs, Qt.Key_Y)
+    dialog = next(d for d in s.findChildren(ConfirmDialog) if d.isVisible())
+    dialog.choose("reset")
+    assert game_profile.get("vol_crowd") == game_profile.default("vol_crowd")
+
+    row = _settings_rows(s, "Audio")["Crowd"]
+    QTest.keyClick(row, Qt.Key_Escape)
+    assert window.screens.currentWidget() is not s
+    window.show_main()
+
+
+def _pad(window, qapp, key):
+    """A pad button: its key, sent where app.gamepad sends it."""
+    from app.gamepad import send_key
+    send_key(key, window.screens.currentWidget)
+    for _ in range(3):
+        qapp.processEvents()
+
+
+def test_pad_leaves_a_card_list_inside_a_scroll_area(window, qapp):
+    """Down moves from card to card instead of scrolling the list holding them."""
+    from PyQt5.QtCore import Qt
+    from PyQt5.QtWidgets import QApplication
+    window.show_challenge_mode()
+    qapp.processEvents()
+    screen = window.screen_challenge_mode
+    tiles = [t for t in screen._tiles if t.isVisible()]
+    assert len(tiles) >= 2
+    tiles[0].setFocus()
+    _pad(window, qapp, Qt.Key_Down)
+    assert QApplication.focusWidget() is tiles[1]
+    _pad(window, qapp, Qt.Key_Escape)
+    assert window.screens.currentWidget() is not screen
+    window.show_main()
+
+
+def test_pad_about_goes_back(window, qapp):
+    from PyQt5.QtCore import Qt
+    window.show_main()
+    window.show_about()
+    qapp.processEvents()
+    _pad(window, qapp, Qt.Key_Down)                         # scrolls, stays
+    assert window.screens.currentWidget() is window.screen_about
+    _pad(window, qapp, Qt.Key_Escape)
+    assert window.screens.currentWidget() is not window.screen_about
+    window.show_main()
+
+
+def test_pad_y_removes_the_focused_row(window, qapp):
+    """A row's ✕ is past fields that keep Left/Right: Y presses it."""
+    from PyQt5.QtCore import Qt
+    from PyQt5.QtWidgets import QApplication, QAbstractButton
+    window.show_challenge_editor()
+    qapp.processEvents()
+    screen = window.screen_challenge_editor
+
+    def removers():
+        return [b for b in screen.findChildren(QAbstractButton)
+                if b.property("removesRow") and b.isVisible()]
+    next(b for b in screen.findChildren(QAbstractButton)
+         if b.text() == "+ CHALLENGE OBJECTIVE").click()     # the row Y takes away again
+    qapp.processEvents()
+    before = removers()
+    assert before
+    row = before[0].parentWidget()
+    field = next(w for w in screen.focus.alive() if row.isAncestorOf(w) and w is not before[0])
+    field.setFocus()
+    _pad(window, qapp, Qt.Key_Y)
+    assert len(removers()) == len(before) - 1
+    focus = QApplication.focusWidget()
+    assert focus is not None and focus.isVisible() and screen.isAncestorOf(focus)
+    window.show_main()
+
+
 def test_updates_screen_installs_and_undoes(window, qapp, tmp_path):
     """Install shows what the update changes, then writes it; undo puts it back."""
     import zipfile
@@ -407,3 +537,36 @@ def test_dialog_ok_is_one_click_while_typing(qapp):
     assert got == ["ok"]
     assert field.value() == "away 2009"
     screen.close()
+
+
+def test_team_editor_shirt_names_tab(window, qapp):
+    """The Shirt names tab: switching names on, dragging the name area and
+    picking a kit colour edit the season through the undo stack, and save."""
+    from screens.team_tabs import TAB_NAMES
+    window.open_team("10001", "2024")
+    _wait(qapp, lambda: window.screen_team_editor.record_id == "10001", 10)
+    editor = window.screen_team_editor
+    editor.shell.tabs.set_index(TAB_NAMES)
+    tab = editor.tabs[TAB_NAMES]
+    for _ in range(10):
+        qapp.processEvents()
+    assert not editor.session.working["2024"].get("shirtNames")
+    assert not editor.session.is_dirty()             # looking edits nothing
+
+    tab.enabled.edited.emit("on")
+    assert editor.session.working["2024"]["shirtNames"] == {"enabled": True}
+    tab.font.edited.emit("Oswald")
+    tab.canvas.area_changed.emit([0.2, 0.15, 0.6, 0.08])
+    block = editor.session.working["2024"]["shirtNames"]
+    assert block["placement"] == "custom" and block["area"] == [0.2, 0.15, 0.6, 0.08]
+    kit = tab.kit_name
+    tab.color.edited.emit("#ffffff")
+    assert editor.session.working["2024"]["kits"][kit]["shirtName"] == {"color": "#ffffff"}
+    tab._render()                                    # the preview copes with the fixture's backs
+    editor.undo()
+    assert "shirtName" not in editor.session.working["2024"]["kits"][kit]
+    assert editor.save()
+    # saved (into the data pack or the user's edits, as the save target says)
+    assert window.data.teams["10001"]["2024"]["shirtNames"]["font"] == "Oswald"
+    editor.edit("names off", lambda w: w["2024"].pop("shirtNames"))
+    assert editor.save()
