@@ -10,7 +10,8 @@ picker next to the season picker switches every tab to that variant as it
 resolves; edits made there are stored as the variant's differences only.
 
 Tabs: Overview (identity, crest, a summary of what the game will get),
-Kits (ordered list, live preview, files), Squad & roles (the team sheet —
+Kits (ordered list, live preview, files), Shirt names (players' names on
+the back: lettering, name area, colours per kit), Squad & roles (the team sheet —
 list order IS the shirt number), Match-day assets (ball, banners, pads,
 secondary logos).
 """
@@ -29,7 +30,8 @@ from app.game_data import (
 from app.season import season_label
 from screens.editor_base import EditorScreen
 from screens.team_tabs import (
-    OverviewTab, KitsTab, SquadTab, AssetsTab, TAB_OVERVIEW, TAB_KITS, TAB_SQUAD, TAB_ASSETS,
+    OverviewTab, KitsTab, ShirtNamesTab, SquadTab, AssetsTab, TAB_OVERVIEW, TAB_KITS, TAB_NAMES,
+    TAB_SQUAD, TAB_ASSETS,
     PADS_ENABLED,
 )
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QWidget
@@ -46,7 +48,7 @@ from shared.config import config
 
 
 class TeamEditorScreen(EditorScreen):
-    TAB_TITLES = ["Overview", "Kits", "Squad & roles", "Other"]
+    TAB_TITLES = ["Overview", "Kits", "Shirt names", "Squad & roles", "Other"]
     RECORD_NOUN = "team"
     LIST_PLACEHOLDER = "filter teams"
     MID_PANE = True
@@ -60,7 +62,8 @@ class TeamEditorScreen(EditorScreen):
 
         self._build_season_pane()
         self.tabs = [OverviewTab(self, TAB_OVERVIEW), KitsTab(self, TAB_KITS),
-                     SquadTab(self, TAB_SQUAD), AssetsTab(self, TAB_ASSETS)]
+                     ShirtNamesTab(self, TAB_NAMES), SquadTab(self, TAB_SQUAD),
+                     AssetsTab(self, TAB_ASSETS)]
         # Squad variants only hold players, roles and set plays, so their
         # picker lives on the squad tab (kit variants have their own, on the
         # kits tab).
@@ -185,6 +188,7 @@ class TeamEditorScreen(EditorScreen):
             self.season = seasons[-1] if seasons else None
         self.tabs[TAB_KITS].kit_index = 0
         self.tabs[TAB_KITS].kit_variant = V.DEFAULT
+        self.tabs[TAB_NAMES].kit_name = None
         self.tabs[TAB_SQUAD].selected_shirt = 1
         self.tabs[TAB_SQUAD].set_carrying(None)
         if self.variant not in V.variant_ids(self.session.working.get(self.season, {})):
@@ -297,9 +301,30 @@ class TeamEditorScreen(EditorScreen):
                 for field in ("frontKitFile", "backKitFile", "previewFile"):
                     if field in over:
                         check(f"kits.{name}.variants.{vid}.{field}", over[field], field)
+        issues += self._shirt_name_issues(info, root)
         return issues
 
+    @staticmethod
+    def _shirt_name_issues(info, root):
+        from shared import shirt_names as SN
+        block = info.get("shirtNames") or {}
+        if not block.get("enabled"):
+            return []
+        out = []
+        font = block.get("font")
+        if font and not SN.resolve_font(font, root)[2]:
+            out.append(("shirtNames.font", f"shirt names: font {font} not found "
+                        f"({SN.DEFAULT_FONT} is used)", "warn"))
+        for name, kit in (info.get("kits") or {}).items():
+            back = kit.get("backKitFile", "")
+            if back and "%" not in back:
+                out.append((f"shirtNames.kits.{name}", f"shirt names: the {name} kit's back "
+                            "numbers are one .fsh file, names need a PNG series", "info"))
+        return out
+
     def tab_for_issue(self, key):
+        if key.startswith(("shirtNames", "shirtName.")):
+            return TAB_NAMES
         if key.startswith("kits"):
             return TAB_KITS
         if key.startswith(("players", "roles", "setPlays")):
