@@ -782,6 +782,7 @@ class ShirtNamesTab(TeamTab):
     def __init__(self, screen, index):
         super().__init__(screen, index)
         self.kit_name = None          # kit shown (and whose colours are edited)
+        self.kit_variant = V.DEFAULT  # its variant, if it has the picked one
         self.preview_shirt = 10       # whose back is shown
         self.try_name = ""            # a name typed to test the lettering (not stored)
         self._printer = None
@@ -812,6 +813,11 @@ class ShirtNamesTab(TeamTab):
         self.kit_pick.popup_title = "kit to preview"
         self.kit_pick.edited.connect(self._pick_kit)
         pgrid.add(self.kit_pick)
+        self.variant_pick = ChoiceField("Kit variant", allow_blank=True, blank_label="Default",
+                                        display=lambda v: V.kit_variant_label(self._stored_kit(), v))
+        self.variant_pick.popup_title = "kit variant"
+        self.variant_pick.edited.connect(self._pick_kit_variant)
+        pgrid.add(self.variant_pick)
         self.shirt_pick = ChoiceField("Preview shirt", [str(n) for n in range(1, SQUAD_SIZE + 1)],
                                       allow_blank=False, display=self._shirt_label)
         self.shirt_pick.popup_title = "whose back"
@@ -820,7 +826,7 @@ class ShirtNamesTab(TeamTab):
         self.try_field = TextField("Try a name", placeholder="type to test a long name")
         self.try_field.edited.connect(self._try)
         pgrid.add(self.try_field)
-        for w in (self.kit_pick, self.shirt_pick, self.try_field):
+        for w in (self.kit_pick, self.variant_pick, self.shirt_pick, self.try_field):
             screen.focus.register(w)
         left.add(pgrid)
         self.left_note = Note("", color=FG_TERTIARY)
@@ -932,9 +938,18 @@ class ShirtNamesTab(TeamTab):
             self.kit_name = name if name in kits else next(iter(kits), None)
         return self.kit_name
 
+    def _stored_kit(self):
+        name = self._current_kit()
+        return self._kits().get(name) or {} if name else {}
+
+    def _current_variant(self):
+        """The picked kit variant if the shown kit has it, else "" (the plain kit)."""
+        vid = self.kit_variant
+        return vid if vid in V.kit_variant_ids(self._stored_kit()) else V.DEFAULT
+
     def _kit_dict(self):
         name = self._current_kit()
-        return V.resolve_kit(self._kits().get(name) or {}) if name else {}
+        return V.resolve_kit(self._kits().get(name) or {}, self._current_variant()) if name else {}
 
     def _style(self):
         return SN.season_style_for(self.info(), self._kit_dict())
@@ -973,6 +988,13 @@ class ShirtNamesTab(TeamTab):
         name = self._current_kit()
         if name is None:
             return
+        vid = self._current_variant()
+        if vid:
+            self.edit(f"{name} kit ({vid}) {label}",
+                      lambda i: T.edit_kit_variant(
+                          i["kits"][name], vid, lambda k: T.set_kit_shirt_name(k, key, value)),
+                      f"shirtName.{key}")
+            return
         self.edit(f"{name} kit {label}",
                   lambda i: T.set_kit_shirt_name(i["kits"][name], key, value),
                   f"shirtName.{key}")
@@ -987,6 +1009,10 @@ class ShirtNamesTab(TeamTab):
 
     def _pick_kit(self, name):
         self.kit_name = name
+        self.refresh()
+
+    def _pick_kit_variant(self, vid):
+        self.kit_variant = vid or V.DEFAULT
         self.refresh()
 
     def _pick_shirt(self, value):
@@ -1033,8 +1059,13 @@ class ShirtNamesTab(TeamTab):
         style = self._style()
         block = self._season_block()
         on = style["enabled"]
+        vid = self._current_variant()
         self.kit_pick.set_options(list(kits))
         self.kit_pick.set_value(name or "")
+        ids = V.kit_variant_ids(self._stored_kit())
+        self.variant_pick.set_options(ids)
+        self.variant_pick.set_value(self._current_variant())
+        self.variant_pick.setEnabled(bool(ids))
         self.shirt_pick.set_value(str(self.preview_shirt))
         self.enabled.set_value("on" if on else "off")
         self.text_mode.set_value(style["text"])
@@ -1050,12 +1081,13 @@ class ShirtNamesTab(TeamTab):
             w.set_value(str(int(style[key])))
             w.set_hint("")
         self.placement.set_value(style["placement"])
-        kit_block = (kits.get(name) or {}).get("shirtName") or {}
+        kit_block = self._kit_dict().get("shirtName") or {}
         self.color.set_value(kit_block.get("color", ""))
         self.outline.set_value(kit_block.get("outline", ""))
         self.outline_w.set_value(str(int(style["outlineWidth"])) if style["outlineWidth"] else "")
         self.outline_w.set_hint("none")
-        self.colours_card.set_title(f"colours · {name} kit" if name else "colours")
+        self.colours_card.set_title(f"colours · {name} kit" + (f" · {V.kit_variant_label(self._stored_kit(), vid)}"
+                                      if vid else "") if name else "colours")
         for w in (self.text_mode, self.case, self.font, self.size, self.spacing, self.arch,
                   self.placement, self.color, self.outline, self.outline_w):
             w.setEnabled(on)
