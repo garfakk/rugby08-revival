@@ -333,7 +333,7 @@ def restart_xz(data: dict, kicker: str):
     out = min(max(float(spot["metres_out"]), 0.0), 2 * TRY_LINE_Z)
     across = min(max(float(spot.get("across") or 0), -TOUCHLINE_X), TOUCHLINE_X)
     # Facing the +Z goal, +X is on the right (Direct3D left-handed frame).
-    return round(sign * across, 1), round(sign * (TRY_LINE_Z - out), 1)
+    return round(sign * across, 1) + 0.0, round(sign * (TRY_LINE_Z - out), 1) + 0.0   # +0.0: no "-0.0"
 
 
 def start_state(data: dict, kicker: str):
