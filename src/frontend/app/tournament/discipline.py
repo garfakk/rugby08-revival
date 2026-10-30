@@ -40,6 +40,10 @@ def _discipline(t, fixture, result, rng):
     # reality mode: the real bans come from reality.py, only the real
     # yellows still add up toward a yellow-card ban
     real = result.source == "real"
+    # a result typed in by hand says who is banned and for how long
+    # (manual.py): no rolled length, no random citing
+    manual = result.source == "manual"
+    chosen = (result.extra.get("manual") or {}).get("bans") or {}
     r = rules(t)
     for side in (result.home, result.away):
         for line in side.players:
@@ -48,8 +52,14 @@ def _discipline(t, fixture, result, rng):
                 continue
             if line.red_cards and not real:
                 lo, hi = r["red_ban"]
-                _ban(t, p, side.team_id, lo + int(round((hi - lo) * rng.random() ** 2)), "red card")
+                n = chosen.get(line.pid)
+                if n is None:
+                    n = lo + int(round((hi - lo) * rng.random() ** 2))
+                if n > 0:
+                    _ban(t, p, side.team_id, n, "red card")
                 continue
+            if line.pid in chosen and chosen[line.pid] > 0:
+                _ban(t, p, side.team_id, chosen[line.pid], "cited for foul play")
             if line.yellow_cards and r["yellow_accumulation"]:
                 d = component(p, "discipline")
                 d["yellows"] = d.get("yellows", 0) + line.yellow_cards
@@ -57,7 +67,7 @@ def _discipline(t, fixture, result, rng):
                     d["yellows"] = 0
                     _ban(t, p, side.team_id, r["yellow_ban"], f"{r['yellow_accumulation']} yellow cards")
         # a citing for something the referee missed
-        if r["citing_chance"] and not real and rng.random() < r["citing_chance"]:
+        if r["citing_chance"] and not real and not manual and rng.random() < r["citing_chance"]:
             played = [t.players[l.pid] for l in side.players
                       if l.minutes > 0 and not l.red_cards and l.pid in t.players]
             if played:

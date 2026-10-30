@@ -785,11 +785,8 @@ class MainWindow(QMainWindow):
     def show_main(self):
         if self.tournament and self._tournament_fixture:
             # Left the game screen mid tournament match (no result came
-            # back): nothing is recorded, back to the tournament.
-            self._tournament_fixture = None
-            self.tournament.abandon_game()
-            self.show_tournament("The match was abandoned, so nothing was recorded. "
-                                 "Play it again or simulate it.")
+            # back): the match is forfeited.
+            self.show_tournament(self._forfeit_tournament_match())
             return
         self.screens.show_screen(self.screen_main, push_history=False)
         self.screens.reset_history()
@@ -966,7 +963,7 @@ class MainWindow(QMainWindow):
 
         t = session.t
         venue = report.venue_name(self.data, fixture) or (cfg.stadium or {}).get("data", {}).get("name", "")
-        stage = " · ".join(x for x in (fixture.label or fixture.round_name, fixture.group) if x)
+        stage = fixture.label or fixture.round_name
         self.screen_presentation.present(Presentation(
             title=t.name, breadcrumb="tournament · match",
             eyebrow=stage or t.template.get("name", "tournament"),
@@ -980,19 +977,17 @@ class MainWindow(QMainWindow):
             home=side(cfg.home), away=side(cfg.away),
             on_kit=set_kit, on_kickoff=kickoff, on_back=back,
             controlled=lambda: {c.get("zone") for c in cfg.controllers.values()},
-            on_edit_squad=edit_squad))
+            on_edit_squad=edit_squad,
+            play_label="PERFORM TOSS" if user_prefs.coin_toss else "KICK OFF"))
         self.screens.show_screen(self.screen_presentation)
 
     def _record_tournament_result(self, result):
         """A tournament match just ended in the game. Returns the message for
         the dashboard ("" when it was recorded: the recap shows it)."""
         session, fixture = self.tournament, self._tournament_fixture
-        self._tournament_fixture = None
         if not result or result.get("finished") is False:
-            session.abandon_game()
-            minute = (result or {}).get("minute")
-            when = f" (stopped at {minute} min)" if minute else ""
-            return f"The match wasn't completed{when}, so nothing was recorded. Play it again or simulate it."
+            return self._forfeit_tournament_match((result or {}).get("minute"))
+        self._tournament_fixture = None
         from screens.tournament import moments
         before = moments.snapshot(session.t)
         done = session.finish_game(fixture, result)
@@ -1000,6 +995,24 @@ class MainWindow(QMainWindow):
         # of the matchday, the table) instead of a line of text
         self.screen_tournament.queue_moments(before, done)
         return ""
+
+    def _forfeit_tournament_match(self, minute=None):
+        """The user left a tournament match before full time: their team
+        forfeits it (the template's walkover score). Returns the message
+        for the dashboard."""
+        session, fixture = self.tournament, self._tournament_fixture
+        self._tournament_fixture = None
+        when = f" at {minute} min" if minute else ""
+        humans = [tid for tid in (fixture.home, fixture.away) if session.t.teams[tid].human]
+        if len(humans) != 1:
+            # both sides managed: no way to tell who walked off
+            session.abandon_game()
+            return f"The match was left{when}, so nothing was recorded. Play it again."
+        from screens.tournament import moments
+        before = moments.snapshot(session.t)
+        done = session.forfeit(fixture, humans[0])
+        self.screen_tournament.queue_moments(before, done)
+        return f"{session.t.team_name(humans[0])} left the match{when} and forfeited it."
 
     def show_roster_import(self):
         self.screens.show_screen(self.screen_roster_import)

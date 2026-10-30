@@ -61,11 +61,10 @@ class TournamentSession:
 
     # ── simulation ──
     def advance_to_human(self) -> list:
-        """Simulate AI fixtures until a user's match is due; returns them."""
-        f = self.human_fixture()
-        if self.t.finished or (f and not any(
-                not g.played and g.ready and g.date and f.date and g.date < f.date
-                and not engine.is_human_fixture(self.t, g) for g in self.today())):
+        """Simulate whole rounds of AI fixtures until a user's match is due;
+        returns them. The due round's earlier kick-offs wait for the user's
+        match (begin_game / prepare), so one recap shows one round."""
+        if self.t.finished or self.human_fixture():
             return []        # nothing to do: keep the undo point we have
         self._checkpoint()
         done = engine.simulate_until_human(self.t)
@@ -76,7 +75,7 @@ class TournamentSession:
         """Simulate a (user) fixture, then the rest of its matchday."""
         self._checkpoint()
         engine.simulate_fixture(self.t, fixture)
-        done = [fixture] + engine.simulate_day(self.t) + engine.simulate_earlier(self.t)
+        done = [fixture] + engine.simulate_day(self.t)
         self.save()
         return done
 
@@ -87,7 +86,9 @@ class TournamentSession:
 
     # ── playing in the game ──
     def begin_game(self, fixture):
-        """Selections ready + crash snapshot; returns (MatchConfig, repairs)."""
+        """Selections ready + crash snapshot; returns (MatchConfig, repairs).
+        The round's AI matches kicking off earlier are played first."""
+        engine.simulate_earlier(self.t)
         repairs = engine.prepare_fixture(self.t, fixture)
         self.save()
         persistence.snapshot(self.t, "prematch")
@@ -95,9 +96,9 @@ class TournamentSession:
         # Settings > Wind: Advanced has no match setup here to set it, so
         # the fixture gets its own wind (seeded: the same fixture always
         # gets the same wind, even after BACK). Standard leaves it None —
-        # the game's stock random wind.
+        # the game's stock random wind. A closed roof has set it to 0.
         from shared.user_prefs import user_prefs
-        if user_prefs.wind_mode == "advanced":
+        if user_prefs.wind_mode == "advanced" and cfg.wind_power is None:
             from app.game_data import random_wind
             cfg.wind_power, cfg.wind_dir_deg = random_wind(engine.fixture_rng(self.t, fixture, "wind"))
         return cfg, repairs
@@ -108,14 +109,16 @@ class TournamentSession:
         result = bridge.from_game_result(self.t, fixture, game_result,
                                          engine.fixture_rng(self.t, fixture, "game"))
         engine.record_result(self.t, fixture, result)
-        done = [fixture] + engine.simulate_day(self.t) + engine.simulate_earlier(self.t)
+        done = [fixture] + engine.simulate_day(self.t)
         persistence.drop_snapshot(self.t.id, "prematch")
         self.save()
         return done
 
     def prepare(self, fixture):
         """Selections ready for a fixture without playing or simulating it
-        (the manual result form lists the players of both squads)."""
+        (the manual result form lists the players of both squads), after
+        the round's earlier kick-offs."""
+        engine.simulate_earlier(self.t)
         engine.prepare_fixture(self.t, fixture)
         self.save()
 
@@ -123,7 +126,7 @@ class TournamentSession:
         """Record a result typed in by hand, then simulate the rest of the day."""
         self._checkpoint()
         engine.record_result(self.t, fixture, result)
-        done = [fixture] + engine.simulate_day(self.t) + engine.simulate_earlier(self.t)
+        done = [fixture] + engine.simulate_day(self.t)
         self.save()
         return done
 
@@ -133,7 +136,7 @@ class TournamentSession:
     def forfeit(self, fixture, losing_team) -> list:
         self._checkpoint()
         engine.record_result(self.t, fixture, bridge.forfeit_result(self.t, fixture, losing_team))
-        done = [fixture] + engine.simulate_day(self.t) + engine.simulate_earlier(self.t)
+        done = [fixture] + engine.simulate_day(self.t)
         persistence.drop_snapshot(self.t.id, "prematch")
         self.save()
         return done

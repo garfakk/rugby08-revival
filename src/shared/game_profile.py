@@ -200,10 +200,8 @@ SECTIONS = (
         Setting("antialiasing", "Antialiasing", 0x25C, "choice", size=4, shift=15, bits=3,
                 choices=_choices("Off", "2x", "4x", "8x"), default=3),
         Setting("gamma", "Gamma", 0x260, "range"),
-        Setting("screen_x", "Screen Centre Horizontal", 0x218, "range", size=2, bits=16,
-                signed=True, minimum=-32, maximum=32),
-        Setting("screen_y", "Screen Centre Vertical", 0x21A, "range", size=2, bits=16,
-                signed=True, minimum=-32, maximum=32),
+        # Not offered: the screen centre offsets (u16 at 0x218 / 0x21A, -32..32)
+        # stay at the profile template's. An old game_profile.ini value is ignored.
     )),
 )
 

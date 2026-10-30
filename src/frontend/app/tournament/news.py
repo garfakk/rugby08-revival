@@ -42,11 +42,19 @@ def _result(t, fixture, result, rng):
 def _stage(t, stage):
     if stage.kind != "round_robin":
         return
+    last = stage is t.stages[-1]
     for g in stage.groups:
         tab = standings.group_table(t, stage, g)
-        if tab:
-            t.add_news("stage", f"{g.name} won by {t.team_name(tab[0].team_id)}"
-                       f" ({tab[0].points} pts)", [tab[0].team_id])
+        if not tab:
+            continue
+        top, pts = t.team_name(tab[0].team_id), f"({tab[0].points} pts)"
+        if len(stage.groups) > 1:
+            t.add_news("stage", f"{g.name} won by {top} {pts}", [tab[0].team_id])
+        elif last:
+            # a league with no knockouts: the table decides the title
+            t.add_news("champion", f"{top} win the {t.name}! {pts}", [tab[0].team_id])
+        else:
+            t.add_news("stage", f"{top} finish top of the table {pts}", [tab[0].team_id])
 
 
 @on("tournament_completed", priority=90)

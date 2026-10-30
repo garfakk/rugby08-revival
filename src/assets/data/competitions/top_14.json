@@ -1,5 +1,6 @@
 {
   "id": "top_14",
+  "category": "Top 14",
   "name": "Top 14",
   "order": 40,
   "description": "The French clubs, home and away, then the six-team play-offs: barrages, semi-finals, final at the Stade de France.",
@@ -114,22 +115,5 @@
         }
       ]
     }
-  ],
-  "participants": {
-    "default": {
-      "league": {
-        "A": [
-          "10101",
-          "10102",
-          "10103",
-          "2026",
-          "2029",
-          "2030",
-          "2024",
-          "2025",
-          "2027"
-        ]
-      }
-    }
-  }
+  ]
 }

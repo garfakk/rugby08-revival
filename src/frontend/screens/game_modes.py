@@ -26,11 +26,11 @@ class GameModesScreen(Screen):
         menu = QVBoxLayout()
         menu.setSpacing(10)
         menu.addStretch(1)
-        for title, slot, soon in (
-            ("CHALLENGE MODE", on_challenge, False),
-            ("TOURNAMENT", on_tournament, True),
+        for title, slot in (
+            ("CHALLENGE MODE", on_challenge),
+            ("TOURNAMENT", on_tournament),
         ):
-            tile = MenuTile(title, soon=soon)
+            tile = MenuTile(title)
             if slot is not None:
                 tile.activated.connect(slot)
             self.focus.register(tile)

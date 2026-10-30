@@ -12,9 +12,9 @@ A template can pin a real calendar instead (a historical tournament):
   * round-robin stage: "fixtures": [{"date": "2023-09-08", "group": "A",
     "home": "10001", "away": "1010", "stadium": "70"}, ...] — used while
     each group's teams are the ones those fixtures name, give or take
-    MAX_STAND_INS teams the wizard put in for teams missing from the data
-    (an edited or shuffled draw falls back to the generated rounds, and the
-    knockout dates are then dropped too);
+    MAX_STAND_INS teams put in for others or left out (missing from the
+    data: their fixtures are dropped); a draw changed further falls back
+    to the generated rounds, and the knockout dates are then dropped too;
   * knockout tie as a dict: {"teams": [...], "date": ..., "stadium": ...}.
   The dates become matchdays in date order, a weekend's dates sharing one
   (a Six Nations round). Unknown keys (e.g. "venue", "real_score") are
@@ -49,9 +49,10 @@ def _day_map(dates, start_day, teams_on=None, round_of=None):
 
 def _fixed_fixtures(spec, groups):
     """The spec's pinned fixtures if they cover these groups' teams, else
-    None. A group may have at most MAX_STAND_INS teams that the fixtures
-    don't name (a team missing from the data, replaced in the wizard): each
-    takes over one unnamed team's fixtures, so the real calendar is kept."""
+    None. A group may differ from the fixtures by at most MAX_STAND_INS
+    teams: a team put in for one the fixtures name takes over its fixtures,
+    and a team left out (missing from the data) has its fixtures dropped,
+    so the real calendar is kept."""
     fixtures = spec.get("fixtures") or []
     if not fixtures or not all(f.get("date") and f.get("group") for f in fixtures):
         return None
@@ -62,18 +63,19 @@ def _fixed_fixtures(spec, groups):
     actual = {g.id: list(g.teams) for g in groups}
     if set(named) != set(actual):
         return None
-    swap = {}
+    swap, dropped = {}, set()
     for gid, teams in actual.items():
         gone = [t for t in named[gid] if t not in teams]
         new = [t for t in teams if t not in named[gid]]
-        if len(gone) != len(new) or len(gone) > MAX_STAND_INS or len(named[gid]) != len(teams):
+        if len(new) > len(gone) or len(gone) > MAX_STAND_INS:
             return None
         swap.update({(gid, old): stand_in for old, stand_in in zip(gone, new)})
-    if not swap:
+        dropped.update(gone[len(new):])
+    if not swap and not dropped:
         return fixtures
     return [dict(f, home=swap.get((f["group"], str(f["home"])), str(f["home"])),
                  away=swap.get((f["group"], str(f["away"])), str(f["away"])))
-            for f in fixtures]
+            for f in fixtures if str(f["home"]) not in dropped and str(f["away"]) not in dropped]
 
 
 def round_robin(teams, legs=1) -> list:
@@ -85,7 +87,7 @@ def round_robin(teams, legs=1) -> list:
     if len(teams) < 2:
         return []
     if len(teams) % 2:
-        teams.append(None)
+        teams.insert(0, None)       # the bye is the fixed slot: every team rotates
     n = len(teams)
     fixed, rotating = teams[0], teams[1:]
     rounds = []
@@ -96,12 +98,13 @@ def round_robin(teams, legs=1) -> list:
             a, b = line[i], line[n - 1 - i]
             if a is None or b is None:
                 continue
-            # Alternate the fixed team's venue; for the rest, alternate by
-            # round parity so nobody hosts every week.
+            # Alternate the fixed team's venue; for the rest, the venue
+            # follows the pair's slot: a team moves one slot a round, so it
+            # alternates home and away and hosts half its games.
             if i == 0:
                 pairs.append((a, b) if r % 2 == 0 else (b, a))
             else:
-                pairs.append((a, b) if (r + i) % 2 else (b, a))
+                pairs.append((a, b) if i % 2 else (b, a))
         rounds.append(pairs)
         rotating = rotating[-1:] + rotating[:-1]
     if legs >= 2:
@@ -120,6 +123,11 @@ def build_stage(spec, participants) -> Stage:
             label = names.get(gid) if isinstance(names, dict) else None
             stage.groups.append(Group(id=gid, name=label or f"Pool {gid}", teams=list(teams)))
     return stage
+
+
+def _label(group_name, round_name, groups) -> str:
+    """"Pool A · Round 2"; just "Round 2" in a stage that is one league."""
+    return f"{group_name} · {round_name}" if groups > 1 else round_name
 
 
 def schedule_stage(t, stage, start_day) -> int:
@@ -147,7 +155,8 @@ def schedule_stage(t, stage, start_day) -> int:
                     id=f"{stage.id}-{fx['group']}-{i + 1}", stage_id=stage.id, day=day,
                     home=str(fx["home"]), away=str(fx["away"]), group=fx["group"],
                     round_id=f"d{day - start_day + 1}", round_name=f"Round {day - start_day + 1}",
-                    label=f"{names.get(fx['group'], fx['group'])} · Round {day - start_day + 1}",
+                    label=_label(names.get(fx['group'], fx['group']), f"Round {day - start_day + 1}",
+                                 len(stage.groups)),
                     neutral=neutral, stadium_id=str(fx.get("stadium") or ""),
                     match_subtype=subtype, date=str(fx["date"])))
             return max(days.values()) + 1
@@ -161,7 +170,7 @@ def schedule_stage(t, stage, start_day) -> int:
                     t.fixtures.append(Fixture(
                         id=f"{stage.id}-{g.id}-r{r + 1}-{i + 1}", stage_id=stage.id, day=day,
                         home=home, away=away, group=g.id, round_id=f"r{r + 1}",
-                        round_name=f"Round {r + 1}", label=f"{g.name} · Round {r + 1}",
+                        round_name=f"Round {r + 1}", label=_label(g.name, f"Round {r + 1}", len(stage.groups)),
                         neutral=neutral, match_subtype=subtype))
         return last + 1
     # knockout: each round is a day — or, when every tie is dated, each date

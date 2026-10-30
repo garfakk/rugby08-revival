@@ -5,12 +5,14 @@ A compact modal panel over the calling screen that runs
 app/coin_toss.CoinToss step by step, with as little text as possible: the
 coin spins on its own (the call is made for the caller), the result reads
 YOU WON THE TOSS / YOU LOST THE TOSS, and after a short beat the other
-team's choice is announced ("SAMOA CHOSE TO KICK OFF"). The player only
-gets the choice that is theirs (a button).
+team's choice is announced ("SAMOA CHOSE TO KICK OFF").
 
 The coin is rugby-faced: heads carries the goalposts (the "H"), tails a
-ball. Under it, a small pitch shows both ends and the match wind — what the
-end choice is really about — and, once picked, which team takes which end.
+ball. Under it, the pitch shows both ends and the match wind — what the end
+choice is really about — and is where the player decides, in one click:
+an end to take it, halfway to kick off (only the choice that is theirs).
+Hovering an option shows the crests where it puts them. KICK OFF then
+starts the match.
 
     run_coin_toss(screen, names, humans, on_done, on_cancel, wind)
     toss_for_match(screen, ds, cfg, on_done, on_cancel)   # names/humans/wind from a MatchConfig
@@ -27,16 +29,18 @@ from PyQt5.QtGui import (
     QPainter, QColor, QFont, QPen, QRadialGradient, QBrush, QPolygonF,
     QPainterPath, QTransform, QLinearGradient, QFontMetrics,
 )
-from PyQt5.QtCore import Qt, QTimer, QVariantAnimation, QEasingCurve, QRectF, QPointF, QEvent, QSize
+from PyQt5.QtCore import (Qt, QTimer, QVariantAnimation, QEasingCurve, QRectF, QPointF, QEvent, QSize,
+                          pyqtSignal)
 
 from app.coin_toss import (
     CoinToss, HEADS, TAILS, KICK_OFF, CHOOSE_END, LEFT, RIGHT,
 )
+from app.game_data import WIND_POWER_NAMES
 from app.input import Action, KEYMAP
 from ui import StyledButton
 from ui.broadcast import Card, eyebrow_label, label_css
 from ui.theme import (
-    ACCENT, HOME_TINT, AWAY_TINT, FG_PRIMARY, FG_TERTIARY, GREEN, DANGER_LITE,
+    ACCENT, HOME_TINT, AWAY_TINT, FG_PRIMARY, FG_TERTIARY, GREEN, DANGER_LITE, WARN,
     FONT_DISPLAY, FONT_BODY, BTN_HEIGHT,
 )
 
@@ -344,31 +348,127 @@ TOTAL_LEN = FIELD_LEN + 2 * IN_GOAL
 POST_GAP, CROSSBAR_H, POST_H, PAD_H = 5.6, 3.0, 16.0, 1.8
 
 
+KICK = "kick"           # the halfway option: elect to kick off
+
+
 class PitchWidget(QWidget):
     """The pitch to scale in broadcast perspective (camera behind the near
     touchline): mow stripes that lose saturation and gain haze with depth,
     every Law 1 marking drawn over a soft glow, posts that catch the light
-    on both try lines, the in-goals tinted with the team taking each end
-    once known, and the wind as a badge plus an arrow on the grass —
-    NO WIND when calm, RANDOM WIND when the game rolls its own."""
+    on both try lines, and the wind: a badge with its strength (a ten-step
+    gauge) and, when it blows, an arrow on the grass sized by it.
+
+    It is also where the toss is decided, in one click: offer() makes the
+    ends and/or halfway clickable (and steppable with Left/Right). The
+    hovered option lights up in the picker's colour and the crests show
+    what it means — who takes which end, who kicks off from halfway.
+    picked(option) fires with LEFT, RIGHT or KICK. Once decided,
+    set_result() keeps the crests on their ends and the kicker's on
+    halfway.
+
+    The wind is drawn fixed to the pitch, blowing as for home attacking
+    right; toss_for_match turns it round when home takes the other end, so
+    the end picked here really is with or against it."""
 
     DEPTH = 0.55        # how much the far touchline shrinks (0 = flat plan)
+    picked = pyqtSignal(str)
 
     def __init__(self, wind_power=None, wind_deg=0.0, parent=None):
         super().__init__(parent)
-        self.setFixedSize(400, 150)
+        self.setFixedSize(660, 270)
+        self.setMouseTracking(True)
         self.wind_power = wind_power        # None = stock random, 0 = calm
         self.wind_deg = wind_deg or 0.0
-        self.ends = {}          # {LEFT: (name, tint), RIGHT: (name, tint)}
-        # The wind bearing is relative to home (see app.game_data): its arrow
-        # follows the way home attacks, right until the ends are known.
-        self.home_attacks_right = True
+        self.crests = {}        # {side: QPixmap}
+        self.names = {}         # {side: name}
+        self.ends = {}          # {LEFT: side, RIGHT: side} once decided
+        self.kicker = None      # the side kicking off, once known
+        self.options = []       # clickable now: LEFT / KICK / RIGHT
+        self.picker = None      # the side choosing
+        self.hover = None
 
-    def set_ends(self, ends, home_end=None):
-        self.ends = ends
-        if home_end is not None:
-            self.home_attacks_right = home_end == LEFT
+    # ── state ────────────────────────────────────────────────────────────
+    def set_teams(self, names, crests):
+        self.names, self.crests = dict(names), dict(crests or {})
         self.update()
+
+    def offer(self, options, picker, kicker=None):
+        """Make `options` clickable for `picker`; `kicker` when already
+        known (they elected to kick off: only the end is left to pick)."""
+        self.options = [o for o in (LEFT, KICK, RIGHT) if o in options]
+        self.picker, self.kicker, self.hover = picker, kicker, None
+        self.update()
+
+    def clear_offer(self):
+        self.options, self.hover = [], None
+        self.setCursor(Qt.ArrowCursor)
+        self.update()
+
+    def set_result(self, ends, kicker):
+        self.clear_offer()
+        self.ends, self.kicker = dict(ends), kicker
+        self.update()
+
+    def step(self, delta):
+        """Left/Right on a pad or keyboard: the next option along."""
+        if not self.options:
+            return
+        if self.hover not in self.options:
+            self.hover = self.options[0 if delta > 0 else -1]
+        else:
+            i = self.options.index(self.hover) + delta
+            self.hover = self.options[max(0, min(len(self.options) - 1, i))]
+        self.update()
+
+    def pick(self, option=None):
+        option = option or self.hover
+        if option in self.options:
+            self.clear_offer()
+            self.picked.emit(option)
+
+    def _shown(self):
+        """(ends, kicker) to draw: the hovered option's outcome, else what
+        is decided."""
+        if self.hover is None or self.picker is None:
+            return self.ends, self.kicker
+        rival = "away" if self.picker == "home" else "home"
+        if self.hover == KICK:
+            return {}, self.picker
+        other_end = RIGHT if self.hover == LEFT else LEFT
+        return {self.hover: self.picker, other_end: rival}, self.kicker or rival
+
+    # ── hit areas (pitch metres) ─────────────────────────────────────────
+    def _area(self, option):
+        L, G = TOTAL_LEN, IN_GOAL
+        if option == LEFT:
+            return self._poly(-1, G + 22)
+        if option == RIGHT:
+            return self._poly(L - G - 22, L + 1)
+        return self._poly(L / 2 - 8, L / 2 + 8)
+
+    def _option_at(self, pos):
+        for option in self.options:
+            if self._area(option).containsPoint(QPointF(pos), Qt.OddEvenFill):
+                return option
+        return None
+
+    def mouseMoveEvent(self, event):
+        hover = self._option_at(event.pos())
+        if hover != self.hover and (hover or self.options):
+            self.hover = hover
+            self.update()
+        self.setCursor(Qt.PointingHandCursor if hover else Qt.ArrowCursor)
+
+    def leaveEvent(self, event):
+        if self.hover is not None:
+            self.hover = None
+            self.update()
+
+    def mousePressEvent(self, event):
+        option = self._option_at(event.pos())
+        if option:
+            self.pick(option)
+        event.accept()
 
     # pitch metres -> widget pixels (a homography: straight lines stay straight)
     def _scale(self, y):
@@ -376,7 +476,7 @@ class PitchWidget(QWidget):
 
     def _pt(self, x, y):
         near_w = self.width() - 8
-        top, bottom = 20.0, self.height() - 20.0
+        top, bottom = 40.0, self.height() - 30.0
         t = y / FIELD_W
         k = self.DEPTH
         sy = bottom - (bottom - top) * t * (1 + k) / (1 + k * t)
@@ -392,8 +492,10 @@ class PitchWidget(QWidget):
     def paintEvent(self, event):
         p = QPainter(self)
         p.setRenderHint(QPainter.Antialiasing)
+        p.setRenderHint(QPainter.SmoothPixmapTransform)
         p.setPen(Qt.NoPen)
         L, G = TOTAL_LEN, IN_GOAL
+        ends, kicker = self._shown()
 
         # Turf: base, then 10 m mow stripes in three depth bands that lose
         # saturation toward the camera horizon — the aerial haze pass below
@@ -409,13 +511,12 @@ class PitchWidget(QWidget):
                 p.drawPolygon(self._poly(G + i * 10, G + (i + 1) * 10, y0, y1))
         p.setOpacity(1.0)
 
-        # In-goals: darker turf, tinted by depth band once a team owns the end.
+        # In-goals: darker turf, tinted by depth band for the team taking the end.
         for end, x0 in ((LEFT, 0), (RIGHT, L - G)):
-            p.setOpacity(1.0)
             p.setBrush(_IN_GOAL_GRASS)
             p.drawPolygon(self._poly(x0, x0 + G))
-            if end in self.ends:
-                tint = QColor(self.ends[end][1])
+            if end in ends:
+                tint = QColor(_TINT[ends[end]])
                 for y0, y1, alpha in ((0.0, 24.0, 107), (24.0, 47.0, 87), (47.0, FIELD_W, 66)):
                     t = QColor(tint)
                     t.setAlpha(alpha)
@@ -427,6 +528,8 @@ class PitchWidget(QWidget):
         p.drawPolygon(self._poly(-2, L + 2, 40, FIELD_W + 2))
         p.setBrush(QColor(_HAZE.red(), _HAZE.green(), _HAZE.blue(), 26))
         p.drawPolygon(self._poly(-2, L + 2, 54, FIELD_W + 2))
+
+        self._paint_options(p)
 
         # Markings: a soft glow under every solid line, then the line itself.
         p.setBrush(Qt.NoBrush)
@@ -458,11 +561,76 @@ class PitchWidget(QWidget):
             for x in (G + 5, L - G - 5):
                 self._line(p, x, y - 1, x, y + 1)
 
-        self._paint_wind(p)
+        self._paint_wind_arrow(p)
         for x in (G, L - G):
             self._paint_posts(p, x)
-        self._paint_labels(p)
+        self._paint_crests(p, ends, kicker)
         self._paint_vignette(p)
+        self._paint_wind_badge(p)
+
+    def _paint_options(self, p):
+        """The clickable areas: a faint outline each, the hovered one filled
+        in the picker's colour with a bright edge."""
+        if not self.options:
+            return
+        tint = QColor(_TINT.get(self.picker, FG_PRIMARY))
+        for option in self.options:
+            area = self._area(option)
+            if option == self.hover:
+                fill = QColor(tint)
+                fill.setAlpha(70)
+                p.setBrush(fill)
+                p.setPen(QPen(tint, 2.4))
+            else:
+                p.setBrush(QColor(255, 255, 255, 14))
+                edge = QPen(QColor(255, 255, 255, 110), 1.2, Qt.CustomDashLine)
+                edge.setDashPattern([3, 3])
+                p.setPen(edge)
+            p.drawPolygon(area)
+            caption = {LEFT: "THIS END", RIGHT: "THIS END", KICK: "KICK OFF"}[option]
+            x = {LEFT: (IN_GOAL + 22) / 2, RIGHT: TOTAL_LEN - (IN_GOAL + 22) / 2, KICK: TOTAL_LEN / 2}[option]
+            at = self._pt(x, 0)
+            self._pill(p, QRectF(at.x() - 42, at.y() + 6, 84, 18), caption,
+                       tint if option == self.hover else QColor(FG_PRIMARY),
+                       tint if option == self.hover else QColor(255, 255, 255, 60))
+
+    def _paint_crests(self, p, ends, kicker):
+        """A crest on each end taken, the kicker's on halfway with a ball."""
+        mid = FIELD_W * 0.38            # nearer half: the wind arrow has the far one
+        for end, x in ((LEFT, IN_GOAL / 2 + 5), (RIGHT, TOTAL_LEN - IN_GOAL / 2 - 5)):
+            if end in ends:
+                self._crest(p, ends[end], self._pt(x, mid), 54)
+        if kicker:
+            at = self._pt(TOTAL_LEN / 2, mid)
+            self._crest(p, kicker, at, 50)
+            ball = QRectF(at.x() + 20, at.y() + 10, 16, 11)
+            p.save()
+            p.translate(ball.center())
+            p.rotate(-20)
+            p.translate(-ball.center())
+            p.setPen(QPen(QColor(60, 40, 20), 1))
+            p.setBrush(QColor("#f1e7d0"))
+            p.drawEllipse(ball)
+            p.restore()
+
+    def _crest(self, p, side, at, size):
+        """The team's crest on a dark disc ringed in its colour (a coloured
+        disc with its initial when there is no crest)."""
+        ring = QColor(_TINT[side])
+        r = size / 2
+        p.setPen(QPen(ring, 2))
+        p.setBrush(QColor(8, 14, 20, 200))
+        p.drawEllipse(at, r, r)
+        pix = self.crests.get(side)
+        if pix is not None and not pix.isNull():
+            inner = int(size * 0.74)
+            p.drawPixmap(QRectF(at.x() - inner / 2, at.y() - inner / 2, inner, inner), pix,
+                         QRectF(pix.rect()))
+        else:
+            p.setPen(ring)
+            p.setFont(QFont(FONT_DISPLAY, int(size * 0.32), QFont.Bold))
+            p.drawText(QRectF(at.x() - r, at.y() - r, size, size), Qt.AlignCenter,
+                       (self.names.get(side) or side)[:1].upper())
 
     def _paint_posts(self, p, x):
         """Uprights rise straight up the screen from the try line, sized by
@@ -498,74 +666,81 @@ class PitchWidget(QWidget):
         p.setPen(QPen(_POST_INK, 2.2, Qt.SolidLine, Qt.RoundCap))
         p.drawLine(QPointF(b0.x(), b0.y() - bar0), QPointF(b1.x(), b1.y() - bar1))
 
-    def _paint_wind(self, p):
-        """Wind read out as a badge, the direction as an arrow on the grass."""
-        p.setFont(QFont(FONT_DISPLAY, 9, QFont.Bold))
-        badge = QRectF(self.width() / 2 - 62, 3, 124, 19)
+    def _paint_wind_arrow(self, p):
+        """The wind's direction as an arrow on the grass, longer and thicker
+        the stronger it blows. None when calm or left to the game."""
         if not self.wind_power:
-            self._pill(p, badge, "RANDOM WIND" if self.wind_power is None else "NO WIND",
-                       QColor(FG_TERTIARY), QColor(255, 255, 255, 36))
             return
+        power = min(10, self.wind_power)
         rad = math.radians(self.wind_deg % 360)
-        along, across = math.cos(rad), math.sin(rad)      # toward home's attack end / home's right
-        face = 1 if self.home_attacks_right else -1
-        dx, dy = along * face, -across * face
-        length = 18 + self.wind_power * 2.2
-        cx, cy = TOTAL_LEN / 2, FIELD_W / 2 + 8
+        dx, dy = math.cos(rad), -math.sin(rad)      # toward home's attack end (right) / home's right
+        length = 16 + power * 3.2
+        width = 2.5 + power * 0.55
+        cx, cy = TOTAL_LEN / 2, FIELD_W * 0.78
         tail = (cx - dx * length / 2, cy - dy * length / 2)
         tip = (cx + dx * length / 2, cy + dy * length / 2)
         nx, ny = -dy, dx
-        head = 8.0
+        head = 6.0 + power * 0.6
         back = (tip[0] - dx * head, tip[1] - dy * head)
         ink = _WIND_INK
-        p.setPen(QPen(QColor(143, 211, 244, 90), 2, Qt.SolidLine, Qt.RoundCap))
-        p.drawLine(self._pt(tail[0] - dx * 6, tail[1] - dy * 6),
-                   self._pt(tail[0] - dx * 2, tail[1] - dy * 2))   # motion streaks
-        p.setPen(QPen(QColor(0, 0, 0, 90), 6, Qt.SolidLine, Qt.RoundCap))
+        streak = QPen(QColor(143, 211, 244, 90), 2, Qt.SolidLine, Qt.RoundCap)
+        p.setPen(streak)
+        for k in range(min(3, 1 + power // 3)):                 # motion streaks, more in a gale
+            off = (k - 1) * 3.5
+            p.drawLine(self._pt(tail[0] - dx * (5 + 3 * k) + nx * off, tail[1] - dy * (5 + 3 * k) + ny * off),
+                       self._pt(tail[0] - dx * 1.5 + nx * off, tail[1] - dy * 1.5 + ny * off))
+        p.setPen(QPen(QColor(0, 0, 0, 90), width + 3, Qt.SolidLine, Qt.RoundCap))
         p.drawLine(self._pt(*tail), self._pt(*back))
-        p.setPen(QPen(ink, 3.2, Qt.SolidLine, Qt.RoundCap))
+        p.setPen(QPen(ink, width, Qt.SolidLine, Qt.RoundCap))
         p.drawLine(self._pt(*tail), self._pt(*back))
         p.setPen(Qt.NoPen)
         p.setBrush(ink)
+        spread = head * 0.75
         p.drawPolygon(QPolygonF([self._pt(*tip),
-                                 self._pt(back[0] + nx * head * 0.7, back[1] + ny * head * 0.7),
+                                 self._pt(back[0] + nx * spread, back[1] + ny * spread),
                                  self._pt(back[0] + dx * 1.5, back[1] + dy * 1.5),
-                                 self._pt(back[0] - nx * head * 0.7, back[1] - ny * head * 0.7)]))
-        self._pill(p, badge, f"WIND {self.wind_power}", ink, QColor(143, 211, 244, 90))
+                                 self._pt(back[0] - nx * spread, back[1] - ny * spread)]))
+
+    def _paint_wind_badge(self, p):
+        """WIND 6 · STRONG GALE and a ten-step gauge, NO WIND when calm,
+        RANDOM WIND when the game rolls its own."""
+        if not self.wind_power:
+            text = "RANDOM WIND" if self.wind_power is None else "NO WIND"
+            self._pill(p, QRectF(self.width() / 2 - 60, 4, 120, 26), text,
+                       QColor(FG_TERTIARY), QColor(255, 255, 255, 36), size=9)
+            return
+        power = min(10, self.wind_power)
+        text = f"WIND {power} · {WIND_POWER_NAMES.get(power, '').upper()}"
+        p.setFont(QFont(FONT_DISPLAY, 9, QFont.Bold))
+        text_w = QFontMetrics(p.font()).horizontalAdvance(text)
+        gauge_w = 10 * 8
+        w = text_w + gauge_w + 40
+        rect = QRectF(self.width() / 2 - w / 2, 4, w, 26)
+        p.setPen(QPen(QColor(143, 211, 244, 110), 1))
+        p.setBrush(QColor(10, 18, 26, 210))
+        p.drawRoundedRect(rect, 11, 11)
+        p.setPen(_WIND_INK)
+        p.drawText(QRectF(rect.left() + 14, rect.top(), text_w + 2, rect.height()), Qt.AlignVCenter, text)
+        x0 = rect.right() - 14 - gauge_w
+        p.setPen(Qt.NoPen)
+        for i in range(10):
+            h = 5 + i * 1.0
+            bar = QRectF(x0 + i * 8, rect.center().y() + 7 - h, 6, h)
+            if i < power:
+                p.setBrush(_WIND_INK if i < 4 else QColor(WARN) if i < 7 else QColor(DANGER_LITE))
+            else:
+                p.setBrush(QColor(255, 255, 255, 34))
+            p.drawRect(bar)
 
     @staticmethod
-    def _pill(p, rect, text, ink, border):
+    def _pill(p, rect, text, ink, border, size=8):
         """A rounded badge: dark glass fill, thin border, centred lettering."""
         p.setPen(QPen(border, 1))
         p.setBrush(QColor(10, 18, 26, 184))
         p.drawRoundedRect(rect, rect.height() / 2, rect.height() / 2)
         p.setPen(ink)
-        p.setFont(QFont(FONT_DISPLAY, 8, QFont.Bold))
+        p.setFont(QFont(FONT_DISPLAY, size, QFont.Bold))
         p.drawText(rect, Qt.AlignCenter, text)
-
-    def _paint_labels(self, p):
-        """Each end as a pill with the team's colour dot and name (or a
-        neutral LEFT/RIGHT END until the toss has been decided)."""
-        h = self.height()
-        for end, x in ((LEFT, 6), (RIGHT, self.width() - 6)):
-            name, tint = self.ends.get(end, ("", FG_TERTIARY))
-            label = (f"END · {name.upper()}" if name else f"{end.upper()} END")
-            ink = QColor(tint)
-            fm = QFontMetrics(QFont(FONT_DISPLAY, 8, QFont.Bold))
-            w = fm.horizontalAdvance(label) + 22
-            rect = QRectF(x, h - 21, w, 16)
-            if end == RIGHT:
-                rect.moveLeft(self.width() - 6 - w)
-            p.setPen(QPen(QColor(ink.red(), ink.green(), ink.blue(), 102), 1))
-            p.setBrush(QColor(8, 14, 20, 178))
-            p.drawRoundedRect(rect, 8, 8)
-            p.setPen(Qt.NoPen)
-            p.setBrush(ink)
-            p.drawEllipse(QPointF(rect.left() + 9, rect.center().y()), 3, 3)
-            p.setPen(ink)
-            p.setFont(QFont(FONT_DISPLAY, 8, QFont.Bold))
-            p.drawText(QRectF(rect.left() + 16, rect.top(), rect.width() - 16, rect.height()),
-                       Qt.AlignVCenter, label)
 
     def _paint_vignette(self, p):
         """Focus the pitch: darker corners, untouched centre."""
@@ -580,10 +755,12 @@ class PitchWidget(QWidget):
 
 # ── overlay ──────────────────────────────────────────────────────────────
 class CoinTossOverlay(QWidget):
-    def __init__(self, screen, names, humans, on_done, on_cancel=None, wind=(None, 0.0), toss=None):
+    def __init__(self, screen, names, humans, on_done, on_cancel=None, wind=(None, 0.0), toss=None,
+                 crests=None):
         super().__init__(screen)
         self.screen = screen
         self.names = names              # {"home": "...", "away": "..."}
+        self.crests = crests or {}      # {"home": QPixmap, "away": QPixmap}
         self.humans = set(humans)       # sides the player controls
         self.on_done = on_done
         self.on_cancel = on_cancel
@@ -608,7 +785,7 @@ class CoinTossOverlay(QWidget):
         row.addStretch(1)
 
         self.card = Card(stripe=ACCENT)
-        self.card.setFixedWidth(500)
+        self.card.setFixedWidth(740)
         v = QVBoxLayout(self.card)
         v.setContentsMargins(30, 18, 30, 22)
         v.setSpacing(8)
@@ -636,6 +813,8 @@ class CoinTossOverlay(QWidget):
 
         v.addSpacing(4)
         self.pitch = PitchWidget(*self._wind)
+        self.pitch.set_teams(self.names, self.crests)
+        self.pitch.picked.connect(self._on_pick)
         v.addWidget(self.pitch, alignment=Qt.AlignHCenter)
         v.addSpacing(6)
 
@@ -748,12 +927,24 @@ class CoinTossOverlay(QWidget):
             self._show(self._verdict("YOU WON THE TOSS" if won else "YOU LOST THE TOSS", won))
         else:
             self._show(f"{self._team(winner)} WIN THE TOSS")
+        self._set_buttons([])
         if winner in self.humans:
-            self._set_buttons([("KICK OFF", lambda: self._on_decision(KICK_OFF), None),
-                               ("CHOOSE END", lambda: self._on_decision(CHOOSE_END), None)])
+            self.sub.setText("Click the end you want, or halfway to kick off")
+            self.pitch.offer((LEFT, KICK, RIGHT), winner)
         else:
-            self._set_buttons([])
             self._later(lambda: self._on_decision(self.toss.cpu_decision()))
+
+    def _on_pick(self, option):
+        """A click on the pitch: the winner's one-click choice (an end, or
+        halfway to kick off), or the end left to pick."""
+        if self.toss.decision is None:
+            if option == KICK:
+                self._on_decision(KICK_OFF)
+            else:
+                self.toss.decision = CHOOSE_END
+                self._on_end(option)
+        elif option in (LEFT, RIGHT):
+            self._on_end(option)
 
     def _on_decision(self, decision):
         self.toss.decision = decision
@@ -765,11 +956,12 @@ class CoinTossOverlay(QWidget):
             self._show(f"{self._side(winner)} KICK OFF")
         else:
             self._show("CHOOSE YOUR END" if chooser == self._you() else f"{self._team(chooser)} CHOOSE AN END")
+        self._set_buttons([])
         if chooser in self.humans:
-            self._set_buttons([("◀  LEFT END", lambda: self._on_end(LEFT), None),
-                               ("RIGHT END  ▶", lambda: self._on_end(RIGHT), None)])
+            self.sub.setText("Click the end you want")
+            self.pitch.offer((LEFT, RIGHT), chooser, kicker=self.toss.kicker)
         else:
-            self._set_buttons([])
+            self.pitch.clear_offer()
             self._later(lambda: self._on_end(self.toss.cpu_end()))
 
     def _on_end(self, end):
@@ -778,9 +970,7 @@ class CoinTossOverlay(QWidget):
         chooser, kicker = self.toss.end_chooser, result["kick_off"]
         home_end = result["home_team_side"]
         away_end = RIGHT if home_end == LEFT else LEFT
-        self.pitch.set_ends({home_end: (self.names.get("home", "home"), HOME_TINT),
-                             away_end: (self.names.get("away", "away"), AWAY_TINT)},
-                            home_end=home_end)
+        self.pitch.set_result({home_end: "home", away_end: "away"}, kicker)
         if chooser not in self.humans:
             # the other team's pick, and who kicks off when that is news
             # (the player chose to kick off: no need to say it again)
@@ -789,7 +979,7 @@ class CoinTossOverlay(QWidget):
                        f"{self._side(kicker)} KICK OFF" if news else "")
         else:
             self._show(f"{self._side(kicker)} KICK OFF")
-        self._set_buttons([("CONTINUE", lambda: self._finish(result), None)])
+        self._set_buttons([("KICK OFF", lambda: self._finish(result), None)])
 
     def _finish(self, result):
         self._close()
@@ -817,7 +1007,11 @@ class CoinTossOverlay(QWidget):
     # ── input ────────────────────────────────────────────────────────────
     def keyPressEvent(self, event):
         action = KEYMAP.get(event.key())
-        if action in (Action.NAV_UP, Action.NAV_DOWN, Action.NAV_LEFT, Action.NAV_RIGHT):
+        if self.pitch.options and action in (Action.NAV_LEFT, Action.NAV_RIGHT):
+            self.pitch.step(-1 if action == Action.NAV_LEFT else 1)
+        elif self.pitch.options and action == Action.CONFIRM:
+            self.pitch.pick()
+        elif action in (Action.NAV_UP, Action.NAV_DOWN, Action.NAV_LEFT, Action.NAV_RIGHT):
             self.screen.focus.move(action)
         elif action == Action.CONFIRM:
             w = QApplication.focusWidget()
@@ -832,8 +1026,8 @@ class CoinTossOverlay(QWidget):
         event.accept()
 
 
-def run_coin_toss(screen, names, humans, on_done, on_cancel=None, wind=(None, 0.0)):
-    overlay = CoinTossOverlay(screen, names, humans, on_done, on_cancel, wind)
+def run_coin_toss(screen, names, humans, on_done, on_cancel=None, wind=(None, 0.0), crests=None):
+    overlay = CoinTossOverlay(screen, names, humans, on_done, on_cancel, wind, crests=crests)
     overlay.start()
     return overlay
 
@@ -843,13 +1037,28 @@ def toss_for_match(screen, ds, cfg, on_done, on_cancel=None):
     controls and the wind come from `cfg`; on_done receives a copy of `cfg`
     carrying the toss's kick_off / home_team_side (the original is left as
     it was, so the screen's own rows keep their values for when the toss is
-    turned off)."""
+    turned off).
+
+    The wind bearing is relative to home's attack (app.game_data); the
+    pitch shows it as for home attacking right (home_team_side left). When
+    the toss gives home the other end, the bearing is turned round so the
+    wind keeps blowing the way it was shown: the end picked is really with
+    or against it."""
+    from screens.tournament.common import team_crest
+
     def name(slot):
         info = slot.info(ds)
         return info.get("name") or slot.team_id or ""
 
+    def done(result):
+        out = replace(cfg, **result)
+        if out.wind_power and result["home_team_side"] != LEFT:
+            out.wind_dir_deg = (cfg.wind_dir_deg + 180.0) % 360.0
+        on_done(out)
+
     names = {"home": name(cfg.home), "away": name(cfg.away)}
+    crests = {side: team_crest(ds, slot.team_id, slot.season, 64, names[side], slot.variant)
+              for side, slot in (("home", cfg.home), ("away", cfg.away))}
     humans = {c.get("zone") for c in cfg.controllers.values()} & {"home", "away"}
-    return run_coin_toss(screen, names, humans,
-                         lambda result: on_done(replace(cfg, **result)), on_cancel,
-                         wind=(cfg.wind_power, cfg.wind_dir_deg))
+    return run_coin_toss(screen, names, humans, done, on_cancel,
+                         wind=(cfg.wind_power, cfg.wind_dir_deg), crests=crests)

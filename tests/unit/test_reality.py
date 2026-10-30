@@ -165,5 +165,8 @@ def test_wizard_offers_reality_mode_only_where_it_can_be_played(qapp, ds, data_d
     assert not any("real draw" in p for p in w._step_problems()[1])
     w._go(1)
     w._start()
+    assert not created                                   # no team taken for you
+    w._toggle_human(parts["pools"]["A"][0])
+    w._start()
     assert created and created[0].t.options["reality"] is True and created[0].t.components["reality"]
     w.close()

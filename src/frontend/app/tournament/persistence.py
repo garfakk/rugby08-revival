@@ -61,7 +61,15 @@ def migrate(data: dict) -> dict:
 
 
 def _from_data(data) -> Tournament:
-    return Tournament.from_dict(migrate(data))
+    t = Tournament.from_dict(migrate(data))
+    # older saves labelled a one-league stage's fixtures "Table · Round 2"
+    for stage in t.stages:
+        if stage.kind == "round_robin" and len(stage.groups) == 1:
+            prefix = f"{stage.groups[0].name} · "
+            for f in t.fixtures:
+                if f.stage_id == stage.id and f.label.startswith(prefix):
+                    f.label = f.label[len(prefix):]
+    return t
 
 
 def save(t: Tournament) -> None:

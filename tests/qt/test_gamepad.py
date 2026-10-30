@@ -29,8 +29,8 @@ def sent(monkeypatch):
 
 def _navigator(qapp, enabled=lambda: True):
     class Idle:
-        def pressed(self):
-            return set()
+        def pads(self):
+            return {}
     nav = gp.GamepadNavigator(Idle(), enabled=enabled)
     nav._timer.stop()
     return nav
@@ -57,7 +57,7 @@ def test_buttons_held_while_disabled_do_not_fire(qapp, sent):
     """The A that started a match is still down when the menus come back."""
     on = {"value": False}
     nav = _navigator(qapp, enabled=lambda: on["value"])
-    nav._source.pressed = lambda: {"a"}
+    nav._source.pads = lambda: {0: {"a"}}
     nav.poll()
     on["value"] = True
     nav.poll()
@@ -77,7 +77,8 @@ def test_linux_joystick_events():
     read, write = os.pipe()
     os.set_blocking(read, False)
     src = gp.LinuxJoystickSource.__new__(gp.LinuxJoystickSource)
-    src._fds, src._buttons, src._axes, src._stick_held = [read], set(), {}, set()
+    src._fds, src._buttons, src._axes, src._stick_held = {0: read}, {0: set()}, {0: {}}, {0: set()}
+    src._next_scan = float("inf")                         # no /dev/input/js* looked for
     event = struct.Struct("<IhBB")
     os.write(write, event.pack(0, 1, 0x01 | 0x80, 0)      # A down (initial state)
              + event.pack(0, 32767, 0x02, 7)              # d-pad down

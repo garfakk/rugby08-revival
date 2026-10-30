@@ -50,8 +50,10 @@ def test_reality_replays_history(real_ds, templates, tid):
     ok, why = reality.available(tpl, known_teams=real_ds.teams)
     if not ok:
         pytest.skip(f"{tid}: {why}")
+    # the edition's draw: a team the data doesn't have is left out (RWC 2019 / 2023)
+    edition = next(e for eds in formats.editions(real_ds, {tid: tpl}).values() for e in eds)
     t = engine.create_tournament(real_ds, copy.deepcopy(tpl), str(tpl.get("season") or ""),
-                                 options={"reality": True}, seed=3)
+                                 edition.participants, options={"reality": True}, seed=3)
     engine.simulate_to_end(t)
     real = [f for f in t.fixtures if f.result and f.result.source == "real"]
     assert len(real) == len(t.fixtures), [f.id for f in t.fixtures if f.result.source != "real"]

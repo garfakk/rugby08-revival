@@ -75,7 +75,13 @@ def _visible_buttons(d):
     return [b for b in (d.primary_btn, d.more_btn, d.details_btn) if b.isVisible()]
 
 
-def test_home_shows_one_primary_action(dash, session):
+@pytest.fixture
+def expert(monkeypatch):
+    from shared.user_prefs import user_prefs
+    monkeypatch.setattr(user_prefs, "expert_mode", True)
+
+
+def test_home_shows_one_primary_action(dash, session, expert):
     session.advance_to_human()
     dash.refresh()
     assert session.human_fixture() is not None
@@ -88,7 +94,42 @@ def test_home_shows_one_primary_action(dash, session):
     assert dash.played == [session.human_fixture()]
 
 
-def test_more_menu_lists_the_secondary_actions(qapp, dash, session):
+def test_simulating_your_match_is_expert_only(dash, session):
+    session.advance_to_human()
+    dash.refresh()
+    data = [d for _l, d, _s in dash._more_items()]
+    assert "simulate" not in data and "sim_end" not in data
+
+
+def test_expert_actions_are_tagged(qapp, dash, session, expert):
+    session.advance_to_human()
+    dash.refresh()
+    dash._more_menu()
+    qapp.processEvents()
+    tags = {r.data: r.tag for r in dash._more_popup._rows}
+    assert tags["simulate"] == tags["sim_end"] == "EXPERT"
+    dash._more_popup.close_popup()
+
+
+def test_match_simulation_form(qapp, ds, session):
+    from screens.tournament.manual_result import ManualResultView
+    session.advance_to_human()
+    f = session.human_fixture()
+    session.prepare(f)
+    view = ManualResultView(session.t, f)
+    assert view.result().source == "manual" and view.result().home.points == 0
+    view.auto_generate()
+    generated = view.result()
+    assert generated.source == "sim" and "manual" in generated.extra
+    # an edit turns it into a typed-in result with the same lines
+    view.home.add_row()
+    view.home.rows[-1].set_event({"minute": 79, "kind": "try", "pid": view.home.players[0][0]})
+    edited = view.result()
+    assert edited.source == "manual" and edited.home.points == generated.home.points + 5
+    view.deleteLater()
+
+
+def test_more_menu_lists_the_secondary_actions(qapp, dash, session, expert):
     from ui.dropdown import PopupList
     session.advance_to_human()
     dash.refresh()
@@ -215,15 +256,26 @@ def test_intro_skips_to_the_dashboard(qapp, ds, session):
     intro.close()
 
 
-def test_hub_details_toggle(qapp, ds, session):
+def test_hub_previews_the_focused_entry(qapp, ds, session):
+    """The preview follows the list's focus: the save's team, next match and
+    options; NEW TOURNAMENT's competitions, its button starting the wizard."""
     from screens.tournament import TournamentHubScreen
-    hub = TournamentHubScreen(ds, on_back=lambda: None, on_new=lambda: None, on_open=lambda *a: None)
+    from ui.editor_kit import Note
+    news = []
+    hub = TournamentHubScreen(ds, on_back=lambda: None, on_new=lambda: news.append(1),
+                              on_open=lambda *a: None)
     hub.resize(1600, 900)
     hub.show()
     hub.on_show()
-    assert len(hub._cards) == 1 and hub.d_more.isHidden()
-    hub.more_btn.click()
-    assert not hub.d_more.isHidden() and hub.d_opts.text()
+    assert len(hub._cards) == 1 and hub._selected["id"] == session.t.id
+    texts = " ".join(n.text() for n in hub.detail.findChildren(Note))
+    assert session.t.team_name(HUMAN) and "v " in texts and "halves" in texts
+    assert hub.continue_btn.text() == "CONTINUE" and hub.delete_btn.isVisibleTo(hub)
+    hub.new_tile.setFocus()
+    hub._select(None)
+    assert not hub.delete_btn.isVisibleTo(hub)
+    hub.continue_btn.click()
+    assert news
     hub.close()
 
 
@@ -271,7 +323,7 @@ def test_your_matches_open_the_report_with_stats(qapp, dash, session):
     again[-1].choose("ok")
 
 
-def test_post_match_reveals_stats(qapp, no_motion):
+def test_post_match_shows_stats(qapp, no_motion):
     from screens.post_match import PostMatchScreen
     screen = PostMatchScreen(lambda: None, lambda: None, lambda: None)
     screen.resize(1600, 900)
@@ -279,15 +331,8 @@ def test_post_match_reveals_stats(qapp, no_motion):
     result = {"team_A": {"score": {"points": 12, "tries": 2}, "stats": {"scrums_won": 4}, "players": []},
               "team_B": {"score": {"points": 3, "penalties": 1}, "stats": {}, "players": []}}
     screen.set_result({"team_A": {"name": "A"}, "team_B": {"name": "B"}}, result)
-    assert not screen.stats_shown() and screen.stats_btn.isVisible()
-    QTest.keyClick(screen, Qt.Key_X)
-    assert screen.stats_shown() and screen.stats.progress == 1.0
+    assert screen.stats_card.isVisible() and screen.stats.progress == 1.0
     assert ("TRIES", 2, 0) in screen.stats.rows
-    QTest.keyClick(screen, Qt.Key_X)
-    assert not screen.stats_shown()
-    screen.toggle_stats()
-    screen.set_result({"team_A": {}, "team_B": {}}, result)            # next match: hidden again
-    assert not screen.stats_shown()
-    screen.set_result({"team_A": {}, "team_B": {}}, None)              # no result: nothing to reveal
-    assert not screen.stats_btn.isVisible()
+    screen.set_result({"team_A": {}, "team_B": {}}, None)              # no result: said so
+    assert screen.stats.rows == [("NO RESULT READ FROM THE GAME", 0, 0)]
     screen.close()

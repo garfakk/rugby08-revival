@@ -1,5 +1,6 @@
 {
   "id": "premiership",
+  "category": "Premiership",
   "name": "English Premiership",
   "order": 30,
   "description": "12 clubs, home and away, then semi-finals (1v4, 2v3) and a final at Twickenham.",
@@ -97,25 +98,5 @@
         }
       ]
     }
-  ],
-  "participants": {
-    "default": {
-      "league": {
-        "A": [
-          "2007",
-          "2009",
-          "2011",
-          "2013",
-          "2014",
-          "2015",
-          "2016",
-          "2017",
-          "2019",
-          "2020",
-          "2021",
-          "2022"
-        ]
-      }
-    }
-  }
+  ]
 }

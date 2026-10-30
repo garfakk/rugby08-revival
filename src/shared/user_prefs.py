@@ -87,8 +87,9 @@ class UserPrefs:
         self.game_windowed = False
         # Expert mode: reveals unfinished features (shown disabled, "coming
         # soon") that are hidden from normal users, and the tournament's
-        # manual result entry. Not in Settings: opt in with `expert_mode =
-        # true` in the prefs file.
+        # match simulation (auto-generated or typed-in results of your own
+        # matches). Each such feature carries an "EXPERT" tag (theme.EXPERT).
+        # Not in Settings: opt in with `expert_mode = true` in the prefs file.
         self.expert_mode = False
         # Logging level chosen in Settings (DEBUG / INFO / WARNING / ERROR);
         # "" = not chosen, so R08_LOG_LEVEL / config.ini / INFO apply.
@@ -129,6 +130,9 @@ class UserPrefs:
         # (season, category, team), "team_first", "browser", "timeline",
         # "era", "leagues". Settings > Quick Match Picker.
         self.match_picker = "classic"
+        # The difficulty a match starts on (app/difficulty.py LEVELS): quick
+        # match, a new tournament, a challenge. Settings > Preferred Difficulty.
+        self.difficulty = "elite"
         self._load()
 
     def _load(self):
@@ -155,6 +159,8 @@ class UserPrefs:
             self.check_updates = cp.getboolean(_SECTION, "check_updates", fallback=self.check_updates)
             self.match_picker = cp.get(_SECTION, "match_picker", fallback=self.match_picker).strip().lower() \
                 or "classic"
+            self.difficulty = cp.get(_SECTION, "difficulty", fallback=self.difficulty).strip().lower() \
+                or "elite"
             mode = cp.get(_SECTION, "wind_mode", fallback=self.wind_mode).strip().lower()
             mode = "standard" if mode == "default" else mode      # older name
             if mode in ("standard", "advanced"):
@@ -203,6 +209,7 @@ class UserPrefs:
                         "animations": str(self.animations),
                         "check_updates": str(self.check_updates),
                         "match_picker": self.match_picker,
+                        "difficulty": self.difficulty,
                         "wind_mode": self.wind_mode}
         if not self.screen_ratio_set:
             # left out until chosen, so the first launch still detects it

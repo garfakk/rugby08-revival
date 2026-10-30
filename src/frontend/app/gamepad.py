@@ -14,6 +14,11 @@ A key goes to the focused widget, else to the current screen (`fallback`).
 The keys carry no text, so X or Y on a text field acts on the screen instead
 of typing a letter. Nothing is sent while `enabled()` says no: in a match the
 game reads the pads itself.
+
+Each pad is also told apart (its index: connection order, the order the game
+numbers them): `pad_pressed` reports which pad pressed what, and a `claim`
+callback can keep a pad's press for itself instead of the key (the
+controllers board: every pad moves its own icon).
 """
 import ctypes
 import os
@@ -21,7 +26,8 @@ import struct
 import sys
 import time
 
-from PyQt5.QtCore import QObject, QTimer, QEvent, Qt
+from PyQt5 import sip
+from PyQt5.QtCore import QObject, QTimer, QEvent, Qt, pyqtSignal
 from PyQt5.QtGui import QKeyEvent
 from PyQt5.QtWidgets import QApplication
 
@@ -90,13 +96,13 @@ class XInputSource:
         if self._dll is None:
             raise OSError("no XInput DLL")
         self._empty_until = [0.0] * 4
-        self._stick_held = set()
+        self._stick_held = {}
 
-    def pressed(self):
-        out = set()
+    def pads(self):
+        """{slot: buttons pressed} for each connected pad."""
+        out = {}
         now = time.monotonic()
         state = _XInputState()
-        sticks = set()
         for slot in range(4):
             if now < self._empty_until[slot]:
                 continue
@@ -104,10 +110,14 @@ class XInputSource:
                 self._empty_until[slot] = now + self.RECHECK
                 continue
             pad = state.Gamepad
-            out |= {name for bit, name in _XINPUT_BUTTONS.items() if pad.wButtons & bit}
-            sticks |= stick_directions(pad.sThumbLX / 32767, pad.sThumbLY / 32767, self._stick_held)
-        self._stick_held = sticks
-        return out | sticks
+            held = self._stick_held.get(slot, set())
+            sticks = stick_directions(pad.sThumbLX / 32767, pad.sThumbLY / 32767, held)
+            self._stick_held[slot] = sticks
+            out[slot] = {name for bit, name in _XINPUT_BUTTONS.items() if pad.wButtons & bit} | sticks
+        return out
+
+    def pressed(self):
+        return set().union(*self.pads().values())
 
 
 # ── Linux joystick API (/dev/input/js*) ───────────────────────────────────────
@@ -118,46 +128,81 @@ _JS_BUTTONS = {0: "a", 1: "b", 2: "x", 3: "y", 4: "lb", 5: "rb", 6: "select", 7:
 
 
 class LinuxJoystickSource:
+    """/dev/input/js0..js3; a node not there (or unplugged) is looked for
+    again every few seconds, so a pad plugged in later shows up."""
+    RECHECK = 2.0
+
     def __init__(self):
-        self._fds = []
+        if not os.path.isdir("/dev/input"):
+            raise OSError("no /dev/input")
+        self._fds = {}                      # js number: fd
+        self._buttons = {}
+        self._axes = {}
+        self._stick_held = {}
+        self._next_scan = 0.0
+
+    def _scan(self):
+        now = time.monotonic()
+        if now < self._next_scan:
+            return
+        self._next_scan = now + self.RECHECK
         for n in range(4):
+            if n in self._fds:
+                continue
             try:
-                self._fds.append(os.open(f"/dev/input/js{n}", os.O_RDONLY | os.O_NONBLOCK))
+                self._fds[n] = os.open(f"/dev/input/js{n}", os.O_RDONLY | os.O_NONBLOCK)
             except OSError:
                 continue
-        if not self._fds:
-            raise OSError("no joystick device")
-        self._buttons = set()
-        self._axes = {}
-        self._stick_held = set()
+            self._buttons[n], self._axes[n], self._stick_held[n] = set(), {}, set()
 
-    def pressed(self):
-        for fd in self._fds:
+    def _drop(self, n):
+        try:
+            os.close(self._fds.pop(n))
+        except OSError:
+            pass
+        for state in (self._buttons, self._axes, self._stick_held):
+            state.pop(n, None)
+
+    def pads(self):
+        """{js number: buttons pressed} for each connected pad."""
+        self._scan()
+        out = {}
+        for n, fd in list(self._fds.items()):
+            buttons, axes = self._buttons[n], self._axes[n]
+            gone = False
             while True:
                 try:
                     data = os.read(fd, _JS_EVENT.size * 32)
                 except BlockingIOError:
                     break
                 except OSError:
-                    break                   # unplugged
+                    gone = True             # unplugged
+                    break
                 if not data:
                     break
                 for i in range(0, len(data) - _JS_EVENT.size + 1, _JS_EVENT.size):
                     _t, value, kind, number = _JS_EVENT.unpack_from(data, i)
                     kind &= ~_JS_INIT
                     if kind == _JS_BUTTON and number in _JS_BUTTONS:
-                        (self._buttons.add if value else self._buttons.discard)(_JS_BUTTONS[number])
+                        (buttons.add if value else buttons.discard)(_JS_BUTTONS[number])
                     elif kind == _JS_AXIS:
-                        self._axes[number] = value / 32767
-        out = set(self._buttons)
-        hat_x, hat_y = self._axes.get(6, 0), self._axes.get(7, 0)
-        if hat_x:
-            out.add("right" if hat_x > 0 else "left")
-        if hat_y:
-            out.add("down" if hat_y > 0 else "up")
-        self._stick_held = stick_directions(self._axes.get(0, 0), -self._axes.get(1, 0),
-                                            self._stick_held)
-        return out | self._stick_held
+                        axes[number] = value / 32767
+            if gone:
+                self._drop(n)
+                continue
+            pressed = set(buttons)
+            hat_x, hat_y = axes.get(6, 0), axes.get(7, 0)
+            if hat_x:
+                pressed.add("right" if hat_x > 0 else "left")
+            if hat_y:
+                pressed.add("down" if hat_y > 0 else "up")
+            self._stick_held[n] = stick_directions(axes.get(0, 0), -axes.get(1, 0),
+                                                   self._stick_held[n])
+            out[n] = pressed | self._stick_held[n]
+        return out
+
+    def pressed(self):
+        return set().union(*self.pads().values())
 
 
 def open_source():
@@ -193,35 +238,88 @@ def send_key(key, fallback=None, repeat=False):
     return True
 
 
+_navigator = None
+
+
+def navigator():
+    """The running GamepadNavigator, None without pads support (or once its
+    window is gone)."""
+    if _navigator is not None and sip.isdeleted(_navigator):
+        return None
+    return _navigator
+
+
 class GamepadNavigator(QObject):
     """Polls `source` and sends the keys of newly pressed buttons (and held
-    directions, repeated) while `enabled()`."""
+    directions, repeated) while `enabled()`.
+
+    Per pad: `pad_pressed(pad, button)` for each new press, `pads_changed`
+    with the connected pads' indices when one comes or goes. `claim`, when
+    set, is offered each new press first: True keeps it (no key is sent
+    while that button stays down)."""
+    pad_pressed = pyqtSignal(int, str)
+    pads_changed = pyqtSignal(tuple)
 
     def __init__(self, source, fallback=None, enabled=None, parent=None):
+        global _navigator
         super().__init__(parent)
         self._source = source
         self._fallback = fallback
         self._enabled = enabled or (lambda: True)
         self._held = set()
         self._next_repeat = {}
+        self._pad_held = {}
+        self._claimed = {}
+        self._connected = ()
+        self.claim = None
         self._timer = QTimer(self)
         self._timer.timeout.connect(self.poll)
         self._timer.start(POLL_MS)
+        _navigator = self
+
+    def connected(self):
+        """Indices of the pads connected, in order."""
+        return self._connected
 
     def poll(self):
         try:
-            pressed = self._source.pressed()
+            pads = self._source.pads()
         except OSError as e:
             log.warning(f"gamepad: stopped ({e})")
             self._timer.stop()
             return
+        connected = tuple(sorted(pads))
+        if connected != self._connected:
+            self._connected = connected
+            self.pads_changed.emit(connected)
         if not self._enabled():
             # Buttons held when it comes back (the A that started a match)
             # don't fire then.
-            self._held = pressed
+            self._pad_held = {n: set(b) for n, b in pads.items()}
+            self._claimed.clear()
+            self._held = set().union(*pads.values())
             self._next_repeat.clear()
             return
-        self.feed(pressed, time.monotonic())
+        self.feed_pads(pads, time.monotonic())
+
+    def feed_pads(self, pads, now):
+        """One poll's buttons per pad: reported, offered to `claim`, and the
+        rest sent as keys (feed)."""
+        merged = set()
+        for n, pressed in pads.items():
+            held = self._pad_held.get(n, set())
+            claimed = self._claimed.setdefault(n, set())
+            claimed &= pressed
+            for name in sorted(pressed - held):
+                self.pad_pressed.emit(n, name)
+                if self.claim is not None and self.claim(n, name):
+                    claimed.add(name)
+            self._pad_held[n] = set(pressed)
+            merged |= pressed - claimed
+        for n in set(self._pad_held) - set(pads):
+            self._pad_held.pop(n)
+            self._claimed.pop(n, None)
+        self.feed(merged, now)
 
     def feed(self, pressed, now):
         """One poll's pressed buttons: new ones fire; held directions repeat."""

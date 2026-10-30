@@ -69,13 +69,18 @@ def _injuries(t, fixture, result, rng):
     if result.source == "real":       # reality mode: only what really happened (reality.py)
         return
     scale = float(t.options.get("injury_duration", 1.0))
+    # a result typed in by hand may say how long (manual.py)
+    chosen = (result.extra.get("manual") or {}).get("injuries") or {}
     for side in (result.home, result.away):
         entry = t.teams.get(side.team_id)
         for line in side.players:
             if not line.injured or line.pid not in t.players:
                 continue
             p = t.players[line.pid]
-            kind, n = roll_injury(rng, scale)
+            if line.pid in chosen:
+                kind, n = chosen[line.pid]["type"], int(chosen[line.pid]["matches"])
+            else:
+                kind, n = roll_injury(rng, scale)
             team = entry.name if entry else side.team_id
             if n <= 0:
                 # Only the user's own knocks are news: everyone else's

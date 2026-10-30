@@ -8,7 +8,11 @@ or evening) and from those:
     "environments": day / night / overcast / cold),
   * the pitch texture (a gsv.pitch_textures name: hard and dry in a warm
     dry spell, worn and muddy in a wet winter, frosty or snow-covered in a
-    freeze), in the light variant that matches the environment,
+    freeze), from the texture pack of the ground's region and in the light
+    variant that matches the environment,
+  * at a ground with a roof (the Millennium Stadium), whether it is closed:
+    in the rain or the cold. Closed = its covered scene, no rain or snow,
+    no wind,
   * cold breath, and how many players would wear baselayers or gloves
     (worked out, not applied to players yet).
 It is seeded per fixture (engine.fixture_rng), so a fixture always gets the
@@ -72,6 +76,16 @@ _BY_COUNTRY = {
     "japan": "japan", "usa": "california",
 }
 
+# The game's pitch texture packs by region, as its own stadium scenes use
+# them (each scene's Config2.bin): Reg1 Australia and North America, Reg2
+# Europe and New Zealand, Reg3 South Africa, Reg4 Argentina and the Pacific.
+REGIONS = {"australia": "Reg1", "pacific_northwest": "Reg1", "california": "Reg1",
+           "south_africa": "Reg3", "argentina": "Reg4", "tropical": "Reg4"}
+DEFAULT_REGION = "Reg2"
+# Grounds with a roof (game id) and the environment whose scene has it
+# closed: the game loads "milleniumcovered.cold" for the Millennium Stadium.
+COVERED = {32: "cold"}
+
 NIGHT_SHARE = 0.4             # evening kick-offs, unless the template says ("night_share")
 COLD = 6                      # °C at or below which the "cold" environment is preferred
 BREATH = 8                    # °C at or below which breath shows
@@ -117,8 +131,27 @@ def keep_stadiums(t, ds) -> None:
     so the simulator (which has no data store) knows the grounds."""
     t.components["stadiums"] = {
         str(sid): {"name": info.get("name", ""), "country": info.get("country", ""),
+                   "game_id": info.get("game_id"),
                    "environments": list(info.get("environments") or [])}
         for sid, info in (getattr(ds, "stadiums", None) or {}).items()}
+
+
+def region_of(climate) -> str:
+    return REGIONS.get(climate, DEFAULT_REGION)
+
+
+def roof_environment(stadium):
+    """The environment in which the ground's roof is closed, or None for
+    a ground without one (or a saved copy that lost its game id: the
+    Millennium Stadium is also known by name)."""
+    gid = (stadium or {}).get("game_id")
+    if gid is None and "millennium" in str((stadium or {}).get("name", "")).lower():
+        gid = 32
+    try:
+        env = COVERED.get(int(gid))
+    except (TypeError, ValueError):
+        return None
+    return env if env in ((stadium or {}).get("environments") or []) else None
 
 
 def _interp(monthly, d):
@@ -143,27 +176,34 @@ def _environment(envs, temp, night, wet, cloudy):
 
 
 _LIGHT = {"day": "d", "night": "n", "overcast": "o", "cold": "o"}
+# The nearest light when a pack has no texture in the wanted one (Reg1, Reg3
+# and Reg4 have no overcast textures: grey light reads closer to day).
+_LIGHTS = {"d": ["d", "o", "n"], "o": ["o", "d", "n"], "n": ["n", "o", "d"]}
 # When a condition has no texture in the wanted light / region, the closest
 # condition that may.
 _FALLBACK = {"snow": ["frosty", "muddier", "norm"], "frosty": ["snow", "norm"],
              "muddier": ["muddy", "light_Mud", "soggy", "norm"], "muddy": ["light_Mud", "muddier", "soggy", "norm"],
              "light_Mud": ["soggy", "muddy", "norm"], "soggy": ["light_Mud", "norm"],
              "hard": ["dry", "best", "norm"], "dry": ["hard", "best", "norm"], "best": ["norm"], "norm": ["best"]}
+# Whatever the region's pack has, when none of a condition's fallbacks is in
+# it (a wet day in South Africa: the pack has only dry, hard and best pitches).
+_ANY = ["norm", "best", "hard", "dry"]
 
 
 def pitch_texture(condition, environment, region="Reg2") -> str:
     """The texture name for a condition in a light, falling back to the
     nearest available one; "default" when nothing matches."""
     have = textures()
-    light = _LIGHT.get(environment, "d")
-    lights = [light] + [x for x in ("o", "n", "d") if x != light]
+    lights = _LIGHTS[_LIGHT.get(environment, "d")]
     regions = [region] + [r for r in ("Reg2", "Reg3", "Reg1", "Reg4") if r != region]
-    # the right light matters more than the exact condition: a night
-    # match on a day-lit texture looks wrong, "muddy" for "muddier" doesn't
+    # the region's own pack first (another region's grass looks out of
+    # place), then the right light (a night match on a day-lit texture looks
+    # wrong, "muddy" for "muddier" doesn't), then the condition
     conditions = [condition] + _FALLBACK.get(condition, [])
-    for lt in lights:
-        for cond in conditions:
-            for reg in regions:
+    conditions += [c for c in _ANY if c not in conditions]
+    for reg in regions:
+        for lt in lights:
+            for cond in conditions:
                 name = f"{reg}_08_{cond}_{lt}"
                 if name in have:
                     return name
@@ -173,8 +213,8 @@ def pitch_texture(condition, environment, region="Reg2") -> str:
 def forecast(t, fixture, ds=None) -> dict:
     """The fixture's weather (see the module docstring). Keys: date, temp,
     precip ("none"/"rain"/"snow"), heavy, night, environment, pitch,
-    condition, breath, baselayers / gloves (share of players who would
-    wear them — not applied to players yet),
+    condition, roof_closed, breath, baselayers / gloves (share of players
+    who would wear them — not applied to players yet),
     summary ("6°C · heavy rain · evening")."""
     from .engine import fixture_rng
     rng = fixture_rng(t, fixture, "weather")
@@ -198,6 +238,12 @@ def forecast(t, fixture, ds=None) -> dict:
         precip = "snow" if temp <= -1 else "rain"        # sleet around freezing reads as rain
     cloudy = precip != "none" or rng.random() < min(0.85, rain_chance * 1.4 + 0.15)
     environment = _environment(stadium.get("environments"), temp, night, precip != "none", cloudy)
+    # a roof is closed for the rain or the cold (and the game's cold scene
+    # of such a ground is the covered one): dry under it, whatever falls
+    roof = roof_environment(stadium)
+    roof_closed = roof is not None and (environment == roof or precip != "none")
+    if roof_closed:
+        environment, precip, heavy = roof, "none", False
     # the ground's lighting decides what the kick-off can look like
     if environment == "night":
         night = True
@@ -206,7 +252,9 @@ def forecast(t, fixture, ds=None) -> dict:
 
     wet_season = rain_chance >= WET_SEASON
     roll = rng.random()
-    if precip == "snow" or (temp <= -2 and roll < 0.3):
+    if roof_closed:
+        condition = "best" if roll < 0.5 else "norm"
+    elif precip == "snow" or (temp <= -2 and roll < 0.3):
         condition = "snow"
     elif temp <= 1 and precip == "none":
         condition = "frosty"
@@ -218,8 +266,6 @@ def forecast(t, fixture, ds=None) -> dict:
         condition = "hard" if roll < 0.5 else "dry"
     else:
         condition = "best" if roll < 0.5 else "norm"
-    dry_climate = climate in ("south_africa", "australia", "argentina", "california", "italy")
-    region = "Reg3" if dry_climate and condition in ("hard", "dry", "best") else "Reg2"
 
     if temp <= 4:
         baselayers = 0.7
@@ -230,7 +276,9 @@ def forecast(t, fixture, ds=None) -> dict:
     else:
         baselayers = 0.05
     words = [f"{round(temp)}°C"]
-    if precip != "none":
+    if roof_closed:
+        words.append("roof closed")
+    elif precip != "none":
         words.append(("heavy " if heavy else "light ") + precip)
     elif cloudy:
         words.append("overcast")
@@ -239,8 +287,8 @@ def forecast(t, fixture, ds=None) -> dict:
     words.append("evening" if night else "afternoon")
     return {
         "date": d.isoformat() if d else "", "temp": round(temp, 1), "precip": precip, "heavy": heavy,
-        "night": night, "environment": environment, "condition": condition,
-        "pitch": pitch_texture(condition, environment, region), "breath": temp <= BREATH,
+        "night": night, "environment": environment, "condition": condition, "roof_closed": roof_closed,
+        "pitch": pitch_texture(condition, environment, region_of(climate)), "breath": temp <= BREATH,
         "baselayers": baselayers, "gloves": 0.25 if temp <= 2 else 0.0,
         "summary": " · ".join(words),
     }

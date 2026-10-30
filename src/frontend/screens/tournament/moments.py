@@ -77,16 +77,17 @@ def human_ids(t):
 
 
 def pool_position(t, team_id):
-    """(group name, 1-based position, qualify count) of the team's pool while
-    the pool stage runs, else None."""
+    """(where, 1-based position, qualify count) of the team's pool while the
+    pool stage runs, else None; `where` is "Pool A", or "" in a one-league
+    stage (the table), and the position is None before its first match."""
     for st in t.stages:
         if st.kind != "round_robin" or st.status == "done":
             continue
         for g in st.groups:
             if team_id in g.teams:
                 tab = standings.group_table(t, st, g)
-                pos = next((i + 1 for i, r in enumerate(tab) if r.team_id == team_id), None)
-                name = g.name if len(st.groups) > 1 else st.name
+                pos = next((i + 1 for i, r in enumerate(tab) if r.team_id == team_id and r.played), None)
+                name = g.name if len(st.groups) > 1 else ""
                 return name, pos, int(st.spec.get("qualify", 0))
     return None
 
@@ -117,7 +118,11 @@ def moments_after(ds, t, before: Before, done) -> list:
     out = []
     played = [f for f in (done or []) if f.played]
     if played:
-        out.append(MatchdayRecap(ds, t, before, played))
+        # one round per recap: the round of your match, else the last one
+        # played (a whole bye round, or the final after simulating to the end)
+        humans = set(human_ids(t))
+        mine = [f for f in played if f.home in humans or f.away in humans]
+        out.append(MatchdayRecap(ds, t, before, max(f.day for f in (mine or played))))
     humans = human_ids(t)
     if t.finished and not before.finished:
         out.append(ChampionMoment(ds, t))
@@ -350,16 +355,23 @@ class MomentOverlay(QWidget):
 
 # ── matchday recap ───────────────────────────────────────────────────────
 class MatchdayRecap(MomentOverlay):
-    """Full time: your match first, then the rest of the results, then how
-    your pool position moved."""
+    """Full time of one round (matchday `day`): your match first, how your
+    pool position moved, then the round's other results — every match of
+    that round played so far, earlier kick-offs included, and nothing from
+    another round."""
 
     MAX_OTHERS = 8
 
-    def __init__(self, ds, t, before, played):
+    def __init__(self, ds, t, before, day):
         super().__init__(ds, t)
         humans = set(human_ids(t))
-        self.mine = next((f for f in played if f.home in humans or f.away in humans), None)
-        self.others = [f for f in played if f is not self.mine]
+        played = [f for f in t.fixtures if f.day == day and f.played]
+        self.mine = next((f for f in reversed(played) if f.home in humans or f.away in humans), None)
+        mine_group = self.mine.group if self.mine else None
+        # your pool's matches first, then pool by pool
+        self.others = sorted((f for f in played if f is not self.mine),
+                             key=lambda f: (f.group != mine_group, f.group or ""))
+        self.round = report.round_title(t, day)
         self.humans = humans
         self.focus_team = None
         if self.mine:
@@ -370,17 +382,11 @@ class MatchdayRecap(MomentOverlay):
             if pp and pp[1]:
                 old = before.positions.get(h, (pp[0], None))[1]
                 self.moves.append((h, pp[0], old, pp[1], pp[2]))
-        ref = self.mine or (played[0] if played else None)
-        if ref is None:
-            self.eyebrow = "RESULTS"
-        elif ref.knockout:
-            self.eyebrow = (ref.round_name or "knockouts").upper()
-        else:
-            days = {f.day for f in played}
-            self.eyebrow = (f"MATCHDAY {ref.day + 1}" if len(days) == 1
-                            else f"MATCHDAYS {min(days) + 1}–{max(days) + 1}")
-            if ref.group and self.mine:
-                self.eyebrow += f"  ·  {self._group_name(ref)}".upper()
+        self.eyebrow = self.round.upper()
+        if self.mine and not self.mine.knockout:
+            st = t.stage(self.mine.stage_id)
+            if st and len(st.groups) > 1:
+                self.eyebrow += f"  ·  {self._group_name(self.mine)}".upper()
         self.title = "FULL TIME" if self.mine else "AROUND THE GROUNDS"
         n_others = min(len(self.others), self.MAX_OTHERS)
         self._others_start = 1500 if self.mine else 500
@@ -485,9 +491,11 @@ class MatchdayRecap(MomentOverlay):
                 arrow, col = "▲", GREEN
             elif old and new > old:
                 arrow, col = "▼", DANGER_LITE
-            where = f"{group.upper()}:  " if group else ""
             change = f"{ordinal(old).upper()}  →  {ordinal(new).upper()}" if old and old != new \
                 else ordinal(new).upper()
+            # "POOL B:  1ST → 3RD", or "1ST → 3RD IN THE TABLE" in a league
+            where, after = (f"{group.upper()}:  ", "") if group else ("", "  IN THE TABLE")
+            change += after
             tail = ""
             if qualify:
                 tail = "   ·   IN THE QUALIFYING PLACES" if new <= qualify else \
@@ -502,7 +510,8 @@ class MatchdayRecap(MomentOverlay):
         y += 14
         a = _ease(_phase(ms, self._others_start - 100, 300))
         real = all(f.result.source == "real" for f in shown)
-        head = ("REAL RESULTS" if real else "OTHER RESULTS") if self.mine else ("REAL RESULTS" if real else "")
+        head = f"{self.round.upper()}  ·  " + (("REAL RESULTS" if real else "OTHER RESULTS") if self.mine
+                                                 else ("REAL RESULTS" if real else "ALL RESULTS"))
         self.text(p, QRectF(0, y, w, 20), head, 11, INFO if real else FG_MUTED, track=2.4, opacity=a)
         y += 28
         cols = 2 if len(shown) > 3 else 1
@@ -533,6 +542,15 @@ class MatchdayRecap(MomentOverlay):
         r = f.result
         win = r.winner_id()
         mid = rect.center().x()
+        st = self.t.stage(f.stage_id)
+        if st and len(st.groups) > 1 and f.group:
+            # which pool, just outside the row
+            p.setFont(tracked_font(FONT_DISPLAY, 10, QFont.Bold, 1.4))
+            p.setPen(QColor(FG_MUTED))
+            side = QRectF(rect.x() - 96, rect.y(), 88, rect.height()) if rect.x() < self.vw / 2 - 100 \
+                else QRectF(rect.right() + 8, rect.y(), 88, rect.height())
+            p.drawText(side, (Qt.AlignRight if side.x() < rect.x() else Qt.AlignLeft) | Qt.AlignVCenter,
+                       self._group_name(f).upper())
         self.crest(p, f.home, rect.x() + 22, rect.center().y(), 24)
         self.crest(p, f.away, rect.right() - 22, rect.center().y(), 24)
         for tid, box, align in ((f.home, QRectF(rect.x() + 42, rect.y(), mid - rect.x() - 90, rect.height()),

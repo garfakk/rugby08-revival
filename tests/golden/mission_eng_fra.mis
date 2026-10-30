@@ -3,7 +3,7 @@
     <GAME>
         <ENVIRONMENT>
             <WEATHER pitch="0" temp="0" precipitation="0" env="day" pitchtex="default">
-                <WIND power="2" x="1.0" y="0" z="0.0"/>
+                <WIND power="2" x="1000" y="0" z="0"/>
             </WEATHER>
         </ENVIRONMENT>
         <STATE>

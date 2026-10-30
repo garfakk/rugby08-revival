@@ -9,14 +9,13 @@ never populates a team score field.
 Substitutions are parsed but the parser returns nothing usable, so they are
 deliberately not shown rather than shown wrong.
 
-The screen opens on the scoreline and the scorers; MATCH STATS (pad X)
-reveals the statistics, the bars growing out row by row.
+The screen shows the scoreline, the statistics (the bars growing out row by
+row) and the scorers.
 """
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel
 from PyQt5.QtGui import QFont, QPixmap
 from PyQt5.QtCore import Qt
 
-from app.input import KEYMAP, Action
 from app.screen_base import Screen
 from ui import StyledButton
 from ui.broadcast import (
@@ -98,14 +97,13 @@ class PostMatchScreen(Screen):
         self.status_label.setAlignment(Qt.AlignCenter)
         bl.addWidget(self.status_label)
 
-        # ── statistics (revealed by MATCH STATS) ─────────────────────────
+        # ── statistics ───────────────────────────────────────────────────
         self.stats_card = Card()
         sv = QVBoxLayout(self.stats_card)
         sv.setContentsMargins(24, 16, 24, 16)
         sv.addWidget(eyebrow_label("match statistics", color=ACCENT, size=13))
         self.stats = StatComparison([])
         sv.addWidget(self.stats)
-        self.stats_card.hide()
         bl.addWidget(self.stats_card, stretch=1)
 
         # ── scorers ──────────────────────────────────────────────────────
@@ -118,13 +116,7 @@ class PostMatchScreen(Screen):
         bl.addLayout(scorers, stretch=1)
 
         actions = QHBoxLayout()
-        self.stats_btn = StyledButton("MATCH STATS  ▾", "neutral")
-        self.stats_btn.setMinimumHeight(BTN_HEIGHT)
-        self.stats_btn.setMinimumWidth(220)
-        self.stats_btn.clicked.connect(self.toggle_stats)
-        self.focus.register(self.stats_btn)
         actions.addStretch(1)
-        actions.addWidget(self.stats_btn)
         self._continue = None
         self._buttons = []
         for text, variant, slot in (("RESTART", "neutral", lambda: self.on_rematch()),
@@ -146,27 +138,7 @@ class PostMatchScreen(Screen):
 
     def _update_hints(self):
         back = "continue" if self._continue else "main menu"
-        stats = [("X", "hide stats" if self.stats_shown() else "match stats")] \
-            if self.stats_btn.isVisibleTo(self) else []
-        self.hintbar.set_hints([("A", "select")] + stats + [("B", back)])
-
-    def stats_shown(self):
-        return not self.stats_card.isHidden()
-
-    def toggle_stats(self):
-        show = not self.stats_shown()
-        self.stats_card.setVisible(show)
-        self.stats_btn.setText("HIDE STATS  ▴" if show else "MATCH STATS  ▾")
-        if show:
-            self.stats.reveal()
-        self._update_hints()
-
-    def keyPressEvent(self, event):
-        if KEYMAP.get(event.key()) == Action.ALT and self.stats_btn.isVisible():
-            self.toggle_stats()
-            event.accept()
-            return
-        super().keyPressEvent(event)
+        self.hintbar.set_hints([("A", "select"), ("B", back)])
 
     def _scorer_card(self, title, tint):
         card = Card(stripe=tint)
@@ -205,11 +177,6 @@ class PostMatchScreen(Screen):
         self._set_crest(self.away_crest, away.get("logo_frontend") or away.get("logo"))
 
         self._set_status(result)
-        # every match opens on the scoreline; the stats wait for MATCH STATS
-        self.stats_card.hide()
-        self.stats_btn.setText("MATCH STATS  ▾")
-        self.stats_btn.setVisible(bool(result))
-        self._update_hints()
 
         if not result:
             self.home_score.setText("–")
@@ -226,6 +193,7 @@ class PostMatchScreen(Screen):
         self.home_score.setText(str(hs.get("points", 0)))
         self.away_score.setText(str(as_.get("points", 0)))
         self.stats.set_rows([(label, fn(hs, hst), fn(as_, ast)) for label, fn in STAT_ROWS])
+        self.stats.reveal()
 
         self._fill_scorers(self.home_scorers[1], result.get("team_A", {}).get("players", []))
         self._fill_scorers(self.away_scorers[1], result.get("team_B", {}).get("players", []))

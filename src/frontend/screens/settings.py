@@ -2,9 +2,10 @@
 
 One tab per topic, whichever file a setting is saved to (user_prefs.ini for
 the mod's own, game_profile.ini for the game's, see shared.game_profile):
-Display, Audio, Gameplay, Camera, HUD, Advanced. A row tagged IN-GAME changes
-only the game itself, not these menus; a dot marks a row that differs from its
-default. Every value is saved as soon as it changes.
+Display, Audio, Gameplay, Camera, HUD, Advanced. A tab is a flat list of
+rows (ui.widgets.SettingRow), grouped under small headings where it has
+more than one kind of setting. Every value is saved as soon as it
+changes.
 
 Keys go through app.input's actions, so a pad drives it the same way:
 Up/Down pick a row, Left/Right change it, Enter opens a list, Q/E (LB/RB)
@@ -15,7 +16,7 @@ import logging
 from pathlib import Path
 
 from PyQt5.QtWidgets import (
-    QVBoxLayout, QHBoxLayout, QWidget, QSizePolicy, QStackedWidget, QLabel,
+    QVBoxLayout, QHBoxLayout, QWidget, QSizePolicy, QStackedWidget,
 )
 from PyQt5.QtCore import Qt, QEvent, QTimer
 
@@ -24,30 +25,22 @@ from shared.user_prefs import user_prefs, SCREEN_RATIOS
 from shared.game_profile import game_profile, SECTIONS, RESOLUTIONS, UNSAFE_RESOLUTIONS
 
 from shared.log import ROOT as LOG_ROOT, setup_logging
+from app import difficulty
 from app.display import native_resolution, native_screen_ratio
 from app.team_browse import DEFAULT_STYLE, STYLES, style_label
 from app.input import Action, KEYMAP, HINT_GLYPH
 from ui import make_page_header, make_separator, StyledButton, ToggleRow, ChoiceRow, CycleRow, SliderRow
-from ui.widgets import make_in_game_tag, make_changed_mark
 from ui.broadcast import HintBar
 from ui.editor_kit import TabStrip, TabPage, ConfirmDialog
-from ui.theme import BTN_HEIGHT_BACK, FG_MUTED, T_SETTING_VALUE, T_SETTING_TAB
+from ui.broadcast import eyebrow_label
+from ui.theme import ACCENT, BTN_HEIGHT_BACK, T_SETTING_TAB
 
 TABS = ("Display", "Audio", "Gameplay", "Camera", "HUD", "Advanced")
 # The game's own option group (shared.game_profile.SECTIONS) on each tab
 GAME_SECTION = {"Display": "VIDEO", "Audio": "AUDIO", "Gameplay": "GAMEPLAY",
                 "Camera": "CAMERA", "HUD": "HUD"}
-# Game options that change these menus too, so not tagged IN-GAME: the menu
-# music plays at the game's own Music volume.
-ALSO_IN_MENUS = {"vol_music"}
 RATIO_CHOICES = ["Auto", *SCREEN_RATIOS]
 LOG_LEVELS = ["OFF", "DEBUG", "INFO", "WARNING", "ERROR"]
-
-
-def _note(text):
-    label = QLabel(text)
-    label.setStyleSheet(f"color: {FG_MUTED}; font-size: {T_SETTING_VALUE}pt; background: transparent;")
-    return label
 
 
 class SettingsScreen(QWidget):
@@ -60,7 +53,7 @@ class SettingsScreen(QWidget):
         # volume for both rather than a separate frontend-only preference.
         self._music = music
         self._pages = []            # TabPage per tab
-        self._rows = []             # per tab: [(row, changed() -> bool)]
+        self._rows = []             # per tab: [SettingRow]
         self._init_ui()
         self._profile_revision = game_profile.revision
 
@@ -93,20 +86,10 @@ class SettingsScreen(QWidget):
         self.tabs.installEventFilter(self)
         cl.addWidget(self.tabs)
 
-        legend = QHBoxLayout()
-        legend.setContentsMargins(2, 12, 0, 0)
-        legend.setSpacing(8)
-        legend.addWidget(make_in_game_tag())
-        legend.addWidget(_note("changes only the game itself, not these menus"))
-        legend.addSpacing(18)
-        legend.addWidget(make_changed_mark())
-        legend.addWidget(_note("changed from its default"))
-        legend.addStretch()
-        cl.addLayout(legend)
-
         self.stack = QStackedWidget()
         for _tab in TABS:
             page = TabPage()
+            page.layout_.setSpacing(0)          # rows sit on their hairlines, no gaps
             self._pages.append(page)
             self._rows.append([])
             self.stack.addWidget(page)
@@ -156,42 +139,35 @@ class SettingsScreen(QWidget):
         while layout.count():
             item = layout.takeAt(0)
             if item.widget():
+                item.widget().hide()            # gone from this frame, not only once deleted
                 item.widget().deleteLater()
         tab = TABS[index]
         if tab == "Display":
-            rows = self._display_rows()
+            groups = [("window", self._window_rows()), ("graphics", self._game_rows("VIDEO"))]
+        elif tab == "Gameplay":
+            groups = [("match setup", self._match_rows()), ("rules", self._game_rows("GAMEPLAY"))]
         elif tab == "Advanced":
-            rows = self._advanced_rows()
+            groups = [("", self._advanced_rows())]
         else:
-            rows = self._game_rows(GAME_SECTION[tab])
-            if tab == "Gameplay":
-                rows += self._match_rows()
-        for row, _changed in rows:
-            row.installEventFilter(self)
-            layout.addWidget(row)
+            groups = [("", self._game_rows(GAME_SECTION[tab]))]
+        rows = []
+        for title, group in groups:
+            if title:
+                heading = eyebrow_label(title, color=ACCENT, size=11)
+                heading.setContentsMargins(17, 22 if rows else 16, 0, 8)
+                layout.addWidget(heading)
+            for row in group:
+                row.installEventFilter(self)
+                layout.addWidget(row)
+            rows += group
         layout.addStretch()
         self._rows[index] = rows
-        self._refresh_marks()
 
-    def _refresh_marks(self):
-        for rows in self._rows:
-            for row, changed in rows:
-                row.set_changed(changed())
-
-    def _saved(self, apply):
-        """`apply`, then the changed-from-default dots brought up to date."""
-        def wrapped(value):
-            apply(value)
-            self._refresh_marks()
-        return wrapped
-
-    def _display_rows(self):
+    def _window_rows(self):
         # Windowed: the normal resizable window. Off (default): unified
         # fullscreen. Applied live — see main.MainWindow.apply_windowed_mode.
-        rows = [(ToggleRow("Windowed Mode", user_prefs.game_windowed, self._saved(self._set_windowed)),
-                 lambda: user_prefs.game_windowed)]
-        rows.append((self._resolution_row(),
-                     lambda: game_profile.get_resolution() != native_resolution()))
+        rows = [ToggleRow("Windowed Mode", user_prefs.game_windowed, self._set_windowed),
+                self._resolution_row()]
         # Screen ratio of the match picture, drawn as big as fits at that
         # ratio, black bars around it (screens.ingame). 4:3 = the game as
         # shipped (widescreen patch off); the others turn the widescreen patch
@@ -199,10 +175,9 @@ class SettingsScreen(QWidget):
         # Written to rugby08patches.ini at the next match start
         # (backend.mod_utils.configure_game_widescreen). Default: the screen's
         # own, closest preset (main.MainWindow._pick_screen_ratio).
-        rows.append((ChoiceRow("Screen Ratio", RATIO_CHOICES, user_prefs.screen_ratio_label(),
-                               self._saved(user_prefs.set_screen_ratio), in_game=True),
-                     lambda: user_prefs.screen_ratio_label() != native_screen_ratio()))
-        return rows + self._game_rows("VIDEO")
+        rows.append(ChoiceRow("Screen Ratio", RATIO_CHOICES, user_prefs.screen_ratio_label(),
+                              user_prefs.set_screen_ratio))
+        return rows
 
     def _set_windowed(self, on):
         user_prefs.game_windowed = bool(on)
@@ -224,8 +199,7 @@ class SettingsScreen(QWidget):
             game_profile.set_resolution(int(w), int(h))
             game_profile.save()
 
-        return ChoiceRow("Resolution", labels, f"{current[0]}x{current[1]}", self._saved(apply),
-                         in_game=True)
+        return ChoiceRow("Resolution", labels, f"{current[0]}x{current[1]}", apply)
 
     def _game_rows(self, section):
         """One row per game option of that SECTIONS group, written into the
@@ -236,18 +210,15 @@ class SettingsScreen(QWidget):
                 game_profile.save()
                 if key == "vol_music" and self._music is not None:
                     self._music.set_volume(value)
-            return self._saved(apply)
+            return apply
 
         rows = []
         for s in dict(SECTIONS)[section]:
             current = game_profile.get(s.key)
-            in_game = s.key not in ALSO_IN_MENUS
             if s.kind == "bool":
-                row = ToggleRow(s.label, bool(current), lambda v, a=_set(s.key): a(int(v)),
-                                in_game=in_game)
+                row = ToggleRow(s.label, bool(current), lambda v, a=_set(s.key): a(int(v)))
             elif s.kind == "range":
-                row = SliderRow(s.label, s.minimum, s.maximum, current, _set(s.key), s.step,
-                                in_game=in_game)
+                row = SliderRow(s.label, s.minimum, s.maximum, current, _set(s.key), s.step)
             else:
                 labels = [label for label, _v in s.choices]
                 by_label = dict(s.choices)
@@ -255,13 +226,13 @@ class SettingsScreen(QWidget):
                 choose = lambda label, a=_set(s.key), m=by_label: a(m[label])
                 # two values: one click flips them; more: a dropdown list
                 row = (CycleRow if len(labels) <= 2 else ChoiceRow)(
-                    s.label, labels, initial, choose, in_game=in_game)
-            rows.append((row, lambda k=s.key: game_profile.get(k) != game_profile.default(k)))
+                    s.label, labels, initial, choose)
+            rows.append(row)
         return rows
 
     def _match_rows(self):
         """The mod's own match options (not the game's profile): applied by
-        match setup, so not tagged IN-GAME."""
+        match setup."""
         def _set_wind_mode(label):
             user_prefs.wind_mode = label.lower()
             user_prefs.save()
@@ -274,22 +245,26 @@ class SettingsScreen(QWidget):
             user_prefs.match_picker = next(i for i, l in STYLES if l == label)
             user_prefs.save()
 
+        def _set_difficulty(label):
+            user_prefs.difficulty = label.lower()
+            user_prefs.save()
+
         # Wind: Standard = the game's own random wind; Advanced = the reR08
-        # wind patch, strength and direction set in match setup.
+        # wind patch, strength set in match setup (direction random).
         # Coin toss before each quick/tournament match: decides kick-off and
         # ends (match setup locks those two rows while it is on).
+        # The difficulty quick match, a new tournament and a challenge start on
+        # (app.difficulty.preferred); each can still be changed there.
+        levels = [level.capitalize() for level in difficulty.LEVELS]
         return [
-            (CycleRow("Wind", ["Standard", "Advanced"], user_prefs.wind_mode.capitalize(),
-                      self._saved(_set_wind_mode)),
-             lambda: user_prefs.wind_mode != "standard"),
-            (ToggleRow("Coin Toss", user_prefs.coin_toss, self._saved(_set_coin_toss)),
-             lambda: user_prefs.coin_toss),
+            ChoiceRow("Preferred Difficulty", levels, difficulty.preferred().capitalize(), _set_difficulty),
+            CycleRow("Wind", ["Standard", "Advanced"], user_prefs.wind_mode.capitalize(), _set_wind_mode),
+            ToggleRow("Coin Toss", user_prefs.coin_toss, _set_coin_toss),
             # How Quick Match picks teams (app/team_browse.py): the classic
             # season > category > team, or one of the team-first ones.
             # Takes effect the next time Quick Match opens.
-            (ChoiceRow("Quick Match Picker", [label for _id, label in STYLES],
-                       style_label(user_prefs.match_picker), self._saved(_set_picker)),
-             lambda: user_prefs.match_picker != DEFAULT_STYLE),
+            ChoiceRow("Quick Match Picker", [label for _id, label in STYLES],
+                      style_label(user_prefs.match_picker), _set_picker),
         ]
 
     def _advanced_rows(self):
@@ -310,13 +285,9 @@ class SettingsScreen(QWidget):
 
         current = logging.getLevelName(logging.getLogger(LOG_ROOT).getEffectiveLevel())
         return [
-            (ToggleRow("3D Player Preview", user_prefs.preview_3d, self._saved(_set_preview_3d)),
-             lambda: not user_prefs.preview_3d),
-            (ToggleRow("Check For Updates", user_prefs.check_updates, self._saved(_set_check_updates)),
-             lambda: not user_prefs.check_updates),
-            (ChoiceRow("Log Level", LOG_LEVELS, user_prefs.log_level or current,
-                       self._saved(_set_log_level)),
-             lambda: bool(user_prefs.log_level)),
+            ToggleRow("3D Player Preview", user_prefs.preview_3d, _set_preview_3d),
+            ToggleRow("Check For Updates", user_prefs.check_updates, _set_check_updates),
+            ChoiceRow("Log Level", LOG_LEVELS, user_prefs.log_level or current, _set_log_level),
         ]
 
     # ── reset ──
@@ -349,6 +320,7 @@ class SettingsScreen(QWidget):
                 user_prefs.wind_mode = "standard"
                 user_prefs.coin_toss = False
                 user_prefs.match_picker = DEFAULT_STYLE
+                user_prefs.difficulty = "elite"
                 user_prefs.save()
             game_profile.reset([s.key for s in dict(SECTIONS)[GAME_SECTION[tab]]])
             if tab == "Audio" and self._music is not None:
@@ -365,12 +337,12 @@ class SettingsScreen(QWidget):
     def _focus_first_row(self):
         rows = self._rows[self.tabs.index()]
         if self.isVisible() and rows:
-            rows[0][0].setFocus(Qt.TabFocusReason)
+            rows[0].setFocus(Qt.TabFocusReason)
 
     def _move_focus(self, current, delta):
         """Up / Down: tab strip, then the tab's rows, then the footer."""
         index = self.tabs.index()
-        rows = [row for row, _changed in self._rows[index]]
+        rows = self._rows[index]
         footer = (self.back_btn, self.reset_btn)
         if current in footer:
             target = rows[-1] if delta < 0 and rows else None

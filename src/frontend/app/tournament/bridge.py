@@ -6,8 +6,9 @@ to_match_config()  fixture + both selections -> app.state.MatchConfig, fed
                    their *effective* ratings (effects.effective_record), so
                    fatigue and future form/morale reach the game's roster.
                    The fixture's weather (tournament/weather.py) sets the
-                   environment, pitch, rain/snow and breath. Baselayers
-                   and gloves are only the ones set on the players.
+                   environment, pitch, rain/snow, breath and (calm under a
+                   closed roof) wind. Baselayers and gloves are only the
+                   ones set on the players.
 from_game_result() R08_handler.read_match_result() dict -> MatchResult.
 
 The game reports per-player lines by roster id (gsv.players_roster_id:
@@ -139,6 +140,8 @@ def _apply_weather(ds, t, fixture, cfg):
     if fc["precip"] == "snow":
         cfg.snow_intensity = 18.0 if fc["heavy"] else 8.0
     cfg.breath = fc["breath"]
+    if fc["roof_closed"]:
+        cfg.wind_power = 0           # calm under the roof, whatever Settings > Wind says
 
 
 def from_game_result(t, fixture, result: dict, rng) -> MatchResult:

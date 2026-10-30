@@ -126,6 +126,10 @@ def create_mission_file(match_data):
         if match_data.get("kick_assist"):
             # reR08 ENABLE_EASY_GOALKICK — depends on wind (below) being on.
             mission_attrs["kickassist"] = "on"
+        # reR08 ENABLE_CPU_EDGE: legend/immortal CPU at lineouts and rucks
+        # (app.difficulty; only set for a human vs CPU match).
+        for key, value in (match_data.get("cpu_edge") or {}).items():
+            mission_attrs[key] = value if isinstance(value, str) else str(int(value))
 
         mission = ET.Element("MISSION", mission_attrs)
 
@@ -186,11 +190,14 @@ def create_mission_file(match_data):
             wind_z = match_data.get("wind_z", 0)
         if not wind_power:
             wind_x = wind_z = 0
+        # The stock reader parses x/y/z with atol (0x4bf1f1): "-0.7071" reads
+        # as 0, and a zero vector is calm to the wind patch. Write integers;
+        # the patch normalizes, so only the direction counts.
         ET.SubElement(weather, "WIND", {
             "power": str(wind_power),
-            "x": str(wind_x),
+            "x": str(round(float(wind_x) * WIND_VECTOR_SCALE)),
             "y": "0",
-            "z": str(wind_z),
+            "z": str(round(float(wind_z) * WIND_VECTOR_SCALE)),
         })
 
         state = ET.SubElement(game, "STATE")
@@ -745,6 +752,17 @@ def write_team_data_to_roster(roster_filepath, match_data):
             set_plays_data = bytearray(set_plays)
             file.seek(roster_data_addresses[team] + 0x5C)
             file.write(set_plays_data)
+
+            # Team performance floors (app.difficulty legend/immortal CPU side):
+            # never lower the stock value.
+            floor = match_data[team].get('performance_floor')
+            if floor:
+                file.seek(roster_data_addresses[team] + team_performance_offset)
+                current = bytearray(file.read(len(team_performance_keys)))
+                for i, key in enumerate(team_performance_keys):
+                    current[i] = max(current[i], min(99, int(floor.get(key, 0))))
+                file.seek(roster_data_addresses[team] + team_performance_offset)
+                file.write(current)
             
     except Exception as e:
         log.error(f"Error while writing team data to roster: {e}")

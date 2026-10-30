@@ -46,6 +46,19 @@ def test_wind_always_written(game_dir, match_data):
             assert (wind.get("x"), wind.get("z")) == ("0", "0")     # calm has no direction
 
 
+def test_wind_direction_written_as_integers(game_dir, match_data):
+    """The game parses <WIND x/z> with atol: "-0.7071" would read as 0, a
+    calm wind. Off-axis bearings must survive as integers."""
+    md = dict(match_data, wind_power=6, wind_x=-0.1736, wind_z=-0.9848)
+    _, root = write_mission(game_dir, md)
+    wind = root.find("GAME/ENVIRONMENT/WEATHER/WIND")
+    assert (wind.get("x"), wind.get("y"), wind.get("z")) == ("-174", "0", "-985")
+    _, root = write_mission(game_dir, dict(match_data, wind_power=None))
+    wind = root.find("GAME/ENVIRONMENT/WEATHER/WIND")
+    for axis in ("x", "z"):
+        assert wind.get(axis).lstrip("-").isdigit()
+
+
 def test_weather_defaults(game_dir, match_data):
     md = dict(match_data, environment=None, pitch_texture="")
     _, root = write_mission(game_dir, md)
@@ -55,7 +68,8 @@ def test_weather_defaults(game_dir, match_data):
 
 def test_advanced_fields_omitted_by_default(game_dir, match_data):
     _, root = write_mission(game_dir, match_data)
-    for attr in ("anthem", "haka0", "haka1", "trophy_lift", "stadium_flags", "kickassist"):
+    for attr in ("anthem", "haka0", "haka1", "trophy_lift", "stadium_flags", "kickassist",
+                 "cpu_lineout_keep", "cpu_jackal"):
         assert attr not in root.attrib
     assert root.find("EVENTS") is None
     assert list(root.find("OBJECTIVES")) == []
@@ -63,7 +77,9 @@ def test_advanced_fields_omitted_by_default(game_dir, match_data):
 
 def test_advanced_fields_written(game_dir, match_data):
     md = dict(match_data, anthem="home", haka_away=True, trophy_lift="on", stadium_flags=False,
-              kick_assist=True, precip_mode="snow", snow_intensity=12.0, breath=True,
+              kick_assist=True, cpu_edge={"cpu_lineout_keep": 97, "cpu_jackal": 25,
+                                                   "cpu_fh_kick": "65,40,15,5"},
+              precip_mode="snow", snow_intensity=12.0, breath=True,
               score_events=[{"type": "SS_TRY", "team": "away", "player": 3, "time": 300},
                             {"type": ""}],
               mission_state={"mode_name": "PEN K", "mode_time": 600, "mode_period": 1},
@@ -77,6 +93,8 @@ def test_advanced_fields_written(game_dir, match_data):
     _, root = write_mission(game_dir, md)
     assert root.get("anthem") == "home" and root.get("haka1") == "1"
     assert root.get("stadium_flags") == "off" and root.get("kickassist") == "on"
+    assert root.get("cpu_lineout_keep") == "97" and root.get("cpu_jackal") == "25"
+    assert root.get("cpu_fh_kick") == "65,40,15,5"
     weather = root.find("GAME/ENVIRONMENT/WEATHER")
     assert weather.get("precip") == "snow" and weather.get("intensity") == "12.0"
     assert weather.get("breath") == "on"
@@ -115,6 +133,22 @@ def test_roster_golden_and_readable(game_dir, data_dir, ds, match_data, golden):
             assert abs(rec["weight_kg"] - player["weight"]) <= 1
             assert rec["foot"] == f"{player['best_foot']}_footed"
             assert rec["socks"] == ("up" if player["socks_up"] else "down")
+
+
+def test_roster_team_performance_floor(game_dir, match_data):
+    """legend/immortal floor the CPU team's record performance bytes (attack is
+    what the CPU set-play chooser reads); a stock value above stays."""
+    path = os.path.join(game_dir, gsv.game_filenames["roster"])
+    GFP.edit_roster_file(copy.deepcopy(match_data))
+    before = read_roster(path)["teams"]
+    md = copy.deepcopy(match_data)
+    md["team_B"]["performance_floor"] = {k: 90 for k in gsv.team_performance_keys}
+    GFP.edit_roster_file(md)
+    after = read_roster(path)["teams"]
+    a_id, b_id = gsv.teams_id["team_A"], gsv.teams_id["team_B"]
+    assert after[a_id]["performance"] == before[a_id]["performance"]
+    for key, value in after[b_id]["performance"].items():
+        assert value == max(90, before[b_id]["performance"][key])
 
 
 @pytest.mark.xfail(strict=True, reason="suspected bug: write_players_data_to_roster truncates "

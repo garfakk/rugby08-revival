@@ -79,6 +79,8 @@ class Presentation:
     # fn(side): EDIT SQUAD on each side the player controls (as in quick
     # match); the mode opens the squad editor and presents again after it
     on_edit_squad: Optional[Callable] = None
+    # the start button: PERFORM TOSS when a coin toss comes first
+    play_label: str = "KICK OFF"
 
 
 def _kit_assets(ds, team_id, season, key, kit_variant="", kit_override=None):
@@ -370,6 +372,7 @@ class MatchPresentationScreen(KickoffTransition, Screen):
         self.objectives_list.setText("<br>".join(f"▸&nbsp;<b>{o}</b>" for o in p.objectives))
         self.objectives_box.setVisible(bool(p.objectives))
         self._build_choices(p.choices)
+        self.play_btn.setText(p.play_label)
         self.text_scroll.setVisible(bool(p.briefing or details))
         self.text_scroll.verticalScrollBar().setValue(0)
 

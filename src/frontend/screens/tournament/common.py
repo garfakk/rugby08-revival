@@ -375,10 +375,11 @@ class ScoreCard(ActivatableCard):
     """One result (or upcoming tie): crest NAME [score] NAME crest, the
     winner bright and the loser dimmed, a caption above."""
 
-    def __init__(self, ds, t, fixture, highlight=(), parent=None):
+    def __init__(self, ds, t, fixture, highlight=(), caption=None, parent=None):
         super().__init__(parent, stripe=YOU_TINT if (fixture.home in highlight
                                                       or fixture.away in highlight) else None)
         self.ds, self.t, self.f = ds, t, fixture
+        self.caption = fixture.label if caption is None else caption
         self.setFixedHeight(62)
         self.setMinimumWidth(300)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
@@ -392,7 +393,7 @@ class ScoreCard(ActivatableCard):
         f, t, w = self.f, self.t, self.width()
         p.setFont(tracked_font(FONT_DISPLAY, 8, QFont.DemiBold, 1.4))
         p.setPen(QColor(FG_TERTIARY))
-        p.drawText(QRectF(14, 4, w - 28, 14), Qt.AlignLeft | Qt.AlignVCenter, (f.label or "").upper())
+        p.drawText(QRectF(14, 4, w - 28, 14), Qt.AlignLeft | Qt.AlignVCenter, (self.caption or "").upper())
         if f.result and f.result.source in ("game", "real"):
             # PLAYED: in the game; REAL: reality mode's real result
             p.setPen(QColor(GREEN if f.result.source == "game" else INFO))
@@ -447,15 +448,20 @@ def ref_label(t, ref) -> str:
     pos = rest[len(gid):]
     stage = t.stage(sid)
     group = stage.group(gid) if stage else None
+    if stage and group and len(stage.groups) == 1:
+        # one league: "1st in the table", "6th in the table"
+        n = int(pos) if pos.isdigit() else 0
+        return f"{n}{'th' if 10 <= n % 100 <= 20 else {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th')} in the table"
     name = group.name if group else f"Pool {gid}"
     place = {"1": "winner", "2": "runner-up", "3": "third"}.get(pos, f"#{pos}")
     return f"{name} {place}"
 
 
 class NewsItem(QWidget):
-    """One headline: a coloured kind tag, the matchday, the text."""
+    """One headline: a coloured kind tag, the text, the round (`day_label`,
+    "R3" / "QF": report.round_short)."""
 
-    def __init__(self, item, compact=False, show_day=True, parent=None):
+    def __init__(self, item, compact=False, show_day=True, day_label=None, parent=None):
         super().__init__(parent)
         self.setAttribute(Qt.WA_StyledBackground, False)
         kind = item.get("kind", "")
@@ -471,7 +477,7 @@ class NewsItem(QWidget):
                     size=T_LABEL - (1 if compact else 0))
         h.addWidget(text, stretch=1)
         if show_day:
-            day = eyebrow_label(f"MD {item.get('day', 0) + 1}", color=FG_MUTED, size=9)
+            day = eyebrow_label(day_label or f"R{item.get('day', 0) + 1}", color=FG_MUTED, size=9)
             h.addWidget(day, alignment=Qt.AlignTop)
 
     def paintEvent(self, event):

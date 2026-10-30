@@ -8,7 +8,25 @@ mental/physical ratings floored higher, position special skills switched on,
 position AI tendencies set, forwards made slightly bigger and star player
 classes (reR08 ENABLE_STARPLAYERS) handed out to the players they suit, with
 the star over their heads hidden. The human team's stamina/fitness is capped
-so it tires while the CPU doesn't.
+so it tires while the CPU doesn't. On top of the roster, the match .mis gets
+reR08 ENABLE_CPU_EDGE percentages: contested CPU lineout throws kept, human
+throws stolen, extra CPU jackals at the ruck and human jackals refused on a
+CPU ruck (the ratings alone can't do it: the stock lineout contest is a
+stat-weighted coin flip, and a human thrower with the better stat never
+loses it). The CPU fly-half kicks or attacks by pitch zone and alternates
+(cpu_fh_kick) and the human side runs slower while a CPU set play is on
+(cpu_setplay_slow), so the play gets executed before the tackle comes.
+
+CPU attack also rides the game's own mechanisms: the team record's
+performance bytes (stock ones are never touched by the mod otherwise) are
+floored -- "attack" is what the set-play chooser reads for how often the CPU
+calls a set play from a ruck (0.1 .. 0.75), the chance of the flair options
+(the attack value itself in % from 90) and the tackle-evasion window scale;
+"defence" drives the CPU's defensive-error chance (0 from 81). And the key
+men get the special skills the chemistry tables (Xml/Chemistry) ask for:
+captain Command (+5% scrummaging/lineouts/rucking/passing/gap defence
+team-wide), the half-back, midfield and back-three unit combinations
+(passing, set-play success, crash-ball, kicking, gap defence bonuses).
 
 Only applies to a CPU side against a human side; with humans on both sides
 (or none) nothing is changed, the match is plain elite.
@@ -20,6 +38,12 @@ from app import star_classes as SC
 # .mis diff= value each level runs the stock AI at.
 MISSION_DIFFICULTY = {"club": 0, "pro": 1, "elite": 2, "legend": 2, "immortal": 2}
 LEVELS = ["club", "pro", "elite", "legend", "immortal"]
+
+
+def preferred() -> str:
+    """Settings > Preferred Difficulty: the level a match starts on."""
+    from shared.user_prefs import user_prefs
+    return user_prefs.difficulty if user_prefs.difficulty in LEVELS else "elite"
 
 RATING_KEYS = [
     "attack", "defense", "speed", "acceleration", "agility", "handling", "passing",
@@ -82,6 +106,26 @@ FIT_WEIGHT = 100
 REUSE_PENALTY = 150
 GOAL_KICKER_BONUS = 40
 
+# Team record performance bytes (backend writes them, never lowering stock).
+TEAM_PERFORMANCE = ["attack", "defence", "scrums", "lineouts", "rucking", "kicking",
+                    "technique", "stamina", "flair", "rating"]
+
+# Skills the chemistry combinations / individual influences need, by shirt:
+# HalfBacks (SH DefensiveOrganisation/Passer, FH DefensiveOrganisation/
+# Playmaker), MidField (FH Passer + 12 CrashBall, 12 CrashBall + 13 Passer/
+# Scoring: set-play success + crash-ball), BackRow (8 CrashBall/Command),
+# ThreeQuarters (14 CrashBall, 15 DefensiveOrganisation), FB TacticalKicking.
+CHEMISTRY_SKILLS = {
+    8: ["ss_crashball", "ss_command"],
+    9: ["ss_defensive_organisation", "ss_passer"],
+    10: ["ss_defensive_organisation", "ss_play_maker", "ss_passer", "ss_tactical_kicking"],
+    12: ["ss_crashball", "ss_play_maker"],
+    13: ["ss_passer", "ss_scoring"],
+    14: ["ss_crashball"],
+    15: ["ss_defensive_organisation", "ss_tactical_kicking"],
+}
+ROLE_SKILLS = {"captain": "ss_command", "long_GK": "ss_goal_kicker", "short_GK": "ss_goal_kicker"}
+
 # Immortal attackers: much better attack, faster, harder to bring down.
 ATTACK_FLOORS = {
     "attack": 97, "speed": 96, "acceleration": 96, "agility": 95,
@@ -102,6 +146,19 @@ PROFILES = {
         "forward_weight_kg": 2,
         "forward_height_cm": 1,
         "human_endurance_cap": 80,   # human team's stamina/fitness ceiling
+        "team_floor": 88,         # team record performance bytes
+        "chemistry": True,        # CHEMISTRY_SKILLS / ROLE_SKILLS
+        # reR08 ENABLE_CPU_EDGE .mis attrs, percent
+        "cpu_edge": {
+            "cpu_lineout_keep": 85,    # contested CPU throws kept at least
+            "cpu_lineout_steal": 12,   # contested human throws stolen at least
+            "cpu_jackal": 10,          # extra chance per ruck the CPU defence jackals
+            "cpu_ruck_secure": 50,     # human jackals refused on a CPU ruck
+            # fly-half kick share by zone: deep own end, own half, opp half,
+            # opp 22 (alternates: two kicks in a row halve the next chance)
+            "cpu_fh_kick": "60,35,15,5",
+            "cpu_setplay_slow": 10,    # human players slower while a CPU set play runs
+        },
     },
     "immortal": {
         "rating_boost": 15,
@@ -117,6 +174,16 @@ PROFILES = {
         "forward_weight_kg": 4,
         "forward_height_cm": 2,
         "human_endurance_cap": 70,
+        "team_floor": 99,
+        "chemistry": True,
+        "cpu_edge": {
+            "cpu_lineout_keep": 97,
+            "cpu_lineout_steal": 25,
+            "cpu_jackal": 25,
+            "cpu_ruck_secure": 85,
+            "cpu_fh_kick": "65,40,15,5",
+            "cpu_setplay_slow": 20,
+        },
     },
 }
 
@@ -241,7 +308,24 @@ def boost_team(team: dict, level: str) -> dict:
     stars = assign_stars(players, profile, kicker_index)
     team["players"] = [boost_player(player, profile, stars.get(index, 0), index == kicker_index)
                        for index, player in enumerate(players)]
+    if profile.get("chemistry"):
+        give_chemistry_skills(team)
+    team["performance_floor"] = {k: profile["team_floor"] for k in TEAM_PERFORMANCE}
     return team
+
+
+def give_chemistry_skills(team: dict):
+    """Switch on the skills the chemistry tables want, on the starters by
+    shirt and on the role holders (captain, goal kickers)."""
+    players = team["players"]
+    for shirt, skills in CHEMISTRY_SKILLS.items():
+        if shirt <= len(players):
+            for skill in skills:
+                players[shirt - 1][skill] = True
+    for role, skill in ROLE_SKILLS.items():
+        shirt = team.get("roles", {}).get(role)
+        if shirt and 1 <= shirt <= min(len(players), STARTERS):
+            players[shirt - 1][skill] = True
 
 
 def tire_team(team: dict, level: str) -> dict:
@@ -261,4 +345,5 @@ def apply(match_data: dict, level: str, home_humans: int, away_humans: int) -> d
         human = "team_A" if key == "team_B" else "team_B"
         match_data[key] = boost_team(match_data[key], level)
         match_data[human] = tire_team(match_data[human], level)
+        match_data["cpu_edge"] = dict(PROFILES[level]["cpu_edge"])
     return match_data

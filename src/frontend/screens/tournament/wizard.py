@@ -2,18 +2,21 @@
 screens/tournament/wizard.py — Setting up a new tournament, in two steps:
 
   1 COMPETITION  competition cards, one per competition
-  2 SETUP        edition (its real editions, e.g. the Six Nations 2008; the
-                 season follows it), name, difficulty; the match rules (half
-                 length, injuries, fatigue, suspensions) folded into one
-                 summary line until MATCH RULES opens them; the teams you control
-                 (crest tiles: click to take a team, again to leave it; two
+  2 SETUP        edition (only the ones the data can play: a real edition,
+                 e.g. the Six Nations 2008, or a club league's season; a team
+                 the data doesn't have is left out, never replaced), name,
+                 difficulty; the match rules (half length, injuries, fatigue,
+                 suspensions) folded into one summary line until MATCH RULES
+                 opens them; the teams you control (crest tiles, none taken
+                 to start with: click to take a team, again to leave it; two
                  at most, P1 and P2). EDIT THE DRAW opens who plays in which
-                 pool (crest + team per slot), default teams / shuffle.
+                 pool (crest + team per slot), the edition's draw / shuffle.
 
 A step bar on top (click a step, or LB / RB) and BACK / NEXT at the bottom;
 the last step's NEXT is START TOURNAMENT, which creates and saves it and
 opens the dashboard.
 """
+import copy
 import random
 
 from PyQt5.QtCore import QRectF, Qt, pyqtSignal
@@ -21,6 +24,7 @@ from PyQt5.QtGui import QColor, QFont, QFontMetrics, QPainter, QPen
 from PyQt5.QtWidgets import (QGridLayout, QHBoxLayout, QScrollArea, QStackedWidget, QVBoxLayout,
                              QWidget)
 
+from app import difficulty
 from app.challenges import DIFFICULTIES, HALF_LENGTHS
 from app.input import KEYMAP, Action
 from app.screen_base import Screen
@@ -45,13 +49,12 @@ DRAW_PAGE = len(STEPS)      # the stack page EDIT THE DRAW opens (part of setup)
 MAX_HUMANS = 2
 
 
-def _format_line(tpl) -> str:
-    stages = tpl.get("stages", [])
+def _format_line(edition) -> str:
+    stages = edition.template.get("stages", [])
     rr = [s for s in stages if s.get("kind", "round_robin") == "round_robin"]
     ko = [s for s in stages if s.get("kind") == "knockout"]
-    groups = sum(len(s.get("group_names") or {}) for s in rr)
-    teams = sum(len(ts) for st in (tpl.get("participants", {}).get("default", {}) or {}).values()
-                for ts in st.values())
+    groups = sum(len(g) for g in edition.participants.values())
+    teams = edition.team_count()
     parts = [f"{teams} teams"] if teams else []
     if rr:
         parts.append(f"{groups} pools" if groups > 1 else "league")
@@ -117,35 +120,32 @@ class StepBar(QWidget):
                        self.steps[i].upper())
 
 
-def family_of(tid, tpl) -> str:
-    """The competition a template belongs to: its branding's (the RWC 2015
-    template is a "world_cup"), else its own id."""
-    return str(tpl.get("branding") or tid)
-
-
-def edition_label(tpl) -> str:
-    """"2015" for a real edition, "custom" for the open template (today's squads)."""
-    if tpl.get("season") or tpl.get("branding_season"):
-        return str(tpl.get("branding_season") or tpl.get("name", ""))
-    return "custom"
-
-
 class CompetitionCard(ActivatableCard):
-    """One competition; `editions` = how many real editions it has."""
+    """One competition (`tid` = its family) and the span of its editions;
+    shows the edition picked last."""
 
-    def __init__(self, ds, tid, tpl, editions=0, parent=None):
+    def __init__(self, ds, tid, editions, parent=None):
         super().__init__(parent)
         self.ds, self.tid, self.editions = ds, tid, editions
         self.setFixedHeight(96)
-        self.set_template(tpl)
+        self.set_edition(editions[0])
 
-    def set_template(self, tpl):
-        self.tpl = tpl
-        self._emblem = competition_emblem(self.ds, tpl, 72)
-        self._format = _format_line(tpl)
-        if self.editions:
-            self._format += f" · {self.editions} real edition{'s' if self.editions != 1 else ''}"
+    def set_edition(self, edition):
+        self.tpl = edition.template
+        self._emblem = competition_emblem(self.ds, self.tpl, 72)
+        self._format = _format_line(edition)
+        labels = [e.label for e in self.editions if e.label]
+        if len(labels) > 1:
+            self._format += f" · {len(labels)} editions, {labels[-1]} to {labels[0]}"
+        elif labels:
+            self._format += f" · {labels[0]}"
         self.update()
+
+    def _title(self):
+        """The competition's name, without an edition's year ("Six Nations")."""
+        name = str(self.editions[-1].template.get("name", self.tid))
+        label = self.editions[-1].label
+        return name[:-len(label)].strip() if label and name.endswith(label) else name
 
     def paintEvent(self, event):
         p = QPainter(self)
@@ -157,7 +157,7 @@ class CompetitionCard(ActivatableCard):
         p.setFont(tracked_font(FONT_DISPLAY, 19, QFont.Bold, 1.0))
         p.setPen(QColor(FG_PRIMARY))
         p.drawText(QRectF(x, 20, w - x - 40, 28), Qt.AlignLeft | Qt.AlignVCenter,
-                   self.tpl.get("name", self.tid).upper())
+                   self._title().upper())
         p.setFont(tracked_font(FONT_DISPLAY, 10, QFont.Bold, 1.4))
         p.setPen(QColor(ACCENT if self.selected else FG_TERTIARY))
         p.drawText(QRectF(x, 50, w - x - 14, 16), Qt.AlignLeft | Qt.AlignVCenter, self._format.upper())
@@ -216,7 +216,6 @@ class TournamentWizardScreen(Screen):
         super().__init__(on_back=on_back)
         self.ds = ds
         self.on_created = on_created
-        self.templates = {}
         self.slot_fields = {}      # (stage_id, group_id, index) -> ChoiceField
         self.slot_crests = {}      # same key -> PixmapLabel
         self._comp_cards = []
@@ -289,7 +288,7 @@ class TournamentWizardScreen(Screen):
         v.setContentsMargins(0, 4, 8, 4)
         v.setSpacing(14)
         self.edition = ChoiceField("edition", allow_blank=False,
-                                   display=lambda tid: edition_label(self.templates.get(tid, {})))
+                                   display=lambda eid: self._edition_label(eid))
         self.edition.popup_title = "edition"
         self.edition.edited.connect(lambda tid: self._pick_competition(tid))
         self.name = TextField("name", max_bytes=60)
@@ -304,6 +303,9 @@ class TournamentWizardScreen(Screen):
             grid.add(f)
             self.focus.register(f)
         sv.addWidget(grid)
+        # who the edition has to do without (left out, never replaced)
+        self.missing_note = Note("", color=FG_TERTIARY)
+        sv.addWidget(self.missing_note)
         # the match rules: the competition's defaults suit most, so one
         # summary line until MATCH RULES opens them
         rules = QHBoxLayout()
@@ -379,7 +381,7 @@ class TournamentWizardScreen(Screen):
         top = QHBoxLayout()
         self.draw_title = SectionTitle("the draw")
         top.addWidget(self.draw_title, stretch=1)
-        self.reset_btn = compact_button("DEFAULT TEAMS", "neutral")
+        self.reset_btn = compact_button("EDITION'S DRAW", "neutral")
         self.reset_btn.clicked.connect(self._fill_defaults)
         self.shuffle_btn = compact_button("SHUFFLE DRAW", "neutral")
         self.shuffle_btn.clicked.connect(self._shuffle)
@@ -397,57 +399,53 @@ class TournamentWizardScreen(Screen):
     # ── data ─────────────────────────────────────────────────────────────
     def on_show(self):
         super().on_show()
-        self.templates = formats.load_templates()
-        # one card per competition, its open template first, then its
-        # editions in the templates' order (newest first)
-        self.families = {}
-        for tid, tpl in self.templates.items():
-            self.families.setdefault(family_of(tid, tpl), []).append(tid)
-        for tids in self.families.values():
-            tids.sort(key=lambda t: bool(edition_label(self.templates[t]) != "custom"))
+        # the season most teams have (the latest of those), for a template
+        # with neither a season of its own nor a category
+        seasons = sorted({s for seasons in self.ds.teams.values() for s in seasons}, reverse=True)
+        count = {s: sum(1 for ts in self.ds.teams.values() if s in ts) for s in seasons}
+        self._default_season = max(seasons, key=lambda s: (count[s], s)) if seasons else ""
+        # one card per competition, its editions newest first: only what
+        # the data can play
+        self.families = {fam: eds for fam, eds in
+                         formats.editions(self.ds, default_season=self._default_season).items()}
+        self.by_id = {e.id: e for eds in self.families.values() for e in eds}
         self._picked_in = {}
         keep = getattr(self, "_comp", None)
         for c in self._comp_cards:
             self.focus.unregister(c)
         clear_layout(self.comp_grid)
         self._comp_cards = []
-        for i, (fam, tids) in enumerate(self.families.items()):
-            editions = sum(1 for t in tids if edition_label(self.templates[t]) != "custom")
-            card = CompetitionCard(self.ds, fam, self.templates[tids[0]],
-                                   editions if len(tids) > 1 else 0)
+        for i, (fam, eds) in enumerate(self.families.items()):
+            card = CompetitionCard(self.ds, fam, eds)
             card.activated.connect(lambda fam=fam: self._pick_family(fam))
             self.focus.register(card)
             self.comp_grid.addWidget(card, i // 2, i % 2)
             self._comp_cards.append(card)
-        # the season most teams have (the latest of those): the fewest sides
-        # borrowing a squad from another era — for a template without its own
-        seasons = sorted({s for seasons in self.ds.teams.values() for s in seasons}, reverse=True)
-        count = {s: sum(1 for ts in self.ds.teams.values() if s in ts) for s in seasons}
-        self._default_season = max(seasons, key=lambda s: (count[s], s)) if seasons else ""
-        first = next(iter(self.families.values()), [""])[0]
-        self.humans = []
-        self._pick_competition(keep if keep in self.templates else first)
+        first = next(iter(self.families.values()), [None])[0]
+        self.humans = []            # nobody's team until you take one
+        if keep in self.by_id or first:
+            self._pick_competition(keep if keep in self.by_id else first.id)
         self._go(0)
         motion.stagger_in(self._comp_cards[:12], step=40)
 
-    def template(self):
-        return self.templates.get(getattr(self, "_comp", ""), {})
+    def current_edition(self):
+        return self.by_id.get(getattr(self, "_comp", ""))
 
-    def _season_for(self, tpl):
-        """A historical edition (e.g. a World Cup) names the season its squads
-        were entered for — its own even when no team has that one (Six
-        Nations 2017: each team then plays its nearest squad); the open
-        template takes the usual season."""
-        return str(tpl.get("season") or "") or self._default_season
+    def template(self):
+        e = self.current_edition()
+        return e.template if e else {}
+
+    def _edition_label(self, eid):
+        e = self.by_id.get(eid)
+        if not e:
+            return ""
+        return e.label or "current squads"
 
     def _team_options(self):
-        tpl = self.template()
         out = []
-        for tid, seasons in self.ds.teams.items():
-            s = engine.pick_season(seasons, self.season)
-            variant = engine.entry_variant(self.ds, tpl, tid, s)
-            if len(engine.usable_squad(self.ds, tid, s, variant)) >= 22:
-                out.append((seasons[s].get("name", tid), tid))
+        for tid in self._usable():
+            seasons = self.ds.teams[tid]
+            out.append((seasons[engine.pick_season(seasons, self.season)].get("name", tid), tid))
         out.sort(key=lambda x: x[0].lower())
         return [tid for _n, tid in out]
 
@@ -474,65 +472,78 @@ class TournamentWizardScreen(Screen):
                           variant=engine.entry_variant(self.ds, self.template(), tid, s))
 
     def _pick_family(self, fam):
-        """A competition card: its edition picked last, else its first."""
-        tids = self.families.get(fam) or []
-        if tids:
-            self._pick_competition(self._picked_in.get(fam) or tids[0])
+        """A competition card: its edition picked last, else its newest."""
+        eds = self.families.get(fam) or []
+        if eds:
+            self._pick_competition(self._picked_in.get(fam) or eds[0].id)
 
-    def _pick_competition(self, tid):
-        self._comp = tid
-        tpl = self.template()
-        fam = family_of(tid, tpl)
-        self._picked_in[fam] = tid
+    def _pick_competition(self, eid):
+        e = self.by_id.get(eid)
+        if not e:
+            return
+        self._comp = eid
+        tpl = e.template
+        self._picked_in[e.family] = eid
         for c in self._comp_cards:
-            c.selected = c.tid == fam
+            c.selected = c.tid == e.family
             if c.selected:
-                c.set_template(tpl)
+                c.set_edition(e)
             c.update()
-        tids = self.families.get(fam, [tid])
-        self.edition.set_options(tids)
-        self.edition.set_value(tid)
-        self.edition.setEnabled(len(tids) > 1)
+        eds = self.families.get(e.family, [e])
+        self.edition.set_options([x.id for x in eds])
+        self.edition.set_value(eid)
+        self.edition.setEnabled(len(eds) > 1)
         self.name.set_value(tpl.get("name", ""))
         opts = tpl.get("default_options") or {}
-        self.difficulty.set_value(opts.get("difficulty", "pro"))
+        self.difficulty.set_value(difficulty.preferred())     # Settings > Preferred Difficulty
         self.half.set_value(opts.get("halftime_length", "5m"))
         self.injuries.set_value("on" if opts.get("injuries", True) else "off")
         self.suspensions.set_value("on" if opts.get("suspensions", True) else "off")
         self.fatigue.set_value("on" if opts.get("fatigue", True) else "off")
         self._update_rules_summary()
-        offered, why = reality.available(tpl, known_teams=self.ds.teams)
+        self.season = e.season
+        self.missing_note.setText(self._missing_text(e))
+        self.missing_note.setVisible(bool(e.missing))
+        offered, why = reality.available(tpl, known_teams=self._usable())
         self._reality_offered = offered
         self.reality_row.setVisible(offered)
         if not offered:
             self.reality.set_value("off")
-        self.season = self._season_for(tpl)
-        self._build_groups(self._installed(engine.default_participants(tpl, self.season)))
+        self._build_groups(self._edition_draw(e))
 
-    def _installed(self, participants):
-        """A template's draw with every team the data doesn't have replaced
-        by an unused team that has a squad (a nation for a nation, a club
-        for a club where possible), so the default draw can be started as
-        it is."""
-        options = self._team_options()
-        used = {tid for groups in participants.values() for ts in groups.values() for tid in ts}
-        spare = [tid for tid in options if tid not in used]
+    def _usable(self):
+        """The teams with a full squad for this edition (cached per edition)."""
+        key = (getattr(self, "_comp", ""), self.season)
+        if getattr(self, "_usable_key", None) != key:
+            self._usable_key = key
+            self._usable_set = formats.playable_teams(self.ds, self.template(), self.season)
+        return self._usable_set
 
-        def kind(tid):
-            seasons = self.ds.teams.get(tid) or {}
-            info = seasons.get(engine.pick_season(seasons, self.season)) if seasons else None
-            return str((info or {}).get("type") or "")
+    def _edition_draw(self, e):
+        return {sid: {gid: list(ts) for gid, ts in groups.items()} for sid, groups in e.participants.items()}
 
-        for groups in participants.values():
-            for gid, teams in groups.items():
-                kinds = {kind(t) for t in teams if t in self.ds.teams}
-                for i, tid in enumerate(teams):
-                    if tid in self.ds.teams or not spare:
-                        continue
-                    pick = next((s for s in spare if kind(s) in kinds), spare[0])
-                    spare.remove(pick)
-                    teams[i] = pick
-        return participants
+    def _missing_text(self, e):
+        """Who the edition plays without, and where it shows."""
+        if not e.missing:
+            return ""
+        names = [self._plain_name(t) if t in self.ds.teams else None for t in e.missing]
+        known = [n for n in names if n]
+        unknown = len(names) - len(known)
+        parts = []
+        if known:
+            parts.append(", ".join(known) + (" have" if len(known) > 1 else " has") + " no full squad")
+        if unknown:
+            parts.append(f"{unknown} team{'s' if unknown > 1 else ''} of the real draw "
+                         f"{'are' if unknown > 1 else 'is'} not in the data")
+        short = [f"{self._group_name(sid, gid)} has {len(ts)} teams"
+                 for sid, groups in e.participants.items() for gid, ts in groups.items()
+                 if len(groups) > 1 and len(ts) < max(len(x) for x in groups.values())]
+        text = "; ".join(parts) + ": left out, not replaced"
+        return "ⓘ  " + text + (f" ({', '.join(short)})." if short else ".")
+
+    def _group_name(self, sid, gid):
+        spec = next((s for s in self.template().get("stages", []) if s.get("id") == sid), {})
+        return (spec.get("group_names") or {}).get(gid, f"Pool {gid}")
 
     def _build_groups(self, participants):
         self._building = True
@@ -554,8 +565,8 @@ class TournamentWizardScreen(Screen):
                 cv.setContentsMargins(16, 12, 16, 14)
                 cv.setSpacing(6)
                 head = QHBoxLayout()
-                head.addWidget(display_label(names.get(gid, f"Pool {gid}"), 14, QFont.Bold, track=1.2,
-                                             color=ACCENT))
+                title = names.get(gid, f"Pool {gid}") if len(groups) > 1 else "the teams"
+                head.addWidget(display_label(title, 14, QFont.Bold, track=1.2, color=ACCENT))
                 head.addStretch(1)
                 head.addWidget(eyebrow_label(f"{len(teams)} teams", color=FG_TERTIARY, size=9))
                 cv.addLayout(head)
@@ -578,7 +589,8 @@ class TournamentWizardScreen(Screen):
         for i, card in enumerate(cards):
             self.groups_holder.addWidget(card, i // cols, i % cols)
         n = sum(len(ts) for g in participants.values() for ts in g.values())
-        self.draw_title.set_right(f"{n} teams · {len(cards)} pool{'s' if len(cards) != 1 else ''}")
+        self.draw_title.set_right(f"{n} teams · {len(cards)} pools" if len(cards) > 1 else f"{n} teams")
+        self.shuffle_btn.setVisible(len(cards) > 1)      # one league: nothing to shuffle
         self._building = False
         self._participants_changed()
 
@@ -598,7 +610,7 @@ class TournamentWizardScreen(Screen):
             return
         teams = [tid for groups in self.participants().values() for ts in groups.values() for tid in ts
                  if tid in self.ds.teams]
-        self.humans = [h for h in self.humans if h in teams] or teams[:1]
+        self.humans = [h for h in self.humans if h in teams]      # never one picked for you
         self._build_tiles(teams)
         self._humans_changed()
 
@@ -634,7 +646,8 @@ class TournamentWizardScreen(Screen):
         self._validate()
 
     def _fill_defaults(self):
-        self._build_groups(self._installed(engine.default_participants(self.template(), self.season)))
+        if self.current_edition():
+            self._build_groups(self._edition_draw(self.current_edition()))
 
     def _shuffle(self):
         parts = self.participants()
@@ -656,11 +669,11 @@ class TournamentWizardScreen(Screen):
         found = formats.problems(self.ds, self.template(), self.season, self.participants())
         out = {0: [] if self.template() else ["choose a competition"], 1: list(found)}
         if not self.humans:
-            out[1].append("pick a team to control")
+            out[1].append("take a team: click its crest under TEAMS YOU CONTROL")
         if self._reality_wanted():
-            ok, why = reality.available(self.template(), self.participants(), self.season, self.ds.teams)
+            ok, why = reality.available(self.template(), self.participants(), self.season, self._usable())
             if not ok:
-                out[1].append(why[0].lower() + why[1:] + " (turn reality mode off, or DEFAULT TEAMS)")
+                out[1].append(why[0].lower() + why[1:] + " (turn reality mode off, or EDITION'S DRAW)")
         return out
 
     def _validate(self):
@@ -734,7 +747,7 @@ class TournamentWizardScreen(Screen):
             "reality": self._reality_wanted(),
         }
         try:
-            session = TournamentSession.new(self.ds, self.template(), self.season,
+            session = TournamentSession.new(self.ds, copy.deepcopy(self.template()), self.season,
                                             self.participants(), list(self.humans), options,
                                             name=self.name.value().strip() or None)
         except Exception as e:

@@ -300,13 +300,12 @@ def simulate_earlier(t) -> list:
 
 
 def simulate_until_human(t) -> list:
-    """Simulate AI fixtures until a human fixture is due (or the end),
-    including that day's earlier kick-offs."""
+    """Simulate AI fixtures until a human fixture is due (or the end). That
+    day's earlier kick-offs are left for simulate_earlier, when the human
+    match is about to be played."""
     done = []
     while not t.finished:
-        f = next_human_fixture(t)
-        if f:
-            done += simulate_earlier(t)
+        if next_human_fixture(t):
             break
         sims = simulate_day(t)
         done += sims

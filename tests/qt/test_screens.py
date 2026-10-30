@@ -91,28 +91,89 @@ def test_match_setup_builds_match_data(window, qapp):
 
 
 def test_match_setup_controllers(window, qapp):
+    """Each device's icon on the board (keyboard, then the pads connected in
+    order) becomes the .mis controller slots."""
     from app.match_data_builder import build_match_data
+    from ui.controller_board import KBD
     window.show_match_setup()
     qapp.processEvents()
     setup = window.screen_match_setup.setup_screen
+    board = setup.controller_board
+    board.set_pads((0, 2))                     # two pads plugged in (js0, js2)
     assert {s: c["zone"] for s, c in setup.cfg.controllers.items()} == \
         {1: "home", 2: "none", 3: "none", 4: "none"}
-    rows = setup.controller_rows
-    rows[2].set_index(1)                       # gamepad 1 -> away
-    rows[2].changed.emit()
-    rows[3].set_index(0)                       # gamepad 2 -> home
-    rows[3].changed.emit()
+    board.move(0, 1)                           # pad 1 -> away
+    board.move(2, -1)                          # pad 2 -> home
+    board.move(2, -1)                          # already at the end: stays
     assert setup.cfg.controller_counts() == (2, 1)
     md = build_match_data(window.data, setup.cfg)
     assert md["controllers"] == {1: "team_A", 2: "team_B", 3: "team_A", 4: "cpu"}
-    for row in rows.values():                  # every device off: CPU vs CPU
-        row.set_index(2)
-        row.changed.emit()
+    board.set_pads((2,))                       # pad 1 unplugged: pad 2 is now the game's first
+    assert build_match_data(window.data, setup.cfg)["controllers"] == \
+        {1: "team_A", 2: "team_A", 3: "cpu", 4: "cpu"}
+    for device in board.devices():             # every device on CPU: CPU vs CPU
+        board.set_zone(device, "none")
     assert setup.cfg.controller_counts() == (0, 0) and setup.cfg.is_ready()
     assert set(build_match_data(window.data, setup.cfg)["controllers"].values()) == {"cpu"}
     setup._init_devices()
-    for slot_id, row in rows.items():
-        row.set_index(0 if slot_id == 1 else 2)
+    board.set_pads(())
+    assert board.zones == {KBD: "home"}
+
+
+def test_controller_board_each_device_moves_its_own_icon(qapp, monkeypatch):
+    """A pad's left/right moves only its own icon while the board has the
+    focus (the navigator sends no key for it); the keyboard's arrows move the
+    keyboard; a click on an icon's half moves it that way."""
+    from PyQt5.QtCore import QPoint, Qt
+    from PyQt5.QtTest import QTest
+    from PyQt5.QtWidgets import QApplication
+    import app.gamepad as gp
+    from ui.controller_board import KBD, ControllerBoard
+
+    class Pads:
+        state = {}
+        def pads(self):
+            return {n: set(b) for n, b in self.state.items()}
+    sent = []
+    monkeypatch.setattr(gp, "send_key", lambda key, fallback=None, repeat=False: sent.append(key))
+    nav = gp.GamepadNavigator(Pads())
+    nav._timer.stop()
+    active = QApplication.activeWindow()
+    board = None
+    try:
+        Pads.state = {0: set(), 1: set()}
+        nav.poll()
+        board = ControllerBoard()
+        board.resize(700, 200)
+        board.show()
+        assert board.devices() == (KBD, 0, 1)
+        QApplication.setActiveWindow(board)
+        board.setFocus()
+        qapp.processEvents()
+        assert board.hasFocus()
+        assert nav.claim is not None
+        Pads.state = {0: {"right"}, 1: {"left"}}
+        nav.poll()
+        assert board.zones == {KBD: "home", 0: "away", 1: "home"} and sent == []
+        Pads.state = {0: {"down"}, 1: set()}     # not left/right: still drives the menus
+        nav.poll()
+        assert sent == [Qt.Key_Down]
+        QTest.keyClick(board, Qt.Key_Right)
+        assert board.zones[KBD] == "none"
+        rect = board._chip_rects()[1]
+        QTest.mouseClick(board, Qt.LeftButton, pos=QPoint(int(rect.right() - 6), int(rect.center().y())))
+        assert board.zones[1] == "none"
+        Pads.state = {1: set()}                  # pad 0 unplugged
+        nav.poll()
+        assert board.devices() == (KBD, 1)
+        board.hide()
+        assert nav.claim is None
+    finally:
+        gp._navigator = None
+        if board is not None:
+            board.deleteLater()
+        if active is not None:
+            QApplication.setActiveWindow(active)
 
 
 def test_settings_screen_ratio_rows(window, qapp, monkeypatch):
@@ -141,13 +202,11 @@ def test_settings_screen_ratio_rows(window, qapp, monkeypatch):
 
 def _settings_rows(screen, tab):
     from screens.settings import TABS
-    return {row.label.text(): row for row, _changed in screen._rows[TABS.index(tab)]}
+    return {row.label.text(): row for row in screen._rows[TABS.index(tab)]}
 
 
-def test_settings_tabs_tags_and_reset(window, qapp):
-    """Tabs by topic; IN-GAME tags on the rows that only change the game; a
-    dot on a changed row until its tab is reset."""
-    from PyQt5.QtWidgets import QLabel
+def test_settings_tabs_and_reset(window, qapp):
+    """Tabs by topic; resetting a tab puts its settings back to their defaults."""
     from shared.game_profile import game_profile
     from screens.settings import TABS
     s = window.screen_settings
@@ -155,23 +214,36 @@ def test_settings_tabs_tags_and_reset(window, qapp):
     qapp.processEvents()
     assert s.tabs.titles == list(TABS)
 
-    def tagged(row):
-        return any(l.text() == "IN-GAME" for l in row.findChildren(QLabel))
     display = _settings_rows(s, "Display")
     assert list(display)[:3] == ["Windowed Mode", "Resolution", "Screen Ratio"]
     assert {"Shadows", "Gamma"} <= set(display)
-    assert tagged(display["Resolution"]) and tagged(display["Screen Ratio"])
-    assert not tagged(display["Windowed Mode"])
     audio = _settings_rows(s, "Audio")
-    assert tagged(audio["Crowd"]) and not tagged(audio["Music"])   # menu music follows it
-    assert not any(tagged(r) for r in _settings_rows(s, "Advanced").values())
 
     default = game_profile.default("vol_crowd")
     audio["Crowd"].set_value(default - 10 if default >= 10 else default + 10)
-    assert game_profile.get("vol_crowd") != default and audio["Crowd"].is_changed()
+    assert game_profile.get("vol_crowd") != default
     s.reset_tab(TABS.index("Audio"))
     assert game_profile.get("vol_crowd") == default
-    assert not _settings_rows(s, "Audio")["Crowd"].is_changed()
+    window.show_main()
+
+
+def test_settings_preferred_difficulty(window, qapp, monkeypatch):
+    """Settings > Preferred Difficulty is what quick match starts on; no
+    screen centre offsets any more."""
+    from shared.user_prefs import user_prefs
+    monkeypatch.setattr(user_prefs, "difficulty", user_prefs.difficulty)
+    monkeypatch.setattr(user_prefs, "save", lambda: None)
+    s = window.screen_settings
+    window.show_settings()
+    qapp.processEvents()
+    assert not {"Screen Centre Horizontal", "Screen Centre Vertical"} & set(_settings_rows(s, "Display"))
+    row = _settings_rows(s, "Gameplay")["Preferred Difficulty"]
+    row.combo.setCurrentText("Legend")
+    assert user_prefs.difficulty == "legend"
+    window.show_match_setup()
+    qapp.processEvents()
+    setup = window.screen_match_setup.setup_screen
+    assert setup.difficulty_row.current() == "legend" and setup.cfg.difficulty == "legend"
     window.show_main()
 
 

@@ -1,14 +1,21 @@
 """
-screens/tournament/manual_result.py — Expert mode: type a match result in
-instead of playing or simulating it. Functional, not pretty: one event list
-per side (minute, kind, player) plus penalty tries; the score follows from
-the events. A level knockout match also needs the winner.
+screens/tournament/manual_result.py — Expert mode: decide a match without
+playing it. AUTO-GENERATE fills the form from the simulator; every line can
+then be changed, or the whole result typed in. Functional, not pretty: one
+event list per side (minute, kind, player; how long for an injury or a ban)
+plus penalty tries; the score follows from the events. A level knockout
+match also needs the winner.
+
+Recorded untouched, a generated result keeps everything the simulator made
+(missed kicks, tackles, replacements); once edited, it is a manual result.
 """
+import random
+
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QComboBox, QHBoxLayout, QLabel, QPushButton, QScrollArea, QSpinBox,
                              QVBoxLayout, QWidget)
 
-from app.tournament import manual
+from app.tournament import injuries, manual, simulator
 from app.tournament.model import MatchResult
 
 _POINTS = {"try": 5, "conversion": 2, "penalty": 3, "drop": 3}
@@ -27,16 +34,51 @@ class _EventRow(QWidget):
         self.player = QComboBox()
         for shirt, (pid, name) in enumerate(players, 1):
             self.player.addItem(f"{shirt}. {name}", pid)
+        # an injury's type, an injury's or a ban's length
+        self.injury_type = QComboBox()
+        self.injury_type.addItems([row[0] for row in injuries.INJURY_TABLE])
+        self.matches = QSpinBox()
+        self.matches.setRange(0, injuries.OUT_FOR_TOURNAMENT)
+        self.matches.setValue(1)
+        self.matches.setToolTip(f"Matches missed (0 = none, {injuries.OUT_FOR_TOURNAMENT} = "
+                                "the rest of the tournament)")
         h.addWidget(self.minute)
         h.addWidget(self.kind)
         h.addWidget(self.player, stretch=1)
-        self.minute.valueChanged.connect(on_change)
-        self.kind.currentIndexChanged.connect(on_change)
-        self.player.currentIndexChanged.connect(on_change)
+        h.addWidget(self.injury_type)
+        h.addWidget(self.matches)
+        self.kind.currentIndexChanged.connect(self._kind_changed)
+        for w in (self.minute, self.matches):
+            w.valueChanged.connect(on_change)
+        for w in (self.kind, self.player, self.injury_type):
+            w.currentIndexChanged.connect(on_change)
+        self._kind_changed()
+
+    def _kind_changed(self):
+        kind = self.kind.currentText()
+        self.injury_type.setVisible(kind == "injury")
+        self.matches.setVisible(kind in manual.LENGTH_KINDS)
+        self.matches.setSuffix(" matches out" if kind == "injury" else " match ban")
+
+    def set_event(self, ev):
+        self.minute.setValue(int(ev.get("minute", 0)))
+        self.kind.setCurrentText(ev.get("kind", "try"))
+        i = self.player.findData(ev.get("pid"))
+        if i >= 0:
+            self.player.setCurrentIndex(i)
+        if ev.get("type"):
+            self.injury_type.setCurrentText(ev["type"])
+        if ev.get("matches") is not None:
+            self.matches.setValue(int(ev["matches"]))
 
     def as_dict(self):
-        return {"minute": self.minute.value(), "kind": self.kind.currentText(),
-                "pid": self.player.currentData()}
+        kind = self.kind.currentText()
+        out = {"minute": self.minute.value(), "kind": kind, "pid": self.player.currentData()}
+        if kind in manual.LENGTH_KINDS:
+            out["matches"] = self.matches.value()
+        if kind == "injury":
+            out["type"] = self.injury_type.currentText()
+        return out
 
 
 class _SidePanel(QWidget):
@@ -76,6 +118,17 @@ class _SidePanel(QWidget):
         self.rows_box.addWidget(row)
         self._on_change()
 
+    def load(self, events, penalty_tries):
+        while self.rows:
+            row = self.rows.pop()
+            row.setParent(None)
+            row.deleteLater()
+        for ev in events:
+            self.add_row()
+            self.rows[-1].set_event(ev)
+        self.penalty_tries.setValue(penalty_tries)
+        self._on_change()
+
     def remove_row(self):
         if self.rows:
             row = self.rows.pop()
@@ -100,6 +153,19 @@ class ManualResultView(QWidget):
         self.score = QLabel()
         self.score.setAlignment(Qt.AlignCenter)
         v.addWidget(self.score)
+        tools = QHBoxLayout()
+        gen = QPushButton("AUTO-GENERATE")
+        gen.setToolTip("A simulated result for this match (again for another one)")
+        gen.clicked.connect(self.auto_generate)
+        clear = QPushButton("CLEAR")
+        clear.clicked.connect(lambda: self._load(([], [], 0, 0)))
+        self.origin = QLabel()
+        tools.addWidget(gen)
+        tools.addWidget(clear)
+        tools.addWidget(self.origin, stretch=1)
+        v.addLayout(tools)
+        self._generated = None      # the simulated result while the form still shows it
+        self._loading = False
         body = QWidget()
         bv = QVBoxLayout(body)
         self.home = _SidePanel(t, fixture.home, self._refresh)
@@ -121,20 +187,48 @@ class ManualResultView(QWidget):
         self.winner.addItem(t.team_name(fixture.away), fixture.away)
         self.decided_by = QComboBox()
         self.decided_by.addItems(["tries", "kicks"])
+        self.winner.currentIndexChanged.connect(self._refresh)
+        self.decided_by.currentIndexChanged.connect(self._refresh)
         th.addWidget(self.winner)
         th.addWidget(self.decided_by)
         th.addStretch(1)
         v.addWidget(self.tie_box)
         self._refresh()
 
+    def auto_generate(self):
+        result = simulator.simulate(self.t, self.fixture, random.Random())
+        self._load(manual.from_result(self.t, result, random.Random()), result)
+
+    def _load(self, events, generated=None):
+        home, away, home_pt, away_pt = events
+        self._loading = True
+        self.home.load(home, home_pt)
+        self.away.load(away, away_pt)
+        if generated and generated.winner:
+            self.winner.setCurrentIndex(self.winner.findData(generated.winner))
+            self.decided_by.setCurrentText(generated.decided_by or "tries")
+        self._generated = generated
+        self._refresh()
+        self._loading = False
+
     def _refresh(self):
+        if not self._loading:
+            # any change of the generated lines makes it a manual result
+            self._generated = None
+        self.origin.setText("  simulated" if self._generated else "  entered by hand")
         h, a = self.home.points(), self.away.points()
         self.score.setText(f"<h2>{self.t.team_name(self.fixture.home)} {h} – {a} "
                            f"{self.t.team_name(self.fixture.away)}</h2>")
         self.tie_box.setVisible(bool(self.fixture.knockout) and h == a)
 
     def result(self) -> MatchResult:
-        return manual.build_result(
+        typed = manual.build_result(
             self.t, self.fixture, self.home.entered(), self.away.entered(),
             self.home.penalty_tries.value(), self.away.penalty_tries.value(),
             self.winner.currentData(), self.decided_by.currentText())
+        if self._generated:
+            # the simulator's own result, with the injury and ban lengths it showed
+            self._generated.extra["manual"] = typed.extra["manual"]
+            return self._generated
+        return typed
+

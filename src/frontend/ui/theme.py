@@ -67,6 +67,7 @@ LIST_SUBTITLE = "#a9bdb2"
 # dark-theme input border, not just a shade more green.
 BORDER        = "#4a6b3c"
 BORDER_EM     = "#107a13"
+DIVIDER       = "#18301a"      # hairline between list rows (Settings)
 
 # Rugby 08 menu red — pure red, not pink (ACCENT ≈4.1:1 on BG_BASE,
 # ACCENT_LITE ≈5.9:1, both large-text/decorative rather than body copy).
@@ -85,6 +86,8 @@ GREEN_2         = "#095A0C"
 WARN          = "#ff9f1c"
 INFO          = "#8fd3f4"
 BLOCKED       = "#46524b"
+# The "EXPERT" tag on every expert mode feature (user_prefs.expert_mode).
+EXPERT        = INFO
 
 FG_PRIMARY    = "#eef3ef"
 FG_SECONDARY  = "#cddbd3"
@@ -175,7 +178,6 @@ EDITOR_ROW_H = 40
 T_SETTING_LABEL = 12
 T_SETTING_VALUE = 11
 T_SETTING_TAB   = 15
-T_SETTING_TAG   = 8
 
 # Focus ring — applied to every focusable widget by the focus system.
 FOCUS_RING = f"2px solid {ACCENT}"

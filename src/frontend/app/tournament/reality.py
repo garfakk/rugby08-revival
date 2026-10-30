@@ -88,10 +88,16 @@ def available(template, participants=None, season=None, known_teams=None):
     from .engine import default_participants
     real_draw = default_participants(template, season or template.get("season", ""))
     if known_teams is not None:
-        missing = sorted({t for groups in real_draw.values() for ts in groups.values() for t in ts}
-                         - set(known_teams))
-        if missing:
-            return False, f"Teams of the real draw are missing from the data ({', '.join(missing)})"
+        # a team the data doesn't have is left out with its matches; the
+        # real bracket still holds unless it reached the knockouts
+        missing = {t for groups in real_draw.values() for ts in groups.values() for t in ts} - set(known_teams)
+        history = template.get("history") or {}
+        ko_teams = {str(v) for key in ("pool_winners", "pool_runners_up")
+                    for v in (history.get(key) or {}).values()}
+        if missing & ko_teams:
+            return False, f"Teams of the real knockouts are missing from the data ({', '.join(sorted(missing))})"
+        real_draw = {sid: {gid: [t for t in ts if t not in missing] for gid, ts in groups.items()}
+                     for sid, groups in real_draw.items()}
     if participants is not None:
         if _norm_parts(participants) != _norm_parts(real_draw):
             return False, "Reality mode needs the real draw"

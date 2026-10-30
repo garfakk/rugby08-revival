@@ -67,6 +67,38 @@ def test_apply_boosts_cpu_and_tires_human(level):
     for p in human:
         assert all(p[k] <= prof["human_endurance_cap"] for k in D.ENDURANCE_KEYS)
         assert p["attack"] == 50                      # only endurance touched
+    assert md["cpu_edge"] == prof["cpu_edge"]
+
+
+def test_cpu_edge_only_for_boosted_human_vs_cpu():
+    for level, home, away in [("elite", 1, 0), ("immortal", 1, 1), ("immortal", 0, 0)]:
+        md = {"team_A": _team(), "team_B": _team()}
+        D.apply(md, level, home, away)
+        assert "cpu_edge" not in md
+
+
+@pytest.mark.parametrize("level", ["legend", "immortal"])
+def test_cpu_team_floor_and_chemistry_skills(level):
+    team = _team()
+    team["roles"] = {"long_GK": 15, "captain": 7, "short_GK": 10}
+    out = D.boost_team(team, level)
+    assert out["performance_floor"] == {k: D.PROFILES[level]["team_floor"] for k in D.TEAM_PERFORMANCE}
+    players = out["players"]
+    for shirt, skills in D.CHEMISTRY_SKILLS.items():
+        assert all(players[shirt - 1][s] for s in skills)
+    assert players[6]["ss_command"] and players[9]["ss_goal_kicker"]
+    assert "performance_floor" not in team
+
+
+def test_immortal_cpu_edge_beyond_legend():
+    legend, immortal = D.PROFILES["legend"]["cpu_edge"], D.PROFILES["immortal"]["cpu_edge"]
+    assert set(legend) == set(immortal)
+    numbers = [k for k in legend if not isinstance(legend[k], str)]
+    assert all(immortal[k] > legend[k] for k in numbers)
+    assert all(0 < immortal[k] <= 100 for k in numbers)
+    for level in (legend, immortal):
+        zones = [int(v) for v in level["cpu_fh_kick"].split(",")]
+        assert len(zones) == 4 and zones == sorted(zones, reverse=True)
 
 
 def test_boost_does_not_mutate_input():
@@ -90,8 +122,10 @@ def test_forwards_grow_backs_dont():
 
 
 def test_skills_per_level():
-    legend = D.boost_team(_team(), "legend")["players"][9]
-    immortal = D.boost_team(_team(), "immortal")["players"][9]
+    # position skills only (boost_team adds the chemistry ones on top)
+    fly_half = _team()["players"][9]
+    legend = D.boost_player(fly_half, D.PROFILES["legend"])
+    immortal = D.boost_player(fly_half, D.PROFILES["immortal"])
     skills = D.POSITION_SKILLS["fly_half"]
     assert [s for s in skills if legend.get(s)] == skills[:2]
     assert [s for s in skills if immortal.get(s)] == skills

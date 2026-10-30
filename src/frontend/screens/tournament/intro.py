@@ -58,7 +58,7 @@ def draw_columns(t):
     columns of MAX_ROWS), or every team when the competition has no pools."""
     stage = next((s for s in t.stages if s.kind == "round_robin" and s.groups), None)
     if stage:
-        groups = [(g.name if len(stage.groups) > 1 else stage.name, list(g.teams)) for g in stage.groups]
+        groups = [(g.name if len(stage.groups) > 1 else "the teams", list(g.teams)) for g in stage.groups]
     else:
         groups = [("teams", list(t.teams))]
     cols = []

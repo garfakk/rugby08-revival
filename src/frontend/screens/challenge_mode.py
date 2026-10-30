@@ -16,7 +16,7 @@ from PyQt5.QtCore import QRectF, Qt
 from PyQt5.QtGui import QColor, QFont, QFontMetrics, QPainter, QPen
 from PyQt5.QtWidgets import QFrame, QScrollArea, QVBoxLayout, QWidget
 
-from app import challenges as ch
+from app import challenges as ch, difficulty
 from app.input import Action, KEYMAP
 from app.match_data_builder import build_match_data
 from app.screen_base import Screen
@@ -250,6 +250,7 @@ class ChallengeModeScreen(Screen):
         if not data or ch.problems(self.ds, data):
             return
         work = copy.deepcopy(data)     # the player's picks never reach the file
+        work["difficulty"] = difficulty.preferred()     # Settings > Preferred Difficulty
 
         choices = []
         for key, label in ch.CHOOSABLE.items():

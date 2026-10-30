@@ -30,7 +30,7 @@ from PyQt5.QtCore import Qt, pyqtSignal, QEvent
 
 from ui.theme import (
     BG_BASE, BG_PANEL, BG_CARD, BG_RAISED, BG_HIGHLIGHT,
-    BORDER, BORDER_EM,
+    BORDER, BORDER_EM, DIVIDER,
     ACCENT, ACCENT_LITE, ACCENT_DARK, ACCENT_DIM,
     FG_PRIMARY, FG_SECONDARY, FG_MUTED,
     DANGER, DANGER_LITE,
@@ -38,7 +38,7 @@ from ui.theme import (
     HEADER_HEIGHT, HEADER_BAR_H,
     GRAD_HEADER, GRAD_ACCENT_BTN, GRAD_ACCENT_BTN_HOVER,
     F_HUGE, F_H1, F_H2, F_H3, F_BODY, F_SMALL, F_MONO,
-    T_SETTING_LABEL, T_SETTING_VALUE, T_SETTING_TAG,
+    T_SETTING_LABEL, T_SETTING_VALUE,
 )
 
 # ── Button variant stylesheets ─────────────────────────────────────────────────
@@ -233,74 +233,38 @@ class HoverComboBox(QComboBox):
 
 # ── Setting rows (Settings screen) ────────────────────────────────────────────
 
-def make_in_game_tag() -> QLabel:
-    """The IN-GAME tag: the setting changes only the game itself, not the menus."""
-    tag = QLabel("IN-GAME")
-    tag.setToolTip("Changes only the game itself, not these menus")
-    tag.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-    tag.setStyleSheet(
-        f"color: {FG_MUTED}; border: 1px solid {FG_MUTED}; padding: 1px 5px;"
-        f" font-family: '{FONT_DISPLAY}'; font-size: {T_SETTING_TAG}pt; font-weight: bold;"
-        f" letter-spacing: 1px; background: transparent;"
-    )
-    return tag
-
-
-def make_changed_mark() -> QLabel:
-    """The dot of a setting that differs from its default."""
-    mark = QLabel("●")
-    mark.setToolTip("Changed from its default")
-    mark.setFixedWidth(12)
-    mark.setStyleSheet(f"color: {ACCENT}; font-size: {T_SETTING_TAG}pt;"
-                       f" background: transparent; border: none;")
-    return mark
-
-
 class SettingRow(QWidget):
-    """A Settings row: the label on the left (a dot while the value differs
-    from its default, an IN-GAME tag when it changes only the game itself),
-    its control on the right. The row takes the keyboard focus, not the
-    control: Left/Right change the value (adjust), Enter/Space activate it;
-    every other key goes on to the screen."""
+    """A Settings row: the label on the left, its control on the right, a
+    hairline under it — a
+    flat list, no boxes. The focused row lights up: a red bar on its left
+    edge, a raised background, the label brighter. The row takes the
+    keyboard focus, not the control: Left/Right change the value (adjust),
+    Enter/Space activate it; every other key goes on to the screen."""
 
-    def __init__(self, label: str, in_game: bool = False, parent=None):
+    HEIGHT = 54
+    CONTROL_WIDTH = 320     # every row's control in one right-hand column
+
+    def __init__(self, label: str, parent=None):
         super().__init__(parent)
         self.setObjectName("settingRow")
         self.setAttribute(Qt.WA_StyledBackground, True)
         self.setFocusPolicy(Qt.StrongFocus)
+        self.setFixedHeight(self.HEIGHT)
         self.row = QHBoxLayout(self)
-        self.row.setContentsMargins(10, 10, 16, 10)
+        self.row.setContentsMargins(34, 0, 12, 1)      # clear of the hairline
         self.row.setSpacing(8)
 
-        self._mark = make_changed_mark()
-        policy = self._mark.sizePolicy()
-        policy.setRetainSizeWhenHidden(True)        # labels stay aligned
-        self._mark.setSizePolicy(policy)
-        self._mark.hide()
-        self.row.addWidget(self._mark)
-
         self.label = QLabel(label)
-        self.label.setStyleSheet(
-            f"color: {FG_SECONDARY}; font-family: '{FONT_DISPLAY}'; font-size: {T_SETTING_LABEL}pt;"
-            f" background: transparent; border: none;"
-        )
         self.row.addWidget(self.label)
-        if in_game:
-            self.row.addWidget(make_in_game_tag())
         self.row.addStretch()
         self._paint_focus(False)
-
-    def set_changed(self, changed: bool):
-        self._mark.setVisible(bool(changed))
-
-    def is_changed(self) -> bool:
-        return not self._mark.isHidden()
 
     def _own(self, control):
         """Add the row's control: driven through the row, never focused itself;
         a click on it focuses the row."""
         control.setFocusPolicy(Qt.NoFocus)
         control.installEventFilter(self)
+        control.setAttribute(Qt.WA_TranslucentBackground, True)
         self.row.addWidget(control)
 
     def eventFilter(self, obj, event):
@@ -314,9 +278,18 @@ class SettingRow(QWidget):
 
     def _paint_focus(self, focused):
         self.setStyleSheet(
-            f"QWidget#settingRow {{ background-color: {BG_RAISED if focused else BG_CARD};"
-            f" border: 1px solid {ACCENT if focused else BORDER}; }}"
+            f"QWidget#settingRow {{ background-color: {BG_RAISED if focused else 'transparent'};"
+            f" border: none; border-bottom: 1px solid {DIVIDER};"
+            f" border-left: 3px solid {ACCENT if focused else 'transparent'}; }}"
         )
+        self.label.setStyleSheet(
+            f"color: {FG_PRIMARY if focused else FG_SECONDARY}; font-family: '{FONT_DISPLAY}';"
+            f" font-size: {T_SETTING_LABEL}pt; background: transparent; border: none;"
+        )
+        self._focus_changed(focused)
+
+    def _focus_changed(self, focused):
+        """Restyle the control for the row's focus (subclasses)."""
 
     def focusInEvent(self, event):
         self._paint_focus(True)
@@ -345,65 +318,144 @@ class SettingRow(QWidget):
         self.adjust(1)
 
 
-def _value_button_style(extra=""):
-    return (f"QPushButton {{ font-family: '{FONT_DISPLAY}'; font-size: {T_SETTING_VALUE}pt;"
-            f"  font-weight: bold; letter-spacing: 2px; {extra} }}")
+def _value_style(color):
+    return (f"color: {color}; font-family: '{FONT_DISPLAY}'; font-size: {T_SETTING_VALUE + 1}pt;"
+            f" font-weight: bold; letter-spacing: 1px; background: transparent; border: none;")
+
+
+class _Switch(QWidget):
+    """An on/off switch: a pill track, the knob at the side of the state."""
+
+    clicked = pyqtSignal()
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setFixedSize(46, 24)
+        self.setCursor(Qt.PointingHandCursor)
+        self.on = False
+
+    def mousePressEvent(self, event):
+        self.clicked.emit()
+
+    def paintEvent(self, event):
+        from PyQt5.QtGui import QPainter, QPen
+        p = QPainter(self)
+        p.setRenderHint(QPainter.Antialiasing)
+        r = self.rect().adjusted(1, 1, -1, -1)
+        p.setPen(QPen(QColor(ACCENT if self.on else BORDER), 1))
+        p.setBrush(QColor(ACCENT if self.on else BG_BASE))
+        p.drawRoundedRect(r, r.height() / 2, r.height() / 2)
+        d = r.height() - 6
+        x = r.right() - d - 2 if self.on else r.left() + 3
+        p.setPen(Qt.NoPen)
+        p.setBrush(QColor(FG_PRIMARY if self.on else FG_MUTED))
+        p.drawEllipse(x, r.top() + 3, d, d)
 
 
 class ToggleRow(SettingRow):
-    def __init__(self, label: str, initial: bool, on_toggle, parent=None, in_game=False):
-        super().__init__(label, in_game, parent)
+    def __init__(self, label: str, initial: bool, on_toggle, parent=None):
+        super().__init__(label, parent)
         self._on_toggle = on_toggle
         self._state = initial
 
-        self._btn = QPushButton()
-        self._btn.setFixedSize(84, 32)
-        self._btn.setCursor(Qt.PointingHandCursor)
-        self._btn.clicked.connect(self._toggle)
-        self._own(self._btn)
+        box = QWidget()
+        box.setFixedWidth(self.CONTROL_WIDTH)
+        h = QHBoxLayout(box)
+        h.setContentsMargins(0, 0, 0, 0)
+        h.setSpacing(12)
+        h.addStretch()
+        self._text = QLabel()
+        h.addWidget(self._text)
+        self._switch = _Switch()
+        self._switch.clicked.connect(self._toggle)
+        h.addWidget(self._switch)
+        self._own(box)
         self._refresh()
 
     def adjust(self, delta):
         self._toggle()
 
     def _toggle(self):
+        self.setFocus(Qt.MouseFocusReason)
         self._state = not self._state
         self._on_toggle(self._state)
         self._refresh()
 
     def _refresh(self):
-        self._btn.setText("ON" if self._state else "OFF")
-        if self._state:
-            self._btn.setStyleSheet(
-                _value_button_style(f"background: {ACCENT}; color: {BG_BASE}; border: none;")
-                + f"QPushButton:hover {{ background: {ACCENT_LITE}; }}"
-            )
-        else:
-            self._btn.setStyleSheet(
-                _value_button_style(f"background: {BG_RAISED}; color: {FG_MUTED};"
-                                    f" border: 1px solid {BORDER};")
-                + f"QPushButton:hover {{ border-color: {DANGER}; color: {DANGER_LITE}; }}"
+        self._text.setText("ON" if self._state else "OFF")
+        self._text.setStyleSheet(_value_style(FG_PRIMARY if self._state else FG_MUTED))
+        self._switch.on = self._state
+        self._switch.update()
+
+
+class _Stepper(QWidget):
+    """‹ VALUE › — the value between two arrows that step it (Left/Right
+    on the row do the same). The arrows light up while the row is focused."""
+
+    ARROW_WIDTH = 28
+
+    def __init__(self, center, on_step, parent=None):
+        super().__init__(parent)
+        self.setFixedWidth(SettingRow.CONTROL_WIDTH)
+        h = QHBoxLayout(self)
+        h.setContentsMargins(0, 0, 0, 0)
+        h.setSpacing(0)
+        self._arrows = []
+        for delta, glyph in ((-1, "‹"), (1, "›")):
+            arrow = QLabel(glyph)
+            arrow.setFixedWidth(self.ARROW_WIDTH)
+            arrow.setAlignment(Qt.AlignCenter)
+            arrow.setCursor(Qt.PointingHandCursor)
+            arrow.mousePressEvent = lambda _e, d=delta: on_step(d)
+            self._arrows.append(arrow)
+        h.addWidget(self._arrows[0])
+        h.addWidget(center, 1)
+        h.addWidget(self._arrows[1])
+        self.set_focused(False)
+
+    def set_focused(self, focused):
+        for arrow in self._arrows:
+            arrow.setStyleSheet(
+                f"color: {ACCENT if focused else FG_MUTED}; font-family: '{FONT_DISPLAY}';"
+                f" font-size: {T_SETTING_LABEL + 6}pt; font-weight: bold; background: transparent;"
             )
 
 
 class ChoiceRow(SettingRow):
-    """A choice among several values: a dropdown list (Left/Right step through
-    it, Enter opens it). on_change is called with the selected label."""
+    """A choice among several values: ‹ value ›, Left/Right step through
+    them, Enter or a click on the value opens the whole list. on_change is
+    called with the selected label."""
 
-    def __init__(self, label: str, values, initial, on_change, parent=None, in_game=False):
-        super().__init__(label, in_game, parent)
-        self.row.setContentsMargins(10, 6, 16, 6)
-
+    def __init__(self, label: str, values, initial, on_change, parent=None):
+        super().__init__(label, parent)
         self.combo = HoverComboBox()
-        self.combo.setFixedSize(190, 38)
-        self.combo.setStyleSheet(f"QComboBox {{ font-size: {T_SETTING_VALUE}pt; }}")
+        self.combo.setFixedHeight(36)
+        self.combo.setCursor(Qt.PointingHandCursor)
+        self.combo.lineEdit().setAlignment(Qt.AlignCenter)
+        self.combo.lineEdit().setCursor(Qt.PointingHandCursor)
+        self.combo.setStyleSheet(
+            f"QComboBox {{ background: transparent; border: none; padding: 0; min-height: 0; }}"
+            f"QComboBox::drop-down {{ width: 0; border: none; }}"
+            f"QComboBox::down-arrow {{ image: none; border: none; width: 0; height: 0; }}"
+        )
+        # the read-only line edit shows the value: styled itself, the
+        # combo's own rule doesn't reach its text colour
+        self.combo.lineEdit().setStyleSheet(_value_style(FG_PRIMARY) + " padding: 0;")
+        self.combo.lineEdit().setFont(QFont(FONT_DISPLAY, T_SETTING_VALUE + 1, QFont.Bold))
         self.combo.addItems([str(v) for v in values])
         if str(initial) in [str(v) for v in values]:
             self.combo.setCurrentText(str(initial))
         self.combo.currentTextChanged.connect(on_change)
-        self._own(self.combo)
+        self._stepper = _Stepper(self.combo, self.adjust)
+        self._own(self._stepper)
+        self.combo.setFocusPolicy(Qt.NoFocus)
+        self.combo.installEventFilter(self)
         self.combo.lineEdit().setFocusPolicy(Qt.NoFocus)
         self.combo.lineEdit().installEventFilter(self)
+
+    def _focus_changed(self, focused):
+        if hasattr(self, "_stepper"):
+            self._stepper.set_focused(focused)
 
     def adjust(self, delta):
         i = self.combo.currentIndex() + delta
@@ -415,30 +467,32 @@ class ChoiceRow(SettingRow):
 
 
 class CycleRow(SettingRow):
-    """A choice among a few values: the button shows the current one and each
-    click steps to the next."""
+    """A choice among a few values: ‹ value ›, each step (or a click on the
+    value) moves to the next one, round."""
 
-    def __init__(self, label: str, values, initial, on_change, parent=None, in_game=False):
-        super().__init__(label, in_game, parent)
+    def __init__(self, label: str, values, initial, on_change, parent=None):
+        super().__init__(label, parent)
         self._values = list(values)
         self._on_change = on_change
         self._index = self._values.index(initial) if initial in self._values else 0
 
-        self._btn = QPushButton(str(self._values[self._index]))
-        self._btn.setFixedSize(130, 32)
-        self._btn.setCursor(Qt.PointingHandCursor)
-        self._btn.setStyleSheet(
-            _value_button_style(f"background: {BG_RAISED}; color: {FG_SECONDARY};"
-                                f" border: 1px solid {BORDER};")
-            + f"QPushButton:hover {{ border-color: {ACCENT}; color: {ACCENT_LITE}; }}"
-        )
-        self._btn.clicked.connect(lambda: self.adjust(1))
-        self._own(self._btn)
+        self._value = QLabel(str(self._values[self._index]))
+        self._value.setAlignment(Qt.AlignCenter)
+        self._value.setCursor(Qt.PointingHandCursor)
+        self._value.setStyleSheet(_value_style(FG_PRIMARY))
+        self._value.mousePressEvent = lambda _e: self.adjust(1)
+        self._stepper = _Stepper(self._value, self.adjust)
+        self._own(self._stepper)
+
+    def _focus_changed(self, focused):
+        if hasattr(self, "_stepper"):
+            self._stepper.set_focused(focused)
 
     def adjust(self, delta):
+        self.setFocus(Qt.MouseFocusReason)
         self._index = (self._index + delta) % len(self._values)
         value = self._values[self._index]
-        self._btn.setText(str(value))
+        self._value.setText(str(value))
         self._on_change(value)
 
 
@@ -447,38 +501,46 @@ class SliderRow(SettingRow):
     on_change is called with the value as the slider moves."""
 
     def __init__(self, label: str, minimum: int, maximum: int, initial: int,
-                 on_change, step: int = 1, parent=None, in_game=False):
-        super().__init__(label, in_game, parent)
+                 on_change, step: int = 1, parent=None):
+        super().__init__(label, parent)
         self._on_change = on_change
 
+        box = QWidget()
+        box.setFixedWidth(self.CONTROL_WIDTH)
+        h = QHBoxLayout(box)
+        h.setContentsMargins(0, 0, 0, 0)
+        h.setSpacing(14)
         self._slider = QSlider(Qt.Horizontal)
         self._slider.setRange(minimum, maximum)
         self._slider.setSingleStep(step)
         self._slider.setPageStep(step)
-        self._slider.setFixedWidth(220)
         self._slider.setCursor(Qt.PointingHandCursor)
-        self._slider.setStyleSheet(
-            f"QSlider {{ background: transparent; border: none; }}"
-            f"QSlider::groove:horizontal {{ height: 4px; background: {BG_RAISED};"
-            f"  border: 1px solid {BORDER}; }}"
-            f"QSlider::sub-page:horizontal {{ background: {ACCENT}; }}"
-            f"QSlider::handle:horizontal {{ width: 12px; margin: -7px 0;"
-            f"  background: {FG_SECONDARY}; border: none; }}"
-            f"QSlider::handle:horizontal:hover {{ background: {ACCENT_LITE}; }}"
-        )
+        self._slider.setFocusPolicy(Qt.NoFocus)
+        self._slider.installEventFilter(self)
         self._step = step
         self._slider.setValue(initial)
         self._slider.valueChanged.connect(self._changed)
-        self._own(self._slider)
+        h.addWidget(self._slider, 1)
 
         self._value = QLabel(str(initial))
-        self._value.setFixedWidth(44)
+        self._value.setFixedWidth(36)
         self._value.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        self._value.setStyleSheet(
-            f"color: {FG_PRIMARY}; font-family: '{FONT_DISPLAY}'; font-size: {T_SETTING_LABEL}pt;"
-            f" font-weight: bold; background: transparent; border: none;"
+        self._value.setStyleSheet(_value_style(FG_PRIMARY))
+        h.addWidget(self._value)
+        self._own(box)
+        self._focus_changed(False)
+
+    def _focus_changed(self, focused):
+        if not hasattr(self, "_slider"):
+            return
+        self._slider.setStyleSheet(
+            f"QSlider {{ background: transparent; border: none; }}"
+            f"QSlider::groove:horizontal {{ height: 4px; background: {BG_BASE}; border-radius: 2px; }}"
+            f"QSlider::sub-page:horizontal {{ background: {ACCENT if focused else ACCENT_DARK};"
+            f"  border-radius: 2px; }}"
+            f"QSlider::handle:horizontal {{ width: 14px; height: 14px; margin: -5px 0;"
+            f"  border-radius: 7px; background: {FG_PRIMARY if focused else FG_SECONDARY}; }}"
         )
-        self.row.addWidget(self._value)
 
     def adjust(self, delta):
         self._slider.setValue(self._slider.value() + delta * self._step)

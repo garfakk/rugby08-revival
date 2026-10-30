@@ -4,6 +4,12 @@
 set_plays_id = {"classic": 0, "pivot": 1, "pocket": 2, "dummy_switch": 3, "miss": 4, "cross_kick": 5, "loop": 6, "miss_pivot": 7}
 
 # These are the roles names in a team order by their position in the roster file
+# Team record performance bytes, at roster_data_addresses + 0x4E (after the
+# roles); in memory team record +0xbca.. (attack read by the CPU set-play
+# chooser and flair options, defence by its defensive-error chance).
+team_performance_keys = ["attack", "defence", "scrums", "lineouts", "rucking", "kicking",
+                         "technique", "stamina", "flair", "rating"]
+team_performance_offset = 0x4E
 team_roles = ['captain', 'vice-captain', 'long_GK', 'short_GK', 'long_punt', 'short_punt', 'kick_off']
 
 # Players positions ID for the roster file
@@ -50,6 +56,10 @@ difficulty = {"club": 0, "pro": 1, "elite": 2}
 # Match type for the mission file (this only influence the commentaries)
 match_type = {"exhibition": 0, "world_cup": 1, "tri_nations": 2, "six_nations": 3, "ten_nations": 5, "european_cup": 6, "super_14": 7, "premiership": 8}
 match_subtype = {"none": 0, "pool": 5, "quarter_final": 8, "semi_final": 9, "final": 10}
+
+# .mis <WIND x/z> scale: the stock reader parses them as integers (atol), so
+# the unit direction is written as integers of this many units.
+WIND_VECTOR_SCALE = 1000
 
 # Weather precipitation IDs. Note: this is a custom setting that works only with the DLL patch
 precipitation_id = {"none": 0, "rain": 1, "snow": 3}

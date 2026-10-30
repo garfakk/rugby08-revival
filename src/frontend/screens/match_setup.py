@@ -15,6 +15,7 @@ from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QStackedWidget, QFrame,
     QScrollArea, QGridLayout,
 )
+from PyQt5 import sip
 from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtCore import (
     Qt, QPoint, QRect, QEasingCurve, QPropertyAnimation, QParallelAnimationGroup, QTimer,
@@ -32,8 +33,7 @@ from app import difficulty
 from app import variants as V
 from app.match_data_builder import build_match_data
 from app.game_data import (
-    SNOW_INTENSITY_MAX, WIND_BEARINGS, WIND_POWER_NAMES, frontend_logo, random_wind,
-    wind_direction_label,
+    SNOW_INTENSITY_MAX, WIND_POWER_NAMES, frontend_logo, random_wind,
 )
 from app.season import nearest_season, season_label
 from app.shell import present
@@ -41,6 +41,7 @@ from app.team_browse import DEFAULT_STYLE, STYLE_IDS, TeamIndex, competitions
 from ui import StyledButton
 from ui.player_stage import KitStage, _try_load_model
 from ui.dropdown import DropdownRow
+from ui.controller_board import KBD, ControllerBoard
 from ui.team_browser import ChipBar, SeasonTimeline, TeamBrowser
 from ui.atmosphere import AtmosphereWidget
 from ui.kickoff_transition import KickoffTransition, WALKOFF_MS
@@ -52,7 +53,7 @@ from ui.broadcast import (
 from ui.theme import (
     BG_PANEL, BORDER,
     ACCENT, HOME_TINT, AWAY_TINT,
-    FG_MUTED, BTN_HEIGHT, WARN,
+    FG_MUTED, BTN_HEIGHT, WARN, EXPERT,
 )
 from screens.squad_editor import SquadEditorScreen
 
@@ -418,7 +419,8 @@ class TeamColumn(QWidget):
         self.season_note.show()
         self._note_token += 1
         token = self._note_token
-        QTimer.singleShot(6000, lambda: token == self._note_token and self.season_note.hide())
+        QTimer.singleShot(6000, lambda: token == self._note_token and not sip.isdeleted(self.season_note)
+                          and self.season_note.hide())
 
     def _on_season_widget_changed(self):
         if self.style == "classic":
@@ -911,11 +913,13 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self._apply_expert_mode()      # picks up a Settings toggle flipped meanwhile
         self._apply_picker_style()     # same, for Settings > Quick Match Picker
         self._apply_coin_toss_lock()   # same, for Settings > Coin Toss Before Match
-        # Settings > Wind: Advanced = strength and direction rows (each on
-        # "random" until picked); Standard = no rows, the game's own wind.
-        advanced = user_prefs.wind_mode == "advanced"
-        self.wind_power_row.setVisible(advanced)
-        self.wind_dir_row.setVisible(advanced)
+        if difficulty.preferred() != self._preferred_difficulty:   # Settings > Preferred Difficulty
+            self._preferred_difficulty = difficulty.preferred()
+            self.difficulty_row.set_index(difficulty.LEVELS.index(self._preferred_difficulty))
+            self.cfg.difficulty = self._preferred_difficulty
+        # Settings > Wind: Advanced = a strength row ("random" until picked;
+        # the direction is always random); Standard = no row, the game's own wind.
+        self.wind_power_row.setVisible(user_prefs.wind_mode == "advanced")
         self._on_wind_changed()
         # Re-roll which two mannequins wear the kits each time the screen is
         # opened — except the first, which uses the ones already picked (and
@@ -940,9 +944,12 @@ class MatchSetupScreen(KickoffTransition, Screen):
     def _apply_coin_toss_lock(self):
         """With the coin toss on, the toss decides who kicks off and which
         end each team takes — the two rows show that instead of a value and
-        take no input (a disabled row is skipped by pad/keyboard navigation).
-        cfg keeps their values for when the toss is turned off again."""
+        take no input (a disabled row is skipped by pad/keyboard navigation),
+        and the start button reads PERFORM TOSS (the toss's own last button
+        is KICK OFF). cfg keeps their values for when the toss is turned off
+        again."""
         locked = user_prefs.coin_toss
+        self.play_btn.setText("PERFORM TOSS" if locked else "KICK OFF")
         for row in (self.side_row, self.kickoff_row):
             row.set_free_text("coin toss" if locked else None)
             row.set_disabled_visual(locked)
@@ -950,26 +957,22 @@ class MatchSetupScreen(KickoffTransition, Screen):
     def _on_wind_changed(self):
         """Strength None = the game's stock random wind (rolled by the
         backend), 0 = calm. A row left on "random" is rolled at kick-off
-        (_roll_wind). The direction (relative to home, see app.game_data)
-        only matters for a set strength."""
+        (_roll_wind), and so is the direction (relative to home, see
+        app.game_data) every time."""
         power = self.wind_power_row.current() if user_prefs.wind_mode == "advanced" else None
         self.cfg.wind_power = power
-        direction = self.wind_dir_row.current()
-        if direction is not None:
-            self.cfg.wind_dir_deg = float(direction)
 
     def _roll_wind(self):
-        """Settle the rows left on "random" for this match: the strength
-        with the weather-like spread of app.game_data.random_wind, the
-        direction any of WIND_BEARINGS."""
+        """Settle the wind for this match: the strength (if left on
+        "random") with the weather-like spread of app.game_data.random_wind,
+        the direction always random, any of WIND_BEARINGS."""
         if user_prefs.wind_mode != "advanced":
             self.cfg.wind_power = None
             return
         power, bearing = random_wind(random)
         if self.wind_power_row.current() is None:
             self.cfg.wind_power = power
-        if self.wind_dir_row.current() is None:
-            self.cfg.wind_dir_deg = bearing
+        self.cfg.wind_dir_deg = bearing
 
     # ── kickoff transition hooks (ui/kickoff_transition.py) ──────────────
     def kt_columns(self):
@@ -1055,8 +1058,13 @@ class MatchSetupScreen(KickoffTransition, Screen):
         # pair matches how season/competition sit on the team cards.
         settings_row = QHBoxLayout()
         settings_row.setSpacing(10)
+        # Starts on Settings > Preferred Difficulty, and follows it when it
+        # changes (on_show); a pick made here holds until then.
         self.difficulty_row = SelectorRow("difficulty", compact=True)
-        self.difficulty_row.set_values(difficulty.LEVELS, index=difficulty.LEVELS.index("elite"))
+        self._preferred_difficulty = difficulty.preferred()
+        self.difficulty_row.set_values(difficulty.LEVELS,
+                                       index=difficulty.LEVELS.index(self._preferred_difficulty))
+        self.cfg.difficulty = self._preferred_difficulty
         self.difficulty_row.changed.connect(
             lambda: setattr(self.cfg, "difficulty", self.difficulty_row.current()))
         self.focus.register(self.difficulty_row)
@@ -1092,8 +1100,9 @@ class MatchSetupScreen(KickoffTransition, Screen):
         v.addWidget(self.environment_row)
 
         # Wind (the reR08 wind patch, Settings > Wind: Advanced): strength =
-        # the .mis <WIND power> band 0..10, direction relative to home. Each
-        # can be left on "random", rolled afresh at each kick-off (_roll_wind).
+        # the .mis <WIND power> band 0..10, or "random"; the direction
+        # (relative to home) is always random. Rolled afresh at each kick-off
+        # (_roll_wind).
         self.wind_power_row = SelectorRow("wind")
         self.wind_power_row.set_values([None] + list(WIND_POWER_NAMES), index=0)
         self.wind_power_row._display = lambda n: "random" if n is None else \
@@ -1101,12 +1110,6 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self.wind_power_row.changed.connect(self._on_wind_changed)
         self.focus.register(self.wind_power_row)
         v.addWidget(self.wind_power_row)
-        self.wind_dir_row = SelectorRow("wind direction")
-        self.wind_dir_row.set_values([None] + list(WIND_BEARINGS), index=0)
-        self.wind_dir_row._display = lambda d: "random" if d is None else wind_direction_label(d)
-        self.wind_dir_row.changed.connect(self._on_wind_changed)
-        self.focus.register(self.wind_dir_row)
-        v.addWidget(self.wind_dir_row)
 
         # Only in the team-first pickers (Settings > Quick Match Picker): the
         # era both teams follow, and the two shortcuts.
@@ -1140,31 +1143,22 @@ class MatchSetupScreen(KickoffTransition, Screen):
         wv.addWidget(card)
         wv.addSpacing(14)
 
-        # Controllers — its own container below the match card: the
-        # keyboard and up to three gamepads, each given to a team (or left
-        # off). They become the .mis c0..c3 the reR08 controllers patch reads
-        # (keyboard = the game's device 0, pads in their connection order);
-        # a pad that isn't plugged in is simply absent in game. Every device
-        # off = CPU vs CPU.
+        # Controllers — its own container below the match card: an icon for
+        # the keyboard and each gamepad connected, moved by that device itself
+        # into the home lane, the away lane or CPU in the middle
+        # (ui/controller_board.py). They become the .mis c0..c3 the reR08
+        # controllers patch reads (keyboard = the game's device 0, pads in
+        # their connection order). Every device on CPU = CPU vs CPU.
         controls_card = Card(translucent=True)
         cv = QVBoxLayout(controls_card)
         cv.setContentsMargins(24, 18, 24, 20)
         cv.setSpacing(10)
         cv.addWidget(eyebrow_label("Controllers", color=ACCENT, size=15))
-        grid = QGridLayout()
-        grid.setHorizontalSpacing(10)
-        grid.setVerticalSpacing(10)
-        self.controller_rows = {}
-        for i, (slot_id, kind, label) in enumerate(CONTROLLER_SLOTS):
-            row = SelectorRow(label.lower(), compact=True)
-            zones = [("home", "home"), ("away", "away"), ("off", "none")]
-            row.set_values(zones, index=0 if kind == "kbd" else len(zones) - 1)
-            row._display = lambda t: t[0]
-            row.changed.connect(lambda slot_id=slot_id: self._on_controller_zone_changed(slot_id))
-            self.focus.register(row)
-            grid.addWidget(row, i // 2, i % 2)
-            self.controller_rows[slot_id] = row
-        cv.addLayout(grid)
+        self.controller_board = ControllerBoard()
+        self.controller_board.setToolTip("Move your controller left or right to pick a side; middle: CPU")
+        self.controller_board.changed.connect(self._on_controllers_changed)
+        self.focus.register(self.controller_board)
+        cv.addWidget(self.controller_board)
         wv.addWidget(controls_card)
 
         wv.addStretch(1)
@@ -1335,7 +1329,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
             row = SelectorRow(label)
             row.set_free_text("—")
             row.set_disabled_visual(True)
-            row.set_status("COMING SOON", FG_MUTED)
+            row.set_status("EXPERT · COMING SOON", EXPERT)
             self.focus.register(row)
             v.addWidget(row)
             self._coming_soon_rows.append(row)
@@ -1475,17 +1469,31 @@ class MatchSetupScreen(KickoffTransition, Screen):
         if hasattr(self, "_advanced_slide"):
             self._advanced_slide.sync_geometry()
 
-    # ── controllers (keyboard + 3 gamepads, no pad detection) ─────────────
+    # ── controllers (ui/controller_board.py) ─────────────────────────────
     def _init_devices(self):
-        # Matches each row's own default: keyboard home, pads off.
-        self.cfg.controllers = {
-            slot_id: {"kind": kind, "label": label, "zone": "home" if kind == "kbd" else "none"}
-            for slot_id, kind, label in CONTROLLER_SLOTS}
+        # Keyboard home, every pad CPU.
+        for device in self.controller_board.devices():
+            self.controller_board.set_zone(device, "home" if device == KBD else "none")
+        self._on_controllers_changed()
 
-    def _on_controller_zone_changed(self, slot_id):
-        zone = self.controller_rows[slot_id].current()
-        default = "home" if self.cfg.controllers[slot_id]["kind"] == "kbd" else "none"
-        self.cfg.controllers[slot_id]["zone"] = zone[1] if zone else default
+    def _on_controllers_changed(self):
+        """The board's lanes as cfg.controllers: the keyboard, then each
+        connected pad in order; slots for pads not there are off."""
+        board = self.controller_board
+        zones = [board.zones[KBD]] + board.pad_zones()
+        self.cfg.controllers = {
+            slot_id: {"kind": kind, "label": label,
+                      "zone": zones[i] if i < len(zones) else "none"}
+            for i, (slot_id, kind, label) in enumerate(CONTROLLER_SLOTS)}
+
+    def _refresh_controller_teams(self):
+        from screens.tournament.common import team_crest
+        names, crests = {}, {}
+        for side, slot in (("home", self.cfg.home), ("away", self.cfg.away)):
+            names[side] = (slot.info(self.ds).get("name") or side) if slot.team_id else side
+            if slot.team_id:
+                crests[side] = team_crest(self.ds, slot.team_id, slot.season, 64, names[side], slot.variant)
+        self.controller_board.set_teams(names, crests)
 
     # ── competition options / backend sync ──────────────────────────────────
     def on_team_changed(self, side):
@@ -1498,6 +1506,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
             self.cfg.shared_tournament = None
             self._auto_select_home_stadium()
         self._refresh_ball_options()
+        self._refresh_controller_teams()
 
     def _on_ball_changed(self):
         option = self.ball_row.current() or {}

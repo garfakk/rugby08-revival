@@ -14,6 +14,61 @@ def fixture_caption(t, f) -> str:
     return f"{home} v {away}"
 
 
+def group_title(stage, group) -> str:
+    """What a pool is called on screen: its own name ("Pool A") when the
+    stage has several, "Table" for a stage that is one league."""
+    return group.name if len(stage.groups) > 1 else "Table"
+
+
+def in_group(stage, group) -> str:
+    """"in Pool A" / "in the table", after a position."""
+    return f"in {group.name}" if len(stage.groups) > 1 else "in the table"
+
+
+def round_title(t, day) -> str:
+    """What matchday `day` is called: "Round 3" (its stage's third round)
+    or a knockout round's name ("Quarter-final")."""
+    f = next((f for f in t.fixtures if f.day == day), None)
+    return (f.round_name if f else "") or f"Round {day + 1}"
+
+
+def round_short(t, day) -> str:
+    """round_title() in a few letters, for tags: "R3", "QF", "FINAL"."""
+    title = round_title(t, day)
+    if title.startswith("Round ") and title[6:].isdigit():
+        return f"R{title[6:]}"
+    words = title.replace("-", " ").split()
+    return title.upper() if len(words) == 1 else "".join(w[0] for w in words).upper()
+
+
+def round_position(t, f):
+    """(round number, round count) of a pool fixture within its stage, else
+    None (a knockout round goes by its name)."""
+    if f.knockout:
+        return None
+    days = sorted({g.day for g in t.fixtures if g.stage_id == f.stage_id})
+    return (days.index(f.day) + 1, len(days)) if f.day in days else None
+
+
+def where_now(t) -> str:
+    """Where the tournament stands, by the next match to play: "Pool stage
+    · Round 3 of 7", "Round 2 of 5" (a one-stage competition), "Quarter-
+    final"; "Tournament complete" at the end."""
+    if t.finished:
+        return "Tournament complete"
+    nxt = next((f for f in sorted(t.fixtures, key=lambda f: f.day) if not f.played), None)
+    if not nxt:
+        return ""
+    if nxt.knockout:
+        return nxt.round_name or "Knockouts"
+    stage = t.stage(nxt.stage_id)
+    n, total = round_position(t, nxt) or (0, 0)
+    where = f"Round {n} of {total}" if n else ""
+    if stage and len(t.stages) > 1:
+        where = f"{stage.name} · {where}" if where else stage.name
+    return where
+
+
 def venue_name(ds, f) -> str:
     info = (ds.stadiums if ds else {}).get(str(f.stadium_id)) if f.stadium_id else None
     return info.get("name", "") if info else ""
@@ -116,8 +171,7 @@ def campaign_summary(t, team_id) -> str:
             tab = standings.group_table(t, stage, g)
             for i, row in enumerate(tab):
                 if row.team_id == team_id and row.played:
-                    where = g.name if len(stage.groups) > 1 else stage.name
-                    return f"{_ordinal(i + 1)} in {where} ({row.points} pts)"
+                    return f"{_ordinal(i + 1)} {in_group(stage, g)} ({row.points} pts)"
     return ""
 
 
