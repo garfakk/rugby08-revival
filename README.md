@@ -34,12 +34,9 @@ The latest release is v0.3. Please note that it is still in development, so expe
 
 Already available:
 - Quick match with any team and season, kit choice, coin toss, weather and wind
-- Tournament mode: Six Nations, Rugby World Cup, Top 14 and Premiership editions, with the draw, standings, matchday recaps, injuries and bans
-- Challenge mode (experimental): replay famous matches with their own objectives
+- Challenge mode: replay famous matches with their own objectives
 - Legend and immortal difficulties
 - Team and player editors, with your edits kept apart from the data pack
-- Menus fully usable with a gamepad
-- Online updates of the program and of the data
 
 The kits/heads/textures used are from [MUP Patch 2009](https://www.therugbyforum.com/threads/mup-v-1-2-season-2008-09.15872), [TRF Patch 10](https://www.therugbyforum.com/threads/trf-rugby-10-patch.18881) and [jim546](https://github.com/jimw546/jimw546-s-Rugby-08-stuff)'s creations for this demo, a big thanks for their work.
 
