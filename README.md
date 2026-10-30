@@ -10,9 +10,8 @@
 - Player names on the back of the shirts, configured per team in the team editor (*Shirt names* tab): font, size, spacing, arch, name area (automatic or dragged), colours per kit, with 2D and 3D previews
 
 The possibilities are infinite, and future updates will include:
-- Extra difficulty modes
 - Improved gameplay
-- Tournament mode with dynamic evolution of the players based on their performance in match
+- Dynamic evolution of the players in tournaments, based on their performance in match
 - Completely new career mode
 - And much more!
 
@@ -31,25 +30,18 @@ The possibilities are infinite, and future updates will include:
 
 
 ## Current status
-Please note that it is still in development, so expect to find bugs.
+The latest release is v0.3. Please note that it is still in development, so expect to find bugs.
+
+Already available:
+- Quick match with any team and season, kit choice, coin toss, weather and wind
+- Tournament mode: Six Nations, Rugby World Cup, Top 14 and Premiership editions, with the draw, standings, matchday recaps, injuries and bans
+- Challenge mode (experimental): replay famous matches with their own objectives
+- Legend and immortal difficulties
+- Team and player editors, with your edits kept apart from the data pack
+- Menus fully usable with a gamepad
+- Online updates of the program and of the data
+
 The kits/heads/textures used are from [MUP Patch 2009](https://www.therugbyforum.com/threads/mup-v-1-2-season-2008-09.15872), [TRF Patch 10](https://www.therugbyforum.com/threads/trf-rugby-10-patch.18881) and [jim546](https://github.com/jimw546/jimw546-s-Rugby-08-stuff)'s creations for this demo, a big thanks for their work.
-
-## Tournament: reality mode
-Historical editions (Six Nations, Rugby World Cup) can be started in **reality mode** (New tournament › Setup › reality mode): every match between two teams you don't control gets its real score, with the real injuries and bans, and the real knockout bracket follows; your own matches are played (or simulated) as usual, and a knockout tie that only exists because of your results is simulated. It is offered only for an edition whose every fixture has a real result in the data, and whose real teams are all in the data (with the real draw).
-
-The data lives in the competition file, per fixture (all optional except `real_score`):
-```
-"real_score": "27–10",
-"real_tries": [3, 1],                    // bonus points then match reality
-"real_winner": "1015",                   // a level knockout match: who went through
-"real_events": [
-  {"kind": "injury", "team": "10003", "player": "Paul O'Connell", "matches": "tournament", "type": "hamstring injury"},
-  {"kind": "suspension", "team": "1005", "player": "Nemani Nadolo", "matches": 1, "reason": "cited for foul play"},
-  {"kind": "yellow" | "red" | "try" | "conversion" | "penalty" | "drop", "team": "...", "player": "..."}
-],
-"_sources": ["https://..."]
-```
-`player` is matched in that team's squad (a `pid` works too). Scorers are generated when the data has none. Rugby World Cup 2015 is filled in as the reference.
 
 ## Installation
 You can find the installer exe in the releases. Alternatively you can run the program directly with python:
