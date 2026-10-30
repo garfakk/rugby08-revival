@@ -8,7 +8,7 @@
    "banners": "banners_1/banner_%.png",
    "pads": "",
    "stadium": "",
-   "primaryStadium": "20",
+   "primaryStadium": "22",
    "logos": {
     "main": "logos_1/logo.png",
     "small": "logos_1/logo_small.png",
@@ -37,13 +37,13 @@
     }
    },
    "roles": {
-    "captain": "155456",
-    "viceCaptain": "155456",
+    "captain": "130109",
+    "viceCaptain": "103625",
     "longGK": "124855",
     "shortGK": "124855",
-    "longPunt": "124855",
-    "shortPunt": "130833",
-    "kickoff": "124855"
+    "longPunt": "155456",
+    "shortPunt": "155456",
+    "kickoff": "155456"
    },
    "setPlays": {
     "left": "pivot",
@@ -67,20 +67,20 @@
     "153465",
     "143166",
     "155466",
-    "155463",
     "153556",
-    "154542",
-    "156263",
-    "156238",
-    "155460",
     "155443",
     "155446",
+    "156238",
     "155450",
+    "154542",
+    "154329",
+    "155463",
+    "156263",
+    "155460",
     "155464",
     "153223",
     "143933",
     "156245",
-    "154329",
     "155455",
     "156376",
     "155449",
@@ -105,7 +105,7 @@
    "banners": "banners_1/banner_%.png",
    "pads": "",
    "stadium": "",
-   "primaryStadium": "20",
+   "primaryStadium": "22",
    "logos": {
     "main": "logos_1/logo.png",
     "small": "logos_1/logo_small.png",
@@ -128,13 +128,13 @@
     }
    },
    "roles": {
-    "captain": "155456",
+    "captain": "130109",
     "viceCaptain": "155456",
     "longGK": "124855",
     "shortGK": "124855",
-    "longPunt": "124855",
-    "shortPunt": "124855",
-    "kickoff": "124855"
+    "longPunt": "155456",
+    "shortPunt": "155456",
+    "kickoff": "155456"
    },
    "setPlays": {
     "left": "pivot",
@@ -146,43 +146,43 @@
     "155443",
     "155439",
     "156241",
-    "130109",
+    "155448",
     "154275",
     "155450",
-    "103625",
-    "155452",
+    "130109",
+    "153178",
     "124855",
     "155456",
-    "115147",
+    "155464",
     "130833",
-    "156223",
+    "115147",
     "143166",
-    "155466",
+    "155462",
     "153167",
     "153758",
-    "155046",
+    "155446",
     "156238",
-    "153178",
+    "103625",
     "152897",
     "154329",
-    "155462",
-    "155458",
+    "155466",
     "128149",
+    "155458",
+    "155452",
     "156216",
-    "155464",
-    "155448",
     "155460",
-    "155446",
     "152451",
     "155459",
     "156381",
     "155449",
+    "156223",
     "156215",
     "154305",
     "155465",
     "155442",
     "155104",
     "155463",
+    "155046",
     "155455",
     "155447",
     "155453"
@@ -196,7 +196,7 @@
    "banners": "banners_2/banner_%.png",
    "pads": "",
    "stadium": "",
-   "primaryStadium": "20",
+   "primaryStadium": "22",
    "logos": {
     "main": "logos_2/logo.png",
     "small": "logos_2/logo_small.png",
@@ -267,7 +267,7 @@
     "154201",
     "155409",
     "152777",
-    "155435",
+    "155414",
     "155417",
     "155418",
     "152971",
@@ -286,7 +286,7 @@
    "banners": "banners_2/banner_%.png",
    "pads": "",
    "stadium": "",
-   "primaryStadium": "20",
+   "primaryStadium": "22",
    "logos": {
     "main": "logos_2/logo.png",
     "small": "logos_2/logo_small.png",
@@ -334,7 +334,7 @@
     "154168",
     "155410",
     "155412",
-    "155419",
+    "155437",
     "152327",
     "152483",
     "155420",
@@ -465,7 +465,8 @@
     "155420",
     "155075"
    ],
-   "enabled": false
+   "enabled": false,
+   "primaryStadium": "22"
   },
   "2008": {
    "name": "Biarritz",
@@ -557,7 +558,8 @@
     "154305",
     "153178"
    ],
-   "enabled": false
+   "enabled": false,
+   "primaryStadium": "22"
   },
   "2016": {
    "name": "Biarritz",
@@ -567,7 +569,7 @@
    "banners": "banners_1/banner_%.png",
    "pads": "",
    "stadium": "",
-   "primaryStadium": "20",
+   "primaryStadium": "22",
    "logos": {
     "main": "logos_1/logo.png",
     "small": "logos_1/logo_small.png",
@@ -746,7 +748,8 @@
     "155420",
     "155075"
    ],
-   "enabled": false
+   "enabled": false,
+   "primaryStadium": "22"
   },
   "2019": {
    "name": "Biarritz",
@@ -843,7 +846,8 @@
     "155420",
     "155075"
    ],
-   "enabled": false
+   "enabled": false,
+   "primaryStadium": "22"
   },
   "2020": {
    "name": "Biarritz",
@@ -940,7 +944,8 @@
     "155420",
     "155075"
    ],
-   "enabled": false
+   "enabled": false,
+   "primaryStadium": "22"
   }
  }
 }

@@ -44,7 +44,8 @@
     "down": ""
    },
    "players": [],
-   "enabled": false
+   "enabled": false,
+   "primaryStadium": "38"
   },
   "2019": {
    "name": "Krasny Yar",
@@ -90,7 +91,8 @@
     "down": ""
    },
    "players": [],
-   "enabled": false
+   "enabled": false,
+   "primaryStadium": "38"
   }
  }
 }

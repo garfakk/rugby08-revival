@@ -44,7 +44,8 @@
     "down": ""
    },
    "players": [],
-   "enabled": false
+   "enabled": false,
+   "primaryStadium": "38"
   },
   "2010": {
    "name": "Bucharest Oaks",
@@ -90,7 +91,8 @@
     "down": ""
    },
    "players": [],
-   "enabled": false
+   "enabled": false,
+   "primaryStadium": "38"
   }
  }
 }

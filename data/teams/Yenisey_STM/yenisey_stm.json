@@ -44,7 +44,8 @@
     "down": ""
    },
    "players": [],
-   "enabled": false
+   "enabled": false,
+   "primaryStadium": "38"
   },
   "2018": {
    "name": "Yenisey-STM",
@@ -90,7 +91,8 @@
     "down": ""
    },
    "players": [],
-   "enabled": false
+   "enabled": false,
+   "primaryStadium": "38"
   },
   "2019": {
    "name": "Yenisey-STM",
@@ -136,7 +138,8 @@
     "down": ""
    },
    "players": [],
-   "enabled": false
+   "enabled": false,
+   "primaryStadium": "38"
   },
   "2020": {
    "name": "Yenisey-STM",
@@ -182,7 +185,8 @@
     "down": ""
    },
    "players": [],
-   "enabled": false
+   "enabled": false,
+   "primaryStadium": "38"
   }
  }
 }
