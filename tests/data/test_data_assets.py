@@ -1,6 +1,7 @@
 """Every asset a team season points at exists: ball, banners, logos, pads and
 each kit (front, back numbers, preview), kit variants included. Checked with
-the team editor's own asset_status / ASSET_SPECS."""
+the team editor's own asset_status / ASSET_SPECS. Kit textures ship packed
+(shared/kit_files.py, packaging/pack_kit_textures.py)."""
 import os
 
 import pytest
@@ -49,3 +50,13 @@ def test_team_asset_sizes(tid, season, known_issue):
     reported separately from missing files."""
     known_issue([f"{label}: {rel} is {detail}"
                  for label, rel, state, detail in _status(tid, season) if state == "size"])
+
+
+@pytest.mark.parametrize("tid,season", team_seasons())
+def test_kit_textures_are_packed(tid, season):
+    """Back numbers as one .webp strip and fronts as .webp, not loose PNGs
+    (22 near-identical PNGs per kit made the pack several GB): run
+    packaging/pack_kit_textures.py after adding a PNG kit."""
+    loose = [f"{label}: {rel}" for label, key, rel in _assets(raw()[0][tid][season])
+             if key in ("frontKitFile", "backKitFile") and rel.lower().endswith(".png")]
+    assert not loose, loose

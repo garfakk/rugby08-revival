@@ -23,6 +23,7 @@ from PyQt5.QtCore import (
 from backend import game_specific_variables as gsv
 from backend.mod_utils import stock_head_path
 from shared.config import config
+from shared import kit_files
 from shared.user_prefs import user_prefs
 from app.screen_base import Screen
 from app.input import Action, KEYMAP
@@ -647,11 +648,11 @@ class TeamColumn(QWidget):
         team_root = ds.teams_folder_path.get(slot.team_id, "")
         # backKitFile is the shirt's own back panel ("jbck") — without it that
         # panel falls back to plain white. It ships as a %-pattern, one image
-        # per shirt number (home_back_1.png, ...); "1" stands in since this
-        # preview isn't tied to a specific player.
+        # per shirt number (a strip, or home_back_1.png, ...); "1" stands in
+        # since this preview isn't tied to a specific player.
         kit_source = os.path.join(team_root, kit.get("frontKitFile", "")) if kit else ""
         back_pattern = kit.get("backKitFile", "") if kit else ""
-        back_source = os.path.join(team_root, back_pattern.replace("%", "1", 1)) if back_pattern else ""
+        back_source = kit_files.back_file(os.path.join(team_root, back_pattern)) if back_pattern else ""
         return kit, kit_source, back_source
 
     def _apply_kit_choice(self):

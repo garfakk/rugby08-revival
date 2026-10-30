@@ -34,6 +34,7 @@ from backend.mod_utils import *
 from shared.config import *
 
 from shared.log import get_logger
+from shared import kit_files
 
 log = get_logger(__name__)
 
@@ -468,12 +469,13 @@ def edit_graphics_files(match_data):
       copy_file(kit_back_source_filepath, kit_back_fsh_filepath)
 
     else:
-      # Create .fsh file from images
+      # Create .fsh file from images (a strip is unpacked to one file per shirt)
         copy_file(kit_back_fsh_template_filepath, kit_back_fsh_filepath)
 
-        printer, names = shirt_name_printer(match_data[team], kit_back_source_filepath)
+        kit_back_pattern = kit_files.back_pattern(kit_back_source_filepath)
+        printer, names = shirt_name_printer(match_data[team], kit_back_pattern)
         for index_file in range(0, 22):
-            kit_back_image = os.path.join(config.mod_data_directory, match_data[team]['kit_back'].replace("%", str(index_file+1)))
+            kit_back_image = kit_back_pattern.replace("%", str(index_file+1))
             image = kit_back_image
             if printer is not None and index_file < len(names) and names[index_file]:
                 try:

@@ -21,6 +21,7 @@ from PyQt5.QtCore import Qt
 
 from backend.mod_utils import stock_head_path
 from shared.config import config
+from shared import kit_files
 from app.screen_base import Screen
 from app import variants as V
 from app.game_data import frontend_logo
@@ -89,7 +90,7 @@ def _kit_assets(ds, team_id, season, key, kit_variant="", kit_override=None):
     preview = os.path.join(root, kit.get("previewFile", "")) if kit.get("previewFile") else ""
     front = os.path.join(root, kit.get("frontKitFile", "")) if kit.get("frontKitFile") else ""
     back_pattern = kit.get("backKitFile", "")
-    back = os.path.join(root, back_pattern.replace("%", "1", 1)) if back_pattern else ""
+    back = kit_files.back_file(os.path.join(root, back_pattern)) if back_pattern else ""
     return preview, front, back, kit.get("model3d")
 
 

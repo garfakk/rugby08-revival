@@ -102,8 +102,8 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2009/home_front.png",
-     "backKitFile": "kits_2009/home_back/home_back_%.png",
+     "frontKitFile": "kits_2009/home_front.webp",
+     "backKitFile": "kits_2009/home_back/home_back.webp",
      "previewFile": "kits_2009/home_preview.png",
      "color": "",
      "model3d": {
@@ -111,8 +111,8 @@
      }
     },
     "away": {
-     "frontKitFile": "kits_2009/away_front.png",
-     "backKitFile": "kits_2009/away_back/away_back_%.png",
+     "frontKitFile": "kits_2009/away_front.webp",
+     "backKitFile": "kits_2009/away_back/away_back.webp",
      "previewFile": "kits_2009/away_preview.png",
      "color": "",
      "model3d": {
@@ -195,14 +195,14 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2010/home_front.png",
-     "backKitFile": "kits_2010/home_back/home_back_%.png",
+     "frontKitFile": "kits_2010/home_front.webp",
+     "backKitFile": "kits_2010/home_back/home_back.webp",
      "previewFile": "kits_2010/home_preview.png",
      "color": ""
     },
     "away": {
-     "frontKitFile": "kits_2010/away_front.png",
-     "backKitFile": "kits_2010/away_back/away_back_%.png",
+     "frontKitFile": "kits_2010/away_front.webp",
+     "backKitFile": "kits_2010/away_back/away_back.webp",
      "previewFile": "kits_2010/away_preview.png",
      "color": ""
     }
@@ -277,14 +277,14 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2017/home_front.png",
-     "backKitFile": "kits_2017/home_back/home_back_%.png",
+     "frontKitFile": "kits_2017/home_front.webp",
+     "backKitFile": "kits_2017/home_back/home_back.webp",
      "previewFile": "kits_2017/home_preview.png",
      "color": ""
     },
     "away": {
-     "frontKitFile": "kits_2017/away_front.png",
-     "backKitFile": "kits_2017/away_back/away_back_%.png",
+     "frontKitFile": "kits_2017/away_front.webp",
+     "backKitFile": "kits_2017/away_back/away_back.webp",
      "previewFile": "kits_2017/away_preview.png",
      "color": ""
     }
@@ -367,14 +367,14 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2018/home_front.png",
-     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "frontKitFile": "kits_2018/home_front.webp",
+     "backKitFile": "kits_2018/home_back/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
      "color": ""
     },
     "away": {
-     "frontKitFile": "kits_2018/away_front.png",
-     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "frontKitFile": "kits_2018/away_front.webp",
+     "backKitFile": "kits_2018/away_back/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
      "color": ""
     }
@@ -464,14 +464,14 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2019/home_front.png",
-     "backKitFile": "kits_2019/home_back/home_back_%.png",
+     "frontKitFile": "kits_2019/home_front.webp",
+     "backKitFile": "kits_2019/home_back/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
      "color": ""
     },
     "away": {
-     "frontKitFile": "kits_2019/away_front.png",
-     "backKitFile": "kits_2019/away_back/away_back_%.png",
+     "frontKitFile": "kits_2019/away_front.webp",
+     "backKitFile": "kits_2019/away_back/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
      "color": ""
     }
@@ -748,14 +748,14 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2022/home_front.png",
-     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "frontKitFile": "kits_2022/home_front.webp",
+     "backKitFile": "kits_2022/home_back/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
      "color": ""
     },
     "away": {
-     "frontKitFile": "kits_2022/away_front.png",
-     "backKitFile": "kits_2022/away_back/away_back_%.png",
+     "frontKitFile": "kits_2022/away_front.webp",
+     "backKitFile": "kits_2022/away_back/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
      "color": ""
     }
@@ -845,14 +845,14 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2023/home_front.png",
-     "backKitFile": "kits_2023/home_back/home_back_%.png",
+     "frontKitFile": "kits_2023/home_front.webp",
+     "backKitFile": "kits_2023/home_back/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
      "color": ""
     },
     "away": {
-     "frontKitFile": "kits_2023/away_front.png",
-     "backKitFile": "kits_2023/away_back/away_back_%.png",
+     "frontKitFile": "kits_2023/away_front.webp",
+     "backKitFile": "kits_2023/away_back/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
      "color": ""
     }
@@ -935,14 +935,14 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2024/home_front.png",
-     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "frontKitFile": "kits_2024/home_front.webp",
+     "backKitFile": "kits_2024/home_back/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
      "color": ""
     },
     "away": {
-     "frontKitFile": "kits_2024/away_front.png",
-     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "frontKitFile": "kits_2024/away_front.webp",
+     "backKitFile": "kits_2024/away_back/away_back.webp",
      "previewFile": "kits_2024/away_preview.png",
      "color": ""
     }

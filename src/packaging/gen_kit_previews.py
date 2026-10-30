@@ -36,6 +36,7 @@ def main(argv=None):
         os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
     from shared.config import config
+    from shared import kit_files
     from shared.log import setup_logging
     setup_logging("WARNING")
     from app import kit_previews
@@ -76,7 +77,8 @@ def main(argv=None):
     size = args.size or kit_preview.SIZE
     failed, start = [], time.monotonic()
     for i, job in enumerate(jobs, 1):
-        image = kit_preview.render_kit_preview(job.front, job.back, job.model3d, size)
+        back = kit_files.back_file(job.back) if job.back else ""
+        image = kit_preview.render_kit_preview(job.front, back, job.model3d, size)
         rel = os.path.relpath(job.preview, data)
         if image is None or image.isNull():
             failed.append(job.label)

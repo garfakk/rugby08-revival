@@ -34,6 +34,7 @@ from ui.team_sheet import (
 )
 from ui.widgets import StyledButton
 from ui.shirt_name_canvas import NameAreaCanvas
+from shared import kit_files
 from shared import shirt_names as SN
 from shared.config import config
 from ui.theme import (
@@ -498,7 +499,8 @@ class KitsTab(TeamTab):
             self._wire_asset(f, key)
             fgrid.add(f)
         right.add(fgrid)
-        right.add(Note(ASSET_SPECS["backKitFile"]["note"] + " A kit_back_%.png series is expected."))
+        right.add(Note(ASSET_SPECS["backKitFile"]["note"] + " A kit_back_%.png series or a "
+                       "back-number strip (.webp) is expected."))
         self.back_strip = FrameStrip(22, thumb=(46, 46), max_show=11)
         right.add(self.back_strip)
         ugrid = FieldGrid(columns=1)
@@ -765,7 +767,7 @@ class KitsTab(TeamTab):
         pix = load_pixmap(os.path.join(root, preview), 512) if preview else None
         front = os.path.join(root, kit["frontKitFile"]) if kit.get("frontKitFile") else ""
         back = kit.get("backKitFile", "")
-        back_path = os.path.join(root, back.replace("%", "1", 1)) if back else ""
+        back_path = kit_files.back_file(os.path.join(root, back)) if back else ""
         key = (front, back_path, preview, str(kit.get("model3d")))
         if getattr(self, "_stage_key", None) == key:
             return
@@ -1124,7 +1126,7 @@ class ShirtNamesTab(TeamTab):
     def _back_pattern(self):
         back = self._kit_dict().get("backKitFile", "")
         root = self.screen.team_folder()
-        return os.path.join(root, back) if back else ""
+        return kit_files.back_pattern(os.path.join(root, back)) if back else ""
 
     def _render(self):
         """Letter the previewed shirt's back and show it."""
@@ -1135,7 +1137,7 @@ class ShirtNamesTab(TeamTab):
         if not pattern or "%" not in pattern:
             self.canvas.set_image(None)
             self.canvas.set_placeholder(
-                "SHIRT NAMES NEED THE KIT'S BACK NUMBERS AS A PNG SERIES (KIT_BACK_%.PNG)"
+                "SHIRT NAMES NEED THE KIT'S BACK NUMBERS AS IMAGES, NOT AN .FSH"
                 if pattern else "THIS KIT HAS NO BACK NUMBERS")
             self.left_note.setText("")
             return

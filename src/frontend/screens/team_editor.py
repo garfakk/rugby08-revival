@@ -317,9 +317,9 @@ class TeamEditorScreen(EditorScreen):
                         f"({SN.DEFAULT_FONT} is used)", "warn"))
         for name, kit in (info.get("kits") or {}).items():
             back = kit.get("backKitFile", "")
-            if back and "%" not in back:
+            if back.lower().endswith(".fsh"):
                 out.append((f"shirtNames.kits.{name}", f"shirt names: the {name} kit's back "
-                            "numbers are one .fsh file, names need a PNG series", "info"))
+                            "numbers are one .fsh file, names need images", "info"))
         return out
 
     def tab_for_issue(self, key):

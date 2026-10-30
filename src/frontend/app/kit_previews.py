@@ -33,7 +33,7 @@ from team_data_loader import TeamDataLoader
 class PreviewJob:
     preview: str                # absolute path of the image to write
     front: str                  # absolute path of the kit texture (frontKitFile)
-    back: str = ""              # first back-number image ("%" -> 1), "" if none
+    back: str = ""              # back numbers (strip or %-pattern), "" if none
     model3d: dict = None        # the kit's "model3d" block (fit, collar)
     label: str = ""             # "England 2024 home", for reports
 
@@ -115,7 +115,7 @@ def plan(teams_dir, only=None):
                         back = (kit.get("backKitFile") or "").strip()
                         jobs[target] = PreviewJob(
                             preview=target, front=front_path,
-                            back=os.path.join(root, back.replace("%", "1", 1)) if back else "",
+                            back=os.path.join(root, back) if back else "",
                             model3d=kit.get("model3d"), label=label)
     return list(jobs.values()), assignments, problems
 

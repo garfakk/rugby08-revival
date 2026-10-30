@@ -26,6 +26,7 @@ from PyQt5.QtGui import (
 )
 from PyQt5.QtCore import Qt, QRectF, QRect, QSize, QTimer, QPoint, QPointF, pyqtSignal, QEvent
 
+from shared import kit_files
 from ui.broadcast import Card, HintBar, draw_frame, tracked_font, display_label, eyebrow_label
 from ui.dropdown import PopupList
 from ui.widgets import StyledButton
@@ -110,9 +111,15 @@ def asset_status(root, rel, spec, check_size=False):
         return "outside", "outside the team folder", 0
     frames = spec.get("frames", 0)
     ext = os.path.splitext(rel)[1].lower()
-    if "%" in rel and frames:
+    if frames and kit_files.is_strip(rel) and os.path.isfile(os.path.join(root, rel)):
+        size = image_size(os.path.join(root, rel))
+        present = min(frames, kit_files.strip_frame_count(size)) if size else 0
+    elif "%" in rel and frames:
         present = sum(1 for i in range(1, frames + 1)
                       if os.path.isfile(os.path.join(root, expand_pattern(rel, i))))
+    else:
+        present = None
+    if present is not None:
         if present == frames:
             return "ok", f"{present}/{frames} files", present
         if present == 0:
@@ -1827,6 +1834,8 @@ class FrameStrip(QWidget):
     def set_pattern(self, root, pattern):
         self.root, self.pattern = root or "", pattern or ""
         self._pix = []
+        if kit_files.is_strip(self.pattern):      # one file per shirt, unpacked
+            self.root, self.pattern = "", kit_files.back_pattern(os.path.join(self.root, self.pattern))
         if self.pattern:
             for i in range(1, self.count + 1):
                 rel = expand_pattern(self.pattern, i) if "%" in self.pattern else self.pattern

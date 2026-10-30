@@ -33,7 +33,7 @@ def test_existing_preview_overwritten_missing_one_assigned(tmp_path):
     by_label = {j.label: j for j in jobs}
     home = by_label["Testland 2024 home"]
     assert home.preview.endswith(os.path.join("kits", "home_preview.png"))
-    assert home.back.endswith(os.path.join("kits", "back_1.png"))
+    assert home.back.endswith(os.path.join("kits", "back_%.png"))     # resolved when rendered
     assert [(a.kit, a.preview) for a in assignments] == [("away", "kits/away_preview.png")]
 
 

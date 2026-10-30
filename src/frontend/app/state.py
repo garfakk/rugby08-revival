@@ -21,6 +21,7 @@ from team_data_loader import TeamDataLoader
 from stadium_data_loader import StadiumDataLoader
 from tournament_data_loader import TournamentDataLoader
 from shared.config import config
+from shared import kit_files
 
 # Order of the category list in match setup. Internal, not exposed to the
 # user. Categories not listed here follow, alphabetically.
@@ -109,10 +110,12 @@ class DataStore:
         edits.enabled = user_prefs.use_edits
         if edits.enabled:
             _apply_edits(loader, teams, players, edits)
-        # older squad variants could carry kits: they now live in the kit
-        for seasons in teams.values():
+        # older squad variants could carry kits: they now live in the kit;
+        # edits made before the kits were packed name the old .png files
+        for tid, seasons in teams.items():
             for info in seasons.values():
                 V.migrate_season(info)
+                kit_files.migrate_kit_files(info, loader.teams_folder_path.get(tid, ""))
         stadiums = StadiumDataLoader(config.directory_stadiums).load_stadiums()
         tournament_loader = TournamentDataLoader(config.directory_competitions)
         tournaments = tournament_loader.load_tournaments()
@@ -207,6 +210,7 @@ class DataStore:
             return
         for info in live.values():
             V.migrate_season(info)
+            kit_files.migrate_kit_files(info, os.path.dirname(path))
         self.register_team(rid, live, os.path.dirname(path), path)
 
     # ── registry updates made by the editors ──────────────────────────────
