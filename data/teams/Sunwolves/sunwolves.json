@@ -17,7 +17,7 @@
    "kits": {
     "home": {
      "frontKitFile": "kits_2018/home_front.webp",
-     "backKitFile": "kits_2018/home_back/home_back.webp",
+     "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
      "color": "",
      "model3d": {
@@ -110,7 +110,7 @@
    "kits": {
     "home": {
      "frontKitFile": "kits_2018/home_front.webp",
-     "backKitFile": "kits_2018/home_back/home_back.webp",
+     "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
      "color": ""
     }

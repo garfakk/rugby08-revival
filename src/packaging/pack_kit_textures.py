@@ -4,9 +4,10 @@ packaging/pack_kit_textures.py — pack the kit textures of the data folder.
 
     python3 pack_kit_textures.py [--data <data folder>] [--team <folder>]... [--dry-run]
 
-Every back-number series a team or challenge json names (home_back_%.png,
-22 PNG files) becomes one lossless WebP strip beside it (home_back.webp,
-see shared/kit_files.py), and every .png kit front a lossless .webp. Each
+Every back-number series a team or challenge json names (a folder of 22
+PNG files, kits_2024/home_back/home_back_%.png) becomes one lossless WebP
+strip in the kit's folder (kits_2024/home_back.webp, see
+shared/kit_files.py), and every .png kit front a lossless .webp. Each
 packed file is decoded again and compared with its source, pixel for pixel
 (RGBA); only then are the json paths rewritten (as text: the files keep
 their layout) and the sources deleted. A source some other path still names
@@ -184,6 +185,9 @@ def main(argv=None):
                   if "%" in src else [src]):
             os.remove(p)
             removed += 1
+        folder = os.path.dirname(src)
+        if "%" in src and not os.listdir(folder):
+            os.rmdir(folder)            # the series' own folder, now empty
     print(f"packed {len(done)}, removed {removed} source files")
     for f in failed:
         print("  FAILED", f)

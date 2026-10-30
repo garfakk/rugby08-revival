@@ -74,7 +74,11 @@ def test_patterns_and_missing_strips_pass_through(tmp_path):
 
 
 def test_packed_rel():
-    assert KF.packed_rel("kits_2020/home_back/home_back_%.png") == "kits_2020/home_back/home_back.webp"
+    assert KF.packed_rel("kits_2020/home_back/home_back_%.png") == "kits_2020/home_back.webp"
+    assert KF.packed_rel("kits_2020/away_wc_back/away_back_%.png") == "kits_2020/away_back.webp"
+    assert KF.packed_rel("kits_2020/home_back_%.png") == "kits_2020/home_back.webp"
+    assert KF.packed_rel("kits_2020/home_back/home_back.webp") == "kits_2020/home_back.webp"
+    assert KF.packed_rel("kits_2020/home_back.webp") == "kits_2020/home_back.webp"
     assert KF.packed_rel("kits_2020/home_front.png") == "kits_2020/home_front.webp"
     assert KF.packed_rel("kits_2020/home_front.big") == "kits_2020/home_front.big"
     assert KF.packed_rel("kits/back.fsh") == "kits/back.fsh"
@@ -84,15 +88,18 @@ def test_migrate_kit_files_points_old_edits_at_packed_files(tmp_path):
     (tmp_path / "k").mkdir()
     (tmp_path / "k" / "home_front.webp").write_bytes(b"x")
     (tmp_path / "k" / "home_back.webp").write_bytes(b"x")
+    (tmp_path / "k" / "away_back.webp").write_bytes(b"x")
     (tmp_path / "k" / "away_front.png").write_bytes(b"x")      # not packed: kept
     info = {"kits": {
-        "home": {"frontKitFile": "k/home_front.png", "backKitFile": "k/home_back_%.png",
+        "home": {"frontKitFile": "k/home_front.png", "backKitFile": "k/home_back/home_back_%.png",
                  "variants": {"wc": {"frontKitFile": "k/home_front.png"}}},
-        "away": {"frontKitFile": "k/away_front.png", "backKitFile": "k/nothing_%.png"}}}
+        "away": {"frontKitFile": "k/away_front.png", "backKitFile": "k/nothing_%.png"},
+        "third": {"backKitFile": "k/away_back/away_back.webp"}}}       # packed before the move
     assert KF.migrate_kit_files(info, str(tmp_path))
     home, away = info["kits"]["home"], info["kits"]["away"]
     assert home["frontKitFile"] == "k/home_front.webp"
     assert home["backKitFile"] == "k/home_back.webp"
     assert home["variants"]["wc"]["frontKitFile"] == "k/home_front.webp"
     assert away == {"frontKitFile": "k/away_front.png", "backKitFile": "k/nothing_%.png"}
+    assert info["kits"]["third"]["backKitFile"] == "k/away_back.webp"
     assert not KF.migrate_kit_files(info, str(tmp_path))

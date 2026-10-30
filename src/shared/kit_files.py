@@ -2,11 +2,13 @@
 shared/kit_files.py — packed kit textures
 ==========================================
 A kit's 22 back-number textures are the same shirt but for the number, so the
-data pack ships them as one lossless WebP strip (home_back.webp): the backs
-stacked top to bottom, shirt 1 first, each a square as wide as the strip
-(512 x 512 today, any size later). One strip is about 1/8 of the 22 PNGs it
-replaces, pixel for pixel the same. The older form, a %-pattern of PNG files
-(home_back_%.png), still works everywhere: user imports and edits use it.
+data pack ships them as one lossless WebP strip in the kit's folder
+(kits_2024/home_back.webp): the backs stacked top to bottom, shirt 1 first,
+each a square as wide as the strip (512 x 512 today, any size later). One
+strip is about 1/8 of the 22 PNGs it replaces, pixel for pixel the same. The
+older form, a folder of 22 PNG files named by a %-pattern
+(kits_2024/home_back/home_back_%.png), still works everywhere: user imports
+and edits use it.
 
 Whatever needs one real image file per shirt (the game's FSH build, the
 shirt-name printer, the 3D previews, the editor's thumbnails) asks for
@@ -111,12 +113,24 @@ def back_file(path, number=1):
         return ""
 
 
+def _out_of_back_folder(rel):
+    """x/home_back/home_back.webp -> x/home_back.webp: a strip needs no
+    folder of its own (only a "..._back" folder is left)."""
+    folder, name = os.path.split(rel)
+    if folder and os.path.basename(folder).lower().endswith("back"):
+        return os.path.join(os.path.dirname(folder), name).replace(os.sep, "/")
+    return rel
+
+
 def packed_rel(rel) -> str:
     """The name a kit file gets once packed: a back %-pattern
-    (x/home_back_%.png) becomes its strip (x/home_back.webp), a .png front
-    its .webp. Anything else is returned as is."""
+    (x/home_back/home_back_%.png) becomes its strip in the kit folder
+    (x/home_back.webp), a strip still in a back folder moves up the same
+    way, a .png front becomes its .webp. Anything else is returned as is."""
     if rel.endswith("_%.png"):
-        return rel[:-len("_%.png")] + STRIP_EXT
+        return _out_of_back_folder(rel[:-len("_%.png")] + STRIP_EXT)
+    if is_strip(rel):
+        return _out_of_back_folder(rel)
     if "%" not in rel and rel.lower().endswith(".png"):
         return rel[:-4] + STRIP_EXT
     return rel
