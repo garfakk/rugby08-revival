@@ -27,6 +27,7 @@ from app.game_data import (
     check_team_detailed, check_team_variants, save_team, delete_team, save_target, saves_to_user_edits, SaveError,
     TEAM_TYPES, ASSET_SPECS, country_label, frontend_logo,
 )
+from app.team_browse import GROUPS, group_label
 from app.season import season_label
 from screens.editor_base import EditorScreen
 from screens.team_tabs import (
@@ -645,15 +646,17 @@ class TeamEditorScreen(EditorScreen):
         name = TextField("Team name")
         team_type = SegmentField("Type", TEAM_TYPES)
         category = ChoiceField("Category", self.ds.all_categories(), allow_blank=True)
+        group = ChoiceField("Group", GROUPS, allow_blank=True, display=group_label)
         year = NumberField("First season", lo=1900, hi=2100, allow_blank=False)
         copy_files = SegmentField("Copy image files", ["yes", "no"])
         info = self.info() if duplicate else {}
         name.set_value(f"{info.get('name', '')} copy" if duplicate else "")
         team_type.set_value(info.get("type", "club") if duplicate else "club")
         category.set_value(info.get("category", "") if duplicate else "")
+        group.set_value(info.get("group", "") if duplicate else "")
         year.set_value(self.season or "2026")
         copy_files.set_value("yes")
-        fields = {"name": name, "type": team_type, "category": category}
+        fields = {"name": name, "type": team_type, "category": category, "group": group}
         if not duplicate:
             fields["year"] = year
         else:
@@ -665,7 +668,7 @@ class TeamEditorScreen(EditorScreen):
                 return
             try:
                 self._create_team(name.value().strip(), team_type.value() or "club",
-                                  category.value(), year.value(), duplicate,
+                                  category.value(), group.value(), year.value(), duplicate,
                                   copy_files.value() == "yes")
             except (ValueError, OSError, SaveError) as e:
                 self.shell.footer.set_status(f"Could not create team: {e}", DANGER_LITE)
@@ -681,7 +684,7 @@ class TeamEditorScreen(EditorScreen):
             fields, [("CANCEL", "neutral", "cancel"),
                      ("CREATE", "primary", "ok")], done, footer=folder_hint))
 
-    def _create_team(self, name, team_type, category, year, duplicate, copy_files):
+    def _create_team(self, name, team_type, category, group, year, duplicate, copy_files):
         if not name:
             raise ValueError("the team needs a name")
         teams_dir = config.directory_teams
@@ -693,9 +696,13 @@ class TeamEditorScreen(EditorScreen):
                 info["name"] = name
                 info["type"] = team_type
                 info["category"] = category
+                if group:
+                    info["group"] = group
             source_folder = self.team_folder() if copy_files else None
         else:
             seasons = {str(year): T.new_team_season(name, team_type, category)}
+            if group:
+                seasons[str(year)]["group"] = group
             source_folder = None
         json_path, missing = T.create_team(teams_dir, folder, tid, seasons, source_folder)
         self.ds.register_team(tid, seasons, os.path.join(teams_dir, folder), json_path)

@@ -10,7 +10,7 @@ from app import variants as V
 from conftest import REAL_DATA
 from team_data_loader import TeamDataLoader
 
-from realdata import raw, team_folders, team_seasons
+from realdata import raw, store, team_folders, team_seasons
 
 pytestmark = pytest.mark.data
 
@@ -48,3 +48,15 @@ def test_team_season(tid, season, known_issue):
             problems += [f"variant {variant}: {p}" for p in
                          _errors(G.check_team_detailed(V.resolve(info, variant), players, season))]
     known_issue(problems)
+
+
+def test_every_team_has_one_known_group():
+    """Quick Match's groups picker (app/team_browse.py): each team names one
+    of its groups, the same in every season."""
+    from app.team_browse import GROUPS
+    bad = []
+    for tid, seasons in store().teams.items():
+        groups = {info.get("group") for info in seasons.values()}
+        if len(groups) != 1 or not groups <= set(GROUPS):
+            bad.append(f"{tid}: {sorted(map(str, groups))}")
+    assert not bad

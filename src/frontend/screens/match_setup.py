@@ -13,7 +13,7 @@ from copy import deepcopy
 
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QStackedWidget, QFrame,
-    QScrollArea, QGridLayout,
+    QScrollArea,
 )
 from PyQt5 import sip
 from PyQt5.QtGui import QPixmap, QFont
@@ -37,17 +37,16 @@ from app.game_data import (
 )
 from app.season import nearest_season, season_label
 from app.shell import present
-from app.team_browse import DEFAULT_STYLE, STYLE_IDS, TeamIndex, competitions
+from app.team_browse import DEFAULT_STYLE, STYLE_IDS, TeamIndex, group_label
 from ui import StyledButton
 from ui.player_stage import KitStage, _try_load_model
 from ui.dropdown import DropdownRow
 from ui.controller_board import KBD, ControllerBoard
-from ui.team_browser import ChipBar, SeasonTimeline, TeamBrowser
 from ui.atmosphere import AtmosphereWidget
 from ui.kickoff_transition import KickoffTransition, WALKOFF_MS
 from ui.side_panel import SidePanelSlide
 from ui.broadcast import (
-    Card, SelectorRow, TeamNamePicker, HintBar,
+    Card, SelectorRow, TeamNamePicker, GroupPicker, HintBar,
     page_header, eyebrow_label, display_label,
 )
 from ui.theme import (
@@ -69,14 +68,6 @@ ADVANCED_PANEL_W = 520   # slide-over width; also its travel (see ui/side_panel.
 from shared.log import get_logger
 
 log = get_logger(__name__)
-
-
-def _short_season(season) -> str:
-    """"2025" -> "24-25" (season chips)."""
-    try:
-        return f"{int(season) - 1 - 2000 if int(season) >= 2000 else int(season) - 1}-{str(season)[2:]}"
-    except ValueError:
-        return str(season)
 
 
 def _load_crest(path: str) -> QPixmap:
@@ -194,6 +185,15 @@ class TeamColumn(QWidget):
         chrome_top_v.addLayout(top_row)
         chrome_top_v.addStretch(1)
 
+        # The groups picker (Settings > Quick Match Picker): the team's
+        # group above its name, cycled like the team (app/team_browse.py).
+        self.index = TeamIndex(screen.ds)
+        self.group_picker = GroupPicker(display=group_label, subtitle=self._group_subtitle)
+        self.group_picker.changed.connect(self._on_group_changed)
+        screen.focus.register(self.group_picker)
+        chrome_top_v.addWidget(self.group_picker)
+        self.group_picker.hide()
+
         # Crest and name share one line. Away mirrors home (name left,
         # crest right) rather than repeating the same order, so the two
         # cards read as a symmetric pair either side of the middle column.
@@ -207,10 +207,9 @@ class TeamColumn(QWidget):
 
         self.name_picker = TeamNamePicker(
             display=lambda tid: self._info_for(tid).get("name", tid),
-            subtitle=lambda tid: self._info_for(tid).get("category", ""),
+            subtitle=self._team_subtitle,
         )
         self.name_picker.changed.connect(self._on_team_changed)
-        self.name_picker.activated.connect(self._open_browser)
         screen.focus.register(self.name_picker)
 
         if side == "home":
@@ -222,30 +221,23 @@ class TeamColumn(QWidget):
 
         chrome_top_v.addLayout(ident_row)
 
-        # The alternative pickers (Settings > Quick Match Picker): the
-        # team's own seasons under its name, as a row, chips or a timeline
-        # — only the one of the current style is shown. See set_style.
-        self.index = TeamIndex(screen.ds)
+        # The groups picker: only the team's own seasons, under its name,
+        # always from a dropdown list.
         self.style = DEFAULT_STYLE
         self.season_row2 = SelectorRow("season", compact=True)
         self.season_row2._display = season_label
-        years = sorted({int(x) for x in screen.ds.seasons() if str(x).isdigit()})
-        self.season_chips = ChipBar(display=_short_season)
-        self.season_timeline = SeasonTimeline([str(y) for y in years], display=season_label)
-        self.season_widgets = (self.season_row2, self.season_chips, self.season_timeline)
+        self.season_row2.set_force_popup(True)
+        self.season_row2.setMinimumWidth(220)
+        self.season_row2.setMaximumWidth(320)
+        self.season_row2.changed.connect(self._on_season_widget_changed)
+        self.season_row2.hide()
+        chrome_top_v.addWidget(self.season_row2, alignment=Qt.AlignHCenter)
+        screen.focus.register(self.season_row2)
         self.season_note = eyebrow_label("", color=WARN, size=10)
         self.season_note.setAlignment(Qt.AlignCenter)
-        for w in self.season_widgets:
-            w.changed.connect(self._on_season_widget_changed)
-            w.hide()
-            chrome_top_v.addWidget(w)
-        screen.focus.register(self.season_row2)
-        screen.focus.register(self.season_chips)
-        screen.focus.register(self.season_timeline)
         self.season_note.hide()
         chrome_top_v.addWidget(self.season_note)
         self._note_token = 0
-        self._browser = None
         chrome_top_v.addStretch(1)
 
         rule = QFrame()
@@ -335,7 +327,7 @@ class TeamColumn(QWidget):
         self.crest_lbl.setPixmap(self._crest_src.scaled(
             self._crest_size, self._crest_size, Qt.KeepAspectRatio, Qt.SmoothTransformation))
 
-    # ── the alternative pickers (app/team_browse.py) ───────────────────────
+    # ── the groups picker (app/team_browse.py) ─────────────────────────────
     def _info_for(self, tid):
         """The team's block of the slot's season, the latest it has when it
         has no such season (a team list spans seasons in the new styles)."""
@@ -343,10 +335,16 @@ class TeamColumn(QWidget):
         block = seasons.get(self._season())
         return block if block is not None else (seasons[max(seasons)] if seasons else {})
 
-    def _season_widget(self):
-        return {"classic": self.season_row, "team_first": self.season_row2, "era": self.season_row2,
-                "browser": self.season_chips, "leagues": self.season_chips,
-                "timeline": self.season_timeline}[self.style]
+    def _team_subtitle(self, tid):
+        """Under the team's name: its category (classic), its seasons span
+        (groups, where the group is said above)."""
+        if self.style == "groups":
+            return self.index.span(tid)
+        return self._info_for(tid).get("category", "")
+
+    def _group_subtitle(self, group):
+        n = len(self.index.in_group(group))
+        return f"{n} team{'s' if n != 1 else ''}"
 
     def set_style(self, style):
         """Switch how this card picks its team (see app/team_browse.STYLES),
@@ -356,12 +354,12 @@ class TeamColumn(QWidget):
         classic = style == DEFAULT_STYLE
         self.season_row.setVisible(classic)
         self.category_row.setVisible(classic)
-        self.season_row2.setVisible(style in ("team_first", "era"))
-        self.season_chips.setVisible(style in ("browser", "leagues"))
-        self.season_timeline.setVisible(style == "timeline")
+        self.group_picker.setVisible(not classic)
+        self.season_row2.setVisible(not classic)
         self.season_note.setVisible(False)
         slot = self._slot()
         if before == style or not slot.team_id:
+            self.name_picker.update()
             return
         if classic:
             self._sync_classic()
@@ -375,37 +373,31 @@ class TeamColumn(QWidget):
         idx = self.season_row.index_of(slot.season)
         self.season_row.set_index(idx if idx is not None else 0)
         cats = ds.categories_for(slot.season) if slot.season else []
-        cat = self.index.category(slot.team_id, slot.season)
+        cat = self._info_for(slot.team_id).get("category", "")
         self.category_row.set_values(cats, index=cats.index(cat) if cat in cats else 0)
         teams = ds.teams_for(slot.season, self.category_row.current()) if cats else {}
         ids = sorted(teams, key=lambda t: teams[t]["name"])
         self.name_picker.set_values(ids, index=ids.index(slot.team_id) if slot.team_id in ids else 0)
 
-    def _team_list(self, tid):
-        """The teams the name cycles through: those of the same kind (every
-        season counted); in the era style, those that have the era."""
-        era = self.screen.era if self.style == "era" else ""
-        stable = self.style == "leagues"
-        ids = self.index.like(tid, stable, season=era or None)
-        return ids if tid in ids else sorted(ids + [tid], key=lambda t: self.index.name(t).lower())
-
     def _adopt_team(self, tid, season=None, note=True):
-        """Make `tid` the card's team in the non-classic styles: its season
-        is `season`, else the era, else the one showing if the team has it,
-        else the nearest it has (said under the season). Reloads the card."""
+        """Make `tid` the card's team in the groups picker: its season is
+        `season`, else the one showing if the team has it, else the nearest
+        it has (said under the season). Reloads the card."""
         slot = self._slot()
         have = self.index.seasons(tid)
         if not have:
             return
-        era = self.screen.era if self.style == "era" else ""
-        wanted = season or (era if era in have else "") or slot.season
+        wanted = season or slot.season
         new = nearest_season(have, wanted) if wanted else have[-1]
         changed_team = slot.team_id != tid
         slot.team_id, slot.season, slot.variant = tid, new, ""
-        teams = self._team_list(tid)
+        group = self.index.group(tid)
+        groups = self.index.groups()
+        self.group_picker.set_values(groups, index=groups.index(group))
+        teams = self.index.in_group(group)
         self.name_picker.set_values(teams, index=teams.index(tid))
-        widget = self._season_widget()
-        widget.set_values(have, index=have.index(new))
+        # newest first, as the dropdown lists them
+        self.season_row2.set_values(have[::-1], index=have[::-1].index(new))
         if note and changed_team and wanted and new != wanted and not season:
             self._say_note(f"No {season_label(wanted)} squad for {self.index.name(tid, new)}: "
                            f"showing {season_label(new)}")
@@ -413,6 +405,13 @@ class TeamColumn(QWidget):
             self.season_note.hide()
         self._load_team()
         self.name_picker.update()
+
+    def _on_group_changed(self):
+        """Another group: its first team, on the season showing or the
+        nearest it has."""
+        teams = self.index.in_group(self.group_picker.current())
+        if teams:
+            self._adopt_team(teams[0])
 
     def _say_note(self, text):
         self.season_note.setText(text)
@@ -425,7 +424,7 @@ class TeamColumn(QWidget):
     def _on_season_widget_changed(self):
         if self.style == "classic":
             return
-        season = self._season_widget().current()
+        season = self.season_row2.current()
         slot = self._slot()
         if not season or season == slot.season:
             return
@@ -433,49 +432,6 @@ class TeamColumn(QWidget):
         self.season_note.hide()
         self._load_team()
         self.name_picker.update()
-
-    def apply_era(self, era):
-        """The era control of the match column changed (era style): this
-        card follows it — its team when it has that season, else a team of
-        its kind that has it."""
-        if self.style != "era":
-            return
-        slot = self._slot()
-        if not slot.team_id:
-            return
-        if not era or era in self.screen.ds.teams.get(slot.team_id, {}):
-            self._adopt_team(slot.team_id, season=era or None, note=False)
-            return
-        pool = self.index.like(slot.team_id, False, season=era) or \
-            [t for t in self.index.all_teams() if era in self.screen.ds.teams[t]]
-        if pool:
-            self._adopt_team(pool[0], season=era, note=False)
-
-    def _browser_entries(self):
-        from screens.tournament.common import team_crest
-        stable = self.style == "leagues"
-        ds = self.screen.ds
-        entries = []
-        for group, tids in self.index.groups(self.index.all_teams(), stable):
-            for t in tids:
-                last = self.index.seasons(t)[-1]
-                entries.append((t, self.index.name(t), group, self.index.span(t),
-                                team_crest(ds, t, last, 30)))
-        return entries
-
-    def _open_browser(self):
-        """A / a click on the team name: the searchable list of every team
-        (browser and leagues styles)."""
-        if self.style not in ("browser", "leagues"):
-            return
-        if self._browser is None:
-            self._browser = TeamBrowser(self.screen)
-        filters = None
-        if self.style == "leagues":
-            filters = self.index.filters(self.screen.competitions(), stable=True)
-        self._browser.open_for(f"{self.side} · choose a team", self._browser_entries(),
-                               self._slot().team_id, self.name_picker,
-                               lambda tid: (self._adopt_team(tid), self.name_picker.setFocus()), filters)
 
     def pick(self):
         """(team id, season, kit key) shown, for swapping sides."""
@@ -490,14 +446,6 @@ class TeamColumn(QWidget):
         if idx is not None:
             self.kit_row.set_index(idx)
             self._on_kit_changed()
-
-    def random_pick(self, season, category, avoid=None):
-        """A random team of `category` in `season` (the screen's RANDOM and
-        its first opening in the non-classic styles)."""
-        teams = list(self.screen.ds.teams_for(season, category)) if season and category else []
-        teams = [t for t in teams if t != avoid] or teams
-        if teams:
-            self._adopt_team(random.choice(teams), season=season, note=False)
 
     # ── state plumbing ───────────────────────────────────────────────────
     def _slot(self) -> TeamSlot:
@@ -731,7 +679,6 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self._advanced_open = False
         self._kickoff_running = False
         self._toss = None              # the coin toss overlay while it runs
-        self.era = ""                  # the era style's season for both teams ("" = any)
         self._picker_style = DEFAULT_STYLE
         self._build()
         self._init_devices()
@@ -806,20 +753,6 @@ class MatchSetupScreen(KickoffTransition, Screen):
                 view.render_first_frame()
 
     # ── Settings > Quick Match Picker ─────────────────────────────────────
-    def competitions(self):
-        """{label: {team ids}} of the tournament competitions, for the
-        leagues style's filter chips (read once, templates don't change)."""
-        if getattr(self, "_competitions", None) is None:
-            try:
-                from app.tournament import engine, formats
-                self._competitions = competitions(
-                    formats.load_templates(),
-                    lambda tpl: engine.default_participants(tpl, tpl.get("season") or ""))
-            except Exception as e:
-                log.warning(f"competition filters unavailable: {e}")
-                self._competitions = {}
-        return self._competitions
-
     def _apply_picker_style(self, first=False):
         style = user_prefs.match_picker
         style = style if style in STYLE_IDS else DEFAULT_STYLE
@@ -828,43 +761,8 @@ class MatchSetupScreen(KickoffTransition, Screen):
         previous, self._picker_style = self._picker_style, style
         for col in (self.home_col, self.away_col):
             col.set_style(style)
-        self.era_row.setVisible(style == "era")
-        self.swap_row.setVisible(style != DEFAULT_STYLE)
-        if style == "era":
-            self.era = ""
-            self.era_row.set_index(0)
         if style != DEFAULT_STYLE and (first or previous == DEFAULT_STYLE):
             self._restore_last_match()
-        self._update_hints()
-
-    def _on_era_changed(self):
-        self.era = self.era_row.current() or ""
-        for col in (self.home_col, self.away_col):
-            col.apply_era(self.era)
-        if self.era and self.home_col._slot().team_id == self.away_col._slot().team_id:
-            self._reroll_away()
-
-    def _reroll_away(self):
-        h = self.home_col._slot()
-        pool = [t for t in self.away_col._team_list(self.away_col._slot().team_id) if t != h.team_id]
-        if pool:
-            self.away_col._adopt_team(random.choice(pool), season=self.era or None, note=False)
-
-    def _swap_sides(self):
-        a, b = self.home_col.pick(), self.away_col.pick()
-        self.home_col.set_pick(*b)
-        self.away_col.set_pick(*a)
-
-    def _random_match(self):
-        """Two different teams of one kind, from one season."""
-        seasons = [x for x in self.ds.seasons() if len(self.ds.teams_in_season(x)) >= 2]
-        season = self.era or (random.choice(seasons) if seasons else "")
-        cats = self.ds.categories_for(season) if season else []
-        if not cats:
-            return
-        cat = random.choice(cats)
-        self.home_col.random_pick(season, cat)
-        self.away_col.random_pick(season, cat, avoid=self.home_col._slot().team_id)
 
     # last match: reopen on it (user_data/last_match.json)
     def _last_match_path(self):
@@ -1111,29 +1009,6 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self.focus.register(self.wind_power_row)
         v.addWidget(self.wind_power_row)
 
-        # Only in the team-first pickers (Settings > Quick Match Picker): the
-        # era both teams follow, and the two shortcuts.
-        self.era_row = SelectorRow("era", compact=True)
-        self.era_row.set_values(["", *sorted(self.ds.seasons())], index=0)
-        self.era_row._display = lambda e: "any" if not e else season_label(e)
-        self.era_row.changed.connect(self._on_era_changed)
-        self.focus.register(self.era_row)
-        v.addWidget(self.era_row)
-        self.era_row.setVisible(False)
-        self.swap_row = QWidget()
-        sh = QHBoxLayout(self.swap_row)
-        sh.setContentsMargins(0, 0, 0, 0)
-        sh.setSpacing(10)
-        self.swap_btn = StyledButton("SWAP SIDES", "neutral")
-        self.swap_btn.clicked.connect(self._swap_sides)
-        self.random_btn = StyledButton("RANDOM", "neutral")
-        self.random_btn.clicked.connect(self._random_match)
-        for b in (self.swap_btn, self.random_btn):
-            b.setMinimumHeight(BTN_HEIGHT)
-            self.focus.register(b)
-            sh.addWidget(b, stretch=1)
-        v.addWidget(self.swap_row)
-        self.swap_row.setVisible(False)
 
         self.advanced_btn = StyledButton("ADVANCED", "neutral")
         self.advanced_btn.setMinimumHeight(BTN_HEIGHT)

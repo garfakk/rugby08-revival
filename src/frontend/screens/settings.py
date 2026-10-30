@@ -261,7 +261,7 @@ class SettingsScreen(QWidget):
             CycleRow("Wind", ["Standard", "Advanced"], user_prefs.wind_mode.capitalize(), _set_wind_mode),
             ToggleRow("Coin Toss", user_prefs.coin_toss, _set_coin_toss),
             # How Quick Match picks teams (app/team_browse.py): the classic
-            # season > category > team, or one of the team-first ones.
+            # season > category > team, or group > team > season.
             # Takes effect the next time Quick Match opens.
             ChoiceRow("Quick Match Picker", [label for _id, label in STYLES],
                       style_label(user_prefs.match_picker), _set_picker),

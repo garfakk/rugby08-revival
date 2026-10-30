@@ -1,75 +1,63 @@
 """
 app/team_browse.py — how the match setup screen can let you reach a team.
 
-The classic screen asks season -> category -> team. Settings > Quick Match
-Picker offers other ways (STYLES), which all start from the team:
+Settings > Quick Match Picker offers two ways (STYLES):
 
-  team_first  the team name cycles through the teams of its kind; the season
-              row only lists the seasons that team has
-  browser     the same, and A / a click on the name opens a searchable list
-              of every team, grouped by kind, with the season span of each
-  timeline    team first, its seasons on a timeline (gaps visible)
-  era         team first, plus an ERA in the match column: both teams from
-              one season
-  leagues     the browser with stable league names (Celtic League, Pro14 and
-              URC are one group) and competition filters (Six Nations...)
+  classic  season -> category -> team: the season's own competitions
+  groups   group -> team -> season: the team's group (its "group" in the
+           team file: France, Celtic, Tier 1 Nations...), which stays the
+           same whatever the season, then only the seasons the team has
 
 Pure logic over the DataStore, no Qt: TeamIndex answers "what seasons does
-this team have", "which teams are like it", "what group is it listed under".
+this team have", "what group is it in", "which teams are in that group".
 """
-import re
-
 from app.season import nearest_season, season_label
 
 STYLES = [
-    ("classic", "Classic: season, category, team"),
-    ("team_first", "Team first, then its seasons"),
-    ("browser", "Team browser with search"),
-    ("timeline", "Team first, seasons on a timeline"),
-    ("era", "Team first, with an era for both"),
-    ("leagues", "Browser with leagues and competitions"),
+    ("classic", "Season, category, team"),
+    ("groups", "Group, team, season"),
 ]
 STYLE_IDS = [s for s, _label in STYLES]
 DEFAULT_STYLE = "classic"
 
-# A league that changed its name keeps one group: the name of the latest one.
-LEAGUE_FAMILIES = {"Celtic League": "URC", "Pro14": "URC", "URC": "URC",
-                   "Super 14": "Super Rugby", "Super Rugby": "Super Rugby"}
-# Competitions a team can be filtered by, from the tournament templates:
-# template id prefix -> label.
-COMPETITION_LABELS = {"six_nations": "Six Nations", "rwc": "World Cup"}
+# The groups, in the order the picker cycles them: the id a team file names
+# in "group" (the same whatever the picker) and the name this picker shows.
+# A group id a team file names that isn't here comes after these, by id,
+# shown as it is.
+GROUP_LABELS = {
+    "international": "International",
+    "england": "England",
+    "france": "France",
+    "other_european": "Other European",
+    "southern_hemisphere": "Southern Hemisphere",
+}
+GROUPS = list(GROUP_LABELS)
+# A team file without a "group" (one made before groups existed): its
+# latest category says where it goes. The categories themselves stay as the
+# classic picker shows them.
+CATEGORY_GROUPS = {
+    "International": "international",
+    "Premiership": "england", "Championship": "england",
+    "Top 14": "france", "Pro D2": "france",
+    "Celtic League": "other_european", "Pro12": "other_european", "Pro14": "other_european",
+    "URC": "other_european", "Italy": "other_european",
+    "Super 14": "southern_hemisphere", "Super Rugby": "southern_hemisphere",
+}
+OTHER_GROUP = "other_european"
 
 
-def family_of(category):
-    return LEAGUE_FAMILIES.get(category, category or "Other")
+def group_label(group):
+    """The name the picker shows for a group id."""
+    return GROUP_LABELS.get(group, group)
 
 
 def style_label(style):
     return dict(STYLES).get(style, dict(STYLES)[DEFAULT_STYLE])
 
 
-def competitions(templates, participants_of):
-    """{label: {team ids}} for the competitions teams can be filtered by:
-    the teams of every edition of a template family (Six Nations, World
-    Cup...). `participants_of(template)` gives {stage: {group: [team ids]}}."""
-    out = {}
-    for tid, tpl in (templates or {}).items():
-        label = next((lab for prefix, lab in COMPETITION_LABELS.items() if tid.startswith(prefix)), None)
-        if not label:
-            continue
-        try:
-            parts = participants_of(tpl)
-        except Exception:
-            continue
-        for groups in parts.values():
-            for teams in groups.values():
-                out.setdefault(label, set()).update(str(t) for t in teams)
-    return out
-
-
 class TeamIndex:
-    """Seasons, kinds and groups of the teams of a DataStore (read live: the
-    data can change under it, e.g. after the team editor)."""
+    """Seasons and groups of the teams of a DataStore (read live: the data
+    can change under it, e.g. after the team editor)."""
 
     def __init__(self, ds):
         self.ds = ds
@@ -90,17 +78,15 @@ class TeamIndex:
     def name(self, tid, season=None):
         return self.info(tid, season).get("name", tid)
 
-    def category(self, tid, season=None):
-        return self.info(tid, season).get("category", "")
-
-    def group(self, tid, stable=False):
-        """What the team is listed under: its latest category, or with
-        `stable` the family of that league (URC for Pro14 / Celtic League)."""
-        cat = self.category(tid)
-        return family_of(cat) if stable else (cat or "Other")
+    def group(self, tid):
+        """The team's group: its latest season's "group", else the one of
+        its category."""
+        info = self.info(tid)
+        return (info.get("group") or CATEGORY_GROUPS.get(info.get("category", ""))
+                or OTHER_GROUP)
 
     def span(self, tid):
-        """"2007-2026 · 12 seasons" for the browser."""
+        """"2007-2026 · 12 seasons" under the team's name."""
         have = self.seasons(tid)
         if not have:
             return ""
@@ -108,45 +94,12 @@ class TeamIndex:
         return f"{first}–{last} · {len(have)} season{'s' if len(have) != 1 else ''}"
 
     # ── lists ──
-    def all_teams(self):
-        return sorted(self.ds.teams, key=lambda t: self.name(t).lower())
+    def groups(self):
+        """Every group with a team, in GROUPS order (others after, by name)."""
+        have = {self.group(t) for t in self.ds.teams}
+        return [g for g in GROUPS if g in have] + sorted(have - set(GROUPS))
 
-    def like(self, tid, stable=False, season=None):
-        """The teams of the same kind as `tid` (same group), by name; with
-        `season` only those that have that season."""
-        group = self.group(tid, stable)
-        out = [t for t in self.all_teams() if self.group(t, stable) == group
-               and (not season or season in self.ds.teams[t])]
-        return out
-
-    def groups(self, team_ids, stable=False):
-        """[(group, [tid])] in a stable order: international first, then by
-        name; the teams by name within."""
-        by = {}
-        for t in team_ids:
-            by.setdefault(self.group(t, stable), []).append(t)
-        order = sorted(by, key=lambda g: (g.lower() != "international", g.lower()))
-        return [(g, sorted(by[g], key=lambda t: self.name(t).lower())) for g in order]
-
-    def filters(self, comps=None, stable=True):
-        """[(label, predicate(tid))] for the browser's filter chips: ALL,
-        the groups with at least a few teams, then the competitions."""
-        out = [("ALL", lambda t: True)]
-        groups = {}
-        for t in self.ds.teams:
-            groups.setdefault(self.group(t, stable), set()).add(t)
-        for g in sorted(groups, key=lambda g: (g.lower() != "international", g.lower())):
-            if len(groups[g]) >= 3:
-                out.append((g.upper(), lambda t, s=groups[g]: t in s))
-        for label, teams in sorted((comps or {}).items()):
-            if teams & set(self.ds.teams):
-                out.append((label.upper(), lambda t, s=teams: t in s))
-        return out
-
-
-def search_match(query, name):
-    """Every word of the query starts a word of the name (accents and case
-    ignored enough for team names): "all bl" finds "All Blacks"."""
-    words = re.findall(r"\w+", str(query or "").lower())
-    parts = re.findall(r"\w+", str(name or "").lower())
-    return all(any(p.startswith(w) for p in parts) for w in words)
+    def in_group(self, group):
+        """The group's teams, by name."""
+        return sorted((t for t in self.ds.teams if self.group(t) == group),
+                      key=lambda t: self.name(t).lower())

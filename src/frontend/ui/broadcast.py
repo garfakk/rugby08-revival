@@ -264,14 +264,21 @@ class SelectorRow(QWidget):
         # than to open a popup for — set True to always use arrow-cycling
         # on this instance regardless of the global dropdown_menus setting.
         self._force_arrows = False
+        # ...and the other way round: a list always picked from a popup
+        # (the match setup's season of a team, in the groups picker).
+        self._force_popup = False
         self._fw_click_boundary = None   # set by _paint_compact once it knows where the text sits
 
     def set_force_arrows(self, on: bool = True):
         self._force_arrows = on
         self.update()
 
+    def set_force_popup(self, on: bool = True):
+        self._force_popup = on
+        self.update()
+
     def _use_popup(self):
-        return user_prefs.dropdown_menus and not self._force_arrows
+        return (user_prefs.dropdown_menus or self._force_popup) and not self._force_arrows
 
     # ── state ────────────────────────────────────────────────────────────
     def set_values(self, values, index=0):
@@ -659,6 +666,41 @@ class TeamNamePicker(QWidget):
                 p.setFont(tracked_font(FONT_DISPLAY, 11, QFont.DemiBold, track=1.8))
                 p.setPen(QColor(FG_SECONDARY))
                 p.drawText(QRectF(0, 48, w, 20), Qt.AlignCenter, sub.upper())
+
+
+class GroupPicker(TeamNamePicker):
+    """A TeamNamePicker for a shorter line above the team's (the match
+    setup's group of teams): same arrows and cycling, a smaller name that
+    shrinks to fit the width, no browser behind A."""
+
+    MAX_PT, MIN_PT = 22, 12
+
+    def __init__(self, values=None, display=str, subtitle=str, parent=None):
+        super().__init__(values, display, subtitle, parent)
+        self.setFixedHeight(62)
+
+    def paintEvent(self, event):
+        p = QPainter(self)
+        focused = self.hasFocus()
+        w = self.width()
+        ac = ACCENT if focused else FG_MUTED
+        arrow(p, 26, 22, "left", ac, size=9)
+        arrow(p, w - 26, 22, "right", ac, size=9)
+        name = (self._display(self._values[self._index]) if self._values else "—").upper()
+        size = self.MAX_PT
+        font = tracked_font(FONT_DISPLAY, size, QFont.Bold, track=0.8)
+        while size > self.MIN_PT and QFontMetrics(font).horizontalAdvance(name) > w - 90:
+            size -= 1
+            font = tracked_font(FONT_DISPLAY, size, QFont.Bold, track=0.8)
+        p.setFont(font)
+        p.setPen(QColor(ACCENT if focused else FG_PRIMARY))
+        p.drawText(QRectF(0, 4, w, 36), Qt.AlignCenter, name)
+        if self._values:
+            sub = self._subtitle(self._values[self._index])
+            if sub:
+                p.setFont(tracked_font(FONT_DISPLAY, 10, QFont.DemiBold, track=1.8))
+                p.setPen(QColor(FG_SECONDARY))
+                p.drawText(QRectF(0, 38, w, 18), Qt.AlignCenter, sub.upper())
 
 
 class DeviceTile(QWidget):

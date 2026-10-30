@@ -19,6 +19,7 @@ from app.game_data import (
     frontend_logo, looks_reversed,
 )
 from app.ratings import position_overall
+from app.team_browse import GROUPS, group_label
 from app.season import season_label
 from ui.broadcast import Card, draw_frame, tracked_font, display_label, eyebrow_label
 from app import variants as V
@@ -142,6 +143,11 @@ class OverviewTab(TeamTab):
         self.category = self.register("category", ChoiceField("Category", allow_blank=True))
         self.category.edited.connect(self._on_category)
         grid.add(self.category)
+        # The team's group in Quick Match's groups picker (app/team_browse.py):
+        # one for the whole team, so it is set on every season at once.
+        self.group = self.register("group", ChoiceField("Group (every season)", allow_blank=True))
+        self.group.edited.connect(self._on_group)
+        grid.add(self.group)
         ident.add(grid)
         left.addWidget(ident)
 
@@ -225,6 +231,26 @@ class OverviewTab(TeamTab):
             return
         self.edit("category", lambda i: i.__setitem__("category", value), "category")
 
+    def _on_group(self, value):
+        if value == "__other__":
+            self.screen.ask_text("New group", "Group", self.info().get("group", ""), self._set_group)
+            self.refresh()
+            return
+        self._set_group(value)
+
+    def _set_group(self, value):
+        value = (value or "").strip()
+
+        def mutate(w):
+            for info in w.values():
+                if value:
+                    info["group"] = value
+                else:
+                    info.pop("group", None)
+        self.screen.edit("group", mutate,
+                         view_hint={"season": self.screen.season, "variant": getattr(self.screen, "variant", ""),
+                                    "tab": self.index, "field": "group", **self.view_extra()})
+
     def refresh(self):
         info = self.info()
         self.name.set_value(info.get("name", ""))
@@ -239,6 +265,14 @@ class OverviewTab(TeamTab):
         self.category.set_options(sorted(cats) + ["__other__"])
         self.category.display = lambda v: "Other…" if v == "__other__" else v
         self.category.set_value(cur)
+        groups = list(GROUPS) + sorted({i.get("group") for t in self.screen.ds.teams.values()
+                                        for i in t.values() if i.get("group")} - set(GROUPS))
+        cur = info.get("group", "")
+        if cur and cur not in groups:
+            groups.append(cur)
+        self.group.set_options(groups + ["__other__"])
+        self.group.display = lambda v: "Other…" if v == "__other__" else group_label(v)
+        self.group.set_value(cur)
         root = self.screen.team_folder()
         self.crest.set_root(root)
         self.crest.set_value((info.get("logos") or {}).get("main", ""))
