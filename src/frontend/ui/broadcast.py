@@ -268,6 +268,14 @@ class SelectorRow(QWidget):
         # (the match setup's season of a team, in the groups picker).
         self._force_popup = False
         self._fw_click_boundary = None   # set by _paint_compact once it knows where the text sits
+        self._inline = False
+
+    def set_inline(self, on: bool = True):
+        """Compact rows only: label and value on one line ("SEASON 2008-2009"),
+        a slimmer chip."""
+        self._inline = on
+        self.setFixedHeight(32 if on else 44)
+        self.update()
 
     def set_force_arrows(self, on: bool = True):
         self._force_arrows = on
@@ -547,6 +555,10 @@ class SelectorRow(QWidget):
             if focused and not self._mirror:
                 p.fillRect(QRectF(0, 0, w, 3), QColor(ACCENT))
 
+        if self._inline:
+            self._paint_inline(p, w, h, focused)
+            return
+
         lab_col = WARN if self._problem else (FG_MUTED if self._disabled else FG_SECONDARY)
         p.setFont(tracked_font(FONT_DISPLAY, 8, QFont.DemiBold, track=1.0))
         p.setPen(QColor(lab_col))
@@ -583,6 +595,45 @@ class SelectorRow(QWidget):
                 # count as "previous"; anything from the text on rightward
                 # (including the right arrow) is "next".
                 self._fw_click_boundary = w / 2 - half_text
+
+    def _paint_inline(self, p, w, h, focused):
+        """set_inline: "LABEL  VALUE" centred together on one line."""
+        lab_col = WARN if self._problem else (FG_MUTED if self._disabled else FG_SECONDARY)
+        val_col = BLOCKED if self._disabled else (ACCENT if focused and not self._mirror else
+                   (FG_SECONDARY if self._mirror else FG_PRIMARY))
+        lab_font = tracked_font(FONT_DISPLAY, 9, QFont.DemiBold, track=1.2)
+        val_font = tracked_font(FONT_DISPLAY, 13, QFont.Bold, track=0.2)
+        label = self._label.upper()
+        lab_w = QFontMetrics(lab_font).horizontalAdvance(label)
+        gap, pad = 10, 18
+        value = QFontMetrics(val_font).elidedText(self._display_text().upper(), Qt.ElideRight,
+                                                  int(max(20, w - 2 * pad - lab_w - gap)))
+        val_w = QFontMetrics(val_font).horizontalAdvance(value)
+        x = (w - lab_w - gap - val_w) / 2
+        p.setFont(lab_font)
+        p.setPen(QColor(lab_col))
+        p.drawText(QRectF(x, 0, lab_w + 2, h), Qt.AlignLeft | Qt.AlignVCenter, label)
+        p.setFont(val_font)
+        p.setPen(QColor(val_col))
+        p.drawText(QRectF(x + lab_w + gap, 0, val_w + 2, h), Qt.AlignLeft | Qt.AlignVCenter, value)
+        if not self._disabled and not self._mirror:
+            ac = ACCENT if focused else FG_MUTED
+            if self._use_popup():
+                arrow(p, w - 10, h / 2, "down", ac, size=4)
+            else:
+                arrow(p, 10, h / 2, "left", ac, size=5)
+                arrow(p, w - 10, h / 2, "right", ac, size=5)
+
+
+def fit_font(text, width, max_pt, min_pt):
+    """The bold display font, largest size from max_pt down to min_pt at
+    which `text` fits `width`."""
+    size = max_pt
+    font = tracked_font(FONT_DISPLAY, size, QFont.Bold, track=0.8)
+    while size > min_pt and QFontMetrics(font).horizontalAdvance(text) > width:
+        size -= 1
+        font = tracked_font(FONT_DISPLAY, size, QFont.Bold, track=0.8)
+    return font
 
 
 class TeamNamePicker(QWidget):
@@ -655,10 +706,12 @@ class TeamNamePicker(QWidget):
         arrow(p, 26, h * 0.34, "left", ac, size=10)
         arrow(p, w - 26, h * 0.34, "right", ac, size=10)
 
-        name = self._display(self._values[self._index]) if self._values else "—"
-        p.setFont(tracked_font(FONT_DISPLAY, 30, QFont.Bold, track=0.8))
+        name = (self._display(self._values[self._index]) if self._values else "—").upper()
+        # Shrinks to stay between the arrows: a long name (Bucharest Oaks)
+        # otherwise runs over them.
+        p.setFont(fit_font(name, w - 90, 30, 16))
         p.setPen(QColor(ACCENT if focused else FG_PRIMARY))
-        p.drawText(QRectF(0, 6, w, 42), Qt.AlignCenter, name.upper())
+        p.drawText(QRectF(0, 6, w, 42), Qt.AlignCenter, name)
 
         if self._values:
             sub = self._subtitle(self._values[self._index])
@@ -669,38 +722,27 @@ class TeamNamePicker(QWidget):
 
 
 class GroupPicker(TeamNamePicker):
-    """A TeamNamePicker for a shorter line above the team's (the match
-    setup's group of teams): same arrows and cycling, a smaller name that
-    shrinks to fit the width, no browser behind A."""
+    """A TeamNamePicker for a shorter line beside the side label (the match
+    setup's group of teams): same arrows and cycling, one line, a smaller
+    name that shrinks to fit the width, no browser behind A."""
 
-    MAX_PT, MIN_PT = 22, 12
+    MAX_PT, MIN_PT = 18, 11
 
-    def __init__(self, values=None, display=str, subtitle=str, parent=None):
-        super().__init__(values, display, subtitle, parent)
-        self.setFixedHeight(62)
+    def __init__(self, values=None, display=str, parent=None):
+        super().__init__(values, display, parent=parent)
+        self.setFixedHeight(34)
 
     def paintEvent(self, event):
         p = QPainter(self)
         focused = self.hasFocus()
-        w = self.width()
+        w, h = self.width(), self.height()
         ac = ACCENT if focused else FG_MUTED
-        arrow(p, 26, 22, "left", ac, size=9)
-        arrow(p, w - 26, 22, "right", ac, size=9)
+        arrow(p, 16, h / 2, "left", ac, size=8)
+        arrow(p, w - 16, h / 2, "right", ac, size=8)
         name = (self._display(self._values[self._index]) if self._values else "—").upper()
-        size = self.MAX_PT
-        font = tracked_font(FONT_DISPLAY, size, QFont.Bold, track=0.8)
-        while size > self.MIN_PT and QFontMetrics(font).horizontalAdvance(name) > w - 90:
-            size -= 1
-            font = tracked_font(FONT_DISPLAY, size, QFont.Bold, track=0.8)
-        p.setFont(font)
+        p.setFont(fit_font(name, w - 60, self.MAX_PT, self.MIN_PT))
         p.setPen(QColor(ACCENT if focused else FG_PRIMARY))
-        p.drawText(QRectF(0, 4, w, 36), Qt.AlignCenter, name)
-        if self._values:
-            sub = self._subtitle(self._values[self._index])
-            if sub:
-                p.setFont(tracked_font(FONT_DISPLAY, 10, QFont.DemiBold, track=1.8))
-                p.setPen(QColor(FG_SECONDARY))
-                p.drawText(QRectF(0, 38, w, 18), Qt.AlignCenter, sub.upper())
+        p.drawText(QRectF(0, 0, w, h), Qt.AlignCenter, name)
 
 
 class DeviceTile(QWidget):

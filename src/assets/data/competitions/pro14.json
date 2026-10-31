@@ -1,0 +1,126 @@
+{
+  "id": "pro14",
+  "category": [
+    "Pro14",
+    "Celtic League"
+  ],
+  "name": "Pro14 / Celtic League",
+  "order": 33,
+  "description": "Celtic League / Pro14 clubs, home and away, then the top six: quarter-finals, semi-finals and a final.",
+  "match_type": "exhibition",
+  "venue": "home",
+  "points": {
+    "win": 4,
+    "draw": 2,
+    "loss": 0,
+    "try_bonus": {
+      "tries": 4
+    },
+    "losing_bonus": {
+      "margin": 7
+    }
+  },
+  "tiebreakers": [
+    "wins",
+    "points_diff",
+    "points_for",
+    "head_to_head",
+    "lots"
+  ],
+  "knockout_draw": "tries_then_kicks",
+  "discipline": {
+    "red_ban": [
+      1,
+      4
+    ],
+    "yellow_accumulation": 4,
+    "yellow_ban": 1,
+    "citing_chance": 0.01
+  },
+  "default_options": {
+    "difficulty": "pro",
+    "halftime_length": "5m",
+    "injuries": true,
+    "suspensions": true,
+    "fatigue": true,
+    "cards": true,
+    "sim_variance": 1.0,
+    "injury_rate": 1.0,
+    "injury_duration": 1.0
+  },
+  "stages": [
+    {
+      "id": "league",
+      "name": "League",
+      "kind": "round_robin",
+      "calendar": {
+        "start": "09-01",
+        "end": "04-28"
+      },
+      "legs": 2,
+      "match_subtype": "none",
+      "group_names": {
+        "A": "Table"
+      },
+      "qualify": 6
+    },
+    {
+      "id": "playoffs",
+      "name": "Play-offs",
+      "kind": "knockout",
+      "calendar": {
+        "start": "05-05",
+        "offsets": [
+          0,
+          7,
+          14
+        ]
+      },
+      "rounds": [
+        {
+          "id": "qf",
+          "name": "Quarter-final",
+          "match_subtype": "quarter_final",
+          "ties": [
+            [
+              "league:A3",
+              "league:A6"
+            ],
+            [
+              "league:A4",
+              "league:A5"
+            ]
+          ]
+        },
+        {
+          "id": "sf",
+          "name": "Semi-final",
+          "match_subtype": "semi_final",
+          "ties": [
+            [
+              "league:A1",
+              "W:qf2"
+            ],
+            [
+              "league:A2",
+              "W:qf1"
+            ]
+          ]
+        },
+        {
+          "id": "final",
+          "name": "Final",
+          "match_subtype": "final",
+          "final": true,
+          "ties": [
+            [
+              "W:sf1",
+              "W:sf2"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "branding": "5005"
+}

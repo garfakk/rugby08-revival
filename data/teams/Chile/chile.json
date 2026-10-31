@@ -1,0 +1,134 @@
+{
+ "1004": {
+  "2024": {
+   "name": "Chile",
+   "type": "international",
+   "category": "International",
+   "group": "international",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "158871",
+    "viceCaptain": "158878",
+    "longGK": "158874",
+    "shortGK": "158874",
+    "longPunt": "158874",
+    "shortPunt": "158874",
+    "kickoff": "158874"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "cross_kick",
+    "left": "dummy_switch",
+    "right": "loop"
+   },
+   "players": [
+    "158854",
+    "158860",
+    "158855",
+    "158863",
+    "158864",
+    "158871",
+    "158868",
+    "158869",
+    "158873",
+    "158874",
+    "158881",
+    "158879",
+    "158878",
+    "158884",
+    "158883",
+    "158861",
+    "158858",
+    "158857",
+    "158865",
+    "158870",
+    "158875",
+    "158877",
+    "158856",
+    "158859",
+    "158862",
+    "158866",
+    "158867",
+    "158872",
+    "158876",
+    "158880",
+    "158882",
+    "158885",
+    "158886"
+   ],
+   "variant": {
+    "world_cup": {
+     "label": "Chile squad at the Rugby World Cup",
+     "players": [
+      "158854",
+      "158860",
+      "158855",
+      "158863",
+      "158864",
+      "158871",
+      "158868",
+      "158869",
+      "158873",
+      "158874",
+      "158881",
+      "158879",
+      "158878",
+      "158884",
+      "158883",
+      "158861",
+      "158858",
+      "158857",
+      "158865",
+      "158870",
+      "158875",
+      "158877",
+      "158856",
+      "158859",
+      "158862",
+      "158866",
+      "158867",
+      "158872",
+      "158876",
+      "158880",
+      "158882",
+      "158885",
+      "158886"
+     ],
+     "roles": {
+      "captain": "158871",
+      "viceCaptain": "158878",
+      "longGK": "158874",
+      "shortGK": "158874",
+      "longPunt": "158874",
+      "shortPunt": "158874",
+      "kickoff": "158874"
+     }
+    }
+   },
+   "primaryStadium": "43"
+  }
+ }
+}

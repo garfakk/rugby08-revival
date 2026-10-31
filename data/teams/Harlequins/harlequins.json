@@ -1,93 +1,10 @@
 {
  "10135": {
-  "2008": {
-   "name": "Harlequins",
-   "type": "club",
-   "category": "Premiership",
-   "ball": "logos_1/ball_%.png",
-   "banners": "logos_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "",
-    "viceCaptain": "",
-    "longGK": "157522",
-    "shortGK": "157522",
-    "longPunt": "107949",
-    "shortPunt": "107949",
-    "kickoff": "107949"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "156900",
-    "148060",
-    "156952",
-    "157532",
-    "156883",
-    "152488",
-    "156889",
-    "156936",
-    "107949",
-    "157522",
-    "102625",
-    "157533",
-    "156794",
-    "157530",
-    "152487",
-    "156880",
-    "156704",
-    "156696",
-    "148070",
-    "157363",
-    "157366",
-    "157359",
-    "156851",
-    "157361",
-    "157365",
-    "157360",
-    "157531",
-    "156786",
-    "143949",
-    "128070",
-    "146843",
-    "128053",
-    "157364",
-    "157534",
-    "157362",
-    "157358"
-   ],
-   "enabled": false,
-   "primaryStadium": "78"
-  },
   "2009": {
    "name": "Harlequins",
    "type": "club",
    "category": "Premiership",
+   "group": "england",
    "ball": "logos_1/ball_%.png",
    "banners": "logos_1/banner_%.png",
    "pads": "",
@@ -107,6 +24,9 @@
      "model3d": {
       "fit": "loose",
       "collar": "stand"
+     },
+     "shirtName": {
+      "color": "#ffffff"
      }
     },
     "away": {
@@ -173,12 +93,19 @@
     "158246"
    ],
    "enabled": true,
-   "primaryStadium": "78"
+   "primaryStadium": "78",
+   "shirtNames": {
+    "enabled": true,
+    "placement": "above",
+    "gap": 61,
+    "size": 43
+   }
   },
   "2010": {
    "name": "Harlequins",
    "type": "club",
    "category": "Premiership",
+   "group": "england",
    "ball": "logos_1/ball_%.png",
    "banners": "logos_1/banner_%.png",
    "pads": "",
@@ -272,6 +199,7 @@
    "name": "Harlequins",
    "type": "club",
    "category": "Premiership",
+   "group": "england",
    "ball": "logos_1/ball_%.png",
    "banners": "logos_1/banner_%.png",
    "pads": "",
@@ -355,12 +283,18 @@
     "157550"
    ],
    "enabled": true,
-   "primaryStadium": "78"
+   "primaryStadium": "78",
+   "shirtNames": {
+    "placement": "above",
+    "gap": -12,
+    "size": 30
+   }
   },
   "2018": {
    "name": "Harlequins",
    "type": "club",
    "category": "Premiership",
+   "group": "england",
    "ball": "logos_1/ball_%.png",
    "banners": "logos_1/banner_%.png",
    "pads": "",
@@ -451,12 +385,18 @@
     "156779"
    ],
    "enabled": true,
-   "primaryStadium": "78"
+   "primaryStadium": "78",
+   "shirtNames": {
+    "enabled": true,
+    "size": 43,
+    "gap": 1
+   }
   },
   "2019": {
    "name": "Harlequins",
    "type": "club",
    "category": "Premiership",
+   "group": "england",
    "ball": "logos_1/ball_%.png",
    "banners": "logos_1/banner_%.png",
    "pads": "",
@@ -546,12 +486,397 @@
     "154646"
    ],
    "enabled": true,
+   "primaryStadium": "78",
+   "shirtNames": {
+    "enabled": true,
+    "size": 40,
+    "area": [
+     0.0972,
+     0.2724,
+     0.8057,
+     0.1172
+    ],
+    "placement": "auto",
+    "gap": -3
+   }
+  },
+  "2022": {
+   "name": "Harlequins",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.webp",
+     "backKitFile": "kits_2022/home_back.webp",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.webp",
+     "backKitFile": "kits_2022/away_back.webp",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "145496",
+    "viceCaptain": "107949",
+    "longGK": "145496",
+    "shortGK": "145496",
+    "longPunt": "107949",
+    "shortPunt": "145496",
+    "kickoff": "107949"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "10777",
+    "142275",
+    "152360",
+    "157073",
+    "157869",
+    "157677",
+    "152474",
+    "152431",
+    "107949",
+    "145496",
+    "152435",
+    "144170",
+    "142276",
+    "156426",
+    "157909",
+    "157939",
+    "154049",
+    "157173",
+    "157867",
+    "157380",
+    "157755",
+    "157208",
+    "144641",
+    "152513",
+    "157088",
+    "156408",
+    "157102",
+    "146066",
+    "156561",
+    "153787",
+    "157728",
+    "152512",
+    "157994",
+    "155120",
+    "157723",
+    "157993",
+    "152502",
+    "157610",
+    "152343",
+    "157144",
+    "157839"
+   ],
+   "enabled": true,
+   "primaryStadium": "78",
+   "shirtNames": {
+    "enabled": true,
+    "size": 37,
+    "gap": -2
+   }
+  },
+  "2023": {
+   "name": "Harlequins",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2023/home_front.webp",
+     "backKitFile": "kits_2023/home_back.webp",
+     "previewFile": "kits_2023/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2023/away_front.webp",
+     "backKitFile": "kits_2023/away_back.webp",
+     "previewFile": "kits_2023/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "107949",
+    "viceCaptain": "142275",
+    "longGK": "11168",
+    "shortGK": "11168",
+    "longPunt": "11168",
+    "shortPunt": "11168",
+    "kickoff": "11168"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "10777",
+    "142275",
+    "154049",
+    "146066",
+    "157056",
+    "152474",
+    "157610",
+    "152431",
+    "107949",
+    "11168",
+    "152477",
+    "144170",
+    "142276",
+    "152435",
+    "157723",
+    "157939",
+    "152502",
+    "157173",
+    "157867",
+    "157380",
+    "157755",
+    "157208",
+    "145496",
+    "152513",
+    "152512",
+    "157728",
+    "157868",
+    "157677",
+    "156561",
+    "157839",
+    "152360",
+    "157909",
+    "153787",
+    "157994",
+    "157102",
+    "156408",
+    "155405",
+    "157993",
+    "157088",
+    "156426",
+    "157788",
+    "157144",
+    "158077"
+   ],
+   "enabled": true,
+   "primaryStadium": "78",
+   "shirtNames": {
+    "enabled": true,
+    "gap": -5,
+    "size": 32
+   }
+  },
+  "2024": {
+   "name": "Harlequins",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.webp",
+     "backKitFile": "kits_2024/home_back.webp",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.webp",
+     "backKitFile": "kits_2024/away_back.webp",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "153003",
+    "viceCaptain": "152481",
+    "longGK": "153003",
+    "shortGK": "153003",
+    "longPunt": "144170",
+    "shortPunt": "153003",
+    "kickoff": "144170"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "152502",
+    "142275",
+    "152360",
+    "152481",
+    "157056",
+    "152507",
+    "157610",
+    "152431",
+    "157674",
+    "153003",
+    "156426",
+    "144170",
+    "152512",
+    "157723",
+    "157909",
+    "157939",
+    "10777",
+    "144459",
+    "157867",
+    "157380",
+    "157589",
+    "157208",
+    "157102",
+    "107949",
+    "152435",
+    "157088",
+    "146066",
+    "152467",
+    "152513",
+    "157173",
+    "158076",
+    "157839",
+    "152474",
+    "158077",
+    "155985",
+    "156408",
+    "155388",
+    "157993",
+    "157677",
+    "157755",
+    "152492"
+   ],
+   "enabled": true,
+   "primaryStadium": "78",
+   "shirtNames": {
+    "enabled": true,
+    "size": 40,
+    "gap": 4
+   }
+  },
+  "2008": {
+   "name": "Harlequins",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "157522",
+    "shortGK": "157522",
+    "longPunt": "107949",
+    "shortPunt": "107949",
+    "kickoff": "107949"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "156900",
+    "148060",
+    "156952",
+    "157532",
+    "156883",
+    "152488",
+    "156889",
+    "156936",
+    "107949",
+    "157522",
+    "102625",
+    "157533",
+    "156794",
+    "157530",
+    "152487",
+    "156880",
+    "156704",
+    "156696",
+    "148070",
+    "157363",
+    "157366",
+    "157359",
+    "156851",
+    "157361",
+    "157365",
+    "157360",
+    "157531",
+    "156786",
+    "143949",
+    "128070",
+    "146843",
+    "128053",
+    "157364",
+    "157534",
+    "157362",
+    "157358"
+   ],
+   "enabled": false,
    "primaryStadium": "78"
   },
   "2020": {
    "name": "Harlequins",
    "type": "club",
    "category": "Premiership",
+   "group": "england",
    "ball": "logos_1/ball_%.png",
    "banners": "logos_1/banner_%.png",
    "pads": "",
@@ -644,6 +969,7 @@
    "name": "Harlequins",
    "type": "club",
    "category": "Premiership",
+   "group": "england",
    "ball": "logos_1/ball_%.png",
    "banners": "logos_1/banner_%.png",
    "pads": "",
@@ -738,279 +1064,11 @@
    "enabled": false,
    "primaryStadium": "78"
   },
-  "2022": {
-   "name": "Harlequins",
-   "type": "club",
-   "category": "Premiership",
-   "ball": "logos_1/ball_%.png",
-   "banners": "logos_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2022/home_front.webp",
-     "backKitFile": "kits_2022/home_back.webp",
-     "previewFile": "kits_2022/home_preview.png",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "kits_2022/away_front.webp",
-     "backKitFile": "kits_2022/away_back.webp",
-     "previewFile": "kits_2022/away_preview.png",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "145496",
-    "viceCaptain": "107949",
-    "longGK": "145496",
-    "shortGK": "145496",
-    "longPunt": "107949",
-    "shortPunt": "145496",
-    "kickoff": "107949"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "10777",
-    "142275",
-    "152360",
-    "157073",
-    "157869",
-    "157677",
-    "152474",
-    "152431",
-    "107949",
-    "145496",
-    "152435",
-    "144170",
-    "142276",
-    "156426",
-    "157909",
-    "157939",
-    "154049",
-    "157173",
-    "157867",
-    "157380",
-    "157755",
-    "157208",
-    "144641",
-    "152513",
-    "157088",
-    "156408",
-    "157102",
-    "146066",
-    "156561",
-    "153787",
-    "157728",
-    "152512",
-    "157994",
-    "155120",
-    "157723",
-    "157993",
-    "152502",
-    "157610",
-    "152343",
-    "157144",
-    "157839"
-   ],
-   "enabled": true,
-   "primaryStadium": "78"
-  },
-  "2023": {
-   "name": "Harlequins",
-   "type": "club",
-   "category": "Premiership",
-   "ball": "logos_1/ball_%.png",
-   "banners": "logos_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2023/home_front.webp",
-     "backKitFile": "kits_2023/home_back.webp",
-     "previewFile": "kits_2023/home_preview.png",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "kits_2023/away_front.webp",
-     "backKitFile": "kits_2023/away_back.webp",
-     "previewFile": "kits_2023/away_preview.png",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "107949",
-    "viceCaptain": "142275",
-    "longGK": "11168",
-    "shortGK": "11168",
-    "longPunt": "11168",
-    "shortPunt": "11168",
-    "kickoff": "11168"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "10777",
-    "142275",
-    "154049",
-    "146066",
-    "157056",
-    "152474",
-    "157610",
-    "152431",
-    "107949",
-    "11168",
-    "152477",
-    "144170",
-    "142276",
-    "152435",
-    "157723",
-    "157939",
-    "152502",
-    "157173",
-    "157867",
-    "157380",
-    "157755",
-    "157208",
-    "145496",
-    "152513",
-    "152512",
-    "157728",
-    "157868",
-    "157677",
-    "156561",
-    "157839",
-    "152360",
-    "157909",
-    "153787",
-    "157994",
-    "157102",
-    "156408",
-    "155405",
-    "157993",
-    "157088",
-    "156426",
-    "157788",
-    "157144",
-    "158077"
-   ],
-   "enabled": true,
-   "primaryStadium": "78"
-  },
-  "2024": {
-   "name": "Harlequins",
-   "type": "club",
-   "category": "Premiership",
-   "ball": "logos_1/ball_%.png",
-   "banners": "logos_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2024/home_front.webp",
-     "backKitFile": "kits_2024/home_back.webp",
-     "previewFile": "kits_2024/home_preview.png",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "kits_2024/away_front.webp",
-     "backKitFile": "kits_2024/away_back.webp",
-     "previewFile": "kits_2024/away_preview.png",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "153003",
-    "viceCaptain": "152481",
-    "longGK": "153003",
-    "shortGK": "153003",
-    "longPunt": "144170",
-    "shortPunt": "153003",
-    "kickoff": "144170"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "152502",
-    "142275",
-    "152360",
-    "152481",
-    "157056",
-    "152507",
-    "157610",
-    "152431",
-    "157674",
-    "153003",
-    "156426",
-    "144170",
-    "152512",
-    "157723",
-    "157909",
-    "157939",
-    "10777",
-    "144459",
-    "157867",
-    "157380",
-    "157589",
-    "157208",
-    "157102",
-    "107949",
-    "152435",
-    "157088",
-    "146066",
-    "152467",
-    "152513",
-    "157173",
-    "158076",
-    "157839",
-    "152474",
-    "158077",
-    "155985",
-    "156408",
-    "155388",
-    "157993",
-    "157677",
-    "157755",
-    "152492"
-   ],
-   "enabled": true,
-   "primaryStadium": "78"
-  },
   "2016": {
    "name": "Harlequins",
    "type": "club",
    "category": "Premiership",
+   "group": "england",
    "ball": "logos_1/ball_%.png",
    "banners": "logos_1/banner_%.png",
    "pads": "",

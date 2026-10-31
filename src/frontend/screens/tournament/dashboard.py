@@ -1080,7 +1080,7 @@ class TournamentDashboardScreen(Screen):
             if role == "ok":
                 self.on_back_cb()
         ConfirmDialog(self, "Back to the main menu?",
-                      "Your tournament is saved: open it again from Game modes > Tournament.",
+                      "Your progression is saved. You can resume this tournament later.",
                       [("STAY", "neutral", "cancel"), ("MAIN MENU", "primary", "ok")], go)
 
     def _undo(self):

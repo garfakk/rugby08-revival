@@ -11,7 +11,8 @@ shared/kit_files.py), and every .png kit front a lossless .webp. Each
 packed file is decoded again and compared with its source, pixel for pixel
 (RGBA); only then are the json paths rewritten (as text: the files keep
 their layout) and the sources deleted. A source some other path still names
-is kept. Series with missing shirts are left alone and reported.
+is kept. Series with missing shirts are left alone and reported. A strip
+still in the older one-column layout is laid out again as a grid, in place.
 
 Run it after adding PNG kits to the pack; packed kits are skipped.
 """
@@ -57,6 +58,23 @@ def pack_back(job):
         return pattern, strip, None
     except Exception as e:                   # one bad series must not stop the run
         return pattern, strip, str(e)
+
+
+def relayout_strip(path):
+    """(path, path, error) — rewrites an older one-column strip as a grid."""
+    try:
+        frames = kit_files.strip_frames(path)
+        tmp = path + ".tmp.webp"
+        kit_files.write_strip(frames, tmp)
+        again = kit_files.strip_frames(tmp)
+        if len(again) != len(frames) or any(
+                not np.array_equal(_rgba(a), _rgba(b)) for a, b in zip(again, frames)):
+            os.remove(tmp)
+            return path, path, "decoded grid differs from the strip"
+        os.replace(tmp, path)
+        return path, path, None
+    except Exception as e:
+        return path, path, str(e)
 
 
 def pack_front(job):
@@ -118,10 +136,17 @@ def main(argv=None):
     args = parser.parse_args(argv)
 
     files = json_files(args.data, args.team)
-    backs, fronts, problems = {}, {}, []
+    backs, fronts, problems, columns = {}, {}, [], set()
     for path, roots in files:
         text = open(path, encoding="utf-8").read()
         for key, _, rel in KIT_REF.findall(text):
+            if key == "backKitFile" and kit_files.is_strip(rel):
+                for root in roots:
+                    full = os.path.normpath(os.path.join(root, rel))
+                    if os.path.isfile(full):
+                        with Image.open(full) as im:
+                            if kit_files.is_column(im.size):
+                                columns.add(full)
             new = kit_files.packed_rel(rel)
             if new == rel:
                 continue
@@ -139,7 +164,8 @@ def main(argv=None):
                 elif key == "frontKitFile" and os.path.isfile(src):
                     fronts[src] = dst
                     break
-    print(f"{len(backs)} back-number series, {len(fronts)} fronts to pack")
+    print(f"{len(backs)} back-number series, {len(fronts)} fronts to pack, "
+          f"{len(columns)} one-column strips to lay out as grids")
     for p in problems:
         print("  SKIPPED", p)
     if args.dry_run:
@@ -147,6 +173,11 @@ def main(argv=None):
 
     done, failed = {}, []
     with ProcessPoolExecutor(args.jobs) as pool:
+        for i, (src, _, err) in enumerate(pool.map(relayout_strip, sorted(columns), chunksize=4), 1):
+            if err:
+                failed.append(f"{os.path.relpath(src, args.data)}: {err}")
+            if i % 100 == 0 or i == len(columns):
+                print(f"  relayout_strip: {i}/{len(columns)}", flush=True)
         work = [(pack_back, sorted(backs.items())), (pack_front, sorted(fronts.items()))]
         for fn, jobs in work:
             for i, (src, dst, err) in enumerate(pool.map(fn, jobs, chunksize=4), 1):

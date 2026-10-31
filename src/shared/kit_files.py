@@ -2,10 +2,13 @@
 shared/kit_files.py — packed kit textures
 ==========================================
 A kit's 22 back-number textures are the same shirt but for the number, so the
-data pack ships them as one lossless WebP strip in the kit's folder
-(kits_2024/home_back.webp): the backs stacked top to bottom, shirt 1 first,
-each a square as wide as the strip (512 x 512 today, any size later). One
-strip is about 1/8 of the 22 PNGs it replaces, pixel for pixel the same. The
+data pack ships them as one lossless WebP sheet in the kit's folder
+(kits_2024/home_back.webp): a grid GRID_COLS squares wide, shirt 1 top left,
+left to right then top to bottom (22 backs of 512 x 512: 2048 x 3072, the
+last two cells blank; a wider sheet compresses much worse). The square size
+follows the sheet's width. An older sheet with the backs stacked in one
+column (more than twice as tall as wide) still reads.
+One sheet is about 1/8 of the 22 PNGs it replaces, pixel for pixel the same. The
 older form, a folder of 22 PNG files named by a %-pattern
 (kits_2024/home_back/home_back_%.png), still works everywhere: user imports
 and edits use it.
@@ -30,6 +33,7 @@ from shared.config import config
 
 STRIP_EXT = ".webp"
 BACK_COUNT = 22
+GRID_COLS = 4
 KIT_FILE_KEYS = ("frontKitFile", "backKitFile")
 _CACHE = "kit_backs"
 
@@ -39,32 +43,54 @@ def is_strip(path) -> bool:
     return bool(path) and "%" not in path and path.lower().endswith(STRIP_EXT)
 
 
+def _layout(size):
+    """(square size, columns, frames) of a sheet of `size` (w, h): a grid
+    GRID_COLS wide, or an older single column."""
+    w, h = size
+    if not w or not h:
+        return 0, 0, 0
+    if is_column(size):                          # older layout
+        return w, 1, h // w
+    cell = w // GRID_COLS
+    if not cell:
+        return 0, 0, 0
+    return cell, GRID_COLS, min(BACK_COUNT, GRID_COLS * (h // cell))
+
+
+def is_column(size) -> bool:
+    """The older one-column layout (repacked by pack_kit_textures.py)."""
+    w, h = size
+    return bool(w) and h > 2 * w
+
+
 def strip_frames(path) -> list:
-    """The strip's square frames, shirt 1 first, as PIL images."""
+    """The sheet's square frames, shirt 1 first, as PIL images."""
     with Image.open(path) as im:
         im.load()
-        w, h = im.size
-        return [im.crop((0, i * w, w, (i + 1) * w)) for i in range(h // w)]
+        cell, cols, count = _layout(im.size)
+        return [im.crop(((i % cols) * cell, (i // cols) * cell,
+                         (i % cols + 1) * cell, (i // cols + 1) * cell)) for i in range(count)]
 
 
 def strip_frame_count(size) -> int:
-    """Frames in a strip of `size` (w, h)."""
-    w, h = size
-    return h // w if w else 0
+    """Frames in a sheet of `size` (w, h)."""
+    return _layout(size)[2]
 
 
 def write_strip(images, path):
-    """Stack `images` (same square size, shirt 1 first) into a lossless WebP
-    strip; RGB unless one of them uses its alpha."""
+    """Lay `images` (same square size, shirt 1 first) out as a lossless WebP
+    grid, GRID_COLS wide; RGB unless one of them uses its alpha. Cells past
+    the last image stay blank."""
     arrays = [im.convert("RGBA") for im in images]
     w = arrays[0].width
     if any(im.size != (w, w) for im in arrays):
         raise ValueError("back numbers must all be squares of the same size")
     opaque = all(im.getchannel("A").getextrema() == (255, 255) for im in arrays)
-    sheet = Image.new("RGB" if opaque else "RGBA", (w, w * len(arrays)))
+    rows = -(-len(arrays) // GRID_COLS)
+    sheet = Image.new("RGB" if opaque else "RGBA", (w * GRID_COLS, w * rows))
     for i, im in enumerate(arrays):
-        sheet.paste(im.convert("RGB") if opaque else im, (0, i * w))
-    sheet.save(path, "WEBP", lossless=True, quality=100, method=5, exact=True)
+        sheet.paste(im.convert("RGB") if opaque else im, ((i % GRID_COLS) * w, (i // GRID_COLS) * w))
+    sheet.save(path, "WEBP", lossless=True, quality=100, method=6, exact=True)
 
 
 def _cache_dir(path):

@@ -1,0 +1,9 @@
+{
+  "id": "5005",
+  "name": "Pro14",
+  "seasonal": false,
+  "pads": "assets/stadium_graphics.fsh",
+  "logo": "assets/tournament_logo.png",
+  "logo_frontend": "assets/logo_frontend.png",
+  "pitch_logo": "assets/pitch_logos/pitch_logo_%.png"
+}

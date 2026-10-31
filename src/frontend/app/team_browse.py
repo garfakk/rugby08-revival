@@ -11,7 +11,7 @@ Settings > Quick Match Picker offers two ways (STYLES):
 Pure logic over the DataStore, no Qt: TeamIndex answers "what seasons does
 this team have", "what group is it in", "which teams are in that group".
 """
-from app.season import nearest_season, season_label
+from app.season import nearest_season
 
 STYLES = [
     ("classic", "Season, category, team"),
@@ -84,14 +84,6 @@ class TeamIndex:
         info = self.info(tid)
         return (info.get("group") or CATEGORY_GROUPS.get(info.get("category", ""))
                 or OTHER_GROUP)
-
-    def span(self, tid):
-        """"2007-2026 · 12 seasons" under the team's name."""
-        have = self.seasons(tid)
-        if not have:
-            return ""
-        first, last = season_label(have[0]).split("-")[0], have[-1]
-        return f"{first}–{last} · {len(have)} season{'s' if len(have) != 1 else ''}"
 
     # ── lists ──
     def groups(self):

@@ -182,17 +182,19 @@ class TeamColumn(QWidget):
         screen.focus.register(self.category_row)
         top_row.addWidget(self.category_row)
 
-        chrome_top_v.addLayout(top_row)
-        chrome_top_v.addStretch(1)
-
         # The groups picker (Settings > Quick Match Picker): the team's
-        # group above its name, cycled like the team (app/team_browse.py).
+        # group, cycled like the team (app/team_browse.py). Sits in the side
+        # label's row, where the classic season/category rows go, so the
+        # crest and name keep their room.
         self.index = TeamIndex(screen.ds)
-        self.group_picker = GroupPicker(display=group_label, subtitle=self._group_subtitle)
+        self.group_picker = GroupPicker(display=group_label)
         self.group_picker.changed.connect(self._on_group_changed)
         screen.focus.register(self.group_picker)
-        chrome_top_v.addWidget(self.group_picker)
+        top_row.addWidget(self.group_picker, stretch=4)
         self.group_picker.hide()
+
+        chrome_top_v.addLayout(top_row)
+        chrome_top_v.addStretch(1)
 
         # Crest and name share one line. Away mirrors home (name left,
         # crest right) rather than repeating the same order, so the two
@@ -212,29 +214,40 @@ class TeamColumn(QWidget):
         self.name_picker.changed.connect(self._on_team_changed)
         screen.focus.register(self.name_picker)
 
-        if side == "home":
-            ident_row.addWidget(self.crest_lbl, alignment=Qt.AlignVCenter)
-            ident_row.addWidget(self.name_picker, stretch=1, alignment=Qt.AlignVCenter)
-        else:
-            ident_row.addWidget(self.name_picker, stretch=1, alignment=Qt.AlignVCenter)
-            ident_row.addWidget(self.crest_lbl, alignment=Qt.AlignVCenter)
-
-        chrome_top_v.addLayout(ident_row)
-
-        # The groups picker: only the team's own seasons, under its name,
-        # always from a dropdown list.
+        # The groups picker: only the team's own seasons, right under its
+        # name (same column, so it centres on the name, not the card), always
+        # from a dropdown list.
         self.style = DEFAULT_STYLE
         self.season_row2 = SelectorRow("season", compact=True)
         self.season_row2._display = season_label
         self.season_row2.set_force_popup(True)
-        self.season_row2.setMinimumWidth(220)
-        self.season_row2.setMaximumWidth(320)
+        self.season_row2.set_inline(True)
+        self.season_row2.setMinimumWidth(240)
+        self.season_row2.setMaximumWidth(260)
         self.season_row2.changed.connect(self._on_season_widget_changed)
         self.season_row2.hide()
-        chrome_top_v.addWidget(self.season_row2, alignment=Qt.AlignHCenter)
         screen.focus.register(self.season_row2)
+        name_col = QVBoxLayout()
+        name_col.setSpacing(4)
+        name_col.addWidget(self.name_picker)
+        name_col.addWidget(self.season_row2, alignment=Qt.AlignHCenter)
+        name_col.addStretch(1)
+
+        if side == "home":
+            ident_row.addWidget(self.crest_lbl, alignment=Qt.AlignVCenter)
+            ident_row.addLayout(name_col, stretch=1)
+        else:
+            ident_row.addLayout(name_col, stretch=1)
+            ident_row.addWidget(self.crest_lbl, alignment=Qt.AlignVCenter)
+
+        chrome_top_v.addLayout(ident_row)
+
+        # Groups picker only: "no 2007 squad, showing 2008" after a team
+        # change. A fixed line that is blanked, never hidden, so nothing
+        # above or below it moves when it comes and goes.
         self.season_note = eyebrow_label("", color=WARN, size=10)
         self.season_note.setAlignment(Qt.AlignCenter)
+        self.season_note.setFixedHeight(16)
         self.season_note.hide()
         chrome_top_v.addWidget(self.season_note)
         self._note_token = 0
@@ -263,7 +276,10 @@ class TeamColumn(QWidget):
         self.kit_row.set_force_arrows(True)
         self.kit_row.changed.connect(self._on_kit_changed)
         screen.focus.register(self.kit_row)
-        chrome_bottom_v.addWidget(self.kit_row)
+        kit_line = QHBoxLayout()
+        kit_line.setSpacing(10)
+        kit_line.addWidget(self.kit_row, stretch=1)
+        chrome_bottom_v.addLayout(kit_line)
 
         # Variants of the picked kit itself (a tournament patch…) — only
         # shown when that kit has one. The squad variant is picked in the
@@ -273,7 +289,9 @@ class TeamColumn(QWidget):
         self.kit_variant_row.set_force_arrows(True)
         self.kit_variant_row.changed.connect(self._on_kit_variant_changed)
         screen.focus.register(self.kit_variant_row)
-        chrome_bottom_v.addWidget(self.kit_variant_row)
+        # Beside the kit, not under it: a team with a variant would otherwise
+        # push the crest, name and kit up every time it is picked.
+        kit_line.addWidget(self.kit_variant_row, stretch=1)
         self.kit_variant_row.hide()
         # The variant last picked by hand: kept while switching kits, so
         # home → away → home with a World Cup patch keeps the patch.
@@ -336,15 +354,11 @@ class TeamColumn(QWidget):
         return block if block is not None else (seasons[max(seasons)] if seasons else {})
 
     def _team_subtitle(self, tid):
-        """Under the team's name: its category (classic), its seasons span
-        (groups, where the group is said above)."""
+        """Under the team's name: its category (classic); nothing in the
+        groups picker, where the group is said above."""
         if self.style == "groups":
-            return self.index.span(tid)
+            return ""
         return self._info_for(tid).get("category", "")
-
-    def _group_subtitle(self, group):
-        n = len(self.index.in_group(group))
-        return f"{n} team{'s' if n != 1 else ''}"
 
     def set_style(self, style):
         """Switch how this card picks its team (see app/team_browse.STYLES),
@@ -356,7 +370,10 @@ class TeamColumn(QWidget):
         self.category_row.setVisible(classic)
         self.group_picker.setVisible(not classic)
         self.season_row2.setVisible(not classic)
-        self.season_note.setVisible(False)
+        # no subtitle under the name in the groups picker: no room kept for it
+        self.name_picker.setFixedHeight(78 if classic else 54)
+        self.season_note.setText("")
+        self.season_note.setVisible(not classic)
         slot = self._slot()
         if before == style or not slot.team_id:
             self.name_picker.update()
@@ -399,10 +416,9 @@ class TeamColumn(QWidget):
         # newest first, as the dropdown lists them
         self.season_row2.set_values(have[::-1], index=have[::-1].index(new))
         if note and changed_team and wanted and new != wanted and not season:
-            self._say_note(f"No {season_label(wanted)} squad for {self.index.name(tid, new)}: "
-                           f"showing {season_label(new)}")
+            self._say_note(f"No {season_label(wanted)} squad · showing {season_label(new)}")
         else:
-            self.season_note.hide()
+            self.season_note.setText("")
         self._load_team()
         self.name_picker.update()
 
@@ -415,11 +431,10 @@ class TeamColumn(QWidget):
 
     def _say_note(self, text):
         self.season_note.setText(text)
-        self.season_note.show()
         self._note_token += 1
         token = self._note_token
         QTimer.singleShot(6000, lambda: token == self._note_token and not sip.isdeleted(self.season_note)
-                          and self.season_note.hide())
+                          and self.season_note.setText(""))
 
     def _on_season_widget_changed(self):
         if self.style == "classic":
@@ -429,7 +444,7 @@ class TeamColumn(QWidget):
         if not season or season == slot.season:
             return
         slot.season, slot.variant = season, ""
-        self.season_note.hide()
+        self.season_note.setText("")
         self._load_team()
         self.name_picker.update()
 

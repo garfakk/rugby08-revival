@@ -103,3 +103,22 @@ def test_migrate_kit_files_points_old_edits_at_packed_files(tmp_path):
     assert away == {"frontKitFile": "k/away_front.png", "backKitFile": "k/nothing_%.png"}
     assert info["kits"]["third"]["backKitFile"] == "k/away_back.webp"
     assert not KF.migrate_kit_files(info, str(tmp_path))
+
+
+def test_strip_is_a_grid(tmp_path):
+    path = str(tmp_path / "home_back.webp")
+    KF.write_strip(_backs(size=16), path)
+    assert Image.open(path).size == (16 * KF.GRID_COLS, 16 * 6)
+
+
+def test_older_column_strips_still_read(tmp_path):
+    backs = _backs()
+    column = Image.new("RGB", (16, 16 * len(backs)))
+    for i, im in enumerate(backs):
+        column.paste(im, (0, i * 16))
+    path = str(tmp_path / "old.webp")
+    column.save(path, "WEBP", lossless=True, exact=True)
+    assert KF.is_column(column.size)
+    frames = KF.strip_frames(path)
+    assert len(frames) == KF.BACK_COUNT
+    assert all(np.array_equal(np.asarray(f), np.asarray(b)) for f, b in zip(frames, backs))

@@ -59,6 +59,25 @@ def test_template_problems(ds):
         ["template has no round-robin stage to enter teams into"]
 
 
+def test_league_editions_by_category_list_and_season_range(ds):
+    """A league template's "category" may be a list (a league's old names)
+    and "from_season" / "to_season" bound the seasons it covers."""
+    for tid, cat in zip(TEAMS, ("Old", "Old", "New", "New")):
+        for info in ds.teams[tid].values():
+            info["category"] = cat
+    league = {"id": "mini_league", "name": "Mini League", "category": ["Old", "New"],
+              "stages": [{"id": "league", "name": "League", "kind": "round_robin", "legs": 2}]}
+
+    def offered(tpl):
+        return [e for eds in formats.editions(ds, {"mini_league": tpl}).values() for e in eds]
+
+    assert {e.season for e in offered(league)} >= {"2024"}
+    assert all(e.team_count() == 4 for e in offered(league) if e.season == "2024")
+    assert not any(e.season == "2024" for e in offered(dict(league, category="Old")) if e.team_count() > 2)
+    assert not any(e.season == "2024" for e in offered(dict(league, to_season="2023")))
+    assert not any(e.season == "2024" for e in offered(dict(league, from_season="2025")))
+
+
 def test_bundled_templates_load():
     tpls = formats.load_templates()
     assert tpls and all("stages" in t for t in tpls.values())

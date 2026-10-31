@@ -127,6 +127,23 @@ _JS_BUTTON, _JS_AXIS, _JS_INIT = 0x01, 0x02, 0x80
 _JS_BUTTONS = {0: "a", 1: "b", 2: "x", 3: "y", 4: "lb", 5: "rb", 6: "select", 7: "start"}
 
 
+def _is_pad(n):
+    """Whether /dev/input/js<n> is a gamepad. Absolute mice, tablets and
+    touch devices (VM and remote-desktop passthrough) show up as joysticks
+    too, sit at a corner of their range, and read as a stick held left."""
+    base = f"/sys/class/input/js{n}/device/capabilities/key"
+    try:
+        with open(base) as f:
+            words = [int(w, 16) for w in f.read().split()]
+    except (OSError, ValueError):
+        return True                         # can't tell: keep the old behaviour
+
+    def has(code):
+        i = code // 64
+        return i < len(words) and bool(words[-1 - i] >> (code % 64) & 1)
+    return has(0x130) or has(0x120)         # BTN_SOUTH (pads) / BTN_TRIGGER (sticks)
+
+
 class LinuxJoystickSource:
     """/dev/input/js0..js3; a node not there (or unplugged) is looked for
     again every few seconds, so a pad plugged in later shows up."""
@@ -148,6 +165,8 @@ class LinuxJoystickSource:
         self._next_scan = now + self.RECHECK
         for n in range(4):
             if n in self._fds:
+                continue
+            if not _is_pad(n):
                 continue
             try:
                 self._fds[n] = os.open(f"/dev/input/js{n}", os.O_RDONLY | os.O_NONBLOCK)

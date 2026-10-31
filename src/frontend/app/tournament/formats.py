@@ -23,6 +23,8 @@ A template is a JSON file describing a competition's structure and rules:
    "season": "2024",                   # a historical edition: the season its squads are for
    "category": "Top 14",               # a club league: one edition per season of the data,
                                        # with the clubs of that category that season
+                                       # (or a list of categories, e.g. a league's old names)
+   "from_season": "2022", "to_season": "2019",   # optional: the seasons of the data it covers
    "variant": "world_cup",             # optional: competition squads/kits (app/variants.py)
    "team_variants": {"1004": ""}}      # optional per-team exception ("" = default)
 
@@ -244,7 +246,9 @@ def _league_editions(ds, tid, tpl, usable_for):
     """One edition per season the data has enough clubs of the template's
     "category" for (their category that very season, a full squad)."""
     import copy
-    category = str(tpl["category"])
+    cats = tpl["category"] if isinstance(tpl["category"], (list, tuple)) else [tpl["category"]]
+    cats = {str(c) for c in cats}
+    first, last = str(tpl.get("from_season") or ""), str(tpl.get("to_season") or "")
     rr = next((s for s in tpl.get("stages", []) if s.get("kind", "round_robin") == "round_robin"), None)
     if not rr:
         return []
@@ -253,8 +257,10 @@ def _league_editions(ds, tid, tpl, usable_for):
     seasons = sorted({s for ss in ds.teams.values() for s in ss}, reverse=True)
     out = []
     for season in seasons:
+        if (first and season < first) or (last and season > last):
+            continue
         clubs = [t for t, ss in ds.teams.items()
-                 if isinstance(ss.get(season), dict) and ss[season].get("category") == category]
+                 if isinstance(ss.get(season), dict) and ss[season].get("category") in cats]
         if len(clubs) < need:
             continue
         edition = copy.deepcopy(tpl)

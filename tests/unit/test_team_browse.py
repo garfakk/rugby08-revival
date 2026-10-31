@@ -31,6 +31,5 @@ def test_group_from_the_file_else_from_the_category():
     assert ix.groups() == [g for g in GROUPS if g in ("other_european", "france")] + ["germany"]
     assert ix.in_group("other_european") == ["1", "3"]
     assert group_label("france") == "France" and group_label("germany") == "germany"
-    assert ix.span("1") == "2008–2024 · 2 seasons"
     assert ix.info("nope") == {}
 

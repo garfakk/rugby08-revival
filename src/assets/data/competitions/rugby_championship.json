@@ -1,0 +1,75 @@
+{
+  "id": "rugby_championship",
+  "name": "The Rugby Championship",
+  "order": 15,
+  "description": "Argentina, Australia, New Zealand and South Africa: home and away, top of the table wins.",
+  "match_type": "tri_nations",
+  "branding": "5008",
+  "venue": "home",
+  "points": {
+    "win": 4,
+    "draw": 2,
+    "loss": 0,
+    "try_bonus": {
+      "tries": 4
+    },
+    "losing_bonus": {
+      "margin": 7
+    }
+  },
+  "tiebreakers": [
+    "head_to_head",
+    "points_diff",
+    "tries_diff",
+    "points_for",
+    "lots"
+  ],
+  "discipline": {
+    "red_ban": [
+      1,
+      4
+    ],
+    "yellow_accumulation": 4,
+    "yellow_ban": 1,
+    "citing_chance": 0.01
+  },
+  "default_options": {
+    "difficulty": "pro",
+    "halftime_length": "5m",
+    "injuries": true,
+    "suspensions": true,
+    "fatigue": true,
+    "cards": true,
+    "sim_variance": 1.0,
+    "injury_rate": 1.0,
+    "injury_duration": 1.0
+  },
+  "stages": [
+    {
+      "id": "table",
+      "name": "Championship",
+      "kind": "round_robin",
+      "calendar": {
+        "start": "08-10",
+        "every": 7
+      },
+      "legs": 2,
+      "match_subtype": "none",
+      "group_names": {
+        "A": "Table"
+      }
+    }
+  ],
+  "participants": {
+    "default": {
+      "table": {
+        "A": [
+          "1001",
+          "1002",
+          "1010",
+          "1015"
+        ]
+      }
+    }
+  }
+}
