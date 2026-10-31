@@ -172,8 +172,7 @@ class ChallengeModeScreen(Screen):
         root = QVBoxLayout(self)
         root.setContentsMargins(0, 0, 0, 0)
         root.setSpacing(0)
-        root.addWidget(page_header("Challenge Mode", breadcrumb="game modes",
-                                   on_back=self.on_back_cb))
+        root.addWidget(page_header("Challenge Mode", on_back=self.on_back_cb))
 
         self.scroll = QScrollArea()
         self.scroll.setWidgetResizable(True)
@@ -281,8 +280,7 @@ class ChallengeModeScreen(Screen):
                 self.on_play(match_data)
 
         self.on_present(Presentation(
-            title="Challenge Mode", breadcrumb="game modes · challenge",
-            eyebrow="challenge", heading=work["name"], briefing=work["description"],
+            title="Challenge Mode", eyebrow="challenge", heading=work["name"], briefing=work["description"],
             details=self._details(work),
             objectives=ch.objective_lines(self.ds, work) if work.get("match_objectives") else [],
             home=side("home"), away=side("away"),

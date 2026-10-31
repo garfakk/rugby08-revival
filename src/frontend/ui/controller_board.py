@@ -5,13 +5,9 @@ Three lanes: the home team, CPU (the middle) and the away team, and an icon
 for the keyboard and for every gamepad connected. Each device moves its own
 icon: a pad with its own d-pad or stick left/right (app.gamepad claims the
 press while the board has the focus), the keyboard with its arrow keys, and
-the mouse by clicking either half of an icon. A pad's icon flashes whenever
-that pad presses something, so everyone can tell which icon is theirs.
-Pads come and go as they are plugged in.
+the mouse by clicking either half of an icon. Pads come and go as they are plugged in.
 """
-import time
-
-from PyQt5.QtCore import Qt, QRectF, QPointF, QTimer, pyqtSignal
+from PyQt5.QtCore import Qt, QRectF, QPointF, pyqtSignal
 from PyQt5.QtGui import QColor, QFont, QPainter, QPainterPath, QPen
 from PyQt5.QtWidgets import QWidget
 
@@ -31,7 +27,6 @@ _ICON_INK = QColor(8, 14, 20, 225)   # the keys and buttons cut into an icon
 CHIP_H = 40
 CHIP_GAP = 6
 CHIP_MAX_W = 230
-FLASH_S = 0.45
 
 
 class ControllerBoard(QWidget):
@@ -46,10 +41,6 @@ class ControllerBoard(QWidget):
         self.pads = ()                      # connected pads' indices, in order
         self.zones = {KBD: "home"}          # device: lane
         self._hover = None                  # (device, -1 | 1)
-        self._flash = {}                    # device: time of its last press
-        self._flash_timer = QTimer(self)
-        self._flash_timer.setInterval(30)
-        self._flash_timer.timeout.connect(self._tick_flash)
         self._nav = None
         self._hook()
         self._fit()
@@ -61,7 +52,6 @@ class ControllerBoard(QWidget):
             return
         self._nav = nav
         nav.pads_changed.connect(self.set_pads)
-        nav.pad_pressed.connect(self._on_pad_pressed)
         self.set_pads(nav.connected())
 
     # ── model ────────────────────────────────────────────────────────────
@@ -113,11 +103,6 @@ class ControllerBoard(QWidget):
             return False
         self.move(pad, -1 if name == "left" else 1)
         return True
-
-    def _on_pad_pressed(self, pad, _name):
-        if pad in self.zones and self.isVisible():
-            self._flash[pad] = time.monotonic()
-            self._flash_timer.start()
 
     def focusInEvent(self, event):
         nav = gamepad.navigator()
@@ -197,23 +182,14 @@ class ControllerBoard(QWidget):
         return out
 
     # ── painting ─────────────────────────────────────────────────────────
-    def _tick_flash(self):
-        now = time.monotonic()
-        self._flash = {d: t for d, t in self._flash.items() if now - t < FLASH_S}
-        if not self._flash:
-            self._flash_timer.stop()
-        self.update()
-
     def paintEvent(self, _event):
         p = QPainter(self)
         p.setRenderHint(QPainter.Antialiasing)
         for i, zone in enumerate(ZONES):
             self._paint_lane(p, i, zone)
         self._paint_tracks(p)
-        now = time.monotonic()
         for device, rect in self._chip_rects().items():
-            flash = max(0.0, 1 - (now - self._flash[device]) / FLASH_S) if device in self._flash else 0.0
-            self._paint_chip(p, device, rect, flash)
+            self._paint_chip(p, device, rect)
         if self.hasFocus():
             p.setPen(QPen(QColor(ACCENT), 2))
             p.setBrush(Qt.NoBrush)
@@ -266,10 +242,10 @@ class ControllerBoard(QWidget):
         p.setPen(QColor(FG_PRIMARY if zone != "none" else FG_TERTIARY))
         p.drawText(QRectF(x, head.top(), room + 4, head.height()), Qt.AlignVCenter | Qt.AlignLeft, text)
 
-    def _paint_chip(self, p, device, rect, flash):
+    def _paint_chip(self, p, device, rect):
         tint = QColor(_DEVICE_TINT[0 if device == KBD else 1 + self.pads.index(device) % 4])
         fill = QColor(tint)
-        fill.setAlpha(int(46 + 150 * flash))
+        fill.setAlpha(46)
         p.setPen(QPen(tint, 2))
         p.setBrush(fill)
         p.drawRoundedRect(rect, 10, 10)

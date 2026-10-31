@@ -83,7 +83,7 @@ class UserEditsScreen(Screen):
         root = QVBoxLayout(self)
         root.setContentsMargins(0, 0, 0, 0)
         root.setSpacing(0)
-        self.header = page_header("My edits", breadcrumb="tools", on_back=self.on_back_cb)
+        self.header = page_header("My edits", on_back=self.on_back_cb)
         root.addWidget(self.header)
 
         body = QWidget()

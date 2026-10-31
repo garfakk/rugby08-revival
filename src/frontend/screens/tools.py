@@ -32,8 +32,7 @@ class ToolsScreen(Screen):
         root = QVBoxLayout(self)
         root.setContentsMargins(0, 0, 0, 0)
         root.setSpacing(0)
-        root.addWidget(page_header("Tools", breadcrumb="mod data",
-                                    right=self._data_summary(),
+        root.addWidget(page_header("Tools", right=self._data_summary(),
                                     on_back=self.on_back_cb))
 
         body = QWidget()

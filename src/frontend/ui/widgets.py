@@ -7,7 +7,6 @@ Screens import from this module — they never hardcode colours or fonts.
 Public API
 ----------
   Factories (return a configured QWidget):
-    make_page_header(title)        -> (header_widget, accent_bar_widget)
     make_separator()               -> QFrame (horizontal rule)
     make_label(text, role, align)  -> QLabel
     make_group(title)              -> QGroupBox
@@ -35,7 +34,6 @@ from ui.theme import (
     FG_PRIMARY, FG_SECONDARY, FG_MUTED,
     DANGER, DANGER_LITE,
     FONT_DISPLAY, FONT_BODY,
-    HEADER_HEIGHT, HEADER_BAR_H,
     GRAD_HEADER, GRAD_ACCENT_BTN, GRAD_ACCENT_BTN_HOVER,
     F_HUGE, F_H1, F_H2, F_H3, F_BODY, F_SMALL, F_MONO,
     T_SETTING_LABEL, T_SETTING_VALUE,
@@ -136,32 +134,6 @@ def make_label(text: str, role: str = "body",
         f" background: transparent;"
     )
     return lbl
-
-
-# ── Page header ───────────────────────────────────────────────────────────────
-
-def make_page_header(title: str) -> tuple[QWidget, QFrame]:
-    header = QWidget()
-    header.setFixedHeight(HEADER_HEIGHT)
-    header.setStyleSheet(
-        f"background: {GRAD_HEADER};"
-        f" border-bottom: 1px solid {BORDER};"
-    )
-    hl = QVBoxLayout(header)
-    hl.setContentsMargins(28, 0, 28, 0)
-
-    lbl = QLabel(title)
-    lbl.setFont(F_H2)
-    lbl.setStyleSheet(
-        f"color: {ACCENT}; letter-spacing: 4px; background: transparent;"
-    )
-    hl.addWidget(lbl, alignment=Qt.AlignVCenter)
-
-    bar = QFrame()
-    bar.setFixedHeight(HEADER_BAR_H)
-    bar.setStyleSheet(f"background: {ACCENT_DARK}; border: none;")
-
-    return header, bar
 
 
 # ── Separator ─────────────────────────────────────────────────────────────────
@@ -375,6 +347,16 @@ class ToggleRow(SettingRow):
     def adjust(self, delta):
         self._toggle()
 
+    def state(self):
+        return self._state
+
+    def set_state(self, on):
+        """Show `on` (on_toggle called when it changes)."""
+        if bool(on) != self._state:
+            self._state = bool(on)
+            self._on_toggle(self._state)
+            self._refresh()
+
     def _toggle(self):
         self.setFocus(Qt.MouseFocusReason)
         self._state = not self._state
@@ -421,54 +403,9 @@ class _Stepper(QWidget):
             )
 
 
-class ChoiceRow(SettingRow):
-    """A choice among several values: ‹ value ›, Left/Right step through
-    them, Enter or a click on the value opens the whole list. on_change is
-    called with the selected label."""
-
-    def __init__(self, label: str, values, initial, on_change, parent=None):
-        super().__init__(label, parent)
-        self.combo = HoverComboBox()
-        self.combo.setFixedHeight(36)
-        self.combo.setCursor(Qt.PointingHandCursor)
-        self.combo.lineEdit().setAlignment(Qt.AlignCenter)
-        self.combo.lineEdit().setCursor(Qt.PointingHandCursor)
-        self.combo.setStyleSheet(
-            f"QComboBox {{ background: transparent; border: none; padding: 0; min-height: 0; }}"
-            f"QComboBox::drop-down {{ width: 0; border: none; }}"
-            f"QComboBox::down-arrow {{ image: none; border: none; width: 0; height: 0; }}"
-        )
-        # the read-only line edit shows the value: styled itself, the
-        # combo's own rule doesn't reach its text colour
-        self.combo.lineEdit().setStyleSheet(_value_style(FG_PRIMARY) + " padding: 0;")
-        self.combo.lineEdit().setFont(QFont(FONT_DISPLAY, T_SETTING_VALUE + 1, QFont.Bold))
-        self.combo.addItems([str(v) for v in values])
-        if str(initial) in [str(v) for v in values]:
-            self.combo.setCurrentText(str(initial))
-        self.combo.currentTextChanged.connect(on_change)
-        self._stepper = _Stepper(self.combo, self.adjust)
-        self._own(self._stepper)
-        self.combo.setFocusPolicy(Qt.NoFocus)
-        self.combo.installEventFilter(self)
-        self.combo.lineEdit().setFocusPolicy(Qt.NoFocus)
-        self.combo.lineEdit().installEventFilter(self)
-
-    def _focus_changed(self, focused):
-        if hasattr(self, "_stepper"):
-            self._stepper.set_focused(focused)
-
-    def adjust(self, delta):
-        i = self.combo.currentIndex() + delta
-        if 0 <= i < self.combo.count():
-            self.combo.setCurrentIndex(i)
-
-    def activate(self):
-        self.combo.showPopup()
-
-
 class CycleRow(SettingRow):
-    """A choice among a few values: ‹ value ›, each step (or a click on the
-    value) moves to the next one, round."""
+    """A choice among values: ‹ value ›, Left/Right (or a click on an arrow)
+    step through them, round; a click on the value moves to the next one."""
 
     def __init__(self, label: str, values, initial, on_change, parent=None):
         super().__init__(label, parent)
@@ -492,6 +429,15 @@ class CycleRow(SettingRow):
         self.setFocus(Qt.MouseFocusReason)
         self._index = (self._index + delta) % len(self._values)
         value = self._values[self._index]
+        self._value.setText(str(value))
+        self._on_change(value)
+
+    def current(self):
+        return self._values[self._index]
+
+    def set_current(self, value):
+        """Select `value` (on_change called), without taking the focus."""
+        self._index = self._values.index(value)
         self._value.setText(str(value))
         self._on_change(value)
 

@@ -5,10 +5,10 @@ Import from here for clean usage in screens:
 
     from ui import (
         APP_STYLESHEET,
-        make_page_header, make_app_title_header, make_footer,
+        make_app_title_header, make_footer,
         make_label, make_separator, make_group,
         StyledButton, style_button, style_panel,
-        HoverComboBox, ToggleRow, CycleRow, ChoiceRow, SliderRow, KitPreviewBox,
+        HoverComboBox, ToggleRow, CycleRow, SliderRow, KitPreviewBox,
     )
     from ui.theme import ACCENT, BTN_HEIGHT   # direct token access
 """
@@ -23,7 +23,6 @@ from ui.widgets import (
     # Label factories
     make_label,
     # Layout building blocks
-    make_page_header,
     make_app_title_header,
     make_footer,
     make_separator,
@@ -33,7 +32,6 @@ from ui.widgets import (
     HoverComboBox,
     ToggleRow,
     CycleRow,
-    ChoiceRow,
     SliderRow,
     KitPreviewBox,
 )
@@ -44,7 +42,6 @@ __all__ = [
     "StyledButton",
     "BUTTON_VARIANTS",
     "make_label",
-    "make_page_header",
     "make_app_title_header",
     "make_footer",
     "make_separator",
@@ -53,7 +50,6 @@ __all__ = [
     "HoverComboBox",
     "ToggleRow",
     "CycleRow",
-    "ChoiceRow",
     "SliderRow",
     "KitPreviewBox",
     "PitchProgressBar",

@@ -72,7 +72,7 @@ def _close_all(qapp, d, limit=10):
 
 
 def _visible_buttons(d):
-    return [b for b in (d.primary_btn, d.more_btn, d.details_btn) if b.isVisible()]
+    return [b for b in (d.primary_btn, d.more_btn) if b.isVisible()]
 
 
 @pytest.fixture
@@ -89,16 +89,16 @@ def test_home_shows_one_primary_action(dash, session, expert):
     # secondary actions are in MORE, not on the card
     data = [d for _l, d, _s in dash._more_items()]
     assert "simulate" in data and "sim_end" in data
-    assert set(_visible_buttons(dash)) == {dash.primary_btn, dash.more_btn, dash.details_btn}
+    assert set(_visible_buttons(dash)) == {dash.primary_btn, dash.more_btn}
     dash.primary_btn.click()
     assert dash.played == [session.human_fixture()]
 
 
-def test_simulating_your_match_is_expert_only(dash, session):
+def test_more_is_expert_only(dash, session):
+    """No MORE out of expert mode (no undo, no your matches there)."""
     session.advance_to_human()
     dash.refresh()
-    data = [d for _l, d, _s in dash._more_items()]
-    assert "simulate" not in data and "sim_end" not in data
+    assert dash._more_items() == [] and not dash.more_btn.isVisible()
 
 
 def test_expert_actions_are_tagged(qapp, dash, session, expert):
@@ -141,15 +141,16 @@ def test_more_menu_lists_the_secondary_actions(qapp, dash, session, expert):
     popup.close_popup()
 
 
-def test_match_details_dialog(qapp, dash, session):
-    from ui.editor_kit import ConfirmDialog
-    from screens.tournament.dashboard import MatchPreviewView
+def test_home_shows_the_rest_of_the_round(qapp, dash, session):
+    """Home: the round next to NEXT MATCH, the round's other matches under
+    the hero; no tags, no match details."""
     session.advance_to_human()
     dash.refresh()
-    dash._match_details()
-    dialogs = dash.findChildren(ConfirmDialog)
-    assert dialogs and isinstance(dialogs[-1].content, MatchPreviewView)
-    dialogs[-1].choose("ok")
+    f = session.human_fixture()
+    assert dash.hero_round.text() == f.label.upper()
+    others = [g for g in session.t.fixtures if g.day == f.day and g is not f]
+    assert dash.round_grid.count() == len(others) and dash.round_section.isVisibleTo(dash)
+    assert not hasattr(dash, "details_btn") and not hasattr(dash.home_block, "tags")
 
 
 def test_simulating_plays_the_matchday_recap(qapp, dash, session):
@@ -256,26 +257,30 @@ def test_intro_skips_to_the_dashboard(qapp, ds, session):
     intro.close()
 
 
-def test_hub_previews_the_focused_entry(qapp, ds, session):
-    """The preview follows the list's focus: the save's team, next match and
-    options; NEW TOURNAMENT's competitions, its button starting the wizard."""
+def test_hub_lists_saves_by_state_and_deletes_after_asking(qapp, ds, session):
+    """NEW TOURNAMENT on its own; the saves under IN PROGRESS / COMPLETED,
+    no preview; the card's delete zone asks first."""
+    from PyQt5.QtCore import Qt
+    from PyQt5.QtTest import QTest
     from screens.tournament import TournamentHubScreen
-    from ui.editor_kit import Note
+    from ui.editor_kit import ConfirmDialog
     news = []
     hub = TournamentHubScreen(ds, on_back=lambda: None, on_new=lambda: news.append(1),
                               on_open=lambda *a: None)
     hub.resize(1600, 900)
     hub.show()
     hub.on_show()
-    assert len(hub._cards) == 1 and hub._selected["id"] == session.t.id
-    texts = " ".join(n.text() for n in hub.detail.findChildren(Note))
-    assert session.t.team_name(HUMAN) and "v " in texts and "halves" in texts
-    assert hub.continue_btn.text() == "CONTINUE" and hub.delete_btn.isVisibleTo(hub)
-    hub.new_tile.setFocus()
-    hub._select(None)
-    assert not hub.delete_btn.isVisibleTo(hub)
-    hub.continue_btn.click()
+    assert len(hub._cards) == 1 and not hasattr(hub, "detail")
+    assert hub.sections["progress"][0].isVisibleTo(hub) and not hub.sections["done"][0].isVisibleTo(hub)
+    hub.new_tile.activated.emit()
     assert news
+    QTest.mouseClick(hub._cards[0].delete_zone, Qt.LeftButton)
+    dialog = [d for d in hub.findChildren(ConfirmDialog) if d.isVisible()][-1]
+    dialog.choose("cancel")
+    assert len(hub._cards) == 1
+    QTest.mouseClick(hub._cards[0].delete_zone, Qt.LeftButton)
+    [d for d in hub.findChildren(ConfirmDialog) if d.isVisible()][-1].choose("ok")
+    assert not hub._cards and not hub.sections["progress"][0].isVisibleTo(hub)
     hub.close()
 
 
@@ -294,38 +299,77 @@ def test_match_stats_rows(ds, session):
     assert rows["SCRUMS WON"] == (5, 3) and rows["LINEOUTS WON"] == (0, 9)
 
 
-def test_your_matches_open_the_report_with_stats(qapp, dash, session):
-    from ui.editor_kit import ConfirmDialog
-    from ui.stat_compare import StatComparison
-    from screens.tournament.dashboard import MatchReportView
+def test_your_matches_filter_and_static_stats(qapp, dash, session):
+    """Fixtures: nothing highlighted under ALL MATCHES; YOUR MATCHES is its
+    own table, one row per match. The stats' tables can't be picked."""
+    from screens.tournament.dashboard import FIXTURES, STATS
     from screens.tournament.common import DataTable
+    from PyQt5.QtWidgets import QAbstractItemView
     session.advance_to_human()
-    dash.refresh()
-    assert "mine" not in [d for _l, d, _s in dash._more_items()]    # nothing played yet
     f = session.human_fixture()
     dash._run(lambda: session.simulate(f))
     _close_all(qapp, dash)
-    assert "mine" in [d for _l, d, _s in dash._more_items()]
-    dash._your_matches()
+    dash._open_view(FIXTURES)
+    assert dash.fixtures.current_key() is None
+    assert dash.fixtures.selectionMode() == QAbstractItemView.NoSelection
+    # a REPORT button on each played match, opening its report
+    from ui.editor_kit import ConfirmDialog
+    from screens.tournament.dashboard import MatchReportView
+    played = [g for g in session.t.fixtures if g.played]
+    assert played and len(dash.fixtures.row_buttons) == len(played)
+    dash.fixtures.row_buttons[0].click()
     dialog = [d for d in dash.findChildren(ConfirmDialog) if d.isVisible()][-1]
-    table = dialog.content
-    assert isinstance(table, DataTable) and table.keys == [f.id]
-    QTest.keyClick(table, Qt.Key_Return)
-    qapp.processEvents()
-    report = [d for d in dash.findChildren(ConfirmDialog) if d.isVisible()][-1]
-    assert isinstance(report.content, MatchReportView)
-    stats = report.content.findChildren(StatComparison)
-    assert stats and stats[0].rows and stats[0].progress == 1.0
-    report.choose("ok")                                   # CLOSE: back to the list
-    qapp.processEvents()
-    again = [d for d in dash.findChildren(ConfirmDialog) if d.isVisible()]
-    assert again and isinstance(again[-1].content, DataTable)
-    again[-1].choose("ok")
+    assert isinstance(dialog.content, MatchReportView)
+    dialog.choose("ok")
+    dash._set_mine(True)
+    assert dash.my_fixtures.isVisibleTo(dash) and not dash.fixtures.isVisibleTo(dash)
+    mine = [g.id for g in sorted(session.t.fixtures, key=lambda g: g.day) if g.involves(HUMAN)]
+    assert dash.my_fixtures.keys == mine
+    dash.tabs.set_index(STATS)
+    tables = [t for t in dash.pages[STATS].findChildren(DataTable)]
+    assert tables and all(t.selectionMode() == QAbstractItemView.NoSelection for t in tables)
+
+
+def test_recap_opens_the_match_report_and_says_forfeited(qapp, ds, session):
+    """A match played in the game: the recap's MATCH STATS (X) opens the
+    match report popup (as the Competition tab's REPORT); a forfeit reads
+    FORFEITED, not DEFEAT."""
+    from ui.editor_kit import ConfirmDialog
+    from screens.tournament.dashboard import MatchReportView
+    from PyQt5.QtWidgets import QWidget
+    from screens.tournament import moments
+    host = QWidget()
+    host.resize(1600, 900)
+    host.show()
+    session.advance_to_human()
+    f = session.human_fixture()
+    before = moments.snapshot(session.t)
+    result = {"finished": True,
+              "team_A": {"score": {"points": 12, "tries": 2}, "stats": {}, "players": []},
+              "team_B": {"score": {"points": 3, "penalties": 1}, "stats": {}, "players": []}}
+    session.begin_game(f)
+    done = session.finish_game(f, result)
+    recap = moments.moments_after(ds, session.t, before, done, game=({}, result))[0]
+    recap.open(host)
+    assert recap.backdrop_alpha() == 1.0 and recap.stats_popup is None
+    QTest.keyClick(recap, Qt.Key_X)
+    assert isinstance(recap.stats_popup, ConfirmDialog)
+    assert isinstance(recap.stats_popup.content, MatchReportView)
+    recap.stats_popup.choose("ok")
+    assert recap.stats_popup is None and recap.isVisible()
+    QTest.keyClick(recap, Qt.Key_Return)
+    session2_before = moments.snapshot(session.t)
+    g = session.human_fixture() or (session.advance_to_human() and session.human_fixture())
+    if g:
+        done = session.forfeit(g, HUMAN)
+        recap = moments.moments_after(ds, session.t, session2_before, done)[0]
+        assert recap.outcome()[0] == "FORFEITED"
+    host.close()
 
 
 def test_post_match_shows_stats(qapp, no_motion):
     from screens.post_match import PostMatchScreen
-    screen = PostMatchScreen(lambda: None, lambda: None, lambda: None)
+    screen = PostMatchScreen(lambda: None)
     screen.resize(1600, 900)
     screen.show()
     result = {"team_A": {"score": {"points": 12, "tries": 2}, "stats": {"scrums_won": 4}, "players": []},
@@ -336,3 +380,61 @@ def test_post_match_shows_stats(qapp, no_motion):
     screen.set_result({"team_A": {}, "team_B": {}}, None)              # no result: said so
     assert screen.stats.rows == [("NO RESULT READ FROM THE GAME", 0, 0)]
     screen.close()
+
+
+def test_settings_tab_changes_the_tournament_options(dash, session):
+    """SETTINGS: the wizard's options, changed for the rest of the tournament
+    and saved at once."""
+    from screens.tournament.dashboard import PREFS
+    from app.tournament import persistence
+    session.t.options.update(difficulty="pro", injuries=True)
+    dash._go_tab(PREFS)
+    rows = dash.prefs.rows
+    assert rows["difficulty"].current() == "Pro" and rows["injuries"].state() is True
+    rows["difficulty"].adjust(1)
+    rows["injuries"].adjust(1)
+    assert session.t.options["difficulty"] == "elite" and session.t.options["injuries"] is False
+    assert persistence.load(session.t.id).options["injuries"] is False
+
+
+def test_mid_match_start_config():
+    """A start at a minute with a score: the stock mid-match restart and
+    .mis score events."""
+    from app.challenges import kick_off_start, mid_match_start, possible_scores, score_shape
+    from app.state import MatchConfig
+    assert 1 not in possible_scores() and 2 not in possible_scores() and 4 not in possible_scores()
+    assert {0, 3, 5, 7, 99} <= set(possible_scores())
+    cfg = MatchConfig()
+    mid_match_start(cfg, 78, 24, 13)
+    pts = {"SS_TRY": 5, "SS_CONVERSION": 2, "SS_PENALTY": 3, "SS_DROPGOAL": 3}
+    total = {"home": 0, "away": 0}
+    for ev in cfg.score_events:
+        total[ev["team"]] += pts[ev["type"]]
+        assert 0 < ev["time"] < 78 * 60
+    assert total == {"home": 24, "away": 13}
+    assert (cfg.mission_mode_time, cfg.mission_mode_period, cfg.mission_mode_name) == (4680, 1, "")
+    assert cfg.mission_nis[0]["script_name"] == "kick_off"
+    kick_off_start(cfg)
+    assert cfg.mission_mode_time is None and not cfg.score_events and not cfg.mission_nis
+    assert score_shape(1) is None
+
+
+def test_more_play_from_a_given_minute(qapp, dash, session, monkeypatch):
+    """Expert MORE > Play from a given minute: 78th and 0-0 to start with,
+    passed to on_play as start=(minute, home, away)."""
+    from shared.user_prefs import user_prefs
+    from ui.editor_kit import ConfirmDialog
+    from ui import CycleRow
+    monkeypatch.setattr(user_prefs, "expert_mode", True)
+    session.advance_to_human()
+    dash.refresh()
+    assert any(d == "late_start" for _l, d, _s in dash._more_items())
+    calls = []
+    dash.on_play = lambda s, f, start=None: calls.append((f, start))
+    dash._late_start()
+    dialog = [d for d in dash.findChildren(ConfirmDialog) if d.isVisible()][-1]
+    rows = dialog.content.findChildren(CycleRow)
+    assert rows[0].current() == "78'"
+    rows[1].adjust(1)                 # home: 3
+    dialog.choose("ok")
+    assert calls and calls[0][1] == (78, 3, 0)

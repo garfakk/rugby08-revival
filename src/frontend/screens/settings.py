@@ -8,7 +8,7 @@ more than one kind of setting. Every value is saved as soon as it
 changes.
 
 Keys go through app.input's actions, so a pad drives it the same way:
-Up/Down pick a row, Left/Right change it, Enter opens a list, Q/E (LB/RB)
+Up/Down pick a row, Left/Right (or a click) change it, round, Q/E (LB/RB)
 switch tabs, Y resets the tab, Esc (B) goes back.
 """
 import sys
@@ -21,7 +21,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt, QEvent, QTimer
 
 sys.path.append(str(Path(__file__).parent.parent.parent))
-from shared.user_prefs import user_prefs, SCREEN_RATIOS
+from shared.user_prefs import user_prefs, COIN_TOSS_OFFERED, SCREEN_RATIOS
 from shared.game_profile import game_profile, SECTIONS, RESOLUTIONS, UNSAFE_RESOLUTIONS
 
 from shared.log import ROOT as LOG_ROOT, setup_logging
@@ -29,8 +29,8 @@ from app import difficulty
 from app.display import native_resolution, native_screen_ratio
 from app.team_browse import DEFAULT_STYLE, STYLES, style_label
 from app.input import Action, KEYMAP, HINT_GLYPH
-from ui import make_page_header, make_separator, StyledButton, ToggleRow, ChoiceRow, CycleRow, SliderRow
-from ui.broadcast import HintBar
+from ui import StyledButton, ToggleRow, CycleRow, SliderRow
+from ui.broadcast import HintBar, page_header
 from ui.editor_kit import TabStrip, TabPage, ConfirmDialog
 from ui.broadcast import eyebrow_label
 from ui.theme import ACCENT, BTN_HEIGHT_BACK, T_SETTING_TAB
@@ -40,6 +40,8 @@ TABS = ("Display", "Audio", "Gameplay", "Camera", "HUD", "Advanced")
 GAME_SECTION = {"Display": "VIDEO", "Audio": "AUDIO", "Gameplay": "GAMEPLAY",
                 "Camera": "CAMERA", "HUD": "HUD"}
 RATIO_CHOICES = ["Auto", *SCREEN_RATIOS]
+# Game options with no visible effect: kept in the profile, not offered
+HIDDEN_SETTINGS = {"gamma"}
 LOG_LEVELS = ["OFF", "DEBUG", "INFO", "WARNING", "ERROR"]
 
 
@@ -70,9 +72,7 @@ class SettingsScreen(QWidget):
         root.setContentsMargins(0, 0, 0, 0)
         root.setSpacing(0)
 
-        header, bar = make_page_header("SETTINGS")
-        root.addWidget(header)
-        root.addWidget(bar)
+        root.addWidget(page_header("Settings", on_back=self.back_callback))
 
         content = QWidget()
         content.setMaximumWidth(900)
@@ -96,18 +96,14 @@ class SettingsScreen(QWidget):
         cl.addWidget(self.stack, stretch=1)
         self._build_pages()
 
-        cl.addWidget(make_separator())
-        cl.addSpacing(10)
+        cl.addSpacing(14)
         footer = QHBoxLayout()
-        footer.setSpacing(12)
-        self.back_btn = StyledButton("BACK", "neutral")
-        self.back_btn.clicked.connect(self.back_callback)
-        self.reset_btn = StyledButton("", "neutral")
+        footer.addStretch(1)
+        self.reset_btn = StyledButton("RESET TO DEFAULTS", "neutral")
         self.reset_btn.clicked.connect(self._ask_reset)
-        for button in (self.back_btn, self.reset_btn):
-            button.setMinimumHeight(BTN_HEIGHT_BACK)
-            button.installEventFilter(self)
-            footer.addWidget(button, stretch=1)
+        self.reset_btn.setMinimumHeight(BTN_HEIGHT_BACK)
+        self.reset_btn.installEventFilter(self)
+        footer.addWidget(self.reset_btn)
         cl.addLayout(footer)
 
         center = QHBoxLayout()
@@ -120,14 +116,13 @@ class SettingsScreen(QWidget):
         self.hintbar.set_hints([
             ("↕", "select"), ("←→", "change"),
             (HINT_GLYPH[Action.TAB_PREV], "previous tab"), (HINT_GLYPH[Action.TAB_NEXT], "next tab"),
-            (HINT_GLYPH[Action.AUX], "reset tab"), ("B", "back"),
+            (HINT_GLYPH[Action.AUX], "reset to defaults"), ("B", "back"),
         ])
         root.addWidget(self.hintbar)
         self._on_tab(0)
 
     def _on_tab(self, index):
         self.stack.setCurrentIndex(index)
-        self.reset_btn.setText(f"RESET {TABS[index].upper()}")
 
     # ── pages ──
     def _build_pages(self):
@@ -175,7 +170,7 @@ class SettingsScreen(QWidget):
         # Written to rugby08patches.ini at the next match start
         # (backend.mod_utils.configure_game_widescreen). Default: the screen's
         # own, closest preset (main.MainWindow._pick_screen_ratio).
-        rows.append(ChoiceRow("Screen Ratio", RATIO_CHOICES, user_prefs.screen_ratio_label(),
+        rows.append(CycleRow("Screen Ratio", RATIO_CHOICES, user_prefs.screen_ratio_label(),
                               user_prefs.set_screen_ratio))
         return rows
 
@@ -199,7 +194,7 @@ class SettingsScreen(QWidget):
             game_profile.set_resolution(int(w), int(h))
             game_profile.save()
 
-        return ChoiceRow("Resolution", labels, f"{current[0]}x{current[1]}", apply)
+        return CycleRow("Resolution", labels, f"{current[0]}x{current[1]}", apply)
 
     def _game_rows(self, section):
         """One row per game option of that SECTIONS group, written into the
@@ -214,6 +209,8 @@ class SettingsScreen(QWidget):
 
         rows = []
         for s in dict(SECTIONS)[section]:
+            if s.key in HIDDEN_SETTINGS:
+                continue
             current = game_profile.get(s.key)
             if s.kind == "bool":
                 row = ToggleRow(s.label, bool(current), lambda v, a=_set(s.key): a(int(v)))
@@ -224,9 +221,7 @@ class SettingsScreen(QWidget):
                 by_label = dict(s.choices)
                 initial = next((l for l, v in s.choices if v == current), labels[0])
                 choose = lambda label, a=_set(s.key), m=by_label: a(m[label])
-                # two values: one click flips them; more: a dropdown list
-                row = (CycleRow if len(labels) <= 2 else ChoiceRow)(
-                    s.label, labels, initial, choose)
+                row = CycleRow(s.label, labels, initial, choose)
             rows.append(row)
         return rows
 
@@ -256,16 +251,18 @@ class SettingsScreen(QWidget):
         # The difficulty quick match, a new tournament and a challenge start on
         # (app.difficulty.preferred); each can still be changed there.
         levels = [level.capitalize() for level in difficulty.LEVELS]
-        return [
-            ChoiceRow("Preferred Difficulty", levels, difficulty.preferred().capitalize(), _set_difficulty),
+        rows = [
+            CycleRow("Preferred Difficulty", levels, difficulty.preferred().capitalize(), _set_difficulty),
             CycleRow("Wind", ["Standard", "Advanced"], user_prefs.wind_mode.capitalize(), _set_wind_mode),
-            ToggleRow("Coin Toss", user_prefs.coin_toss, _set_coin_toss),
             # How Quick Match picks teams (app/team_browse.py): the classic
             # season > category > team, or group > team > season.
             # Takes effect the next time Quick Match opens.
-            ChoiceRow("Quick Match Picker", [label for _id, label in STYLES],
+            CycleRow("Quick Match Picker", [label for _id, label in STYLES],
                       style_label(user_prefs.match_picker), _set_picker),
         ]
+        if COIN_TOSS_OFFERED:      # not offered for now (shared/user_prefs.py)
+            rows.insert(2, ToggleRow("Coin Toss", user_prefs.coin_toss, _set_coin_toss))
+        return rows
 
     def _advanced_rows(self):
         def _set_preview_3d(on):
@@ -287,7 +284,7 @@ class SettingsScreen(QWidget):
         return [
             ToggleRow("3D Player Preview", user_prefs.preview_3d, _set_preview_3d),
             ToggleRow("Check For Updates", user_prefs.check_updates, _set_check_updates),
-            ChoiceRow("Log Level", LOG_LEVELS, user_prefs.log_level or current, _set_log_level),
+            CycleRow("Log Level", LOG_LEVELS, user_prefs.log_level or current, _set_log_level),
         ]
 
     # ── reset ──
@@ -297,7 +294,7 @@ class SettingsScreen(QWidget):
         text = "Every setting on this tab goes back to its default."
         if tab == "Display":
             text += " Resolution and Screen Ratio go back to this screen's own."
-        ConfirmDialog(self, f"Reset {tab}?", text,
+        ConfirmDialog(self, f"Reset {tab} to defaults?", text,
                       [("CANCEL", "neutral", "cancel"), ("RESET", "primary", "reset")],
                       lambda role: self._on_reset_choice(role, index))
 
@@ -343,13 +340,12 @@ class SettingsScreen(QWidget):
         """Up / Down: tab strip, then the tab's rows, then the footer."""
         index = self.tabs.index()
         rows = self._rows[index]
-        footer = (self.back_btn, self.reset_btn)
-        if current in footer:
+        if current is self.reset_btn:
             target = rows[-1] if delta < 0 and rows else None
         else:
             order = [self.tabs] + rows
             i = order.index(current) + delta if current in order else 0
-            target = order[i] if 0 <= i < len(order) else (footer[0] if i >= len(order) else None)
+            target = order[i] if 0 <= i < len(order) else (self.reset_btn if i >= len(order) else None)
         if target is not None:
             target.setFocus(Qt.TabFocusReason)
             if target in rows:
@@ -362,7 +358,7 @@ class SettingsScreen(QWidget):
             return False
         action = KEYMAP.get(event.key())
         if action in (Action.TAB_PREV, Action.TAB_NEXT):
-            on_row = obj not in (self.tabs, self.back_btn, self.reset_btn)
+            on_row = obj not in (self.tabs, self.reset_btn)
             self.tabs.step(-1 if action == Action.TAB_PREV else 1)
             if on_row:
                 self._focus_first_row()
@@ -372,9 +368,7 @@ class SettingsScreen(QWidget):
             self._ask_reset()
         elif action in (Action.NAV_UP, Action.NAV_DOWN):
             self._move_focus(obj, -1 if action == Action.NAV_UP else 1)
-        elif obj in (self.back_btn, self.reset_btn) and action in (Action.NAV_LEFT, Action.NAV_RIGHT):
-            (self.reset_btn if obj is self.back_btn else self.back_btn).setFocus(Qt.TabFocusReason)
-        elif obj in (self.back_btn, self.reset_btn) and action == Action.CONFIRM:
+        elif obj is self.reset_btn and action == Action.CONFIRM:
             obj.click()
         else:
             return False

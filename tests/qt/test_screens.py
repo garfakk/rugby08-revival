@@ -179,7 +179,7 @@ def test_controller_board_each_device_moves_its_own_icon(qapp, monkeypatch):
 def test_settings_screen_ratio_rows(window, qapp, monkeypatch):
     """One Screen Ratio row (4:3 = widescreen off), no Fill the Screen."""
     from shared.user_prefs import user_prefs
-    from ui.widgets import ChoiceRow
+    from ui.widgets import CycleRow
     from PyQt5.QtWidgets import QLabel
     for attr in ("widescreen", "widescreen_aspect"):
         monkeypatch.setattr(user_prefs, attr, getattr(user_prefs, attr))
@@ -190,10 +190,10 @@ def test_settings_screen_ratio_rows(window, qapp, monkeypatch):
     def row(cls, text):
         return next(r for r in window.screen_settings.findChildren(cls)
                     if any(l.text() == text for l in r.findChildren(QLabel)))
-    ratio = row(ChoiceRow, "Screen Ratio").combo
-    ratio.setCurrentText("16:10")
+    ratio = row(CycleRow, "Screen Ratio")
+    ratio.set_current("16:10")
     assert user_prefs.widescreen and user_prefs.widescreen_aspect == "16:10"
-    ratio.setCurrentText("4:3")
+    ratio.set_current("4:3")
     assert not user_prefs.widescreen
     assert not any(l.text() in ("Widescreen", "Aspect Ratio", "Fill the Screen")
                    for l in window.screen_settings.findChildren(QLabel))
@@ -216,7 +216,7 @@ def test_settings_tabs_and_reset(window, qapp):
 
     display = _settings_rows(s, "Display")
     assert list(display)[:3] == ["Windowed Mode", "Resolution", "Screen Ratio"]
-    assert {"Shadows", "Gamma"} <= set(display)
+    assert "Shadows" in display and "Gamma" not in display
     audio = _settings_rows(s, "Audio")
 
     default = game_profile.default("vol_crowd")
@@ -238,7 +238,7 @@ def test_settings_preferred_difficulty(window, qapp, monkeypatch):
     qapp.processEvents()
     assert not {"Screen Centre Horizontal", "Screen Centre Vertical"} & set(_settings_rows(s, "Display"))
     row = _settings_rows(s, "Gameplay")["Preferred Difficulty"]
-    row.combo.setCurrentText("Legend")
+    row.set_current("Legend")
     assert user_prefs.difficulty == "legend"
     window.show_match_setup()
     qapp.processEvents()
@@ -642,3 +642,12 @@ def test_team_editor_shirt_names_tab(window, qapp):
     assert window.data.teams["10001"]["2024"]["shirtNames"]["font"] == "Oswald"
     editor.edit("names off", lambda w: w["2024"].pop("shirtNames"))
     assert editor.save()
+
+
+def test_coin_toss_not_offered(qapp, tmp_path, monkeypatch):
+    """The coin toss is off for now: user_prefs.ini can't turn it on."""
+    from shared import user_prefs as up
+    ini = tmp_path / "user_prefs.ini"
+    ini.write_text("[prefs]\ncoin_toss = True\n")
+    monkeypatch.setattr(up, "_PREFS_FILE", str(ini))
+    assert up.UserPrefs().coin_toss is False

@@ -198,16 +198,6 @@ from ui.music import MenuMusic, TrackMedal
 MAX_CONTENT_WIDTH = 1920
 
 
-def _wind_detail(cfg):
-    """The pre-match line for a generated wind; "" for the stock random one."""
-    from app.game_data import wind_direction_label
-    if cfg.wind_power is None:
-        return ""
-    if not cfg.wind_power:
-        return "Wind: calm"
-    return f"Wind: {cfg.wind_power} {wind_direction_label(cfg.wind_dir_deg)}"
-
-
 class MainWindow(QMainWindow):
     """Top-level window. Owns the ScreenManager and all navigation. Screens
     receive callbacks — they never import MainWindow directly."""
@@ -704,15 +694,10 @@ class MainWindow(QMainWindow):
         self.screen_ingame = GameWidget(self.show_main, self.show_match_setup,
                                          result_callback=self.show_post_match,
                                          on_loading_end=self.music.stop_loading)
-        self.screen_post_match = PostMatchScreen(
-            on_rematch=self.rematch,
-            on_match_setup=self.show_match_setup,
-            on_main_menu=self.show_main,
-        )
+        self.screen_post_match = PostMatchScreen(on_main_menu=self.show_main)
         self.screen_challenge_result = ChallengeResultScreen(
             on_retry=self.rematch,
             on_challenges=self.show_challenge_mode_from_result,
-            on_main_menu=self.show_main,
         )
         yield
         self.screen_tools = ToolsScreen(
@@ -786,7 +771,8 @@ class MainWindow(QMainWindow):
         if self.tournament and self._tournament_fixture:
             # Left the game screen mid tournament match (no result came
             # back): the match is forfeited.
-            self.show_tournament(self._forfeit_tournament_match())
+            self._record_tournament_result(getattr(self, "_last_match_data", None), None)
+            self.show_tournament("")
             return
         self.screens.show_screen(self.screen_main, push_history=False)
         self.screens.reset_history()
@@ -892,12 +878,17 @@ class MainWindow(QMainWindow):
         self.screens.show_screen(self.screen_tournament, push_history=False)
         self.screens.reset_history()
 
-    def play_tournament_match(self, session, fixture):
+    def play_tournament_match(self, session, fixture, start=None):
         """Dashboard PLAY -> the pre-match presentation (kits) -> kick off.
-        BACK from the presentation drops the pre-match snapshot again."""
+        BACK from the presentation drops the pre-match snapshot again.
+        `start` = (minute, home points, away points): expert mode's MORE >
+        Play from a given minute (the stock mid-match restart)."""
         from app.match_data_builder import build_match_data
         from app.tournament import calendar, report, weather
         cfg, repairs = session.begin_game(fixture)
+        if start:
+            from app.challenges import mid_match_start
+            mid_match_start(cfg, *start)
         if repairs:
             log.info("Tournament: selection repaired before kick-off: %s", repairs)
 
@@ -965,15 +956,13 @@ class MainWindow(QMainWindow):
         venue = report.venue_name(self.data, fixture) or (cfg.stadium or {}).get("data", {}).get("name", "")
         stage = fixture.label or fixture.round_name
         self.screen_presentation.present(Presentation(
-            title=t.name, breadcrumb="tournament · match",
-            eyebrow=stage or t.template.get("name", "tournament"),
+            title=t.name, eyebrow=stage or t.template.get("name", "tournament"),
             heading=report.fixture_caption(t, fixture),
             details=[f"Date: {calendar.short_date(calendar.fixture_date(t, fixture))}",
                      f"Stadium: {venue}" if venue else "",
                      f"Weather: {weather.forecast(t, fixture, self.data)['summary']}",
                      f"Difficulty: {cfg.difficulty}",
-                     f"Half length: {cfg.halftime_length}",
-                     _wind_detail(cfg)],
+                     f"Half length: {cfg.halftime_length}"],
             home=side(cfg.home), away=side(cfg.away),
             on_kit=set_kit, on_kickoff=kickoff, on_back=back,
             controlled=lambda: {c.get("zone") for c in cfg.controllers.values()},
@@ -981,38 +970,26 @@ class MainWindow(QMainWindow):
             play_label="PERFORM TOSS" if user_prefs.coin_toss else "KICK OFF"))
         self.screens.show_screen(self.screen_presentation)
 
-    def _record_tournament_result(self, result):
-        """A tournament match just ended in the game. Returns the message for
-        the dashboard ("" when it was recorded: the recap shows it)."""
+    def _record_tournament_result(self, match_data, result):
+        """A tournament match just ended in the game: record it and queue
+        the dashboard's full-time recap (which also shows the game's match
+        report: `match_data`, `result`)."""
         session, fixture = self.tournament, self._tournament_fixture
+        self._tournament_fixture = None
+        from screens.tournament import moments
+        before = moments.snapshot(session.t)
         if not result or result.get("finished") is False:
-            return self._forfeit_tournament_match((result or {}).get("minute"))
-        self._tournament_fixture = None
-        from screens.tournament import moments
-        before = moments.snapshot(session.t)
-        done = session.finish_game(fixture, result)
-        # the dashboard opens on the matchday recap (your result, the rest
-        # of the matchday, the table) instead of a line of text
-        self.screen_tournament.queue_moments(before, done)
-        return ""
-
-    def _forfeit_tournament_match(self, minute=None):
-        """The user left a tournament match before full time: their team
-        forfeits it (the template's walkover score). Returns the message
-        for the dashboard."""
-        session, fixture = self.tournament, self._tournament_fixture
-        self._tournament_fixture = None
-        when = f" at {minute} min" if minute else ""
-        humans = [tid for tid in (fixture.home, fixture.away) if session.t.teams[tid].human]
-        if len(humans) != 1:
-            # both sides managed: no way to tell who walked off
-            session.abandon_game()
-            return f"The match was left{when}, so nothing was recorded. Play it again."
-        from screens.tournament import moments
-        before = moments.snapshot(session.t)
-        done = session.forfeit(fixture, humans[0])
-        self.screen_tournament.queue_moments(before, done)
-        return f"{session.t.team_name(humans[0])} left the match{when} and forfeited it."
+            humans = [tid for tid in (fixture.home, fixture.away) if session.t.teams[tid].human]
+            if len(humans) != 1:
+                # both sides managed: no way to tell who walked off
+                session.abandon_game()
+                return
+            # the user left before full time: their team forfeits it (the
+            # template's walkover score)
+            done = session.forfeit(fixture, humans[0])
+        else:
+            done = session.finish_game(fixture, result)
+        self.screen_tournament.queue_moments(before, done, game=(match_data, result))
 
     def show_roster_import(self):
         self.screens.show_screen(self.screen_roster_import)
@@ -1076,10 +1053,11 @@ class MainWindow(QMainWindow):
             self.screens.reset_history()
             return
         if self.tournament and self._tournament_fixture:
-            message = self._record_tournament_result(result)
-            self.screen_post_match.set_continue(lambda: self.show_tournament(message))
-        else:
-            self.screen_post_match.set_continue(None)
+            # no full-time screen: the dashboard's full-time recap shows the
+            # result, the match statistics folded under it
+            self._record_tournament_result(match_data, result)
+            self.show_tournament("")
+            return
         self.screen_post_match.set_result(getattr(self, "_last_match_data", None), result)
         self.screens.show_screen(self.screen_post_match, push_history=False)
         self.screens.reset_history()

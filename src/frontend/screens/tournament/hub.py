@@ -1,33 +1,31 @@
 """
 screens/tournament/hub.py — Tournament mode's front door.
 
-Left: one list — NEW TOURNAMENT on top, then the saved tournaments, newest
-first (emblem, name and edition, your team, where it stands, last played).
-Right: a preview of whatever is focused in the list, never a copy of its
-card: for a save, how your team is doing (position or campaign, record),
-its next match and last result, the options, with CONTINUE / DELETE; for
-NEW TOURNAMENT, the competitions on offer. The cards rise in one after the
-other. Pad: A open, X delete, Y new, B back.
+NEW TOURNAMENT on its own on top, then the saved tournaments in two
+sections, newest first: IN PROGRESS and COMPLETED (emblem, name and
+edition, your team, where it stands, last played), each with a delete
+zone at its right end (a bin; asked first). The cards rise in one after the other. Pad: A open,
+X delete, Y new, B back.
 """
 from datetime import datetime
 
-from PyQt5.QtCore import QRectF, Qt
-from PyQt5.QtGui import QColor, QFont, QPainter
-from PyQt5.QtWidgets import QGridLayout, QHBoxLayout, QScrollArea, QVBoxLayout, QWidget
+from PyQt5.QtCore import QPointF, QRectF, Qt, pyqtSignal
+from PyQt5.QtGui import QColor, QFont, QPainter, QPainterPath, QPen
+from PyQt5.QtWidgets import QHBoxLayout, QScrollArea, QVBoxLayout, QWidget
 
 from app.input import KEYMAP, Action
 from app.screen_base import Screen
-from app.tournament import calendar, engine, formats, persistence, report
+from app.tournament import formats, persistence, report
 from app.tournament.session import TournamentSession
 from shared.log import get_logger
 from ui import motion
-from ui.broadcast import Card, HintBar, display_label, eyebrow_label, page_header, tracked_font
-from ui.editor_kit import ConfirmDialog, Note, compact_button
-from ui.theme import (ACCENT, AWAY_TINT, BG_BASE, BTN_HEIGHT, FG_MUTED, FG_PRIMARY, FG_SECONDARY,
+from ui.broadcast import HintBar, page_header, tracked_font
+from ui.editor_kit import ConfirmDialog
+from ui.theme import (ACCENT, AWAY_TINT, BG_BASE, BORDER, DANGER, DANGER_LITE, FG_MUTED, FG_PRIMARY, FG_SECONDARY,
                       FG_TERTIARY, FONT_DISPLAY, GREEN, WARN)
 
-from .common import (ActivatableCard, FormStrip, PixmapLabel, ProgressStrip, SectionTitle, YOU_TINT,
-                     clear_layout, competition_emblem, hline, team_crest, tournament_crest, transparent)
+from .common import (ActivatableCard, SectionTitle, clear_layout, competition_emblem, team_crest,
+                     transparent)
 
 log = get_logger(__name__)
 
@@ -48,17 +46,66 @@ def relative_time(stamp) -> str:
     return "yesterday" if days == 1 else (f"{days} days ago" if days < 30 else then.strftime("%d %b %Y"))
 
 
-def _options_line(opts) -> str:
-    parts = [str(opts.get("difficulty", "")).upper(), f"{opts.get('halftime_length', '')} halves"]
-    if opts.get("injuries", True):
-        parts.append("injuries")
-    if opts.get("fatigue", True):
-        parts.append("fatigue")
-    if opts.get("suspensions", True):
-        parts.append("suspensions")
-    if opts.get("reality"):
-        parts.append("reality mode")
-    return " · ".join(p for p in parts if p.strip())
+def paint_bin(p, c, size, color):
+    """A bin (delete) centred on `c`: lid, handle, can with two ribs."""
+    s = size
+    pen = QPen(QColor(color), max(1.6, s / 11), Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin)
+    p.setPen(pen)
+    p.setBrush(Qt.NoBrush)
+    top = c.y() - s * 0.42
+    p.drawLine(QPointF(c.x() - s * 0.45, top + s * 0.14), QPointF(c.x() + s * 0.45, top + s * 0.14))
+    p.drawLine(QPointF(c.x() - s * 0.14, top), QPointF(c.x() + s * 0.14, top))
+    can = QPainterPath(QPointF(c.x() - s * 0.34, top + s * 0.28))
+    can.lineTo(c.x() - s * 0.27, c.y() + s * 0.46)
+    can.lineTo(c.x() + s * 0.27, c.y() + s * 0.46)
+    can.lineTo(c.x() + s * 0.34, top + s * 0.28)
+    p.drawPath(can)
+    for dx in (-0.1, 0.1):
+        p.drawLine(QPointF(c.x() + s * dx, top + s * 0.42), QPointF(c.x() + s * dx, c.y() + s * 0.3))
+
+
+class DeleteZone(QWidget):
+    """The right end of a save card: a bin over DELETE, set off by a rule.
+    Quiet until the card is focused; red under the mouse. Click: clicked."""
+
+    WIDTH = 92
+    clicked = pyqtSignal()
+
+    def __init__(self, card):
+        super().__init__(card)
+        self._card = card
+        self.setAttribute(Qt.WA_Hover)
+        self.setCursor(Qt.PointingHandCursor)
+        self.setToolTip("Delete this tournament")
+
+    def enterEvent(self, e):
+        self.update()
+        self._card.update()
+
+    def leaveEvent(self, e):
+        self.update()
+        self._card.update()
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            event.accept()
+            self.clicked.emit()
+
+    def paintEvent(self, event):
+        p = QPainter(self)
+        p.setRenderHint(QPainter.Antialiasing)
+        w, h = self.width(), self.height()
+        hover = self.underMouse()
+        if hover:
+            p.fillRect(QRectF(0, 1, w - 1, h - 2), QColor(DANGER))
+        else:
+            p.fillRect(QRectF(0, 18, 1, h - 36), QColor(BORDER))
+        hot = self._card.hasFocus() or self._card.selected
+        color = DANGER_LITE if hover else (FG_SECONDARY if hot else FG_MUTED)
+        paint_bin(p, QPointF(w / 2, h / 2 - 9), 26, color)
+        p.setPen(QColor(color))
+        p.setFont(tracked_font(FONT_DISPLAY, 9, QFont.Bold, 1.4))
+        p.drawText(QRectF(0, h / 2 + 12, w, 20), Qt.AlignCenter, "DELETE")
 
 
 class SaveCard(ActivatableCard):
@@ -75,13 +122,19 @@ class SaveCard(ActivatableCard):
         self._comp = (template or {}).get("name", save.get("template_id", ""))
         self._where = where
         self._err = save.get("error")
+        self.delete_zone = DeleteZone(self)
+
+    def resizeEvent(self, event):
+        self.delete_zone.setGeometry(self.width() - DeleteZone.WIDTH, 0, DeleteZone.WIDTH, self.height())
+        super().resizeEvent(event)
 
     def paintEvent(self, event):
         p = QPainter(self)
         p.setRenderHint(QPainter.Antialiasing)
         p.setRenderHint(QPainter.SmoothPixmapTransform)
         self.paint_background(p)
-        s, w, h = self.save, self.width(), self.height()
+        s, h = self.save, self.height()
+        w = self.width() - DeleteZone.WIDTH      # the content ends clear of the delete zone
         p.drawPixmap(20, (h - 76) // 2, self._emblem)
         x = 116
         p.setFont(tracked_font(FONT_DISPLAY, 20, QFont.Bold, 0.8))
@@ -155,16 +208,6 @@ class NewTile(ActivatableCard):
         p.drawText(QRectF(116, 0, self.width() - 130, h), Qt.AlignLeft | Qt.AlignVCenter, "NEW TOURNAMENT")
 
 
-def _record(t, team_id) -> str:
-    played = [f for f in t.fixtures if f.played and f.involves(team_id)]
-    if not played:
-        return "no match played yet"
-    won = sum(1 for f in played if f.result.winner_id() == team_id)
-    drawn = sum(1 for f in played if f.result.winner_id() is None)
-    lost = len(played) - won - drawn
-    return f"played {len(played)} · won {won}" + (f" · drawn {drawn}" if drawn else "") + f" · lost {lost}"
-
-
 class TournamentHubScreen(Screen):
     def __init__(self, ds, on_back, on_new, on_open):
         super().__init__(on_back=on_back)
@@ -173,9 +216,8 @@ class TournamentHubScreen(Screen):
         self.on_open = on_open
         self._saves = []
         self._cards = []
-        self._loaded = {}            # save id -> (updated, Tournament) for the previews
+        self._loaded = {}            # save id -> (updated, Tournament)
         self._selected = None        # the focused save; None = NEW TOURNAMENT
-        self._editions = None        # formats.editions(), for the NEW TOURNAMENT preview
         self._build()
 
     # ── layout ───────────────────────────────────────────────────────────
@@ -183,27 +225,20 @@ class TournamentHubScreen(Screen):
         root = QVBoxLayout(self)
         root.setContentsMargins(0, 0, 0, 0)
         root.setSpacing(0)
-        root.addWidget(page_header("Tournament", breadcrumb="game modes", on_back=self.on_back_cb))
+        root.addWidget(page_header("Tournament", on_back=self.on_back_cb))
 
         body = QWidget()
         body.setObjectName("hubBody")
         body.setStyleSheet(f"QWidget#hubBody {{ background: {BG_BASE}; }}")
         bl = QHBoxLayout(body)
         bl.setContentsMargins(80, 28, 80, 24)
-        bl.setSpacing(28)
 
-        # the list: new, then the saves
-        left = transparent(QWidget(), "hubLeft")
-        lv = QVBoxLayout(left)
-        lv.setContentsMargins(0, 0, 0, 0)
-        lv.setSpacing(12)
-        self.saves_title = SectionTitle("tournaments")
-        lv.addWidget(self.saves_title)
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
         scroll.setFrameShape(QScrollArea.NoFrame)
         scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         scroll.setStyleSheet("QScrollArea { background: transparent; border: none; }")
+        scroll.setMaximumWidth(1200)
         self._scroll = scroll
         holder = transparent(QWidget(), "hubSaves")
         hv = QVBoxLayout(holder)
@@ -214,46 +249,27 @@ class TournamentHubScreen(Screen):
         self.new_tile.focused.connect(lambda: self._select(None))
         self.focus.register(self.new_tile)
         hv.addWidget(self.new_tile)
-        self.list_layout = QVBoxLayout()
-        self.list_layout.setSpacing(10)
-        hv.addLayout(self.list_layout)
+        hv.addSpacing(30)
+        # two sections: the tournaments under way, the finished ones
+        self.sections = {}
+        for key, title in (("progress", "in progress"), ("done", "completed")):
+            section = transparent(QWidget(), f"hub_{key}")
+            sv = QVBoxLayout(section)
+            sv.setContentsMargins(0, 0, 0, 18)
+            sv.setSpacing(10)
+            heading = SectionTitle(title)
+            sv.addWidget(heading)
+            rows = QVBoxLayout()
+            rows.setSpacing(10)
+            sv.addLayout(rows)
+            hv.addWidget(section)
+            self.sections[key] = (section, heading, rows)
         hv.addStretch(1)
         scroll.setWidget(holder)
         scroll.viewport().setStyleSheet("background: transparent;")
-        lv.addWidget(scroll, stretch=1)
-        bl.addWidget(left, stretch=3)
-
-        # the preview of the focused entry
-        right = transparent(QWidget(), "hubRight")
-        rv = QVBoxLayout(right)
-        rv.setContentsMargins(0, 0, 0, 0)
-        rv.setSpacing(12)
-        self.preview_title = SectionTitle("preview")
-        rv.addWidget(self.preview_title)
-        self.detail = Card(stripe=ACCENT, translucent=True)
-        dv = QVBoxLayout(self.detail)
-        dv.setContentsMargins(26, 20, 26, 22)
-        dv.setSpacing(10)
-        self.d_holder = QVBoxLayout()
-        self.d_holder.setSpacing(10)
-        dv.addLayout(self.d_holder)
-        dv.addSpacing(6)
-        row = QHBoxLayout()
-        row.setSpacing(10)
-        self.delete_btn = compact_button("DELETE", "danger", height=BTN_HEIGHT)
-        self.delete_btn.clicked.connect(self._delete)
-        row.addWidget(self.delete_btn)
-        row.addStretch(1)
-        self.continue_btn = compact_button("CONTINUE", "primary", height=BTN_HEIGHT)
-        self.continue_btn.setMinimumWidth(220)
-        self.continue_btn.clicked.connect(self._activate)
-        row.addWidget(self.continue_btn)
-        dv.addLayout(row)
-        for b in (self.continue_btn, self.delete_btn):
-            self.focus.register(b)
-        rv.addWidget(self.detail)
-        rv.addStretch(1)
-        bl.addWidget(right, stretch=2)
+        bl.addStretch(1)
+        bl.addWidget(scroll, stretch=100)
+        bl.addStretch(1)
         root.addWidget(body, stretch=1)
 
         self.hints = HintBar()
@@ -264,7 +280,7 @@ class TournamentHubScreen(Screen):
         super().on_show()
         self.reload()
         (self._cards[0] if self._cards else self.new_tile).setFocus()
-        motion.stagger_in([self.new_tile] + self._cards[:8] + [self.detail], step=55)
+        motion.stagger_in([self.new_tile] + self._cards[:8], step=55)
 
     def _tournament(self, s):
         """The save's Tournament (cached until the save changes), else None."""
@@ -276,33 +292,42 @@ class TournamentHubScreen(Screen):
         try:
             t = persistence.load(s["id"])
         except Exception as e:
-            log.warning("tournament preview %s: %s", s["id"], e)
+            log.warning("tournament %s: %s", s["id"], e)
             return None
         self._loaded[s["id"]] = (s.get("updated"), t)
         return t
 
     def reload(self):
         self.templates = formats.load_templates()
-        self._editions = None
         self._saves = persistence.list_saves()
-        for c in self._cards:
-            self.focus.unregister(c)
-        clear_layout(self.list_layout)
+        for w in self._cards:
+            self.focus.unregister(w)
         self._cards = []
-        for s in self._saves:
-            t = self._tournament(s)
-            tpl = (t.template if t else None) or self.templates.get(s.get("template_id"))
-            card = SaveCard(self.ds, s, tpl if not s.get("error") else None,
-                            report.where_now(t) if t else "")
-            card.activated.connect(lambda s=s: (self._select(s), self._continue()))
-            card.focused.connect(lambda s=s: self._select(s))
-            self.focus.register(card)
-            self.list_layout.addWidget(card)
-            self._cards.append(card)
-        self.saves_title.set_right(f"{len(self._saves)} saved" if self._saves else "")
+        count = {"progress": 0, "done": 0}
+        for _section, _heading, rows in self.sections.values():
+            clear_layout(rows)
+        # in progress first, then completed: the focus order follows the page
+        for key in ("progress", "done"):
+            for s in self._saves:
+                if ("done" if s.get("champion") else "progress") != key:
+                    continue
+                t = self._tournament(s)
+                tpl = (t.template if t else None) or self.templates.get(s.get("template_id"))
+                card = SaveCard(self.ds, s, tpl if not s.get("error") else None,
+                                report.where_now(t) if t else "")
+                card.activated.connect(lambda s=s: (self._select(s), self._continue()))
+                card.focused.connect(lambda s=s: self._select(s))
+                card.delete_zone.clicked.connect(lambda s=s, c=card: (c.setFocus(), self._select(s),
+                                                                      self._delete()))
+                self.sections[key][2].addWidget(card)
+                self.focus.register(card)
+                self._cards.append(card)
+                count[key] += 1
+        for key, (section, heading, _rows) in self.sections.items():
+            section.setVisible(bool(count[key]))
+            heading.set_right(str(count[key]))
         keep = self._selected["id"] if self._selected else None
-        self._select(next((s for s in self._saves if s["id"] == keep), self._saves[0] if self._saves else None),
-                     force=True)
+        self._select(next((s for s in self._saves if s["id"] == keep), None), force=True)
 
     def _select(self, s, force=False):
         if s is self._selected and not force:
@@ -313,123 +338,9 @@ class TournamentHubScreen(Screen):
             c.update()
         self.new_tile.selected = s is None
         self.new_tile.update()
-        clear_layout(self.d_holder)
-        if s is None:
-            self._preview_new()
-        else:
-            self._preview_save(s)
-        if self.isVisible():
-            motion.fade_in(self.detail, ms=160)
         has = s is not None
         self.hints.set_hints([("A", "continue"), ("X", "delete"), ("Y", "new"), ("B", "back")] if has
                              else [("A", "new tournament"), ("B", "back")])
-
-    def _preview_new(self):
-        self.preview_title.set_title("new tournament")
-        v = self.d_holder
-        v.addWidget(display_label("start a new tournament", 20, QFont.Bold, track=0.8))
-        v.addWidget(Note("Pick a competition and one of its editions, take charge of a team and play "
-                         "every round. Progress is saved after each match.", color=FG_SECONDARY))
-        v.addWidget(hline())
-        v.addWidget(eyebrow_label("competitions", color=ACCENT, size=10))
-        if self._editions is None:
-            self._editions = formats.editions(self.ds, self.templates)
-        grid = QGridLayout()
-        grid.setHorizontalSpacing(14)
-        grid.setVerticalSpacing(8)
-        for i, eds in enumerate(list(self._editions.values())[:8]):
-            tpl, label = eds[0].template, eds[0].label
-            cell = QHBoxLayout()
-            cell.setSpacing(10)
-            cell.addWidget(PixmapLabel(36, competition_emblem(self.ds, tpl, 36)))
-            name = str(tpl.get("name", ""))
-            name = name[:-len(label)].strip() if label and name.endswith(label) else name
-            span = f"{eds[-1].label} – {eds[0].label}" if len(eds) > 1 else label
-            text = QVBoxLayout()
-            text.setSpacing(0)
-            text.addWidget(eyebrow_label(name, color=FG_PRIMARY, size=11))
-            text.addWidget(eyebrow_label(span, color=FG_TERTIARY, size=9))
-            cell.addLayout(text, stretch=1)
-            grid.addLayout(cell, i // 2, i % 2)
-        v.addLayout(grid)
-        self.delete_btn.hide()
-        self.continue_btn.setEnabled(True)
-        self.continue_btn.setText("NEW TOURNAMENT")
-
-    def _preview_save(self, s):
-        v = self.d_holder
-        self.delete_btn.show()
-        self.preview_title.set_title(s.get("name", ""))
-        if s.get("error"):
-            v.addWidget(display_label("this save can't be read", 18, QFont.Bold, track=0.8, color=WARN))
-            v.addWidget(Note(s["error"], color=FG_TERTIARY))
-            self.continue_btn.setEnabled(False)
-            self.continue_btn.setText("CONTINUE")
-            return
-        t = self._tournament(s)
-        self.continue_btn.setEnabled(t is not None)
-        self.continue_btn.setText("VIEW" if s.get("champion") else "CONTINUE")
-        if t is None:
-            v.addWidget(Note("This save can't be opened.", color=WARN))
-            return
-        # where it stands
-        caption = report.where_now(t)
-        v.addWidget(eyebrow_label(caption, color=AWAY_TINT if t.finished else ACCENT, size=11))
-        bar = ProgressStrip(height=6)
-        bar.set_value(1.0 if t.finished else t.day / max(1, t.last_day() + 1),
-                      AWAY_TINT if t.finished else ACCENT)
-        v.addWidget(bar)
-        if t.finished and t.champion:
-            row = QHBoxLayout()
-            row.setSpacing(12)
-            row.addWidget(PixmapLabel(44, tournament_crest(self.ds, t, t.champion, 44)))
-            row.addWidget(display_label(f"{t.team_name(t.champion)} are champions", 16, QFont.Bold,
-                                        track=0.6, color=AWAY_TINT), stretch=1)
-            v.addLayout(row)
-        # each team you manage: how it's doing, its next match, last result
-        for e in t.human_teams():
-            v.addWidget(hline())
-            tid = e.team_id
-            row = QHBoxLayout()
-            row.setSpacing(14)
-            row.addWidget(PixmapLabel(56, tournament_crest(self.ds, t, tid, 56)))
-            col = QVBoxLayout()
-            col.setSpacing(3)
-            col.addWidget(display_label(t.team_name(tid), 18, QFont.Bold, track=0.6, color=YOU_TINT))
-            status = report.campaign_summary(t, tid) or "the tournament is about to start"
-            if not t.finished and engine.is_eliminated(t, tid):
-                status = f"out · {status}"
-            col.addWidget(Note(status[0].upper() + status[1:], color=FG_PRIMARY))
-            col.addWidget(Note(_record(t, tid)[0].upper() + _record(t, tid)[1:], color=FG_TERTIARY))
-            row.addLayout(col, stretch=1)
-            row.addWidget(FormStrip([("D" if f.result.winner_id() is None else
-                                      ("W" if f.result.winner_id() == tid else "L"))
-                                     for f in t.fixtures if f.played and f.involves(tid)][-5:], cell=16,
-                                    align_right=True))
-            v.addLayout(row)
-            nxt = next((f for f in t.fixtures if not f.played and f.involves(tid)), None)
-            if nxt:
-                other = nxt.away if nxt.home == tid else nxt.home
-                when = calendar.short_date(calendar.fixture_date(t, nxt))
-                text = " · ".join(x for x in (f"v {t.team_name(other)}" if other else "", nxt.label, when) if x)
-                v.addLayout(self._line("next", text))
-            last = next((f for f in reversed(t.fixtures) if f.played and f.involves(tid)), None)
-            if last:
-                v.addLayout(self._line("last", f"{report.fixture_caption(t, last)} "
-                                               f"{last.result.score_text()} · {last.label}"))
-        v.addWidget(hline())
-        v.addWidget(Note(_options_line(s.get("options") or {}), color=FG_TERTIARY))
-        v.addWidget(Note("Last played " + (relative_time(s.get("updated")) or "—"), color=FG_MUTED))
-
-    @staticmethod
-    def _line(tag, text):
-        row = QHBoxLayout()
-        row.setSpacing(10)
-        label = eyebrow_label(tag, color=ACCENT, size=9)
-        label.setFixedWidth(44)
-        row.addWidget(label)
-        row.addWidget(Note(text, color=FG_SECONDARY), stretch=1)
-        return row
 
     # ── actions ──────────────────────────────────────────────────────────
     def keyPressEvent(self, event):
@@ -439,12 +350,6 @@ class TournamentHubScreen(Screen):
         if action == Action.AUX:
             self.on_new(); event.accept(); return
         super().keyPressEvent(event)
-
-    def _activate(self):
-        if self._selected is None:
-            self.on_new()
-        else:
-            self._continue()
 
     def _continue(self):
         s = self._selected
@@ -477,5 +382,9 @@ class TournamentHubScreen(Screen):
                 self._selected = None
                 self.reload()
                 (self._cards[0] if self._cards else self.new_tile).setFocus()
+            elif s in self._saves:
+                card = next((c for c in self._cards if c.save is s), None)
+                if card is not None:
+                    card.setFocus()
         ConfirmDialog(self, "Delete tournament?", f"“{s['name']}” and all its progress will be lost.",
                       [("CANCEL", "neutral", "cancel"), ("DELETE", "danger", "ok")], done)

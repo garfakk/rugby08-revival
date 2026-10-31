@@ -195,7 +195,6 @@ class TournamentSquadScreen(Screen):
         clear_layout(self.header_holder)
         if not self.embedded:
             self.header_holder.addWidget(page_header(f"Squad · {self.t.team_name(team_id)}",
-                                                     breadcrumb=f"tournament · {self.t.name}",
                                                      on_back=self.on_back_cb))
         self.crest.set_pixmap(tournament_crest(self.ds, self.t, team_id, 52))
         self.team_name.setText(self.t.team_name(team_id).upper())

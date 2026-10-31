@@ -15,7 +15,6 @@ from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QStackedWidget, QFrame,
     QScrollArea,
 )
-from PyQt5 import sip
 from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtCore import (
     Qt, QPoint, QRect, QEasingCurve, QPropertyAnimation, QParallelAnimationGroup, QTimer,
@@ -52,7 +51,7 @@ from ui.broadcast import (
 from ui.theme import (
     BG_PANEL, BORDER,
     ACCENT, HOME_TINT, AWAY_TINT,
-    FG_MUTED, BTN_HEIGHT, WARN, EXPERT,
+    FG_MUTED, BTN_HEIGHT, EXPERT,
 )
 from screens.squad_editor import SquadEditorScreen
 
@@ -183,14 +182,12 @@ class TeamColumn(QWidget):
         top_row.addWidget(self.category_row)
 
         # The groups picker (Settings > Quick Match Picker): the team's
-        # group, cycled like the team (app/team_browse.py). Sits in the side
-        # label's row, where the classic season/category rows go, so the
-        # crest and name keep their room.
+        # group, cycled like the team (app/team_browse.py). Right above the
+        # team's name, in its column, so the two pickers line up.
         self.index = TeamIndex(screen.ds)
         self.group_picker = GroupPicker(display=group_label)
         self.group_picker.changed.connect(self._on_group_changed)
         screen.focus.register(self.group_picker)
-        top_row.addWidget(self.group_picker, stretch=4)
         self.group_picker.hide()
 
         chrome_top_v.addLayout(top_row)
@@ -229,6 +226,7 @@ class TeamColumn(QWidget):
         screen.focus.register(self.season_row2)
         name_col = QVBoxLayout()
         name_col.setSpacing(4)
+        name_col.addWidget(self.group_picker)
         name_col.addWidget(self.name_picker)
         name_col.addWidget(self.season_row2, alignment=Qt.AlignHCenter)
         name_col.addStretch(1)
@@ -242,15 +240,6 @@ class TeamColumn(QWidget):
 
         chrome_top_v.addLayout(ident_row)
 
-        # Groups picker only: "no 2007 squad, showing 2008" after a team
-        # change. A fixed line that is blanked, never hidden, so nothing
-        # above or below it moves when it comes and goes.
-        self.season_note = eyebrow_label("", color=WARN, size=10)
-        self.season_note.setAlignment(Qt.AlignCenter)
-        self.season_note.setFixedHeight(16)
-        self.season_note.hide()
-        chrome_top_v.addWidget(self.season_note)
-        self._note_token = 0
         chrome_top_v.addStretch(1)
 
         rule = QFrame()
@@ -372,8 +361,6 @@ class TeamColumn(QWidget):
         self.season_row2.setVisible(not classic)
         # no subtitle under the name in the groups picker: no room kept for it
         self.name_picker.setFixedHeight(78 if classic else 54)
-        self.season_note.setText("")
-        self.season_note.setVisible(not classic)
         slot = self._slot()
         if before == style or not slot.team_id:
             self.name_picker.update()
@@ -381,7 +368,7 @@ class TeamColumn(QWidget):
         if classic:
             self._sync_classic()
         else:
-            self._adopt_team(slot.team_id, season=slot.season, note=False)
+            self._adopt_team(slot.team_id, season=slot.season)
 
     def _sync_classic(self):
         """The classic rows (season, category, team list) shown for the slot's
@@ -396,29 +383,24 @@ class TeamColumn(QWidget):
         ids = sorted(teams, key=lambda t: teams[t]["name"])
         self.name_picker.set_values(ids, index=ids.index(slot.team_id) if slot.team_id in ids else 0)
 
-    def _adopt_team(self, tid, season=None, note=True):
+    def _adopt_team(self, tid, season=None):
         """Make `tid` the card's team in the groups picker: its season is
         `season`, else the one showing if the team has it, else the nearest
-        it has (said under the season). Reloads the card."""
+        it has. Reloads the card."""
         slot = self._slot()
         have = self.index.seasons(tid)
         if not have:
             return
         wanted = season or slot.season
         new = nearest_season(have, wanted) if wanted else have[-1]
-        changed_team = slot.team_id != tid
         slot.team_id, slot.season, slot.variant = tid, new, ""
         group = self.index.group(tid)
         groups = self.index.groups()
         self.group_picker.set_values(groups, index=groups.index(group))
         teams = self.index.in_group(group)
         self.name_picker.set_values(teams, index=teams.index(tid))
-        # newest first, as the dropdown lists them
-        self.season_row2.set_values(have[::-1], index=have[::-1].index(new))
-        if note and changed_team and wanted and new != wanted and not season:
-            self._say_note(f"No {season_label(wanted)} squad · showing {season_label(new)}")
-        else:
-            self.season_note.setText("")
+        # oldest first, the order the seasons were played in
+        self.season_row2.set_values(have, index=have.index(new))
         self._load_team()
         self.name_picker.update()
 
@@ -429,13 +411,6 @@ class TeamColumn(QWidget):
         if teams:
             self._adopt_team(teams[0])
 
-    def _say_note(self, text):
-        self.season_note.setText(text)
-        self._note_token += 1
-        token = self._note_token
-        QTimer.singleShot(6000, lambda: token == self._note_token and not sip.isdeleted(self.season_note)
-                          and self.season_note.setText(""))
-
     def _on_season_widget_changed(self):
         if self.style == "classic":
             return
@@ -444,7 +419,6 @@ class TeamColumn(QWidget):
         if not season or season == slot.season:
             return
         slot.season, slot.variant = season, ""
-        self.season_note.setText("")
         self._load_team()
         self.name_picker.update()
 
@@ -456,7 +430,7 @@ class TeamColumn(QWidget):
     def set_pick(self, tid, season, kit):
         if not tid:
             return
-        self._adopt_team(tid, season=season, note=False)
+        self._adopt_team(tid, season=season)
         idx = self.kit_row.index_of(kit)
         if idx is not None:
             self.kit_row.set_index(idx)
@@ -901,7 +875,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
         root = QVBoxLayout(self)
         root.setContentsMargins(0, 0, 0, 0)
         root.setSpacing(0)
-        self.header_widget = page_header("Quick match", breadcrumb="Match setup", right="",
+        self.header_widget = page_header("Quick match", right="",
                                           on_back=self._on_back_clicked)
         root.addWidget(self.header_widget)
 

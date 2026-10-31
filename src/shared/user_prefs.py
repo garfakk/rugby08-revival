@@ -34,6 +34,9 @@ def _prefs_dir() -> str:
 PREFS_DIR = _prefs_dir()
 _PREFS_FILE = os.path.join(PREFS_DIR, "user_prefs.ini")
 _SECTION = "prefs"
+# The coin toss before a match (Settings > Coin Toss) is not offered for now:
+# the setting is hidden and always off, whatever user_prefs.ini says.
+COIN_TOSS_OFFERED = False
 
 
 def fit_rect(left, top, width, height, ratio):
@@ -152,7 +155,8 @@ class UserPrefs:
                                             fallback=self.widescreen_aspect).strip() or "auto"
             if cp.has_option(_SECTION, "widescreen") or cp.has_option(_SECTION, "widescreen_aspect"):
                 self.screen_ratio_set = True
-            self.coin_toss = cp.getboolean(_SECTION, "coin_toss", fallback=self.coin_toss)
+            # the coin toss is not offered for now (COIN_TOSS_OFFERED): always off
+            self.coin_toss = COIN_TOSS_OFFERED and cp.getboolean(_SECTION, "coin_toss", fallback=self.coin_toss)
             self.expert_mode = cp.getboolean(_SECTION, "expert_mode", fallback=self.expert_mode)
             self.use_edits = cp.getboolean(_SECTION, "use_edits", fallback=self.use_edits)
             self.animations = cp.getboolean(_SECTION, "animations", fallback=self.animations)

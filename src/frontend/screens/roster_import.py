@@ -105,8 +105,7 @@ class RosterImportScreen(Screen):
         root = QVBoxLayout(self)
         root.setContentsMargins(0, 0, 0, 0)
         root.setSpacing(0)
-        root.addWidget(page_header("Import roster", breadcrumb="rugby 08 .ros / .rdf",
-                                   on_back=self.request_back))
+        root.addWidget(page_header("Import roster", on_back=self.request_back))
         body = QWidget()
         body.setObjectName("importBody")
         body.setStyleSheet(f"QWidget#importBody {{ background: {BG_BASE}; }}")
@@ -135,16 +134,12 @@ class RosterImportScreen(Screen):
         self.status = display_label("", T_LABEL, QFont.DemiBold, track=0.4, color=FG_SECONDARY,
                                     upper=False)
         fh.addWidget(self.status, stretch=3)
-        self.back_btn = compact_button("‹ BACK")
-        self.back_btn.clicked.connect(self.request_back)
         self.next_btn = compact_button("NEXT ›", "primary")
         self.next_btn.setMinimumWidth(160)
         self.next_btn.clicked.connect(self.next_step)
-        fh.addWidget(self.back_btn)
         fh.addWidget(self.next_btn)
         root.addWidget(foot)
-        for b in (self.back_btn, self.next_btn):
-            self.focus.register(b)
+        self.focus.register(self.next_btn)
 
         self._build_file_page(self.pages[STEP_FILE].layout_)
         self._build_teams_page(self.pages[STEP_TEAMS].layout_)
@@ -850,7 +845,6 @@ class RosterImportScreen(Screen):
         elif step == STEP_REVIEW:
             self._on_options()
             self._refresh_review()
-        self.back_btn.setText("‹ CANCEL" if step == STEP_FILE else "‹ BACK")
         if step == STEP_REVIEW:
             self.next_btn.setText("DONE" if self._imported else "IMPORT")
         else:

@@ -1,20 +1,21 @@
 """
 screens/tournament/wizard.py — Setting up a new tournament, in two steps:
 
-  1 COMPETITION  competition cards, one per competition
-  2 SETUP        edition (only the ones the data can play: a real edition,
-                 e.g. the Six Nations 2008, or a club league's season; a team
-                 the data doesn't have is left out, never replaced), name,
-                 difficulty; the match rules (half length, injuries, fatigue,
-                 suspensions) folded into one summary line until MATCH RULES
-                 opens them; the teams you control (crest tiles, none taken
-                 to start with: click to take a team, again to leave it; two
-                 at most, P1 and P2). EDIT THE DRAW opens who plays in which
-                 pool (crest + team per slot), the edition's draw / shuffle.
+  1 COMPETITION  competition cards, one per competition, none picked to
+                 start with
+  2 SETUP        the edition on its own line (only the ones the data can
+                 play: a real edition, e.g. the Six Nations 2008, or a club
+                 league's season; a team the data doesn't have is left out,
+                 never replaced) and the tournament's name; PREFERENCES:
+                 match (difficulty, half length) and squad (injuries,
+                 fatigue, suspensions) rows, as in Settings; the teams you
+                 control (crest tiles, none taken to start with: click to
+                 take a team, again to leave it; two at most, P1 and P2).
+                 The edition's draw is played as it is.
 
-A step bar on top (click a step, or LB / RB) and BACK / NEXT at the bottom;
-the last step's NEXT is START TOURNAMENT, which creates and saves it and
-opens the dashboard.
+A step bar on top (click a step, or LB / RB), the header's BACK going a step
+back, NEXT at the bottom; the last step's NEXT is START TOURNAMENT, which
+creates and saves it and opens the dashboard.
 """
 import copy
 import random
@@ -25,7 +26,6 @@ from PyQt5.QtWidgets import (QGridLayout, QHBoxLayout, QScrollArea, QStackedWidg
                              QWidget)
 
 from app import difficulty
-from app.challenges import DIFFICULTIES, HALF_LENGTHS
 from app.input import KEYMAP, Action
 from app.screen_base import Screen
 from app.tournament import engine, formats, reality
@@ -40,6 +40,7 @@ from ui.theme import (ACCENT, BG_BASE, BG_PANEL, BORDER, BTN_HEIGHT, FG_MUTED, F
 
 from .common import (ActivatableCard, PixmapLabel, SectionTitle, YOU_TINT, clear_layout,
                      competition_emblem, placeholder_crest, section, team_crest, transparent)
+from .prefs import PrefsPanel
 
 log = get_logger(__name__)
 
@@ -47,21 +48,9 @@ ON_OFF = ["on", "off"]
 STEPS = ["competition", "setup"]
 DRAW_PAGE = len(STEPS)      # the stack page EDIT THE DRAW opens (part of setup)
 MAX_HUMANS = 2
-
-
-def _format_line(edition) -> str:
-    stages = edition.template.get("stages", [])
-    rr = [s for s in stages if s.get("kind", "round_robin") == "round_robin"]
-    ko = [s for s in stages if s.get("kind") == "knockout"]
-    groups = sum(len(g) for g in edition.participants.values())
-    teams = edition.team_count()
-    parts = [f"{teams} teams"] if teams else []
-    if rr:
-        parts.append(f"{groups} pools" if groups > 1 else "league")
-    if ko:
-        rounds = [r.get("name", "") for s in ko for r in s.get("rounds", [])]
-        parts.append(f"{len(rounds)} knockout rounds" if len(rounds) > 1 else "final")
-    return " · ".join(parts)
+# Reality mode (app/tournament/reality.py) is not offered for now: off, the
+# field stays hidden and every new tournament is played without it.
+REALITY_OFFERED = False
 
 
 class StepBar(QWidget):
@@ -133,12 +122,6 @@ class CompetitionCard(ActivatableCard):
     def set_edition(self, edition):
         self.tpl = edition.template
         self._emblem = competition_emblem(self.ds, self.tpl, 72)
-        self._format = _format_line(edition)
-        labels = [e.label for e in self.editions if e.label]
-        if len(labels) > 1:
-            self._format += f" · {len(labels)} editions, {labels[-1]} to {labels[0]}"
-        elif labels:
-            self._format += f" · {labels[0]}"
         self.update()
 
     def _title(self):
@@ -156,11 +139,8 @@ class CompetitionCard(ActivatableCard):
         x = 104
         p.setFont(tracked_font(FONT_DISPLAY, 19, QFont.Bold, 1.0))
         p.setPen(QColor(FG_PRIMARY))
-        p.drawText(QRectF(x, 20, w - x - 40, 28), Qt.AlignLeft | Qt.AlignVCenter,
+        p.drawText(QRectF(x, 0, w - x - 40, h), Qt.AlignLeft | Qt.AlignVCenter,
                    self._title().upper())
-        p.setFont(tracked_font(FONT_DISPLAY, 10, QFont.Bold, 1.4))
-        p.setPen(QColor(ACCENT if self.selected else FG_TERTIARY))
-        p.drawText(QRectF(x, 50, w - x - 14, 16), Qt.AlignLeft | Qt.AlignVCenter, self._format.upper())
         if self.selected:
             p.setPen(Qt.NoPen)
             p.setBrush(QColor(ACCENT))
@@ -232,7 +212,7 @@ class TournamentWizardScreen(Screen):
         root = QVBoxLayout(self)
         root.setContentsMargins(0, 0, 0, 0)
         root.setSpacing(0)
-        root.addWidget(page_header("New tournament", breadcrumb="tournament", on_back=self._back_step))
+        root.addWidget(page_header("New tournament", on_back=self._back_step))
 
         body = QWidget()
         body.setObjectName("wizBody")
@@ -252,10 +232,6 @@ class TournamentWizardScreen(Screen):
 
         foot = QHBoxLayout()
         foot.setSpacing(12)
-        self.prev_btn = compact_button("BACK", "neutral", height=BTN_HEIGHT)
-        self.prev_btn.setMinimumWidth(140)
-        self.prev_btn.clicked.connect(self._back_step)
-        foot.addWidget(self.prev_btn)
         self.problems = Note("", color=WARN)
         foot.addWidget(self.problems, stretch=1)
         self.next_btn = compact_button("NEXT", "primary", height=BTN_HEIGHT)
@@ -292,86 +268,52 @@ class TournamentWizardScreen(Screen):
         self.edition.popup_title = "edition"
         self.edition.edited.connect(lambda tid: self._pick_competition(tid))
         self.name = TextField("name", max_bytes=60)
-        self.difficulty = ChoiceField("difficulty", DIFFICULTIES, allow_blank=False)
-        self.half = ChoiceField("half length", HALF_LENGTHS, allow_blank=False)
-        self.injuries = ChoiceField("injuries", ON_OFF, allow_blank=False)
-        self.fatigue = ChoiceField("fatigue", ON_OFF, allow_blank=False)
-        self.suspensions = ChoiceField("suspensions", ON_OFF, allow_blank=False)
+        # the edition and the tournament's name, side by side
         w, sv = section("tournament")
         grid = FieldGrid(columns=2)
-        for f in (self.edition, self.name, self.difficulty):
+        for f in (self.edition, self.name):
             grid.add(f)
             self.focus.register(f)
         sv.addWidget(grid)
         # who the edition has to do without (left out, never replaced)
         self.missing_note = Note("", color=FG_TERTIARY)
         sv.addWidget(self.missing_note)
-        # the match rules: the competition's defaults suit most, so one
-        # summary line until MATCH RULES opens them
-        rules = QHBoxLayout()
-        rules.setSpacing(12)
-        self.rules_btn = compact_button("MATCH RULES  ▾", "ghost")
-        self.rules_btn.clicked.connect(self._toggle_rules)
-        self.focus.register(self.rules_btn)
-        rules.addWidget(self.rules_btn)
-        self.rules_summary = Note("", color=FG_TERTIARY)
-        rules.addWidget(self.rules_summary, stretch=1)
-        sv.addLayout(rules)
-        self.rules_grid = FieldGrid(columns=2)
-        for f in (self.half, self.injuries, self.fatigue, self.suspensions):
-            self.rules_grid.add(f)
-            self.focus.register(f)
-            f.edited.connect(lambda _v: self._update_rules_summary())
-        self.rules_grid.hide()
-        sv.addWidget(self.rules_grid)
-        # Reality mode (app/tournament/reality.py): only for an edition with
-        # real results whose real draw can be played with this data
-        self.reality_row = transparent(QWidget(), "wizReality")
-        rr = QHBoxLayout(self.reality_row)
-        rr.setContentsMargins(0, 4, 0, 0)
-        rr.setSpacing(14)
-        self.reality = ChoiceField("reality mode", ON_OFF, allow_blank=False)
-        self.reality.set_value("off")
-        self.reality.setFixedWidth(330)
-        self.reality.edited.connect(lambda _v: self._validate())
-        self.focus.register(self.reality)
-        rr.addWidget(self.reality)
-        self.reality_note = Note("The other teams' matches get their real results, with the real "
-                                 "injuries and bans. Yours are played as usual.", color=FG_TERTIARY)
-        rr.addWidget(self.reality_note, stretch=1)
-        sv.addWidget(self.reality_row)
         v.addWidget(w)
 
-        top = QHBoxLayout()
+        # how it is played: match and squad options (changeable later on the
+        # dashboard's SETTINGS tab)
+        w, sv = section("preferences")
+        self.prefs = PrefsPanel()
+        for row in self.prefs.focus_rows():
+            self.focus.register(row)
+        sv.addWidget(self.prefs)
+        grid = FieldGrid(columns=2)
+        # Reality mode (app/tournament/reality.py): only for an edition with
+        # real results whose real draw can be played with this data
+        self.reality = ChoiceField("reality mode", ON_OFF, allow_blank=False)
+        self.reality.set_value("off")
+        self.reality.edited.connect(lambda _v: self._validate())
+        if REALITY_OFFERED:
+            grid.add(self.reality)
+            self.focus.register(self.reality)
+            sv.addWidget(grid)
+        else:
+            self.reality.hide()
+            grid.hide()
+        self.reality_note = Note("Reality mode: the other teams' matches get their real results, with "
+                                 "the real injuries and bans. Yours are played as usual.", color=FG_TERTIARY)
+        sv.addWidget(self.reality_note)
+        self.reality_note.setVisible(REALITY_OFFERED)
+        v.addWidget(w)
+
         self.teams_title = SectionTitle("teams you control")
-        top.addWidget(self.teams_title, stretch=1)
-        self.draw_btn = compact_button("EDIT THE DRAW", "neutral")
-        self.draw_btn.clicked.connect(lambda: self._show_page(DRAW_PAGE))
-        top.addWidget(self.draw_btn)
-        self.focus.register(self.draw_btn)
-        v.addLayout(top)
+        v.addWidget(self.teams_title)
         self.tiles_grid = QGridLayout()
         self.tiles_grid.setHorizontalSpacing(10)
         self.tiles_grid.setVerticalSpacing(10)
         v.addLayout(self.tiles_grid)
         v.addStretch(1)
         return page
-
-    def _toggle_rules(self):
-        show = self.rules_grid.isHidden()
-        self.rules_grid.setVisible(show)
-        self.rules_btn.setText("MATCH RULES  ▴" if show else "MATCH RULES  ▾")
-        if show:
-            motion.fade_in(self.rules_grid, ms=200)
-            self.half.setFocus()
-
-    def _update_rules_summary(self):
-        on = [k for k, f in (("injuries", self.injuries), ("fatigue", self.fatigue),
-                             ("suspensions", self.suspensions)) if f.value() == "on"]
-        off = [k for k, f in (("injuries", self.injuries), ("fatigue", self.fatigue),
-                              ("suspensions", self.suspensions)) if f.value() != "on"]
-        parts = [f"{self.half.value()} halves"] + on + [f"no {k}" for k in off]
-        self.rules_summary.setText(" · ".join(parts))
 
     def _page_draw(self):
         page = transparent(QWidget(), "wizP3")
@@ -410,7 +352,7 @@ class TournamentWizardScreen(Screen):
                          formats.editions(self.ds, default_season=self._default_season).items()}
         self.by_id = {e.id: e for eds in self.families.values() for e in eds}
         self._picked_in = {}
-        keep = getattr(self, "_comp", None)
+        self._comp = None           # no competition picked to start with
         for c in self._comp_cards:
             self.focus.unregister(c)
         clear_layout(self.comp_grid)
@@ -421,10 +363,8 @@ class TournamentWizardScreen(Screen):
             self.focus.register(card)
             self.comp_grid.addWidget(card, i // 2, i % 2)
             self._comp_cards.append(card)
-        first = next(iter(self.families.values()), [None])[0]
         self.humans = []            # nobody's team until you take one
-        if keep in self.by_id or first:
-            self._pick_competition(keep if keep in self.by_id else first.id)
+        self._build_groups({})
         self._go(0)
         motion.stagger_in(self._comp_cards[:12], step=40)
 
@@ -495,18 +435,15 @@ class TournamentWizardScreen(Screen):
         self.edition.setEnabled(len(eds) > 1)
         self.name.set_value(tpl.get("name", ""))
         opts = tpl.get("default_options") or {}
-        self.difficulty.set_value(difficulty.preferred())     # Settings > Preferred Difficulty
-        self.half.set_value(opts.get("halftime_length", "5m"))
-        self.injuries.set_value("on" if opts.get("injuries", True) else "off")
-        self.suspensions.set_value("on" if opts.get("suspensions", True) else "off")
-        self.fatigue.set_value("on" if opts.get("fatigue", True) else "off")
-        self._update_rules_summary()
+        # difficulty: Settings > Preferred Difficulty
+        self.prefs.set_values(dict(opts, difficulty=difficulty.preferred()))
         self.season = e.season
         self.missing_note.setText(self._missing_text(e))
         self.missing_note.setVisible(bool(e.missing))
-        offered, why = reality.available(tpl, known_teams=self._usable())
+        offered = REALITY_OFFERED and reality.available(tpl, known_teams=self._usable())[0]
         self._reality_offered = offered
-        self.reality_row.setVisible(offered)
+        self.reality.setVisible(offered)
+        self.reality_note.setVisible(offered)
         if not offered:
             self.reality.set_value("off")
         self._build_groups(self._edition_draw(e))
@@ -679,13 +616,14 @@ class TournamentWizardScreen(Screen):
     def _validate(self):
         probs = self._step_problems()
         all_found = [p for i in sorted(probs) for p in probs[i]]
-        here = probs.get(self._step, [])
+        here = probs.get(self._step, []) if self._step else []    # NEXT waits for a pick
         last = self._step == len(STEPS) - 1
         shown = here or (all_found if last else [])
         self.problems.setText(("⚠  " + "; ".join(shown[:3]) + (" …" if len(shown) > 3 else "")) if shown else "")
         self.next_btn.setText("DONE" if self._page == DRAW_PAGE else
                               ("START TOURNAMENT" if last else "NEXT"))
-        self.next_btn.setEnabled(self._page == DRAW_PAGE or (not all_found if last else True))
+        self.next_btn.setEnabled(self._page == DRAW_PAGE or
+                                 (not all_found if last else not probs.get(self._step)))
         self.steps.set_state(self._step, {i for i in range(len(STEPS)) if i < self._step and not probs.get(i)})
         return not all_found
 
@@ -696,18 +634,25 @@ class TournamentWizardScreen(Screen):
         self.stack.setCurrentIndex(page)
         if changed and self.isVisible():
             motion.fade_in(self.stack.currentWidget(), ms=200)
-        self.prev_btn.setText("CANCEL" if page == 0 else "BACK")
         self._validate()
-        first = {0: [c for c in self._comp_cards if c.selected][:1] or self._comp_cards[:1],
+        # nothing picked yet: no card lit up as if it were (Screen.on_show)
+        first = {0: [c for c in self._comp_cards if c.selected][:1],
                  1: [self.edition], DRAW_PAGE: list(self.slot_fields.values())[:1]}.get(page) or []
         if first:
             first[0].setFocus()
+        elif self.isVisible():
+            self.setFocus(Qt.OtherFocusReason)      # the first arrow lands on the first card
 
     def _go(self, i):
-        self._step = max(0, min(len(STEPS) - 1, i))
+        i = max(0, min(len(STEPS) - 1, i))
+        if i > 0 and not self.current_edition():
+            i = 0                   # a competition first
+        self._step = i
         self._show_page(self._step)
 
     def _next_step(self):
+        if not self.next_btn.isEnabled():
+            return
         if self._page == DRAW_PAGE:
             self._show_page(self._step)
         elif self._step == len(STEPS) - 1:
@@ -737,12 +682,8 @@ class TournamentWizardScreen(Screen):
         if not self._validate():
             return
         options = {
-            "difficulty": self.difficulty.value(),
-            "halftime_length": self.half.value(),
-            "injuries": self.injuries.value() == "on",
+            **self.prefs.values(),    # difficulty, halftime_length, injuries, suspensions, fatigue
             "injury_rate": 1.0,
-            "suspensions": self.suspensions.value() == "on",
-            "fatigue": self.fatigue.value() == "on",
             "sim_variance": 1.0,
             "reality": self._reality_wanted(),
         }

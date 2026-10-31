@@ -267,8 +267,7 @@ class MissionEditorScreen(Screen):
         root = QVBoxLayout(self)
         root.setContentsMargins(0, 0, 0, 0)
         root.setSpacing(0)
-        root.addWidget(page_header("Mission State", breadcrumb="advanced · experimental",
-                                   on_back=self.on_back_cb))
+        root.addWidget(page_header("Mission State", on_back=self.on_back_cb))
 
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)

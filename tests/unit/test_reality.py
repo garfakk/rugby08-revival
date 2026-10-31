@@ -149,13 +149,21 @@ def test_wizard_offers_reality_mode_only_where_it_can_be_played(qapp, ds, data_d
         for f in st.get("fixtures", []):
             f.pop("real_score")
     monkeypatch.setattr(formats, "load_templates", lambda: {"real_cup": real, "open_cup": open_cup})
+    from screens.tournament import wizard
+    w = TournamentWizardScreen(ds, on_back=lambda: None, on_created=lambda s: None)
+    w.show()
+    w.on_show()
+    w._pick_competition("real_cup")                      # not offered for now, even where it could be
+    assert not w._reality_offered and not w.reality.isVisibleTo(w)
+    w.close()
+    monkeypatch.setattr(wizard, "REALITY_OFFERED", True)
     created = []
     w = TournamentWizardScreen(ds, on_back=lambda: None, on_created=created.append)
     w.resize(1400, 900)
     w.show()
     w.on_show()
     w._pick_competition("open_cup")
-    assert not w._reality_offered and not w.reality_row.isVisibleTo(w)
+    assert not w._reality_offered and not w.reality.isVisibleTo(w)
     w._pick_competition("real_cup")
     assert w._reality_offered
     w.reality.set_value("on")

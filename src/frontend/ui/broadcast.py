@@ -61,7 +61,7 @@ def display_label(text, size, weight=QFont.Bold, track=1.0, color=FG_PRIMARY,
     return lbl
 
 
-def page_header(title: str, breadcrumb: str = None, right: str = None, on_back=None,
+def page_header(title: str, right: str = None, on_back=None,
                 icon=None) -> QWidget:
     """`icon`: a QPixmap (a competition's logo…) drawn before the title."""
     header = QWidget()
@@ -102,9 +102,6 @@ def page_header(title: str, breadcrumb: str = None, right: str = None, on_back=N
     tcol.setSpacing(0)
     tcol.addStretch(1)
     tcol.addWidget(display_label(title, 24, QFont.Bold, track=1.2))
-    if breadcrumb:
-        tcol.addWidget(display_label(breadcrumb, 10, QFont.DemiBold, track=1.6,
-                                     color=FG_SECONDARY, family=FONT_BODY))
     tcol.addStretch(1)
     hl.addLayout(tcol)
     hl.addStretch(1)

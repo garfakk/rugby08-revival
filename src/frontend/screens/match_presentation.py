@@ -29,6 +29,7 @@ from ui import StyledButton
 from ui.kickoff_transition import KickoffTransition
 from ui.atmosphere import AtmosphereWidget
 from ui.player_stage import KitStage
+from ui.checklist import CheckList
 from ui.broadcast import Card, SelectorRow, HintBar, page_header, eyebrow_label, display_label
 from ui.editor_kit import Note
 from ui.theme import (
@@ -63,7 +64,6 @@ class Choice:
 @dataclass
 class Presentation:
     title: str
-    breadcrumb: str
     home: SideSpec
     away: SideSpec
     eyebrow: str = "match"
@@ -154,11 +154,12 @@ class _SideCard(QWidget):
         screen.focus.register(self.kit_row)
         v.addWidget(self.kit_row)
 
+        # EDIT SQUAD sits by the kick-off button (the screen's bottom row);
+        # this card only says whether it is shown for its side
         self.squad_btn = StyledButton("EDIT SQUAD", "neutral")
-        self.squad_btn.setMinimumHeight(BTN_HEIGHT)
+        self.squad_btn.setMinimumHeight(BTN_HEIGHT + 12)
+        self.squad_btn.setMinimumWidth(200)
         self.squad_btn.clicked.connect(self._on_squad)
-        screen.focus.register(self.squad_btn)
-        v.addWidget(self.squad_btn)
         self.squad_btn.hide()
 
     def chrome(self):
@@ -312,8 +313,7 @@ class MatchPresentationScreen(KickoffTransition, Screen):
         ov.addWidget(eyebrow_label("objectives", color=ACCENT, size=13))
         self.objectives_hint = Note("All needed to win the challenge", color=FG_MUTED)
         ov.addWidget(self.objectives_hint)
-        self.objectives_list = Note("", color=FG_PRIMARY, size=T_VALUE)
-        self.objectives_list.setTextFormat(Qt.RichText)
+        self.objectives_list = CheckList(size=T_VALUE)
         ov.addWidget(self.objectives_list)
         mv.addWidget(self.objectives_box)
         self.choices_label = eyebrow_label("your choices", color=ACCENT, size=12)
@@ -331,7 +331,12 @@ class MatchPresentationScreen(KickoffTransition, Screen):
 
         bottom = QHBoxLayout()
         bottom.setContentsMargins(80, 0, 80, 20)
+        bottom.setSpacing(12)
         bottom.addStretch(1)
+        # EDIT SQUAD left of the kick-off, for each side you control
+        for card in (self.home_card, self.away_card):
+            self.focus.register(card.squad_btn)
+            bottom.addWidget(card.squad_btn)
         self.play_btn = StyledButton("KICK OFF", "primary")
         self.play_btn.setMinimumHeight(BTN_HEIGHT + 12)
         self.play_btn.setMinimumWidth(220)
@@ -359,8 +364,7 @@ class MatchPresentationScreen(KickoffTransition, Screen):
             if w is not None:
                 w.setParent(None)
                 w.deleteLater()
-        self.header_holder.addWidget(page_header(p.title, breadcrumb=p.breadcrumb,
-                                                 on_back=self._back))
+        self.header_holder.addWidget(page_header(p.title, on_back=self._back))
         self.eyebrow.setText(p.eyebrow.upper())
         self.heading.setText(p.heading)
         self.heading.setVisible(bool(p.heading))
@@ -369,7 +373,7 @@ class MatchPresentationScreen(KickoffTransition, Screen):
         details = "\n".join(d for d in p.details if d)
         self.details.setText(details)
         self.details.setVisible(bool(details))
-        self.objectives_list.setText("<br>".join(f"▸&nbsp;<b>{o}</b>" for o in p.objectives))
+        self.objectives_list.set_items(p.objectives)      # none met yet
         self.objectives_box.setVisible(bool(p.objectives))
         self._build_choices(p.choices)
         self.play_btn.setText(p.play_label)
@@ -412,6 +416,10 @@ class MatchPresentationScreen(KickoffTransition, Screen):
         sides = set(self.p.controlled()) if self.p and self.p.controlled else set()
         self.home_card.set_controlled("home" in sides)
         self.away_card.set_controlled("away" in sides)
+        both = {"home", "away"} <= sides
+        for card in (self.home_card, self.away_card):
+            # two buttons: each says whose squad
+            card.squad_btn.setText(f"EDIT {card.name.text()} SQUAD" if both else "EDIT SQUAD")
 
     # ── kickoff transition hooks (ui/kickoff_transition.py) ──────────────
     def kt_columns(self):

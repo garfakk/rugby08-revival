@@ -445,6 +445,54 @@ def start_score(data: dict):
     return pts["home"], pts["away"]
 
 
+def score_shape(points):
+    """(tries, conversions, penalties, drops) making `points`, or None when
+    no rugby score adds up to it (1, 2, 4)."""
+    from app.tournament.reality import decompose
+    shape = decompose(points)
+    T, C, K, D = shape
+    return shape if 5 * T + 2 * C + 3 * (K + D) == points else None
+
+
+def possible_scores(limit=99):
+    """The scores a team can have, 0..limit."""
+    return [p for p in range(limit + 1) if score_shape(p) is not None]
+
+
+def mid_match_start(cfg, minute, home_points, away_points):
+    """Set `cfg` to start at `minute` (1-79, the 80-minute clock) with the
+    given score: the stock mid-match restart (a kick-off at that time,
+    see start_state) and the score so far as .mis score events, spread
+    over the minutes already played (tries by the wings, kicks by the 10)."""
+    seconds = int(minute) * 60
+    cfg.mission_mode_name = ""
+    cfg.mission_mode_time = seconds
+    cfg.mission_mode_period = 0 if minute < 40 else 1
+    cfg.mission_nis = [_nis("kick_off", team=cfg.kick_off if cfg.kick_off in ("home", "away") else "home")]
+    events = []
+    for team, points in (("home", home_points), ("away", away_points)):
+        T, C, K, D = score_shape(points) or (0, 0, 0, 0)
+        for i in range(T):
+            events.append({"type": "SS_TRY", "team": team, "player": 10 if i % 2 else 13})
+            if i < C:
+                events.append({"type": "SS_CONVERSION", "team": team, "player": 9})
+        events += [{"type": "SS_PENALTY", "team": team, "player": 9}] * K
+        events += [{"type": "SS_DROPGOAL", "team": team, "player": 9}] * D
+    # the .mis counts players from 0 (jersey - 1); one score per stretch
+    # of the time already played
+    step = seconds / (len(events) + 1) if events else 0
+    cfg.score_events = [dict(ev, time=int(step * (i + 1))) for i, ev in enumerate(events)]
+
+
+def kick_off_start(cfg):
+    """`cfg` back to an ordinary 0-0 kick-off (undoes mid_match_start)."""
+    cfg.mission_mode_name = ""
+    cfg.mission_mode_time = None
+    cfg.mission_mode_period = None
+    cfg.mission_nis = []
+    cfg.score_events = []
+
+
 def start_minute(data: dict):
     """Match minute the challenge starts at, or None for a kick-off start."""
     t = data.get("mission_mode_time")

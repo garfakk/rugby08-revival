@@ -63,6 +63,7 @@ ROLE_LABELS = {
 SIDE_PANEL_WIDTH = 340    # the left-hand actions card
 SIDE_PANEL_MARGIN = 22
 ROLES_PANEL_W = 440       # the roles/set-plays slide-over on the right
+POSITION_ROWS = 3         # a player carries up to 3 positions
 
 
 def _elide_for(label, text: str) -> str:
@@ -139,8 +140,7 @@ class SquadEditorScreen(Screen):
         root = QVBoxLayout(self)
         root.setContentsMargins(0, 0, 0, 0)
         root.setSpacing(0)
-        header = page_header("Squad", breadcrumb=f"{self.team_name} · {self.side}",
-                             right=self._count_text())
+        header = page_header(f"Squad · {self.team_name}", right=self._count_text(), on_back=self._on_back_clicked)
         self._count_lbl = header.findChild(QLabel, "pageHeaderRight")
         root.addWidget(header)
 
@@ -246,10 +246,21 @@ class SquadEditorScreen(Screen):
         self.player_name_lbl = display_label("—", 26, QFont.Bold, track=0.6)
         self.player_name_lbl.setFixedWidth(inner_w)
         v.addWidget(self.player_name_lbl)
-        self.player_pos_lbl = display_label("", 11, QFont.DemiBold, track=1.6,
-                                            color=FG_SECONDARY)
-        self.player_pos_lbl.setFixedWidth(inner_w)
-        v.addWidget(self.player_pos_lbl)
+        # one position per row, always POSITION_ROWS rows tall: the panel
+        # never moves with how many positions a player has
+        self.player_pos_lbls = []
+        pos_box = QWidget()
+        pos_box.setStyleSheet("background: transparent;")
+        pv = QVBoxLayout(pos_box)
+        pv.setContentsMargins(0, 0, 0, 0)
+        pv.setSpacing(2)
+        for _ in range(POSITION_ROWS):
+            lbl = display_label("", 11, QFont.DemiBold, track=1.6, color=FG_SECONDARY)
+            lbl.setFixedWidth(inner_w)
+            pv.addWidget(lbl)
+            self.player_pos_lbls.append(lbl)
+        pos_box.setFixedHeight(pos_box.sizeHint().height())
+        v.addWidget(pos_box)
 
         v.addSpacing(10)
         v.addWidget(eyebrow_label("attributes", color=FG_SECONDARY, size=12))
@@ -381,8 +392,10 @@ class SquadEditorScreen(Screen):
         captain_pid = self.roles.get("captain")
         for number, av in self.avatars.items():
             pid = self.assignment.get(number)
-            av.set_player(self.players.get(pid) if pid else None,
-                          is_captain=(pid is not None and pid == captain_pid))
+            player = self.players.get(pid) if pid else None
+            av.set_player(player, is_captain=(pid is not None and pid == captain_pid))
+            # out of position: in orange, as in the team editor
+            av.set_issue(WARN if player and not self._fits(player, number) else None)
         for number, chip in self.sub_chips.items():
             pid = self.assignment.get(number)
             chip.set_player(self.players.get(pid) if pid else None)
@@ -420,14 +433,16 @@ class SquadEditorScreen(Screen):
 
     def _show_player_preview(self, player, fit_number):
         self.player_name_lbl.setText(_elide_for(self.player_name_lbl, _last_name(player)))
-        self.player_pos_lbl.setText(_elide_for(self.player_pos_lbl, _all_positions(player)))
+        positions = _all_positions(player).split(" / ") if player else []
+        for i, lbl in enumerate(self.player_pos_lbls):
+            lbl.setText(_elide_for(lbl, positions[i]) if i < len(positions) else "")
         self.stats.set_player(player)
 
         if player and not self._fits(player, fit_number):
             # Short enough to fit the fixed-width panel — the longer phrasing
             # elided to "...FOR THIS SHI".
             self.fit_lbl.setText("✗ OUT OF POSITION")
-            self.fit_lbl.setStyleSheet(f"color: {ACCENT}; background: transparent;"
+            self.fit_lbl.setStyleSheet(f"color: {WARN}; background: transparent;"
                                         f" font-family: '{FONT_DISPLAY}'; font-size: 11pt;"
                                         f" font-weight: 600;")
         else:

@@ -113,8 +113,10 @@ def snapshot(t) -> Before:
                   positions=positions, stage_key=stage_key(t))
 
 
-def moments_after(ds, t, before: Before, done) -> list:
-    """The overlays to play for the matches in `done` (in order)."""
+def moments_after(ds, t, before: Before, done, game=None) -> list:
+    """The overlays to play for the matches in `done` (in order). `game`:
+    (match_data, result) of your match when it was just played in the game,
+    for the recap's match statistics."""
     out = []
     played = [f for f in (done or []) if f.played]
     if played:
@@ -122,7 +124,7 @@ def moments_after(ds, t, before: Before, done) -> list:
         # played (a whole bye round, or the final after simulating to the end)
         humans = set(human_ids(t))
         mine = [f for f in played if f.home in humans or f.away in humans]
-        out.append(MatchdayRecap(ds, t, before, max(f.day for f in (mine or played))))
+        out.append(MatchdayRecap(ds, t, before, max(f.day for f in (mine or played)), game=game))
     humans = human_ids(t)
     if t.finished and not before.finished:
         out.append(ChampionMoment(ds, t))
@@ -174,6 +176,7 @@ class MomentOverlay(QWidget):
         self.vw, self.vh = VIRTUAL_W, VIRTUAL_H       # the canvas paint_moment draws on
         self.setFocusPolicy(Qt.StrongFocus)
         self.setAttribute(Qt.WA_OpaquePaintEvent, False)
+        self.hint = self.HINT
 
     # lifecycle
     def open(self, host, on_close=None):
@@ -287,13 +290,17 @@ class MomentOverlay(QWidget):
         p.scale(scale, scale)
         self.vw, self.vh = self.width() / scale, self.height() / scale
         self.paint_moment(p, self._ms)
-        if self.settled and not self._closing and self.HINT:
+        if self.settled and not self._closing and self.hint:
             self.paint_hint(p)
+
+    def backdrop_alpha(self):
+        """0..1 of the dark backdrop over the screen behind."""
+        return _ease(_phase(self._ms, 0, 260))
 
     def paint_backdrop(self, p):
         w, h = self.width(), self.height()
-        a = _ease(_phase(self._ms, 0, 260))
-        p.fillRect(self.rect(), QColor(4, 10, 4, int(238 * a)))
+        a = self.backdrop_alpha()
+        p.fillRect(self.rect(), QColor(4, 10, 4, int(255 * a)))
         glow = QRadialGradient(w / 2, h * 0.42, max(w, h) * 0.55)
         c = QColor(self.glow_color())
         c.setAlpha(int(46 * a))
@@ -311,7 +318,7 @@ class MomentOverlay(QWidget):
         p.setOpacity(self._fade * pulse)
         p.setFont(tracked_font(FONT_DISPLAY, 13, QFont.Bold, 2.0))
         p.setPen(QColor(FG_TERTIARY))
-        p.drawText(QRectF(0, self.vh - 70, self.vw, 30), Qt.AlignCenter, self.HINT)
+        p.drawText(QRectF(0, self.vh - 70, self.vw, 30), Qt.AlignCenter, self.hint)
         p.restore()
 
     def paint_moment(self, p, ms):
@@ -355,14 +362,20 @@ class MomentOverlay(QWidget):
 
 # ── matchday recap ───────────────────────────────────────────────────────
 class MatchdayRecap(MomentOverlay):
-    """Full time of one round (matchday `day`): your match first, how your
-    pool position moved, then the round's other results — every match of
-    that round played so far, earlier kick-offs included, and nothing from
-    another round."""
+    """Full time of one round (matchday `day`): your match first, then the
+    round's other results — every match of that round played so far,
+    earlier kick-offs included, and nothing from another round — on a
+    backdrop that hides the screen behind from the start.
+
+    `game` = (match_data, result) when your match was just played in the
+    game to full time: MATCH STATS (or X) opens your match's report in a
+    popup, the same as the Competition tab's REPORT."""
 
     MAX_OTHERS = 8
+    CARD_H = 250
+    STATS_HINT = "A  CONTINUE      X  MATCH STATS"
 
-    def __init__(self, ds, t, before, day):
+    def __init__(self, ds, t, before, day, game=None):
         super().__init__(ds, t)
         humans = set(human_ids(t))
         played = [f for f in t.fixtures if f.day == day and f.played]
@@ -376,12 +389,6 @@ class MatchdayRecap(MomentOverlay):
         self.focus_team = None
         if self.mine:
             self.focus_team = self.mine.home if self.mine.home in humans else self.mine.away
-        self.moves = []                      # [(team_id, group, old, new, qualify)]
-        for h in sorted(humans):
-            pp = pool_position(t, h)
-            if pp and pp[1]:
-                old = before.positions.get(h, (pp[0], None))[1]
-                self.moves.append((h, pp[0], old, pp[1], pp[2]))
         self.eyebrow = self.round.upper()
         if self.mine and not self.mine.knockout:
             st = t.stage(self.mine.stage_id)
@@ -391,6 +398,84 @@ class MatchdayRecap(MomentOverlay):
         n_others = min(len(self.others), self.MAX_OTHERS)
         self._others_start = 1500 if self.mine else 500
         self.DURATION = self._others_start + n_others * 90 + 500
+        # the game's report, when the match was played to full time
+        self.game = game if self.mine and game and game[1] and game[1].get("finished") is not False else None
+        self.stats_popup = None        # the match report popup while open
+        self._stats_btn = None
+        if self.game:
+            self.hint = self.STATS_HINT
+            self._build_stats()
+
+    # ── the match report, in a popup over the recap ──
+    def _build_stats(self):
+        from ui.widgets import StyledButton
+        self._stats_btn = StyledButton("MATCH STATS", "neutral")
+        self._stats_btn.setParent(self)
+        self._stats_btn.setFocusPolicy(Qt.NoFocus)
+        self._stats_btn.clicked.connect(self.open_stats)
+        self._stats_btn.hide()
+
+    def _settled(self):
+        super()._settled()
+        if self._stats_btn is not None:
+            self._place_stats()
+            self._stats_btn.show()
+
+    def open_stats(self):
+        """Your match's report, the same popup as the Competition tab's
+        REPORT (dashboard.show_report); CLOSE comes back to the recap."""
+        if self._stats_btn is None or self._closing or self.stats_popup is not None:
+            return
+        if not self.settled:
+            self.skip()
+        from .dashboard import show_report
+
+        def closed(_role):
+            self.stats_popup = None
+            if not self._closing:
+                self.setFocus(Qt.OtherFocusReason)
+        self.stats_popup = show_report(self, self.ds, self.t, self.mine, closed)
+
+    def _scale(self):
+        return max(0.1, min(1.0, self.width() / VIRTUAL_W, self.height() / VIRTUAL_H))
+
+    def _place_stats(self):
+        """The button under your match's card (virtual 1920 x 1080
+        coordinates, scaled like the paint)."""
+        if self._stats_btn is None:
+            return
+        k = self._scale()
+        vw, vh = self.width() / k, self.height() / k
+        card_bottom = vh * 0.09 + 116 + self.CARD_H
+        bw, bh = 260, 44
+        self._stats_btn.setGeometry(int((vw / 2 - bw / 2) * k), int((card_bottom + 18) * k),
+                                    int(bw * k), max(32, int(bh * k)))
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        if self._stats_btn is not None and self._stats_btn.isVisible():
+            self._place_stats()
+
+    def keyPressEvent(self, event):
+        action = KEYMAP.get(event.key())
+        if self.game and action == Action.ALT:
+            self.open_stats()
+            event.accept()
+            return
+        super().keyPressEvent(event)
+
+    def mousePressEvent(self, event):
+        if self.stats_popup is None:
+            super().mousePressEvent(event)
+        event.accept()
+
+    def close_moment(self):
+        if self._stats_btn is not None:
+            self._stats_btn.hide()
+        super().close_moment()
+
+    def backdrop_alpha(self):
+        return 1.0          # nothing of the screen behind, from the first frame
 
     def _group_name(self, f):
         st = self.t.stage(f.stage_id)
@@ -398,12 +483,15 @@ class MatchdayRecap(MomentOverlay):
         return g.name if g else f.group
 
     def outcome(self):
-        """WIN / LOSS / DRAW of the focus team, with its colour."""
+        """WIN / DEFEAT / DRAW of the focus team (FORFEITED when it left the
+        match), with its colour."""
         r = self.mine.result
         w = r.winner_id()
         if w is None:
             return "DRAW", WARN
-        return ("WIN", GREEN) if w == self.focus_team else ("DEFEAT", DANGER_LITE)
+        if w == self.focus_team:
+            return "WIN", GREEN
+        return ("FORFEITED" if r.decided_by == "forfeit" else "DEFEAT"), DANGER_LITE
 
     def glow_color(self):
         if not self.mine:
@@ -422,13 +510,14 @@ class MatchdayRecap(MomentOverlay):
         y = top + 116
         if self.mine:
             y = self._paint_mine(p, ms, y)
+        if self.game:
+            y += 18 + 44        # the MATCH STATS button
         self._paint_others(p, ms, y + 18)
 
     def _paint_mine(self, p, ms, y):
         w = self.vw
         f, r = self.mine, self.mine.result
-        card_h = 250
-        card = QRectF(w / 2 - 520, y, 1040, card_h)
+        card = QRectF(w / 2 - 520, y, 1040, self.CARD_H)
         a = _ease(_phase(ms, 250, 450))
         p.save()
         p.setOpacity(p.opacity() * a)
@@ -452,18 +541,12 @@ class MatchdayRecap(MomentOverlay):
         hs, as_ = int(round(r.home.points * sp)), int(round(r.away.points * sp))
         self.text(p, QRectF(card.x(), cy - 50, card.width(), 90), f"{hs}  –  {as_}", 64, track=2.0,
                   opacity=_ease(_phase(ms, 450, 200)))
-        detail = []
-        tries = (r.home.tries, r.away.tries)
-        if any(tries):
-            detail.append(f"{tries[0]} – {tries[1]} TRIES")
-        if r.decided_by and r.decided_by not in ("forfeit",):
-            detail.append(r.score_text().split(" ", 1)[-1].strip("()").upper())
-        motm = r.extra.get("motm")
-        if motm:
-            detail.append(f"PLAYER OF THE MATCH: {self.t.player_name(motm).upper()}")
-        da = _ease(_phase(ms, 1200, 300))
-        self.text(p, QRectF(card.x(), cy + 34, card.width(), 24), "   ·   ".join(detail), 12,
-                  FG_TERTIARY, weight=QFont.DemiBold, track=1.4, opacity=da)
+        # a knockout draw: how it was decided
+        if r.decided_by and r.decided_by != "forfeit":
+            da = _ease(_phase(ms, 1200, 300))
+            self.text(p, QRectF(card.x(), cy + 34, card.width(), 24),
+                      r.score_text().split(" ", 1)[-1].strip("()").upper(), 12,
+                      FG_TERTIARY, weight=QFont.DemiBold, track=1.4, opacity=da)
         # the verdict stamp
         stamp = _phase(ms, 1250, 260)
         if stamp > 0:
@@ -479,32 +562,6 @@ class MatchdayRecap(MomentOverlay):
     def _paint_others(self, p, ms, y):
         w = self.vw
         shown = self.others[:self.MAX_OTHERS]
-        if not shown and not self.moves:
-            return
-        # position movement first (one line per managed team in a pool)
-        for i, (tid, group, old, new, qualify) in enumerate(self.moves):
-            a = _ease(_phase(ms, self._others_start - 300 + i * 120, 360))
-            if a <= 0:
-                continue
-            arrow, col = "", FG_SECONDARY
-            if old and new < old:
-                arrow, col = "▲", GREEN
-            elif old and new > old:
-                arrow, col = "▼", DANGER_LITE
-            change = f"{ordinal(old).upper()}  →  {ordinal(new).upper()}" if old and old != new \
-                else ordinal(new).upper()
-            # "POOL B:  1ST → 3RD", or "1ST → 3RD IN THE TABLE" in a league
-            where, after = (f"{group.upper()}:  ", "") if group else ("", "  IN THE TABLE")
-            change += after
-            tail = ""
-            if qualify:
-                tail = "   ·   IN THE QUALIFYING PLACES" if new <= qualify else \
-                    f"   ·   TOP {qualify} QUALIFY"
-            name = self.t.team_name(tid).upper() if len(self.moves) > 1 else ""
-            line = f"{name + '  ' if name else ''}{where}{change}  {arrow}{tail}"
-            self.text(p, QRectF(0, y, w, 30), line, 16, col if arrow else FG_SECONDARY, track=1.6,
-                      opacity=a)
-            y += 32
         if not shown:
             return
         y += 14

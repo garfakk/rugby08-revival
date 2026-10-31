@@ -13,9 +13,9 @@ from shared.config import config
 from shared.version import APP_VERSION
 from app.input import Action, KEYMAP
 from app.screen_base import Screen
-from ui import make_page_header, make_separator, make_label, StyledButton
-from ui.broadcast import HintBar
-from ui.theme import AWAY_TINT, BTN_HEIGHT_BACK
+from ui import make_separator, make_label
+from ui.broadcast import HintBar, page_header
+from ui.theme import AWAY_TINT
 
 SCROLL_STEP = 120       # px per Up/Down
 
@@ -48,9 +48,7 @@ class AboutScreen(Screen):
         root.setContentsMargins(0, 0, 0, 0)
         root.setSpacing(0)
 
-        header, bar = make_page_header("ABOUT")
-        root.addWidget(header)
-        root.addWidget(bar)
+        root.addWidget(page_header("About", on_back=self.back_callback))
 
         scroll = self.scroll = QScrollArea()
         scroll.setFocusPolicy(Qt.NoFocus)       # the screen takes the keys
@@ -98,13 +96,6 @@ class AboutScreen(Screen):
         credits_view.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         cl.addWidget(credits_view, stretch=1)
         cl.addWidget(make_label(f"Version  {APP_VERSION}", role="muted"))
-        cl.addWidget(make_separator())
-        cl.addSpacing(8)
-
-        back = StyledButton("BACK", "neutral")
-        back.setMinimumHeight(BTN_HEIGHT_BACK)
-        back.clicked.connect(self.back_callback)
-        cl.addWidget(back)
 
         center = QHBoxLayout()
         center.addStretch()

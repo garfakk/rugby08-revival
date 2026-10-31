@@ -10,10 +10,10 @@ from, with crest icons, form pills, section rows and a qualification rule.
 import os
 import zlib
 
-from PyQt5.QtCore import QPointF, QRectF, QSize, Qt, pyqtSignal
-from PyQt5.QtGui import (QBrush, QColor, QFont, QIcon, QLinearGradient, QPainter, QPainterPath,
+from PyQt5.QtCore import QEvent, QPointF, QRectF, QSize, Qt, pyqtSignal
+from PyQt5.QtGui import (QBrush, QColor, QFont, QFontMetrics, QIcon, QLinearGradient, QPainter, QPainterPath,
                          QPen, QPixmap)
-from PyQt5.QtWidgets import (QAbstractItemView, QFrame, QHBoxLayout, QHeaderView,
+from PyQt5.QtWidgets import (QAbstractItemView, QFrame, QHBoxLayout, QHeaderView, QPushButton,
                              QSizePolicy, QStyle, QStyledItemDelegate, QTableWidget,
                              QTableWidgetItem, QVBoxLayout, QWidget)
 
@@ -258,11 +258,7 @@ class FormStrip(QWidget):
     def paintEvent(self, event):
         p = QPainter(self)
         if not self._form:
-            p.setPen(QColor(FG_MUTED))
-            p.setFont(tracked_font(FONT_DISPLAY, 9, QFont.DemiBold, 1.0))
-            p.drawText(QRectF(self.rect()), (Qt.AlignRight if self._right else Qt.AlignLeft)
-                       | Qt.AlignVCenter, "NO FORM YET")
-            return
+            return              # nothing played yet: nothing shown
         paint_form(p, QRectF(self.rect()), self._form, self._cell, align_right=self._right)
 
 
@@ -644,6 +640,43 @@ class _TableDelegate(QStyledItemDelegate):
             p.drawLine(QPointF(r.left(), r.bottom()), QPointF(r.right(), r.bottom()))
 
 
+class ReportIconButton(QPushButton):
+    """A match report as an icon: three rounded bars of a chart, no box,
+    quiet in the row's own colour; under the mouse or with the focus a
+    round highlight comes up behind it and the bars turn red."""
+
+    SIZE = 32
+
+    def __init__(self, tooltip="", parent=None):
+        super().__init__(parent)
+        self.setFixedSize(self.SIZE, self.SIZE)
+        self.setCursor(Qt.PointingHandCursor)
+        self.setToolTip(tooltip)
+        self.setAccessibleName(tooltip)
+        self.setAttribute(Qt.WA_Hover)
+        self.setFlat(True)
+
+    def paintEvent(self, event):
+        p = QPainter(self)
+        p.setRenderHint(QPainter.Antialiasing)
+        hot = self.hasFocus() or self.underMouse()
+        r = QRectF(self.rect()).adjusted(1, 1, -1, -1)
+        if hot:
+            p.setPen(QPen(QColor(ACCENT), 1.4) if self.hasFocus() else Qt.NoPen)
+            p.setBrush(QColor(BG_HIGHLIGHT))
+            p.drawEllipse(r)
+        color = QColor(ACCENT if hot else FG_TERTIARY)
+        p.setPen(Qt.NoPen)
+        p.setBrush(color)
+        bar, gap = 3.6, 2.6
+        base = r.center().y() + 7
+        left = r.center().x() - (3 * bar + 2 * gap) / 2
+        for i, h in enumerate((8.0, 14.0, 10.5)):
+            x = left + i * (bar + gap)
+            p.drawRoundedRect(QRectF(x, base - h, bar, h), bar / 2, bar / 2)
+        p.end()
+
+
 class DataTable(QTableWidget):
     """Read-only grid. set_rows([[cell, ...]], keys, colors={row: color},
     bold={row}, tint={row: color}, rules={row}). A cell is text, a
@@ -657,6 +690,7 @@ class DataTable(QTableWidget):
     def __init__(self, columns, stretch_col=1, parent=None, widths=None, header_align=None):
         super().__init__(0, len(columns), parent)
         self.keys = []
+        self.row_buttons = []
         self.setHorizontalHeaderLabels([c.upper() for c in columns])
         # {col: Qt.AlignHCenter / Qt.AlignRight}: line a header up with
         # its column's cells (the default is left)
@@ -704,6 +738,11 @@ class DataTable(QTableWidget):
                  tint=None, rules=(), center=()):
         keep = self.current_key()
         self.clearSpans()
+        for r in range(self.rowCount()):           # last time's row buttons
+            for col in range(self.columnCount()):
+                if self.cellWidget(r, col) is not None:
+                    self.removeCellWidget(r, col)
+        self.row_buttons = []
         self.keys = list(keys) if keys is not None else [
             None if isinstance(r, Section) else i for i, r in enumerate(rows)]
         colors, tint = colors or {}, tint or {}
@@ -755,6 +794,54 @@ class DataTable(QTableWidget):
                 self.setItem(r, c, item)
         if keep is not None and keep in self.keys:
             self.selectRow(self.keys.index(keep))
+
+    def add_row_button(self, row, col, tooltip, on_click):
+        """A small icon button in a cell (the match report of a played
+        match), centred; brought into view when it takes the focus (arrows
+        / pad)."""
+        btn = ReportIconButton(tooltip)
+        btn.clicked.connect(on_click)
+        btn.installEventFilter(self)
+        btn.setProperty("tableRow", row)
+        holder = QWidget()
+        holder.setStyleSheet("background: transparent;")
+        h = QHBoxLayout(holder)
+        h.setContentsMargins(4, 0, 4, 0)
+        h.addWidget(btn, alignment=Qt.AlignCenter)
+        self.setCellWidget(row, col, holder)
+        self.row_buttons.append(btn)
+        return btn
+
+    def eventFilter(self, obj, event):
+        if event.type() == QEvent.FocusIn and obj in getattr(self, "row_buttons", ()):
+            item = self.item(obj.property("tableRow"), 0)
+            if item is not None:
+                self.scrollToItem(item, QAbstractItemView.EnsureVisible)
+        return super().eventFilter(obj, event)
+
+    def fit_column(self, col, minimum=90, gap=36):
+        """Column `col` as wide as its longest cell (section rows aside)
+        plus `gap`, so the next column never runs into it."""
+        self.ensurePolished()           # the stylesheet's font size
+        widest = 0
+        for r in range(self.rowCount()):
+            item = self.item(r, col)
+            if item is None or item.data(_SECTION_ROLE) or not item.text():
+                continue
+            f = QFont(self.font())
+            f.setBold(item.font().bold())
+            widest = max(widest, QFontMetrics(f).horizontalAdvance(item.text()))
+        self.setColumnWidth(col, max(minimum, widest + gap))
+
+    def set_static(self):
+        """Nothing to pick: no selection, no focus (a list to read)."""
+        self.setSelectionMode(QAbstractItemView.NoSelection)
+        self.setFocusPolicy(Qt.NoFocus)
+
+    def scroll_to_key(self, key):
+        """Bring the row of `key` to the middle, without selecting it."""
+        if key in self.keys:
+            self.scrollToItem(self.item(self.keys.index(key), 0), QAbstractItemView.PositionAtCenter)
 
     def current_key(self):
         r = self.currentRow()

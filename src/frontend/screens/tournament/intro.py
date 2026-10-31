@@ -6,11 +6,12 @@ and its dashboard: the draw.
   2 logo and name rise to the top; the pools appear and every team's crest
     drops into its pool, one after the other (yours highlighted)
   3 YOUR FIRST MATCH slides in from both sides
-  4 the dashboard opens by itself
+  4 it stays on that frame until a key or a click, then fades out to the
+    dashboard
 
 Painted on a clock (ms since it started) on a 1920 x 1080 canvas scaled to
 the window. The first key or click shows the whole draw at once, the next
-opens the dashboard (as does the end of the hold). With animations off
+opens the dashboard. With animations off
 (user_prefs.animations) it opens on the final frame.
 """
 from PyQt5.QtCore import QElapsedTimer, QRectF, Qt, QTimer
@@ -32,7 +33,7 @@ RISE_MS = 600            # ... rising to the top
 DROP_STEP = 45           # between two crests landing
 DROP_MS = 320            # one crest's fall
 MATCH_MS = 700           # your first match sliding in
-HOLD_MS = 2600           # the final frame, before the dashboard opens
+FADE_OUT_MS = 220        # the fade to the dashboard
 COL_W, ROW_H = 300, 38
 DRAW_TOP = 250
 MAX_ROWS = 8             # a bigger pool (a league) wraps into more columns
@@ -83,10 +84,9 @@ class TournamentIntroScreen(Screen):
         self._timer = QTimer(self)
         self._timer.setInterval(16)
         self._timer.timeout.connect(self._tick)
-        self._hold = QTimer(self)
-        self._hold.setSingleShot(True)
-        self._hold.timeout.connect(self._finish)
         self._pending = False
+        self._fade = 1.0            # 1 -> 0 while fading out
+        self._fading = False
 
     def set_session(self, session):
         t = self.t = session.t
@@ -108,7 +108,7 @@ class TournamentIntroScreen(Screen):
     def on_show(self):
         super().on_show()
         self._pending = True
-        self._hold.stop()
+        self._fade, self._fading = 1.0, False
         if motion.enabled():
             self._ms = 0
             self._clock.start()
@@ -117,16 +117,21 @@ class TournamentIntroScreen(Screen):
             self._settle()
 
     def _tick(self):
+        if self._fading:
+            self._fade = 1.0 - min(1.0, self._clock.elapsed() / FADE_OUT_MS)
+            if self._fade <= 0:
+                self._done()
+            self.update()
+            return
         self._ms = min(self._duration, self._clock.elapsed())
         if self._ms >= self._duration:
             self._settle()
         self.update()
 
     def _settle(self):
+        """The whole draw on screen: it stays until a key or a click."""
         self._ms = self._duration
         self._timer.stop()
-        if not self._hold.isActive():
-            self._hold.start(HOLD_MS)
         self.update()
 
     def _advance(self):
@@ -136,10 +141,21 @@ class TournamentIntroScreen(Screen):
             self._finish()
 
     def _finish(self):
+        """Fade out, then the dashboard."""
+        if not self._pending or self._fading:
+            return
+        if not motion.enabled():
+            self._done()
+            return
+        self._fading = True
+        self._clock.restart()
+        self._timer.start()
+
+    def _done(self):
         if self._pending:
             self._pending = False
+            self._fading = False
             self._timer.stop()
-            self._hold.stop()
             self.on_done()
 
     def mousePressEvent(self, event):
@@ -157,6 +173,7 @@ class TournamentIntroScreen(Screen):
         p.fillRect(self.rect(), QColor(BG_BASE))
         if self._emblem is None:
             return
+        p.setOpacity(self._fade)
         glow = QRadialGradient(self.width() / 2, self.height() * 0.35, max(self.width(), self.height()) * 0.6)
         c = QColor(ACCENT)
         c.setAlpha(34)
@@ -173,7 +190,7 @@ class TournamentIntroScreen(Screen):
             self._paint_draw(p, ms, w, h)
         if self._first and ms >= self._match_at:
             self._paint_first(p, ms, w, min(h - 210, bottom + 70))
-        if ms >= self._duration:
+        if ms >= self._duration and not self._fading:
             self._text(p, QRectF(0, h - 60, w, 26), "A  CONTINUE", 12, FG_MUTED, track=2.0)
 
     def _text(self, p, rect, text, size, color, weight=QFont.Bold, track=1.0, opacity=1.0,

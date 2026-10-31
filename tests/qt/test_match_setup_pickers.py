@@ -41,7 +41,7 @@ def test_groups_keep_the_teams_and_list_only_their_seasons(setup, qapp):
     assert not col.category_row.isVisibleTo(setup)
     assert col.group_picker.isVisibleTo(setup) and col.season_row2.isVisibleTo(setup)
     assert col.group_picker.current() == col.index.group(h)
-    assert col.season_row2._values == sorted(setup.ds.teams[h], reverse=True)
+    assert col.season_row2._values == sorted(setup.ds.teams[h])
     assert col.season_row2.current() == setup.cfg.home.season
     assert col.season_row2._use_popup()                   # a dropdown, whatever the setting
     assert h in col.name_picker._values
@@ -70,7 +70,7 @@ def test_changing_the_group_picks_its_first_team(setup, qapp):
     assert setup.cfg.home.season in setup.ds.teams[tid]
 
 
-def test_team_change_falls_back_to_the_nearest_season_and_says_so(setup, qapp):
+def test_team_change_falls_back_to_the_nearest_season(setup, qapp):
     use(setup, "groups", qapp)
     col = setup.home_col
     ds = setup.ds
@@ -82,7 +82,6 @@ def test_team_change_falls_back_to_the_nearest_season_and_says_so(setup, qapp):
     setup.cfg.home.season = missing
     col._adopt_team(short)
     assert setup.cfg.home.team_id == short and setup.cfg.home.season in ds.teams[short]
-    assert col.season_note.text()
 
 
 def test_last_match_is_remembered_and_a_bad_file_ignored(setup, qapp, tmp_path):
@@ -121,3 +120,4 @@ def test_setting_is_saved_and_an_old_style_falls_back(tmp_path, monkeypatch):
     p.match_picker = "timeline"                       # a style that no longer exists
     p.save()
     assert up.UserPrefs().match_picker == "classic"
+

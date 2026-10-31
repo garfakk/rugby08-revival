@@ -9,8 +9,8 @@ never populates a team score field.
 Substitutions are parsed but the parser returns nothing usable, so they are
 deliberately not shown rather than shown wrong.
 
-The screen shows the scoreline, the statistics (the bars growing out row by
-row) and the scorers.
+MatchReport shows the scoreline, the statistics (the bars growing out row by
+row) and the scorers; PostMatchScreen is the quick match's full time.
 """
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel
 from PyQt5.QtGui import QFont, QPixmap
@@ -39,33 +39,25 @@ STAT_ROWS = [
 ]
 
 
-class PostMatchScreen(Screen):
-    def __init__(self, on_rematch, on_match_setup, on_main_menu):
-        super().__init__(on_back=on_main_menu)
-        self.on_rematch = on_rematch
-        self.on_match_setup = on_match_setup
-        self.on_main_menu = on_main_menu
-        self._build()
+class MatchReport(QWidget):
+    """The result of a game as the game reported it: the scoreline (unless
+    `scoreline=False`), an interrupted-match banner, the statistics and each
+    side's scorers. The full-time screen, the challenge result and the
+    tournament's full-time recap all show it."""
 
-    def _build(self):
-        root = QVBoxLayout(self)
-        root.setContentsMargins(0, 0, 0, 0)
-        root.setSpacing(0)
-        self.header_holder = QWidget()
-        hh = QVBoxLayout(self.header_holder)
-        hh.setContentsMargins(0, 0, 0, 0)
-        self.header = page_header("Full time", breadcrumb="friendly", on_back=self.on_main_menu)
-        hh.addWidget(self.header)
-        root.addWidget(self.header_holder)
-
-        body = QWidget()
-        body.setStyleSheet(f"background: {BG_BASE};")
-        bl = QVBoxLayout(body)
-        bl.setContentsMargins(80, 24, 80, 16)
+    def __init__(self, scoreline=True, parent=None):
+        super().__init__(parent)
+        self.setObjectName("matchReport")
+        self.setStyleSheet("QWidget#matchReport { background: transparent; }")
+        bl = QVBoxLayout(self)
+        bl.setContentsMargins(0, 0, 0, 0)
         bl.setSpacing(16)
 
         # ── scoreline ────────────────────────────────────────────────────
-        score_row = QHBoxLayout()
+        self.scoreline = QWidget()
+        self.scoreline.setStyleSheet("background: transparent;")
+        score_row = QHBoxLayout(self.scoreline)
+        score_row.setContentsMargins(0, 0, 0, 0)
         score_row.setSpacing(24)
 
         self.home_crest = QLabel(); self.home_crest.setFixedSize(110, 110)
@@ -90,7 +82,8 @@ class PostMatchScreen(Screen):
         score_row.addWidget(self.away_name, alignment=Qt.AlignVCenter)
         score_row.addWidget(self.away_crest, alignment=Qt.AlignVCenter)
         score_row.addStretch(1)
-        bl.addLayout(score_row)
+        bl.addWidget(self.scoreline)
+        self.scoreline.setVisible(scoreline)
 
         # Full time / interrupted banner
         self.status_label = eyebrow_label("", color=FG_MUTED, size=20)
@@ -115,31 +108,6 @@ class PostMatchScreen(Screen):
         scorers.addWidget(self.away_scorers[0], stretch=1)
         bl.addLayout(scorers, stretch=1)
 
-        actions = QHBoxLayout()
-        actions.addStretch(1)
-        self._continue = None
-        self._buttons = []
-        for text, variant, slot in (("RESTART", "neutral", lambda: self.on_rematch()),
-                                      ("MAIN MENU", "primary", lambda: (self._continue or self.on_main_menu)())):
-            btn = StyledButton(text, variant)
-            btn.setMinimumHeight(BTN_HEIGHT)
-            btn.setMinimumWidth(180)
-            btn.clicked.connect(slot)
-            self.focus.register(btn)
-            actions.addWidget(btn)
-            self._buttons.append(btn)
-        bl.addLayout(actions)
-
-        root.addWidget(body, stretch=1)
-
-        self.hintbar = HintBar()
-        root.addWidget(self.hintbar)
-        self._update_hints()
-
-    def _update_hints(self):
-        back = "continue" if self._continue else "main menu"
-        self.hintbar.set_hints([("A", "select"), ("B", back)])
-
     def _scorer_card(self, title, tint):
         card = Card(stripe=tint)
         v = QVBoxLayout(card)
@@ -151,17 +119,6 @@ class PostMatchScreen(Screen):
         v.addLayout(holder)
         v.addStretch(1)
         return card, holder
-
-    def set_continue(self, on_continue=None):
-        """Tournament matches: no restart (the result is already recorded),
-        and the primary button / back go on to the tournament instead of
-        the main menu. None restores the friendly-match buttons."""
-        self._continue = on_continue
-        restart, primary = self._buttons
-        restart.setVisible(on_continue is None)
-        primary.setText("CONTINUE" if on_continue else "MAIN MENU")
-        self.on_back_cb = on_continue or self.on_main_menu
-        self._update_hints()
 
     # ── data ─────────────────────────────────────────────────────────────
     def set_result(self, match_data, result):
@@ -208,6 +165,7 @@ class PostMatchScreen(Screen):
             self.status_label.setStyleSheet(label_css(20, QFont.DemiBold, ACCENT, FONT_DISPLAY))
         else:
             self.status_label.setText("")
+        self.status_label.setVisible(bool(self.status_label.text()))
 
     def _set_crest(self, label, rel_path):
         from shared.config import config
@@ -255,3 +213,56 @@ class PostMatchScreen(Screen):
             wrapper.setStyleSheet("background: transparent;")
             wrapper.setLayout(row)
             holder.addWidget(wrapper)
+
+
+class PostMatchScreen(Screen):
+    """Full time of a quick match: the match report and MAIN MENU."""
+
+    def __init__(self, on_main_menu):
+        super().__init__(on_back=on_main_menu)
+        self.on_main_menu = on_main_menu
+        self._build()
+
+    def _build(self):
+        root = QVBoxLayout(self)
+        root.setContentsMargins(0, 0, 0, 0)
+        root.setSpacing(0)
+        root.addWidget(page_header("Full time"))
+
+        body = QWidget()
+        body.setStyleSheet(f"background: {BG_BASE};")
+        bl = QVBoxLayout(body)
+        bl.setContentsMargins(80, 24, 80, 16)
+        bl.setSpacing(16)
+        self.report = MatchReport()
+        bl.addWidget(self.report, stretch=1)
+
+        actions = QHBoxLayout()
+        actions.addStretch(1)
+        self.menu_btn = StyledButton("MAIN MENU", "primary")
+        self.menu_btn.setMinimumHeight(BTN_HEIGHT)
+        self.menu_btn.setMinimumWidth(180)
+        self.menu_btn.clicked.connect(lambda: self.on_main_menu())
+        self.focus.register(self.menu_btn)
+        actions.addWidget(self.menu_btn)
+        bl.addLayout(actions)
+        root.addWidget(body, stretch=1)
+
+        self.hintbar = HintBar()
+        self.hintbar.set_hints([("A", "main menu")])
+        root.addWidget(self.hintbar)
+
+    @property
+    def stats(self):
+        return self.report.stats
+
+    @property
+    def stats_card(self):
+        return self.report.stats_card
+
+    def on_show(self):
+        super().on_show()
+        self.menu_btn.setFocus()
+
+    def set_result(self, match_data, result):
+        self.report.set_result(match_data, result)

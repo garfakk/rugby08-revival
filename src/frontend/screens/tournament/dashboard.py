@@ -3,28 +3,30 @@ screens/tournament/dashboard.py — The running tournament.
 
 The header (the competition's logo, the tournament's name) over five tabs:
 
-  Home         where the tournament stands (stage, progress), the next
-               match as a broadcast-style hero card with ONE primary action
-               (PLAY MATCH / CONTINUE / SIMULATE TO END), your pool or
-               knockout path, the last round's results, three headlines
+  Home         the next match as a broadcast-style hero card with ONE
+               primary action (PLAY MATCH / CONTINUE / SIMULATE TO END) and
+               the other matches of its round; right of a rule, your pool
+               or knockout path and three headlines
   Squad        the matchday squad (screens.tournament.squad)
   Competition  Table / Fixtures / Bracket
   Stats        leader boards, team of the tournament on a pitch
   News         every headline, by matchday
 
-Home stays glanceable: the secondary actions (simulate, enter a result,
-simulate to the end, undo) sit in the MORE menu, the full match details
-(form, positions, weather, unavailable players) in MATCH DETAILS.
+Home stays glanceable: expert mode's actions (simulate your match,
+simulate to the end) sit in the MORE menu, only shown in expert mode.
 
 Whatever an action plays is shown as it happens (screens.tournament.
 moments): the matchday recap, a new stage, elimination, the champions.
 
 Every action goes through the TournamentSession, which saves after each
-step. Pad: Q/E switch tabs, A select, X Competition view, Y more, B back.
+step. Pad: Q/E switch tabs, A select, X Competition view, Y more, B back
+(the header's BACK: to the main menu, asked first).
 """
-from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtCore import QSize, Qt, QTimer
 from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QGridLayout, QHBoxLayout, QStackedWidget, QVBoxLayout, QWidget
+from PyQt5 import sip
+from PyQt5.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout, QStackedWidget, QVBoxLayout,
+                             QWidget)
 
 from app.input import KEYMAP, Action
 from app.screen_base import Screen
@@ -35,7 +37,7 @@ from ui.broadcast import Card, HintBar, display_label, eyebrow_label, page_heade
 from ui.dropdown import PopupList
 from ui.editor_kit import ConfirmDialog, Note, TabPage, TabStrip, compact_button
 from ui.stat_compare import StatComparison
-from ui.theme import (ACCENT, AWAY_TINT, BG_BASE, BTN_HEIGHT, DANGER_LITE, EXPERT, FG_MUTED,
+from ui.theme import (ACCENT, AWAY_TINT, BG_BASE, BORDER_EM, BTN_HEIGHT, DANGER_LITE, EXPERT, FG_MUTED,
                       FG_PRIMARY, FG_SECONDARY, FG_TERTIARY, GREEN, INFO, WARN)
 from ui.widgets import style_button
 
@@ -46,17 +48,18 @@ from .common import (DataTable, FormStrip, NewsItem, PixmapLabel, ProgressStrip,
                      competition_emblem, hline, section, tournament_crest, transparent)
 from .manual_result import ManualResultView
 from .pitch import LineupPitch
+from .prefs import PrefsPanel
 from .squad import TournamentSquadScreen
 
-TABS = ["Home", "Squad", "Competition", "Stats", "News"]
-HOME, TEAM, COMP, STATS, NEWS = range(len(TABS))
+TABS = ["Home", "Squad", "Competition", "Stats", "News", "Settings"]
+HOME, TEAM, COMP, STATS, NEWS, PREFS = range(len(TABS))
 VIEWS = ["Table", "Fixtures", "Bracket"]
 TABLE, FIXTURES, BRACKET = range(len(VIEWS))
 
-LATEST_SHOWN = 4          # result cards on Home (yours first)
+ROUND_SHOWN = 6           # the round's other matches on Home
 HEADLINES_SHOWN = 3       # news items on Home
 # MORE menu actions only offered in expert mode (tagged EXPERT there)
-_EXPERT_ACTIONS = {"simulate", "sim_end"}
+_EXPERT_ACTIONS = {"simulate", "late_start", "sim_end"}
 
 
 def _without_round(f) -> str:
@@ -87,17 +90,8 @@ def stage_progress(t):
     return report.where_now(t), (t.day / (last + 1)) if last >= 0 else 0.0
 
 
-def last_round(t):
-    """The matchday of the latest round played in full (the round under way
-    may have its earlier kick-offs played), else the latest one started;
-    None before the first match."""
-    played = {f.day for f in t.fixtures if f.played}
-    full = [d for d in played if all(f.played for f in t.fixtures_on(d))]
-    return max(full or played) if played else None
-
-
 class _TeamBlock(QWidget):
-    """One side of the hero card: crest, name, tags, form."""
+    """One side of the hero card: crest, name, form."""
 
     CREST = 116
 
@@ -114,20 +108,11 @@ class _TeamBlock(QWidget):
         v.setSpacing(6)
         self.name = display_label("", 28, QFont.Bold, track=1.0)
         self.name.setWordWrap(True)
-        self.tags = QHBoxLayout()
-        self.tags.setSpacing(6)
         self.form = FormStrip(cell=18, align_right=right)
         align = Qt.AlignRight if right else Qt.AlignLeft
         self.name.setAlignment(align | Qt.AlignVCenter)
         v.addStretch(1)
         v.addWidget(self.name)
-        tag_row = QHBoxLayout()
-        if right:
-            tag_row.addStretch(1)
-        tag_row.addLayout(self.tags)
-        if not right:
-            tag_row.addStretch(1)
-        v.addLayout(tag_row)
         v.addWidget(self.form)
         v.addStretch(1)
         if right:
@@ -137,14 +122,9 @@ class _TeamBlock(QWidget):
             h.addWidget(self.crest)
             h.addLayout(v, stretch=1)
 
-    def set_team(self, ds, t, team_id, label, human):
+    def set_team(self, ds, t, team_id):
         self.crest.set_pixmap(tournament_crest(ds, t, team_id, self.CREST))
         self.name.setText(t.team_name(team_id).upper())
-        clear_layout(self.tags)
-        if label:
-            self.tags.addWidget(Tag(label, FG_TERTIARY, filled=False))
-        if human:
-            self.tags.addWidget(Tag("you", YOU_TINT))
         self.form.set_form(team_form(t, team_id))
 
 
@@ -152,7 +132,7 @@ class TournamentDashboardScreen(Screen):
     def __init__(self, ds, on_back, on_play):
         super().__init__(on_back=on_back)
         self.ds = ds
-        self.on_play = on_play        # fn(session, fixture)
+        self.on_play = on_play        # fn(session, fixture, start=None): start = (minute, home, away)
         self.session = None
         self._message = ""
         self._mine_only = False
@@ -210,13 +190,6 @@ class TournamentDashboardScreen(Screen):
             p.layout_.setSpacing(16)
             self.stack.addWidget(p)
         bv.addWidget(self.stack, stretch=1)
-        foot = QHBoxLayout()
-        foot.addStretch(1)
-        self.menu_btn = compact_button("BACK TO MAIN MENU", "neutral", height=BTN_HEIGHT)
-        self.menu_btn.clicked.connect(self._leave)
-        self.focus.register(self.menu_btn)
-        foot.addWidget(self.menu_btn)
-        bv.addLayout(foot)
         root.addWidget(body, stretch=1)
 
         self._build_home(self.pages[HOME].layout_)
@@ -227,14 +200,15 @@ class TournamentDashboardScreen(Screen):
         self._build_competition(self.pages[COMP].layout_)
         self.stats_holder = self.pages[STATS].layout_
         self.news_holder = self.pages[NEWS].layout_
+        self._build_prefs(self.pages[PREFS].layout_)
 
         self.hints = HintBar()
         root.addWidget(self.hints)
         self._update_hints()
 
     def _build_home(self, v):
-        # system messages only (an abandoned match, undo...): results are
-        # shown by the matchday recap instead
+        # system messages only (a match that couldn't be set up...): results
+        # are shown by the matchday recap instead
         self.banner = Card(stripe=INFO, translucent=True)
         bl = QHBoxLayout(self.banner)
         bl.setContentsMargins(20, 10, 20, 10)
@@ -242,16 +216,22 @@ class TournamentDashboardScreen(Screen):
         bl.addWidget(self.banner_text)
         v.addWidget(self.banner)
 
-        top = QHBoxLayout()
-        top.setSpacing(18)
+        cols = QHBoxLayout()
+        cols.setSpacing(28)
+        left = QVBoxLayout()
+        left.setSpacing(18)
         # hero
         self.hero = Card(stripe=ACCENT)
         hv = QVBoxLayout(self.hero)
         hv.setContentsMargins(28, 18, 28, 20)
         hv.setSpacing(14)
         eb = QHBoxLayout()
+        eb.setSpacing(14)
         self.hero_eyebrow = display_label("", 20, QFont.Bold, track=1.2, color=ACCENT)
-        eb.addWidget(self.hero_eyebrow)
+        eb.addWidget(self.hero_eyebrow, alignment=Qt.AlignVCenter)
+        # the round, right of NEXT MATCH
+        self.hero_round = display_label("", 20, QFont.Bold, track=1.2, color=FG_SECONDARY)
+        eb.addWidget(self.hero_round, alignment=Qt.AlignVCenter)
         eb.addStretch(1)
         venue_col = QVBoxLayout()
         venue_col.setSpacing(2)
@@ -308,26 +288,45 @@ class TournamentDashboardScreen(Screen):
         hv.addWidget(hline())
         row = QHBoxLayout()
         row.setSpacing(10)
-        # the details live behind these two; the hero shows one action
-        self.details_btn = compact_button("MATCH DETAILS", "ghost", height=BTN_HEIGHT)
-        self.details_btn.clicked.connect(self._match_details)
+        # expert mode's actions behind MORE; the hero shows one action
         self.more_btn = compact_button("MORE  ▾", "neutral", height=BTN_HEIGHT)
         self.more_btn.setMinimumWidth(130)
         self.more_btn.clicked.connect(self._more_menu)
         self.primary_btn = compact_button("PLAY MATCH", "primary", height=BTN_HEIGHT)
         self.primary_btn.setMinimumWidth(240)
         self.primary_btn.clicked.connect(lambda: self._primary and self._primary())
-        row.addWidget(self.details_btn)
         row.addStretch(1)
         row.addWidget(self.more_btn)
         row.addWidget(self.primary_btn)
         # Registration order = where focus starts: the primary action first.
-        for b in (self.primary_btn, self.more_btn, self.details_btn):
+        for b in (self.primary_btn, self.more_btn):
             self.focus.register(b)
         hv.addLayout(row)
-        top.addWidget(self.hero, stretch=3)
+        left.addWidget(self.hero)
 
-        # your pool / path
+        # the other matches of the next match's round
+        w, lv = section("this round")
+        self.round_section = w
+        self.round_title = w.title
+        self.round_grid = QGridLayout()
+        self.round_grid.setHorizontalSpacing(10)
+        self.round_grid.setVerticalSpacing(10)
+        lv.addLayout(self.round_grid)
+        self.round_more = compact_button("ALL MATCHES  →", "ghost")
+        self.round_more.clicked.connect(lambda: self._open_view(FIXTURES))
+        self.focus.register(self.round_more)
+        lv.addWidget(self.round_more, alignment=Qt.AlignRight)
+        left.addWidget(w)
+        left.addStretch(1)
+        cols.addLayout(left, stretch=3)
+
+        # a clear rule between the next match and the rest
+        rule = QFrame()
+        rule.setFixedWidth(1)
+        rule.setStyleSheet(f"background: {BORDER_EM}; border: none;")
+        cols.addWidget(rule)
+
+        # your pool / path, then the headlines
         side = transparent(QWidget(), "ovSide")
         sv = QVBoxLayout(side)
         sv.setContentsMargins(0, 0, 0, 0)
@@ -341,24 +340,7 @@ class TournamentDashboardScreen(Screen):
         self.side_more.clicked.connect(lambda: self._open_view(TABLE))
         self.focus.register(self.side_more)
         sv.addWidget(self.side_more, alignment=Qt.AlignRight)
-        sv.addStretch(1)
-        top.addWidget(side, stretch=2)
-        v.addLayout(top)
-
-        bottom = QHBoxLayout()
-        bottom.setSpacing(18)
-        w, lv = section("last round")
-        self.latest_title = w.title
-        self.latest_grid = QGridLayout()
-        self.latest_grid.setHorizontalSpacing(10)
-        self.latest_grid.setVerticalSpacing(10)
-        lv.addLayout(self.latest_grid)
-        self.latest_more = compact_button("ALL RESULTS  →", "ghost")
-        self.latest_more.clicked.connect(lambda: self._open_view(FIXTURES))
-        self.focus.register(self.latest_more)
-        lv.addWidget(self.latest_more, alignment=Qt.AlignRight)
-        lv.addStretch(1)
-        bottom.addWidget(w, stretch=3)
+        sv.addSpacing(10)
         w, rv = section("headlines")
         self.news_card = Card(translucent=True)
         self.news_list = QVBoxLayout(self.news_card)
@@ -369,9 +351,10 @@ class TournamentDashboardScreen(Screen):
         self.news_more.clicked.connect(lambda: self._go_tab(NEWS))
         self.focus.register(self.news_more)
         rv.addWidget(self.news_more, alignment=Qt.AlignRight)
-        rv.addStretch(1)
-        bottom.addWidget(w, stretch=2)
-        v.addLayout(bottom)
+        sv.addWidget(w)
+        sv.addStretch(1)
+        cols.addWidget(side, stretch=2)
+        v.addLayout(cols)
         v.addStretch(1)
 
     def _build_competition(self, v):
@@ -406,12 +389,26 @@ class TournamentDashboardScreen(Screen):
         fixtures_page = transparent(QWidget(), "compFixtures")
         fv = QVBoxLayout(fixtures_page)
         fv.setContentsMargins(0, 0, 0, 0)
-        self.fixtures = DataTable(["Round", "Home", "", "Away", "Venue"], stretch_col=1,
-                                  widths={0: 190, 2: 120, 3: 300, 4: 200},
-                                  header_align={1: Qt.AlignRight})
-        self.fixtures.activated_row.connect(lambda r: self._report(self.fixtures.keys[r]))
-        self.focus.register(self.fixtures)
+        # a list to read, nothing to pick: a played match has its report icon
+        self.fixtures = DataTable(["Round", "Venue", "Home", "", "Away", ""], stretch_col=2,
+                                  widths={0: 150, 1: 220, 3: 120, 4: 280, 5: 56},
+                                  header_align={2: Qt.AlignRight})
+        self.fixtures.set_static()
         fv.addWidget(self.fixtures, stretch=1)
+        # YOUR MATCHES: one roomy row per match, no round headers in between
+        self.my_fixtures = DataTable(["Round", "Date", "Venue", "Home", "", "Away", "Result", ""],
+                                     stretch_col=3, widths={0: 170, 1: 120, 2: 220, 4: 110, 5: 260, 6: 100,
+                                                            7: 56},
+                                     header_align={3: Qt.AlignRight, 4: Qt.AlignHCenter,
+                                                   6: Qt.AlignHCenter})
+        self.my_fixtures.ROW_H = 52
+        self.my_fixtures.verticalHeader().setDefaultSectionSize(52)
+        self.my_fixtures.setIconSize(QSize(30, 30))
+        self.my_fixtures.setStyleSheet(self.my_fixtures.styleSheet()
+                                       + f"QTableWidget {{ font-size: 13pt; }}")
+        self.my_fixtures.set_static()
+        self.my_fixtures.hide()
+        fv.addWidget(self.my_fixtures, stretch=1)
         bracket_page = transparent(QWidget(), "compBracket")
         self.bracket_holder = QVBoxLayout(bracket_page)
         self.bracket_holder.setContentsMargins(0, 0, 0, 0)
@@ -426,7 +423,7 @@ class TournamentDashboardScreen(Screen):
         self._pending = None
         clear_layout(self.header_holder)
         t = session.t
-        self.header_holder.addWidget(page_header(t.name,
+        self.header_holder.addWidget(page_header(t.name, on_back=self._leave,
                                                  icon=competition_emblem(self.ds, t.template, 52)))
         self._has_bracket = any(s.kind == "knockout" for s in t.stages)
         self.view_btns[BRACKET].setVisible(self._has_bracket)
@@ -441,10 +438,11 @@ class TournamentDashboardScreen(Screen):
         self._message = text
         self.refresh()
 
-    def queue_moments(self, before, done):
+    def queue_moments(self, before, done, game=None):
         """Matches just played outside this screen (in the game): shown as
-        moments the next time the dashboard opens."""
-        self._pending = (before, done)
+        moments the next time the dashboard opens; `game` = (match_data,
+        result) of the game, for the recap's match statistics."""
+        self._pending = (before, done, game)
 
     def on_show(self):
         super().on_show()
@@ -453,10 +451,10 @@ class TournamentDashboardScreen(Screen):
             if self.tabs.index() == HOME and self.primary_btn.isVisible():
                 self.primary_btn.setFocus()
             if self._pending:
-                before, done = self._pending
+                before, done, game = self._pending
                 self._pending = None
                 # after the screen has settled (shell.present) and painted once
-                QTimer.singleShot(0, lambda: self._play_moments(before, done))
+                QTimer.singleShot(0, lambda: self._play_moments(before, done, game))
 
     def _tab_changed(self, i):
         self.stack.setCurrentIndex(i)
@@ -529,6 +527,8 @@ class TournamentDashboardScreen(Screen):
             self._refresh_stats()
         elif i == NEWS:
             self._refresh_news()
+        elif i == PREFS:
+            self.prefs.set_values(self.t.options)
         self._update_hints()
 
     # ── home ─────────────────────────────────────────────────────────────
@@ -549,24 +549,24 @@ class TournamentDashboardScreen(Screen):
 
     def _show_match(self, f):
         t = self.t
-        humans = set(self._human_ids())
         self.match_view.show()
         self.message_view.hide()
         self.hero_eyebrow.setText("NEXT MATCH" if f.ready else "COMING UP")
+        self.hero_round.setText(f.label.upper())
+        self.hero_round.show()
         venue = report.venue_name(self.ds, f)
         when = calendar.short_date(calendar.fixture_date(t, f))
-        # neutral: said once, by the venue, not as a tag on both teams
-        self.hero_venue.setText(" · ".join(x for x in (f.label, when, venue,
-                                                       "neutral venue" if f.neutral else "") if x)
-                                .upper())
+        self.hero_venue.setText(" · ".join(x for x in (when, venue, "neutral venue" if f.neutral else "")
+                                           if x).upper())
         self.hero_weather.setText(weather.forecast(t, f, self.ds)["summary"].upper() if f.stadium_id else "")
-        for block, tid, label in ((self.home_block, f.home, "home"), (self.away_block, f.away, "away")):
-            block.set_team(self.ds, t, tid, "" if f.neutral else label, tid in humans)
+        for block, tid in ((self.home_block, f.home), (self.away_block, f.away)):
+            block.set_team(self.ds, t, tid)
 
     def _show_message(self, eyebrow, kicker, title, info, crest=None):
         self.match_view.hide()
         self.message_view.show()
         self.hero_eyebrow.setText(eyebrow.upper())
+        self.hero_round.hide()
         self.hero_venue.setText("")
         self.hero_weather.setText("")
         self.msg_kicker.setText(kicker.upper())
@@ -585,9 +585,9 @@ class TournamentDashboardScreen(Screen):
         return [h for h in self._human_ids() if not engine.is_eliminated(self.t, h)]
 
     def _more_items(self):
-        """(label, data, subtitle) of the MORE menu in the current state.
-        Deciding your own matches without playing them is expert mode only
-        (_EXPERT_ACTIONS: tagged EXPERT)."""
+        """(label, data, subtitle) of the MORE menu in the current state:
+        deciding your own matches without playing them, expert mode only
+        (nothing otherwise: no MORE button)."""
         t = self.t
         due = self.session.human_fixture()
         out = []
@@ -595,18 +595,11 @@ class TournamentDashboardScreen(Screen):
             if due:
                 out.append(("Simulate this match", "simulate",
                             "auto-generate or enter the result, injuries and bans"))
+                out.append(("Play from a given minute", "late_start",
+                            "start your match late, with the score you set"))
             if not t.finished and self._alive_humans():
                 out.append(("Simulate to the end", "sim_end", "every match left, yours included"))
-        if self._my_played():
-            out.append(("Your matches", "mine", "results and stats of every match you played"))
-        if self.session.can_undo():
-            out.append(("Undo last step", "undo", "only one step back"))
         return out
-
-    def _my_played(self):
-        """Your teams' played fixtures, newest first."""
-        humans = set(self._human_ids())
-        return [f for f in reversed(self.t.fixtures) if f.played and (f.home in humans or f.away in humans)]
 
     def _refresh_home(self, animate=False):
         t = self.t
@@ -617,7 +610,6 @@ class TournamentDashboardScreen(Screen):
         humans = self._human_ids()
         alive = self._alive_humans()
         self.next_avail.setText("")
-        self.details_btn.setVisible(False)
         if t.finished:
             won = t.champion in humans
             final = next((f for f in reversed(t.fixtures) if f.final and f.result), None)
@@ -630,14 +622,11 @@ class TournamentDashboardScreen(Screen):
         elif due:
             self._show_match(due)
             out = sum(len(report.availability(t, tid)) for tid in (due.home, due.away) if t.teams[tid].human)
-            self.next_avail.setText(f"⚠  {out} player{'s' if out != 1 else ''} unavailable — see match details"
-                                    if out else "")
-            self.details_btn.setVisible(True)
+            self.next_avail.setText(f"{out} player{'s' if out != 1 else ''} unavailable" if out else "")
             self._set_primary("PLAY MATCH", self._play)
         elif upcoming:
             self._show_match(upcoming)
             self.next_avail.setText("The other teams play first.")
-            self.details_btn.setVisible(True)
             self._set_primary("CONTINUE", self._continue)
         else:
             if not humans:
@@ -661,26 +650,7 @@ class TournamentDashboardScreen(Screen):
 
         self._refresh_side()
 
-        clear_layout(self.latest_grid)
-        playedf = [f for f in t.fixtures if f.played]
-        last_day = last_round(t)
-        recent = [f for f in playedf if f.day == last_day] if last_day is not None else []
-        self.latest_title.set_title(f"{report.round_title(t, last_day)} results" if last_day is not None
-                                    else "last round")
-        mine = set(humans)
-        recent.sort(key=lambda f: not (f.home in mine or f.away in mine))
-        cards = []
-        if not recent:
-            self.latest_grid.addWidget(Note("No match played yet.", color=FG_MUTED), 0, 0)
-        for i, f in enumerate(recent[:LATEST_SHOWN]):
-            # the round is the section's title: the card only says the pool
-            card = ScoreCard(self.ds, t, f, highlight=mine, caption=_without_round(f))
-            card.activated.connect(lambda fid=f.id: self._report(fid))
-            self._register_dynamic(card)
-            self.latest_grid.addWidget(card, i // 2, i % 2)
-            cards.append(card)
-        self.latest_title.set_right(f"{len(recent)} matches" if len(recent) > LATEST_SHOWN else "")
-        self.latest_more.setVisible(bool(playedf))
+        cards = self._refresh_round(upcoming if not t.finished else None)
 
         clear_layout(self.news_list)
         news = list(reversed(t.news))[:HEADLINES_SHOWN]
@@ -695,6 +665,28 @@ class TournamentDashboardScreen(Screen):
         if animate and self.tabs.index() == HOME:
             motion.fade_in(self.hero, ms=260)
             motion.stagger_in(cards + items, start=120)
+
+    def _refresh_round(self, f):
+        """The other matches of `f`'s round (its earlier kick-offs with their
+        score); the section hidden when there is no next match."""
+        t = self.t
+        clear_layout(self.round_grid)
+        others = [g for g in t.fixtures if f is not None and g.day == f.day and g is not f]
+        self.round_section.setVisible(bool(others))
+        if not others:
+            return []
+        self.round_title.set_title(f"{report.round_title(t, f.day)} · other matches")
+        self.round_title.set_right(f"{len(others)} matches" if len(others) > ROUND_SHOWN else "")
+        humans = set(self._human_ids())
+        cards = []
+        for i, g in enumerate(others[:ROUND_SHOWN]):
+            # the round is the section's title: the card only says the pool
+            card = ScoreCard(self.ds, t, g, highlight=humans, caption=_without_round(g))
+            card.activated.connect(lambda fid=g.id: self._report(fid))
+            self._register_dynamic(card)
+            self.round_grid.addWidget(card, i // 2, i % 2)
+            cards.append(card)
+        return cards
 
     def _refresh_side(self):
         """Your pool's table while the pool stage runs, your knockout path
@@ -737,8 +729,7 @@ class TournamentDashboardScreen(Screen):
             stage, group = st, st.groups[0]
         self.side_more.show()
         self.side_title.set_title(report.group_title(stage, group))
-        qualify = int(stage.spec.get("qualify", 0))
-        self.side_title.set_right(f"top {qualify} qualify" if qualify else "")
+        self.side_title.set_right("")
         table = self._standings_table(t, stage, group, compact=True)
         self.side_holder.addWidget(table)
 
@@ -798,10 +789,8 @@ class TournamentDashboardScreen(Screen):
         grid.setHorizontalSpacing(18)
         grid.setVerticalSpacing(18)
         for i, (st, g) in enumerate(groups):
-            qualify = int(st.spec.get("qualify", 0))
             w, v = section(report.group_title(st, g) if len(st.groups) > 1 or len(t.stages) == 1
-                           else f"{st.name} · table",
-                           right=f"top {qualify} qualify" if qualify else "")
+                           else f"{st.name} · table")
             v.addWidget(self._standings_table(t, st, g))
             if two_up:
                 grid.addWidget(w, i // 2, i % 2)
@@ -835,9 +824,7 @@ class TournamentDashboardScreen(Screen):
         for b in (self.fx_all, self.fx_mine):
             b.setVisible(self._view == FIXTURES and humans)
         real = bool((self.t.options or {}).get("reality"))
-        self.comp_note.setText({TABLE: "", FIXTURES: "A on a played match opens its report."
-                                + ("  Blue scores: real results." if real else ""),
-                                BRACKET: "A on a played tie opens its report."}[self._view])
+        self.comp_note.setText("Blue scores: real results." if real and self._view == FIXTURES else "")
         if self._view == TABLE:
             self._refresh_standings()
         elif self._view == FIXTURES:
@@ -851,17 +838,19 @@ class TournamentDashboardScreen(Screen):
         self._refresh_fixtures()
 
     def _refresh_fixtures(self):
+        self.fixtures.setVisible(not self._mine_only)
+        self.my_fixtures.setVisible(self._mine_only)
+        if self._mine_only:
+            self._refresh_my_fixtures()
+            return
         t = self.t
         humans = set(self._human_ids())
         rows, keys, tint = [], [], {}
         day = None
         for f in sorted(t.fixtures, key=lambda f: f.day):      # stable: keeps pool order within a day
-            if self._mine_only and not (f.home in humans or f.away in humans):
-                continue
             if f.day != day:
                 day = f.day
-                state = "current" if day == t.day and not t.finished else (
-                    "played" if day < t.day else "")
+                state = "current" if day == t.day and not t.finished else ""
                 when = calendar.short_date(calendar.fixture_date(t, f))
                 title = f.round_name or f"Round {day + 1}"
                 rows.append(Section(title + (f" · {when}" if when else ""), state, gap=bool(rows)))
@@ -872,6 +861,7 @@ class TournamentDashboardScreen(Screen):
             away_name = t.team_name(f.away) if f.away else _ref(t, f.away_ref)
             rows.append([
                 {"text": _without_round(f), "color": FG_TERTIARY},
+                {"text": report.venue_name(self.ds, f), "color": FG_TERTIARY},
                 {"text": home_name, "icon": tournament_crest(self.ds, t, f.home, 22),
                  "align": Qt.AlignRight, "bold": win is not None and win == f.home,
                  "color": YOU_TINT if f.home in humans else (FG_MUTED if not f.home else None)},
@@ -880,17 +870,63 @@ class TournamentDashboardScreen(Screen):
                 {"text": away_name, "icon": tournament_crest(self.ds, t, f.away, 22),
                  "bold": win is not None and win == f.away,
                  "color": YOU_TINT if f.away in humans else (FG_MUTED if not f.away else None)},
-                {"text": report.venue_name(self.ds, f), "color": FG_TERTIARY},
+                "",
             ])
             keys.append(f.id)
             if f.home in humans or f.away in humans:
                 tint[len(rows) - 1] = YOU_TINT
         self.fixtures.set_rows(rows, keys=keys, tint=tint)
+        self.fixtures.fit_column(0, minimum=300)      # the venue well clear of the round
+        self._add_report_buttons(self.fixtures)
+        # the next match in view, nothing highlighted
         nxt = next((f for f in sorted(t.fixtures, key=lambda f: f.day)
                     if not f.played and f.id in keys), None)
         if nxt and self.fixtures.current_key() is None:
-            self.fixtures.select_key(nxt.id)
-            self.fixtures.scrollTo(self.fixtures.currentIndex(), DataTable.PositionAtCenter)
+            self.fixtures.scroll_to_key(nxt.id)
+
+    def _add_report_buttons(self, table):
+        """The report icon in the last column of every played match
+        (focusable: the arrows / pad reach it, the table scrolls along)."""
+        col = table.columnCount() - 1
+        for r, fid in enumerate(table.keys):
+            f = self.t.fixture(fid) if fid else None
+            if f is not None and f.played:
+                self._register_dynamic(table.add_row_button(r, col, "Open match report",
+                                                            lambda _=False, fid=fid: self._report(fid)))
+
+    def _refresh_my_fixtures(self):
+        """Your matches, one per row: round, date, the two teams and the
+        score, your result, the venue."""
+        t = self.t
+        humans = set(self._human_ids())
+        rows, keys = [], []
+        for f in sorted(t.fixtures, key=lambda f: f.day):
+            if not (f.home in humans or f.away in humans):
+                continue
+            r = f.result
+            win = r.winner_id() if r else None
+            me = f.home if f.home in humans else f.away
+            verdict = ("", None) if not r else (("DRAW", WARN) if win is None else
+                                               (("WIN", GREEN) if win == me else ("DEFEAT", DANGER_LITE)))
+            rows.append([
+                {"text": f.label, "color": FG_SECONDARY},
+                {"text": calendar.short_date(calendar.fixture_date(t, f)), "color": FG_TERTIARY},
+                {"text": report.venue_name(self.ds, f), "color": FG_TERTIARY},
+                {"text": t.team_name(f.home) if f.home else _ref(t, f.home_ref),
+                 "icon": tournament_crest(self.ds, t, f.home, 30), "align": Qt.AlignRight,
+                 "bold": f.home in humans, "color": YOU_TINT if f.home in humans else None},
+                {"text": f"{r.home.points} – {r.away.points}" if r else "v", "align": Qt.AlignHCenter,
+                 "bold": bool(r), "color": FG_PRIMARY if r else FG_MUTED},
+                {"text": t.team_name(f.away) if f.away else _ref(t, f.away_ref),
+                 "icon": tournament_crest(self.ds, t, f.away, 30),
+                 "bold": f.away in humans, "color": YOU_TINT if f.away in humans else None},
+                {"text": verdict[0], "color": verdict[1], "bold": True, "align": Qt.AlignHCenter},
+                "",
+            ])
+            keys.append(f.id)
+        self.my_fixtures.set_rows(rows, keys=keys)
+        self.my_fixtures.fit_column(0)
+        self._add_report_buttons(self.my_fixtures)
 
     # ── bracket ──────────────────────────────────────────────────────────
     def _refresh_bracket(self):
@@ -945,7 +981,7 @@ class TournamentDashboardScreen(Screen):
                             for i, (p, val) in enumerate(leaders[1:])])
             table.horizontalHeader().hide()
             table.fit_height()
-            self._register_dynamic(table)
+            table.set_static()             # a list to read, nothing to pick
             cv.addWidget(table)
         v.addWidget(card)
         return w
@@ -987,6 +1023,24 @@ class TournamentDashboardScreen(Screen):
         motion.stagger_in(cards + [w], step=70)
 
     # ── news ─────────────────────────────────────────────────────────────
+    # ── settings ─────────────────────────────────────────────────────────
+    def _build_prefs(self, v):
+        """The options chosen in the wizard, changed for the rest of the
+        tournament (read again at each match: a change applies from the next)."""
+        v.addWidget(Note("Changes are saved at once and apply from your next match.", color=FG_TERTIARY))
+        self.prefs = PrefsPanel()
+        self.prefs.changed.connect(self._pref_changed)
+        for r in self.prefs.focus_rows():
+            self.focus.register(r)
+        v.addWidget(self.prefs)
+        v.addStretch(1)
+
+    def _pref_changed(self, key, value):
+        if not self.session:
+            return
+        self.t.options[key] = value
+        self.session.save()
+
     def _refresh_news(self):
         clear_layout(self.news_holder)
         news = list(reversed(self.t.news))[:200]
@@ -1016,8 +1070,8 @@ class TournamentDashboardScreen(Screen):
         self._message = ""
         self._play_moments(before, done)
 
-    def _play_moments(self, before, done):
-        found = moments.moments_after(self.ds, self.t, before, done)
+    def _play_moments(self, before, done, game=None):
+        found = moments.moments_after(self.ds, self.t, before, done, game)
         self.refresh()
         if not found:
             return
@@ -1057,6 +1111,37 @@ class TournamentDashboardScreen(Screen):
                       [("CANCEL", "neutral", "cancel"), ("RECORD", "primary", "ok")], go,
                       content=view, width=820)
 
+    def _late_start(self):
+        """Expert mode: play your match from a given minute (the 78th to
+        start with) and score, then as usual (presentation, kick-off)."""
+        f = self.session.human_fixture()
+        if not f:
+            return
+        from app.challenges import possible_scores
+        from ui import CycleRow
+        scores = possible_scores()
+        picked = {"minute": 78, "home": 0, "away": 0}
+        content = transparent(QWidget(), "lateStart")
+        v = QVBoxLayout(content)
+        v.setContentsMargins(0, 0, 0, 0)
+        v.setSpacing(0)
+        minutes = [f"{m}'" for m in range(1, 80)]
+        v.addWidget(CycleRow("Start Minute", minutes, "78'",
+                             lambda m: picked.__setitem__("minute", int(m[:-1]))))
+        for side, tid in (("home", f.home), ("away", f.away)):
+            v.addWidget(CycleRow(f"{self.t.team_name(tid)} Score", scores, 0,
+                                 lambda p, side=side: picked.__setitem__(side, p)))
+
+        def go(role):
+            if role == "ok":
+                self._message = ""
+                self.on_play(self.session, f, start=(picked["minute"], picked["home"], picked["away"]))
+        ConfirmDialog(self, "Expert · play from a given minute",
+                      f"{report.fixture_caption(self.t, f)}: the match starts at this minute with "
+                      "this score, then is played as usual.",
+                      [("CANCEL", "neutral", "cancel"), ("PLAY", "primary", "ok")], go,
+                      content=content, width=640)
+
     def _continue(self):
         self._run(self.session.advance_to_human)
 
@@ -1083,15 +1168,6 @@ class TournamentDashboardScreen(Screen):
                       "Your progression is saved. You can resume this tournament later.",
                       [("STAY", "neutral", "cancel"), ("MAIN MENU", "primary", "ok")], go)
 
-    def _undo(self):
-        def go(role):
-            if role == "ok" and self.session.undo():
-                self.set_message("Last step undone.")
-                self.refresh(animate=True)
-        ConfirmDialog(self, "Undo the last step?",
-                      "The results recorded by the last action are removed (only one step can be undone).",
-                      [("CANCEL", "neutral", "cancel"), ("UNDO", "danger", "ok")], go)
-
     def _more_menu(self):
         items = self._more_items()
         if not items:
@@ -1101,10 +1177,10 @@ class TournamentDashboardScreen(Screen):
         for label, data, sub in items:
             expert = data in _EXPERT_ACTIONS
             popup.add_row(label, data, subtitle=sub, tag="EXPERT" if expert else "",
-                          tag_color=EXPERT if expert else DANGER_LITE if data == "undo" else None)
+                          tag_color=EXPERT if expert else None)
         popup.size_to(len(items))
-        actions = {"simulate": self._simulate, "sim_end": self._sim_to_end,
-                   "undo": self._undo, "mine": self._your_matches}
+        actions = {"simulate": self._simulate, "late_start": self._late_start,
+                   "sim_end": self._sim_to_end}
         # after the popup has closed: a dialog opened from inside the pick
         # would lose its focus to the popup's own teardown
         popup.picked.connect(lambda data: QTimer.singleShot(0, actions[data]))
@@ -1112,59 +1188,6 @@ class TournamentDashboardScreen(Screen):
         popup.open_at(self.more_btn, self)
         popup.set_highlight(0)
         self._more_popup = popup
-
-    def _your_matches(self):
-        """Every match your teams played, newest first; A opens its report
-        with the match stats."""
-        played = self._my_played()
-        if not played:
-            return
-        humans = set(self._human_ids())
-        table = DataTable(["Round", "Home", "", "Away", "", ""], stretch_col=1,
-                          widths={0: 170, 2: 90, 3: 220, 4: 74, 5: 96},
-                          header_align={1: Qt.AlignRight})
-        rows = []
-        for f in played:
-            r = f.result
-            win = r.winner_id()
-            me = f.home if f.home in humans else f.away
-            verdict, color = (("DRAW", WARN) if win is None else
-                              (("WIN", GREEN) if win == me else ("DEFEAT", DANGER_LITE)))
-            rows.append([
-                {"text": f.label, "color": FG_TERTIARY},
-                {"text": self.t.team_name(f.home), "icon": tournament_crest(self.ds, self.t, f.home, 22),
-                 "align": Qt.AlignRight, "bold": win == f.home,
-                 "color": YOU_TINT if f.home in humans else None},
-                {"text": f"{r.home.points} – {r.away.points}", "align": Qt.AlignHCenter, "bold": True},
-                {"text": self.t.team_name(f.away), "icon": tournament_crest(self.ds, self.t, f.away, 22),
-                 "bold": win == f.away, "color": YOU_TINT if f.away in humans else None},
-                {"text": verdict, "color": color, "bold": True, "align": Qt.AlignHCenter},
-                {"text": "played" if r.source == "game" else ("entered" if r.source == "manual"
-                                                             else r.source.replace("sim", "simulated")),
-                 "color": GREEN if r.source == "game" else FG_MUTED},
-            ])
-        table.set_rows(rows, keys=[f.id for f in played])
-        table.fit_height(max_rows=10)
-        dialog = ConfirmDialog(self, "Your matches", "A on a match shows its report and statistics.",
-                               [("CLOSE", "primary", "ok")], lambda _r: None, cancel_role="ok",
-                               content=table, width=900)
-
-        def open_report(row):
-            fid = table.keys[row]
-            dialog.choose("ok")
-            # once this dialog is gone: the report comes back here on CLOSE
-            QTimer.singleShot(0, lambda: self._report(fid, back=self._your_matches))
-        table.activated_row.connect(open_report)
-        table.selectRow(0)
-        table.setFocus()
-
-    def _match_details(self):
-        f = self._shown_fixture()
-        if not f:
-            return
-        ConfirmDialog(self, report.fixture_caption(self.t, f), "", [("CLOSE", "primary", "ok")],
-                      lambda _r: None, cancel_role="ok",
-                      content=MatchPreviewView(self.ds, self.t, f, set(self._human_ids())), width=820)
 
     def _refresh_team(self):
         """Manage your team: the team of the next match you play, else your first."""
@@ -1184,74 +1207,22 @@ class TournamentDashboardScreen(Screen):
         f = self.t.fixture(fid) if fid else None
         if not f or not f.played:
             return
-        ConfirmDialog(self, f.label, "", [("CLOSE", "primary", "ok")],
-                      lambda _r: back and QTimer.singleShot(0, back),
-                      cancel_role="ok", content=MatchReportView(self.ds, self.t, f), width=820)
+        focus = QApplication.focusWidget()
+
+        def closed(_role):
+            if back:
+                QTimer.singleShot(0, back)
+            elif focus is not None and not sip.isdeleted(focus) and focus.isVisible():
+                focus.setFocus()
+        show_report(self, self.ds, self.t, f, closed)
 
 
-class MatchPreviewView(QWidget):
-    """MATCH DETAILS: everything about the next match the hero card leaves
-    out — each side's position, form, record in the tournament and who is
-    missing; the date, ground, weather and pitch; an earlier meeting."""
-
-    def __init__(self, ds, t, f, humans, parent=None):
-        super().__init__(parent)
-        transparent(self, "matchPreview")
-        v = QVBoxLayout(self)
-        v.setContentsMargins(0, 0, 0, 0)
-        v.setSpacing(12)
-        meta = [f.label, calendar.short_date(calendar.fixture_date(t, f)), report.venue_name(ds, f),
-                "neutral venue" if f.neutral else ""]
-        v.addWidget(eyebrow_label("  ·  ".join(m for m in meta if m), color=FG_TERTIARY, size=10))
-        if f.stadium_id:
-            v.addWidget(Note(f"Weather: {weather.forecast(t, f, ds)['summary']}", color=INFO))
-        v.addWidget(hline())
-        cols = QHBoxLayout()
-        cols.setSpacing(24)
-        for i, tid in enumerate((f.home, f.away)):
-            col = QVBoxLayout()
-            col.setSpacing(8)
-            top = QHBoxLayout()
-            top.setSpacing(12)
-            top.addWidget(PixmapLabel(56, tournament_crest(ds, t, tid, 56)))
-            nv = QVBoxLayout()
-            nv.setSpacing(2)
-            nv.addWidget(display_label(t.team_name(tid), 18, QFont.Bold, track=0.6,
-                                       color=YOU_TINT if tid in humans else FG_PRIMARY))
-            pp = moments.pool_position(t, tid)
-            where = (f"{moments.ordinal(pp[1])} in {pp[0] or 'the table'}" if pp and pp[1]
-                     else report.campaign_summary(t, tid))
-            nv.addWidget(eyebrow_label(where or "", color=FG_TERTIARY, size=10))
-            top.addLayout(nv, stretch=1)
-            col.addLayout(top)
-            played = [g for g in t.fixtures if g.played and g.involves(tid)]
-            won = sum(1 for g in played if g.result.winner_id() == tid)
-            lost = sum(1 for g in played if g.result.winner_id() not in (None, tid))
-            pf = sum(g.result.side(tid).points for g in played if g.result.side(tid))
-            pa = sum(g.result.opponent(tid).points for g in played if g.result.opponent(tid))
-            col.addWidget(eyebrow_label("form", color=ACCENT, size=9))
-            col.addWidget(FormStrip(team_form(t, tid), cell=18))
-            if played:
-                col.addWidget(Note(f"Played {len(played)} · won {won} · lost {lost} · "
-                                   f"points {pf}–{pa}", color=FG_SECONDARY))
-            missing = report.availability(t, tid) if tid in t.teams else []
-            col.addWidget(eyebrow_label("unavailable", color=WARN if missing else ACCENT, size=9))
-            if missing:
-                for pid, reason in missing[:8]:
-                    col.addWidget(Note(f"{t.player_name(pid)} — {reason}", color=WARN))
-                if len(missing) > 8:
-                    col.addWidget(Note(f"+ {len(missing) - 8} more", color=FG_MUTED))
-            else:
-                col.addWidget(Note("Everyone is available.", color=GREEN))
-            col.addStretch(1)
-            cols.addLayout(col, stretch=1)
-        v.addLayout(cols)
-        met = [g for g in t.fixtures if g.played and g.involves(f.home) and g.involves(f.away)]
-        if met:
-            v.addWidget(hline())
-            g = met[-1]
-            v.addWidget(Note(f"Earlier in this tournament: {report.fixture_caption(t, g)} "
-                             f"{g.result.score_text()} ({g.label})", color=FG_SECONDARY))
+def show_report(host, ds, t, f, on_close=None):
+    """A played match's report (MatchReportView) in a popup over `host`:
+    the Competition tab's REPORT and the full-time recap's MATCH STATS."""
+    return ConfirmDialog(host, f.label, "", [("CLOSE", "primary", "ok")],
+                         lambda r: on_close and on_close(r), cancel_role="ok",
+                         content=MatchReportView(ds, t, f), width=820)
 
 
 def _ref(t, ref):

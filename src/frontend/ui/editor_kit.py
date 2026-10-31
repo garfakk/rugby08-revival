@@ -29,7 +29,7 @@ from PyQt5.QtCore import Qt, QRectF, QRect, QSize, QTimer, QPoint, QPointF, pyqt
 from shared import kit_files
 from ui.broadcast import Card, HintBar, draw_frame, tracked_font, display_label, eyebrow_label
 from ui.dropdown import PopupList
-from ui.widgets import StyledButton
+from ui.widgets import SettingRow, StyledButton
 from ui.theme import (
     BG_BASE, BG_PANEL, BG_CARD, BG_RAISED, BG_HIGHLIGHT, BORDER, BORDER_EM,
     ACCENT, ACCENT_DIM, WARN, INFO, GREEN, DANGER, DANGER_LITE, HOME_TINT,
@@ -2689,7 +2689,7 @@ class ConfirmDialog(QWidget):
         out = []
         if self.content is not None:
             for w in self.content.findChildren(QWidget):
-                if isinstance(w, FieldBase) and w.isVisible() and w.isEnabled():
+                if isinstance(w, (FieldBase, SettingRow)) and w.isVisible() and w.isEnabled():
                     out.append(w)
         return out
 

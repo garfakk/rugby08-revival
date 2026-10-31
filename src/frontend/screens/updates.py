@@ -149,7 +149,7 @@ class UpdatesScreen(Screen):
         root = QVBoxLayout(self)
         root.setContentsMargins(0, 0, 0, 0)
         root.setSpacing(0)
-        root.addWidget(page_header("Updates", breadcrumb="tools", on_back=self.on_back_cb))
+        root.addWidget(page_header("Updates", on_back=self.on_back_cb))
 
         body = QWidget()
         body.setObjectName("updatesBody")
