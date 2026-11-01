@@ -1,6 +1,6 @@
 """
 tournament/news.py — Headlines for the dashboard feed: results worth a
-line (upsets, thrashings), qualification and elimination, the champion.
+line (upsets, big wins), qualification and elimination, the champion.
 Injury, ban and return headlines are written by their own modules.
 """
 from . import standings
@@ -25,17 +25,17 @@ def _result(t, fixture, result, rng):
     home, away = t.team_name(fixture.home), t.team_name(fixture.away)
     score = result.score_text()
     if fixture.final and winner:
-        t.add_news("champion", f"{t.team_name(winner)} win the {t.name}! Final: {home} {score} {away}",
+        t.add_news("champion", f"{t.team_name(winner)} win the {t.name}. Final: {home} {score} {away}",
                    [winner])
         return
     chance = None if home_chance is None else (home_chance if winner == fixture.home else 1 - home_chance)
     if winner and chance is not None and chance < UPSET_CHANCE:
-        t.add_news("upset", f"Upset! {t.team_name(winner)} beat {t.team_name(loser)} ({home} {score} {away})",
+        t.add_news("upset", f"{t.team_name(winner)} beat {t.team_name(loser)}: {home} {score} {away}",
                    [winner, loser])
     elif abs(result.home.points - result.away.points) >= THRASHING:
-        t.add_news("result", f"{t.team_name(winner)} run riot: {home} {score} {away}", [winner, loser])
+        t.add_news("result", f"Big win for {t.team_name(winner)}: {home} {score} {away}", [winner, loser])
     elif fixture.knockout and winner:
-        t.add_news("result", f"{t.team_name(winner)} through: {home} {score} {away}", [winner, loser])
+        t.add_news("result", f"{t.team_name(winner)} go through: {home} {score} {away}", [winner, loser])
 
 
 @on("stage_completed", priority=90)
@@ -52,7 +52,7 @@ def _stage(t, stage):
             t.add_news("stage", f"{g.name} won by {top} {pts}", [tab[0].team_id])
         elif last:
             # a league with no knockouts: the table decides the title
-            t.add_news("champion", f"{top} win the {t.name}! {pts}", [tab[0].team_id])
+            t.add_news("champion", f"{top} win the {t.name} {pts}", [tab[0].team_id])
         else:
             t.add_news("stage", f"{top} finish top of the table {pts}", [tab[0].team_id])
 

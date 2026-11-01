@@ -27,6 +27,7 @@ from shared import kit_files
 # user. Categories not listed here follow, alphabetically.
 CATEGORY_ORDER = [
     "International",
+    "Representatives",
     "European Cup",
     "Top 14",
     "Pro D2",
@@ -396,6 +397,14 @@ CONTROLLER_SLOTS = (
     (3, "pad", "GAMEPAD 2"),
     (4, "pad", "GAMEPAD 3"),
 )
+
+
+def controllers_for(zones):
+    """MatchConfig.controllers from the devices' lanes, in slot order (the
+    keyboard, then each connected pad): slots past the list are off."""
+    return {slot_id: {"kind": kind, "label": label,
+                      "zone": zones[i] if i < len(zones) else "none"}
+            for i, (slot_id, kind, label) in enumerate(CONTROLLER_SLOTS)}
 
 
 @dataclass

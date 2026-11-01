@@ -236,10 +236,6 @@ class SettingsScreen(QWidget):
             user_prefs.coin_toss = bool(on)
             user_prefs.save()
 
-        def _set_picker(label):
-            user_prefs.match_picker = next(i for i, l in STYLES if l == label)
-            user_prefs.save()
-
         def _set_difficulty(label):
             user_prefs.difficulty = label.lower()
             user_prefs.save()
@@ -254,11 +250,6 @@ class SettingsScreen(QWidget):
         rows = [
             CycleRow("Preferred Difficulty", levels, difficulty.preferred().capitalize(), _set_difficulty),
             CycleRow("Wind", ["Standard", "Advanced"], user_prefs.wind_mode.capitalize(), _set_wind_mode),
-            # How Quick Match picks teams (app/team_browse.py): the classic
-            # season > category > team, or group > team > season.
-            # Takes effect the next time Quick Match opens.
-            CycleRow("Quick Match Picker", [label for _id, label in STYLES],
-                      style_label(user_prefs.match_picker), _set_picker),
         ]
         if COIN_TOSS_OFFERED:      # not offered for now (shared/user_prefs.py)
             rows.insert(2, ToggleRow("Coin Toss", user_prefs.coin_toss, _set_coin_toss))
@@ -271,6 +262,10 @@ class SettingsScreen(QWidget):
 
         # Once a day at startup, ask GitHub for a new program or data release
         # (app/updater); Tools > Updates can always check by hand.
+        def _set_picker(label):
+            user_prefs.match_picker = next(i for i, l in STYLES if l == label)
+            user_prefs.save()
+
         def _set_check_updates(on):
             user_prefs.check_updates = bool(on)
             user_prefs.save()
@@ -283,6 +278,11 @@ class SettingsScreen(QWidget):
         current = logging.getLevelName(logging.getLogger(LOG_ROOT).getEffectiveLevel())
         return [
             ToggleRow("3D Player Preview", user_prefs.preview_3d, _set_preview_3d),
+            # How Quick Match picks teams (app/team_browse.py): the classic
+            # season > category > team, or group > team > season.
+            # Takes effect the next time Quick Match opens.
+            CycleRow("Quick Match Picker", [label for _id, label in STYLES],
+                     style_label(user_prefs.match_picker), _set_picker),
             ToggleRow("Check For Updates", user_prefs.check_updates, _set_check_updates),
             CycleRow("Log Level", LOG_LEVELS, user_prefs.log_level or current, _set_log_level),
         ]
@@ -310,13 +310,13 @@ class SettingsScreen(QWidget):
             user_prefs.preview_3d = True
             user_prefs.check_updates = True
             user_prefs.log_level = ""
+            user_prefs.match_picker = DEFAULT_STYLE
             user_prefs.save()
             setup_logging()
         else:
             if tab == "Gameplay":
                 user_prefs.wind_mode = "standard"
                 user_prefs.coin_toss = False
-                user_prefs.match_picker = DEFAULT_STYLE
                 user_prefs.difficulty = "elite"
                 user_prefs.save()
             game_profile.reset([s.key for s in dict(SECTIONS)[GAME_SECTION[tab]]])

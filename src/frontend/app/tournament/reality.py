@@ -33,6 +33,7 @@ from shared.log import get_logger
 
 from .conditions import add_condition
 from .events import on
+from .injuries import _matches
 from .model import Condition, MatchResult, PlayerLine
 
 log = get_logger(__name__)
@@ -406,13 +407,14 @@ def _real_events(t, fixture, result, rng):
             if n <= 0:
                 continue
             add_condition(t, p, Condition(kind="injury", matches_left=n, data={"type": what, "real": True}))
-            out = "is out of the tournament" if n >= OUT_FOR_TOURNAMENT else f"will miss {n} match{'es' if n != 1 else ''}"
+            out = "will miss the rest of the tournament" if n >= OUT_FOR_TOURNAMENT else f"will miss {_matches(n)}"
             t.add_news("injury", f"{p.name} ({name}) {out} ({what})", [team], pid)
         else:
             why = str(ev.get("reason") or "suspension")
             if n <= 0:
                 continue
             add_condition(t, p, Condition(kind="suspension", matches_left=n, data={"reason": why, "real": True}))
-            t.add_news("suspension", f"{p.name} ({name}) banned for {n} match{'es' if n != 1 else ''} ({why})",
+            t.add_news("suspension", f"{p.name} ({name}) is banned for {n} match{'es' if n != 1 else ''}"
+                       f" ({why})",
                        [team], pid)
 

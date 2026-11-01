@@ -48,6 +48,7 @@ ON_OFF = ["on", "off"]
 STEPS = ["competition", "setup"]
 DRAW_PAGE = len(STEPS)      # the stack page EDIT THE DRAW opens (part of setup)
 MAX_HUMANS = 2
+NO_TEAM = "take a team"   # START needs one; not shown as a warning
 # Reality mode (app/tournament/reality.py) is not offered for now: off, the
 # field stays hidden and every new tournament is played without it.
 REALITY_OFFERED = False
@@ -606,7 +607,8 @@ class TournamentWizardScreen(Screen):
         found = formats.problems(self.ds, self.template(), self.season, self.participants())
         out = {0: [] if self.template() else ["choose a competition"], 1: list(found)}
         if not self.humans:
-            out[1].append("take a team: click its crest under TEAMS YOU CONTROL")
+            # START still needs a team of yours, but no warning line says so
+            out[1].append(NO_TEAM)
         if self._reality_wanted():
             ok, why = reality.available(self.template(), self.participants(), self.season, self._usable())
             if not ok:
@@ -618,7 +620,7 @@ class TournamentWizardScreen(Screen):
         all_found = [p for i in sorted(probs) for p in probs[i]]
         here = probs.get(self._step, []) if self._step else []    # NEXT waits for a pick
         last = self._step == len(STEPS) - 1
-        shown = here or (all_found if last else [])
+        shown = [p for p in (here or (all_found if last else [])) if p is not NO_TEAM]
         self.problems.setText(("⚠  " + "; ".join(shown[:3]) + (" …" if len(shown) > 3 else "")) if shown else "")
         self.next_btn.setText("DONE" if self._page == DRAW_PAGE else
                               ("START TOURNAMENT" if last else "NEXT"))

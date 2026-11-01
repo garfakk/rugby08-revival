@@ -353,5 +353,5 @@ def default_updates():
     from shared.app_paths import user_data_directory
     from shared.config import config
     from shared.version import APP_VERSION
-    return Updates({"mod_data": config.mod_data_directory, "app_data": config.mod_src_directory},
+    return Updates({"mod_data": config.pack_directory, "app_data": config.mod_src_directory},
                    os.path.join(user_data_directory(), "updates"), APP_VERSION)

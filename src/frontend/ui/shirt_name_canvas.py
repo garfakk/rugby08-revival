@@ -4,7 +4,10 @@ ui/shirt_name_canvas.py — the back of the shirt, with the name area to drag
 Shows one back texture as the game gets it (the name already lettered on it,
 see shared/shirt_names.py) and the rectangle the name is fitted into. The
 rectangle is moved by dragging it and resized by its handles, or with the
-keyboard: arrows move it, Alt+arrows resize it (Shift: bigger steps).
+keyboard: arrows move it, Alt+arrows resize it (Shift: bigger steps). While
+it is dragged a vertical guide runs down the number's middle (the texture's
+without one) and the box sticks to it when its centre comes close: a name
+centred over the number by hand. Hold Shift to drag it free.
 
 The area is in fractions of the texture ([x, y, w, h]); `area_changing`
 fires while it moves (for a live preview) and `area_changed` once it is
@@ -21,6 +24,7 @@ from ui.theme import (
 
 REF = 512.0          # keyboard steps are pixels of a 512 px texture
 MIN_W, MIN_H = 0.06, 0.02
+SNAP_PX = 10         # how close (screen pixels) the box's centre sticks to the guide
 
 
 class NameAreaCanvas(QWidget):
@@ -42,6 +46,7 @@ class NameAreaCanvas(QWidget):
         self._editable = True
         self._caption = "NAME AREA"
         self._drag = None              # (mode, start point, start area)
+        self._snapped = False          # the dragged box sits on the guide
         self._hover = None
         self._key_timer = QTimer(self)
         self._key_timer.setSingleShot(True)
@@ -121,13 +126,26 @@ class NameAreaCanvas(QWidget):
         y = max(0.0, min(1.0 - h, y))
         return [round(x, 4), round(y, 4), round(w, 4), round(h, 4)]
 
-    def _dragged(self, mode, start, area, pos):
+    def guide_x(self):
+        """The vertical guide, as a fraction of the texture: the middle of
+        the number (of the texture when it wasn't found)."""
+        if self._number_box:
+            x0, _y0, x1, _y1 = self._number_box
+            return (x0 + x1) / 2
+        return 0.5
+
+    def _dragged(self, mode, start, area, pos, free=False):
         t = self._texture_rect()
         dx = (pos.x() - start.x()) / t.width()
         dy = (pos.y() - start.y()) / t.height()
         x, y, w, h = area
+        self._snapped = False
         if mode == "move":
-            return self.clamp([x + dx, y + dy, w, h])
+            nx = x + dx
+            g = self.guide_x()
+            if not free and abs(nx + w / 2 - g) * t.width() <= SNAP_PX:
+                nx, self._snapped = g - w / 2, True
+            return self.clamp([nx, y + dy, w, h])
         x0, y0, x1, y1 = x, y, x + w, y + h
         if "l" in mode:
             x0 = min(x1 - MIN_W, max(0.0, x0 + dx))
@@ -149,7 +167,8 @@ class NameAreaCanvas(QWidget):
     def mouseMoveEvent(self, event):
         if self._drag:
             mode, start, area = self._drag
-            new = self._dragged(mode, start, area, QPointF(event.pos()))
+            new = self._dragged(mode, start, area, QPointF(event.pos()),
+                                free=bool(event.modifiers() & Qt.ShiftModifier))
             if new != self._area:
                 self._area = new
                 self.area_changing.emit(list(new))
@@ -165,6 +184,7 @@ class NameAreaCanvas(QWidget):
         if self._drag:
             start_area = self._drag[2]
             self._drag = None
+            self._snapped = False
             if self._area != start_area:
                 self.area_changed.emit(list(self._area))
             self.update()
@@ -226,6 +246,12 @@ class NameAreaCanvas(QWidget):
             nr = self._to_widget((x0, y0, x1 - x0, y1 - y0))
             p.setPen(QPen(QColor(255, 255, 255, 90), 1, Qt.DotLine))
             p.drawRect(nr)
+
+        if self._drag is not None and self._drag[0] == "move" and self._pixmap is not None:
+            gx = t.x() + self.guide_x() * t.width()
+            p.setPen(QPen(QColor(ACCENT) if self._snapped else QColor(255, 255, 255, 110),
+                          1.5 if self._snapped else 1, Qt.SolidLine if self._snapped else Qt.DashLine))
+            p.drawLine(QPointF(gx, t.top()), QPointF(gx, t.bottom()))
 
         if self._area and self._pixmap is not None:
             r = self._to_widget(self._area)

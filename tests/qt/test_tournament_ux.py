@@ -383,18 +383,18 @@ def test_post_match_shows_stats(qapp, no_motion):
 
 
 def test_settings_tab_changes_the_tournament_options(dash, session):
-    """SETTINGS: the wizard's options, changed for the rest of the tournament
-    and saved at once."""
+    """SETTINGS: the wizard's match options, changed for the rest of the
+    tournament and saved at once; the squad rules are fixed (no rows)."""
     from screens.tournament.dashboard import PREFS
     from app.tournament import persistence
     session.t.options.update(difficulty="pro", injuries=True)
     dash._go_tab(PREFS)
     rows = dash.prefs.rows
-    assert rows["difficulty"].current() == "Pro" and rows["injuries"].state() is True
+    assert rows["difficulty"].current() == "Pro"
+    assert not {"injuries", "fatigue", "suspensions"} & set(rows)
     rows["difficulty"].adjust(1)
-    rows["injuries"].adjust(1)
-    assert session.t.options["difficulty"] == "elite" and session.t.options["injuries"] is False
-    assert persistence.load(session.t.id).options["injuries"] is False
+    assert session.t.options["difficulty"] == "elite" and session.t.options["injuries"] is True
+    assert persistence.load(session.t.id).options["difficulty"] == "elite"
 
 
 def test_mid_match_start_config():

@@ -14,11 +14,11 @@ this team have", "what group is it in", "which teams are in that group".
 from app.season import nearest_season
 
 STYLES = [
-    ("classic", "Season, category, team"),
-    ("groups", "Group, team, season"),
+    ("classic", "Season first"),
+    ("groups", "Category first"),
 ]
 STYLE_IDS = [s for s, _label in STYLES]
-DEFAULT_STYLE = "classic"
+DEFAULT_STYLE = "groups"
 
 # The groups, in the order the picker cycles them: the id a team file names
 # in "group" (the same whatever the picker) and the name this picker shows.
@@ -30,6 +30,7 @@ GROUP_LABELS = {
     "france": "France",
     "other_european": "Other European",
     "southern_hemisphere": "Southern Hemisphere",
+    "representatives": "Representatives",
 }
 GROUPS = list(GROUP_LABELS)
 # A team file without a "group" (one made before groups existed): its
@@ -37,6 +38,7 @@ GROUPS = list(GROUP_LABELS)
 # classic picker shows them.
 CATEGORY_GROUPS = {
     "International": "international",
+    "Representatives": "representatives", "Invitational": "representatives",
     "Premiership": "england", "Championship": "england",
     "Top 14": "france", "Pro D2": "france",
     "Celtic League": "other_european", "Pro12": "other_european", "Pro14": "other_european",

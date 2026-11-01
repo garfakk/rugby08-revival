@@ -6,6 +6,7 @@ import sys
 import shutil
 import tempfile
 
+from shared import mod_overlay
 from shared.app_paths import (FROZEN, app_directory, app_data_directory, check_writable_or_exit,
                               is_portable, mod_data_directory,
                               user_data_directory)
@@ -157,7 +158,12 @@ class Config:
     # Mod directories (see shared/app_paths.py): assets/ and the docs are in
     # app_data/ (src/ from source), the data pack in mod_data/ (data/ from source).
     self.mod_src_directory = app_data_directory()
-    self.mod_data_directory = self.data_directory or mod_data_directory()
+    # pack_directory: the data pack as released. mod_data_directory: what the
+    # program reads, i.e. the pack with the user's own files (user_data/mod_data,
+    # shared/mod_overlay.py) laid over it; the same folder when there are none.
+    self.pack_directory = self.data_directory or mod_data_directory()
+    mod_overlay.ensure_structure(user_data_directory())
+    self.mod_data_directory = mod_overlay.effective_directory(self.pack_directory, user_data_directory())
 
     # Warning bug here. If mod_src_directory or mod_data_directory are overridden in config.ini,
     # then the following paths will be incorrect.

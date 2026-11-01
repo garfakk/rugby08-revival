@@ -23,9 +23,8 @@ from PyQt5.QtWidgets import QWidget, QStackedLayout
 from shared.config import config
 from shared.user_prefs import user_prefs
 from ui.widgets import KitPreviewBox
-from ui.broadcast import display_label
-from ui.theme import FG_MUTED, BG_PANEL, BORDER
-from PyQt5.QtGui import QFont, QPainter, QPixmap
+from ui.theme import FG_MUTED
+from PyQt5.QtGui import QPainter, QPixmap
 
 # The generic body/skin/boots/head the 3D preview always uses — shared
 # across every team, since only the kit is team-specific. Extracted on first
@@ -207,18 +206,6 @@ class KitStage(QWidget):
         self._yaw = default_yaw
         self._pan_y = 0.0
 
-        # The setting alone can't guarantee 3D — most kits are still a flat
-        # PNG the model can't texture with. Without this, "on but showing
-        # flat anyway" reads as the toggle simply not working.
-        self._badge = display_label("3D UNAVAILABLE FOR THIS KIT", 8, QFont.DemiBold,
-                                    track=1.0, color=FG_MUTED)
-        self._badge.setStyleSheet(
-            self._badge.styleSheet() + f" background: {BG_PANEL}; border: 1px solid {BORDER};"
-            " padding: 2px 6px;")
-        self._badge.setParent(self)
-        self._badge.adjustSize()
-        self._badge.hide()
-
     @property
     def player_view(self):
         """The live 3D view, or None if the stage is currently flat. Used
@@ -258,7 +245,6 @@ class KitStage(QWidget):
             self.set_placeholder()
 
         if not user_prefs.player_3d_preview:
-            self._badge.hide()
             self._show_flat()
             return
         if not load_3d:
@@ -267,7 +253,6 @@ class KitStage(QWidget):
         if _gl_unusable():
             # No usable OpenGL: the flat kit picture (the kit's previewFile)
             # is all there is, so show it rather than a dead 3D view.
-            self._badge.hide()
             self._show_flat()
             return
 
@@ -279,7 +264,6 @@ class KitStage(QWidget):
                _stamp(head_path), _stamp(boots_path), skin_entry, _stamp(skin_path),
                finger_tape, boots_index, wrist_tape, thigh_tape, socks)
         if key == self._model_key and self._player_view is not None:
-            self._badge.hide()
             self._show_3d()
             return
 
@@ -287,13 +271,9 @@ class KitStage(QWidget):
                                 head_path, boots_path, skin_entry, skin_path, finger_tape,
                                 boots_index, wrist_tape, thigh_tape, socks)
         if model is None:
-            self._badge.move(6, 6)
-            self._badge.show()
-            self._badge.raise_()
             self._show_flat()
             return
 
-        self._badge.hide()
         self._model_key = key
         self._load_3d(model)
         self._show_3d()

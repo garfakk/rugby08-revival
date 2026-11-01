@@ -30,7 +30,7 @@ from ui.editor_kit import (
 )
 from ui.form import SearchList
 from ui.widgets import StyledButton
-from ui.theme import GREEN, DANGER_LITE, WARN, FG_SECONDARY, FG_TERTIARY, BTN_HEIGHT_SM
+from ui.theme import GREEN, DANGER_LITE, FG_SECONDARY, FG_TERTIARY, BTN_HEIGHT_SM
 
 
 class EditorScreen(Screen):
@@ -92,9 +92,6 @@ class EditorScreen(Screen):
         self.dup_btn.clicked.connect(self.duplicate_record)
         bar.addWidget(self.new_btn)
         bar.addWidget(self.dup_btn)
-        self.tools_btn = compact_button("MORE ▾")
-        self.tools_btn.clicked.connect(self.open_bulk_menu)
-        bar.addWidget(self.tools_btn)
         lay.addLayout(bar)
 
         # Show/group/sort stay collapsed by default — a filter box below
@@ -127,7 +124,7 @@ class EditorScreen(Screen):
         lay.addWidget(self.list, stretch=1)
         self.count_note = Note("", color=FG_TERTIARY)
         lay.addWidget(self.count_note)
-        for w in (self.new_btn, self.dup_btn, self.tools_btn, self.filters_toggle, self.show_filter,
+        for w in (self.new_btn, self.dup_btn, self.filters_toggle, self.show_filter,
                   self.group_filter, self.sort_choice, self.list):
             self.focus.register(w)
 
@@ -168,37 +165,6 @@ class EditorScreen(Screen):
         showing = self._filters_panel.isVisible()
         self._filters_panel.setVisible(not showing)
         self.filters_toggle.setText("FILTERS ▴" if not showing else "FILTERS ▾")
-
-    def open_bulk_menu(self):
-        actions = self.bulk_actions()
-        popup = PopupList(self, width=440, height=300, own_keys=True)
-        popup.set_title("more")
-        if self.on_import is not None:
-            popup.add_row("Import a Rugby 08 roster (.ros / .rdf)…", "__import__",
-                          subtitle="teams and players")
-        for key, label, count in actions:
-            popup.add_row(label, key if count else None, tag=str(count),
-                          tag_color=WARN if count else FG_SECONDARY, disabled=not count)
-        if not actions:
-            popup.add_row("nothing to fix", None, disabled=True)
-        popup.size_to(max(1, len(actions) + 1))
-        popup.picked.connect(self._on_more_picked)
-        popup.open_at(self.tools_btn, self)
-
-    on_import = None
-
-    def _on_more_picked(self, key):
-        if key == "__import__":
-            self.guard_dirty(self.on_import)
-        elif key:
-            self.run_bulk_action(key)
-
-    def bulk_actions(self):
-        """[(key, label, count)]"""
-        return []
-
-    def run_bulk_action(self, key):
-        pass
 
     def reload_list(self):
         items, search = self.list_items()

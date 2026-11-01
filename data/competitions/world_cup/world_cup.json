@@ -1135,7 +1135,7 @@
                     "team": "10001",
                     "player": "Yoann Huget",
                     "matches": "tournament",
-                    "type": "ruptured knee ligament"
+                    "type": "torn knee ligament"
                   }
                 ],
                 "_sources": [
@@ -1228,21 +1228,21 @@
                     "team": "10003",
                     "player": "Paul O'Connell",
                     "matches": "tournament",
-                    "type": "hamstring injury"
+                    "type": "pulled hamstring"
                   },
                   {
                     "kind": "injury",
                     "team": "10003",
                     "player": "Peter O'Mahony",
                     "matches": "tournament",
-                    "type": "knee ligament damage"
+                    "type": "sprained knee"
                   },
                   {
                     "kind": "injury",
                     "team": "10003",
                     "player": "Johnny Sexton",
                     "matches": 1,
-                    "type": "groin strain"
+                    "type": "pulled groin"
                   }
                 ],
                 "_sources": [

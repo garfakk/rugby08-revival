@@ -40,8 +40,7 @@ def _tick(t, fixture, result, rng):
                     c.matches_left -= 1
                     if c.matches_left <= 0:
                         if c.data.get("announce_return", True):
-                            t.add_news("return", f"{p.name} ({entry.name}) is available again"
-                                       f" after {describe_condition_past(c)}", [tid], pid)
+                            t.add_news("return", f"{p.name} ({entry.name}) can play again ({describe_condition_past(c)})", [tid], pid)
                         continue
                 kept.append(c)
             p.conditions = kept
@@ -49,7 +48,7 @@ def _tick(t, fixture, result, rng):
 
 def describe_condition_past(c) -> str:
     if c.kind == "injury":
-        return f"his {c.data.get('type', 'injury')}"
+        return c.data.get("type", "injury")
     if c.kind == "suspension":
-        return "his suspension"
+        return "ban over"
     return describe_condition(c).lower()

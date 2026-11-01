@@ -33,7 +33,7 @@ from app.screen_base import Screen
 from app.tournament import calendar, engine, report, standings, stats, weather
 from shared.user_prefs import user_prefs
 from ui import motion
-from ui.broadcast import Card, HintBar, display_label, eyebrow_label, page_header
+from ui.broadcast import Card, HintBar, display_label, eyebrow_label, label_css, page_header
 from ui.dropdown import PopupList
 from ui.editor_kit import ConfirmDialog, Note, TabPage, TabStrip, compact_button
 from ui.stat_compare import StatComparison
@@ -43,7 +43,7 @@ from ui.widgets import style_button
 
 from . import moments
 from .bracket import BracketView
-from .common import (DataTable, FormStrip, NewsItem, PixmapLabel, ProgressStrip,
+from .common import (DataTable, FormStrip, NewsItem, PixmapLabel,
                      ScoreCard, Section, SectionTitle, Tag, YOU_TINT, clear_layout,
                      competition_emblem, hline, section, tournament_crest, transparent)
 from .manual_result import ManualResultView
@@ -79,15 +79,6 @@ def team_form(t, team_id, n=5):
             w = f.result.winner_id()
             out.append("D" if w is None else ("W" if w == team_id else "L"))
     return out[-n:]
-
-
-def stage_progress(t):
-    """(caption, 0..1) of where the tournament stands: "POOL STAGE · ROUND
-    3 OF 7" (report.where_now), the share of matchdays played."""
-    last = t.last_day()
-    if t.finished:
-        return "tournament complete", 1.0
-    return report.where_now(t), (t.day / (last + 1)) if last >= 0 else 0.0
 
 
 class _TeamBlock(QWidget):
@@ -169,18 +160,6 @@ class TournamentDashboardScreen(Screen):
         self.tabs.changed.connect(self._tab_changed)
         self.focus.register(self.tabs)
         top.addWidget(self.tabs, stretch=1)
-        # where the tournament stands, always in view
-        prog = QVBoxLayout()
-        prog.setSpacing(5)
-        prog.addStretch(1)
-        self.stage_line = eyebrow_label("", color=FG_TERTIARY, size=10)
-        self.stage_line.setAlignment(Qt.AlignRight)
-        prog.addWidget(self.stage_line)
-        self.progress = ProgressStrip(height=5)
-        self.progress.setFixedWidth(280)
-        prog.addWidget(self.progress, alignment=Qt.AlignRight)
-        prog.addStretch(1)
-        top.addLayout(prog)
         bv.addLayout(top)
 
         self.stack = QStackedWidget()
@@ -227,11 +206,12 @@ class TournamentDashboardScreen(Screen):
         hv.setSpacing(14)
         eb = QHBoxLayout()
         eb.setSpacing(14)
+        # the round first, in the accent; NEXT MATCH after it (alone, in
+        # the accent, when the hero shows a message instead of a match)
+        self.hero_round = display_label("", 20, QFont.Bold, track=1.2, color=ACCENT)
+        eb.addWidget(self.hero_round, alignment=Qt.AlignVCenter)
         self.hero_eyebrow = display_label("", 20, QFont.Bold, track=1.2, color=ACCENT)
         eb.addWidget(self.hero_eyebrow, alignment=Qt.AlignVCenter)
-        # the round, right of NEXT MATCH
-        self.hero_round = display_label("", 20, QFont.Bold, track=1.2, color=FG_SECONDARY)
-        eb.addWidget(self.hero_round, alignment=Qt.AlignVCenter)
         eb.addStretch(1)
         venue_col = QVBoxLayout()
         venue_col.setSpacing(2)
@@ -423,7 +403,7 @@ class TournamentDashboardScreen(Screen):
         self._pending = None
         clear_layout(self.header_holder)
         t = session.t
-        self.header_holder.addWidget(page_header(t.name, on_back=self._leave,
+        self.header_holder.addWidget(page_header(t.name, on_back=self._leave, back_text="‹ BACK TO MAIN MENU",
                                                  icon=competition_emblem(self.ds, t.template, 52)))
         self._has_bracket = any(s.kind == "knockout" for s in t.stages)
         self.view_btns[BRACKET].setVisible(self._has_bracket)
@@ -514,9 +494,6 @@ class TournamentDashboardScreen(Screen):
         for w in self._dynamic:
             self.focus.unregister(w)
         self._dynamic = []
-        caption, frac = stage_progress(self.t)
-        self.stage_line.setText(caption.upper())
-        self.progress.set_value(frac, AWAY_TINT if self.t.finished else ACCENT)
         i = self.tabs.index()
         self._refresh_home(animate)
         if i == TEAM:
@@ -552,8 +529,9 @@ class TournamentDashboardScreen(Screen):
         self.match_view.show()
         self.message_view.hide()
         self.hero_eyebrow.setText("NEXT MATCH" if f.ready else "COMING UP")
+        self.hero_eyebrow.setStyleSheet(label_css(20, QFont.Bold, FG_SECONDARY))
         self.hero_round.setText(f.label.upper())
-        self.hero_round.show()
+        self.hero_round.setVisible(bool(f.label))
         venue = report.venue_name(self.ds, f)
         when = calendar.short_date(calendar.fixture_date(t, f))
         self.hero_venue.setText(" · ".join(x for x in (when, venue, "neutral venue" if f.neutral else "")
@@ -566,6 +544,7 @@ class TournamentDashboardScreen(Screen):
         self.match_view.hide()
         self.message_view.show()
         self.hero_eyebrow.setText(eyebrow.upper())
+        self.hero_eyebrow.setStyleSheet(label_css(20, QFont.Bold, ACCENT))
         self.hero_round.hide()
         self.hero_venue.setText("")
         self.hero_weather.setText("")
@@ -845,7 +824,7 @@ class TournamentDashboardScreen(Screen):
             return
         t = self.t
         humans = set(self._human_ids())
-        rows, keys, tint = [], [], {}
+        rows, keys = [], []
         day = None
         for f in sorted(t.fixtures, key=lambda f: f.day):      # stable: keeps pool order within a day
             if f.day != day:
@@ -864,18 +843,17 @@ class TournamentDashboardScreen(Screen):
                 {"text": report.venue_name(self.ds, f), "color": FG_TERTIARY},
                 {"text": home_name, "icon": tournament_crest(self.ds, t, f.home, 22),
                  "align": Qt.AlignRight, "bold": win is not None and win == f.home,
-                 "color": YOU_TINT if f.home in humans else (FG_MUTED if not f.home else None)},
+                 "ball": f.home in humans, "color": FG_MUTED if not f.home else None},
                 {"text": score, "align": Qt.AlignHCenter, "bold": bool(f.result),
                  "color": (INFO if f.result.source == "real" else FG_PRIMARY) if f.result else FG_MUTED},
                 {"text": away_name, "icon": tournament_crest(self.ds, t, f.away, 22),
                  "bold": win is not None and win == f.away,
-                 "color": YOU_TINT if f.away in humans else (FG_MUTED if not f.away else None)},
+                 "ball": f.away in humans, "color": FG_MUTED if not f.away else None},
                 "",
             ])
             keys.append(f.id)
-            if f.home in humans or f.away in humans:
-                tint[len(rows) - 1] = YOU_TINT
-        self.fixtures.set_rows(rows, keys=keys, tint=tint)
+        # no row tint for your matches: a ball by the teams you control
+        self.fixtures.set_rows(rows, keys=keys)
         self.fixtures.fit_column(0, minimum=300)      # the venue well clear of the round
         self._add_report_buttons(self.fixtures)
         # the next match in view, nothing highlighted
@@ -1028,7 +1006,9 @@ class TournamentDashboardScreen(Screen):
         """The options chosen in the wizard, changed for the rest of the
         tournament (read again at each match: a change applies from the next)."""
         v.addWidget(Note("Changes are saved at once and apply from your next match.", color=FG_TERTIARY))
-        self.prefs = PrefsPanel()
+        # MATCH only: the squad rules (injuries, fatigue, suspensions) are
+        # fixed for the whole tournament
+        self.prefs = PrefsPanel(groups=("match",))
         self.prefs.changed.connect(self._pref_changed)
         for r in self.prefs.focus_rows():
             self.focus.register(r)

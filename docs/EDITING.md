@@ -21,7 +21,7 @@ The list on the left can be filtered by name, id, position or team (`FILTERS` fo
 *New player:*  
 ![new player](img/new_player.png)
 
-At the top you find the identity, the same for all seasons: first name, last name, birthdate (`YYYY/MM/DD`), in-game name and commentary id (leave it to 0 if you don't know).
+At the top you find the identity, the same for all seasons: first name, last name, birthdate (`YYYY/MM/DD`), in-game name and commentary name — the surname the commentators say, picked from the clips recorded in the game (the list opens on the closest match to the last name; ▶ plays the clip, and resting on a name in the list plays it too).
 
 ### Seasons
 A player has one set of ratings and looks **per season** (the same man is not rated the same in 2009 and 2024). The `SEASON` column lists them, `+ ADD` creates a new one (copied from another season) and `⋯` has the other actions.
@@ -144,3 +144,12 @@ Please check before you export:
 - No `MISSING` or `NO ALPHA` tag, and `NO ISSUES` at the top right of the editors
 - Only export what you want to share, `My edits` lets you drop a record you don't want (`DELETE…`)
 - You own the rights of the images, or they come from a patch with a credit I can add in `CREDITS.MD`
+
+## Adding your own heads, skins, kits… (`user_data/mod_data/`)
+
+To add files or replace the pack's, use only `user_data/mod_data/`. It has the layout of the data pack (`players/heads`, `players/skins`, `players/baselayers`, `teams/<Team>/kits_<season>`…), and the installer creates the folders for you with a `README.txt`:
+
+- a file with the same path as one of the pack **replaces** it;
+- a file the pack does not have is **added** (a new head, a new team folder with its json, kits and logos…).
+
+The pack is never modified, so a new release never erases them. Restart the program after changing files.

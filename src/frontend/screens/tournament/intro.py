@@ -269,12 +269,23 @@ class TournamentIntroScreen(Screen):
             return
         per_row, x0, rows_h, gap = self._grid(w)
         top = DRAW_TOP
-        i = 0
-        for ci, (name, teams) in enumerate(cols):
-            col_x = x0 + (ci % per_row) * (COL_W + gap)
-            col_y = top + (ci // per_row) * (rows_h + 18)
-            ca = _ease(_phase(ms, self._drops_at - 300 + ci * 60, 400))
-            card = QRectF(col_x, col_y, COL_W, 40 + len(teams) * ROW_H + 6)
+        # One card per pool: a pool wrapped over several columns (a league)
+        # gets a single container across them, not one box per column. A
+        # column without a title continues the pool before it; a pool can
+        # only be split where the grid itself wraps to a new row.
+        spans = []          # [first column, last column]
+        for ci, (name, _teams) in enumerate(cols):
+            if spans and not name and ci % per_row:
+                spans[-1][1] = ci
+            else:
+                spans.append([ci, ci])
+        for first, last in spans:
+            col_x = x0 + (first % per_row) * (COL_W + gap)
+            col_y = top + (first // per_row) * (rows_h + 18)
+            rows = max(len(cols[c][1]) for c in range(first, last + 1))
+            ca = _ease(_phase(ms, self._drops_at - 300 + first * 60, 400))
+            card = QRectF(col_x, col_y, (last - first + 1) * COL_W + (last - first) * gap,
+                          40 + rows * ROW_H + 6)
             p.save()
             p.setOpacity(ca)
             p.fillRect(card, QColor(BG_CARD))
@@ -282,6 +293,11 @@ class TournamentIntroScreen(Screen):
             p.drawRect(card)
             p.fillRect(QRectF(card.x(), card.y(), card.width(), 3), QColor(ACCENT))
             p.restore()
+        i = 0
+        for ci, (name, teams) in enumerate(cols):
+            col_x = x0 + (ci % per_row) * (COL_W + gap)
+            col_y = top + (ci // per_row) * (rows_h + 18)
+            ca = _ease(_phase(ms, self._drops_at - 300 + ci * 60, 400))
             if name:
                 self._text(p, QRectF(col_x + 16, col_y + 8, COL_W - 32, 26), name.upper(), 14, ACCENT,
                            track=2.0, opacity=ca, align=Qt.AlignLeft | Qt.AlignVCenter)

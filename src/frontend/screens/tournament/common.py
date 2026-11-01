@@ -463,11 +463,10 @@ class NewsItem(QWidget):
         kind = item.get("kind", "")
         color = NEWS_COLORS.get(kind, FG_TERTIARY)
         h = QHBoxLayout(self)
-        h.setContentsMargins(10, 6 if compact else 8, 10, 6 if compact else 8)
+        h.setContentsMargins(14, 6 if compact else 8, 10, 6 if compact else 8)
         h.setSpacing(10)
         self._color = color
-        tag = Tag(NEWS_TAGS.get(kind, kind or "news"), color, filled=kind in ("champion", "award"))
-        h.addWidget(tag, alignment=Qt.AlignTop)
+        self.setToolTip(NEWS_TAGS.get(kind, kind or "news").capitalize())
         from ui.editor_kit import Note
         text = Note(item.get("text", ""), color=FG_PRIMARY if not compact else FG_SECONDARY,
                     size=T_LABEL - (1 if compact else 0))
@@ -479,6 +478,8 @@ class NewsItem(QWidget):
     def paintEvent(self, event):
         p = QPainter(self)
         p.fillRect(QRectF(0, self.height() - 1, self.width(), 1), QColor(BORDER).darker(160))
+        # the kind is a thin colour stripe, not a boxed label per headline
+        p.fillRect(QRectF(2, 7, 3, max(4, self.height() - 15)), QColor(self._color))
 
 
 # ── headings, layout helpers ─────────────────────────────────────────────
@@ -562,6 +563,26 @@ _FORM_ROLE = Qt.UserRole + 1        # str: W/D/L pills to paint in the cell
 _SECTION_ROLE = Qt.UserRole + 2     # bool: a full-width section header row
 _RULE_ROLE = Qt.UserRole + 3        # bool: draw the qualification rule under the row
 _TINT_ROLE = Qt.UserRole + 4        # str: row background tint (the user's team)
+_BALL_ROLE = Qt.UserRole + 7        # bool: a ball by the name (a team you control)
+
+
+def paint_ball(p, center, length, color):
+    """A small rugby ball, tilted, `length` px tip to tip, in `color`:
+    the mark of a team you control."""
+    p.save()
+    p.setRenderHint(QPainter.Antialiasing)
+    p.translate(center)
+    p.rotate(-35)
+    a, b = length / 2, length * 0.32
+    p.setPen(Qt.NoPen)
+    p.setBrush(QColor(color))
+    p.drawEllipse(QPointF(0, 0), a, b)
+    ink = QColor(BG_PANEL)
+    p.setPen(QPen(ink, max(1.0, length / 14)))
+    p.drawLine(QPointF(-a * 0.45, 0), QPointF(a * 0.45, 0))         # the seam
+    for x in (-a * 0.2, 0.0, a * 0.2):                              # its stitches
+        p.drawLine(QPointF(x, -b * 0.3), QPointF(x, b * 0.3))
+    p.restore()
 
 
 class Section:
@@ -627,9 +648,16 @@ class _TableDelegate(QStyledItemDelegate):
             p.setPen(fg.color() if fg is not None else QColor(FG_PRIMARY))
             tr = (r.adjusted(8, 0, -16 - size.width(), 0) if right
                   else r.adjusted(16 + size.width(), 0, -8, 0))
+            ball = 18 if index.data(_BALL_ROLE) else 0
+            if ball:
+                tr = tr.adjusted(ball + 8, 0, 0, 0) if right else tr.adjusted(0, 0, -ball - 8, 0)
             text = p.fontMetrics().elidedText(str(index.data(Qt.DisplayRole) or ""), Qt.ElideRight,
                                               int(tr.width()))
             p.drawText(tr, (Qt.AlignRight if right else Qt.AlignLeft) | Qt.AlignVCenter, text)
+            if ball:
+                tw = p.fontMetrics().horizontalAdvance(text)
+                cx = tr.right() - tw - 8 - ball / 2 if right else tr.left() + tw + 8 + ball / 2
+                paint_ball(p, QPointF(cx, r.center().y()), ball, YOU_TINT)
         else:
             opt = option
             opt.state &= ~QStyle.State_Selected
@@ -680,7 +708,8 @@ class ReportIconButton(QPushButton):
 class DataTable(QTableWidget):
     """Read-only grid. set_rows([[cell, ...]], keys, colors={row: color},
     bold={row}, tint={row: color}, rules={row}). A cell is text, a
-    (text, color) tuple, or a dict {text, color, icon, form, bold, align}.
+    (text, color) tuple, or a dict {text, color, icon, form, bold, align,
+    ball} (ball: a ball by the name, beside its crest icon).
     A row may be a Section("MATCHDAY 3") header. Enter / double-click
     emits activated_row; keys[i] is what callers usually want."""
     activated_row = pyqtSignal(int)
@@ -776,6 +805,8 @@ class DataTable(QTableWidget):
                     item.setIcon(QIcon(spec["icon"]))
                 if spec.get("form") is not None:
                     item.setData(_FORM_ROLE, spec["form"])
+                if spec.get("ball"):
+                    item.setData(_BALL_ROLE, True)
                 if r in bold or spec.get("bold"):
                     f = item.font()
                     f.setBold(True)

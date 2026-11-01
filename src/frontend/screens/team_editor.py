@@ -144,41 +144,6 @@ class TeamEditorScreen(EditorScreen):
             })
         return rows
 
-    def bulk_actions(self):
-        from app.game_data import looks_reversed
-        n = sum(1 for seasons in self.ds.teams.values() for season, info in seasons.items()
-                for _vid, block in T.squad_blocks(info)
-                if looks_reversed([str(p) for p in block.get("players", [])], self.ds.players, season))
-        return [("reverse", "", n)]
-
-    def run_bulk_action(self, key):
-        if key != "reverse":
-            return
-        from app.game_data import looks_reversed
-
-        def go():
-            changed = []
-            for tid, seasons in self.ds.teams.items():
-                touched = False
-                for season, info in seasons.items():
-                    for _vid, block in T.squad_blocks(info):
-                        if looks_reversed([str(p) for p in block.get("players", [])],
-                                          self.ds.players, season):
-                            T.reverse(block)
-                            touched = True
-                if touched:
-                    save_team(self.ds.teams_file_path[tid], tid, seasons)
-                    changed.append(tid)
-                    self.ds.events.team_changed.emit(tid)
-            if self.record_id in changed:
-                self.open_record_keep_view(self.record_id)
-            self.reload_list()
-            self.shell.footer.set_status(f"Reversed squads in {len(changed)} team file(s)", GREEN)
-
-        count = self.bulk_actions()[0][2]
-        self.guard_dirty(lambda: self.confirm(
-            f"Reverse {count} squad(s)?","", "REVERSE AND SAVE", go))
-
     def load_record(self, tid):
         seasons = self.ds.teams.get(tid)
         return copy.deepcopy(seasons) if seasons is not None else None

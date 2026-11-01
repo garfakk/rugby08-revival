@@ -19,6 +19,7 @@ FEATURES = (
     "injuries",
     "discipline",
     "fatigue",
+    "returning",
     "stats",
     "news",
 )

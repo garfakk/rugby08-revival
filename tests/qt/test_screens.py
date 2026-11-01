@@ -637,6 +637,21 @@ def test_team_editor_shirt_names_tab(window, qapp):
     tab._render()                                    # the preview copes with the fixture's backs
     editor.undo()
     assert "shirtName" not in editor.session.working["2024"]["kits"][kit]
+    # THIS KIT ONLY: the shown kit gets its own position, the season's stays
+    tab._render()
+    tab.scope.edited.emit("kit")
+    working = editor.session.working["2024"]
+    own = working["kits"][kit]["shirtName"]["area"]
+    assert own == [round(v, 4) for v in tab._printer.area] or own
+    assert working["shirtNames"]["area"] == [0.2, 0.15, 0.6, 0.08]
+    tab.canvas.area_changed.emit([0.1, 0.5, 0.5, 0.06])         # moves this kit only
+    assert working["kits"][kit]["shirtName"]["area"] == [0.1, 0.5, 0.5, 0.06]
+    assert working["shirtNames"]["area"] == [0.2, 0.15, 0.6, 0.08]
+    tab.scope.edited.emit("all")                                # follows the season again
+    assert "shirtName" not in working["kits"][kit]
+    tab.canvas.area_changed.emit([0.3, 0.2, 0.4, 0.07])         # every kit follows
+    assert working["shirtNames"]["area"] == [0.3, 0.2, 0.4, 0.07]
+    tab.canvas.area_changed.emit([0.2, 0.15, 0.6, 0.08])
     assert editor.save()
     # saved (into the data pack or the user's edits, as the save target says)
     assert window.data.teams["10001"]["2024"]["shirtNames"]["font"] == "Oswald"

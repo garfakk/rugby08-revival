@@ -872,6 +872,7 @@ class ChoiceField(FieldBase):
         self.off_list_badge = True     # False when `display` already explains it
         self.on_hover = None           # optional fn(value): the popup's cursor moved onto a row
         self.on_popup_closed = None    # optional fn(): the popup closed (picked or not)
+        self.default_highlight = None  # optional fn() -> option the popup starts on when blank
         self._value = ""
         self._popup = None
 
@@ -940,8 +941,11 @@ class ChoiceField(FieldBase):
         anchor = self
         popup.open_at(anchor, screen, own_toggle=True)
         cycle = self._cycle()
-        if self._value in cycle:
-            QTimer.singleShot(0, lambda: popup.set_highlight(cycle.index(self._value)))
+        start = self._value
+        if not start and self.default_highlight is not None:
+            start = self.default_highlight() or start
+        if start in cycle:
+            QTimer.singleShot(0, lambda: popup.set_highlight(cycle.index(start)))
         self._popup = popup
 
     def _on_popup_closed(self):

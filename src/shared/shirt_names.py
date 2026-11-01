@@ -21,12 +21,16 @@ Where it is configured
       placement  "auto": the free space above the number, else below it;
                  "above" / "below" the number (these follow the number when
                  the kit changes) or "custom" (the `area` below)
-      area       [x, y, w, h], fractions of the texture (placement "custom")
+      area       [x, y, w, h], fractions of the texture (placement "custom");
+                 the position every kit of the season gets unless it has its own
+                 (see the kit's "area")
       gap        distance to the number, pixels of a 512 px texture
   kit          "shirtName": the colours, which usually differ per kit
       color      "auto" (the colour of the kit's own numbers) or "#rrggbb"
       outline    "" (none) or "#rrggbb"
       outlineWidth  pixels of a 512 px texture
+      area       [x, y, w, h]: this kit's own name position, in place of the
+                 season's (a kit without one follows the season's)
   player       "shirt_name": what to print instead of the generated text
                  (an empty string is ignored)
 
@@ -86,7 +90,7 @@ KIT_DEFAULTS = {
     "outline": "",
     "outlineWidth": 0,
 }
-LIMITS = {"size": (8, 120), "spacing": (-20, 60), "arch": (-60, 60), "gap": (-40, 120),
+LIMITS = {"size": (8, 120), "spacing": (-20, 60), "arch": (-60, 60), "gap": (-REF, REF),
           "outlineWidth": (0, 12)}
 
 _HEX = re.compile(r"^#?([0-9a-fA-F]{6})$")
@@ -154,6 +158,10 @@ def normalise_style(season_block=None, kit_block=None):
     out["area"] = _area(season_block.get("area"))
     if out["placement"] == "custom" and out["area"] is None:
         out["placement"] = "auto"
+    kit_area = _area(kit_block.get("area"))
+    if kit_area:                          # this kit's own position wins
+        out["area"] = kit_area
+        out["placement"] = "custom"
     color = kit_block.get("color", "auto")
     out["color"] = color_hex(parse_color(color)) if parse_color(color) else "auto"
     outline = parse_color(kit_block.get("outline"))

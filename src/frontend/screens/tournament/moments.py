@@ -417,7 +417,17 @@ class MatchdayRecap(MomentOverlay):
 
     def _settled(self):
         super()._settled()
-        if self._stats_btn is not None:
+        self._show_stats()
+
+    def _tick(self):
+        super()._tick()
+        # MATCH STATS comes in with your match's card done, before the
+        # other results slide in under it
+        if not self._closing and self._ms >= self._others_start - 150:
+            self._show_stats()
+
+    def _show_stats(self):
+        if self._stats_btn is not None and not self._stats_btn.isVisible() and not self._closing:
             self._place_stats()
             self._stats_btn.show()
 

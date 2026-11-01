@@ -16,33 +16,30 @@ from .model import Condition
 # (type, weight, min matches, max matches). max None = rest of tournament.
 INJURY_TABLE = [
     ("knock", 30, 0, 0),
-    ("dead leg", 10, 0, 1),
-    ("hamstring strain", 14, 1, 3),
-    ("ankle sprain", 12, 1, 3),
-    ("calf strain", 8, 1, 2),
+    ("bruised thigh", 10, 0, 1),
+    ("pulled hamstring", 14, 1, 3),
+    ("twisted ankle", 12, 1, 3),
+    ("pulled calf", 8, 1, 2),
     ("concussion", 10, 1, 2),
-    ("shoulder injury", 7, 2, 5),
-    ("rib cartilage damage", 4, 1, 3),
-    ("knee ligament damage", 3, 3, 8),
-    ("broken hand", 1.5, 2, 4),
-    ("ruptured ACL", 0.5, None, None),
+    ("dislocated shoulder", 7, 2, 5),
+    ("cracked ribs", 4, 1, 3),
+    ("sprained knee", 3, 3, 8),
+    ("broken thumb", 1.5, 2, 4),
+    ("torn ACL", 0.5, None, None),
 ]
 OUT_FOR_TOURNAMENT = 99
-_UNCOUNTABLE = {"concussion", "knee ligament damage", "rib cartilage damage"}
 
 
-def with_article(kind) -> str:
-    if kind in _UNCOUNTABLE:
-        return kind
-    return ("an " if kind[0] in "aeiou" else "a ") + kind
+def _matches(n) -> str:
+    return "the next match" if n == 1 else f"the next {n} matches"
 
 
 def _describe(c):
     n = c.matches_left
     kind = c.data.get("type", "injury")
     if n is None or n >= OUT_FOR_TOURNAMENT:
-        return f"{kind} (out for the tournament)"
-    return f"{kind} ({n} match{'es' if n != 1 else ''})"
+        return f"{kind}: out for the rest of the tournament"
+    return f"{kind}: misses {_matches(n)}"
 
 
 register_condition_kind("injury", "Injured", blocks_selection=True, describe=_describe)
@@ -86,13 +83,14 @@ def _injuries(t, fixture, result, rng):
                 # Only the user's own knocks are news: everyone else's
                 # would bury the headlines that matter.
                 if entry and entry.human:
-                    t.add_news("knock", f"{p.name} ({team}) took {with_article(kind)} but should be fine",
+                    t.add_news("knock", f"{p.name} ({team}) was hurt"
+                               f"{'' if kind == 'knock' else f' ({kind})'} but should be fine",
                                [side.team_id], p.pid)
                 continue
             add_condition(t, p, Condition(kind="injury", matches_left=n, data={"type": kind}))
             if n >= OUT_FOR_TOURNAMENT:
-                t.add_news("injury", f"Blow for {team}: {p.name} is out of the tournament ({kind})",
+                t.add_news("injury", f"{p.name} ({team}) will miss the rest of the tournament ({kind})",
                            [side.team_id], p.pid)
             else:
-                t.add_news("injury", f"{p.name} ({team}) will miss {n} match{'es' if n != 1 else ''}"
-                           f" with {with_article(kind)}", [side.team_id], p.pid)
+                t.add_news("injury", f"{p.name} ({team}) will miss {_matches(n)} ({kind})",
+                           [side.team_id], p.pid)

@@ -88,6 +88,7 @@ def point_config(monkeypatch, data_dir=None, game_dir=None):
     config.py computes only once) at another data and/or game folder."""
     if data_dir:
         monkeypatch.setattr(config, "mod_data_directory", data_dir)
+        monkeypatch.setattr(config, "pack_directory", data_dir)
         for attr, sub in DATA_DIR_ATTRS.items():
             monkeypatch.setattr(config, attr, os.path.join(data_dir, sub))
     if game_dir:

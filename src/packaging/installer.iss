@@ -3,6 +3,7 @@
 ;   /DVariant=app    program only (upgrade, keeps data)
 ;   /DVariant=data   data pack only (new season etc, no program needed)
 ; Other defines: AppVersion, DataVersion, ProgramDir (staged program+assets),
+; UserModDir (staged empty user_data/mod_data tree, gen_user_mod_data.py),
 ; DataDir (staged data pack), OutDir, IncDir (generated data_*.inc).
 #ifndef Variant
   #define Variant "full"
@@ -75,6 +76,9 @@ Source: "{#ProgramDir}\app_data\*"; DestDir: "{app}\app_data"; Flags: ignorevers
 ; files into what's supposed to be a clean copy; the mod writes them all fresh
 ; on first launch.
 #include AddBackslash(IncDir) + "game_includes.inc"
+; the user's own mod data (shared/mod_overlay.py): empty folders laid out like the data pack, and a
+; README. Only what is staged is copied, so files the user put there are never replaced.
+Source: "{#UserModDir}\*"; DestDir: "{app}\user_data\mod_data"; Flags: ignoreversion recursesubdirs createallsubdirs
 #endif
 #ifdef WithData
 #include AddBackslash(IncDir) + "data_files.inc"

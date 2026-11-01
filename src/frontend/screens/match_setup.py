@@ -27,7 +27,7 @@ from shared import kit_files
 from shared.user_prefs import user_prefs
 from app.screen_base import Screen
 from app.input import Action, KEYMAP
-from app.state import CONTROLLER_SLOTS, DataStore, MatchConfig, TeamSlot
+from app.state import DataStore, MatchConfig, TeamSlot, controllers_for
 from app import difficulty
 from app import variants as V
 from app.match_data_builder import build_match_data
@@ -214,7 +214,7 @@ class TeamColumn(QWidget):
         # The groups picker: only the team's own seasons, right under its
         # name (same column, so it centres on the name, not the card), always
         # from a dropdown list.
-        self.style = DEFAULT_STYLE
+        self.style = "classic"   # built as classic; set_style switches
         self.season_row2 = SelectorRow("season", compact=True)
         self.season_row2._display = season_label
         self.season_row2.set_force_popup(True)
@@ -354,7 +354,7 @@ class TeamColumn(QWidget):
         keeping the team and season it shows."""
         style = style if style in STYLE_IDS else DEFAULT_STYLE
         before, self.style = self.style, style
-        classic = style == DEFAULT_STYLE
+        classic = style == "classic"
         self.season_row.setVisible(classic)
         self.category_row.setVisible(classic)
         self.group_picker.setVisible(not classic)
@@ -527,7 +527,7 @@ class TeamColumn(QWidget):
         picked in the squad editor), then load it."""
         slot = self._slot()
         tid = self.name_picker.current()
-        if self.style != DEFAULT_STYLE:
+        if self.style != "classic":
             if tid:
                 self._adopt_team(tid)
             return
@@ -668,7 +668,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self._advanced_open = False
         self._kickoff_running = False
         self._toss = None              # the coin toss overlay while it runs
-        self._picker_style = DEFAULT_STYLE
+        self._picker_style = "classic"   # what the columns are built as
         self._build()
         self._init_devices()
 
@@ -677,11 +677,18 @@ class MatchSetupScreen(KickoffTransition, Screen):
         # Prefer a season that can actually field two different teams —
         # some seasons in the data only carry one, and opening on a team
         # against itself looks broken even though it's just thin data.
+        # The pick is a (season, category) pair with at least two teams, so
+        # home and away always come from the same competition and season
+        # and are never the same team.
         seasons = self.ds.seasons()
-        playable = [s for s in seasons if len(self.ds.teams_in_season(s)) >= 2]
-        season = random.choice(playable or seasons) if seasons else None
-        cats = self.ds.categories_for(season) if season else []
-        category = random.choice(cats) if cats else None
+        pairs = [(s, c) for s in seasons for c in self.ds.categories_for(s) if c
+                 if len(self.ds.teams_for(s, c)) >= 2]
+        if pairs:
+            season, category = random.choice(pairs)
+        else:
+            season = random.choice(seasons) if seasons else None
+            cats = self.ds.categories_for(season) if season else []
+            category = random.choice(cats) if cats else None
         self.home_col.init_random(season, category)
         self.away_col.init_random(season, category, avoid=self.cfg.home.team_id)
         self.on_team_changed("home")   # sync cfg.stadium from the initial pick
@@ -750,7 +757,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
         previous, self._picker_style = self._picker_style, style
         for col in (self.home_col, self.away_col):
             col.set_style(style)
-        if style != DEFAULT_STYLE and (first or previous == DEFAULT_STYLE):
+        if style != "classic" and (first or previous == "classic"):
             self._restore_last_match()
 
     # last match: reopen on it (user_data/last_match.json)
@@ -781,6 +788,8 @@ class MatchSetupScreen(KickoffTransition, Screen):
                 picks[side] = (str(tid), str(season), kit)
         except (OSError, ValueError, KeyError, TypeError):
             return
+        if picks["home"][0] == picks["away"][0]:
+            return      # keep the random pair: never a team against itself
         self.home_col.set_pick(*picks["home"])
         self.away_col.set_pick(*picks["away"])
 
@@ -1023,6 +1032,8 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self.controller_board.changed.connect(self._on_controllers_changed)
         self.focus.register(self.controller_board)
         cv.addWidget(self.controller_board)
+        # A click anywhere on the card (its title, margins) focuses the board.
+        controls_card.mousePressEvent = lambda _e: self.controller_board.setFocus(Qt.MouseFocusReason)
         wv.addWidget(controls_card)
 
         wv.addStretch(1)
@@ -1343,12 +1354,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
     def _on_controllers_changed(self):
         """The board's lanes as cfg.controllers: the keyboard, then each
         connected pad in order; slots for pads not there are off."""
-        board = self.controller_board
-        zones = [board.zones[KBD]] + board.pad_zones()
-        self.cfg.controllers = {
-            slot_id: {"kind": kind, "label": label,
-                      "zone": zones[i] if i < len(zones) else "none"}
-            for i, (slot_id, kind, label) in enumerate(CONTROLLER_SLOTS)}
+        self.cfg.controllers = controllers_for(self.controller_board.slot_zones())
 
     def _refresh_controller_teams(self):
         from screens.tournament.common import team_crest
@@ -1521,7 +1527,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self.play_btn.setFocus()
 
     def _launch(self, cfg):
-        if self._picker_style != DEFAULT_STYLE:
+        if self._picker_style != "classic":
             self._save_last_match()
         match_data = build_match_data(self.ds, cfg)
         if match_data is None:

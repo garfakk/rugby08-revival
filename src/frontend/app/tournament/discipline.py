@@ -18,8 +18,8 @@ from .model import Condition
 DEFAULTS = {"red_ban": [1, 3], "yellow_accumulation": 3, "yellow_ban": 1, "citing_chance": 0.01}
 
 register_condition_kind("suspension", "Suspended", blocks_selection=True,
-                        describe=lambda c: f"suspended ({c.matches_left} match"
-                                           f"{'es' if c.matches_left != 1 else ''})")
+                        describe=lambda c: "banned: misses " + (
+                            "the next match" if c.matches_left == 1 else f"the next {c.matches_left} matches"))
 register_component("discipline", "player", lambda: {"yellows": 0})
 
 
@@ -29,7 +29,7 @@ def rules(t) -> dict:
 
 def _ban(t, p, team, matches, why):
     add_condition(t, p, Condition(kind="suspension", matches_left=matches, data={"reason": why}))
-    t.add_news("suspension", f"{p.name} ({t.team_name(team)}) banned for {matches} match"
+    t.add_news("suspension", f"{p.name} ({t.team_name(team)}) is banned for {matches} match"
                f"{'es' if matches != 1 else ''} ({why})", [team], p.pid)
 
 

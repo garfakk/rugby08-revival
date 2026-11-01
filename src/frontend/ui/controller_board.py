@@ -40,6 +40,7 @@ class ControllerBoard(QWidget):
         self.crests = {}
         self.pads = ()                      # connected pads' indices, in order
         self.zones = {KBD: "home"}          # device: lane
+        self.allowed = ZONES                # lanes a device may move into
         self._hover = None                  # (device, -1 | 1)
         self._nav = None
         self._hook()
@@ -73,8 +74,18 @@ class ControllerBoard(QWidget):
         self.update()
         self.changed.emit()
 
+    def set_allowed(self, zones):
+        """Only these lanes take a device (CPU always does): a tournament or
+        challenge only lets you play the sides you manage. A device in a
+        lane no longer allowed goes back to CPU."""
+        self.allowed = tuple(z for z in ZONES if z in set(zones) | {"none"})
+        for device, zone in list(self.zones.items()):
+            if zone not in self.allowed:
+                self.set_zone(device, "none")
+        self.update()
+
     def set_zone(self, device, zone):
-        if self.zones.get(device) == zone or zone not in ZONES:
+        if self.zones.get(device) == zone or zone not in self.allowed:
             return
         self.zones[device] = zone
         self.update()
@@ -84,12 +95,27 @@ class ControllerBoard(QWidget):
         """One lane left (-1) or right (+1); stops at the ends."""
         if device not in self.zones:
             return
-        i = max(0, min(len(ZONES) - 1, ZONES.index(self.zones[device]) + delta))
-        self.set_zone(device, ZONES[i])
+        i = ZONES.index(self.zones[device]) + delta
+        while 0 <= i < len(ZONES) and ZONES[i] not in self.allowed:
+            i += delta          # skip a lane closed to devices
+        if 0 <= i < len(ZONES):
+            self.set_zone(device, ZONES[i])
 
     def pad_zones(self):
         """Each connected pad's lane, in the game's pad order."""
         return [self.zones[n] for n in self.pads]
+
+    def slot_zones(self):
+        """The keyboard's lane, then each connected pad's: the order of the
+        game's input slots (app.state.controllers_for)."""
+        return [self.zones[KBD]] + self.pad_zones()
+
+    def load_slots(self, controllers):
+        """Put each device in the lane MatchConfig.controllers gives its
+        slot (slot 1 the keyboard, 2.. the pads in order)."""
+        slots = sorted(controllers.items())
+        for device, (_slot, c) in zip(self.devices(), slots):
+            self.set_zone(device, c.get("zone", "none"))
 
     def set_teams(self, names, crests=None):
         self.names = dict(names)
@@ -155,6 +181,10 @@ class ControllerBoard(QWidget):
         self.update()
 
     def mousePressEvent(self, event):
+        # The focus manager registers widgets as TabFocus (no click focus):
+        # a click on the board must still give it the focus, so the pads'
+        # left/right move their icons right away.
+        self.setFocus(Qt.MouseFocusReason)
         hit = self._hit(QPointF(event.pos()))
         if hit and event.button() == Qt.LeftButton:
             self.move(*hit)
@@ -201,7 +231,7 @@ class ControllerBoard(QWidget):
         the way its icon slides."""
         rail = QColor(FG_MUTED)
         rail.setAlpha(110)
-        stops = [self._lane_rect(i).center().x() for i in range(len(ZONES))]
+        stops = [self._lane_rect(i).center().x() for i, z in enumerate(ZONES) if z in self.allowed]
         for row in range(len(self.devices())):
             y = self._row_y(row) + CHIP_H / 2
             p.setPen(QPen(rail, 1.5, Qt.DashLine))
@@ -213,6 +243,7 @@ class ControllerBoard(QWidget):
 
     def _paint_lane(self, p, i, zone):
         lane = self._lane_rect(i)
+        p.setOpacity(1.0 if zone in self.allowed else 0.35)
         tint = QColor(_LANE_TINT[zone])
         fill = QColor(tint)
         fill.setAlpha(22 if zone != "none" else 10)
@@ -241,6 +272,7 @@ class ControllerBoard(QWidget):
             x += crest + 8
         p.setPen(QColor(FG_PRIMARY if zone != "none" else FG_TERTIARY))
         p.drawText(QRectF(x, head.top(), room + 4, head.height()), Qt.AlignVCenter | Qt.AlignLeft, text)
+        p.setOpacity(1.0)
 
     def _paint_chip(self, p, device, rect):
         tint = QColor(_DEVICE_TINT[0 if device == KBD else 1 + self.pads.index(device) % 4])

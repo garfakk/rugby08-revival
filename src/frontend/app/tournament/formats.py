@@ -167,7 +167,7 @@ class Edition:
       id            the template id, or "<template id>@<season>" for a season
                     of a club league built from the data
       family        the competition it belongs to (family_of)
-      label         "2015" (a real edition), "2023-24" (a club season)
+      label         "2015" (a real edition), "2023-2024" (a club season)
       missing       team ids of the real draw the data doesn't have: they
                     are left out, never replaced
     """
@@ -192,12 +192,12 @@ def is_real_edition(tpl) -> bool:
 
 
 def _short_season(season) -> str:
-    """"2024" -> "2023-24"."""
+    """"2024" -> "2023-2024"."""
     try:
         year = int(season)
     except (TypeError, ValueError):
         return str(season)
-    return f"{year - 1}-{str(year)[2:]}"
+    return f"{year - 1}-{year}"
 
 
 def needed_per_group(template) -> int:

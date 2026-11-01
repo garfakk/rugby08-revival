@@ -22,7 +22,7 @@ TEMPLATE = {
     "stages": [
         {"id": "pools", "name": "Pool", "kind": "round_robin", "qualify": 2, "fixtures": [
             _fx("2024-09-01", ENG, FRA, "27–10", real_events=[
-                {"kind": "injury", "team": FRA, "player": "PLACEHOLDER", "matches": 2, "type": "hamstring strain"},
+                {"kind": "injury", "team": FRA, "player": "PLACEHOLDER", "matches": 2, "type": "pulled hamstring"},
                 {"kind": "red", "team": ENG, "player": "PLACEHOLDER_E"},
                 {"kind": "suspension", "team": ENG, "player": "PLACEHOLDER_E", "matches": 3,
                  "reason": "red card"}]),
@@ -96,7 +96,7 @@ def test_ai_matches_get_the_real_result_and_the_real_events(ds, data_dir):
     assert fra_pid and eng_pid
     assert sum(l.red_cards for l in opener.result.home.players if l.pid == eng_pid) == 1
     texts = [n["text"] for n in t.news]
-    assert any("will miss 2 matches (hamstring strain)" in x for x in texts)
+    assert any("will miss the next 2 matches (pulled hamstring)" in x for x in texts)
     assert any("banned for 3 matches (red card)" in x for x in texts)
     # no random roll on a real result: only the real events made injury / ban news
     real_days = {n["day"] for n in t.news if n["kind"] in ("injury", "suspension")}

@@ -714,8 +714,6 @@ class MainWindow(QMainWindow):
                                                    open_player=self.open_player)
         self.screen_player_editor = PlayerEditorScreen(self.data, editor_back,
                                                        open_team=self.open_team)
-        self.screen_team_editor.on_import = self.show_roster_import
-        self.screen_player_editor.on_import = self.show_roster_import
         yield
         self.screen_challenge_editor = ChallengeEditorScreen(
             self.data, editor_back, on_edit_squad=self.edit_challenge_squad)
@@ -953,6 +951,9 @@ class MainWindow(QMainWindow):
             self.screens.show_screen(widget)
 
         t = session.t
+        # the sides you manage: the only ones a controller may join
+        managed = {name for name, tid in (("home", fixture.home), ("away", fixture.away))
+                   if t.teams[tid].human}
         venue = report.venue_name(self.data, fixture) or (cfg.stadium or {}).get("data", {}).get("name", "")
         stage = fixture.label or fixture.round_name
         self.screen_presentation.present(Presentation(
@@ -965,8 +966,10 @@ class MainWindow(QMainWindow):
                      f"Half length: {cfg.halftime_length}"],
             home=side(cfg.home), away=side(cfg.away),
             on_kit=set_kit, on_kickoff=kickoff, on_back=back,
-            controlled=lambda: {c.get("zone") for c in cfg.controllers.values()},
+            controlled=lambda: managed,
             on_edit_squad=edit_squad,
+            controller_sides=managed, controllers=cfg.controllers,
+            on_controllers=lambda c: setattr(cfg, "controllers", c),
             play_label="PERFORM TOSS" if user_prefs.coin_toss else "KICK OFF"))
         self.screens.show_screen(self.screen_presentation)
 

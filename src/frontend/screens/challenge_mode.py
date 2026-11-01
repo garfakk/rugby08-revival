@@ -267,8 +267,16 @@ class ChallengeModeScreen(Screen):
                             kit_variant=slot.get("kit_variant", ""),
                             kit_override=ch.custom_kit(work, name))
 
+        controllers = {1: {"kind": "kbd", "label": "KEYBOARD", "zone": work["user_side"]}}
+
+        def set_controllers(c):
+            controllers.clear()
+            controllers.update(c)
+
         def kickoff():
-            match_data = build_match_data(self.ds, ch.to_match_config(self.ds, work))
+            cfg = ch.to_match_config(self.ds, work)
+            cfg.controllers = dict(controllers)
+            match_data = build_match_data(self.ds, cfg)
             if match_data:
                 # What the full-time screen needs to frame the result; rides
                 # along in match_data so a rematch keeps it.
@@ -287,7 +295,9 @@ class ChallengeModeScreen(Screen):
             choices=choices,
             on_kit=lambda s, key: work[s].__setitem__("kit", key),
             on_kickoff=kickoff,
-            controlled=lambda: {work["user_side"]}))
+            controlled=lambda: {work["user_side"]},
+            controller_sides={work["user_side"]}, controllers=dict(controllers),
+            on_controllers=set_controllers))
 
     def _details(self, data):
         """The settings the challenge fixes, one line each."""

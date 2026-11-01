@@ -84,11 +84,13 @@ if [ "$TARGET" != app ]; then
 fi
 [ -d "$DATASTAGE" ] || DATASTAGE="$OUT/data_pack"
 
+USERMOD="$OUT/user_mod_data"; rm -rf "$USERMOD"; python3 "$HERE/gen_user_mod_data.py" "$USERMOD"
+
 iscc() {  # variant, extra defines...
   local variant="$1"; shift
   wine "$ISCC" "/DVariant=$variant" "/DAppVersion=$APP_VERSION" "/DDataVersion=$DATA_VERSION" \
     "/DProgramDir=$(winpath "$PROG")" "/DDataDir=$(winpath "$DATASTAGE")" \
-    "/DOutDir=$(winpath "$OUT")" "/DIncDir=$(winpath "$INC")" "$@" \
+    "/DUserModDir=$(winpath "$USERMOD")" "/DOutDir=$(winpath "$OUT")" "/DIncDir=$(winpath "$INC")" "$@" \
     "$(winpath "$HERE/installer.iss")" </dev/null 2>&1 | grep -E "Successful|Error|error|Warning" || true
 }
 step "installers"
@@ -101,6 +103,7 @@ if [ "$TARGET" = all ]; then
   step "portable zip"
   P="$OUT/portable/R08Revival"; rm -rf "$OUT/portable"; mkdir -p "$OUT/portable"
   cp -al "$PROG" "$P"; cp -al "$DATASTAGE" "$P/mod_data"; : > "$P/portable.txt"
+  mkdir -p "$P/user_data"; cp -a "$USERMOD" "$P/user_data/mod_data"
   ( cd "$OUT/portable" && zip -qr "$OUT/R08Revival_${APP_VERSION}_portable.zip" R08Revival )
   rm -rf "$OUT/portable"
 fi

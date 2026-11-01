@@ -101,6 +101,9 @@ class SquadEditorScreen(Screen):
         self._refresh_all()
 
     def _load_lineup(self, players: dict, lineup: dict):
+        # what RESET goes back to: the squad as it was opened (or as the
+        # variant picked loaded it)
+        self._initial = (players, lineup)
         self.players = {int(k): v for k, v in players.items()}
         # A player can only hold one shirt: dedupe rather than letting a
         # repeated id in the team file fill several slots with the same man.
@@ -140,7 +143,8 @@ class SquadEditorScreen(Screen):
         root = QVBoxLayout(self)
         root.setContentsMargins(0, 0, 0, 0)
         root.setSpacing(0)
-        header = page_header(f"Squad · {self.team_name}", right=self._count_text(), on_back=self._on_back_clicked)
+        # No header BACK button: DISCARD leaves, and the B key / pad BACK still does.
+        header = page_header(f"Squad · {self.team_name}", right=self._count_text())
         self._count_lbl = header.findChild(QLabel, "pageHeaderRight")
         root.addWidget(header)
 
@@ -243,6 +247,10 @@ class SquadEditorScreen(Screen):
         v.addWidget(self.slot_lbl)
 
         inner_w = SIDE_PANEL_WIDTH - 2 * SIDE_PANEL_MARGIN
+        self.player_first_lbl = display_label("", 14, QFont.DemiBold, track=0.6,
+                                              color=FG_SECONDARY, upper=False)
+        self.player_first_lbl.setFixedWidth(inner_w)
+        v.addWidget(self.player_first_lbl)
         self.player_name_lbl = display_label("—", 26, QFont.Bold, track=0.6)
         self.player_name_lbl.setFixedWidth(inner_w)
         v.addWidget(self.player_name_lbl)
@@ -278,11 +286,19 @@ class SquadEditorScreen(Screen):
         self.focus.register(self.roles_btn)
         v.addWidget(self.roles_btn)
 
+        reset_line = QHBoxLayout()
+        reset_line.setSpacing(8)
         self.clear_btn = StyledButton("CLEAR ALL", "danger")
         self.clear_btn.setMinimumHeight(BTN_HEIGHT)
         self.clear_btn.clicked.connect(self._clear_all)
         self.focus.register(self.clear_btn)
-        v.addWidget(self.clear_btn)
+        reset_line.addWidget(self.clear_btn, stretch=1)
+        self.reset_btn = StyledButton("RESET", "neutral")
+        self.reset_btn.setMinimumHeight(BTN_HEIGHT)
+        self.reset_btn.clicked.connect(self._reset)
+        self.focus.register(self.reset_btn)
+        reset_line.addWidget(self.reset_btn, stretch=1)
+        v.addLayout(reset_line)
 
         # Why SAVE is unavailable — filled by _update_save_state
         self.save_note = QLabel("")
@@ -432,6 +448,8 @@ class SquadEditorScreen(Screen):
         self._update_hints()
 
     def _show_player_preview(self, player, fit_number):
+        first = (player or {}).get("first_name") or ""
+        self.player_first_lbl.setText(_elide_for(self.player_first_lbl, first) if first else "")
         self.player_name_lbl.setText(_elide_for(self.player_name_lbl, _last_name(player)))
         positions = _all_positions(player).split(" / ") if player else []
         for i, lbl in enumerate(self.player_pos_lbls):
@@ -532,6 +550,18 @@ class SquadEditorScreen(Screen):
         self.roles = {}
         self._refresh_all()
 
+    def _reset(self):
+        """Back to the squad, roles and set plays the editor opened on."""
+        self._load_lineup(*self._initial)
+        self._sync_set_play_rows()
+        self._refresh_all()
+
+    def _sync_set_play_rows(self):
+        options = list(SET_PLAY_OPTIONS)
+        for key, row in self.set_play_rows.items():
+            k = self.set_plays.get(key)
+            row.set_index(options.index(k) if k in options else 0)
+
     def _on_role_changed(self, key):
         self.roles[key] = self.role_rows[key].current()
         self._refresh_all()
@@ -578,10 +608,7 @@ class SquadEditorScreen(Screen):
         self._load_lineup(*self._load_variant(vid))
         if self._count_lbl is not None:
             self._count_lbl.setText(self._count_text())
-        options = list(SET_PLAY_OPTIONS)
-        for key, row in self.set_play_rows.items():
-            k = self.set_plays.get(key)
-            row.set_index(options.index(k) if k in options else 0)
+        self._sync_set_play_rows()
         self._refresh_all()
 
     def _save(self):

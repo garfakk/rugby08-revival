@@ -284,3 +284,18 @@ def test_overlap_with_a_logo_is_reported(kit, tmp_path):
     assert SN.area_overlap([0.2, 0.30, 0.6, 0.08], clean) == 0.0
     busy = SN.analyse_numbers(_with_sponsor(kit, tmp_path, (0.2, 0.30, 0.8, 0.38)))
     assert SN.area_overlap([0.2, 0.30, 0.6, 0.08], busy) > 0.9
+
+
+def test_a_kit_can_have_its_own_name_position():
+    """The season's area is every kit's default; a kit's own "area" wins for
+    that kit only."""
+    from shared import shirt_names as SN
+    season = {"enabled": True, "placement": "custom", "area": [0.2, 0.1, 0.6, 0.08]}
+    plain = SN.normalise_style(season, {"color": "#fff"})
+    own = SN.normalise_style(season, {"area": [0.1, 0.4, 0.5, 0.06]})
+    assert plain["area"] == [0.2, 0.1, 0.6, 0.08]
+    assert own["area"] == [0.1, 0.4, 0.5, 0.06] and own["placement"] == "custom"
+    # a kit position with a season on "auto" still places that kit by hand
+    assert SN.normalise_style({"enabled": True}, {"area": [0.1, 0.4, 0.5, 0.06]})["placement"] == "custom"
+    # a bad kit area is ignored: the season's applies
+    assert SN.normalise_style(season, {"area": "x"})["area"] == [0.2, 0.1, 0.6, 0.08]

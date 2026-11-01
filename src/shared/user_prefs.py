@@ -132,7 +132,7 @@ class UserPrefs:
         # How Quick Match picks a team (app/team_browse.py STYLES): "classic"
         # (season, category, team) or "groups" (group, team, season).
         # Settings > Quick Match Picker.
-        self.match_picker = "classic"
+        self.match_picker = "groups"
         # The difficulty a match starts on (app/difficulty.py LEVELS): quick
         # match, a new tournament, a challenge. Settings > Preferred Difficulty.
         self.difficulty = "elite"
@@ -163,7 +163,7 @@ class UserPrefs:
             self.check_updates = cp.getboolean(_SECTION, "check_updates", fallback=self.check_updates)
             self.match_picker = cp.get(_SECTION, "match_picker", fallback=self.match_picker).strip().lower()
             if self.match_picker not in ("classic", "groups"):     # the older team-first styles
-                self.match_picker = "classic"
+                self.match_picker = "groups"
             self.difficulty = cp.get(_SECTION, "difficulty", fallback=self.difficulty).strip().lower() \
                 or "elite"
             mode = cp.get(_SECTION, "wind_mode", fallback=self.wind_mode).strip().lower()

@@ -29,6 +29,8 @@ from ui import StyledButton
 from ui.kickoff_transition import KickoffTransition
 from ui.atmosphere import AtmosphereWidget
 from ui.player_stage import KitStage
+from ui.controller_board import ControllerBoard
+from app.state import controllers_for
 from ui.checklist import CheckList
 from ui.broadcast import Card, SelectorRow, HintBar, page_header, eyebrow_label, display_label
 from ui.editor_kit import Note
@@ -81,6 +83,12 @@ class Presentation:
     on_edit_squad: Optional[Callable] = None
     # the start button: PERFORM TOSS when a coin toss comes first
     play_label: str = "KICK OFF"
+    # The controllers board (as in quick match): the sides a device may
+    # join (None = no board), the MatchConfig.controllers it opens on, and
+    # fn(controllers) on every move.
+    controller_sides: Optional[set] = None
+    controllers: dict = field(default_factory=dict)
+    on_controllers: Optional[Callable] = None
 
 
 def _kit_assets(ds, team_id, season, key, kit_variant="", kit_override=None):
@@ -324,8 +332,28 @@ class MatchPresentationScreen(KickoffTransition, Screen):
         mv.addLayout(self.choices_grid)
         mv.addStretch(1)      # takes the room only when the text block is hidden
 
+        # Controllers: its own card under the match card, as in quick match.
+        self.controls_card = Card(translucent=True)
+        self.controls_card.setMinimumWidth(340)
+        self.controls_card.setMaximumWidth(420)
+        cv = QVBoxLayout(self.controls_card)
+        cv.setContentsMargins(24, 18, 24, 20)
+        cv.setSpacing(10)
+        cv.addWidget(eyebrow_label("Controllers", color=ACCENT, size=15))
+        self.controller_board = ControllerBoard()
+        self.controller_board.setToolTip("Move your controller left or right to pick a side; middle: CPU")
+        self.controller_board.changed.connect(self._on_controllers)
+        self.focus.register(self.controller_board)
+        cv.addWidget(self.controller_board)
+        self.controls_card.mousePressEvent = lambda _e: self.controller_board.setFocus(Qt.MouseFocusReason)
+        self.controls_card.hide()
+        mid_col = QVBoxLayout()
+        mid_col.setSpacing(14)
+        mid_col.addWidget(mid, stretch=1)
+        mid_col.addWidget(self.controls_card)
+
         bl.addWidget(self.home_card, stretch=5)
-        bl.addWidget(mid, stretch=3)
+        bl.addLayout(mid_col, stretch=3)
         bl.addWidget(self.away_card, stretch=5)
         root.addWidget(body, stretch=1)
 
@@ -387,7 +415,32 @@ class MatchPresentationScreen(KickoffTransition, Screen):
         self.away_card.set_spec(p.away)
         for card in (self.home_card, self.away_card):
             card.refresh_preview(load_3d=False)
+        self._load_controllers()
         self._refresh_controlled()
+
+    def _load_controllers(self):
+        p, board = self.p, self.controller_board
+        show = p.controller_sides is not None
+        self.controls_card.setVisible(show)
+        if not show:
+            return
+        board.set_teams({"home": self.home_card.name.text(), "away": self.away_card.name.text()},
+                        {"home": self.home_card.crest.pixmap(), "away": self.away_card.crest.pixmap()})
+        board.blockSignals(True)
+        board.set_allowed(p.controller_sides)
+        for device in board.devices():
+            board.set_zone(device, "none")
+        board.load_slots(p.controllers)
+        board.blockSignals(False)
+        board.update()
+        self._on_controllers()
+
+    def _on_controllers(self):
+        p = self.p
+        if p is None or p.controller_sides is None:
+            return
+        if p.on_controllers:
+            p.on_controllers(controllers_for(self.controller_board.slot_zones()))
 
     def _build_choices(self, choices):
         for row in self._choice_rows:
@@ -427,7 +480,7 @@ class MatchPresentationScreen(KickoffTransition, Screen):
 
     def kt_fade_widgets(self):
         return [*self.home_card.chrome(), *self.away_card.chrome(),
-                self.mid_card, self.header_holder.itemAt(0).widget(),
+                self.mid_card, self.controls_card, self.header_holder.itemAt(0).widget(),
                 self.hintbar, self.play_btn]
 
     def on_show(self):

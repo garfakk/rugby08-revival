@@ -41,7 +41,8 @@ from ui.theme import (
     ACCENT, GREEN, DANGER_LITE, INFO, FG_SECONDARY, FG_TERTIARY, T_LABEL, FONT_DISPLAY,
 )
 from shared.config import config
-from shared import shirt_names
+from shared import commentary, shirt_names
+from ui.sound_preview import SoundPreview
 
 from shared.log import get_logger
 
@@ -143,6 +144,36 @@ class PlayerEditorScreen(EditorScreen):
     def _edit_identity(self, label, key, value):
         self.edit(label, lambda r: r.__setitem__(key, value), coalesce_key=key,
                  view_hint={"tab": TAB_PROFILE, "field": key})
+
+    # ── commentary name ──────────────────────────────────────────────────
+    def _commentary_label(self, value):
+        name = self._commentary_names.get(int(value)) if str(value).isdigit() else None
+        return f"{name} ({value})" if name else f"#{value}"
+
+    def _commentary_guess(self):
+        """Where the list opens for a player with no clip yet: the first
+        clip named like his last name."""
+        last = (self.session.working.get("last_name", "") if self.session else "").strip().lower()
+        if not last:
+            return None
+        for v in self.commentary.options:
+            if self._commentary_names[int(v)].lower().startswith(last):
+                return v
+        return None
+
+    def _commentary_hovered(self, value):
+        self._hovered_clip = value
+        if value:
+            self._hover_timer.start()
+        else:
+            self._hover_timer.stop()
+
+    def _commentary_hover_timer_stop(self):
+        self._hover_timer.stop()
+
+    def _play_commentary(self, value):
+        if value and str(value).isdigit():
+            self._sound.play(f"commentary_{value}", lambda: commentary.wav_bytes(value))
 
     def _edit_shirt_name(self, value):
         value = (value or "").strip()
@@ -254,13 +285,39 @@ class PlayerEditorScreen(EditorScreen):
         self.shirt_name.edited.connect(self._edit_shirt_name)
         small_row.addWidget(self.shirt_name, stretch=1)
 
+        # The name the commentators say, picked from the game's recorded
+        # clips (shared/commentary.py); ▶ plays it, and browsing the list
+        # plays whichever name the cursor rests on.
+        self._commentary_names = commentary.names()
         self.commentary = self.register_field(
-            "commentary", NumberField("Commentary id", 0, 65535), TAB_PROFILE)
-        self.commentary.set_hint("game uses 0")
+            "commentary", ChoiceField(
+                "Commentary",
+                sorted((str(i) for i in self._commentary_names),
+                       key=lambda v: (self._commentary_names[int(v)].lower(), int(v))),
+                display=self._commentary_label, blank_label="none"), TAB_PROFILE)
         self.commentary.label_width = 98
-        self.commentary.edited.connect(lambda v: self._edit_identity("commentary id", "commentary", v))
+        self.commentary.popup_title = "commentary name"
+        self.commentary.off_list_badge = bool(self._commentary_names)
+        self.commentary.default_highlight = self._commentary_guess
+        self.commentary.on_hover = self._commentary_hovered
+        self.commentary.on_popup_closed = self._commentary_hover_timer_stop
+        self.commentary.edited.connect(lambda v: self._edit_identity("commentary", "commentary", v))
         small_row.addWidget(self.commentary, stretch=1)
+        self.commentary_play = compact_button("▶")
+        self.commentary_play.setFixedWidth(30)
+        self.commentary_play.setToolTip("Play the commentary name")
+        self.commentary_play.clicked.connect(lambda: self._play_commentary(self.commentary.value()))
+        self.commentary_play.setEnabled(bool(self._commentary_names))
+        self.focus.register(self.commentary_play)
+        small_row.addWidget(self.commentary_play, alignment=Qt.AlignVCenter)
         outer.addLayout(small_row)
+
+        self._sound = SoundPreview(self)
+        self._hovered_clip = None
+        self._hover_timer = QTimer(self)
+        self._hover_timer.setSingleShot(True)
+        self._hover_timer.setInterval(450)
+        self._hover_timer.timeout.connect(lambda: self._play_commentary(self._hovered_clip))
 
         self.shell.identity_layout.addWidget(id_card)
 
@@ -446,77 +503,6 @@ class PlayerEditorScreen(EditorScreen):
             self._warm_timer.stop()
             self._warm_job = None
 
-    def bulk_actions(self):
-        from app.game_data import POSITION_ALIASES
-        from app import appearance as A
-        generic = skin = boots = 0
-        for record in self.ds.players.values():
-            for block in (record.get("stats") or {}).values():
-                if any(block.get(k) in POSITION_ALIASES for k in ("position1", "position2", "position3")):
-                    generic += 1
-                tone = str(block.get("skin_tone") or "")
-                if tone and A.normalize_tone(tone) and A.normalize_tone(tone) != tone:
-                    skin += 1
-                if A.boot_kind(block.get("boot_style")) == "invalid":
-                    boots += 1
-        return [("positions", "Rewrite generic positions (flanker → openside flanker…)", generic),
-                ("skin", "Write numeric skin tones as names (“2” → dark-med)", skin),
-                ("boots", "Reset boot styles the game can't use to style 0", boots)]
-
-    def run_bulk_action(self, key):
-        from app.game_data import POSITION_ALIASES, _load_json, _write_json
-        count = dict((k, n) for k, _, n in self.bulk_actions()).get(key, 0)
-
-        def fix(block):
-            if key == "positions":
-                for k in ("position1", "position2", "position3"):
-                    if block.get(k) in POSITION_ALIASES:
-                        block[k] = POSITION_ALIASES[block[k]]
-            elif key == "skin":
-                from app import appearance as A
-                tone = A.normalize_tone(block.get("skin_tone"))
-                if tone and tone != block.get("skin_tone"):
-                    block["skin_tone"] = tone
-            elif key == "boots":
-                from app import appearance as A
-                if A.boot_kind(block.get("boot_style")) == "invalid":
-                    block["boot_style"] = "0"
-
-        def go():
-            by_file = {}
-            for pid, path in self.ds.players_file_path.items():
-                by_file.setdefault(path, []).append(pid)
-            written = 0
-            try:
-                for path, pids in by_file.items():
-                    data = _load_json(path)
-                    if not isinstance(data, dict):
-                        continue
-                    for pid in pids:
-                        if pid in data:
-                            for block in (data[pid].get("stats") or {}).values():
-                                fix(block)
-                            self.ds.players[pid] = copy.deepcopy(data[pid])
-                    _write_json(path, data)
-                    written += 1
-            except SaveError as e:
-                self.shell.footer.set_status(f"Bulk fix failed: {e}", DANGER_LITE)
-                return
-            if self.record_id:
-                self.open_record_keep_view(self.record_id)
-            self.reload_list()
-            self.shell.footer.set_status(f"Fixed {count} season block(s) in {written} file(s)", GREEN)
-
-        what = {"positions": "generic positions become the roster position they most likely meant "
-                             "(flanker → openside flanker, prop → loosehead prop…)",
-                "skin": "a numeric skin tone is written as the name the game reads it as",
-                "boots": "a boot style the game can't use (10 or more, or a missing image) "
-                         "becomes style 0"}.get(key, "")
-        self.guard_dirty(lambda: self.confirm(
-            f"Fix {count} season block(s)?",
-            f"In every player file, {what}. Files are saved immediately (a .bak of each original "
-            f"is kept on first save).", "FIX AND SAVE", go))
-
     def load_record(self, pid):
         record = self.ds.players.get(pid)
         return copy.deepcopy(record) if record is not None else None
@@ -589,9 +575,8 @@ class PlayerEditorScreen(EditorScreen):
         self.display_name.set_value(record.get("display_name", ""))
         self.display_name.set_hint(_display_name_default(record))
         self.shirt_name.set_value(record.get("shirt_name", ""))
-        self.shirt_name.set_hint(f"shirts read {shirt_names.shirt_text(record)}"
-                                 if record.get("last_name") or record.get("display_name") else "")
-        self.commentary.set_value(record.get("commentary", ""))
+        cid = str(record.get("commentary", "") or "").strip()
+        self.commentary.set_value("" if cid in ("", "0") else cid)
 
     def _refresh_seasons(self, stats):
         self.season_pill.set_text(

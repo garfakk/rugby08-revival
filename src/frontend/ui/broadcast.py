@@ -62,8 +62,9 @@ def display_label(text, size, weight=QFont.Bold, track=1.0, color=FG_PRIMARY,
 
 
 def page_header(title: str, right: str = None, on_back=None,
-                icon=None) -> QWidget:
-    """`icon`: a QPixmap (a competition's logo…) drawn before the title."""
+                icon=None, back_text: str = "‹ BACK") -> QWidget:
+    """`icon`: a QPixmap (a competition's logo…) drawn before the title;
+    `back_text`: the BACK button's label."""
     header = QWidget()
     header.setFixedHeight(76)
     header.setObjectName("pageHeader")
@@ -85,7 +86,7 @@ def page_header(title: str, right: str = None, on_back=None,
     # had no way back off a screen that relies solely on it.
     if on_back is not None:
         from ui.widgets import StyledButton
-        back_btn = StyledButton("‹ BACK", "ghost")
+        back_btn = StyledButton(back_text, "ghost")
         back_btn.setFixedHeight(38)
         back_btn.clicked.connect(on_back)
         hl.addWidget(back_btn, alignment=Qt.AlignVCenter)

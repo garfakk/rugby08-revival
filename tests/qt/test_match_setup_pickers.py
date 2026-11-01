@@ -1,5 +1,5 @@
-"""Settings > Quick Match Picker: the classic season > category > team rows
-(default) and the groups picker, group > team > season, on the real screen."""
+"""Settings > Advanced > Quick Match Picker: the classic season > category > team rows
+and the groups picker (default), group > team > season, on the real screen."""
 import pytest
 
 from shared.user_prefs import user_prefs
@@ -26,7 +26,7 @@ def use(s, style, qapp):
     qapp.processEvents()
 
 
-def test_classic_is_the_default_and_hides_the_group_widgets(setup):
+def test_classic_hides_the_group_widgets(setup):
     assert user_prefs.match_picker == "classic"
     col = setup.home_col
     assert not col.group_picker.isVisibleTo(setup) and not col.season_row2.isVisibleTo(setup)
@@ -114,10 +114,11 @@ def test_setting_is_saved_and_an_old_style_falls_back(tmp_path, monkeypatch):
     p = up.UserPrefs() if hasattr(up, "UserPrefs") else None
     if p is None:
         pytest.skip("no UserPrefs class")
-    p.match_picker = "groups"
-    p.save()
-    assert up.UserPrefs().match_picker == "groups"
-    p.match_picker = "timeline"                       # a style that no longer exists
+    assert up.UserPrefs().match_picker == "groups"     # the default
+    p.match_picker = "classic"
     p.save()
     assert up.UserPrefs().match_picker == "classic"
+    p.match_picker = "timeline"                       # a style that no longer exists
+    p.save()
+    assert up.UserPrefs().match_picker == "groups"
 
