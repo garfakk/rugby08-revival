@@ -274,7 +274,7 @@ class ChallengeEditorScreen(Screen):
         self._choice(grid, "pitch_texture", "pitch", ["default"] + gsv.pitch_textures)
         self._choice(grid, "precip_mode", "precipitation", ch.PRECIP_MODES)
         self._choice(grid, "rain", "rain (plain)", [False, True], display=_yes_no)
-        self._number(grid, "wind_power", "wind power", 0, 10,
+        self._number(grid, "wind_power", "wind power", 0, 4,
                      convert=lambda n: n or None, show=lambda n: n or 0)
         self._choice(grid, "wind_dir_deg", "wind direction", list(range(0, 360, 45)),
                      display=lambda n: f"{n}°", allow_blank=False)

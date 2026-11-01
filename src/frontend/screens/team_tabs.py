@@ -189,18 +189,6 @@ class OverviewTab(TeamTab):
         summary.add_layout(self.summary_grid)
         right.addWidget(summary)
 
-        seasons = SectionCard("seasons of this team")
-        self.seasons_note = Note("", color=FG_SECONDARY, size=T_LABEL)
-        seasons.add(self.seasons_note)
-        srow = QHBoxLayout()
-        for text, action in (("ADD", "add"), ("DUPLICATE", "duplicate"), ("DELETE", "delete")):
-            b = _button(text, "danger" if action == "delete" else "neutral")
-            b.clicked.connect(lambda _=False, a=action: screen.season_action(a))
-            screen.focus.register(b)
-            srow.addWidget(b)
-        seasons.add_layout(srow)
-        right.addWidget(seasons)
-
         danger = SectionCard("team file")
         self.file_note = Note("", color=FG_TERTIARY)
         danger.add(self.file_note)
@@ -299,9 +287,6 @@ class OverviewTab(TeamTab):
                                                                               "banners", "pads")))
         self._set_summary("assets", "all found" if not missing else f"{missing} problem(s)",
                           GREEN if not missing else WARN)
-        seasons = list(self.screen.session.working)
-        self.seasons_note.setText("  ·  ".join(
-            (f"[{season_label(s)}]" if s == season else season_label(s)) for s in seasons))
         self.file_note.setText(self.screen.file_label())
 
     def _set_summary(self, key, text, color):
@@ -899,7 +884,6 @@ class ShirtNamesTab(TeamTab):
         self.stage = KitStage(default_yaw=180.0)
         self.stage.setFixedHeight(470)
         mid.add(self.stage)
-        mid.add(Note("Drag to turn the player.", color=FG_TERTIARY))
         mid.v.addStretch(1)
         row.addWidget(mid)
 
@@ -979,14 +963,7 @@ class ShirtNamesTab(TeamTab):
             "name outline width"))
         cgrid.add(self.outline_w)
         colours.add(cgrid)
-        colours.add(Note("AUTO takes the colour of the kit's own numbers.", color=FG_TERTIARY))
         right.addWidget(colours)
-        self.help = Note(
-            "Each player's name is printed on their own back-number texture when the match "
-            "starts: shirt N gets the name of player N of the squad. A player's \"shirt name\" "
-            "(player editor) replaces the generated text. Your own .ttf/.otf files in the team "
-            "folder appear in the font list.", color=FG_TERTIARY)
-        right.addWidget(self.help)
         right.addStretch(1)
         row.addLayout(right, stretch=4)
         self.body.addLayout(row)
@@ -1287,8 +1264,6 @@ class ShirtNamesTab(TeamTab):
         if style["enabled"]:
             notes.append("Drag the box to move the name, its handles to resize it "
                          "(arrows / Alt+arrows with the box focused).")
-        else:
-            notes.append("Turn shirt names on to print each player's name on their back.")
         self.left_note.setText(" ".join(notes))
 
     def _refresh_stage(self):
@@ -1789,17 +1764,12 @@ class SquadTab(TeamTab):
                                   if n - 1 <= len(roster) else "Fill the slots before this one first.")
             return
         player = self.player(pid)
-        s = self.stats(pid)
         self.sel_name.setText((player or {}).get("display_name") or f"Unknown player {pid}")
         if player is None:
             self.sel_meta.setText(f"Id {pid} is not in the player files — the game drops this player.")
             return
-        positions = [POSITION_NAMES.get(p, p) for p in (s.get("position1"), s.get("position2"),
-                                                         s.get("position3")) if p]
-        ovr = position_overall(s, SHIRT_POSITIONS.get(n))
-        fit = "fits the position" if n > STARTING_XV or T.fits(player, self.screen.season, n) \
-            else "OUT OF POSITION"
-        self.sel_meta.setText(f"{' / '.join(positions) or 'no position'}  ·  OVR {ovr}  ·  {fit}")
+        out = n <= STARTING_XV and not T.fits(player, self.screen.season, n)
+        self.sel_meta.setText("OUT OF POSITION" if out else "")
 
     def hints(self, focused):
         if isinstance(focused, (SlotAvatar, SubChip)):

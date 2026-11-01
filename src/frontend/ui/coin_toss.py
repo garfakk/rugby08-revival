@@ -35,7 +35,7 @@ from PyQt5.QtCore import (Qt, QTimer, QVariantAnimation, QEasingCurve, QRectF, Q
 from app.coin_toss import (
     CoinToss, HEADS, TAILS, KICK_OFF, CHOOSE_END, LEFT, RIGHT,
 )
-from app.game_data import WIND_POWER_NAMES
+from app.game_data import WIND_POWER_MAX, WIND_POWER_NAMES
 from app.input import Action, KEYMAP
 from ui import StyledButton
 from ui.broadcast import Card, eyebrow_label, label_css
@@ -671,7 +671,7 @@ class PitchWidget(QWidget):
         the stronger it blows. None when calm or left to the game."""
         if not self.wind_power:
             return
-        power = min(10, self.wind_power)
+        power = min(WIND_POWER_MAX, self.wind_power)
         rad = math.radians(self.wind_deg % 360)
         dx, dy = math.cos(rad), -math.sin(rad)      # toward home's attack end (right) / home's right
         length = 16 + power * 3.2
@@ -685,7 +685,7 @@ class PitchWidget(QWidget):
         ink = _WIND_INK
         streak = QPen(QColor(143, 211, 244, 90), 2, Qt.SolidLine, Qt.RoundCap)
         p.setPen(streak)
-        for k in range(min(3, 1 + power // 3)):                 # motion streaks, more in a gale
+        for k in range(min(3, 1 + power // 2)):                 # motion streaks, more when stronger
             off = (k - 1) * 3.5
             p.drawLine(self._pt(tail[0] - dx * (5 + 3 * k) + nx * off, tail[1] - dy * (5 + 3 * k) + ny * off),
                        self._pt(tail[0] - dx * 1.5 + nx * off, tail[1] - dy * 1.5 + ny * off))
@@ -702,18 +702,18 @@ class PitchWidget(QWidget):
                                  self._pt(back[0] - nx * spread, back[1] - ny * spread)]))
 
     def _paint_wind_badge(self, p):
-        """WIND 6 · STRONG GALE and a ten-step gauge, NO WIND when calm,
+        """WIND 3 · STRONG and a four-step gauge, NO WIND when calm,
         RANDOM WIND when the game rolls its own."""
         if not self.wind_power:
             text = "RANDOM WIND" if self.wind_power is None else "NO WIND"
             self._pill(p, QRectF(self.width() / 2 - 60, 4, 120, 26), text,
                        QColor(FG_TERTIARY), QColor(255, 255, 255, 36), size=9)
             return
-        power = min(10, self.wind_power)
+        power = min(WIND_POWER_MAX, self.wind_power)
         text = f"WIND {power} · {WIND_POWER_NAMES.get(power, '').upper()}"
         p.setFont(QFont(FONT_DISPLAY, 9, QFont.Bold))
         text_w = QFontMetrics(p.font()).horizontalAdvance(text)
-        gauge_w = 10 * 8
+        gauge_w = WIND_POWER_MAX * 12
         w = text_w + gauge_w + 40
         rect = QRectF(self.width() / 2 - w / 2, 4, w, 26)
         p.setPen(QPen(QColor(143, 211, 244, 110), 1))
@@ -723,11 +723,11 @@ class PitchWidget(QWidget):
         p.drawText(QRectF(rect.left() + 14, rect.top(), text_w + 2, rect.height()), Qt.AlignVCenter, text)
         x0 = rect.right() - 14 - gauge_w
         p.setPen(Qt.NoPen)
-        for i in range(10):
-            h = 5 + i * 1.0
-            bar = QRectF(x0 + i * 8, rect.center().y() + 7 - h, 6, h)
+        for i in range(WIND_POWER_MAX):
+            h = 6 + i * 3.0
+            bar = QRectF(x0 + i * 12, rect.center().y() + 7 - h, 9, h)
             if i < power:
-                p.setBrush(_WIND_INK if i < 4 else QColor(WARN) if i < 7 else QColor(DANGER_LITE))
+                p.setBrush(_WIND_INK if i < 2 else QColor(WARN) if i < 3 else QColor(DANGER_LITE))
             else:
                 p.setBrush(QColor(255, 255, 255, 34))
             p.drawRect(bar)

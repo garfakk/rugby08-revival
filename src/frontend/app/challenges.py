@@ -20,6 +20,7 @@ from shared.config import config
 from shared.log import get_logger
 from shared.user_prefs import user_prefs
 from app import competition_branding, difficulty
+from app.game_data import WIND_POWER_MAX
 from app.state import MatchConfig, TeamSlot
 
 log = get_logger(__name__)
@@ -399,9 +400,9 @@ def to_match_config(ds, data: dict) -> MatchConfig:
                 "stadium_flags", "kick_assist", "mission_mode_name",
                 "mission_mode_time", "mission_mode_period"):
         setattr(cfg, key, data[key])
-    # Wind is fixed by the challenge file (band 0..10): no strength set means
+    # Wind is fixed by the challenge file (strength 0..4): no strength set means
     # calm, never the game's random stock wind.
-    cfg.wind_power = int(data["wind_power"] or 0)
+    cfg.wind_power = min(WIND_POWER_MAX, int(data["wind_power"] or 0))
     cfg.wind_dir_deg = float(data["wind_dir_deg"] or 0)
     # Settings > Wind: Standard ignores the file and leaves the game's own
     # random wind (None).

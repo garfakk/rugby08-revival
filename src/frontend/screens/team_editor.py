@@ -386,9 +386,9 @@ class TeamEditorScreen(EditorScreen):
             chips.append((V.variant_label(self.season_block(), self.variant), ACCENT))
         name = info.get("name") or self.record_id or "—"
         return {
-            "eyebrow": f"team · id {self.record_id}",
+            "eyebrow": "",
             "title": name,
-            "subtitle": self.file_label(),
+            "subtitle": "",
             "chips": chips,
             "pixmap": load_pixmap(os.path.join(root, crest), 128) if crest else None,
             "initials": "".join(w[:1] for w in name.split()[:2]) or "?",

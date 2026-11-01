@@ -463,7 +463,7 @@ class MatchConfig:
     # as "omit the .mis attribute entirely" — so a match built with
     # advanced_user off, or with the advanced panel never opened, produces
     # the exact same mission file as before these fields existed.
-    wind_power: Optional[int] = None       # 0..10, reR08 ENABLE_WIND band; None = stock random wind, rolled by the backend
+    wind_power: Optional[int] = None       # 0..4, reR08 ENABLE_WIND band; None = stock random wind, rolled by the backend
     wind_dir_deg: float = 0.0              # compass bearing; only used when wind_power is set
     precip_mode: str = "stock"             # stock, none, rain, snow — overrides `rain` above when set
     snow_intensity: Optional[float] = None  # 0..26, reR08 ENABLE_SNOWFX

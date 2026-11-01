@@ -31,8 +31,8 @@ import re
 import shutil
 from datetime import datetime
 
-# UI range for reR08 ENABLE_WIND's extended wind-power bands.
-WIND_POWER_MAX = 10
+# Strongest wind offered (4 = extreme); the reR08 bands above that are unused.
+WIND_POWER_MAX = 4
 # Wind bearings are relative to the HOME team, not to the screen or the world
 # (reR08 wind.cpp: the .mis <WIND x y z> is a world-frame vector the wind blows
 # TOWARD, direction only; x is lateral across the pitch, z runs along it, goal
@@ -41,16 +41,13 @@ WIND_POWER_MAX = 10
 # against home, 270° toward home's left. match_data_builder turns that into
 # the world vector once the sides are known (wind_world_xz).
 WIND_BEARINGS = list(range(0, 360, 45))
-# Match setup's wind strength choices: every reR08 ENABLE_WIND band (the
-# .mis <WIND power>: 0 = calm, 1..3 = the stock bands, 4..10 = extended).
-WIND_POWER_NAMES = {0: "calm", 1: "light", 2: "moderate", 3: "strong", 4: "very strong",
-                    5: "gale", 6: "strong gale", 7: "storm", 8: "violent storm",
-                    9: "hurricane", 10: "extreme"}
+# Match setup's wind strength choices (the .mis <WIND power>).
+WIND_POWER_NAMES = {0: "none", 1: "light", 2: "medium", 3: "strong", 4: "extreme"}
 
 
-# Weather-like spread for a generated wind: mostly the stock bands (1-3),
-# sometimes calm, now and then a gale from the extended bands.
-_RANDOM_WIND_WEIGHTS = {0: 12, 1: 24, 2: 24, 3: 18, 4: 8, 5: 6, 6: 4, 7: 2, 8: 1, 9: 0.6, 10: 0.4}
+# Weather-like spread for a generated wind: mostly light to strong, sometimes
+# none, now and then extreme.
+_RANDOM_WIND_WEIGHTS = {0: 14, 1: 28, 2: 28, 3: 22, 4: 8}
 
 
 def random_wind(rng):

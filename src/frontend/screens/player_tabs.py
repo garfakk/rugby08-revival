@@ -351,8 +351,7 @@ class RatingsTab(PlayerTab):
         strip.setSpacing(14)
         self.ovr = display_label("OVR —", T_TITLE, QFont.Bold, track=0.6, upper=False)
         strip.addWidget(self.ovr)
-        self.ovr_note = Note("", color=FG_SECONDARY, size=T_LABEL)
-        strip.addWidget(self.ovr_note, stretch=1)
+        strip.addStretch(1)
         self.copy_btn = compact_button("COPY RATINGS FROM…")
         self.copy_btn.clicked.connect(self._copy_menu)
         screen.focus.register(self.copy_btn)
@@ -442,13 +441,6 @@ class RatingsTab(PlayerTab):
         pos = stats.get("position1", "")
         ovr = position_overall(stats, pos)
         self.ovr.setText(f"OVR {ovr if ovr is not None else '—'}")
-        note = f"as {position_name(pos).lower()}" if pos in POSITIONS else "no roster position"
-        if prev:
-            pov = position_overall(prev, pos)
-            if pov is not None and ovr is not None:
-                d = ovr - pov
-                note += f"  ·  {'+' if d >= 0 else '−'}{abs(d)} vs {season_label(prev_key)}"
-        self.ovr_note.setText(note)
         self.copy_btn.setEnabled(len(record.get("stats") or {}) > 1)
 
     def hints(self, focused):
@@ -957,8 +949,6 @@ class TeamsTab(PlayerTab):
     def __init__(self, screen, index):
         super().__init__(screen, index)
         card = SectionCard("teams")
-        self.note = Note("", color=FG_SECONDARY, size=T_LABEL)
-        card.add(self.note)
         self.rows = QVBoxLayout()
         self.rows.setSpacing(4)
         card.add_layout(self.rows)
@@ -978,9 +968,6 @@ class TeamsTab(PlayerTab):
         season = self.screen.season
         memberships = [m for m in self.screen.ds.memberships(self.screen.record_id, with_variants=True)
                        if m[2] == season]
-        self.note.setText(f"In {len(memberships)} squad{'s' if len(memberships) != 1 else ''} "
-                          f"for {season_label(season)}." if memberships else
-                          f"Not named in any squad for {season_label(season)}.")
         for tid, name, s, shirt, variant in memberships:
             role = "starter" if shirt <= 15 else ("bench" if shirt <= 22 else "not loaded")
             tag = f" ({_variant_label(self.screen.ds, tid, s, variant)})" if variant else ""

@@ -996,7 +996,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
         v.addWidget(self.environment_row)
 
         # Wind (the reR08 wind patch, Settings > Wind: Advanced): strength =
-        # the .mis <WIND power> band 0..10, or "random"; the direction
+        # the .mis <WIND power> strength 0..4, or "random"; the direction
         # (relative to home) is always random. Rolled afresh at each kick-off
         # (_roll_wind).
         self.wind_power_row = SelectorRow("wind")

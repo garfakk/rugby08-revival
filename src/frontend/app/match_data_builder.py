@@ -14,7 +14,7 @@ from backend import game_specific_variables as gsv
 from shared.config import config
 from shared import shirt_names
 from app import appearance, competition_branding, difficulty
-from app.game_data import frontend_logo, normalise_position, wind_world_xz
+from app.game_data import WIND_POWER_MAX, frontend_logo, normalise_position, wind_world_xz
 from app.state import DataStore, MatchConfig, TeamSlot
 
 
@@ -407,7 +407,7 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
         # ── Advanced/.mis fields — see the comment above and MatchConfig's
         # own for what each depends on. All at their "omit" default unless
         # the advanced panel (config.advanced_user) was used.
-        "wind_power": cfg.wind_power,
+        "wind_power": None if cfg.wind_power is None else min(WIND_POWER_MAX, cfg.wind_power),
         "wind_x": wind_x,
         "wind_z": wind_z,
         "precip_mode": cfg.precip_mode,

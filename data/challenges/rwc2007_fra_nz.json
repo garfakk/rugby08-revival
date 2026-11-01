@@ -117,7 +117,7 @@
   "rain": false,
   "precip_mode": "stock",
   "snow_intensity": null,
-  "wind_power": 6,
+  "wind_power": 4,
   "wind_dir_deg": 10,
   "breath": null,
   "anthem": "stock",
