@@ -552,15 +552,15 @@
    "type": "club",
    "category": "Top 14",
    "group": "france",
-   "ball": "",
+   "ball": "ball_1/ball_%.png",
    "banners": "banners/banner_%.png",
    "pads": "",
    "logos": {
-    "main": "",
-    "frontend": "",
-    "small": "",
-    "left": "",
-    "right": ""
+    "main": "logos_2/logo.png",
+    "frontend": "logos_2/logo_frontend.png",
+    "small": "logos_2/logo_small.png",
+    "left": "logos_2/logo_left.png",
+    "right": "logos_2/logo_right.png"
    },
    "kits": {
     "home": {
@@ -638,15 +638,15 @@
    "type": "club",
    "category": "Top 14",
    "group": "france",
-   "ball": "",
+   "ball": "ball_1/ball_%.png",
    "banners": "banners/banner_%.png",
    "pads": "",
    "logos": {
-    "main": "",
-    "frontend": "",
-    "small": "",
-    "left": "",
-    "right": ""
+    "main": "logos_2/logo.png",
+    "frontend": "logos_2/logo_frontend.png",
+    "small": "logos_2/logo_small.png",
+    "left": "logos_2/logo_left.png",
+    "right": "logos_2/logo_right.png"
    },
    "kits": {
     "home": {
@@ -727,15 +727,15 @@
    "type": "club",
    "category": "Top 14",
    "group": "france",
-   "ball": "",
+   "ball": "ball_1/ball_%.png",
    "banners": "banners/banner_%.png",
    "pads": "",
    "logos": {
-    "main": "",
-    "frontend": "",
-    "small": "",
-    "left": "",
-    "right": ""
+    "main": "logos_2/logo.png",
+    "frontend": "logos_2/logo_frontend.png",
+    "small": "logos_2/logo_small.png",
+    "left": "logos_2/logo_left.png",
+    "right": "logos_2/logo_right.png"
    },
    "kits": {
     "home": {
@@ -816,15 +816,15 @@
    "type": "club",
    "category": "Top 14",
    "group": "france",
-   "ball": "",
+   "ball": "ball_1/ball_%.png",
    "banners": "banners/banner_%.png",
    "pads": "",
    "logos": {
-    "main": "",
-    "frontend": "",
-    "small": "",
-    "left": "",
-    "right": ""
+    "main": "logos_2/logo.png",
+    "frontend": "logos_2/logo_frontend.png",
+    "small": "logos_2/logo_small.png",
+    "left": "logos_2/logo_left.png",
+    "right": "logos_2/logo_right.png"
    },
    "kits": {
     "home": {

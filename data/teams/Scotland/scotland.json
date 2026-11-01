@@ -1248,13 +1248,29 @@
      "frontKitFile": "kits_2026_2/home_front.webp",
      "backKitFile": "kits_2026_2/home_back.webp",
      "previewFile": "kits_2026_2/home_preview.png",
-     "color": ""
+     "color": "",
+     "shirtName": {
+      "area": [
+       0.0761,
+       0.2824,
+       0.84,
+       0.0879
+      ]
+     }
     },
     "away": {
      "frontKitFile": "kits_2026_2/away_front.webp",
      "backKitFile": "kits_2026_2/away_back.webp",
      "previewFile": "kits_2026_2/away_preview.png",
-     "color": ""
+     "color": "",
+     "shirtName": {
+      "area": [
+       0.0761,
+       0.2832,
+       0.84,
+       0.0879
+      ]
+     }
     }
    },
    "roles": {
@@ -1361,9 +1377,7 @@
     }
    },
    "shirtNames": {
-    "enabled": true,
-    "placement": "above",
-    "gap": -4
+    "enabled": true
    },
    "primaryStadium": "29"
   },
@@ -1626,7 +1640,7 @@
    "primaryStadium": "29"
   },
   "2013": {
-   "enabled": false,
+   "enabled": true,
    "name": "Scotland",
    "type": "international",
    "category": "International",
@@ -1643,15 +1657,15 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2022/home_front.webp",
-     "backKitFile": "kits_2022/home_back.webp",
-     "previewFile": "kits_2022/home_preview.png",
+     "frontKitFile": "kits_2013/home_front.png",
+     "backKitFile": "kits_2013/home_back/home_back_%.png",
+     "previewFile": "",
      "color": ""
     },
     "away": {
-     "frontKitFile": "kits_2022/away_front.webp",
-     "backKitFile": "kits_2022/away_back.webp",
-     "previewFile": "kits_2022/away_preview.png",
+     "frontKitFile": "kits_2013/away_front.png",
+     "backKitFile": "kits_2013/away_back/away_back_%.png",
+     "previewFile": "",
      "color": ""
     }
    },

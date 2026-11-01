@@ -1206,14 +1206,28 @@
      "previewFile": "kits_2026_2/home_preview.png",
      "color": "",
      "shirtName": {
-      "color": "#111111"
+      "color": "#111111",
+      "area": [
+       0.1813,
+       0.1963,
+       0.6531,
+       0.1084
+      ]
      }
     },
     "away": {
      "frontKitFile": "kits_2026_2/away_front.webp",
      "backKitFile": "kits_2026_2/away_back.webp",
      "previewFile": "kits_2026_2/away_preview.png",
-     "color": ""
+     "color": "",
+     "shirtName": {
+      "area": [
+       0.1813,
+       0.1963,
+       0.6531,
+       0.1084
+      ]
+     }
     }
    },
    "roles": {
@@ -1327,15 +1341,7 @@
     "text": "surname",
     "size": 37,
     "spacing": 6,
-    "arch": 0,
-    "placement": "above",
-    "area": [
-     0.1813,
-     0.2274,
-     0.6531,
-     0.1084
-    ],
-    "gap": 8
+    "arch": 0
    }
   },
   "2007": {
@@ -1445,7 +1451,7 @@
    ]
   },
   "2011": {
-   "enabled": false,
+   "enabled": true,
    "name": "England",
    "type": "international",
    "category": "International",
@@ -1464,15 +1470,15 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2011/home_front.webp",
-     "backKitFile": "kits_2011/home_back.webp",
-     "previewFile": "kits_2011/home_preview.png",
+     "frontKitFile": "kits_2011/home_front.png",
+     "backKitFile": "kits_2011/home_back/home_back_%.png",
+     "previewFile": "",
      "color": ""
     },
     "away": {
-     "frontKitFile": "kits_2011/away_front.webp",
-     "backKitFile": "kits_2011/away_back.webp",
-     "previewFile": "kits_2011/away_preview.png",
+     "frontKitFile": "kits_2011/away_front.png",
+     "backKitFile": "kits_2011/away_back/away_back_%.png",
+     "previewFile": "",
      "color": ""
     }
    },

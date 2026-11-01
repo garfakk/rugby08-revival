@@ -26,7 +26,13 @@
       "collar": "stand"
      },
      "shirtName": {
-      "color": "#ffffff"
+      "color": "#ffffff",
+      "area": [
+       0.082,
+       0.2536,
+       0.84,
+       0.126
+      ]
      }
     },
     "away": {
@@ -37,6 +43,15 @@
      "model3d": {
       "fit": "loose",
       "collar": "stand"
+     },
+     "shirtName": {
+      "color": "#111111",
+      "area": [
+       0.082,
+       0.2536,
+       0.84,
+       0.126
+      ]
      }
     }
    },
@@ -96,8 +111,6 @@
    "primaryStadium": "78",
    "shirtNames": {
     "enabled": true,
-    "placement": "above",
-    "gap": 61,
     "size": 43
    }
   },
@@ -215,13 +228,29 @@
      "frontKitFile": "kits_2017/home_front.webp",
      "backKitFile": "kits_2017/home_back.webp",
      "previewFile": "kits_2017/home_preview.png",
-     "color": ""
+     "color": "",
+     "shirtName": {
+      "area": [
+       0.101,
+       0.2658,
+       0.7941,
+       0.0879
+      ]
+     }
     },
     "away": {
      "frontKitFile": "kits_2017/away_front.webp",
      "backKitFile": "kits_2017/away_back.webp",
      "previewFile": "kits_2017/away_preview.png",
-     "color": ""
+     "color": "",
+     "shirtName": {
+      "area": [
+       0.101,
+       0.2658,
+       0.7941,
+       0.0879
+      ]
+     }
     }
    },
    "roles": {
@@ -285,8 +314,6 @@
    "enabled": true,
    "primaryStadium": "78",
    "shirtNames": {
-    "placement": "above",
-    "gap": -12,
     "size": 30
    }
   },
@@ -310,13 +337,29 @@
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": ""
+     "color": "",
+     "shirtName": {
+      "area": [
+       0.08,
+       0.256,
+       0.84,
+       0.126
+      ]
+     }
     },
     "away": {
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": ""
+     "color": "",
+     "shirtName": {
+      "area": [
+       0.08,
+       0.256,
+       0.84,
+       0.126
+      ]
+     }
     }
    },
    "roles": {
@@ -388,8 +431,7 @@
    "primaryStadium": "78",
    "shirtNames": {
     "enabled": true,
-    "size": 43,
-    "gap": 1
+    "size": 43
    }
   },
   "2019": {
@@ -412,13 +454,29 @@
      "frontKitFile": "kits_2019/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
-     "color": ""
+     "color": "",
+     "shirtName": {
+      "area": [
+       0.1088,
+       0.2895,
+       0.7941,
+       0.0859
+      ]
+     }
     },
     "away": {
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": ""
+     "color": "",
+     "shirtName": {
+      "area": [
+       0.1088,
+       0.2895,
+       0.7941,
+       0.0859
+      ]
+     }
     }
    },
    "roles": {
@@ -489,15 +547,7 @@
    "primaryStadium": "78",
    "shirtNames": {
     "enabled": true,
-    "size": 40,
-    "area": [
-     0.0972,
-     0.2724,
-     0.8057,
-     0.1172
-    ],
-    "placement": "auto",
-    "gap": -3
+    "size": 40
    }
   },
   "2022": {
@@ -520,13 +570,29 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "",
+     "shirtName": {
+      "area": [
+       0.1105,
+       0.2666,
+       0.7867,
+       0.1084
+      ]
+     }
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "",
+     "shirtName": {
+      "area": [
+       0.118,
+       0.2666,
+       0.7719,
+       0.1084
+      ]
+     }
     }
    },
    "roles": {
@@ -591,8 +657,7 @@
    "primaryStadium": "78",
    "shirtNames": {
     "enabled": true,
-    "size": 37,
-    "gap": -2
+    "size": 37
    }
   },
   "2023": {
@@ -615,13 +680,29 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": ""
+     "color": "",
+     "shirtName": {
+      "area": [
+       0.118,
+       0.2871,
+       0.7719,
+       0.0938
+      ]
+     }
     },
     "away": {
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": ""
+     "color": "",
+     "shirtName": {
+      "area": [
+       0.1162,
+       0.2871,
+       0.7793,
+       0.0938
+      ]
+     }
     }
    },
    "roles": {
@@ -688,7 +769,6 @@
    "primaryStadium": "78",
    "shirtNames": {
     "enabled": true,
-    "gap": -5,
     "size": 32
    }
   },
@@ -712,13 +792,29 @@
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": ""
+     "color": "",
+     "shirtName": {
+      "area": [
+       0.1105,
+       0.293,
+       0.7867,
+       0.1172
+      ]
+     }
     },
     "away": {
      "frontKitFile": "kits_2024/away_front.webp",
      "backKitFile": "kits_2024/away_back.webp",
      "previewFile": "kits_2024/away_preview.png",
-     "color": ""
+     "color": "",
+     "shirtName": {
+      "area": [
+       0.118,
+       0.2969,
+       0.7719,
+       0.1172
+      ]
+     }
     }
    },
    "roles": {
@@ -783,8 +879,7 @@
    "primaryStadium": "78",
    "shirtNames": {
     "enabled": true,
-    "size": 40,
-    "gap": 4
+    "size": 40
    }
   },
   "2008": {

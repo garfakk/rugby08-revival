@@ -1,0 +1,522 @@
+{
+  "id": "british_irish_lions",
+  "name": "British & Irish Lions Tour",
+  "seasonal": true,
+  "seasons": {
+    "2009": {
+      "template": {
+        "id": "lions_2009",
+        "name": "Lions tour of South Africa 2009",
+        "order": 40.0,
+        "description": "The Test series in South Africa, won 2-1 by the Springboks: Durban, Pretoria and Johannesburg, 20 June to 4 July 2009. Real dates, grounds and results; the Lions play their tour squad of the year against the host nation's squad of that year (or the nearest one in the data). Points: 2 a win, 1 a draw.",
+        "season": "2009",
+        "match_type": "exhibition",
+        "venue": "home",
+        "points": {
+          "win": 2,
+          "draw": 1,
+          "loss": 0
+        },
+        "tiebreakers": [
+          "points_diff",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            3
+          ],
+          "yellow_accumulation": 0,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "tests",
+            "name": "Test series",
+            "kind": "round_robin",
+            "legs": 1,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Test series"
+            },
+            "fixtures": [
+              {
+                "date": "2009-06-20",
+                "time": "15:00",
+                "group": "A",
+                "home": "1015",
+                "away": "10177",
+                "stadium": "58",
+                "venue": "ABSA Stadium, Durban",
+                "real_score": "26–21"
+              },
+              {
+                "date": "2009-06-27",
+                "time": "15:00",
+                "group": "A",
+                "home": "1015",
+                "away": "10177",
+                "stadium": "55",
+                "venue": "Loftus Versfeld, Pretoria",
+                "real_score": "28–25"
+              },
+              {
+                "date": "2009-07-04",
+                "time": "15:00",
+                "group": "A",
+                "home": "1015",
+                "away": "10177",
+                "stadium": "57",
+                "venue": "Coca-Cola Park, Johannesburg",
+                "real_score": "9–28"
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "tests": {
+              "A": [
+                "10177",
+                "1015"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "series": "2–1",
+          "winner": "1015"
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2009_British_%26_Irish_Lions_tour_to_South_Africa"
+        ],
+        "_venue_note": "Game stadium stand-ins: Melbourne → Sydney (no Melbourne ground in the game); the 2013 Test at Docklands and the 2025 one at the MCG are played in Sydney."
+      }
+    },
+    "2013": {
+      "template": {
+        "id": "lions_2013",
+        "name": "Lions tour of Australia 2013",
+        "order": 40.01,
+        "description": "The Test series in Australia, won 2-1 by the Lions: Brisbane, Melbourne and Sydney, 22 June to 6 July 2013. Real dates, grounds and results; the Lions play their tour squad of the year against the host nation's squad of that year (or the nearest one in the data). Points: 2 a win, 1 a draw.",
+        "season": "2013",
+        "match_type": "exhibition",
+        "venue": "home",
+        "points": {
+          "win": 2,
+          "draw": 1,
+          "loss": 0
+        },
+        "tiebreakers": [
+          "points_diff",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            3
+          ],
+          "yellow_accumulation": 0,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "tests",
+            "name": "Test series",
+            "kind": "round_robin",
+            "legs": 1,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Test series"
+            },
+            "fixtures": [
+              {
+                "date": "2013-06-22",
+                "time": "20:05",
+                "group": "A",
+                "home": "1002",
+                "away": "10177",
+                "stadium": "2",
+                "venue": "Suncorp Stadium, Brisbane",
+                "real_score": "21–23"
+              },
+              {
+                "date": "2013-06-29",
+                "time": "20:05",
+                "group": "A",
+                "home": "10177",
+                "away": "1002",
+                "stadium": "3",
+                "venue": "Docklands Stadium, Melbourne",
+                "real_score": "16–15"
+              },
+              {
+                "date": "2013-07-06",
+                "time": "20:00",
+                "group": "A",
+                "home": "1002",
+                "away": "10177",
+                "stadium": "3",
+                "venue": "Stadium Australia, Sydney",
+                "real_score": "16–41"
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "tests": {
+              "A": [
+                "10177",
+                "1002"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "series": "2–1",
+          "winner": "10177"
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2013_British_%26_Irish_Lions_tour_to_Australia"
+        ],
+        "_venue_note": "Game stadium stand-ins: Melbourne → Sydney (no Melbourne ground in the game); the 2013 Test at Docklands and the 2025 one at the MCG are played in Sydney."
+      }
+    },
+    "2017": {
+      "template": {
+        "id": "lions_2017",
+        "name": "Lions tour of New Zealand 2017",
+        "order": 40.02,
+        "description": "The Test series in New Zealand, drawn 1-1: Auckland, Wellington and Auckland, 24 June to 8 July 2017. Real dates, grounds and results; the Lions play their tour squad of the year against the host nation's squad of that year (or the nearest one in the data). Points: 2 a win, 1 a draw.",
+        "season": "2017",
+        "match_type": "exhibition",
+        "venue": "home",
+        "points": {
+          "win": 2,
+          "draw": 1,
+          "loss": 0
+        },
+        "tiebreakers": [
+          "points_diff",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            3
+          ],
+          "yellow_accumulation": 0,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "tests",
+            "name": "Test series",
+            "kind": "round_robin",
+            "legs": 1,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Test series"
+            },
+            "fixtures": [
+              {
+                "date": "2017-06-24",
+                "time": "19:35",
+                "group": "A",
+                "home": "1010",
+                "away": "10177",
+                "stadium": "49",
+                "venue": "Eden Park, Auckland",
+                "real_score": "30–15"
+              },
+              {
+                "date": "2017-07-01",
+                "time": "19:35",
+                "group": "A",
+                "home": "1010",
+                "away": "10177",
+                "stadium": "50",
+                "venue": "Wellington Regional Stadium",
+                "real_score": "21–24"
+              },
+              {
+                "date": "2017-07-08",
+                "time": "19:35",
+                "group": "A",
+                "home": "1010",
+                "away": "10177",
+                "stadium": "49",
+                "venue": "Eden Park, Auckland",
+                "real_score": "15–15"
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "tests": {
+              "A": [
+                "10177",
+                "1010"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "series": "1–1",
+          "winner": null
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2017_British_%26_Irish_Lions_tour_to_New_Zealand"
+        ],
+        "_venue_note": "Game stadium stand-ins: Melbourne → Sydney (no Melbourne ground in the game); the 2013 Test at Docklands and the 2025 one at the MCG are played in Sydney."
+      }
+    },
+    "2021": {
+      "template": {
+        "id": "lions_2021",
+        "name": "Lions tour of South Africa 2021",
+        "order": 40.03,
+        "description": "The Test series in South Africa, won 2-1 by the Springboks; all three Tests in Cape Town behind closed doors, 24 July to 7 August 2021. Real dates, grounds and results; the Lions play their tour squad of the year against the host nation's squad of that year (or the nearest one in the data). Points: 2 a win, 1 a draw.",
+        "season": "2021",
+        "match_type": "exhibition",
+        "venue": "home",
+        "points": {
+          "win": 2,
+          "draw": 1,
+          "loss": 0
+        },
+        "tiebreakers": [
+          "points_diff",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            3
+          ],
+          "yellow_accumulation": 0,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "tests",
+            "name": "Test series",
+            "kind": "round_robin",
+            "legs": 1,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Test series"
+            },
+            "fixtures": [
+              {
+                "date": "2021-07-24",
+                "time": "18:00",
+                "group": "A",
+                "home": "1015",
+                "away": "10177",
+                "stadium": "56",
+                "venue": "Cape Town Stadium",
+                "real_score": "17–22"
+              },
+              {
+                "date": "2021-07-31",
+                "time": "18:00",
+                "group": "A",
+                "home": "1015",
+                "away": "10177",
+                "stadium": "56",
+                "venue": "Cape Town Stadium",
+                "real_score": "27–9"
+              },
+              {
+                "date": "2021-08-07",
+                "time": "18:00",
+                "group": "A",
+                "home": "1015",
+                "away": "10177",
+                "stadium": "56",
+                "venue": "Cape Town Stadium",
+                "real_score": "19–16"
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "tests": {
+              "A": [
+                "10177",
+                "1015"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "series": "2–1",
+          "winner": "1015"
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2021_British_%26_Irish_Lions_tour_to_South_Africa"
+        ],
+        "_venue_note": "Game stadium stand-ins: Melbourne → Sydney (no Melbourne ground in the game); the 2013 Test at Docklands and the 2025 one at the MCG are played in Sydney."
+      }
+    },
+    "2025": {
+      "template": {
+        "id": "lions_2025",
+        "name": "Lions tour of Australia 2025",
+        "order": 40.04,
+        "description": "The Test series in Australia, won 2-1 by the Lions: Brisbane, Melbourne and Sydney, 19 July to 2 August 2025. Real dates, grounds and results; the Lions play their tour squad of the year against the host nation's squad of that year (or the nearest one in the data). Points: 2 a win, 1 a draw.",
+        "season": "2025",
+        "match_type": "exhibition",
+        "venue": "home",
+        "points": {
+          "win": 2,
+          "draw": 1,
+          "loss": 0
+        },
+        "tiebreakers": [
+          "points_diff",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            3
+          ],
+          "yellow_accumulation": 0,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "tests",
+            "name": "Test series",
+            "kind": "round_robin",
+            "legs": 1,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Test series"
+            },
+            "fixtures": [
+              {
+                "date": "2025-07-19",
+                "time": "20:00",
+                "group": "A",
+                "home": "1002",
+                "away": "10177",
+                "stadium": "2",
+                "venue": "Suncorp Stadium, Brisbane",
+                "real_score": "19–27"
+              },
+              {
+                "date": "2025-07-26",
+                "time": "20:00",
+                "group": "A",
+                "home": "1002",
+                "away": "10177",
+                "stadium": "3",
+                "venue": "Melbourne Cricket Ground (played at Sydney)",
+                "real_score": "26–29"
+              },
+              {
+                "date": "2025-08-02",
+                "time": "20:00",
+                "group": "A",
+                "home": "1002",
+                "away": "10177",
+                "stadium": "3",
+                "venue": "Stadium Australia, Sydney",
+                "real_score": "22–12"
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "tests": {
+              "A": [
+                "10177",
+                "1002"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "series": "2–1",
+          "winner": "10177"
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2025_British_%26_Irish_Lions_tour_to_Australia"
+        ],
+        "_venue_note": "Game stadium stand-ins: Melbourne → Sydney (no Melbourne ground in the game); the 2013 Test at Docklands and the 2025 one at the MCG are played in Sydney."
+      }
+    }
+  }
+}

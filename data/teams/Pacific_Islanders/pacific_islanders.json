@@ -1,0 +1,51 @@
+{
+ "10179": {
+  "2008": {
+   "name": "Pacific Islanders",
+   "type": "special",
+   "category": "Representatives",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2008/home_front.png",
+     "backKitFile": "kits_2008/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "",
+    "shortGK": "",
+    "longPunt": "",
+    "shortPunt": "",
+    "kickoff": ""
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [],
+   "group": "representatives",
+   "enabled": true
+  }
+ }
+}

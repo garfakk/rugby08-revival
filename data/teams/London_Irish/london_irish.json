@@ -873,15 +873,15 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2019/home_front.webp",
-     "backKitFile": "kits_2019/home_back.webp",
-     "previewFile": "kits_2019/home_preview.png",
+     "frontKitFile": "kits_2019/home_front.png",
+     "backKitFile": "kits_2019/home_back/home_back_%.png",
+     "previewFile": "",
      "color": ""
     },
     "away": {
-     "frontKitFile": "kits_2019/away_front.webp",
-     "backKitFile": "kits_2019/away_back.webp",
-     "previewFile": "kits_2019/away_preview.png",
+     "frontKitFile": "kits_2019/away_front.png",
+     "backKitFile": "kits_2019/away_back/away_back_%.png",
+     "previewFile": "",
      "color": ""
     }
    },
@@ -939,7 +939,7 @@
     "155388",
     "157732"
    ],
-   "enabled": false,
+   "enabled": true,
    "primaryStadium": "7"
   }
  }

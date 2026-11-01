@@ -741,15 +741,15 @@
    "type": "club",
    "category": "Top 14",
    "group": "france",
-   "ball": "",
-   "banners": "",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
    "pads": "",
    "logos": {
-    "main": "",
-    "frontend": "",
-    "small": "",
-    "left": "",
-    "right": ""
+    "main": "logos_3/logo.png",
+    "frontend": "logos_3/logo_frontend.png",
+    "small": "logos_3/logo_small.png",
+    "left": "logos_3/logo_left.png",
+    "right": "logos_3/logo_right.png"
    },
    "kits": {
     "home": {
@@ -833,15 +833,15 @@
    "type": "club",
    "category": "Top 14",
    "group": "france",
-   "ball": "",
-   "banners": "",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
    "pads": "",
    "logos": {
-    "main": "",
-    "frontend": "",
-    "small": "",
-    "left": "",
-    "right": ""
+    "main": "logos_3/logo.png",
+    "frontend": "logos_3/logo_frontend.png",
+    "small": "logos_3/logo_small.png",
+    "left": "logos_3/logo_left.png",
+    "right": "logos_3/logo_right.png"
    },
    "kits": {
     "home": {
@@ -932,15 +932,15 @@
    "type": "club",
    "category": "Top 14",
    "group": "france",
-   "ball": "",
-   "banners": "",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
    "pads": "",
    "logos": {
-    "main": "",
-    "frontend": "",
-    "small": "",
-    "left": "",
-    "right": ""
+    "main": "logos_3/logo.png",
+    "frontend": "logos_3/logo_frontend.png",
+    "small": "logos_3/logo_small.png",
+    "left": "logos_3/logo_left.png",
+    "right": "logos_3/logo_right.png"
    },
    "kits": {
     "home": {
@@ -1015,15 +1015,15 @@
    "type": "club",
    "category": "Top 14",
    "group": "france",
-   "ball": "",
-   "banners": "",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
    "pads": "",
    "logos": {
-    "main": "",
-    "frontend": "",
-    "small": "",
-    "left": "",
-    "right": ""
+    "main": "logos_3/logo.png",
+    "frontend": "logos_3/logo_frontend.png",
+    "small": "logos_3/logo_small.png",
+    "left": "logos_3/logo_left.png",
+    "right": "logos_3/logo_right.png"
    },
    "kits": {
     "home": {
@@ -1114,15 +1114,15 @@
    "type": "club",
    "category": "Top 14",
    "group": "france",
-   "ball": "",
-   "banners": "",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
    "pads": "",
    "logos": {
-    "main": "",
-    "frontend": "",
-    "small": "",
-    "left": "",
-    "right": ""
+    "main": "logos_3/logo.png",
+    "frontend": "logos_3/logo_frontend.png",
+    "small": "logos_3/logo_small.png",
+    "left": "logos_3/logo_left.png",
+    "right": "logos_3/logo_right.png"
    },
    "kits": {
     "home": {
@@ -1213,15 +1213,15 @@
    "type": "club",
    "category": "Top 14",
    "group": "france",
-   "ball": "",
-   "banners": "",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
    "pads": "",
    "logos": {
-    "main": "",
-    "frontend": "",
-    "small": "",
-    "left": "",
-    "right": ""
+    "main": "logos_3/logo.png",
+    "frontend": "logos_3/logo_frontend.png",
+    "small": "logos_3/logo_small.png",
+    "left": "logos_3/logo_left.png",
+    "right": "logos_3/logo_right.png"
    },
    "kits": {
     "home": {
@@ -1305,15 +1305,15 @@
    "type": "club",
    "category": "Top 14",
    "group": "france",
-   "ball": "",
-   "banners": "",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
    "pads": "",
    "logos": {
-    "main": "",
-    "frontend": "",
-    "small": "",
-    "left": "",
-    "right": ""
+    "main": "logos_3/logo.png",
+    "frontend": "logos_3/logo_frontend.png",
+    "small": "logos_3/logo_small.png",
+    "left": "logos_3/logo_left.png",
+    "right": "logos_3/logo_right.png"
    },
    "kits": {
     "home": {
@@ -1395,15 +1395,15 @@
    "type": "club",
    "category": "Top 14",
    "group": "france",
-   "ball": "",
-   "banners": "",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
    "pads": "",
    "logos": {
-    "main": "",
-    "frontend": "",
-    "small": "",
-    "left": "",
-    "right": ""
+    "main": "logos_3/logo.png",
+    "frontend": "logos_3/logo_frontend.png",
+    "small": "logos_3/logo_small.png",
+    "left": "logos_3/logo_left.png",
+    "right": "logos_3/logo_right.png"
    },
    "kits": {
     "home": {
@@ -1490,15 +1490,15 @@
    "type": "club",
    "category": "Top 14",
    "group": "france",
-   "ball": "",
-   "banners": "",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
    "pads": "",
    "logos": {
-    "main": "",
-    "frontend": "",
-    "small": "",
-    "left": "",
-    "right": ""
+    "main": "logos_3/logo.png",
+    "frontend": "logos_3/logo_frontend.png",
+    "small": "logos_3/logo_small.png",
+    "left": "logos_3/logo_left.png",
+    "right": "logos_3/logo_right.png"
    },
    "kits": {
     "home": {
@@ -1589,15 +1589,15 @@
    "type": "club",
    "category": "Pro D2",
    "group": "france",
-   "ball": "",
-   "banners": "",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
    "pads": "",
    "logos": {
-    "main": "",
-    "frontend": "",
-    "small": "",
-    "left": "",
-    "right": ""
+    "main": "logos_3/logo.png",
+    "frontend": "logos_3/logo_frontend.png",
+    "small": "logos_3/logo_small.png",
+    "left": "logos_3/logo_left.png",
+    "right": "logos_3/logo_right.png"
    },
    "kits": {
     "home": {

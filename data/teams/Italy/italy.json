@@ -1164,13 +1164,29 @@
      "frontKitFile": "kits_2026_3/home_front.webp",
      "backKitFile": "kits_2026_3/home_back.webp",
      "previewFile": "kits_2026_3/home_preview.png",
-     "color": ""
+     "color": "",
+     "shirtName": {
+      "area": [
+       0.1957,
+       0.2617,
+       0.6086,
+       0.0938
+      ]
+     }
     },
     "away": {
      "frontKitFile": "kits_2026_3/away_front.webp",
      "backKitFile": "kits_2026_3/away_back.webp",
      "previewFile": "kits_2026_3/away_preview.png",
-     "color": ""
+     "color": "",
+     "shirtName": {
+      "area": [
+       0.1957,
+       0.2617,
+       0.6086,
+       0.0938
+      ]
+     }
     }
    },
    "roles": {
@@ -1278,8 +1294,6 @@
    },
    "shirtNames": {
     "enabled": true,
-    "placement": "above",
-    "gap": 0,
     "size": 32
    },
    "primaryStadium": "39"

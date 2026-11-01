@@ -1,5 +1,662 @@
 {
  "10104": {
+  "2017": {
+   "enabled": true,
+   "name": "Bristol",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.webp",
+     "backKitFile": "kits_2018/home_back.webp",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": "",
+     "shirtName": {
+      "area": [
+       0.1664,
+       0.2609,
+       0.6828,
+       0.0879
+      ]
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.webp",
+     "backKitFile": "kits_2018/away_back.webp",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "",
+     "shirtName": {
+      "area": [
+       0.1547,
+       0.6788,
+       0.6828,
+       0.0879
+      ]
+     }
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "143711",
+    "shortGK": "143711",
+    "longPunt": "143711",
+    "shortPunt": "143711",
+    "kickoff": "143711"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155304",
+    "157515",
+    "153714",
+    "157352",
+    "157484",
+    "157552",
+    "144768",
+    "155356",
+    "157334",
+    "154504",
+    "155322",
+    "143711",
+    "155320",
+    "155321",
+    "152494",
+    "155318",
+    "152341",
+    "155301",
+    "157522",
+    "155314",
+    "155307",
+    "155323",
+    "153148",
+    "155316",
+    "155315",
+    "155415",
+    "157639",
+    "154343",
+    "157374",
+    "156695",
+    "155312",
+    "155309",
+    "143536",
+    "148312",
+    "154268",
+    "155302",
+    "143113",
+    "155009",
+    "148216",
+    "155335",
+    "157363",
+    "157364",
+    "155300",
+    "153220",
+    "155330",
+    "156243",
+    "155240",
+    "155339"
+   ],
+   "primaryStadium": "79",
+   "shirtNames": {
+    "enabled": true,
+    "size": 36
+   }
+  },
+  "2019": {
+   "enabled": true,
+   "name": "Bristol",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2019/home_front.webp",
+     "backKitFile": "kits_2019/home_back.webp",
+     "previewFile": "kits_2019/home_preview.png",
+     "color": "",
+     "shirtName": {
+      "area": [
+       0.0976,
+       0.2042,
+       0.84,
+       0.0879
+      ]
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2019/away_front.webp",
+     "backKitFile": "kits_2019/away_back.webp",
+     "previewFile": "kits_2019/away_preview.png",
+     "color": "",
+     "shirtName": {
+      "area": [
+       0.0956,
+       0.2125,
+       0.84,
+       0.0879
+      ]
+     }
+    }
+   },
+   "roles": {
+    "captain": "155009",
+    "viceCaptain": "145419",
+    "longGK": "153437",
+    "shortGK": "153437",
+    "longPunt": "153437",
+    "shortPunt": "153437",
+    "kickoff": "153437"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155328",
+    "155326",
+    "142484",
+    "155334",
+    "144415",
+    "145419",
+    "143081",
+    "155316",
+    "155339",
+    "153437",
+    "154650",
+    "155009",
+    "155341",
+    "153256",
+    "144391",
+    "155325",
+    "155329",
+    "155332",
+    "155335",
+    "157819",
+    "152337",
+    "155319",
+    "155313",
+    "153402",
+    "144768",
+    "155342",
+    "155314",
+    "155320",
+    "155343",
+    "155331",
+    "155324",
+    "155338",
+    "154504",
+    "155321",
+    "155327",
+    "155336",
+    "155349",
+    "155333",
+    "155310",
+    "144866",
+    "155311",
+    "155364",
+    "155347",
+    "155312",
+    "155340",
+    "155330",
+    "155306",
+    "155317",
+    "155370"
+   ],
+   "primaryStadium": "79",
+   "shirtNames": {
+    "enabled": true
+   }
+  },
+  "2022": {
+   "enabled": true,
+   "name": "Bristol",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.webp",
+     "backKitFile": "kits_2022/home_back.webp",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.webp",
+     "backKitFile": "kits_2022/away_back.webp",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "153437",
+    "viceCaptain": "142470",
+    "longGK": "153437",
+    "shortGK": "153437",
+    "longPunt": "144391",
+    "shortPunt": "153437",
+    "kickoff": "144391"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "10947",
+    "155326",
+    "155354",
+    "142470",
+    "155335",
+    "145419",
+    "155312",
+    "155360",
+    "152337",
+    "153437",
+    "154650",
+    "155341",
+    "144964",
+    "155350",
+    "144391",
+    "153291",
+    "155313",
+    "142484",
+    "155347",
+    "155336",
+    "155339",
+    "155374",
+    "144415",
+    "155328",
+    "155359",
+    "155331",
+    "152399",
+    "155373",
+    "153256",
+    "155349",
+    "155334",
+    "155340",
+    "155352",
+    "155362",
+    "155329",
+    "155353",
+    "155363",
+    "157765",
+    "158118",
+    "155367",
+    "155358",
+    "155375",
+    "155370",
+    "155372",
+    "155356",
+    "155364",
+    "155371"
+   ],
+   "primaryStadium": "79"
+  },
+  "2023": {
+   "enabled": true,
+   "name": "Bristol",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2023/home_front.webp",
+     "backKitFile": "kits_2023/home_back.webp",
+     "previewFile": "kits_2023/home_preview.png",
+     "color": "",
+     "shirtName": {
+      "color": "#ffffff",
+      "area": [
+       0.1551,
+       0.167,
+       0.6977,
+       0.0879
+      ]
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2023/away_front.webp",
+     "backKitFile": "kits_2023/away_back.webp",
+     "previewFile": "kits_2023/away_preview.png",
+     "color": "",
+     "shirtName": {
+      "area": [
+       0.1551,
+       0.167,
+       0.6977,
+       0.0879
+      ]
+     }
+    }
+   },
+   "roles": {
+    "captain": "145419",
+    "viceCaptain": "144253",
+    "longGK": "144253",
+    "shortGK": "144253",
+    "longPunt": "144253",
+    "shortPunt": "144253",
+    "kickoff": "144253"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "144505",
+    "155326",
+    "10947",
+    "155310",
+    "144415",
+    "145419",
+    "155360",
+    "152785",
+    "152337",
+    "144253",
+    "155067",
+    "155349",
+    "144964",
+    "155358",
+    "144391",
+    "155353",
+    "155329",
+    "155313",
+    "155347",
+    "155336",
+    "155339",
+    "155374",
+    "155354",
+    "155328",
+    "153437",
+    "155341",
+    "155352",
+    "157902",
+    "155335",
+    "155373",
+    "153256",
+    "155312",
+    "156860",
+    "155375",
+    "155334",
+    "155370",
+    "158178",
+    "155376",
+    "155359",
+    "157674",
+    "155362",
+    "155365",
+    "153291",
+    "155384",
+    "155385",
+    "155350",
+    "155367",
+    "155383"
+   ],
+   "primaryStadium": "79",
+   "shirtNames": {
+    "enabled": true
+   }
+  },
+  "2024": {
+   "enabled": true,
+   "name": "Bristol",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.webp",
+     "backKitFile": "kits_2024/home_back.webp",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": "",
+     "shirtName": {
+      "color": "#ffffff",
+      "area": [
+       0.1551,
+       0.1987,
+       0.6977,
+       0.0879
+      ]
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.webp",
+     "backKitFile": "kits_2024/away_back.webp",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": "",
+     "shirtName": {
+      "area": [
+       0.1551,
+       0.1987,
+       0.6977,
+       0.0879
+      ]
+     }
+    }
+   },
+   "roles": {
+    "captain": "145419",
+    "viceCaptain": "144505",
+    "longGK": "144253",
+    "shortGK": "144253",
+    "longPunt": "144253",
+    "shortPunt": "144253",
+    "kickoff": "144253"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "144505",
+    "152471",
+    "10947",
+    "142470",
+    "155310",
+    "145419",
+    "155360",
+    "152785",
+    "152337",
+    "144253",
+    "155067",
+    "157902",
+    "155382",
+    "155385",
+    "11131",
+    "155352",
+    "155329",
+    "155354",
+    "155378",
+    "155355",
+    "153075",
+    "153437",
+    "152408",
+    "155375",
+    "155336",
+    "155326",
+    "155313",
+    "155370",
+    "155387",
+    "146303",
+    "155341",
+    "155379",
+    "155358",
+    "155334",
+    "155365",
+    "155381",
+    "155328",
+    "155391",
+    "155373",
+    "155852",
+    "155372",
+    "158178",
+    "155359"
+   ],
+   "primaryStadium": "79",
+   "shirtNames": {
+    "enabled": true
+   }
+  },
+  "2009": {
+   "name": "Bristol",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2009/home_front.webp",
+     "backKitFile": "kits_2009/home_back.webp",
+     "previewFile": "kits_2009/home_preview.png",
+     "color": "",
+     "model3d": {
+      "fit": "loose",
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2009/away_front.webp",
+     "backKitFile": "kits_2009/away_back.webp",
+     "previewFile": "kits_2009/away_preview.png",
+     "color": "",
+     "model3d": {
+      "fit": "loose",
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "155288",
+    "viceCaptain": "155284",
+    "longGK": "155288",
+    "shortGK": "155288",
+    "longPunt": "146828",
+    "shortPunt": "146828",
+    "kickoff": "146828"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155274",
+    "155268",
+    "155270",
+    "153276",
+    "156754",
+    "153563",
+    "154526",
+    "155284",
+    "146828",
+    "155288",
+    "143113",
+    "157351",
+    "155291",
+    "155297",
+    "155300",
+    "155266",
+    "155275",
+    "155269",
+    "155279",
+    "142470",
+    "155287",
+    "157522",
+    "155298",
+    "155286",
+    "155276",
+    "155280",
+    "146844",
+    "157521",
+    "148062",
+    "155272",
+    "156790",
+    "158310",
+    "156622",
+    "155282",
+    "157352",
+    "148209",
+    "155283",
+    "158222",
+    "155295",
+    "157349",
+    "155281"
+   ],
+   "enabled": true,
+   "primaryStadium": "6"
+  },
   "2008": {
    "enabled": false,
    "name": "Bristol",
@@ -94,103 +751,6 @@
    ],
    "primaryStadium": "6"
   },
-  "2017": {
-   "enabled": true,
-   "name": "Bristol",
-   "type": "club",
-   "category": "Premiership",
-   "group": "england",
-   "ball": "",
-   "banners": "",
-   "pads": "",
-   "logos": {
-    "main": "",
-    "frontend": "",
-    "small": "",
-    "left": "",
-    "right": ""
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2018/home_front.webp",
-     "backKitFile": "kits_2018/home_back.webp",
-     "previewFile": "kits_2018/home_preview.png",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "kits_2018/away_front.webp",
-     "backKitFile": "kits_2018/away_back.webp",
-     "previewFile": "kits_2018/away_preview.png",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "",
-    "viceCaptain": "",
-    "longGK": "143711",
-    "shortGK": "143711",
-    "longPunt": "143711",
-    "shortPunt": "143711",
-    "kickoff": "143711"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "155304",
-    "157515",
-    "153714",
-    "157352",
-    "157484",
-    "157552",
-    "144768",
-    "155356",
-    "157334",
-    "154504",
-    "155322",
-    "143711",
-    "155320",
-    "155321",
-    "152494",
-    "155318",
-    "152341",
-    "155301",
-    "157522",
-    "155314",
-    "155307",
-    "155323",
-    "153148",
-    "155316",
-    "155315",
-    "155415",
-    "157639",
-    "154343",
-    "157374",
-    "156695",
-    "155312",
-    "155309",
-    "143536",
-    "148312",
-    "154268",
-    "155302",
-    "143113",
-    "155009",
-    "148216",
-    "155335",
-    "157363",
-    "157364",
-    "155300",
-    "153220",
-    "155330",
-    "156243",
-    "155240",
-    "155339"
-   ],
-   "primaryStadium": "79"
-  },
   "2018": {
    "enabled": false,
    "name": "Bristol",
@@ -279,104 +839,6 @@
     "155324",
     "144391",
     "155343"
-   ],
-   "primaryStadium": "79"
-  },
-  "2019": {
-   "enabled": true,
-   "name": "Bristol",
-   "type": "club",
-   "category": "Premiership",
-   "group": "england",
-   "ball": "logos_1/ball_%.png",
-   "banners": "logos_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2019/home_front.webp",
-     "backKitFile": "kits_2019/home_back.webp",
-     "previewFile": "kits_2019/home_preview.png",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "kits_2019/away_front.webp",
-     "backKitFile": "kits_2019/away_back.webp",
-     "previewFile": "kits_2019/away_preview.png",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "155009",
-    "viceCaptain": "145419",
-    "longGK": "153437",
-    "shortGK": "153437",
-    "longPunt": "153437",
-    "shortPunt": "153437",
-    "kickoff": "153437"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "155328",
-    "155326",
-    "142484",
-    "155334",
-    "144415",
-    "145419",
-    "143081",
-    "155316",
-    "155339",
-    "153437",
-    "154650",
-    "155009",
-    "155341",
-    "153256",
-    "144391",
-    "155325",
-    "155329",
-    "155332",
-    "155335",
-    "157819",
-    "152337",
-    "155319",
-    "155313",
-    "153402",
-    "144768",
-    "155342",
-    "155314",
-    "155320",
-    "155343",
-    "155331",
-    "155324",
-    "155338",
-    "154504",
-    "155321",
-    "155327",
-    "155336",
-    "155349",
-    "155333",
-    "155310",
-    "144866",
-    "155311",
-    "155364",
-    "155347",
-    "155312",
-    "155340",
-    "155330",
-    "155306",
-    "155317",
-    "155370"
    ],
    "primaryStadium": "79"
   },
@@ -569,389 +1031,6 @@
     "155266"
    ],
    "primaryStadium": "79"
-  },
-  "2022": {
-   "enabled": true,
-   "name": "Bristol",
-   "type": "club",
-   "category": "Premiership",
-   "group": "england",
-   "ball": "logos_1/ball_%.png",
-   "banners": "logos_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2022/home_front.webp",
-     "backKitFile": "kits_2022/home_back.webp",
-     "previewFile": "kits_2022/home_preview.png",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "kits_2022/away_front.webp",
-     "backKitFile": "kits_2022/away_back.webp",
-     "previewFile": "kits_2022/away_preview.png",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "153437",
-    "viceCaptain": "142470",
-    "longGK": "153437",
-    "shortGK": "153437",
-    "longPunt": "144391",
-    "shortPunt": "153437",
-    "kickoff": "144391"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "10947",
-    "155326",
-    "155354",
-    "142470",
-    "155335",
-    "145419",
-    "155312",
-    "155360",
-    "152337",
-    "153437",
-    "154650",
-    "155341",
-    "144964",
-    "155350",
-    "144391",
-    "153291",
-    "155313",
-    "142484",
-    "155347",
-    "155336",
-    "155339",
-    "155374",
-    "144415",
-    "155328",
-    "155359",
-    "155331",
-    "152399",
-    "155373",
-    "153256",
-    "155349",
-    "155334",
-    "155340",
-    "155352",
-    "155362",
-    "155329",
-    "155353",
-    "155363",
-    "157765",
-    "158118",
-    "155367",
-    "155358",
-    "155375",
-    "155370",
-    "155372",
-    "155356",
-    "155364",
-    "155371"
-   ],
-   "primaryStadium": "79"
-  },
-  "2023": {
-   "enabled": true,
-   "name": "Bristol",
-   "type": "club",
-   "category": "Premiership",
-   "group": "england",
-   "ball": "logos_1/ball_%.png",
-   "banners": "logos_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2023/home_front.webp",
-     "backKitFile": "kits_2023/home_back.webp",
-     "previewFile": "kits_2023/home_preview.png",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "kits_2023/away_front.webp",
-     "backKitFile": "kits_2023/away_back.webp",
-     "previewFile": "kits_2023/away_preview.png",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "145419",
-    "viceCaptain": "144253",
-    "longGK": "144253",
-    "shortGK": "144253",
-    "longPunt": "144253",
-    "shortPunt": "144253",
-    "kickoff": "144253"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "144505",
-    "155326",
-    "10947",
-    "155310",
-    "144415",
-    "145419",
-    "155360",
-    "152785",
-    "152337",
-    "144253",
-    "155067",
-    "155349",
-    "144964",
-    "155358",
-    "144391",
-    "155353",
-    "155329",
-    "155313",
-    "155347",
-    "155336",
-    "155339",
-    "155374",
-    "155354",
-    "155328",
-    "153437",
-    "155341",
-    "155352",
-    "157902",
-    "155335",
-    "155373",
-    "153256",
-    "155312",
-    "156860",
-    "155375",
-    "155334",
-    "155370",
-    "158178",
-    "155376",
-    "155359",
-    "157674",
-    "155362",
-    "155365",
-    "153291",
-    "155384",
-    "155385",
-    "155350",
-    "155367",
-    "155383"
-   ],
-   "primaryStadium": "79"
-  },
-  "2024": {
-   "enabled": true,
-   "name": "Bristol",
-   "type": "club",
-   "category": "Premiership",
-   "group": "england",
-   "ball": "logos_1/ball_%.png",
-   "banners": "logos_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2024/home_front.webp",
-     "backKitFile": "kits_2024/home_back.webp",
-     "previewFile": "kits_2024/home_preview.png",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "kits_2024/away_front.webp",
-     "backKitFile": "kits_2024/away_back.webp",
-     "previewFile": "kits_2024/away_preview.png",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "145419",
-    "viceCaptain": "144505",
-    "longGK": "144253",
-    "shortGK": "144253",
-    "longPunt": "144253",
-    "shortPunt": "144253",
-    "kickoff": "144253"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "144505",
-    "152471",
-    "10947",
-    "142470",
-    "155310",
-    "145419",
-    "155360",
-    "152785",
-    "152337",
-    "144253",
-    "155067",
-    "157902",
-    "155382",
-    "155385",
-    "11131",
-    "155352",
-    "155329",
-    "155354",
-    "155378",
-    "155355",
-    "153075",
-    "153437",
-    "152408",
-    "155375",
-    "155336",
-    "155326",
-    "155313",
-    "155370",
-    "155387",
-    "146303",
-    "155341",
-    "155379",
-    "155358",
-    "155334",
-    "155365",
-    "155381",
-    "155328",
-    "155391",
-    "155373",
-    "155852",
-    "155372",
-    "158178",
-    "155359"
-   ],
-   "primaryStadium": "79"
-  },
-  "2009": {
-   "name": "Bristol",
-   "type": "club",
-   "category": "Premiership",
-   "group": "england",
-   "ball": "logos_1/ball_%.png",
-   "banners": "logos_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2009/home_front.webp",
-     "backKitFile": "kits_2009/home_back.webp",
-     "previewFile": "kits_2009/home_preview.png",
-     "color": "",
-     "model3d": {
-      "fit": "loose",
-      "collar": "stand"
-     }
-    },
-    "away": {
-     "frontKitFile": "kits_2009/away_front.webp",
-     "backKitFile": "kits_2009/away_back.webp",
-     "previewFile": "kits_2009/away_preview.png",
-     "color": "",
-     "model3d": {
-      "fit": "loose",
-      "collar": "stand"
-     }
-    }
-   },
-   "roles": {
-    "captain": "155288",
-    "viceCaptain": "155284",
-    "longGK": "155288",
-    "shortGK": "155288",
-    "longPunt": "146828",
-    "shortPunt": "146828",
-    "kickoff": "146828"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "155274",
-    "155268",
-    "155270",
-    "153276",
-    "156754",
-    "153563",
-    "154526",
-    "155284",
-    "146828",
-    "155288",
-    "143113",
-    "157351",
-    "155291",
-    "155297",
-    "155300",
-    "155266",
-    "155275",
-    "155269",
-    "155279",
-    "142470",
-    "155287",
-    "157522",
-    "155298",
-    "155286",
-    "155276",
-    "155280",
-    "146844",
-    "157521",
-    "148062",
-    "155272",
-    "156790",
-    "158310",
-    "156622",
-    "155282",
-    "157352",
-    "148209",
-    "155283",
-    "158222",
-    "155295",
-    "157349",
-    "155281"
-   ],
-   "enabled": true,
-   "primaryStadium": "6"
   },
   "2010": {
    "name": "Bristol",

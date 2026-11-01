@@ -3252,7 +3252,7 @@
   "first_name": "Antoine",
   "last_name": "Dupont",
   "birthdate": "1996/11/15",
-  "commentary": "28",
+  "commentary": "439",
   "stats": {
    "2024": {
     "position1": "scrum_half",
@@ -1161587,7 +1161587,7 @@
     "skin_tone": "light",
     "skin": "",
     "skin_overlay": [],
-    "face": "45005",
+    "face": "144",
     "foot": "right_footed",
     "headgear": "",
     "boot_style": "0",
@@ -1161633,7 +1161633,7 @@
     "skin_tone": "light",
     "skin": "",
     "skin_overlay": [],
-    "face": "45005",
+    "face": "144",
     "foot": "right_footed",
     "headgear": "",
     "boot_style": "0",
@@ -1594205,7 +1594205,7 @@
   }
  },
  "158860": {
-  "display_name": "A.Böhme",
+  "display_name": "A.Bohme",
   "first_name": "Augusto",
   "last_name": "Böhme",
   "birthdate": "",

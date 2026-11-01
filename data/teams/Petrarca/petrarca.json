@@ -101,15 +101,15 @@
    "type": "club",
    "category": "Italy",
    "group": "other_european",
-   "ball": "",
-   "banners": "",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
    "pads": "",
    "logos": {
-    "main": "",
-    "frontend": "",
-    "small": "",
-    "left": "",
-    "right": ""
+    "main": "logos_2/logo.png",
+    "frontend": "logos_2/logo_frontend.png",
+    "small": "logos_2/logo_small.png",
+    "left": "logos_2/logo_left.png",
+    "right": "logos_2/logo_right.png"
    },
    "kits": {
     "home": {

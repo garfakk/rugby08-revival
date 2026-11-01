@@ -1,0 +1,120 @@
+{
+ "10180": {
+  "2026": {
+   "name": "French Barbarians",
+   "type": "special",
+   "category": "Representatives",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2026_2/home_front.png",
+     "backKitFile": "kits_2026_2/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "",
+    "shortGK": "",
+    "longPunt": "",
+    "shortPunt": "",
+    "kickoff": ""
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [],
+   "group": "representatives",
+   "enabled": true
+  },
+  "2022": {
+   "name": "French Barbarians",
+   "type": "special",
+   "category": "Representatives",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2026_2/home_front.png",
+     "backKitFile": "kits_2026_2/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "153627",
+    "shortGK": "153627",
+    "longPunt": "153627",
+    "shortPunt": "153627",
+    "kickoff": "153627"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "154280",
+    "144382",
+    "152960",
+    "152965",
+    "146382",
+    "153778",
+    "142364",
+    "146237",
+    "155074",
+    "153627",
+    "152970",
+    "152899",
+    "146349",
+    "145163",
+    "144808",
+    "145469",
+    "152495",
+    "158951",
+    "126946",
+    "145824",
+    "153480",
+    "152864"
+   ],
+   "group": "representatives"
+  }
+ }
+}

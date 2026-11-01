@@ -1,93 +1,5 @@
 {
  "10105": {
-  "2008": {
-   "enabled": false,
-   "name": "Bath",
-   "type": "club",
-   "category": "Premiership",
-   "group": "england",
-   "ball": "",
-   "banners": "",
-   "pads": "",
-   "logos": {
-    "main": "",
-    "frontend": "",
-    "small": "",
-    "left": "",
-    "right": ""
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "",
-    "viceCaptain": "",
-    "longGK": "143306",
-    "shortGK": "143306",
-    "longPunt": "143361",
-    "shortPunt": "143306",
-    "kickoff": "143361"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "157538",
-    "132707",
-    "117922",
-    "157539",
-    "156649",
-    "156845",
-    "156397",
-    "157377",
-    "156814",
-    "143361",
-    "106493",
-    "143306",
-    "157372",
-    "157373",
-    "144070",
-    "157535",
-    "156760",
-    "157371",
-    "157374",
-    "156778",
-    "157367",
-    "157368",
-    "156724",
-    "157537",
-    "124227",
-    "156772",
-    "157375",
-    "156665",
-    "156636",
-    "156708",
-    "148056",
-    "154093",
-    "148033",
-    "157542",
-    "157370",
-    "157376",
-    "157369",
-    "157541",
-    "157392"
-   ],
-   "primaryStadium": "9"
-  },
   "2023": {
    "enabled": true,
    "name": "Bath",
@@ -109,13 +21,31 @@
      "frontKitFile": "kits_2023_2/home_front.webp",
      "backKitFile": "kits_2023_2/home_back.webp",
      "previewFile": "kits_2023_2/home_preview.png",
-     "color": ""
+     "color": "",
+     "shirtName": {
+      "color": "#ffffff",
+      "area": [
+       0.1551,
+       0.2383,
+       0.6977,
+       0.1348
+      ]
+     }
     },
     "away": {
      "frontKitFile": "kits_2023_2/away_front.webp",
      "backKitFile": "kits_2023_2/away_back.webp",
      "previewFile": "kits_2023_2/away_preview.png",
-     "color": ""
+     "color": "",
+     "shirtName": {
+      "color": "#ffffff",
+      "area": [
+       0.1551,
+       0.2383,
+       0.6977,
+       0.1348
+      ]
+     }
     }
    },
    "roles": {
@@ -184,7 +114,11 @@
     "157945",
     "156447"
    ],
-   "primaryStadium": "9"
+   "primaryStadium": "9",
+   "shirtNames": {
+    "enabled": true,
+    "size": 46
+   }
   },
   "2024": {
    "enabled": true,
@@ -207,13 +141,30 @@
      "frontKitFile": "kits_2024_2/home_front.webp",
      "backKitFile": "kits_2024_2/home_back.webp",
      "previewFile": "kits_2024_2/home_preview.png",
-     "color": ""
+     "color": "",
+     "shirtName": {
+      "color": "#ffffff",
+      "area": [
+       0.1551,
+       0.2293,
+       0.6977,
+       0.126
+      ]
+     }
     },
     "away": {
      "frontKitFile": "kits_2024_2/away_front.webp",
      "backKitFile": "kits_2024_2/away_back.webp",
      "previewFile": "kits_2024_2/away_preview.png",
-     "color": ""
+     "color": "",
+     "shirtName": {
+      "area": [
+       0.1551,
+       0.2378,
+       0.6977,
+       0.126
+      ]
+     }
     }
    },
    "roles": {
@@ -272,7 +223,11 @@
     "157945",
     "157947"
    ],
-   "primaryStadium": "9"
+   "primaryStadium": "9",
+   "shirtNames": {
+    "enabled": true,
+    "size": 43
+   }
   },
   "2009": {
    "name": "Bath",
@@ -756,6 +711,190 @@
    "enabled": true,
    "primaryStadium": "9"
   },
+  "2022": {
+   "name": "Bath",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.webp",
+     "backKitFile": "kits_2022/home_back.webp",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.webp",
+     "backKitFile": "kits_2022/away_back.webp",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "158001",
+    "viceCaptain": "152479",
+    "longGK": "158001",
+    "shortGK": "158001",
+    "longPunt": "158001",
+    "shortPunt": "158001",
+    "kickoff": "158001"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "157668",
+    "152479",
+    "11859",
+    "152472",
+    "152464",
+    "157807",
+    "11581",
+    "152793",
+    "152490",
+    "158001",
+    "152516",
+    "152476",
+    "152483",
+    "152356",
+    "157832",
+    "157054",
+    "157603",
+    "145623",
+    "156825",
+    "157698",
+    "157493",
+    "113608",
+    "157081",
+    "157198",
+    "158043",
+    "157833",
+    "157122",
+    "157931",
+    "157947",
+    "155386",
+    "152342",
+    "156858",
+    "145526",
+    "152351",
+    "152331",
+    "157657",
+    "157944",
+    "153913",
+    "157589",
+    "156799",
+    "157843",
+    "157945",
+    "152920",
+    "157772",
+    "155064",
+    "144394",
+    "152436"
+   ],
+   "enabled": true,
+   "primaryStadium": "9"
+  },
+  "2008": {
+   "enabled": false,
+   "name": "Bath",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "143306",
+    "shortGK": "143306",
+    "longPunt": "143361",
+    "shortPunt": "143306",
+    "kickoff": "143361"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "157538",
+    "132707",
+    "117922",
+    "157539",
+    "156649",
+    "156845",
+    "156397",
+    "157377",
+    "156814",
+    "143361",
+    "106493",
+    "143306",
+    "157372",
+    "157373",
+    "144070",
+    "157535",
+    "156760",
+    "157371",
+    "157374",
+    "156778",
+    "157367",
+    "157368",
+    "156724",
+    "157537",
+    "124227",
+    "156772",
+    "157375",
+    "156665",
+    "156636",
+    "156708",
+    "148056",
+    "154093",
+    "148033",
+    "157542",
+    "157370",
+    "157376",
+    "157369",
+    "157541",
+    "157392"
+   ],
+   "primaryStadium": "9"
+  },
   "2020": {
    "name": "Bath",
    "type": "club",
@@ -944,102 +1083,6 @@
     "157931"
    ],
    "enabled": false,
-   "primaryStadium": "9"
-  },
-  "2022": {
-   "name": "Bath",
-   "type": "club",
-   "category": "Premiership",
-   "group": "england",
-   "ball": "logos_1/ball_%.png",
-   "banners": "logos_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2022/home_front.webp",
-     "backKitFile": "kits_2022/home_back.webp",
-     "previewFile": "kits_2022/home_preview.png",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "kits_2022/away_front.webp",
-     "backKitFile": "kits_2022/away_back.webp",
-     "previewFile": "kits_2022/away_preview.png",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "158001",
-    "viceCaptain": "152479",
-    "longGK": "158001",
-    "shortGK": "158001",
-    "longPunt": "158001",
-    "shortPunt": "158001",
-    "kickoff": "158001"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "157668",
-    "152479",
-    "11859",
-    "152472",
-    "152464",
-    "157807",
-    "11581",
-    "152793",
-    "152490",
-    "158001",
-    "152516",
-    "152476",
-    "152483",
-    "152356",
-    "157832",
-    "157054",
-    "157603",
-    "145623",
-    "156825",
-    "157698",
-    "157493",
-    "113608",
-    "157081",
-    "157198",
-    "158043",
-    "157833",
-    "157122",
-    "157931",
-    "157947",
-    "155386",
-    "152342",
-    "156858",
-    "145526",
-    "152351",
-    "152331",
-    "157657",
-    "157944",
-    "153913",
-    "157589",
-    "156799",
-    "157843",
-    "157945",
-    "152920",
-    "157772",
-    "155064",
-    "144394",
-    "152436"
-   ],
-   "enabled": true,
    "primaryStadium": "9"
   },
   "2016": {

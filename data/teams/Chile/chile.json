@@ -129,6 +129,88 @@
     }
    },
    "primaryStadium": "43"
+  },
+  "2023": {
+   "name": "Chile",
+   "type": "international",
+   "category": "International",
+   "group": "international",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.png",
+     "backKitFile": "kits_2024/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.png",
+     "backKitFile": "kits_2024/away_back/away_back_%.png",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "158871",
+    "viceCaptain": "158878",
+    "longGK": "158874",
+    "shortGK": "158874",
+    "longPunt": "158874",
+    "shortPunt": "158874",
+    "kickoff": "158874"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "cross_kick",
+    "left": "dummy_switch",
+    "right": "loop"
+   },
+   "players": [
+    "158854",
+    "158860",
+    "158855",
+    "158870",
+    "158863",
+    "158871",
+    "158872",
+    "158868",
+    "158876",
+    "158874",
+    "158878",
+    "158877",
+    "158879",
+    "158886",
+    "158880",
+    "158867",
+    "158859",
+    "158864",
+    "158865",
+    "158861",
+    "158884",
+    "158862",
+    "158856",
+    "158873",
+    "158857",
+    "158885",
+    "158883",
+    "158881",
+    "158920",
+    "158858",
+    "158869",
+    "158866",
+    "158875",
+    "158882"
+   ],
+   "primaryStadium": "43"
   }
  }
 }

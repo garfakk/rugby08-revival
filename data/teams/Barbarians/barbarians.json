@@ -1,0 +1,1439 @@
+{
+ "10178": {
+  "2026": {
+   "name": "Barbarians",
+   "type": "special",
+   "category": "Representatives",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2026/away_front.png",
+     "backKitFile": "kits_2026/away_back/away_back_%.png",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "153972",
+    "shortGK": "153972",
+    "longPunt": "153972",
+    "shortPunt": "153972",
+    "kickoff": "153972"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "158949",
+    "144499",
+    "142335",
+    "153135",
+    "157636",
+    "158605",
+    "146366",
+    "152351",
+    "145357",
+    "153972",
+    "155840",
+    "152408",
+    "155675",
+    "144491",
+    "145941",
+    "153784",
+    "158948",
+    "155326",
+    "146211",
+    "145623",
+    "146150",
+    "145637",
+    "10947",
+    "145139",
+    "152482",
+    "153088",
+    "153122",
+    "153096",
+    "11924",
+    "158950",
+    "144888",
+    "142288",
+    "145678",
+    "153316",
+    "155735",
+    "156284",
+    "143523",
+    "153776",
+    "152442"
+   ],
+   "group": "representatives"
+  },
+  "2019": {
+   "name": "Barbarians",
+   "type": "special",
+   "category": "Representatives",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2019/home_front.png",
+     "backKitFile": "kits_2019/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2019/away_front.png",
+     "backKitFile": "kits_2019/away_back/away_back_%.png",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "144544",
+    "viceCaptain": "",
+    "longGK": "124230",
+    "shortGK": "124230",
+    "longPunt": "124230",
+    "shortPunt": "124230",
+    "kickoff": "124230"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "10777",
+    "152671",
+    "142484",
+    "143784",
+    "144415",
+    "153408",
+    "145419",
+    "144544",
+    "152933",
+    "124230",
+    "144555",
+    "152349",
+    "144257",
+    "157153",
+    "144391",
+    "146479",
+    "156869",
+    "142300",
+    "142956",
+    "145647",
+    "155318",
+    "153597",
+    "155363"
+   ],
+   "group": "representatives"
+  },
+  "2008": {
+   "name": "Barbarians",
+   "type": "special",
+   "category": "Representatives",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2008/home_front.png",
+     "backKitFile": "kits_2008/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2008/away_front.png",
+     "backKitFile": "kits_2008/away_back/away_back_%.png",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "153480",
+    "shortGK": "153480",
+    "longPunt": "153480",
+    "shortPunt": "153480",
+    "kickoff": "153480"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "152604",
+    "146844",
+    "143529",
+    "124227",
+    "153407",
+    "142879",
+    "142779",
+    "153988",
+    "143067",
+    "153480",
+    "156059",
+    "143560",
+    "143085",
+    "156771",
+    "148155",
+    "154907",
+    "156691",
+    "107905",
+    "143368",
+    "112654",
+    "143182",
+    "143355",
+    "147228",
+    "156234",
+    "143000",
+    "142717",
+    "143276"
+   ],
+   "group": "representatives"
+  },
+  "2009": {
+   "name": "Barbarians",
+   "type": "special",
+   "category": "Representatives",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2008/home_front.png",
+     "backKitFile": "kits_2008/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2008/away_front.png",
+     "backKitFile": "kits_2008/away_back/away_back_%.png",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "153249",
+    "shortGK": "153249",
+    "longPunt": "153249",
+    "shortPunt": "153249",
+    "kickoff": "153249"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "110075",
+    "143511",
+    "142508",
+    "153407",
+    "142687",
+    "142879",
+    "143081",
+    "143852",
+    "142792",
+    "153249",
+    "143000",
+    "142750",
+    "143848",
+    "142717",
+    "143530",
+    "143798",
+    "142421",
+    "142578",
+    "142408",
+    "143878",
+    "143573",
+    "142893",
+    "143067",
+    "127813",
+    "143638",
+    "143015",
+    "144126"
+   ],
+   "group": "representatives"
+  },
+  "2010": {
+   "name": "Barbarians",
+   "type": "special",
+   "category": "Representatives",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2008/home_front.png",
+     "backKitFile": "kits_2008/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2008/away_front.png",
+     "backKitFile": "kits_2008/away_back/away_back_%.png",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "156675",
+    "viceCaptain": "",
+    "longGK": "113608",
+    "shortGK": "113608",
+    "longPunt": "113608",
+    "shortPunt": "113608",
+    "kickoff": "113608"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "157538",
+    "155439",
+    "143529",
+    "146831",
+    "146924",
+    "142779",
+    "143081",
+    "156675",
+    "119718",
+    "113608",
+    "142852",
+    "106617",
+    "155559",
+    "121726",
+    "113330",
+    "100182",
+    "156391",
+    "142740",
+    "154515",
+    "152927",
+    "112654",
+    "143965",
+    "154524",
+    "130109",
+    "143722",
+    "156389",
+    "143349",
+    "127595",
+    "103728",
+    "124230",
+    "104099",
+    "141322",
+    "147446",
+    "143085",
+    "153061",
+    "102125"
+   ],
+   "group": "representatives"
+  },
+  "2012": {
+   "name": "Barbarians",
+   "type": "special",
+   "category": "Representatives",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2008/home_front.png",
+     "backKitFile": "kits_2008/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2008/away_front.png",
+     "backKitFile": "kits_2008/away_back/away_back_%.png",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "101264",
+    "viceCaptain": "",
+    "longGK": "120945",
+    "shortGK": "120945",
+    "longPunt": "120945",
+    "shortPunt": "120945",
+    "kickoff": "120945"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "143365",
+    "155439",
+    "142484",
+    "142381",
+    "101264",
+    "153408",
+    "155586",
+    "152860",
+    "153571",
+    "120945",
+    "155462",
+    "155559",
+    "116085",
+    "156795",
+    "153991",
+    "129337",
+    "143368",
+    "143309",
+    "154275",
+    "130109",
+    "109876",
+    "147556",
+    "153634",
+    "143037",
+    "142796",
+    "153217",
+    "143917",
+    "130833",
+    "113330",
+    "143788",
+    "143276",
+    "102125"
+   ],
+   "group": "representatives"
+  },
+  "2017": {
+   "name": "Barbarians",
+   "type": "special",
+   "category": "Representatives",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2015/home_front.png",
+     "backKitFile": "kits_2015/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2015/away_front.png",
+     "backKitFile": "kits_2015/away_back/away_back_%.png",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "124230",
+    "shortGK": "124230",
+    "longPunt": "124230",
+    "shortPunt": "124230",
+    "kickoff": "124230"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153987",
+    "142740",
+    "112654",
+    "103959",
+    "108075",
+    "110021",
+    "142800",
+    "152317",
+    "142792",
+    "124230",
+    "154152",
+    "143560",
+    "152546",
+    "153061",
+    "143796",
+    "156113",
+    "145106",
+    "152961",
+    "152312",
+    "156869",
+    "142421",
+    "156952",
+    "142465",
+    "156050",
+    "11318",
+    "154324",
+    "152967",
+    "144544",
+    "154660",
+    "142350",
+    "143639",
+    "155319",
+    "147244",
+    "152327",
+    "155553",
+    "145699",
+    "153820",
+    "158244",
+    "107491",
+    "144391"
+   ],
+   "group": "representatives"
+  },
+  "2018": {
+   "name": "Barbarians",
+   "type": "special",
+   "category": "Representatives",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "144253",
+    "shortGK": "144253",
+    "longPunt": "144253",
+    "shortPunt": "144253",
+    "kickoff": "144253"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "156533",
+    "124937",
+    "142484",
+    "142465",
+    "154096",
+    "145625",
+    "148221",
+    "153270",
+    "153029",
+    "144253",
+    "155363",
+    "125043",
+    "152546",
+    "141334",
+    "144391",
+    "153123",
+    "154095",
+    "147906",
+    "145406",
+    "154904",
+    "142803",
+    "142740",
+    "145095",
+    "152891",
+    "145565",
+    "153418",
+    "154065",
+    "152929",
+    "152967",
+    "144483",
+    "145407",
+    "147134",
+    "154055",
+    "144835",
+    "155318",
+    "154997",
+    "144549",
+    "145217",
+    "154159",
+    "154059",
+    "144824",
+    "155639",
+    "144257",
+    "144964",
+    "144782",
+    "144434",
+    "158585",
+    "144766",
+    "152880",
+    "154060"
+   ],
+   "group": "representatives"
+  },
+  "2022": {
+   "name": "Barbarians",
+   "type": "special",
+   "category": "Representatives",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2026/away_front.png",
+     "backKitFile": "kits_2026/away_back/away_back_%.png",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "144947",
+    "shortGK": "144947",
+    "longPunt": "144947",
+    "shortPunt": "144947",
+    "kickoff": "144947"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153219",
+    "152932",
+    "145381",
+    "152480",
+    "146669",
+    "153435",
+    "144943",
+    "156951",
+    "142312",
+    "144947",
+    "157008",
+    "154649",
+    "152408",
+    "153033",
+    "157634",
+    "152795",
+    "153006",
+    "142284",
+    "155471",
+    "145621",
+    "145227",
+    "156722",
+    "144410",
+    "142848",
+    "144277",
+    "146273",
+    "145565",
+    "145420",
+    "145705",
+    "142465",
+    "142035",
+    "142281",
+    "153030",
+    "142285",
+    "10297",
+    "157503",
+    "142288",
+    "144213",
+    "142286",
+    "158947",
+    "146438",
+    "142289",
+    "152921",
+    "154652",
+    "146698",
+    "10392",
+    "157051",
+    "152746",
+    "146070",
+    "146407"
+   ],
+   "group": "representatives"
+  },
+  "2023": {
+   "name": "Barbarians",
+   "type": "special",
+   "category": "Representatives",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2026/away_front.png",
+     "backKitFile": "kits_2026/away_back/away_back_%.png",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "142385",
+    "shortGK": "142385",
+    "longPunt": "142385",
+    "shortPunt": "142385",
+    "kickoff": "142385"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153119",
+    "157725",
+    "144565",
+    "142437",
+    "157088",
+    "145419",
+    "155070",
+    "144244",
+    "154071",
+    "142385",
+    "158589",
+    "152784",
+    "145405",
+    "152478",
+    "144573",
+    "156510",
+    "157245",
+    "154574",
+    "155326",
+    "142307",
+    "155689",
+    "153672",
+    "152904"
+   ],
+   "group": "representatives"
+  },
+  "2024": {
+   "name": "Barbarians",
+   "type": "special",
+   "category": "Representatives",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2026/away_front.png",
+     "backKitFile": "kits_2026/away_back/away_back_%.png",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "10541",
+    "shortGK": "10541",
+    "longPunt": "10541",
+    "shortPunt": "10541",
+    "kickoff": "10541"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "152345",
+    "145398",
+    "10947",
+    "155921",
+    "157752",
+    "158605",
+    "155070",
+    "107949",
+    "142274",
+    "10541",
+    "152483",
+    "155800",
+    "155844",
+    "146046",
+    "153087",
+    "155326",
+    "142278",
+    "142845",
+    "146213",
+    "144419",
+    "12301",
+    "152408",
+    "144959"
+   ],
+   "group": "representatives"
+  },
+  "2025": {
+   "name": "Barbarians",
+   "type": "special",
+   "category": "Representatives",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.png",
+     "backKitFile": "kits_2022/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2026/away_front.png",
+     "backKitFile": "kits_2026/away_back/away_back_%.png",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "155923",
+    "shortGK": "155923",
+    "longPunt": "155923",
+    "shortPunt": "155923",
+    "kickoff": "155923"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "152360",
+    "144339",
+    "142335",
+    "155959",
+    "142278",
+    "158605",
+    "145366",
+    "146573",
+    "145357",
+    "155923",
+    "145130",
+    "144959",
+    "142276",
+    "155848",
+    "142290",
+    "117773",
+    "156298",
+    "155664",
+    "157719",
+    "10773",
+    "153312",
+    "145547",
+    "153961"
+   ],
+   "group": "representatives"
+  },
+  "2011": {
+   "name": "Barbarians",
+   "type": "special",
+   "category": "Representatives",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2008/home_front.png",
+     "backKitFile": "kits_2008/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2008/away_front.png",
+     "backKitFile": "kits_2008/away_back/away_back_%.png",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "124230",
+    "shortGK": "124230",
+    "longPunt": "124230",
+    "shortPunt": "124230",
+    "kickoff": "124230"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153631",
+    "154515",
+    "143529",
+    "142578",
+    "157295",
+    "143160",
+    "143081",
+    "119314",
+    "143639",
+    "124230",
+    "142852",
+    "127663",
+    "158936",
+    "113330",
+    "101497",
+    "110075",
+    "156720",
+    "115834",
+    "142882",
+    "142821",
+    "143177",
+    "147140",
+    "142465",
+    "156775",
+    "101071",
+    "142408",
+    "142830",
+    "143399",
+    "156389",
+    "120899",
+    "142376",
+    "120415",
+    "153179",
+    "156575",
+    "154157",
+    "130188",
+    "124648",
+    "113608",
+    "147446",
+    "155553",
+    "143848",
+    "142856",
+    "157488",
+    "156795",
+    "143000",
+    "156232",
+    "158937",
+    "142622"
+   ],
+   "group": "representatives"
+  },
+  "2013": {
+   "name": "Barbarians",
+   "type": "special",
+   "category": "Representatives",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2008/home_front.png",
+     "backKitFile": "kits_2008/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2008/away_front.png",
+     "backKitFile": "kits_2008/away_back/away_back_%.png",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "144034",
+    "shortGK": "144034",
+    "longPunt": "144034",
+    "shortPunt": "144034",
+    "kickoff": "144034"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "146954",
+    "142740",
+    "142979",
+    "142764",
+    "154334",
+    "156685",
+    "156174",
+    "103625",
+    "154660",
+    "144034",
+    "154152",
+    "10433",
+    "142750",
+    "143166",
+    "156130",
+    "153211",
+    "143365",
+    "142386",
+    "142882",
+    "143192",
+    "156954",
+    "143510",
+    "156765",
+    "153408",
+    "119314",
+    "143017",
+    "143797",
+    "124855",
+    "142785",
+    "155559",
+    "116085",
+    "142717",
+    "158938"
+   ],
+   "group": "representatives"
+  },
+  "2014": {
+   "name": "Barbarians",
+   "type": "special",
+   "category": "Representatives",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2014/home_front.png",
+     "backKitFile": "kits_2014/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2014/away_front.png",
+     "backKitFile": "kits_2014/away_back/away_back_%.png",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "147134",
+    "viceCaptain": "",
+    "longGK": "124230",
+    "shortGK": "124230",
+    "longPunt": "124230",
+    "shortPunt": "124230",
+    "kickoff": "124230"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153999",
+    "142665",
+    "118397",
+    "154333",
+    "103737",
+    "111521",
+    "147134",
+    "147556",
+    "143138",
+    "124230",
+    "153997",
+    "153990",
+    "153599",
+    "142717",
+    "156154",
+    "158939",
+    "156124",
+    "124050",
+    "142465",
+    "156833",
+    "145514",
+    "153480",
+    "127813",
+    "142635",
+    "155571"
+   ],
+   "group": "representatives"
+  },
+  "2015": {
+   "name": "Barbarians",
+   "type": "special",
+   "category": "Representatives",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2015/home_front.png",
+     "backKitFile": "kits_2015/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2015/away_front.png",
+     "backKitFile": "kits_2015/away_back/away_back_%.png",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "156402",
+    "viceCaptain": "",
+    "longGK": "155583",
+    "shortGK": "155583",
+    "longPunt": "155583",
+    "shortPunt": "155583",
+    "kickoff": "155583"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "158940",
+    "153084",
+    "144120",
+    "153044",
+    "153993",
+    "143310",
+    "156402",
+    "155561",
+    "145514",
+    "155583",
+    "142717",
+    "143926",
+    "153990",
+    "144160",
+    "154575",
+    "154489",
+    "158941",
+    "148216",
+    "108075",
+    "154334",
+    "144923",
+    "142857",
+    "154253",
+    "144571",
+    "158383",
+    "143081",
+    "156208",
+    "143639",
+    "155569",
+    "154504",
+    "143710",
+    "102625",
+    "153061",
+    "153411",
+    "142645"
+   ],
+   "group": "representatives"
+  },
+  "2016": {
+   "name": "Barbarians",
+   "type": "special",
+   "category": "Representatives",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2015/home_front.png",
+     "backKitFile": "kits_2015/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2015/away_front.png",
+     "backKitFile": "kits_2015/away_back/away_back_%.png",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "157052",
+    "shortGK": "157052",
+    "longPunt": "157052",
+    "shortPunt": "157052",
+    "kickoff": "157052"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153987",
+    "155622",
+    "155544",
+    "155550",
+    "156804",
+    "142902",
+    "144928",
+    "157601",
+    "142547",
+    "157052",
+    "156813",
+    "158561",
+    "152904",
+    "130614",
+    "153256",
+    "158942",
+    "155506",
+    "158943",
+    "154047",
+    "156194",
+    "155309",
+    "145705",
+    "152485",
+    "144835",
+    "145017",
+    "143639",
+    "155338",
+    "144367",
+    "157153",
+    "157089",
+    "156980"
+   ],
+   "group": "representatives"
+  },
+  "2021": {
+   "name": "Barbarians",
+   "type": "special",
+   "category": "Representatives",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/home_front.png",
+     "backKitFile": "kits_2018/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.png",
+     "backKitFile": "kits_2018/away_back/away_back_%.png",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "142635",
+    "shortGK": "142635",
+    "longPunt": "142635",
+    "shortPunt": "142635",
+    "kickoff": "142635"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "144147",
+    "146298",
+    "146585",
+    "157923",
+    "154600",
+    "155315",
+    "145257",
+    "145303",
+    "145560",
+    "142635",
+    "153981",
+    "144970",
+    "145317",
+    "158944",
+    "104954",
+    "145406",
+    "153086",
+    "145095",
+    "146150",
+    "143824",
+    "153028",
+    "145194",
+    "146199",
+    "145610"
+   ],
+   "group": "representatives"
+  }
+ }
+}

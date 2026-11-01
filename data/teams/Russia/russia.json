@@ -125,6 +125,85 @@
     }
    },
    "primaryStadium": "38"
+  },
+  "2019": {
+   "name": "Russia",
+   "type": "international",
+   "category": "International",
+   "group": "international",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2020/home_front.png",
+     "backKitFile": "kits_2020/home_back/home_back_%.png",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2020/away_front.png",
+     "backKitFile": "kits_2020/away_back/away_back_%.png",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "158917",
+    "viceCaptain": "",
+    "longGK": "158907",
+    "shortGK": "158907",
+    "longPunt": "158907",
+    "shortPunt": "158907",
+    "kickoff": "158907"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "cross_kick",
+    "left": "dummy_switch",
+    "right": "loop"
+   },
+   "players": [
+    "157668",
+    "158889",
+    "158891",
+    "156922",
+    "158896",
+    "158904",
+    "158933",
+    "158903",
+    "158906",
+    "158907",
+    "158912",
+    "158911",
+    "158913",
+    "158914",
+    "158917",
+    "158897",
+    "158902",
+    "158932",
+    "158916",
+    "158908",
+    "158894",
+    "158890",
+    "158905",
+    "158893",
+    "158895",
+    "158934",
+    "158910",
+    "158915",
+    "158900",
+    "158901",
+    "158887"
+   ],
+   "primaryStadium": "38"
   }
  }
 }
