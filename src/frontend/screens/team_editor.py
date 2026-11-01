@@ -25,7 +25,7 @@ from app import team_ops as T
 from app import variants as V
 from app.game_data import (
     check_team_detailed, check_team_variants, save_team, delete_team, save_target, saves_to_user_edits, SaveError,
-    TEAM_TYPES, ASSET_SPECS, country_label, frontend_logo,
+    TEAM_TYPES, ASSET_SPECS, frontend_logo,
 )
 from app.team_browse import GROUPS, group_label
 from app.season import season_label
@@ -273,17 +273,16 @@ class TeamEditorScreen(EditorScreen):
     @staticmethod
     def _shirt_name_issues(info, root):
         from shared import shirt_names as SN
-        block = info.get("shirtNames") or {}
-        if not block.get("enabled"):
-            return []
         out = []
-        font = block.get("font")
-        if font and not SN.resolve_font(font, root)[2]:
-            out.append(("shirtNames.font", f"shirt names: font {font} not found "
-                        f"({SN.DEFAULT_FONT} is used)", "warn"))
         for name, kit in (info.get("kits") or {}).items():
-            back = kit.get("backKitFile", "")
-            if back.lower().endswith(".fsh"):
+            style = SN.season_style_for(info, kit)
+            if not style["enabled"]:
+                continue
+            font = style["font"]
+            if font and not SN.resolve_font(font, root)[2]:
+                out.append((f"shirtName.font.{name}", f"shirt names: the {name} kit's font {font} "
+                            f"is not found ({SN.DEFAULT_FONT} is used)", "warn"))
+            if kit.get("backKitFile", "").lower().endswith(".fsh"):
                 out.append((f"shirtNames.kits.{name}", f"shirt names: the {name} kit's back "
                             "numbers are one .fsh file, names need images", "info"))
         return out
@@ -375,13 +374,7 @@ class TeamEditorScreen(EditorScreen):
         info = self.info()
         root = self.team_folder()
         crest = frontend_logo(info)
-        chips = []
-        if info.get("category"):
-            chips.append((info["category"], FG_SECONDARY))
-        if info.get("type"):
-            chips.append((info["type"], FG_TERTIARY))
-        if info.get("country"):
-            chips.append((country_label(info["country"]), FG_TERTIARY))
+        chips = []          # no category / type / country tags: only the variant edited
         if self.variant:
             chips.append((V.variant_label(self.season_block(), self.variant), ACCENT))
         name = info.get("name") or self.record_id or "—"
@@ -392,7 +385,6 @@ class TeamEditorScreen(EditorScreen):
             "chips": chips,
             "pixmap": load_pixmap(os.path.join(root, crest), 128) if crest else None,
             "initials": "".join(w[:1] for w in name.split()[:2]) or "?",
-            "target": f"→ {save_target(self.ds.teams_file_path.get(self.record_id, ''))}",
         }
 
     def tab_hints(self, focused):

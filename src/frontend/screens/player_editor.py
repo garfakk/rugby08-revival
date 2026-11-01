@@ -161,16 +161,6 @@ class PlayerEditorScreen(EditorScreen):
                 return v
         return None
 
-    def _commentary_hovered(self, value):
-        self._hovered_clip = value
-        if value:
-            self._hover_timer.start()
-        else:
-            self._hover_timer.stop()
-
-    def _commentary_hover_timer_stop(self):
-        self._hover_timer.stop()
-
     def _play_commentary(self, value):
         if value and str(value).isdigit():
             self._sound.play(f"commentary_{value}", lambda: commentary.wav_bytes(value))
@@ -286,8 +276,8 @@ class PlayerEditorScreen(EditorScreen):
         small_row.addWidget(self.shirt_name, stretch=1)
 
         # The name the commentators say, picked from the game's recorded
-        # clips (shared/commentary.py); ▶ plays it, and browsing the list
-        # plays whichever name the cursor rests on.
+        # clips (shared/commentary.py). The list is searchable; each row
+        # has a play icon (nothing plays on its own) and an ASSIGN button.
         self._commentary_names = commentary.names()
         self.commentary = self.register_field(
             "commentary", ChoiceField(
@@ -299,25 +289,14 @@ class PlayerEditorScreen(EditorScreen):
         self.commentary.popup_title = "commentary name"
         self.commentary.off_list_badge = bool(self._commentary_names)
         self.commentary.default_highlight = self._commentary_guess
-        self.commentary.on_hover = self._commentary_hovered
-        self.commentary.on_popup_closed = self._commentary_hover_timer_stop
+        self.commentary.searchable = True
+        self.commentary.on_play = self._play_commentary
+        self.commentary.on_popup_closed = lambda: self._sound.stop()
         self.commentary.edited.connect(lambda v: self._edit_identity("commentary", "commentary", v))
         small_row.addWidget(self.commentary, stretch=1)
-        self.commentary_play = compact_button("▶")
-        self.commentary_play.setFixedWidth(30)
-        self.commentary_play.setToolTip("Play the commentary name")
-        self.commentary_play.clicked.connect(lambda: self._play_commentary(self.commentary.value()))
-        self.commentary_play.setEnabled(bool(self._commentary_names))
-        self.focus.register(self.commentary_play)
-        small_row.addWidget(self.commentary_play, alignment=Qt.AlignVCenter)
         outer.addLayout(small_row)
 
         self._sound = SoundPreview(self)
-        self._hovered_clip = None
-        self._hover_timer = QTimer(self)
-        self._hover_timer.setSingleShot(True)
-        self._hover_timer.setInterval(450)
-        self._hover_timer.timeout.connect(lambda: self._play_commentary(self._hovered_clip))
 
         self.shell.identity_layout.addWidget(id_card)
 
@@ -701,7 +680,6 @@ class PlayerEditorScreen(EditorScreen):
             "chips": [],
             "pixmap": None,
             "initials": "",
-            "target": f"→ {save_target(path)}" if path else "",
         }
 
     def tab_hints(self, focused):

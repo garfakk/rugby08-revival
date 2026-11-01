@@ -842,17 +842,17 @@ class TournamentDashboardScreen(Screen):
                 {"text": _without_round(f), "color": FG_TERTIARY},
                 {"text": report.venue_name(self.ds, f), "color": FG_TERTIARY},
                 {"text": home_name, "icon": tournament_crest(self.ds, t, f.home, 22),
-                 "align": Qt.AlignRight, "bold": win is not None and win == f.home,
-                 "ball": f.home in humans, "color": FG_MUTED if not f.home else None},
+                 "align": Qt.AlignRight, "bold": f.home in humans or (win is not None and win == f.home),
+                 "color": YOU_TINT if f.home in humans else FG_MUTED if not f.home else None},
                 {"text": score, "align": Qt.AlignHCenter, "bold": bool(f.result),
                  "color": (INFO if f.result.source == "real" else FG_PRIMARY) if f.result else FG_MUTED},
                 {"text": away_name, "icon": tournament_crest(self.ds, t, f.away, 22),
-                 "bold": win is not None and win == f.away,
-                 "ball": f.away in humans, "color": FG_MUTED if not f.away else None},
+                 "bold": f.away in humans or (win is not None and win == f.away),
+                 "color": YOU_TINT if f.away in humans else FG_MUTED if not f.away else None},
                 "",
             ])
             keys.append(f.id)
-        # no row tint for your matches: a ball by the teams you control
+        # no row tint for your matches: the teams you control are in bold, in blue
         self.fixtures.set_rows(rows, keys=keys)
         self.fixtures.fit_column(0, minimum=300)      # the venue well clear of the round
         self._add_report_buttons(self.fixtures)

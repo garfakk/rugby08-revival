@@ -250,10 +250,16 @@ class SquadEditorScreen(Screen):
         self.player_first_lbl = display_label("", 14, QFont.DemiBold, track=0.6,
                                               color=FG_SECONDARY, upper=False)
         self.player_first_lbl.setFixedWidth(inner_w)
-        v.addWidget(self.player_first_lbl)
         self.player_name_lbl = display_label("—", 26, QFont.Bold, track=0.6)
         self.player_name_lbl.setFixedWidth(inner_w)
-        v.addWidget(self.player_name_lbl)
+        names = QVBoxLayout()           # first name right on top of the last name
+        names.setSpacing(0)
+        self.player_first_lbl.setMaximumHeight(self.player_first_lbl.minimumHeight())
+        self.player_first_lbl.setAlignment(Qt.AlignLeft | Qt.AlignBottom)
+        self.player_name_lbl.setAlignment(Qt.AlignLeft | Qt.AlignTop)
+        names.addWidget(self.player_first_lbl)
+        names.addWidget(self.player_name_lbl)
+        v.addLayout(names)
         # one position per row, always POSITION_ROWS rows tall: the panel
         # never moves with how many positions a player has
         self.player_pos_lbls = []
@@ -288,12 +294,12 @@ class SquadEditorScreen(Screen):
 
         reset_line = QHBoxLayout()
         reset_line.setSpacing(8)
-        self.clear_btn = StyledButton("CLEAR ALL", "danger")
+        self.clear_btn = StyledButton("CLEAR ALL", "ghost")
         self.clear_btn.setMinimumHeight(BTN_HEIGHT)
         self.clear_btn.clicked.connect(self._clear_all)
         self.focus.register(self.clear_btn)
         reset_line.addWidget(self.clear_btn, stretch=1)
-        self.reset_btn = StyledButton("RESET", "neutral")
+        self.reset_btn = StyledButton("RESET", "ghost")
         self.reset_btn.setMinimumHeight(BTN_HEIGHT)
         self.reset_btn.clicked.connect(self._reset)
         self.focus.register(self.reset_btn)
@@ -309,7 +315,7 @@ class SquadEditorScreen(Screen):
 
         buttons = QHBoxLayout()
         buttons.setSpacing(8)
-        self.discard_btn = StyledButton("DISCARD", "neutral")
+        self.discard_btn = StyledButton("DISCARD", "danger")
         self.discard_btn.setMinimumHeight(BTN_HEIGHT)
         self.discard_btn.clicked.connect(self._discard)
         self.focus.register(self.discard_btn)

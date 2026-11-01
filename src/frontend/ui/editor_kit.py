@@ -873,6 +873,8 @@ class ChoiceField(FieldBase):
         self.on_hover = None           # optional fn(value): the popup's cursor moved onto a row
         self.on_popup_closed = None    # optional fn(): the popup closed (picked or not)
         self.default_highlight = None  # optional fn() -> option the popup starts on when blank
+        self.searchable = False        # a search box above the list filters it
+        self.on_play = None            # optional fn(value): rows get a play icon + ASSIGN button
         self._value = ""
         self._popup = None
 
@@ -923,18 +925,20 @@ class ChoiceField(FieldBase):
         # height=380 is only the CAP — size_to() below sizes the box to the
         # actual option count, so a short list doesn't open into a mostly
         # empty box.
-        popup = PopupList(screen, width=max(260, int(self.width() - self.label_width)),
-                          height=380, own_keys=True)
+        # Rows with a play icon and ASSIGN button need more room for the name.
+        min_w = 380 if self.on_play is not None else 260
+        popup = PopupList(screen, width=max(min_w, int(self.width() - self.label_width)),
+                          height=420 if self.searchable else 380, own_keys=True)
         popup.set_title(self.popup_title)
-        if self.allow_blank:
-            popup.add_row(self.blank_label, "", selected=(self._value == ""))
-        for opt in self.options:
-            tag, tag_col = self.tag_for(opt) if self.tag_for else ("", None)
-            popup.add_row(self.display(opt), opt, tag=tag, tag_color=tag_col,
-                          selected=(opt == self._value),
-                          subtitle=self.subtitle_for(opt) if self.subtitle_for else "")
+        popup.row_actions = self.on_play is not None
+        if self.searchable:
+            box = popup.add_search_box()
+            box.textChanged.connect(lambda text: self._refilter(popup, text))
         popup.size_to(len(self.options) + (1 if self.allow_blank else 0))
+        self._fill_popup(popup, "")
         popup.picked.connect(self._emit)
+        if self.on_play is not None:
+            popup.played.connect(self.on_play)
         if self.on_hover is not None:
             popup.hovered.connect(self.on_hover)
         popup.closed.connect(self._on_popup_closed)
@@ -947,6 +951,26 @@ class ChoiceField(FieldBase):
         if start in cycle:
             QTimer.singleShot(0, lambda: popup.set_highlight(cycle.index(start)))
         self._popup = popup
+
+    def _fill_popup(self, popup, query):
+        query = query.strip().casefold()
+        if self.allow_blank and not query:
+            popup.add_row(self.blank_label, "", selected=(self._value == ""))
+        for opt in self.options:
+            text = self.display(opt)
+            if query and query not in text.casefold():
+                continue
+            tag, tag_col = self.tag_for(opt) if self.tag_for else ("", None)
+            popup.add_row(text, opt, tag=tag, tag_color=tag_col,
+                          selected=(opt == self._value),
+                          subtitle=self.subtitle_for(opt) if self.subtitle_for else "")
+
+    def _refilter(self, popup, text):
+        popup.clear_rows()
+        self._fill_popup(popup, text)
+        popup._sync_rows()
+        popup.scroll.verticalScrollBar().setValue(0)
+        popup.set_highlight(0)
 
     def _on_popup_closed(self):
         self.setFocus()

@@ -55,17 +55,24 @@ def _phase(ms, start, length):
 
 
 def draw_columns(t):
-    """[(title, [team ids])] of the first stage's pools (a big one split in
-    columns of MAX_ROWS), or every team when the competition has no pools."""
+    """[(title, [team ids])] of the first stage's pools, or every team when
+    the competition has no pools. A pool longer than MAX_ROWS is split in
+    columns as even as can be (14 teams: 7 + 7, not 8 + 6). A single pool
+    has no title."""
     stage = next((s for s in t.stages if s.kind == "round_robin" and s.groups), None)
     if stage:
-        groups = [(g.name if len(stage.groups) > 1 else "the teams", list(g.teams)) for g in stage.groups]
+        groups = [(g.name if len(stage.groups) > 1 else "", list(g.teams)) for g in stage.groups]
     else:
-        groups = [("teams", list(t.teams))]
+        groups = [("", list(t.teams))]
     cols = []
     for name, teams in groups:
-        for i in range(0, max(1, len(teams)), MAX_ROWS):
-            cols.append((name if i == 0 else "", teams[i:i + MAX_ROWS]))
+        n = len(teams)
+        k = max(1, -(-n // MAX_ROWS))           # columns needed
+        start = 0
+        for c in range(k):
+            size = n // k + (1 if c < n % k else 0)
+            cols.append((name if c == 0 else "", teams[start:start + size]))
+            start += size
     return cols
 
 
@@ -78,6 +85,7 @@ class TournamentIntroScreen(Screen):
         self._emblem = None
         self._title, self._edition, self._name = "", "", ""
         self._columns, self._humans, self._first = [], set(), None
+        self._titled, self._head = False, 12
         self._ms = 0
         self._duration = LOGO_MS
         self._clock = QElapsedTimer()
@@ -96,6 +104,8 @@ class TournamentIntroScreen(Screen):
         self._edition = str(tpl.get("branding_season") or "")
         self._name = t.name.upper() if t.name and t.name.upper() != self._title else ""
         self._columns = draw_columns(t)
+        self._titled = any(name for name, _teams in self._columns)    # several pools
+        self._head = 42 if self._titled else 12                     # card top to its first row
         self._humans = {e.team_id for e in t.human_teams()}
         self._first = next((f for f in sorted(t.fixtures, key=lambda f: f.day)
                             if f.home in self._humans or f.away in self._humans), None)
@@ -243,7 +253,7 @@ class TournamentIntroScreen(Screen):
             self._text(p, QRectF(-w, y + 64, 2 * w, 32), label, 18, ACCENT, QFont.DemiBold, track=4.0,
                        opacity=_ease(_phase(ms, 600, 600)) * (1 - rise))
         p.restore()
-        if rise > 0:
+        if rise > 0 and self._titled:
             self._text(p, QRectF(0, top1 + (EMBLEM + 104) * k, w, 26), "THE DRAW", 14, ACCENT,
                        track=5.0, opacity=rise)
 
@@ -253,7 +263,7 @@ class TournamentIntroScreen(Screen):
         gap = 22
         per_row = min(len(cols), max(1, int((w - 160 + gap) // (COL_W + gap))))
         x_total = per_row * COL_W + (per_row - 1) * gap
-        rows_h = max(len(teams) for _n, teams in cols) * ROW_H + 46
+        rows_h = max(len(teams) for _n, teams in cols) * ROW_H + self._head + 4
         return per_row, (w - x_total) / 2, rows_h, gap
 
     def _draw_bottom(self, w):
@@ -285,7 +295,7 @@ class TournamentIntroScreen(Screen):
             rows = max(len(cols[c][1]) for c in range(first, last + 1))
             ca = _ease(_phase(ms, self._drops_at - 300 + first * 60, 400))
             card = QRectF(col_x, col_y, (last - first + 1) * COL_W + (last - first) * gap,
-                          40 + rows * ROW_H + 6)
+                          self._head + rows * ROW_H + 4)
             p.save()
             p.setOpacity(ca)
             p.fillRect(card, QColor(BG_CARD))
@@ -306,7 +316,7 @@ class TournamentIntroScreen(Screen):
                 i += 1
                 if d <= 0:
                     continue
-                y = col_y + 42 + ri * ROW_H - 26 * (1 - _ease_back(d))
+                y = col_y + self._head + ri * ROW_H - 26 * (1 - _ease_back(d))
                 mine = tid in self._humans
                 row = QRectF(col_x + 6, y, COL_W - 12, ROW_H - 4)
                 p.save()

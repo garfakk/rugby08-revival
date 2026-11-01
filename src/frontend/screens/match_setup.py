@@ -265,10 +265,7 @@ class TeamColumn(QWidget):
         self.kit_row.set_force_arrows(True)
         self.kit_row.changed.connect(self._on_kit_changed)
         screen.focus.register(self.kit_row)
-        kit_line = QHBoxLayout()
-        kit_line.setSpacing(10)
-        kit_line.addWidget(self.kit_row, stretch=1)
-        chrome_bottom_v.addLayout(kit_line)
+        chrome_bottom_v.addWidget(self.kit_row)
 
         # Variants of the picked kit itself (a tournament patch…) — only
         # shown when that kit has one. The squad variant is picked in the
@@ -278,9 +275,12 @@ class TeamColumn(QWidget):
         self.kit_variant_row.set_force_arrows(True)
         self.kit_variant_row.changed.connect(self._on_kit_variant_changed)
         screen.focus.register(self.kit_variant_row)
-        # Beside the kit, not under it: a team with a variant would otherwise
-        # push the crest, name and kit up every time it is picked.
-        kit_line.addWidget(self.kit_variant_row, stretch=1)
+        # Under the kit row, its space kept while hidden: a team with a
+        # variant would otherwise push the crest, name and kit up.
+        keep = self.kit_variant_row.sizePolicy()
+        keep.setRetainSizeWhenHidden(True)
+        self.kit_variant_row.setSizePolicy(keep)
+        chrome_bottom_v.addWidget(self.kit_variant_row)
         self.kit_variant_row.hide()
         # The variant last picked by hand: kept while switching kits, so
         # home → away → home with a World Cup patch keeps the patch.
@@ -1026,7 +1026,6 @@ class MatchSetupScreen(KickoffTransition, Screen):
         cv.setSpacing(10)
         cv.addWidget(eyebrow_label("Controllers", color=ACCENT, size=15))
         self.controller_board = ControllerBoard()
-        self.controller_board.setToolTip("Move your controller left or right to pick a side; middle: CPU")
         self.controller_board.changed.connect(self._on_controllers_changed)
         self.focus.register(self.controller_board)
         cv.addWidget(self.controller_board)

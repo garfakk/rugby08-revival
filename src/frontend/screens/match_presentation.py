@@ -15,7 +15,7 @@ import random
 from dataclasses import dataclass, field
 from typing import Callable, List, Optional
 
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QLabel, QFrame, QScrollArea
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QLabel, QFrame, QScrollArea, QSizePolicy
 from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtCore import Qt
 
@@ -38,6 +38,43 @@ from ui.theme import (
     ACCENT, HOME_TINT, AWAY_TINT, BORDER, FG_MUTED, FG_PRIMARY, FG_SECONDARY, T_VALUE, BTN_HEIGHT, T_TITLE,
 )
 from screens.match_setup import FACE_YAW, MANNEQUIN_POOL, _load_crest
+
+
+class _FitScroll(QScrollArea):
+    """A scroll area as tall as its content when there is room, shorter (and
+    scrolling) when there is not."""
+
+    def __init__(self, widget, parent=None):
+        super().__init__(parent)
+        self.setWidgetResizable(True)
+        self.setFrameShape(QFrame.NoFrame)
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setStyleSheet("QScrollArea { background: transparent; border: none; }")
+        self.viewport().setStyleSheet("background: transparent;")
+        self.setWidget(widget)
+        self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
+
+    def _content_height(self):
+        w = self.widget()
+        width = max(1, self.viewport().width())
+        lay = w.layout()
+        if lay is not None and lay.hasHeightForWidth():
+            return lay.totalHeightForWidth(width)
+        return w.sizeHint().height()
+
+    def sizeHint(self):
+        hint = super().sizeHint()
+        hint.setHeight(self._content_height())
+        return hint
+
+    def minimumSizeHint(self):
+        hint = super().minimumSizeHint()
+        hint.setHeight(min(48, self._content_height()))
+        return hint
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        self.updateGeometry()       # wrapped lines: a new width, a new height
 
 
 @dataclass
@@ -69,6 +106,7 @@ class Presentation:
     home: SideSpec
     away: SideSpec
     eyebrow: str = "match"
+    title_icon: Optional[QPixmap] = None      # drawn before the title (a competition's logo…)
     heading: str = ""
     briefing: str = ""
     details: List[str] = field(default_factory=list)
@@ -322,7 +360,10 @@ class MatchPresentationScreen(KickoffTransition, Screen):
         self.objectives_hint = Note("All needed to win the challenge", color=FG_MUTED)
         ov.addWidget(self.objectives_hint)
         self.objectives_list = CheckList(size=T_VALUE)
-        ov.addWidget(self.objectives_list)
+        # too many to fit: they scroll, at full size, instead of being squashed
+        self.objectives_scroll = _FitScroll(self.objectives_list)
+        ov.addWidget(self.objectives_scroll)
+        self.objectives_box.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
         mv.addWidget(self.objectives_box)
         self.choices_label = eyebrow_label("your choices", color=ACCENT, size=12)
         mv.addWidget(self.choices_label)
@@ -341,7 +382,6 @@ class MatchPresentationScreen(KickoffTransition, Screen):
         cv.setSpacing(10)
         cv.addWidget(eyebrow_label("Controllers", color=ACCENT, size=15))
         self.controller_board = ControllerBoard()
-        self.controller_board.setToolTip("Move your controller left or right to pick a side; middle: CPU")
         self.controller_board.changed.connect(self._on_controllers)
         self.focus.register(self.controller_board)
         cv.addWidget(self.controller_board)
@@ -392,7 +432,7 @@ class MatchPresentationScreen(KickoffTransition, Screen):
             if w is not None:
                 w.setParent(None)
                 w.deleteLater()
-        self.header_holder.addWidget(page_header(p.title, on_back=self._back))
+        self.header_holder.addWidget(page_header(p.title, on_back=self._back, icon=p.title_icon))
         self.eyebrow.setText(p.eyebrow.upper())
         self.heading.setText(p.heading)
         self.heading.setVisible(bool(p.heading))
@@ -403,6 +443,8 @@ class MatchPresentationScreen(KickoffTransition, Screen):
         self.details.setVisible(bool(details))
         self.objectives_list.set_items(p.objectives)      # none met yet
         self.objectives_box.setVisible(bool(p.objectives))
+        self.objectives_scroll.updateGeometry()
+        self.objectives_scroll.verticalScrollBar().setValue(0)
         self._build_choices(p.choices)
         self.play_btn.setText(p.play_label)
         self.text_scroll.setVisible(bool(p.briefing or details))

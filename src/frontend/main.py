@@ -883,6 +883,7 @@ class MainWindow(QMainWindow):
         Play from a given minute (the stock mid-match restart)."""
         from app.match_data_builder import build_match_data
         from app.tournament import calendar, report, weather
+        from screens.tournament.common import competition_emblem
         cfg, repairs = session.begin_game(fixture)
         if start:
             from app.challenges import mid_match_start
@@ -958,6 +959,7 @@ class MainWindow(QMainWindow):
         stage = fixture.label or fixture.round_name
         self.screen_presentation.present(Presentation(
             title=t.name, eyebrow=stage or t.template.get("name", "tournament"),
+            title_icon=competition_emblem(self.data, t.template, 52),
             heading=report.fixture_caption(t, fixture),
             details=[f"Date: {calendar.short_date(calendar.fixture_date(t, fixture))}",
                      f"Stadium: {venue}" if venue else "",

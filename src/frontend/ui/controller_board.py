@@ -256,7 +256,7 @@ class ControllerBoard(QWidget):
         p.drawRect(QRectF(lane.left() + 10, lane.top() + HEADER_H - 6, lane.width() - 20, 2))
 
         head = QRectF(lane.left(), lane.top(), lane.width(), HEADER_H - 8)
-        text = "CPU" if zone == "none" else self.names.get(zone, zone).upper()
+        text = "" if zone == "none" else self.names.get(zone, zone).upper()
         p.setFont(QFont(FONT_DISPLAY, 13, QFont.Bold))
         fm = p.fontMetrics()
         pix = self.crests.get(zone)

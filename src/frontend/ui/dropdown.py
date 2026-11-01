@@ -11,7 +11,7 @@ from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QScrollArea, QApplication, QSizePolicy,
 )
 from PyQt5.QtGui import QPainter, QColor, QPen, QFont, QPolygonF
-from PyQt5.QtCore import Qt, QPoint, QRect, QRectF, QEvent, QTimer, pyqtSignal
+from PyQt5.QtCore import Qt, QPoint, QPointF, QRect, QRectF, QEvent, QTimer, pyqtSignal
 
 from ui.broadcast import tracked_font, eyebrow_label, draw_frame
 from ui.theme import (
@@ -74,12 +74,14 @@ class OptionRow(QWidget):
 
     entered = pyqtSignal()
     picked = pyqtSignal(object)
+    played = pyqtSignal(object)    # actions rows: the play icon (or the row body)
 
     ROW_H = 34
+    ASSIGN_W = 74
 
     def __init__(self, text, data, tag="", tag_color=None, disabled=False,
                  selected=False, subdued=False, parent=None, icon=None, subtitle="",
-                 list_style=False):
+                 list_style=False, actions=False):
         super().__init__(parent)
         self.setFixedHeight(self.ROW_H)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
@@ -93,6 +95,9 @@ class OptionRow(QWidget):
         self.icon = icon            # optional QPixmap drawn at the left (thumbnails)
         self.subtitle = subtitle    # optional secondary text after the name
         self.list_style = list_style
+        # actions: a play icon at the left and an ASSIGN button at the right;
+        # a click on the row plays it, only ASSIGN picks it (sound clips).
+        self.actions = actions
 
     def set_highlighted(self, on):
         if on != self.highlighted:
@@ -125,9 +130,44 @@ class OptionRow(QWidget):
     # No leaveEvent: the highlight moves, it never clears. Sliding the mouse
     # off the list must not blank the cursor a pad user is about to move.
 
+    def play_rect(self):
+        d = self.ROW_H - 10
+        return QRectF(8, 5, d, d)
+
+    def assign_rect(self):
+        return QRectF(self.width() - self.ASSIGN_W - 8, 5, self.ASSIGN_W, self.ROW_H - 10)
+
     def mousePressEvent(self, event):
-        if not self.disabled:
-            self.picked.emit(self.data)
+        if self.disabled:
+            return
+        if self.actions and not self.assign_rect().contains(QPointF(event.pos())):
+            if self.data:
+                self.played.emit(self.data)
+            return
+        self.picked.emit(self.data)
+
+    def _paint_actions(self, p, lit):
+        """Play disc at the left (rows with a clip), ASSIGN pill at the right."""
+        p.setRenderHint(QPainter.Antialiasing)
+        if self.data:
+            r = self.play_rect()
+            p.setPen(Qt.NoPen)
+            p.setBrush(QColor(ACCENT))
+            p.drawEllipse(r)
+            c = r.center()
+            h = r.height() * 0.36
+            p.setBrush(QColor(FG_PRIMARY))
+            p.drawPolygon(QPolygonF([QPointF(c.x() - h * 0.55, c.y() - h),
+                                     QPointF(c.x() - h * 0.55, c.y() + h),
+                                     QPointF(c.x() + h * 0.95, c.y())]))
+        a = self.assign_rect()
+        p.setPen(QPen(QColor(ACCENT if lit else BORDER), 1.5))
+        p.setBrush(QColor(ACCENT) if lit else QColor(BG_RAISED))
+        p.drawRoundedRect(a, a.height() / 2, a.height() / 2)
+        p.setFont(tracked_font(FONT_DISPLAY, 10, QFont.Bold, track=1.0))
+        p.setPen(QColor(FG_PRIMARY if lit else FG_SECONDARY))
+        p.drawText(a, Qt.AlignCenter, "ASSIGN")
+        p.setRenderHint(QPainter.Antialiasing, False)
 
     def paintEvent(self, event):
         p = QPainter(self)
@@ -162,17 +202,21 @@ class OptionRow(QWidget):
             text_col = (LIST_SUBDUED_TEXT if self.list_style else DROPDOWN_SUBDUED_TEXT) if self.subdued else (LIST_TEXT if self.list_style else DROPDOWN_TEXT)
 
         x0 = 14
+        if self.actions:
+            self._paint_actions(p, lit)
+            x0 = int(self.play_rect().right()) + 10
         if self.icon is not None and not self.icon.isNull():
             ih = self.ROW_H - 8
             scaled = self.icon.scaled(ih * 2, ih, Qt.KeepAspectRatio, Qt.SmoothTransformation)
             p.drawPixmap(10, (self.ROW_H - scaled.height()) // 2, scaled)
             x0 = 10 + ih * 2 + 8 if scaled.width() > ih else 10 + ih + 8
-        avail = self.width() - x0 - 12
+        avail = self.width() - x0 - 12 - (self.ASSIGN_W + 8 if self.actions else 0)
         if self.tag:
             p.setFont(tracked_font(FONT_DISPLAY, 10, QFont.DemiBold, track=1.0))
             tag_w = p.fontMetrics().horizontalAdvance(self.tag) + 4
             p.setPen(QColor(self.tag_color or (LIST_TAG if self.list_style else DROPDOWN_TAG)))
-            p.drawText(self.rect().adjusted(0, 0, -14, 0), Qt.AlignRight | Qt.AlignVCenter, self.tag)
+            right = 14 + (self.ASSIGN_W + 8 if self.actions else 0)
+            p.drawText(self.rect().adjusted(0, 0, -right, 0), Qt.AlignRight | Qt.AlignVCenter, self.tag)
             avail -= tag_w + 8
         p.setFont(tracked_font(FONT_DISPLAY, 13, QFont.DemiBold, track=0.4))
         p.setPen(QColor(text_col))
@@ -197,15 +241,16 @@ class RowSpec:
     shown."""
 
     FIELDS = ("text", "data", "tag", "tag_color", "disabled", "selected", "subdued",
-              "highlighted", "icon", "subtitle", "list_style")
+              "highlighted", "icon", "subtitle", "list_style", "actions")
     __slots__ = FIELDS + ("view",)
 
     def __init__(self, text, data, tag="", tag_color=None, disabled=False, selected=False,
-                 subdued=False, icon=None, subtitle="", list_style=False):
+                 subdued=False, icon=None, subtitle="", list_style=False, actions=False):
         self.text, self.data, self.tag, self.tag_color = text, data, tag, tag_color
         self.disabled, self.selected, self.subdued = disabled, selected, subdued
         self.highlighted = False
         self.icon, self.subtitle, self.list_style = icon, subtitle, list_style
+        self.actions = actions
         self.view = None
 
     def set_highlighted(self, on):
@@ -232,6 +277,7 @@ class VirtualRows(QScrollArea):
 
     row_entered = pyqtSignal(int)      # index into the specs — mouse over a row
     row_picked = pyqtSignal(object)    # the picked row's data
+    row_played = pyqtSignal(object)    # actions rows: play clicked
 
     def __init__(self, spacing, bg, parent=None):
         super().__init__(parent)
@@ -289,6 +335,7 @@ class VirtualRows(QScrollArea):
             row.setParent(self._content)
             row.entered.connect(lambda r=row: self._on_entered(r))
             row.picked.connect(self.row_picked.emit)
+            row.played.connect(self.row_played.emit)
             self._pool.append(row)
         width = self._content.width()
         for i, row in enumerate(self._pool):
@@ -344,6 +391,7 @@ class PopupList(QWidget):
 
     picked = pyqtSignal(object)
     hovered = pyqtSignal(object)
+    played = pyqtSignal(object)    # actions rows: play icon / row body / Space
     closed = pyqtSignal()
 
     # Popups that are open right now, innermost last. Only the top one may
@@ -419,6 +467,7 @@ class PopupList(QWidget):
         # list under a moving cursor makes it chase itself.
         self.scroll.row_entered.connect(lambda i: self.set_highlight(i, scroll=False))
         self.scroll.row_picked.connect(self._on_row_picked)
+        self.scroll.row_played.connect(self.played.emit)
         list_wrap = QVBoxLayout()
         # No top margin — that halo strip sat right above the list's own
         # border with nothing between it and the toolbar/top edge, reading
@@ -433,6 +482,10 @@ class PopupList(QWidget):
         self._anchor = None
         # keep_open(data) -> True: picking that row doesn't close the popup.
         self.keep_open = None
+        # Rows with a play icon and an ASSIGN button (see OptionRow.actions):
+        # Space plays the highlighted row, Enter assigns it.
+        self.row_actions = False
+        self.search_box = None
 
         self.hide()
 
@@ -464,7 +517,8 @@ class PopupList(QWidget):
     def add_row(self, text, data, tag="", tag_color=None, disabled=False,
                 selected=False, subdued=False, icon=None, subtitle=""):
         row = RowSpec(text, data, tag=tag, tag_color=tag_color, disabled=disabled,
-                      selected=selected, subdued=subdued, icon=icon, subtitle=subtitle)
+                      selected=selected, subdued=subdued, icon=icon, subtitle=subtitle,
+                      actions=self.row_actions)
         self._rows.append(row)
         # The view catches up once per batch, not once per row: on the next
         # highlight / open, or the next event-loop turn, whichever is first.
@@ -612,9 +666,47 @@ class PopupList(QWidget):
             return self._handle_key(event)
         return False
 
+    def add_search_box(self, placeholder="Search…"):
+        """A search line in the toolbar. Typing anywhere in the popup goes
+        into it (instead of type-ahead); callers connect to
+        `search_box.textChanged` and refill the rows. Add it before
+        size_to(), which then counts its height."""
+        from PyQt5.QtWidgets import QLineEdit
+        box = QLineEdit()
+        box.setPlaceholderText(placeholder)
+        box.setFont(tracked_font(FONT_DISPLAY, 12, QFont.DemiBold, track=0.4))
+        box.setStyleSheet(
+            f"QLineEdit {{ background: {BG_RAISED}; color: {FG_PRIMARY};"
+            f" border: 1px solid {BORDER}; padding: 4px 8px; }}"
+            f"QLineEdit:focus {{ border: 1px solid {ACCENT}; }}")
+        self.set_toolbar_widget(box)
+        self.search_box = box
+        return box
+
+    def _search_key(self, event):
+        box = self.search_box
+        if box is None or event.modifiers() & (Qt.ControlModifier | Qt.AltModifier):
+            return False
+        k = event.key()
+        if k == Qt.Key_Backspace and box.text():
+            box.backspace()
+        elif k == Qt.Key_Delete and box.text():
+            box.clear()
+        elif k == Qt.Key_Escape and box.text():
+            box.clear()
+        elif event.text() and event.text().isprintable():
+            if k == Qt.Key_Space and (self.row_actions and not box.hasFocus() or not box.text()):
+                return False    # Space plays / picks; it types only in a clicked box
+            box.insert(event.text())
+        else:
+            return False
+        return True
+
     def _handle_key(self, event):
         import time
         if self.key_hook is not None and self.key_hook(event):
+            return True
+        if self._search_key(event):
             return True
         k = event.key()
         toolbar = self._toolbar_v.itemAt(0).widget() if self._toolbar_v.count() else None
@@ -631,6 +723,10 @@ class PopupList(QWidget):
         elif k == Qt.Key_End:
             self.set_highlight(max((i for i, r in enumerate(self._rows) if not r.disabled),
                                    default=0))
+        elif k == Qt.Key_Space and self.row_actions:
+            data = self.highlighted_data()
+            if data:
+                self.played.emit(data)
         elif k in (Qt.Key_Return, Qt.Key_Enter, Qt.Key_Space):
             self.activate_highlight()
         elif k in (Qt.Key_Escape, Qt.Key_Backspace):

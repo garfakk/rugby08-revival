@@ -51,13 +51,24 @@ class SoundPreview(QObject):
                 log.warning("sound preview: cannot write %s: %s", path, e)
                 return False
         if self._effect is not None:
+            self._effect.playingChanged.disconnect()
             self._effect.stop()
             self._effect.deleteLater()
-        self._effect = QSoundEffect(self)
-        self._effect.setSource(QUrl.fromLocalFile(path))
-        self._effect.play()
+        effect = QSoundEffect(self)
+        self._effect = effect
+        # The menu music drops while the clip plays, back up once it ends.
+        effect.playingChanged.connect(lambda: _duck(effect.isPlaying()))
+        effect.setSource(QUrl.fromLocalFile(path))
+        effect.play()
+        _duck(True)
         return True
 
     def stop(self):
         if self._effect is not None:
             self._effect.stop()
+        _duck(False)
+
+
+def _duck(on):
+    from ui.music import MenuMusic
+    MenuMusic.duck(on)

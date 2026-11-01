@@ -63,8 +63,14 @@ class MenuMusic(QObject):
 
     track_started = pyqtSignal(str, str)   # title, artist
 
+    # Share of the music volume kept while a sound clip is previewed.
+    DUCK_SHARE = 0.35
+    _instance = None
+
     def __init__(self, parent=None):
         super().__init__(parent)
+        MenuMusic._instance = self
+        self._ducked = False
         self._tracks = self._load_manifest()
         self._order = list(range(len(self._tracks)))
         random.shuffle(self._order)
@@ -78,11 +84,22 @@ class MenuMusic(QObject):
         self._player.mediaStatusChanged.connect(self._on_status)
         self._player.error.connect(self._on_error)
 
-    @staticmethod
-    def _target_volume():
+    def _target_volume(self):
         """Same "Music" slider as the game's own audio settings
-        (shared.game_profile, key "vol_music") — one volume for both."""
-        return max(0, min(100, int(game_profile.get("vol_music"))))
+        (shared.game_profile, key "vol_music") — one volume for both.
+        Lowered while a clip preview plays (see duck)."""
+        volume = max(0, min(100, int(game_profile.get("vol_music"))))
+        return int(volume * self.DUCK_SHARE) if self._ducked else volume
+
+    @classmethod
+    def duck(cls, on):
+        """Lower the music under a sound clip preview (on) / restore it."""
+        music = cls._instance
+        if music is None or music._ducked == on:
+            return
+        music._ducked = on
+        if not music._suspended and getattr(music, "_fade_anim", None) is None:
+            music._player.setVolume(music._target_volume())
 
     def _loading_track_path(self):
         directory = getattr(config, "menu_music_directory", None)
