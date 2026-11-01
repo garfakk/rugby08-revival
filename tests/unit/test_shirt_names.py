@@ -63,7 +63,7 @@ def test_style_defaults_and_bad_values():
     assert s["size"] == SN.SEASON_DEFAULTS["size"]       # unreadable: default
     assert s["arch"] == SN.LIMITS["arch"][1]               # clamped
     assert s["text"] == "surname"
-    assert s["placement"] == "auto"                        # custom without a valid area
+    assert s["placement"] == "above"                       # custom without a valid area
     assert s["color"] == "auto" and s["outline"] == "#00ff00" and s["outlineWidth"] == 0
 
 
@@ -146,7 +146,7 @@ def _with_sponsor(kit, folder, box):
 
 
 def test_auto_area_avoids_a_sponsor(kit, tmp_path):
-    style = _style()                                    # placement "auto"
+    style = _style(placement="auto")                    # no longer the default: "above" is
     clean = SN.name_area(style, SN.analyse_numbers(SN.expand_back_paths(kit)))
     assert clean[1] + clean[3] <= NUMBER_BOX[1] + 0.01  # free above: above
     # a sponsor right above the number: the name goes below it
@@ -245,38 +245,28 @@ def test_match_data_carries_the_names(ds):
 
 # ── team editor helpers ──────────────────────────────────────────────────
 def test_team_ops_store_only_what_is_set():
-    info = {"kits": {"home": {}, "away": {}}}
-    T.set_shirt_names(info, "enabled", True)
-    T.set_shirt_names(info, "font", "Anton")
-    assert info["shirtNames"] == {"enabled": True, "font": "Anton"}
-    T.set_shirt_name_area(info, [0.123456, 0.2, 0.5, 0.08])
-    assert info["shirtNames"]["placement"] == "custom"
-    assert info["shirtNames"]["area"] == [0.1235, 0.2, 0.5, 0.08]
-    T.set_shirt_name_area(info, None)
-    assert "area" not in info["shirtNames"] and "placement" not in info["shirtNames"]   # auto
-    T.set_kit_shirt_name(info["kits"]["home"], "color", "#ffffff")
-    assert info["kits"]["home"]["shirtName"] == {"color": "#ffffff"}
-    T.set_kit_shirt_name(info["kits"]["home"], "color", "")
-    assert "shirtName" not in info["kits"]["home"]
-    for key in ("enabled", "font"):
-        T.set_shirt_names(info, key, None)
-    assert "shirtNames" not in info
+    kit = {}
+    T.set_kit_shirt_name(kit, "enabled", True)
+    T.set_kit_shirt_name(kit, "font", "Anton")
+    T.set_kit_shirt_name(kit, "color", "#ffffff")
+    assert kit["shirtName"] == {"enabled": True, "font": "Anton", "color": "#ffffff"}
+    T.set_kit_shirt_name(kit, "enabled", False)              # off is stored: it beats the season's
+    assert kit["shirtName"]["enabled"] is False
+    for key in ("enabled", "font", "color"):
+        T.set_kit_shirt_name(kit, key, "")
+    assert "shirtName" not in kit
 
 
-def test_copy_shirt_names_to_other_seasons():
-    seasons = {
-        "2024": {"shirtNames": {"enabled": True, "font": "Anton"},
-                 "kits": {"home": {"shirtName": {"color": "#000000"}}, "away": {}}},
-        "2025": {"kits": {"home": {}, "third": {"shirtName": {"color": "#ff0000"}}}},
-        "2026": {"shirtNames": {"enabled": True, "font": "Anton"},
-                 "kits": {"home": {"shirtName": {"color": "#000000"}}}},
-    }
-    assert T.copy_shirt_names(seasons, "2024") == 1          # 2026 already the same
-    assert seasons["2025"]["shirtNames"] == {"enabled": True, "font": "Anton"}
-    assert seasons["2025"]["kits"]["home"]["shirtName"] == {"color": "#000000"}
-    assert seasons["2025"]["kits"]["third"]["shirtName"] == {"color": "#ff0000"}   # no such kit in 2024
-    seasons["2025"]["shirtNames"]["font"] = "Teko"
-    assert seasons["2024"]["shirtNames"]["font"] == "Anton"   # a copy, not shared
+def test_each_kit_has_its_own_lettering():
+    """A kit's own keys win over the season's (older data); what it doesn't
+    set falls back to the season's."""
+    season = {"enabled": True, "font": "Anton", "size": 40}
+    plain = SN.normalise_style(season, {})
+    own = SN.normalise_style(season, {"enabled": False, "font": "Teko", "placement": "below"})
+    assert plain["enabled"] and plain["font"] == "Anton"
+    assert not own["enabled"] and own["font"] == "Teko" and own["size"] == 40
+    assert own["placement"] == "below"
+    assert SN.normalise_style({}, {"enabled": True, "text": "full"})["text"] == "full"
 
 
 def test_overlap_with_a_logo_is_reported(kit, tmp_path):

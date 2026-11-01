@@ -625,37 +625,39 @@ def test_team_editor_shirt_names_tab(window, qapp):
     assert not editor.session.working["2024"].get("shirtNames")
     assert not editor.session.is_dirty()             # looking edits nothing
 
+    kit = tab.kit_name
     tab.enabled.edited.emit("on")
-    assert editor.session.working["2024"]["shirtNames"] == {"enabled": True}
+    working = editor.session.working["2024"]
+    assert working["kits"][kit]["shirtName"] == {"enabled": True}      # the shown kit's own
+    assert "shirtNames" not in working                                 # nothing season-wide
     tab.font.edited.emit("Oswald")
     tab.canvas.area_changed.emit([0.2, 0.15, 0.6, 0.08])
-    block = editor.session.working["2024"]["shirtNames"]
-    assert block["placement"] == "custom" and block["area"] == [0.2, 0.15, 0.6, 0.08]
-    kit = tab.kit_name
-    tab.color.edited.emit("#ffffff")
-    assert editor.session.working["2024"]["kits"][kit]["shirtName"] == {"color": "#ffffff"}
-    tab._render()                                    # the preview copes with the fixture's backs
-    editor.undo()
-    assert "shirtName" not in editor.session.working["2024"]["kits"][kit]
-    # THIS KIT ONLY: the shown kit gets its own position, the season's stays
+    assert working["kits"][kit]["shirtName"]["area"] == [0.2, 0.15, 0.6, 0.08]
+    assert not hasattr(tab, "copy_btn")
+    tab.refresh()
     tab._render()
-    tab.scope.edited.emit("kit")
-    working = editor.session.working["2024"]
-    own = working["kits"][kit]["shirtName"]["area"]
-    assert own == [round(v, 4) for v in tab._printer.area] or own
-    assert working["shirtNames"]["area"] == [0.2, 0.15, 0.6, 0.08]
-    tab.canvas.area_changed.emit([0.1, 0.5, 0.5, 0.06])         # moves this kit only
-    assert working["kits"][kit]["shirtName"]["area"] == [0.1, 0.5, 0.5, 0.06]
-    assert working["shirtNames"]["area"] == [0.2, 0.15, 0.6, 0.08]
-    tab.scope.edited.emit("all")                                # follows the season again
-    assert "shirtName" not in working["kits"][kit]
-    tab.canvas.area_changed.emit([0.3, 0.2, 0.4, 0.07])         # every kit follows
-    assert working["shirtNames"]["area"] == [0.3, 0.2, 0.4, 0.07]
-    tab.canvas.area_changed.emit([0.2, 0.15, 0.6, 0.08])
+    size = tab._texture_size()
+    if size:                                    # the fixture's backs: typed in pixels of the image
+        assert tab.area_fields[1].value() == str(round(0.15 * size[1]))
+        tab.area_fields[1].edited.emit(str(size[1] // 4))
+        assert working["kits"][kit]["shirtName"]["area"][1] == 0.25
+    tab.color.edited.emit("#ffffff")
+    assert working["kits"][kit]["shirtName"]["color"] == "#ffffff"
+    editor.undo()
+    working = editor.session.working["2024"]                    # undo restores a copy
+    assert "color" not in working["kits"][kit]["shirtName"]
+    assert not hasattr(tab, "placement") and not hasattr(tab, "gap")
+    tab.refresh()
+    tab.reset_pos_btn.click()                                   # back above the number
+    block = working["kits"][kit]["shirtName"]
+    assert block["placement"] == "above" and "area" not in block
+    other = next((k for k in working["kits"] if k != kit), None)
+    if other:
+        assert "shirtName" not in working["kits"][other]        # the other kits are untouched
     assert editor.save()
     # saved (into the data pack or the user's edits, as the save target says)
-    assert window.data.teams["10001"]["2024"]["shirtNames"]["font"] == "Oswald"
-    editor.edit("names off", lambda w: w["2024"].pop("shirtNames"))
+    assert window.data.teams["10001"]["2024"]["kits"][kit]["shirtName"]["font"] == "Oswald"
+    editor.edit("names off", lambda w: w["2024"]["kits"][kit].pop("shirtName"))
     assert editor.save()
 
 

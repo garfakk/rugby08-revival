@@ -811,15 +811,13 @@ class KitsTab(TeamTab):
 TEXT_MODE_LABELS = {"surname": "surname", "initial": "j. surname", "display": "in-game",
                     "full": "full name"}
 CASE_LABELS = {"upper": "capitals", "asis": "as typed"}
-PLACEMENT_LABELS = {"auto": "auto", "above": "above no.", "below": "below no.", "custom": "custom"}
 
 
-SCOPE_LABELS = {"all": "All kits", "kit": "This kit only"}
 
 
 class ShirtNamesTab(TeamTab):
     """The player's name on the back of the shirt (shared/shirt_names.py).
-    The lettering is the season's, the colours each kit's own. The back is
+    Lettering, position and colours are each kit's own. The back is
     shown as the game gets it — flat, with the name area to drag, and on the
     3D player seen from behind."""
 
@@ -890,63 +888,65 @@ class ShirtNamesTab(TeamTab):
         # right: settings
         right = QVBoxLayout()
         right.setSpacing(12)
-        lettering = SectionCard("lettering · this season")
+        # Everything here is the shown kit's own (its "shirtName" block):
+        # each kit has its own lettering, position and colours.
+        lettering = SectionCard("lettering · kit")
+        self.lettering_card = lettering
         lgrid = FieldGrid(columns=1)
-        self.enabled = self.register("shirtNames.enabled",
+        self.enabled = self.register("shirtName.enabled",
                                      SegmentField("Shirt names", ["off", "on"]))
-        self.enabled.edited.connect(lambda v: self._set("enabled", True if v == "on" else None,
-                                                        "shirt names " + v))
+        self.enabled.edited.connect(lambda v: self._set("enabled", v == "on", "shirt names " + v))
         lgrid.add(self.enabled)
-        self.text_mode = self.register("shirtNames.text", SegmentField(
+        self.text_mode = self.register("shirtName.text", SegmentField(
             "Text", list(SN.TEXT_MODES), display=lambda v: TEXT_MODE_LABELS.get(v, v)))
         self.text_mode.edited.connect(lambda v: self._set("text", v, "name text"))
         lgrid.add(self.text_mode)
-        self.case = self.register("shirtNames.case", SegmentField(
+        self.case = self.register("shirtName.case", SegmentField(
             "Case", list(SN.CASES), display=lambda v: CASE_LABELS.get(v, v)))
         self.case.edited.connect(lambda v: self._set("case", v, "name case"))
         lgrid.add(self.case)
-        self.font = self.register("shirtNames.font", ChoiceField(
+        self.font = self.register("shirtName.font", ChoiceField(
             "Font", allow_blank=False, display=self._font_label))
         self.font.popup_title = "font"
         self.font.subtitle_for = lambda v: ("your font file in the team folder" if SN.is_font_file(v)
                                             else "bundled")
         self.font.edited.connect(lambda v: self._set("font", v, "name font"))
         lgrid.add(self.font)
-        self.size = self.register("shirtNames.size", NumberField("Letter height", 8, 120))
+        self.size = self.register("shirtName.size", NumberField("Letter height", 8, 120))
         self.size.edited.connect(lambda v: self._set_number("size", v, "name size"))
         lgrid.add(self.size)
-        self.spacing = self.register("shirtNames.spacing", NumberField("Letter spacing %", -20, 60))
+        self.spacing = self.register("shirtName.spacing", NumberField("Letter spacing %", -20, 60))
         self.spacing.edited.connect(lambda v: self._set_number("spacing", v, "letter spacing"))
         lgrid.add(self.spacing)
-        self.arch = self.register("shirtNames.arch", NumberField("Arch %", -60, 60))
+        self.arch = self.register("shirtName.arch", NumberField("Arch %", -60, 60))
         self.arch.edited.connect(lambda v: self._set_number("arch", v, "name arch"))
         lgrid.add(self.arch)
-        self.placement = self.register("shirtNames.placement", SegmentField(
-            "Placement", list(SN.PLACEMENTS), display=lambda v: PLACEMENT_LABELS.get(v, v)))
-        self.placement.edited.connect(self._set_placement)
-        lgrid.add(self.placement)
-        # where a moved name applies: the whole season (the default) or
-        # only the kit shown (it then keeps its own position)
-        self.scope = SegmentField("Name position", list(SCOPE_LABELS),
-                                  display=lambda v: SCOPE_LABELS.get(v, v))
-        self.scope.edited.connect(self._set_scope)
-        screen.focus.register(self.scope)
-        lgrid.add(self.scope)
-        # not capped to a few pixels: any distance that keeps the name on the
-        # texture (a 512 px texture's height either way)
-        self.gap = self.register("shirtNames.gap", NumberField("Gap to number", -SN.REF, SN.REF))
-        self.gap.edited.connect(self._set_gap)
-        lgrid.add(self.gap)
         lettering.add(lgrid)
-        brow = QHBoxLayout()
-        brow.setSpacing(8)
-        self.copy_btn = _button("COPY TO OTHER SEASONS")
-        self.copy_btn.clicked.connect(self._copy_to_seasons)
-        screen.focus.register(self.copy_btn)
-        brow.addWidget(self.copy_btn)
-        brow.addStretch(1)
-        lettering.add_layout(brow)
         right.addWidget(lettering)
+
+        # Position: above the number to start with, then moved by hand —
+        # dragged, or typed as X, Y, width and height in pixels of the shown
+        # back image (its own resolution).
+        position = SectionCard("position · kit")
+        self.position_card = position
+        xy_grid = FieldGrid(columns=2)
+        self.area_fields = []
+        for i, label in enumerate(("X (px)", "Y (px)", "Width (px)", "Height (px)")):
+            f = self.register(f"shirtName.area.{i}", NumberField(label, 0, 4096))
+            f.edited.connect(lambda v, i=i: self._set_area_value(i, v))
+            xy_grid.add(f)
+            self.area_fields.append(f)
+        position.add(xy_grid)
+        self.position_note = Note("", color=FG_TERTIARY)
+        position.add(self.position_note)
+        prow = QHBoxLayout()
+        self.reset_pos_btn = _button("RESET POSITION")
+        self.reset_pos_btn.clicked.connect(self._reset_position)
+        screen.focus.register(self.reset_pos_btn)
+        prow.addWidget(self.reset_pos_btn)
+        prow.addStretch(1)
+        position.add_layout(prow)
+        right.addWidget(position)
 
         colours = SectionCard("colours · kit")
         self.colours_card = colours
@@ -969,9 +969,6 @@ class ShirtNamesTab(TeamTab):
         self.body.addLayout(row)
 
     # ── helpers ──────────────────────────────────────────────────────────
-    def _season_block(self):
-        return self.info().get("shirtNames") or {}
-
     def _kits(self):
         return self.info().get("kits") or {}
 
@@ -1020,7 +1017,7 @@ class ShirtNamesTab(TeamTab):
         return value
 
     def _set(self, key, value, label):
-        self.edit(label, lambda i: T.set_shirt_names(i, key, value), f"shirtNames.{key}")
+        self._set_kit(key, value, label)
 
     def _set_number(self, key, value, label):
         try:
@@ -1029,83 +1026,58 @@ class ShirtNamesTab(TeamTab):
             n = None
         self._set(key, n, label)
 
-    def _number_box(self):
-        return (self._printer.analysis.get("box") if self._printer else None) or None
+    def _texture_size(self):
+        """(w, h) in pixels of the shown back image, or None."""
+        return self._last_image.size if self._last_image is not None else None
 
-    def _area_gap(self, area, box):
-        """The distance from a placed name area to the number, in pixels of
-        a 512 px texture (above it or below it, whichever side it is on)."""
-        x, y, w, h = area
-        if y + h / 2 < (box[1] + box[3]) / 2:
-            return (box[1] - (y + h)) * SN.REF
-        return (y - box[3]) * SN.REF
-
-    def _set_gap(self, value):
-        """GAP TO NUMBER. A name placed by hand (a custom position, or this
-        kit's own) moves up or down to sit that far from the number; else
-        the season's gap the automatic placements use."""
-        style, box = self._style(), self._number_box()
+    def _set_area_value(self, i, value):
+        """X / Y / WIDTH / HEIGHT typed in: the shown kit's own position
+        in pixels of its back image."""
+        size, area = self._texture_size(), self._printer.area if self._printer else None
         try:
-            gap = int(value)
+            px = int(value)
         except (TypeError, ValueError):
-            gap = None
-        if style["placement"] != "custom" or not style.get("area") or box is None or gap is None:
-            self._set_number("gap", value, "name gap")
+            px = None
+        if size is None or area is None or px is None:
+            self._show_area()
             return
-        x, y, w, h = style["area"]
-        g = gap / SN.REF
-        y = box[1] - g - h if y + h / 2 < (box[1] + box[3]) / 2 else box[3] + g
-        area = NameAreaCanvas.clamp([x, y, w, h])
-        if self._kit_area():
-            self._set_kit("area", area, "name gap")
-        else:
-            self.edit("name gap", lambda i: T.set_shirt_name_area(i, area), "shirtNames.gap")
+        area = list(area)
+        area[i] = px / size[i % 2]
+        self._set_kit("area", NameAreaCanvas.clamp(area), "name position")
 
-    def _show_area_gap(self):
-        """A name placed by hand shows its real distance to the number."""
-        style, box = self._style(), self._number_box()
-        if style["placement"] == "custom" and style.get("area") and box is not None:
-            self.gap.set_value(str(int(round(self._area_gap(style["area"], box)))))
+    def _show_area(self, area=None):
+        """The X / Y / WIDTH / HEIGHT fields: where the name is now."""
+        size = self._texture_size()
+        area = area or (self._printer.area if self._printer else None)
+        on = self._style()["enabled"]
+        for i, f in enumerate(self.area_fields):
+            f.set_value(str(int(round(area[i] * size[i % 2]))) if size and area else "")
+            f.setEnabled(bool(on and size and area))
+        self.position_note.setText(
+            f"Pixels of this kit's back image ({size[0]} × {size[1]})." if size else "")
 
-    def _set_kit(self, key, value, label):
+    def _set_kit(self, key, value, label, more=None):
+        """One setting of the shown kit (its variant's, if one is picked);
+        `more`: other {key: value} changed in the same edit (one undo)."""
         name = self._current_kit()
         if name is None:
             return
+        changes = dict({key: value}, **(more or {}))
+
+        def apply(kit):
+            for k, v in changes.items():
+                T.set_kit_shirt_name(kit, k, v)
         vid = self._current_variant()
         if vid:
             self.edit(f"{name} kit ({vid}) {label}",
-                      lambda i: T.edit_kit_variant(
-                          i["kits"][name], vid, lambda k: T.set_kit_shirt_name(k, key, value)),
+                      lambda i: T.edit_kit_variant(i["kits"][name], vid, apply),
                       f"shirtName.{key}")
             return
-        self.edit(f"{name} kit {label}",
-                  lambda i: T.set_kit_shirt_name(i["kits"][name], key, value),
-                  f"shirtName.{key}")
+        self.edit(f"{name} kit {label}", lambda i: apply(i["kits"][name]), f"shirtName.{key}")
 
-    def _kit_area(self):
-        """The shown kit's own name position, or None (it follows the season)."""
-        return SN._area((self._kit_dict().get("shirtName") or {}).get("area"))
-
-    def _set_scope(self, value):
-        """ALL KITS: the shown kit follows the season's position again.
-        THIS KIT ONLY: it gets a position of its own, the one it has now."""
-        if value == "kit":
-            area = self._printer.area if self._printer else None
-            if area and not self._kit_area():
-                self._set_kit("area", [round(float(v), 4) for v in area], "own name position")
-        elif self._kit_area():
-            self._set_kit("area", None, "name position back to the season's")
-
-    def _set_placement(self, value):
-        if self._kit_area():
-            # a placement is the season's: the shown kit follows it again
-            self._set_kit("area", None, "name position back to the season's")
-        if value == "custom":
-            area = self._printer.area if self._printer else None
-            self.edit("name placement", lambda i: T.set_shirt_name_area(i, area),
-                      "shirtNames.placement")
-        else:
-            self._set("placement", value, "name placement")
+    def _reset_position(self):
+        """RESET POSITION: back above the number (the default)."""
+        self._set_kit("area", None, "name position reset", {"placement": "above", "gap": None})
 
     def _pick_kit(self, name):
         self.kit_name = name
@@ -1131,38 +1103,15 @@ class ShirtNamesTab(TeamTab):
         self._schedule(stage=False)
 
     def _area_changed(self, area):
+        """A name moved by hand: the shown kit's own position, only it moves."""
         self._live_area = None
-        if self._kit_area():
-            # this kit has its own position: only it moves
-            self._set_kit("area", [round(float(v), 4) for v in area], "name area")
-        else:
-            # every kit of the season follows (those with their own keep it)
-            self.edit("name area", lambda i: T.set_shirt_name_area(i, area), "shirtNames.area")
-
-    def _copy_to_seasons(self):
-        season = self.screen.season
-        others = [s for s in self.screen.session.working if s != season]
-        if not others:
-            self.screen.shell.footer.set_status("this team has only one season", DANGER_LITE)
-            return
-
-        def go():
-            self.screen.edit("copy shirt names to every season",
-                             lambda w: T.copy_shirt_names(w, season),
-                             view_hint={"season": season, "tab": self.index})
-            self.screen.shell.footer.set_status(
-                f"Shirt names of {season_label(season)} copied to {len(others)} other season(s)",
-                GREEN)
-        self.screen.confirm(f"Copy these shirt names to the {len(others)} other season(s)?",
-                            "The lettering and each kit's name colours (matched by kit name) "
-                            "replace theirs. Ctrl+Z to undo until you save.", "COPY", go)
+        self._set_kit("area", [round(float(v), 4) for v in area], "name area")
 
     # ── refresh / render ─────────────────────────────────────────────────
     def refresh(self):
         kits = self._kits()
         name = self._current_kit()
         style = self._style()
-        block = self._season_block()
         on = style["enabled"]
         vid = self._current_variant()
         self.kit_pick.set_options(list(kits))
@@ -1177,29 +1126,27 @@ class ShirtNamesTab(TeamTab):
         self.case.set_value(style["case"])
         root = self.screen.team_folder()
         fonts = list(SN.BUILTIN_FONTS) + SN.team_font_files(root)
-        if block.get("font") and block["font"] not in fonts:
-            fonts.append(block["font"])         # shown off-list until fixed
+        if style["font"] not in fonts:
+            fonts.append(style["font"])         # shown off-list until fixed
         self.font.set_options(fonts)
-        self.font.set_value(block.get("font") or SN.DEFAULT_FONT)
-        for w, key in ((self.size, "size"), (self.spacing, "spacing"), (self.arch, "arch"),
-                       (self.gap, "gap")):
+        self.font.set_value(style["font"])
+        for w, key in ((self.size, "size"), (self.spacing, "spacing"), (self.arch, "arch")):
             w.set_value(str(int(style[key])))
             w.set_hint("")
-        self._show_area_gap()
-        self.placement.set_value(style["placement"])
-        self.scope.set_value("kit" if self._kit_area() else "all")
         kit_block = self._kit_dict().get("shirtName") or {}
         self.color.set_value(kit_block.get("color", ""))
         self.outline.set_value(kit_block.get("outline", ""))
         self.outline_w.set_value(str(int(style["outlineWidth"])) if style["outlineWidth"] else "")
         self.outline_w.set_hint("none")
-        self.colours_card.set_title(f"colours · {name} kit" + (f" · {V.kit_variant_label(self._stored_kit(), vid)}"
-                                      if vid else "") if name else "colours")
+        kit_label = (f"{name} kit" + (f" · {V.kit_variant_label(self._stored_kit(), vid)}" if vid else "")
+                     if name else "")
+        for card, title in ((self.lettering_card, "lettering"), (self.position_card, "position"),
+                            (self.colours_card, "colours")):
+            card.set_title(f"{title} · {kit_label}" if kit_label else title)
         for w in (self.text_mode, self.case, self.font, self.size, self.spacing, self.arch,
-                  self.placement, self.scope, self.color, self.outline, self.outline_w):
+                  self.color, self.outline, self.outline_w):
             w.setEnabled(on)
-        self.gap.setEnabled(on)
-        self.copy_btn.setEnabled(bool(block))
+        self.reset_pos_btn.setEnabled(on and style["placement"] == "custom")
         self.canvas.set_editable(on)
         self._schedule()
 
@@ -1219,6 +1166,7 @@ class ShirtNamesTab(TeamTab):
         pattern = self._back_pattern()
         self._printer = None
         self._last_image = None
+        self._show_area()                   # cleared until there is an image
         if not pattern or "%" not in pattern:
             self.canvas.set_image(None)
             self.canvas.set_placeholder(
@@ -1250,17 +1198,13 @@ class ShirtNamesTab(TeamTab):
         self.canvas.set_image(_pil_to_qimage(image))
         self.canvas.set_area(printer.area if style["enabled"] else None)
         self.canvas.set_number_box(printer.analysis.get("box"))
-        if not self._live_area:
-            self._show_area_gap()
-        self.canvas.set_caption("NAME AREA" + {"auto": " · AUTO", "above": " · ABOVE NUMBER",
-                                               "below": " · BELOW NUMBER"}.get(style["placement"], "")
-                                + (" · THIS KIT ONLY" if self._kit_area() else ""))
+        self._show_area(self._live_area)
+        self.canvas.set_caption("NAME AREA")
         notes = []
         if not found:
             notes.append(f"Font \"{style['font']}\" not found: {SN.DEFAULT_FONT} is used.")
         if style["enabled"] and SN.area_overlap(printer.area, printer.analysis) > 0.25:
-            notes.append("The name runs over a logo here: drag the box to a free spot, or "
-                         "try another placement.")
+            notes.append("The name runs over a logo here: drag the box to a free spot.")
         if style["enabled"]:
             notes.append("Drag the box to move the name, its handles to resize it "
                          "(arrows / Alt+arrows with the box focused).")

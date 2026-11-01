@@ -5,9 +5,9 @@ Shows one back texture as the game gets it (the name already lettered on it,
 see shared/shirt_names.py) and the rectangle the name is fitted into. The
 rectangle is moved by dragging it and resized by its handles, or with the
 keyboard: arrows move it, Alt+arrows resize it (Shift: bigger steps). While
-it is dragged a vertical guide runs down the number's middle (the texture's
-without one) and the box sticks to it when its centre comes close: a name
-centred over the number by hand. Hold Shift to drag it free.
+it is dragged a vertical guide runs down the middle of the image and the
+box sticks to it when its centre comes close: a name centred on the back by
+hand. Hold Shift to drag it free.
 
 The area is in fractions of the texture ([x, y, w, h]); `area_changing`
 fires while it moves (for a live preview) and `area_changed` once it is
@@ -126,12 +126,11 @@ class NameAreaCanvas(QWidget):
         y = max(0.0, min(1.0 - h, y))
         return [round(x, 4), round(y, 4), round(w, 4), round(h, 4)]
 
-    def guide_x(self):
+    @staticmethod
+    def guide_x():
         """The vertical guide, as a fraction of the texture: the middle of
-        the number (of the texture when it wasn't found)."""
-        if self._number_box:
-            x0, _y0, x1, _y1 = self._number_box
-            return (x0 + x1) / 2
+        the image frame itself, not of the number (a fraction: the same
+        line on a 512 or a 1024 px back)."""
         return 0.5
 
     def _dragged(self, mode, start, area, pos, free=False):

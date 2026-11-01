@@ -9,7 +9,8 @@ very same images (screens/team_tabs.py ShirtNamesTab) — one renderer, so what
 the editor shows is what the game gets.
 
 Where it is configured
-  team season  "shirtNames": the lettering, shared by every kit of the season
+  kit          "shirtName": everything, each kit its own (the team editor
+               writes only here)
       enabled    bool
       text       "surname" | "initial" (J. SMITH) | "display" (in-game name) | "full"
       case       "upper" | "asis"
@@ -18,19 +19,19 @@ Where it is configured
       size       letter (cap) height, in pixels of a 512 px texture
       spacing    extra space between letters, % of the letter height
       arch       curve, % of the letter height (+ middle up, - middle down)
-      placement  "auto": the free space above the number, else below it;
-                 "above" / "below" the number (these follow the number when
-                 the kit changes) or "custom" (the `area` below)
-      area       [x, y, w, h], fractions of the texture (placement "custom");
-                 the position every kit of the season gets unless it has its own
-                 (see the kit's "area")
+      placement  "above" (the default) / "below" the number (these follow
+                 the number when the kit changes), "auto" (the free space
+                 above the number, else below it) or "custom" (the `area`
+                 below). The team editor only writes "custom": a name starts
+                 above the number, then is moved by hand
+      area       [x, y, w, h], fractions of the texture: a position set by
+                 hand (it makes the placement "custom")
       gap        distance to the number, pixels of a 512 px texture
-  kit          "shirtName": the colours, which usually differ per kit
       color      "auto" (the colour of the kit's own numbers) or "#rrggbb"
       outline    "" (none) or "#rrggbb"
       outlineWidth  pixels of a 512 px texture
-      area       [x, y, w, h]: this kit's own name position, in place of the
-                 season's (a kit without one follows the season's)
+  team season  "shirtNames": older data — the same lettering keys, shared by
+               the season's kits; what a kit doesn't set itself falls back to
   player       "shirt_name": what to print instead of the generated text
                  (an empty string is ignored)
 
@@ -81,7 +82,7 @@ SEASON_DEFAULTS = {
     "size": 30,
     "spacing": 6,
     "arch": 0,
-    "placement": "auto",
+    "placement": "above",
     "area": None,
     "gap": 8,
 }
@@ -141,9 +142,12 @@ def _area(value):
 
 def normalise_style(season_block=None, kit_block=None):
     """The season's "shirtNames" and the kit's "shirtName" merged into one
-    complete, valid style dict (defaults for whatever is missing or bad)."""
+    complete, valid style dict (defaults for whatever is missing or bad).
+    A key the kit sets wins over the season's."""
     season_block = season_block if isinstance(season_block, dict) else {}
     kit_block = kit_block if isinstance(kit_block, dict) else {}
+    kit_area = _area(kit_block.get("area"))
+    season_block = dict(season_block, **{k: v for k, v in kit_block.items() if k != "area"})
     out = dict(SEASON_DEFAULTS)
     out.update(KIT_DEFAULTS)
     out["enabled"] = bool(season_block.get("enabled", False))
@@ -157,8 +161,7 @@ def normalise_style(season_block=None, kit_block=None):
         out[key] = _number(season_block.get(key), SEASON_DEFAULTS[key], lo, hi)
     out["area"] = _area(season_block.get("area"))
     if out["placement"] == "custom" and out["area"] is None:
-        out["placement"] = "auto"
-    kit_area = _area(kit_block.get("area"))
+        out["placement"] = "above"
     if kit_area:                          # this kit's own position wins
         out["area"] = kit_area
         out["placement"] = "custom"
