@@ -813,9 +813,11 @@ class MatchSetupScreen(KickoffTransition, Screen):
             self._preferred_difficulty = difficulty.preferred()
             self.difficulty_row.set_index(difficulty.LEVELS.index(self._preferred_difficulty))
             self.cfg.difficulty = self._preferred_difficulty
-        # Settings > Wind: Advanced = a strength row ("random" until picked;
-        # the direction is always random); Standard = no row, the game's own wind.
+        # Settings > Wind: Advanced = a strength row, set to a random strength
+        # each time the screen opens (the direction is always random);
+        # Standard = no row, the game's own wind.
         self.wind_power_row.setVisible(user_prefs.wind_mode == "advanced")
+        self.wind_power_row.set_index(self.wind_power_row.index_of(random_wind(random)[0]))
         self._on_wind_changed()
         # Re-roll which two mannequins wear the kits each time the screen is
         # opened — except the first, which uses the ones already picked (and
@@ -851,24 +853,21 @@ class MatchSetupScreen(KickoffTransition, Screen):
             row.set_disabled_visual(locked)
 
     def _on_wind_changed(self):
-        """Strength None = the game's stock random wind (rolled by the
-        backend), 0 = calm. A row left on "random" is rolled at kick-off
-        (_roll_wind), and so is the direction (relative to home, see
-        app.game_data) every time."""
+        """Strength None = the game's stock random wind (Standard mode,
+        rolled by the backend), else the row's strength, 0 = none. The
+        direction (relative to home, see app.game_data) is rolled at
+        kick-off (_roll_wind)."""
         power = self.wind_power_row.current() if user_prefs.wind_mode == "advanced" else None
         self.cfg.wind_power = power
 
     def _roll_wind(self):
-        """Settle the wind for this match: the strength (if left on
-        "random") with the weather-like spread of app.game_data.random_wind,
-        the direction always random, any of WIND_BEARINGS."""
+        """Settle the wind for this match: the strength is the row's, the
+        direction always random, any of WIND_BEARINGS."""
         if user_prefs.wind_mode != "advanced":
             self.cfg.wind_power = None
             return
-        power, bearing = random_wind(random)
-        if self.wind_power_row.current() is None:
-            self.cfg.wind_power = power
-        self.cfg.wind_dir_deg = bearing
+        self.cfg.wind_power = self.wind_power_row.current()
+        self.cfg.wind_dir_deg = random_wind(random)[1]
 
     # ── kickoff transition hooks (ui/kickoff_transition.py) ──────────────
     def kt_columns(self):
@@ -996,13 +995,12 @@ class MatchSetupScreen(KickoffTransition, Screen):
         v.addWidget(self.environment_row)
 
         # Wind (the reR08 wind patch, Settings > Wind: Advanced): strength =
-        # the .mis <WIND power> strength 0..4, or "random"; the direction
-        # (relative to home) is always random. Rolled afresh at each kick-off
-        # (_roll_wind).
+        # the .mis <WIND power> strength 0..4, picked at random each time the
+        # screen opens; the direction (relative to home) is always random,
+        # rolled afresh at each kick-off (_roll_wind).
         self.wind_power_row = SelectorRow("wind")
-        self.wind_power_row.set_values([None] + list(WIND_POWER_NAMES), index=0)
-        self.wind_power_row._display = lambda n: "random" if n is None else \
-            WIND_POWER_NAMES.get(n, '')
+        self.wind_power_row.set_values(list(WIND_POWER_NAMES), index=0)
+        self.wind_power_row._display = lambda n: WIND_POWER_NAMES.get(n, '')
         self.wind_power_row.changed.connect(self._on_wind_changed)
         self.focus.register(self.wind_power_row)
         v.addWidget(self.wind_power_row)
