@@ -45,9 +45,9 @@ WIND_BEARINGS = list(range(0, 360, 45))
 WIND_POWER_NAMES = {0: "none", 1: "light", 2: "medium", 3: "strong", 4: "extreme"}
 
 
-# Weather-like spread for a generated wind: mostly light to strong, sometimes
-# none, now and then extreme.
-_RANDOM_WIND_WEIGHTS = {0: 14, 1: 28, 2: 28, 3: 22, 4: 8}
+# Spread for a generated wind: none, light and medium alike, strong a bit
+# rarer, extreme never (it can only be picked by hand).
+_RANDOM_WIND_WEIGHTS = {0: 25, 1: 25, 2: 25, 3: 18, 4: 0}
 
 
 def random_wind(rng):
