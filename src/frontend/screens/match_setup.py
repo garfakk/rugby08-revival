@@ -1002,7 +1002,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self.wind_power_row = SelectorRow("wind")
         self.wind_power_row.set_values([None] + list(WIND_POWER_NAMES), index=0)
         self.wind_power_row._display = lambda n: "random" if n is None else \
-            f"{n} · {WIND_POWER_NAMES.get(n, '')}"
+            WIND_POWER_NAMES.get(n, '')
         self.wind_power_row.changed.connect(self._on_wind_changed)
         self.focus.register(self.wind_power_row)
         v.addWidget(self.wind_power_row)
