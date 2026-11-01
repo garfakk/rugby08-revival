@@ -433,8 +433,9 @@ class TournamentDashboardScreen(Screen):
             if self._pending:
                 before, done, game = self._pending
                 self._pending = None
-                # after the screen has settled (shell.present) and painted once
-                QTimer.singleShot(0, lambda: self._play_moments(before, done, game))
+                # after the screen has settled (shell.present) and painted once;
+                # refreshed just above, not again before the recap
+                QTimer.singleShot(0, lambda: self._play_moments(before, done, game, refresh=False))
 
     def _tab_changed(self, i):
         self.stack.setCurrentIndex(i)
@@ -1050,9 +1051,10 @@ class TournamentDashboardScreen(Screen):
         self._message = ""
         self._play_moments(before, done)
 
-    def _play_moments(self, before, done, game=None):
+    def _play_moments(self, before, done, game=None, refresh=True):
         found = moments.moments_after(self.ds, self.t, before, done, game)
-        self.refresh()
+        if refresh or not found:
+            self.refresh()
         if not found:
             return
         self._playing = True

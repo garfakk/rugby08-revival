@@ -33,6 +33,8 @@ from PyQt5.QtCore import (
     QObject, QRect, QPropertyAnimation, QEasingCurve, pyqtSignal,
 )
 
+from ui import motion
+
 SLIDE_MS = 280
 # Out of the edge on the way in (fast start, soft landing), back into it on
 # the way out — the pane never decelerates into a position it is leaving.
@@ -113,7 +115,7 @@ class SidePanelSlide(QObject):
         self._open = open_
         self._anim.stop()
 
-        if not animate:
+        if not animate or not motion.enabled():
             self._panel.setGeometry(self._resting_rect() if open_ else self._parked_rect())
             self._panel.setVisible(open_)
             if open_:

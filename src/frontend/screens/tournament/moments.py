@@ -15,13 +15,21 @@ its final frame at any time: the first key or click shows the whole
 moment, the next one closes it. With animations off (user_prefs.
 animations) every moment opens on its final frame.
 
+Kept cheap for slow machines: the clock advances by at most MAX_STEP_MS a
+frame (a stall — the window coming back from the game, a save — slows the
+moment down instead of skipping half of it), an overlay whose backdrop
+covers the screen is opaque (the dashboard behind is not repainted every
+frame), the backdrop is painted once into a pixmap, and Python's garbage
+collector waits until the moment has played.
+
 Pure painting: no child widgets, nothing focusable but the overlay itself.
 """
+import gc
 import math
 import random
 from dataclasses import dataclass, field
 
-from PyQt5.QtCore import QElapsedTimer, QEvent, QPointF, QRectF, Qt, QTimer
+from PyQt5.QtCore import QElapsedTimer, QEvent, QPointF, QRect, QRectF, Qt, QTimer
 from PyQt5.QtGui import (QColor, QFont, QImage, QLinearGradient, QPainter, QPen, QPixmap,
                          QRadialGradient)
 from PyQt5.QtWidgets import QWidget
@@ -37,6 +45,7 @@ from .common import YOU_TINT, tournament_crest
 
 FRAME_MS = 16
 FADE_OUT_MS = 180
+MAX_STEP_MS = 50       # the most one frame moves a moment on (see the docstring)
 VIRTUAL_W, VIRTUAL_H = 1920, 1080
 
 
@@ -142,6 +151,9 @@ def play_moments(host, moments, on_done=None):
     """Play the overlays one after the other over `host`; on_done once the
     last one closes (at once when there are none)."""
     queue = list(moments)
+    if queue and motion.enabled():
+        # what the match left behind goes now, not halfway through a moment
+        gc.collect()
 
     def nxt():
         if not queue:
@@ -166,7 +178,11 @@ class MomentOverlay(QWidget):
         super().__init__()
         self.ds, self.t = ds, t
         self._ms = 0
-        self._clock = QElapsedTimer()
+        self._clock = QElapsedTimer()      # time since the last frame
+        self._pulse = QElapsedTimer()      # the hint's breathing
+        self._close_ms = 0
+        self._gc_held = False
+        self._backdrop_cache = None        # (key, QPixmap)
         self._timer = QTimer(self)
         self._timer.setInterval(FRAME_MS)
         self._timer.timeout.connect(self._tick)
@@ -189,6 +205,8 @@ class MomentOverlay(QWidget):
         self.setFocus(Qt.OtherFocusReason)
         if motion.enabled():
             self._clock.start()
+            self._pulse.start()
+            self._hold_gc()
             self._timer.start()
         else:
             self._ms = self.DURATION
@@ -204,21 +222,60 @@ class MomentOverlay(QWidget):
         self._settled()
         self.update()
 
+    def _hold_gc(self):
+        """No garbage collection while the moment moves: a full collection
+        is a visible hitch on a slow machine. Given back once settled."""
+        if not self._gc_held and gc.isenabled():
+            gc.disable()
+            self._gc_held = True
+
+    def _release_gc(self):
+        if self._gc_held:
+            self._gc_held = False
+            gc.enable()
+
+    def _step(self):
+        """ms to move on this frame: the real time since the last one, but
+        never more than MAX_STEP_MS."""
+        return min(MAX_STEP_MS, self._clock.restart()) if self._clock.isValid() else MAX_STEP_MS
+
     def _tick(self):
+        step = self._step()
         if self._closing:
-            self._fade = 1.0 - min(1.0, self._clock.elapsed() / FADE_OUT_MS)
+            self._close_ms += step
+            self._fade = 1.0 - min(1.0, self._close_ms / FADE_OUT_MS)
             if self._fade <= 0:
                 self._finish()
                 return
         elif not self.settled:
-            self._ms = min(self.DURATION, self._clock.elapsed())
+            self._ms = min(self.DURATION, self._ms + step)
             if self.settled:
                 self._settled()
+        elif self.hint:
+            self._sync_opaque()
+            self.update(self._hint_rect())     # only the hint breathes now
+            return
+        self._sync_opaque()
         self.update()
+
+    def _sync_opaque(self):
+        """Opaque while the backdrop covers everything: Qt then skips
+        repainting the screen behind at every frame."""
+        opaque = not self._closing and self.backdrop_alpha() >= 1.0
+        if opaque != self.testAttribute(Qt.WA_OpaquePaintEvent):
+            self.setAttribute(Qt.WA_OpaquePaintEvent, opaque)
+
+    def _hint_rect(self):
+        k = self._scale()
+        return QRect(0, int(self.height() - 80 * k), self.width(), int(50 * k) + 2)
+
+    def _scale(self):
+        return max(0.1, min(1.0, self.width() / VIRTUAL_W, self.height() / VIRTUAL_H))
 
     def _settled(self):
         """The final frame is on: the hint keeps breathing at a low rate,
         and a moment that closes by itself starts counting."""
+        self._release_gc()
         if motion.enabled():
             self._timer.setInterval(50)
             if not self._timer.isActive():
@@ -234,7 +291,9 @@ class MomentOverlay(QWidget):
         if self._closing:
             return
         self._closing = True
+        self._sync_opaque()
         if motion.enabled():
+            self._close_ms = 0
             self._clock.restart()
             self._timer.setInterval(FRAME_MS)
             self._timer.start()
@@ -243,6 +302,7 @@ class MomentOverlay(QWidget):
 
     def _finish(self):
         self._timer.stop()
+        self._release_gc()
         host = self.parentWidget()
         if host is not None:
             host.removeEventFilter(self)
@@ -280,13 +340,13 @@ class MomentOverlay(QWidget):
     # painting
     def paintEvent(self, event):
         p = QPainter(self)
+        p.setOpacity(self._fade)
+        self.paint_backdrop(p)          # a plain blit: before the render hints
         p.setRenderHint(QPainter.Antialiasing)
         p.setRenderHint(QPainter.SmoothPixmapTransform)
-        p.setOpacity(self._fade)
-        self.paint_backdrop(p)
         # the moment itself is laid out for 1920 x 1080 and scaled down to
         # fit a smaller window (never up: big crests would just blur)
-        scale = max(0.1, min(1.0, self.width() / VIRTUAL_W, self.height() / VIRTUAL_H))
+        scale = self._scale()
         p.scale(scale, scale)
         self.vw, self.vh = self.width() / scale, self.height() / scale
         self.paint_moment(p, self._ms)
@@ -298,23 +358,40 @@ class MomentOverlay(QWidget):
         return _ease(_phase(self._ms, 0, 260))
 
     def paint_backdrop(self, p):
-        w, h = self.width(), self.height()
+        """The dark backdrop and its glow, painted once per size and colour
+        (a full-screen radial gradient is the dearest thing in a frame) and
+        laid over the screen behind at backdrop_alpha()."""
         a = self.backdrop_alpha()
-        p.fillRect(self.rect(), QColor(4, 10, 4, int(255 * a)))
-        glow = QRadialGradient(w / 2, h * 0.42, max(w, h) * 0.55)
-        c = QColor(self.glow_color())
-        c.setAlpha(int(46 * a))
-        glow.setColorAt(0, c)
-        glow.setColorAt(1, QColor(0, 0, 0, 0))
-        p.fillRect(self.rect(), glow)
+        if a <= 0:
+            return
+        dpr = self.devicePixelRatioF()
+        key = (self.width(), self.height(), dpr, QColor(self.glow_color()).rgba())
+        if self._backdrop_cache is None or self._backdrop_cache[0] != key:
+            w, h = self.width(), self.height()
+            pix = QPixmap(max(1, int(w * dpr)), max(1, int(h * dpr)))
+            pix.setDevicePixelRatio(dpr)
+            pix.fill(QColor(4, 10, 4))
+            bp = QPainter(pix)
+            glow = QRadialGradient(w / 2, h * 0.42, max(w, h) * 0.55)
+            c = QColor(self.glow_color())
+            c.setAlpha(46)
+            glow.setColorAt(0, c)
+            glow.setColorAt(1, QColor(0, 0, 0, 0))
+            bp.fillRect(QRectF(0, 0, w, h), glow)
+            bp.end()
+            self._backdrop_cache = (key, pix)
+        p.save()
+        p.setOpacity(p.opacity() * a)
+        p.drawPixmap(0, 0, self._backdrop_cache[1])
+        p.restore()
 
     def glow_color(self):
         return ACCENT
 
     def paint_hint(self, p):
         p.save()
-        pulse = 0.55 + 0.45 * (0.5 + 0.5 * math.sin(self._clock.elapsed() / 380.0)) \
-            if self._clock.isValid() else 1.0
+        pulse = 0.55 + 0.45 * (0.5 + 0.5 * math.sin(self._pulse.elapsed() / 380.0)) \
+            if self._pulse.isValid() else 1.0
         p.setOpacity(self._fade * pulse)
         p.setFont(tracked_font(FONT_DISPLAY, 13, QFont.Bold, 2.0))
         p.setPen(QColor(FG_TERTIARY))
@@ -445,9 +522,6 @@ class MatchdayRecap(MomentOverlay):
             if not self._closing:
                 self.setFocus(Qt.OtherFocusReason)
         self.stats_popup = show_report(self, self.ds, self.t, self.mine, closed)
-
-    def _scale(self):
-        return max(0.1, min(1.0, self.width() / VIRTUAL_W, self.height() / VIRTUAL_H))
 
     def _place_stats(self):
         """The button under your match's card (virtual 1920 x 1080

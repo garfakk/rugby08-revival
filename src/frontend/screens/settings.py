@@ -266,6 +266,10 @@ class SettingsScreen(QWidget):
             user_prefs.match_picker = next(i for i, l in STYLES if l == label)
             user_prefs.save()
 
+        def _set_animations(on):
+            user_prefs.animations = bool(on)
+            user_prefs.save()
+
         def _set_check_updates(on):
             user_prefs.check_updates = bool(on)
             user_prefs.save()
@@ -278,6 +282,9 @@ class SettingsScreen(QWidget):
         current = logging.getLevelName(logging.getLogger(LOG_ROOT).getEffectiveLevel())
         return [
             ToggleRow("3D Player Preview", user_prefs.preview_3d, _set_preview_3d),
+            # Off on a slow machine: menus, recaps and transitions open on
+            # their final frame (ui/motion.py).
+            ToggleRow("Animations", user_prefs.animations, _set_animations),
             # How Quick Match picks teams (app/team_browse.py): the classic
             # season > category > team, or group > team > season.
             # Takes effect the next time Quick Match opens.
@@ -308,6 +315,7 @@ class SettingsScreen(QWidget):
         tab = TABS[index]
         if tab == "Advanced":
             user_prefs.preview_3d = True
+            user_prefs.animations = True
             user_prefs.check_updates = True
             user_prefs.log_level = ""
             user_prefs.match_picker = DEFAULT_STYLE

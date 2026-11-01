@@ -9,8 +9,9 @@ fade in crashed Qt), render their widget through an offscreen pixmap, and
 clip children that paint outside it. The catch: the target should sit on
 the plain background colour, as the screens' bodies do.
 
-Nothing happens with animations off (user_prefs.animations): callers never
-branch on it themselves.
+Nothing happens with animations off (user_prefs.animations, Settings >
+Advanced): callers never branch on it themselves; other Qt animations take
+their duration from ms().
 """
 from PyQt5.QtCore import QEasingCurve, QEvent, Qt, QTimer, QVariantAnimation
 from PyQt5.QtGui import QColor, QPainter
@@ -22,6 +23,12 @@ from ui.theme import BG_BASE
 
 def enabled() -> bool:
     return bool(getattr(user_prefs, "animations", True))
+
+
+def ms(duration):
+    """An animation's duration, 0 with animations off: a Qt animation of
+    0 ms jumps straight to its end value (and still emits finished)."""
+    return duration if enabled() else 0
 
 
 class _Curtain(QWidget):

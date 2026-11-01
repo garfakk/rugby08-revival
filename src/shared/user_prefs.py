@@ -122,9 +122,10 @@ class UserPrefs:
         # The user's team/player edits (user_data/edits) laid over the data
         # pack. Off: the pack alone is used, the edits are kept. Tools › My edits.
         self.use_edits = True
-        # Tournament mode's transitions and recaps (matchday results, new
-        # stage, champions...). Not in Settings: opt out with
-        # `animations = false` in the prefs file.
+        # The menus' animations: tournament transitions and recaps
+        # (matchday results, new stage, champions...), fades, the main
+        # menu's entrance, sliding panels. Off: everything opens on its
+        # final frame (slow machines). Settings > Advanced > Animations.
         self.animations = True
         # Look on GitHub for a new program or data release at startup, at
         # most once a day (app/updater). Settings > Check For Updates.

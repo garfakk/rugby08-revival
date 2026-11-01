@@ -8,6 +8,7 @@ from PyQt5.QtCore import (
 
 from shared.config import config
 from app.screen_base import Screen
+from ui import motion
 from ui.broadcast import display_label, HintBar, MenuTile
 from ui.theme import BG_BASE, ACCENT
 
@@ -80,7 +81,11 @@ class MainMenuScreen(Screen):
         """Slide + fade the menu tiles in one after another, top to bottom.
         Called when the startup intro lifts (see MainWindow._show_intro); the
         tiles sit fully painted otherwise, so any other route to this screen
-        is unaffected."""
+        is unaffected. Animations off: they stay as they are."""
+        if not motion.enabled():
+            for tile in self._tiles:
+                tile.set_entrance(1.0)
+            return
         group = QParallelAnimationGroup(self)
         for i, tile in enumerate(self._tiles):
             tile.set_entrance(0.0)

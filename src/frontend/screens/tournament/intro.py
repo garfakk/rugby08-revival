@@ -34,6 +34,7 @@ DROP_STEP = 45           # between two crests landing
 DROP_MS = 320            # one crest's fall
 MATCH_MS = 700           # your first match sliding in
 FADE_OUT_MS = 220        # the fade to the dashboard
+MAX_STEP_MS = 50         # the most one frame moves the draw on
 COL_W, ROW_H = 300, 38
 DRAW_TOP = 250
 MAX_ROWS = 8             # a bigger pool (a league) wraps into more columns
@@ -94,6 +95,7 @@ class TournamentIntroScreen(Screen):
         self._timer.timeout.connect(self._tick)
         self._pending = False
         self._fade = 1.0            # 1 -> 0 while fading out
+        self._fade_ms = 0
         self._fading = False
 
     def set_session(self, session):
@@ -127,13 +129,17 @@ class TournamentIntroScreen(Screen):
             self._settle()
 
     def _tick(self):
+        # at most MAX_STEP_MS a frame: a stall slows the draw down rather
+        # than skipping part of it (as moments.py)
+        step = min(MAX_STEP_MS, self._clock.restart())
         if self._fading:
-            self._fade = 1.0 - min(1.0, self._clock.elapsed() / FADE_OUT_MS)
+            self._fade_ms += step
+            self._fade = 1.0 - min(1.0, self._fade_ms / FADE_OUT_MS)
             if self._fade <= 0:
                 self._done()
             self.update()
             return
-        self._ms = min(self._duration, self._clock.elapsed())
+        self._ms = min(self._duration, self._ms + step)
         if self._ms >= self._duration:
             self._settle()
         self.update()
@@ -158,6 +164,7 @@ class TournamentIntroScreen(Screen):
             self._done()
             return
         self._fading = True
+        self._fade_ms = 0
         self._clock.restart()
         self._timer.start()
 

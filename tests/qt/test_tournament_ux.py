@@ -241,6 +241,36 @@ def test_animations_on_do_not_crash(qapp, dash, session, monkeypatch):
     assert not _overlays(dash)
 
 
+def test_recap_rides_out_a_stall(qapp, dash, session, monkeypatch):
+    """A slow frame (the window coming back from the game) moves the recap on
+    by MAX_STEP_MS at most, the recap covers the dashboard (opaque: nothing
+    behind is repainted) and the garbage collector waits until it settles."""
+    import gc
+    import time
+    from shared.user_prefs import user_prefs
+    from screens.tournament import moments
+    monkeypatch.setattr(user_prefs, "animations", True)
+    session.advance_to_human()
+    f = session.human_fixture()
+    dash._run(lambda: session.simulate(f))
+    recap = _overlays(dash)[0]
+    assert not gc.isenabled()
+    time.sleep(0.4)
+    recap._tick()
+    assert 0 < recap._ms <= moments.MAX_STEP_MS
+    assert recap.testAttribute(Qt.WA_OpaquePaintEvent)
+    recap.skip()
+    assert gc.isenabled()
+    QTest.keyClick(recap, Qt.Key_Return)                 # closing: fades over the dashboard
+    assert not recap.testAttribute(Qt.WA_OpaquePaintEvent)
+    for _ in range(6):
+        for m in _overlays(dash):
+            m.skip()
+            m.close_moment()
+        QTest.qWait(250)
+    assert not _overlays(dash) and gc.isenabled()
+
+
 def test_intro_skips_to_the_dashboard(qapp, ds, session):
     from screens.tournament import TournamentIntroScreen
     done = []
