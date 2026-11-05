@@ -18,8 +18,8 @@
     "home": {
      "frontKitFile": "kits_2026_2/home_front.png",
      "backKitFile": "kits_2026_2/home_back/home_back_%.png",
-     "previewFile": "",
-     "color": ""
+     "previewFile": "kits_2026_2/home_preview.png",
+     "color": "#0f5295"
     },
     "away": {
      "frontKitFile": "",
@@ -45,7 +45,7 @@
    },
    "players": [],
    "group": "representatives",
-   "enabled": true
+   "enabled": false
   },
   "2022": {
    "name": "French Barbarians",
@@ -65,8 +65,8 @@
     "home": {
      "frontKitFile": "kits_2026_2/home_front.png",
      "backKitFile": "kits_2026_2/home_back/home_back_%.png",
-     "previewFile": "",
-     "color": ""
+     "previewFile": "kits_2026_2/home_preview.png",
+     "color": "#0f5295"
     },
     "away": {
      "frontKitFile": "",
@@ -76,12 +76,12 @@
     }
    },
    "roles": {
-    "captain": "",
-    "viceCaptain": "",
-    "longGK": "153627",
-    "shortGK": "153627",
+    "captain": "146382",
+    "viceCaptain": "146349",
+    "longGK": "145163",
+    "shortGK": "145163",
     "longPunt": "153627",
-    "shortPunt": "153627",
+    "shortPunt": "153480",
     "kickoff": "153627"
    },
    "setPlays": {
@@ -98,21 +98,21 @@
     "146382",
     "153778",
     "142364",
-    "146237",
-    "155074",
-    "153627",
-    "152970",
-    "152899",
-    "146349",
-    "145163",
-    "144808",
-    "145469",
-    "152495",
-    "158951",
     "126946",
     "145824",
     "153480",
-    "152864"
+    "146349",
+    "152899",
+    "152970",
+    "153627",
+    "145163",
+    "144808",
+    "152495",
+    "145469",
+    "158951",
+    "146237",
+    "152864",
+    "155074"
    ],
    "group": "representatives"
   }

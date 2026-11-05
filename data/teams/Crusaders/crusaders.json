@@ -102,7 +102,7 @@
      "frontKitFile": "kits_2010/home_front.webp",
      "backKitFile": "kits_2010/home_back.webp",
      "previewFile": "kits_2010/home_preview.png",
-     "color": "",
+     "color": "#161715",
      "model3d": {
       "collar": "stand"
      }
@@ -111,7 +111,7 @@
      "frontKitFile": "kits_2010/away_front.webp",
      "backKitFile": "kits_2010/away_back.webp",
      "previewFile": "kits_2010/away_preview.png",
-     "color": "",
+     "color": "#7e868d",
      "model3d": {
       "collar": "stand"
      }
@@ -278,13 +278,13 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": ""
+     "color": "#b21d22"
     },
     "away": {
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": ""
+     "color": "#131419"
     }
    },
    "roles": {
@@ -316,7 +316,7 @@
     "144959",
     "155801",
     "153307",
-    "144446",
+    "155917",
     "145692",
     "155749",
     "155955",
@@ -330,7 +330,7 @@
     "155844",
     "155969",
     "155704",
-    "155917",
+    "144446",
     "155894",
     "153960",
     "155925",
@@ -372,13 +372,13 @@
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": ""
+     "color": "#ca1a23"
     },
     "away": {
      "frontKitFile": "kits_2024/away_front.webp",
      "backKitFile": "kits_2024/away_back.webp",
      "previewFile": "kits_2024/away_preview.png",
-     "color": ""
+     "color": "#810f14"
     }
    },
    "roles": {
@@ -548,7 +548,7 @@
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": "",
+     "color": "#a80001",
      "model3d": {
       "collar": "stand"
      }
@@ -557,7 +557,7 @@
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": "",
+     "color": "#1a1c15",
      "model3d": {
       "collar": "stand"
      }
@@ -643,7 +643,7 @@
      "frontKitFile": "kits_2019/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
-     "color": "",
+     "color": "#c6060a",
      "model3d": {
       "collar": "stand"
      }
@@ -652,7 +652,7 @@
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": "",
+     "color": "#eff0ee",
      "model3d": {
       "collar": "stand"
      }
@@ -918,7 +918,7 @@
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": "",
+     "color": "#a80001",
      "model3d": {
       "collar": "stand"
      }
@@ -927,7 +927,7 @@
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": "",
+     "color": "#1a1c15",
      "model3d": {
       "collar": "stand"
      }

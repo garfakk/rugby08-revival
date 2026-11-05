@@ -107,8 +107,30 @@ def test_expert_actions_are_tagged(qapp, dash, session, expert):
     dash._more_menu()
     qapp.processEvents()
     tags = {r.data: r.tag for r in dash._more_popup._rows}
-    assert tags["simulate"] == tags["sim_end"] == "EXPERT"
+    assert tags["simulate"] == tags["sim_title"] == tags["sim_end"] == "EXPERT"
     dash._more_popup.close_popup()
+
+
+def test_simulate_to_the_title_match(qapp, dash, session, expert):
+    """MORE > Simulate to your title match: the dialog's PLAYS FOR THE TITLE
+    (the default) simulates up to the users' final or decider, won on the
+    way; then the item is gone."""
+    from app.tournament import engine
+    from ui.editor_kit import ConfirmDialog
+    session.advance_to_human()
+    dash.refresh()
+    assert any(d == "sim_title" for _l, d, _s in dash._more_items())
+    dash._sim_to_title()
+    qapp.processEvents()
+    [d for d in dash.findChildren(ConfirmDialog) if d.isVisible()][-1].choose("ok")
+    qapp.processEvents()
+    due = session.human_fixture()
+    human = next(tid for tid, e in session.t.teams.items() if e.human)
+    if due is not None:
+        assert engine.is_title_match(session.t, due)
+        assert all(f.result.winner_id() == human for f in session.t.fixtures
+                   if f.played and f.involves(human))
+    assert not any(d == "sim_title" for _l, d, _s in dash._more_items())
 
 
 def test_match_simulation_form(qapp, ds, session):
@@ -468,3 +490,235 @@ def test_more_play_from_a_given_minute(qapp, dash, session, monkeypatch):
     rows[1].adjust(1)                 # home: 3
     dialog.choose("ok")
     assert calls and calls[0][1] == (78, 3, 0)
+
+
+def test_squad_tab_keyboard_and_picker(qapp, dash, session):
+    """Down from the tab bar enters the team sheet; A opens the picker on
+    that shirt; picking a player already in the 22 swaps the two shirts."""
+    from PyQt5.QtWidgets import QApplication
+    from screens.tournament.dashboard import TEAM
+    from ui.team_sheet import SlotAvatar
+    dash.tabs.set_index(TEAM)
+    dash.tabs.setFocus()
+    qapp.processEvents()
+    QTest.keyClick(dash.tabs, Qt.Key_Down)
+    qapp.processEvents()
+    shirt = QApplication.focusWidget()
+    assert isinstance(shirt, SlotAvatar) and shirt.number == 1
+    sq = dash.squad
+    before = list(sq._sel()["players"])
+    QTest.keyClick(shirt, Qt.Key_Return)
+    qapp.processEvents()
+    assert sq.picker.isVisible()
+    sq._on_pick(before[1])                       # number 2 onto number 1
+    after = sq._sel()["players"]
+    assert after[0] == before[1] and after[1] == before[0] and len(after) == 22
+    sq.picker.hide()
+    qapp.processEvents()
+    QTest.keyClick(QApplication.focusWidget(), Qt.Key_Escape)   # back to the tabs
+    qapp.processEvents()
+    assert QApplication.focusWidget() is dash.tabs
+
+
+def test_squad_roles_panel_sets_roles(qapp, dash, session):
+    from screens.tournament.dashboard import TEAM
+    dash.tabs.set_index(TEAM)
+    qapp.processEvents()
+    sq = dash.squad
+    starters = sq._sel()["players"][:15]
+    sq.toggle_panel("roles")
+    assert sq._panel == "roles"
+    sq.role_fields["captain"].edited.emit(starters[4])
+    assert sq._sel()["roles"]["captain"] == starters[4]
+    sq.play_fields["up"].edited.emit("loop")
+    assert sq._sel()["set_plays"]["up"] == "loop"
+    sq.toggle_panel("roles")
+    assert sq._panel is None
+
+
+def test_squad_lineups_panel(qapp, dash, session):
+    """Auto pick until a shirt changes; a lineup saved under a name is
+    shown as the current one and loads back; the squad view lists the 22."""
+    from app.tournament import lineups
+    from screens.tournament.dashboard import TEAM
+    dash.tabs.set_index(TEAM)
+    qapp.processEvents()
+    sq = dash.squad
+    entry = session.t.teams[sq.team_id]
+    assert lineups.is_auto(entry) and sq.mode_field.value() == "auto"
+    sq._swap(0, 2)
+    assert not lineups.is_auto(entry) and sq.mode_field.value() == "default"
+    session.save_lineup(sq.team_id, "Props swapped")
+    sq.refresh()
+    assert "PROPS SWAPPED" in sq.lineup_title.text()
+    sq._auto()
+    assert "PROPS SWAPPED" not in sq.lineup_title.text()
+    sq._load(lineups.saved(entry)[0])
+    assert "PROPS SWAPPED" in sq.lineup_title.text()
+    sq.view_tabs.set_index(1)
+    qapp.processEvents()
+    assert sq.table.keys.count(None) >= 1 and len([k for k in sq.table.keys if k]) == len(entry.squad)
+
+
+def test_squad_list_takes_any_player_to_the_sheet(qapp, dash, session):
+    """A on a player of the 22 goes to his shirt; on one outside the 22,
+    to the picker on the shirt that suits him, him highlighted: one more A
+    puts him in. B in the list goes back to the team sheet, not the tabs."""
+    from PyQt5.QtWidgets import QApplication
+    from screens.tournament.dashboard import TEAM
+    from screens.tournament.squad import SHEET, SQUAD_VIEW
+    from ui.team_sheet import SlotAvatar, SubChip
+    dash.tabs.set_index(TEAM)
+    qapp.processEvents()
+    sq = dash.squad
+    sq.view_tabs.set_index(SQUAD_VIEW)
+    qapp.processEvents()
+    assert sq.name_lbl.text() not in ("", "—", "EMPTY")      # the panel follows the list
+    outsider = sq.table.keys[-1]
+    assert outsider not in sq._players()
+    sq.table.setFocus()
+    sq.table.setCurrentCell(len(sq.table.keys) - 1, 1)
+    QTest.keyClick(sq.table, Qt.Key_Return)
+    qapp.processEvents()
+    assert sq.views.currentIndex() == SHEET and sq.picker.isVisible()
+    assert sq.picker.highlighted_pid() == outsider
+    slot = sq._picker_slot
+    sq._on_pick(sq.picker.highlighted_pid())
+    sq.picker.hide()
+    assert sq._players()[slot] == outsider
+    sq.view_tabs.set_index(SQUAD_VIEW)
+    sq.table.setFocus()
+    qapp.processEvents()
+    QTest.keyClick(sq.table, Qt.Key_Escape)
+    qapp.processEvents()
+    assert sq.views.currentIndex() == SHEET
+    assert isinstance(QApplication.focusWidget(), (SlotAvatar, SubChip))
+
+
+def test_squad_lineup_use_keeps_the_focus_in_the_panel(qapp, dash, session):
+    """USE rebuilds the rows: the focus lands on the used row's next button,
+    not on the deleted USE button (keys would go nowhere)."""
+    from PyQt5.QtWidgets import QApplication
+    from app.tournament import lineups
+    from screens.tournament.dashboard import TEAM
+    dash.tabs.set_index(TEAM)
+    qapp.processEvents()
+    sq = dash.squad
+    sq._swap(0, 2)
+    session.save_lineup(sq.team_id, "A")
+    sq._swap(3, 4)
+    session.save_lineup(sq.team_id, "B")
+    sq.refresh()
+    sq.toggle_panel("lineups")
+    qapp.processEvents()
+    use = sq._row_buttons[0][0]
+    assert use.text() == "USE"
+    use.setFocus()
+    QTest.keyClick(use, Qt.Key_Return)
+    for _ in range(3):
+        qapp.processEvents()
+    assert lineups.matching(sq._entry(), sq._sel()) == 0
+    assert QApplication.focusWidget() is sq._row_buttons[0][0]
+    assert sq._row_buttons[0][0].text() == "RENAME"
+    assert "YOUR LINEUP · A" == sq.lineup_title.text()
+
+
+def test_squad_auto_pick_asks_before_dropping_an_unsaved_lineup(qapp, dash, session):
+    from ui.editor_kit import ConfirmDialog
+    from screens.tournament.dashboard import TEAM
+    dash.tabs.set_index(TEAM)
+    qapp.processEvents()
+    sq = dash.squad
+    assert not sq.auto_btn.isVisible() or sq._auto_mode() is False   # auto mode: no button
+    sq._swap(0, 2)
+    mine = list(sq._players())
+    sq._auto()
+    dialogs = [w for w in sq.window().findChildren(ConfirmDialog) if w.isVisible()]
+    assert dialogs and sq._players() == mine
+    dialogs[-1].choose("ok")
+    qapp.processEvents()
+    assert sq._players() != mine
+
+
+def test_squad_list_rates_the_22_like_the_sheet(qapp, dash, session):
+    """The matchday 22 are rated in their shirt (the sheet's number), the
+    rest at their own position; each section header says which."""
+    from screens.tournament.dashboard import TEAM
+    from screens.tournament.squad import SQUAD_VIEW
+    dash.tabs.set_index(TEAM)
+    qapp.processEvents()
+    sq = dash.squad
+    sq.view_tabs.set_index(SQUAD_VIEW)
+    qapp.processEvents()
+    players = sq._players()
+    for row, pid in enumerate(sq.table.keys):
+        if pid in players:
+            slot = players.index(pid)
+            assert sq.table.item(row, 3).text() == sq.shirts[slot + 1].value
+    sections = [sq.table.item(r, 0).data(Qt.UserRole + 5) for r, k in enumerate(sq.table.keys) if k is None]
+    assert sections[0] == "rating: in his shirt" and sections[1] == "rating: at his own position"
+
+
+def test_squad_picker_keeps_off_the_side_panel(qapp, dash, session):
+    from PyQt5.QtCore import QPoint
+    from screens.tournament.dashboard import TEAM
+    dash.resize(1920, 1080)
+    dash.tabs.set_index(TEAM)
+    qapp.processEvents()
+    sq = dash.squad
+    sq._open_picker(19)                       # a replacement on the right
+    qapp.processEvents()
+    pop = sq.picker._popup
+    assert pop.isVisible()
+    assert pop.geometry().right() < sq.side_card.mapTo(sq, QPoint(0, 0)).x()
+    sq.picker.hide()
+
+
+def test_squad_fits_a_short_window(qapp, dash, session):
+    """1280x720: 15 joins the back row and nothing on the squad page scrolls."""
+    from PyQt5.QtWidgets import QScrollArea
+    from screens.tournament.dashboard import TEAM
+    dash.resize(1280, 720)
+    dash.tabs.set_index(TEAM)
+    for _ in range(5):
+        qapp.processEvents()
+    sq = dash.squad
+    sq._fit_shirts()
+    for _ in range(5):
+        qapp.processEvents()
+    assert sq.sheet_rows[-2].indexOf(sq.shirts[15]) >= 0
+    area = next(a for a in dash.findChildren(QScrollArea) if a.isAncestorOf(sq))
+    assert area.widget().height() <= area.viewport().height()
+    dash.resize(1920, 1080)
+    for _ in range(5):
+        qapp.processEvents()
+    sq._fit_shirts()
+    assert sq.sheet_rows[-1].indexOf(sq.shirts[15]) >= 0
+
+
+def test_squad_edited_saved_lineup_updates_or_reverts(qapp, dash, session):
+    """A saved lineup changed on the sheet is shown as edited: UPDATE writes
+    the change into it, REVERT puts it back on the sheet."""
+    from app.tournament import lineups
+    from screens.tournament.dashboard import TEAM
+    dash.tabs.set_index(TEAM)
+    qapp.processEvents()
+    sq = dash.squad
+    entry = session.t.teams[sq.team_id]
+    sq._swap(0, 2)
+    session.save_lineup(sq.team_id, "Plan A")
+    sq.refresh()
+    original = list(sq._players())
+    sq._swap(3, 4)
+    assert sq.lineup_title.text() == "YOUR LINEUP · PLAN A (EDITED)"
+    assert sq._edited_index() == 0
+    assert [b.text() for b in sq._row_buttons[0]][:2] == ["UPDATE", "REVERT"]
+    sq._load(lineups.saved(entry)[0], row=0)            # REVERT
+    assert sq._players() == original and sq.lineup_title.text() == "YOUR LINEUP · PLAN A"
+    sq._swap(3, 4)
+    edited = list(sq._players())
+    sq._update(0)                                        # UPDATE
+    assert lineups.saved(entry)[0]["players"] == edited
+    assert sq.lineup_title.text() == "YOUR LINEUP · PLAN A" and sq._edited_index() is None
+    sq._do_auto()                                        # no longer from Plan A
+    assert lineups.source(entry) is None

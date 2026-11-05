@@ -20,13 +20,13 @@
      "frontKitFile": "kits_2009/home_front.webp",
      "backKitFile": "kits_2010/home_back.webp",
      "previewFile": "kits_2009/home_preview.png",
-     "color": ""
+     "color": "#72b1c6"
     },
     "away": {
      "frontKitFile": "kits_2009/away_front.webp",
      "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2009/away_preview.png",
-     "color": ""
+     "color": "#bdbfb7"
     }
    },
    "roles": {
@@ -105,13 +105,13 @@
      "frontKitFile": "kits_2010/home_front.webp",
      "backKitFile": "kits_2010/home_back.webp",
      "previewFile": "kits_2010/home_preview.png",
-     "color": ""
+     "color": "#70a9bd"
     },
     "away": {
      "frontKitFile": "kits_2010/away_front.webp",
      "backKitFile": "kits_2010/away_back.webp",
      "previewFile": "kits_2010/away_preview.png",
-     "color": ""
+     "color": "#603258"
     }
    },
    "roles": {
@@ -119,9 +119,9 @@
     "viceCaptain": "158347",
     "longGK": "158347",
     "shortGK": "158347",
-    "longPunt": "157281",
-    "shortPunt": "157281",
-    "kickoff": "157281"
+    "longPunt": "147840",
+    "shortPunt": "147840",
+    "kickoff": "147840"
    },
    "setPlays": {
     "left": "",

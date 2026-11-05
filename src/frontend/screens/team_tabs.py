@@ -500,7 +500,7 @@ class KitsTab(TeamTab):
         self.kit_title = right.title_lbl
         self.variant_picker = VariantPicker(
             display=lambda vid: V.kit_variant_label(self.stored_kit(), vid), width=300,
-            add_subtitle="this kit with a small difference (a patch, a logo)")
+            add_subtitle="this kit with a small change (a patch, a logo)")
         self.variant_picker.variant_picked.connect(self._pick_variant)
         self.variant_picker.action.connect(self.variant_action)
         screen.register_field("kits.variant", self.variant_picker.choice, index)
@@ -519,7 +519,8 @@ class KitsTab(TeamTab):
             fgrid.add(f)
         right.add(fgrid)
         right.add(Note(ASSET_SPECS["backKitFile"]["note"] + " A kit_back_%.png series or a "
-                       "back-number strip (.webp) is expected."))
+                       "back-number strip (.webp) is expected. The game's own files also work: "
+                       "a .big shirt front and a .fsh of the 22 backs."))
         self.back_strip = FrameStrip(22, thumb=(46, 46), max_show=11)
         right.add(self.back_strip)
         ugrid = FieldGrid(columns=1)
@@ -630,18 +631,17 @@ class KitsTab(TeamTab):
                 kit_edit(f"add variant {new}",
                          lambda k: T.add_kit_variant(k, new, new_label))
                 screen.shell.footer.set_status(
-                    f"{name} kit · {V.kit_variant_label(self.stored_kit(), new)} added — it is "
-                    "the plain kit until you give it its own files", GREEN)
+                    f"{name} kit · {V.kit_variant_label(self.stored_kit(), new)} added "
+                    "(same as the plain kit until you change its files)", GREEN)
 
             if world_cup:
                 intro = (f"The {name} kit with the World Cup patch: id {world_cup[0]}, label "
-                         f"\"{world_cup[1]}\". Only the files you change are stored; the rest "
-                         "stay the plain kit's.")
+                         f"\"{world_cup[1]}\". Files you don't change come from the plain kit.")
             else:
-                intro = (f"The {name} kit with a small difference for one competition (a "
-                         "tournament patch, a logo), named after the competition's id "
-                         "(world_cup, six_nations…). Only the files you change are stored; "
-                         "the rest stay the plain kit's.")
+                intro = (f"The {name} kit with a small change for one competition (a patch, a "
+                         "logo). Named after a tournament (rwc_2023, six_nations_2024…) or a "
+                         "competition (world_cup). "
+                         "Files you don't change come from the plain kit.")
             screen.show_dialog(FormDialog(
                 screen, "Add kit variant", intro, fields,
                 [("CANCEL", "neutral", "cancel"), ("ADD VARIANT", "primary", "ok")], done))
@@ -660,8 +660,7 @@ class KitsTab(TeamTab):
                                            ("RENAME", "primary", "ok")], done))
         elif action == "reset" and vid:
             screen.confirm(f"Reset {V.kit_variant_label(kit, vid)} to the plain {name} kit?",
-                           "Its own files are dropped (the image files stay on disk; Ctrl+Z "
-                           "to undo until you save).", "RESET",
+                           "Its own files will be dropped. The images stay on disk.", "RESET",
                            lambda: kit_edit(f"reset variant {vid}",
                                             lambda k: T.clear_kit_variant(k, vid)))
         elif action == "delete" and vid:
@@ -669,8 +668,7 @@ class KitsTab(TeamTab):
                 self.kit_variant = V.DEFAULT
                 kit_edit(f"delete variant {vid}", lambda k: T.delete_kit_variant(k, vid))
             screen.confirm(f"Delete {V.kit_variant_label(kit, vid)} from the {name} kit?",
-                           "Competitions asking for it wear the plain kit instead "
-                           "(Ctrl+Z to undo until you save).", "DELETE VARIANT", go)
+                           "Competitions using it will get the plain kit.", "DELETE VARIANT", go)
 
     def _wire_asset(self, field, key):
         field.browse_requested.connect(lambda: browse_assets(
@@ -707,8 +705,7 @@ class KitsTab(TeamTab):
             self.screen.ask_text("Rename kit", "Kit name", name, lambda v: self._rename(name, v))
         elif action == "delete" and name is not None:
             self.screen.confirm(f"Delete the {name} kit?",
-                                "Its file paths are removed from this season (the image files "
-                                "stay on disk). Undo with Ctrl+Z.",
+                                "Its file paths will be removed from this season. The images stay on disk.",
                                 "DELETE", lambda: self.edit(f"delete {name} kit",
                                                             lambda i: T.delete_kit(i, name), "kits"))
 
@@ -1054,7 +1051,7 @@ class ShirtNamesTab(TeamTab):
             f.set_value(str(int(round(area[i] * size[i % 2]))) if size and area else "")
             f.setEnabled(bool(on and size and area))
         self.position_note.setText(
-            f"Pixels of this kit's back image ({size[0]} × {size[1]})." if size else "")
+            f"Back image: {size[0]} × {size[1]} px." if size else "")
 
     def _set_kit(self, key, value, label, more=None):
         """One setting of the shown kit (its variant's, if one is picked);
@@ -1170,7 +1167,7 @@ class ShirtNamesTab(TeamTab):
         if not pattern or "%" not in pattern:
             self.canvas.set_image(None)
             self.canvas.set_placeholder(
-                "SHIRT NAMES NEED THE KIT'S BACK NUMBERS AS IMAGES, NOT AN .FSH"
+                "SHIRT NAMES NEED BACK NUMBERS AS IMAGES, NOT AN .FSH"
                 if pattern else "THIS KIT HAS NO BACK NUMBERS")
             self.left_note.setText("")
             return
@@ -1187,7 +1184,7 @@ class ShirtNamesTab(TeamTab):
         except Exception as e:         # a preview must never break editing
             log.warning(f"shirt name preview failed: {e}")
             self.canvas.set_image(None)
-            self.canvas.set_placeholder("PREVIEW FAILED — SEE THE LOG")
+            self.canvas.set_placeholder("PREVIEW FAILED (SEE THE LOG)")
             return
         self._printer = printer
         if image is None:
@@ -1202,12 +1199,12 @@ class ShirtNamesTab(TeamTab):
         self.canvas.set_caption("NAME AREA")
         notes = []
         if not found:
-            notes.append(f"Font \"{style['font']}\" not found: {SN.DEFAULT_FONT} is used.")
+            notes.append(f"Font \"{style['font']}\" not found, using {SN.DEFAULT_FONT}.")
         if style["enabled"] and SN.area_overlap(printer.area, printer.analysis) > 0.25:
-            notes.append("The name runs over a logo here: drag the box to a free spot.")
+            notes.append("The name overlaps a logo. Drag the box elsewhere.")
         if style["enabled"]:
-            notes.append("Drag the box to move the name, its handles to resize it "
-                         "(arrows / Alt+arrows with the box focused).")
+            notes.append("Drag the box to move it, the handles to resize. "
+                         "Arrows move it, Alt+arrows resize.")
         self.left_note.setText(" ".join(notes))
 
     def _refresh_stage(self):
@@ -1323,7 +1320,7 @@ class SquadTab(TeamTab):
         self.extras_grid.setHorizontalSpacing(6)
         self.extras_grid.setVerticalSpacing(4)
         extras_card.add_layout(self.extras_grid)
-        self.extras_empty = Note("No extra players: + ADD puts one in the squad pool.")
+        self.extras_empty = Note("No extra players. + ADD adds one to the pool.")
         extras_card.add(self.extras_empty)
         self.extra_chips = []
         sheet_col.addWidget(extras_card)
@@ -1398,8 +1395,8 @@ class SquadTab(TeamTab):
             pg.add(f)
             self.play_fields[key] = f
         pv.addWidget(pg)
-        pv.addWidget(Note("Set plays are called in a match with the d-pad direction shown. "
-                          "Blank uses the game's default play."))
+        pv.addWidget(Note("Called with the d-pad direction shown. "
+                          "Blank uses the game's default."))
         self.tactics_stack.addWidget(plays_page)
         self.tactics_tabs.changed.connect(self.tactics_stack.setCurrentIndex)
         tactics.add(self.tactics_stack)
@@ -1592,7 +1589,7 @@ class SquadTab(TeamTab):
         name = (self.player(roster[n - 1]) or {}).get("display_name", roster[n - 1])
         self.edit(f"remove {name}", lambda i: T.remove(i, n - 1), f"players.{n - 1}")
         self.screen.shell.footer.set_status(
-            f"Removed {name} — later players moved up one (Ctrl+Z to undo)", FG_SECONDARY)
+            f"Removed {name}; later players moved up", FG_SECONDARY)
 
     def _auto_sort(self):
         moved = {}
@@ -1601,7 +1598,7 @@ class SquadTab(TeamTab):
             moved["n"] = T.auto_sort(i, self.screen.ds.players, self.screen.season)
         self.edit("auto-sort squad", fn, "players")
         self.screen.shell.footer.set_status(
-            f"Auto-sort moved {moved.get('n', 0)} player(s) — Ctrl+Z to undo", FG_SECONDARY)
+            f"Auto-sort moved {moved.get('n', 0)} player(s)", FG_SECONDARY)
 
     def _reverse(self):
         self.edit("reverse squad order", T.reverse, "players")
@@ -1704,13 +1701,13 @@ class SquadTab(TeamTab):
         self.sel_title.setText((f"PLAYER {n} · {where}" if n <= SQUAD_SIZE else "EXTRA PLAYER").upper())
         if pid is None:
             self.sel_name.setText("Empty")
-            self.sel_meta.setText("Pick a player for this slot, or drag one here."
+            self.sel_meta.setText("Pick or drag a player here."
                                   if n - 1 <= len(roster) else "Fill the slots before this one first.")
             return
         player = self.player(pid)
         self.sel_name.setText((player or {}).get("display_name") or f"Unknown player {pid}")
         if player is None:
-            self.sel_meta.setText(f"Id {pid} is not in the player files — the game drops this player.")
+            self.sel_meta.setText(f"Id {pid} is not in the player files; the game ignores it.")
             return
         out = n <= STARTING_XV and not T.fits(player, self.screen.season, n)
         self.sel_meta.setText("OUT OF POSITION" if out else "")

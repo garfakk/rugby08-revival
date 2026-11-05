@@ -29,7 +29,7 @@ _DEFAULT_TEXT = {
     "win": "Challenge completed.",
     "draw": "A draw is not enough. Try again.",
     "loss": "Challenge failed. Try again.",
-    "missed": "The match is won, but not every objective was met. Try again.",
+    "missed": "Match won, but not every objective was met. Try again.",
 }
 
 

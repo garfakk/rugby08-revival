@@ -16,8 +16,9 @@ A template can pin a real calendar instead (a historical tournament):
     data: their fixtures are dropped); a draw changed further falls back
     to the generated rounds, and the knockout dates are then dropped too;
   * knockout tie as a dict: {"teams": [...], "date": ..., "stadium": ...}.
-  The dates become matchdays in date order, a weekend's dates sharing one
-  (a Six Nations round). Unknown keys (e.g. "venue", "real_score") are
+  A pinned round-robin's matchdays are its rounds, numbered per group so
+  each holds a full set of matches (_fixed_rounds); dated knockout ties
+  become matchdays in date order, a weekend's dates sharing one. Unknown keys (e.g. "venue", "real_score") are
   reference only.
 """
 from datetime import date as _date
@@ -45,6 +46,83 @@ def _day_map(dates, start_day, teams_on=None, round_of=None):
         days[d] = day
         seen |= teams
     return days
+
+
+SEARCH_LIMIT = 200000   # nodes per group before settling for the chronological rounds
+
+
+def _chronological_rounds(fixtures) -> list:
+    """Each fixture (in date order) in the round after its two teams'
+    previous ones: no team plays out of calendar order, but a bye the
+    calendar puts late can leave a short round and an extra one."""
+    last, rounds = {}, []
+    for f in fixtures:
+        home, away = str(f["home"]), str(f["away"])
+        rnd = max(last.get(home, 0), last.get(away, 0)) + 1
+        last[home] = last[away] = rnd
+        rounds.append(rnd)
+    return rounds
+
+
+def _balanced_rounds(fixtures):
+    """Rounds for one group's fixtures (in date order) that are all full
+    (teams // 2 matches, a team once per round), with as few pairs of a
+    team's matches played against calendar order as possible — 0 for a
+    tidy calendar; a World Cup pool that hands one team two byes, or a
+    postponed match, costs one or two. None when no such split exists."""
+    teams = {t for f in fixtures for t in (str(f["home"]), str(f["away"]))}
+    cap = len(teams) // 2
+    if not cap or len(fixtures) % cap:
+        return None
+    n_rounds = len(fixtures) // cap
+    load, busy = [0] * (n_rounds + 1), [set() for _ in range(n_rounds + 1)]
+    played = {t: [] for t in teams}           # rounds given to a team so far
+    out, best, nodes = [0] * len(fixtures), [None, float("inf")], [0]
+
+    def go(i, cost):
+        nodes[0] += 1
+        if cost >= best[1] or nodes[0] > SEARCH_LIMIT:
+            return
+        if i == len(fixtures):
+            best[:] = [out[:], cost]
+            return
+        home, away = str(fixtures[i]["home"]), str(fixtures[i]["away"])
+        # earliest round after both teams' last first, so the first answer is the tidy one
+        start = max(max(played[home], default=0), max(played[away], default=0)) + 1
+        for r in list(range(start, n_rounds + 1)) + list(range(min(start, n_rounds + 1) - 1, 0, -1)):
+            if load[r] >= cap or home in busy[r] or away in busy[r]:
+                continue
+            extra = sum(1 for t in (home, away) for p in played[t] if p > r)
+            load[r] += 1
+            busy[r] |= {home, away}
+            played[home].append(r)
+            played[away].append(r)
+            out[i] = r
+            go(i + 1, cost + extra)
+            played[home].pop()
+            played[away].pop()
+            busy[r] -= {home, away}
+            load[r] -= 1
+
+    go(0, 0)
+    return best[0]
+
+
+def _fixed_rounds(fixtures) -> list:
+    """Round number (1-based) of each pinned fixture, given in date order.
+    Rounds are numbered per group so every pool's rounds hold the same match
+    count even when the pools' dates are staggered (a World Cup: a team's
+    gaps run 4-8 days and the pools never share a weekend), which
+    clustering dates by weekend cannot follow."""
+    rounds = [0] * len(fixtures)
+    by_group = {}
+    for i, f in enumerate(fixtures):
+        by_group.setdefault(f.get("group"), []).append(i)
+    for idx in by_group.values():
+        group = [fixtures[i] for i in idx]
+        for i, r in zip(idx, _balanced_rounds(group) or _chronological_rounds(group)):
+            rounds[i] = r
+    return rounds
 
 
 def _fixed_fixtures(spec, groups):
@@ -144,13 +222,11 @@ def schedule_stage(t, stage, start_day) -> int:
             # the later stages' real dates no longer fit either
             t.components["calendar_free"] = True
         if fixed:
-            teams_on = {}
-            for f in fixed:
-                teams_on.setdefault(f["date"], set()).update((str(f["home"]), str(f["away"])))
-            days = _day_map([f["date"] for f in fixed], start_day, teams_on)
+            ordered = sorted(fixed, key=lambda f: (f["date"], f.get("time", "")))
+            rounds = _fixed_rounds(ordered)
             names = {g.id: g.name for g in stage.groups}
-            for i, fx in enumerate(sorted(fixed, key=lambda f: (f["date"], f.get("time", "")))):
-                day = days[fx["date"]]
+            for i, (fx, rnd) in enumerate(zip(ordered, rounds)):
+                day = start_day + rnd - 1
                 t.fixtures.append(Fixture(
                     id=f"{stage.id}-{fx['group']}-{i + 1}", stage_id=stage.id, day=day,
                     home=str(fx["home"]), away=str(fx["away"]), group=fx["group"],
@@ -159,7 +235,7 @@ def schedule_stage(t, stage, start_day) -> int:
                                  len(stage.groups)),
                     neutral=neutral, stadium_id=str(fx.get("stadium") or ""),
                     match_subtype=subtype, date=str(fx["date"])))
-            return max(days.values()) + 1
+            return start_day + max(rounds, default=0)
         legs = int(spec.get("legs", 1))
         last = start_day - 1
         for g in stage.groups:

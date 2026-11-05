@@ -9,6 +9,8 @@ register_selection_weight(name, fn(t, player, ctx) -> multiplier) lets a
 feature bias the AI's picks without being worth a stat change (fatigue
 rotation today; form or morale could use it later).
 """
+import copy
+
 from .effects import MatchContext, effective_stats, is_available, unavailable_reason
 from .strength import (SLOT_POSITIONS, group_of, position_fit, slot_rating)
 
@@ -28,9 +30,16 @@ def register_selection_weight(name, fn):
     _weights[name] = fn
 
 
-def _score(t, player, team_id, slot, pos, fixture, weighted=True):
+def _score(t, player, team_id, slot, pos, fixture, weighted=True, cache=None):
     ctx = MatchContext(fixture=fixture, team_id=team_id, position=pos, slot=slot + 1)
-    value = slot_rating(effective_stats(t, player, ctx), pos, player.positions)
+    # The rating part depends on the player and the position only (stat
+    # modifiers never read the slot): auto_select asks it for every slot.
+    key = (player.pid, pos)
+    value = cache.get(key) if cache is not None else None
+    if value is None:
+        value = slot_rating(effective_stats(t, player, ctx), pos, player.positions)
+        if cache is not None:
+            cache[key] = value
     if weighted:
         for fn in _weights.values():
             value *= fn(t, player, ctx)
@@ -49,6 +58,7 @@ def auto_select(t, team_id, fixture=None) -> dict:
     positions = list(SLOT_POSITIONS)
     problems = []
     used = set()
+    ratings = {}
 
     def pick(slot, candidates_positions):
         best = None
@@ -57,7 +67,7 @@ def auto_select(t, team_id, fixture=None) -> dict:
                 if p.pid in used:
                     continue
                 for pos in candidates_positions:
-                    s = _score(t, p, team_id, slot, pos, fixture)
+                    s = _score(t, p, team_id, slot, pos, fixture, cache=ratings)
                     if best is None or s > best[0]:
                         best = (s, p, pos)
             if best:
@@ -120,8 +130,10 @@ def pick_roles(t, team_id, players, current=None) -> dict:
     return roles
 
 
-def validate(t, team_id, sel) -> tuple:
-    """(errors, warnings). Errors make the selection unplayable."""
+def validate(t, team_id, sel, availability=True) -> tuple:
+    """(errors, warnings). Errors make the selection unplayable.
+    `availability=False`: unavailable players are not reported (a default
+    lineup, covered before each match)."""
     entry = t.teams[team_id]
     pids = sel.get("players", [])
     positions = sel.get("positions") or SLOT_POSITIONS
@@ -135,7 +147,7 @@ def validate(t, team_id, sel) -> tuple:
         if p is None or pid not in entry.squad:
             errors.append(f"slot {slot + 1}: not in the squad")
             continue
-        reason = unavailable_reason(t, p)
+        reason = unavailable_reason(t, p) if availability else None
         if reason:
             errors.append(f"{p.name}: {reason}")
         pos = positions[slot] if slot < len(positions) else SLOT_POSITIONS[slot]
@@ -149,11 +161,11 @@ def validate(t, team_id, sel) -> tuple:
     return errors, warnings
 
 
-def repair(t, team_id, fixture=None) -> list:
-    """Replace selected players who are no longer available with the best
-    available cover for their slot. Returns [(out_pid, in_pid)]."""
+def cover(t, team_id, sel, fixture=None) -> tuple:
+    """(players, [(out_pid, in_pid)]): `sel`'s players with everyone no
+    longer available replaced by the best available cover for the slot.
+    `sel` itself is left alone."""
     entry = t.teams[team_id]
-    sel = entry.selection
     pids = list(sel.get("players", []))
     positions = list(sel.get("positions") or SLOT_POSITIONS)
     changes = []
@@ -171,6 +183,14 @@ def repair(t, team_id, fixture=None) -> list:
         pids[slot] = sub.pid
         used.add(sub.pid)
         changes.append((pid, sub.pid))
+    return pids, changes
+
+
+def repair(t, team_id, fixture=None) -> list:
+    """Replace selected players who are no longer available with the best
+    available cover for their slot. Returns [(out_pid, in_pid)]."""
+    sel = t.teams[team_id].selection
+    pids, changes = cover(t, team_id, sel, fixture)
     if changes:
         sel["players"] = pids
         sel["roles"] = pick_roles(t, team_id, pids, sel.get("roles"))
@@ -179,10 +199,14 @@ def repair(t, team_id, fixture=None) -> list:
 
 def prepare(t, team_id, fixture=None) -> list:
     """Make the team's selection ready for `fixture`: AI teams re-pick,
-    human teams keep theirs (repaired, or auto-picked if they never chose).
-    Returns the repair changes for a human team."""
+    human teams start again from their default lineup (tournament/lineups.py),
+    covered for anyone unavailable — or are auto-picked when they asked for
+    it or never chose. Returns the cover changes for a human team."""
+    from . import lineups
     entry = t.teams[team_id]
-    if entry.human and entry.selection.get("manual") and entry.selection.get("players"):
+    if entry.human and not lineups.is_auto(entry):
+        entry.selection = dict(copy.deepcopy(lineups.default(entry)), manual=True)
+        entry.selection.setdefault("set_plays", dict(entry.set_plays))
         return repair(t, team_id, fixture)
     entry.selection = auto_select(t, team_id, fixture)
     return []

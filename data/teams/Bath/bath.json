@@ -21,7 +21,7 @@
      "frontKitFile": "kits_2023_2/home_front.webp",
      "backKitFile": "kits_2023_2/home_back.webp",
      "previewFile": "kits_2023_2/home_preview.png",
-     "color": "",
+     "color": "#0c34e0",
      "shirtName": {
       "color": "#ffffff",
       "area": [
@@ -36,7 +36,7 @@
      "frontKitFile": "kits_2023_2/away_front.webp",
      "backKitFile": "kits_2023_2/away_back.webp",
      "previewFile": "kits_2023_2/away_preview.png",
-     "color": "",
+     "color": "#898992",
      "shirtName": {
       "color": "#ffffff",
       "area": [
@@ -141,7 +141,7 @@
      "frontKitFile": "kits_2024_2/home_front.webp",
      "backKitFile": "kits_2024_2/home_back.webp",
      "previewFile": "kits_2024_2/home_preview.png",
-     "color": "",
+     "color": "#053c7d",
      "shirtName": {
       "color": "#ffffff",
       "area": [
@@ -156,7 +156,7 @@
      "frontKitFile": "kits_2024_2/away_front.webp",
      "backKitFile": "kits_2024_2/away_back.webp",
      "previewFile": "kits_2024_2/away_preview.png",
-     "color": "",
+     "color": "#cbb74e",
      "shirtName": {
       "area": [
        0.1551,
@@ -249,7 +249,7 @@
      "frontKitFile": "kits_2009/home_front.webp",
      "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2009/home_preview.png",
-     "color": "",
+     "color": "#212124",
      "model3d": {
       "fit": "loose"
      }
@@ -258,7 +258,7 @@
      "frontKitFile": "kits_2009/away_front.webp",
      "backKitFile": "kits_2009/away_back.webp",
      "previewFile": "kits_2009/away_preview.png",
-     "color": "",
+     "color": "#dadad7",
      "model3d": {
       "fit": "loose"
      }
@@ -339,7 +339,7 @@
      "frontKitFile": "kits_2010/home_front.webp",
      "backKitFile": "kits_2010/home_back.webp",
      "previewFile": "kits_2010/home_preview.png",
-     "color": "",
+     "color": "#1e201e",
      "model3d": {
       "collar": "stand"
      }
@@ -348,7 +348,7 @@
      "frontKitFile": "kits_2010/away_front.webp",
      "backKitFile": "kits_2010/away_back.webp",
      "previewFile": "kits_2010/away_preview.png",
-     "color": "",
+     "color": "#302951",
      "model3d": {
       "collar": "stand"
      }
@@ -413,33 +413,33 @@
    "type": "club",
    "category": "Premiership",
    "group": "england",
-   "ball": "",
-   "banners": "",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
    "pads": "",
    "logos": {
-    "main": "",
-    "frontend": "",
-    "small": "",
-    "left": "",
-    "right": ""
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
    },
    "kits": {
     "home": {
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": ""
+     "color": "#082190"
     },
     "away": {
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": ""
+     "color": "#b8bab3"
     }
    },
    "roles": {
-    "captain": "",
-    "viceCaptain": "",
+    "captain": "144314",
+    "viceCaptain": "106493",
     "longGK": "10542",
     "shortGK": "10542",
     "longPunt": "10542",
@@ -527,13 +527,13 @@
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": ""
+     "color": "#082190"
     },
     "away": {
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": ""
+     "color": "#b8bab3"
     }
    },
    "roles": {
@@ -626,7 +626,7 @@
      "frontKitFile": "kits_2019/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
-     "color": "",
+     "color": "#0407a7",
      "model3d": {
       "collar": "stand"
      }
@@ -635,7 +635,7 @@
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": "",
+     "color": "#1920c3",
      "model3d": {
       "collar": "stand"
      }
@@ -731,13 +731,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#0633e4"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#e8e8e7"
     }
    },
    "roles": {

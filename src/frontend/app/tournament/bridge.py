@@ -20,8 +20,8 @@ from shared.log import get_logger
 from app import competition_branding
 from app.state import MatchConfig
 
-from . import weather
-from .engine import team_variant
+from . import trophy, weather
+from .engine import kit_variant
 from .effects import MatchContext, effective_record, effective_stats, is_available
 from .model import MatchResult, PlayerLine, SideResult
 from .simulator import settle_knockout_draw
@@ -73,6 +73,24 @@ def editable_squad(t, fixture, tid):
     return players, lineup, to_pid
 
 
+def _game_stage(t, fixture, match_type) -> str:
+    """The .mis matchsubtype (the game's competition stage) of a fixture. The
+    game's competition commentary and intros need a stage: a competition
+    match at stage 0 ("none") gets none of them — quick match never sends
+    one (pool / quarter / semi / final). A table stage is "pool" (many
+    templates say "none" there, the Six Nations ones all of them), a final
+    "final"; a knockout round the template leaves at "none" keeps it."""
+    sub = fixture.match_subtype if fixture.match_subtype in gsv.match_subtype else "none"
+    if match_type == "exhibition" or sub != "none":
+        return sub
+    if fixture.final:
+        return "final"
+    stage = t.stage(fixture.stage_id) if fixture.stage_id else None
+    if stage is not None and stage.kind == "round_robin":
+        return "pool"
+    return sub
+
+
 def to_match_config(ds, t, fixture) -> MatchConfig:
     cfg = MatchConfig()
     humans = []
@@ -84,7 +102,9 @@ def to_match_config(ds, t, fixture) -> MatchConfig:
         slot.kit_index = 0 if side == "home" or len(kits) < 2 else 1
         # the competition's kit version (a World Cup patch) when the kit has
         # one — independent of whether the team has a squad for it
-        slot.kit_variant = team_variant(t.template, tid)
+        kit_template = dict(t.template, id=t.template.get("id") or t.template_id)
+        stored = info.get("kits", {}).get(kits[slot.kit_index]) if kits else None
+        slot.kit_variant = kit_variant(kit_template, tid, stored or {})
         slot.lineup, slot.players = side_lineup(t, fixture, tid)
         if entry.human:
             humans.append(side)
@@ -105,9 +125,16 @@ def to_match_config(ds, t, fixture) -> MatchConfig:
     cfg.halftime_length = opts.get("halftime_length", "5m")
     tpl = t.template
     cfg.match_type = tpl.get("match_type", "exhibition") if tpl.get("match_type") in gsv.match_type else "exhibition"
-    cfg.match_subtype = fixture.match_subtype if fixture.match_subtype in gsv.match_subtype else "none"
-    if fixture.final and tpl.get("trophy_lift", True):
-        cfg.trophy_lift = "on"
+    cfg.match_subtype = _game_stage(t, fixture, cfg.match_type)
+    if tpl.get("trophy_lift", True):
+        if fixture.final:
+            cfg.trophy_lift = "on"
+        else:
+            # no final: the match that decides the title (tournament/trophy.py)
+            by_result = trophy.lifters(t, fixture)
+            if by_result and any(by_result.values()):
+                cfg.trophy_lift = "on"
+                cfg.trophy_lifter = trophy.lifter_attr(by_result)
     branding = tpl.get("branding")
     if branding and branding in ds.tournaments:
         # The template's own season's textures (e.g. the RWC 2023 template
@@ -142,6 +169,31 @@ def _apply_weather(ds, t, fixture, cfg):
     cfg.breath = fc["breath"]
     if fc["roof_closed"]:
         cfg.wind_power = 0           # calm under the roof, whatever Settings > Wind says
+
+
+_GAME_KIND = {"try": "try", "conversion": "conversion", "penalty": "penalty", "drop_goal": "drop"}
+
+
+def game_minute(clock) -> int:
+    """Match minute (1-based, as a scoreboard reads it) of a displayed clock in seconds."""
+    return int(float(clock or 0) // 60) + 1
+
+
+def _game_events(t, fixture, result) -> list:
+    """The scores the game's clock timed -> [{minute, team, kind, pid}]; empty
+    when the clock could not be read (result["events"] is None)."""
+    out = []
+    for ev in (result or {}).get("events") or []:
+        key = ev.get("team")
+        tid = fixture.home if key == "team_A" else fixture.away
+        roster_ids = gsv.players_roster_id.get(key, [])
+        sel = t.teams[tid].selection.get("players", [])
+        rid = ev.get("id")
+        slot = roster_ids.index(rid) if rid in roster_ids else ev.get("slot", -1)
+        kind = _GAME_KIND.get(ev.get("type"))
+        if kind and 0 <= slot < len(sel):
+            out.append({"minute": game_minute(ev.get("clock")), "team": tid, "kind": kind, "pid": sel[slot]})
+    return sorted(out, key=lambda e: e["minute"])
 
 
 def from_game_result(t, fixture, result: dict, rng) -> MatchResult:
@@ -190,6 +242,7 @@ def from_game_result(t, fixture, result: dict, rng) -> MatchResult:
         sides.append(SideResult(team_id=tid, players=lines,
                                 stats=dict((result or {}).get(key, {}).get("stats", {}))))
     mr = MatchResult(home=sides[0], away=sides[1], source="game",
+                     events=_game_events(t, fixture, result),
                      extra={"raw_injury": raw_injury})
     if fixture.knockout and mr.home.points == mr.away.points:
         def kickers(tid):

@@ -39,6 +39,16 @@ STAT_ROWS = [
 ]
 
 
+def _times(result, team):
+    """{(roster id, score type): [minute, ...]} of the scores the game's clock
+    timed (none when the clock was unreadable)."""
+    out = {}
+    for ev in (result or {}).get("events") or []:
+        if ev.get("team") == team:
+            out.setdefault((ev.get("id"), ev.get("type")), []).append(int(float(ev.get("clock") or 0) // 60) + 1)
+    return {k: sorted(v) for k, v in out.items()}
+
+
 class MatchReport(QWidget):
     """The result of a game as the game reported it: the scoreline (unless
     `scoreline=False`), an interrupted-match banner, the statistics and each
@@ -152,8 +162,10 @@ class MatchReport(QWidget):
         self.stats.set_rows([(label, fn(hs, hst), fn(as_, ast)) for label, fn in STAT_ROWS])
         self.stats.reveal()
 
-        self._fill_scorers(self.home_scorers[1], result.get("team_A", {}).get("players", []))
-        self._fill_scorers(self.away_scorers[1], result.get("team_B", {}).get("players", []))
+        self._fill_scorers(self.home_scorers[1], result.get("team_A", {}).get("players", []),
+                           _times(result, "team_A"))
+        self._fill_scorers(self.away_scorers[1], result.get("team_B", {}).get("players", []),
+                           _times(result, "team_B"))
 
     def _set_status(self, result):
         """Banner under the scoreline: blank at full time, a warning when the
@@ -179,7 +191,8 @@ class MatchReport(QWidget):
             if not pix.isNull():
                 label.setPixmap(pix.scaled(100, 100, Qt.KeepAspectRatio, Qt.SmoothTransformation))
 
-    def _fill_scorers(self, holder, players):
+    def _fill_scorers(self, holder, players, times=None):
+        times = times or {}
         while holder.count():
             item = holder.takeAt(0)
             if item.widget():
@@ -188,14 +201,16 @@ class MatchReport(QWidget):
         scorers = []
         for p in players:
             events = []
-            if p.get("tries"):
-                events.append(f"TRY ×{p['tries']}" if p["tries"] > 1 else "TRY")
-            if p.get("conversions_scored"):
-                events.append(f"CON ×{p['conversions_scored']}")
-            if p.get("penalties_scored"):
-                events.append(f"PEN ×{p['penalties_scored']}")
-            if p.get("drop_goals"):
-                events.append(f"DROP ×{p['drop_goals']}")
+            for field, label, kind in (("tries", "TRY", "try"), ("conversions_scored", "CON", "conversion"),
+                                       ("penalties_scored", "PEN", "penalty"), ("drop_goals", "DROP", "drop_goal")):
+                n = p.get(field)
+                if not n:
+                    continue
+                mins = times.get((p.get("id"), kind), [])
+                if len(mins) == n:
+                    events.append(f"{label} " + " ".join(f"{m}'" for m in mins))
+                else:
+                    events.append(f"{label} ×{n}" if n > 1 else label)
             if events:
                 scorers.append((p.get("name", "—"), " · ".join(events)))
 

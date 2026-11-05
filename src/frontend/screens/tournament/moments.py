@@ -150,10 +150,10 @@ def moments_after(ds, t, before: Before, done, game=None) -> list:
 def play_moments(host, moments, on_done=None):
     """Play the overlays one after the other over `host`; on_done once the
     last one closes (at once when there are none)."""
+    # No gc.collect() first: a full collection here froze the screen just
+    # before the first moment (~70 ms on a fast PC). Collection is held off
+    # while a moment moves anyway (_hold_gc) and comes back once it settles.
     queue = list(moments)
-    if queue and motion.enabled():
-        # what the match left behind goes now, not halfway through a moment
-        gc.collect()
 
     def nxt():
         if not queue:
@@ -204,6 +204,7 @@ class MomentOverlay(QWidget):
         self.raise_()
         self.setFocus(Qt.OtherFocusReason)
         if motion.enabled():
+            motion.hold(self)
             self._clock.start()
             self._pulse.start()
             self._hold_gc()
@@ -276,6 +277,7 @@ class MomentOverlay(QWidget):
         """The final frame is on: the hint keeps breathing at a low rate,
         and a moment that closes by itself starts counting."""
         self._release_gc()
+        motion.release(self)
         if motion.enabled():
             self._timer.setInterval(50)
             if not self._timer.isActive():
@@ -293,6 +295,7 @@ class MomentOverlay(QWidget):
         self._closing = True
         self._sync_opaque()
         if motion.enabled():
+            motion.hold(self)
             self._close_ms = 0
             self._clock.restart()
             self._timer.setInterval(FRAME_MS)
@@ -303,6 +306,7 @@ class MomentOverlay(QWidget):
     def _finish(self):
         self._timer.stop()
         self._release_gc()
+        motion.release(self)
         host = self.parentWidget()
         if host is not None:
             host.removeEventFilter(self)
@@ -454,6 +458,7 @@ class MatchdayRecap(MomentOverlay):
 
     def __init__(self, ds, t, before, day, game=None):
         super().__init__(ds, t)
+        self._scores = {}
         humans = set(human_ids(t))
         played = [f for f in t.fixtures if f.day == day and f.played]
         self.mine = next((f for f in reversed(played) if f.home in humans or f.away in humans), None)
@@ -561,6 +566,16 @@ class MatchdayRecap(MomentOverlay):
     def backdrop_alpha(self):
         return 1.0          # nothing of the screen behind, from the first frame
 
+    def _score(self, f):
+        """(home points, away points, winner) of a fixture, worked out once:
+        the points are sums over every player line, and a frame needs them
+        for each result row (a few hundred thousand sums over a recap)."""
+        hit = self._scores.get(id(f))
+        if hit is None:
+            r = f.result
+            hit = self._scores[id(f)] = (r.home.points, r.away.points, r.winner_id())
+        return hit
+
     def _group_name(self, f):
         st = self.t.stage(f.stage_id)
         g = st.group(f.group) if st else None
@@ -570,7 +585,7 @@ class MatchdayRecap(MomentOverlay):
         """WIN / DEFEAT / DRAW of the focus team (FORFEITED when it left the
         match), with its colour."""
         r = self.mine.result
-        w = r.winner_id()
+        w = self._score(self.mine)[2]
         if w is None:
             return "DRAW", WARN
         if w == self.focus_team:
@@ -614,7 +629,8 @@ class MatchdayRecap(MomentOverlay):
         cy = y + 104
         slide = 80 * (1 - _ease(_phase(ms, 300, 520)))
         for tid, cx in ((f.home, card.x() + 120 + -slide), (f.away, card.right() - 120 + slide)):
-            dim = r.winner_id() is not None and r.winner_id() != tid
+            win = self._score(f)[2]
+            dim = win is not None and win != tid
             self.crest(p, tid, cx, cy, 128, opacity=a * (0.55 if dim and self.settled else 1.0))
             name = self.t.team_name(tid).upper()
             self.text(p, QRectF(cx - 150, cy + 72, 300, 30), name, 18,
@@ -622,7 +638,8 @@ class MatchdayRecap(MomentOverlay):
                       track=1.0, opacity=a)
         # score, counting up
         sp = _ease(_phase(ms, 520, 760))
-        hs, as_ = int(round(r.home.points * sp)), int(round(r.away.points * sp))
+        hp, ap, _win = self._score(f)
+        hs, as_ = int(round(hp * sp)), int(round(ap * sp))
         self.text(p, QRectF(card.x(), cy - 50, card.width(), 90), f"{hs}  –  {as_}", 64, track=2.0,
                   opacity=_ease(_phase(ms, 450, 200)))
         # a knockout draw: how it was decided
@@ -681,7 +698,7 @@ class MatchdayRecap(MomentOverlay):
         if f.home in self.humans or f.away in self.humans:
             p.fillRect(QRectF(rect.x(), rect.y(), 3, rect.height()), QColor(YOU_TINT))
         r = f.result
-        win = r.winner_id()
+        hp, ap, win = self._score(f)
         mid = rect.center().x()
         st = self.t.stage(f.stage_id)
         if st and len(st.groups) > 1 and f.group:
@@ -707,7 +724,7 @@ class MatchdayRecap(MomentOverlay):
         p.setFont(tracked_font(FONT_DISPLAY, 15, QFont.Bold, 0.5))
         p.setPen(QColor(INFO if r.source == "real" else FG_PRIMARY))
         p.drawText(QRectF(mid - 44, rect.y(), 88, rect.height()), Qt.AlignCenter,
-                   f"{r.home.points} – {r.away.points}")
+                   f"{hp} – {ap}")
         p.restore()
 
 
@@ -783,7 +800,7 @@ class EliminationCard(MomentOverlay):
         if self.summary:
             self.text(p, QRectF(0, cy + 214, w, 30), self.summary.upper(), 15, FG_SECONDARY,
                       weight=QFont.DemiBold, track=1.6, opacity=_ease(_phase(ms, 900, 500)))
-        self.text(p, QRectF(0, cy + 252, w, 26), "SIMULATE THE REST TO SEE WHO LIFTS THE TROPHY", 12,
+        self.text(p, QRectF(0, cy + 252, w, 26), "SIMULATE THE REST TO FIND THE WINNER", 12,
                   FG_MUTED, weight=QFont.DemiBold, track=1.8, opacity=_ease(_phase(ms, 1100, 300)))
 
 

@@ -12,8 +12,14 @@ the plain background colour, as the screens' bodies do.
 Nothing happens with animations off (user_prefs.animations, Settings >
 Advanced): callers never branch on it themselves; other Qt animations take
 their duration from ms().
+
+Running animations say so (hold/release, or track() on a Qt animation):
+idle-time work — prewarming caches, building hidden screens — asks
+animating() first and waits (when_idle), so it never lands mid-motion.
 """
-from PyQt5.QtCore import QEasingCurve, QEvent, Qt, QTimer, QVariantAnimation
+import weakref
+
+from PyQt5.QtCore import QAbstractAnimation, QEasingCurve, QEvent, QObject, Qt, QTimer, QVariantAnimation
 from PyQt5.QtGui import QColor, QPainter
 from PyQt5.QtWidgets import QWidget
 
@@ -23,6 +29,76 @@ from ui.theme import BG_BASE
 
 def enabled() -> bool:
     return bool(getattr(user_prefs, "animations", True))
+
+
+# ── what is moving right now ─────────────────────────────────────────────
+_running = weakref.WeakSet()
+
+
+def hold(obj):
+    """`obj` (any QObject) is animating until release(obj) or its deletion."""
+    _running.add(obj)
+
+
+def release(obj):
+    _running.discard(obj)
+
+
+def animating() -> bool:
+    for obj in list(_running):
+        try:
+            if isinstance(obj, QAbstractAnimation):
+                if obj.state() == QAbstractAnimation.Running:
+                    return True
+            elif obj.isVisible() if isinstance(obj, QWidget) else True:
+                return True
+        except RuntimeError:            # the C++ side is gone
+            _running.discard(obj)
+    return False
+
+
+def track(anim):
+    """Count a QAbstractAnimation as animating while it runs."""
+    hold(anim)
+    return anim
+
+
+def when_idle(fn, delay=0, poll=120, settle=250):
+    """Call `fn` once nothing has animated for `settle` ms (checked every
+    `poll` ms), at the earliest after `delay` ms."""
+    state = {"quiet": 0}
+
+    def check():
+        if animating():
+            state["quiet"] = 0
+        else:
+            state["quiet"] += poll
+            if state["quiet"] >= settle:
+                fn()
+                return
+        QTimer.singleShot(poll, check)
+    QTimer.singleShot(delay, check)
+
+
+def after_paint(widget, fn, delay=0):
+    """Call `fn` once `widget` has been painted (then `delay` ms more): an
+    animation started from here begins on a frame the user can see, rather
+    than spending its first frames behind the screen's own first paint.
+    A hidden widget waits for the paint that comes with showing it."""
+    if widget is None:
+        QTimer.singleShot(delay, fn)
+        return
+
+    class _Once(QObject):
+        def eventFilter(self, watched, event):
+            if event.type() == QEvent.Paint:
+                watched.removeEventFilter(self)
+                QTimer.singleShot(delay, fn)
+                self.deleteLater()
+            return False
+    f = _Once(widget)
+    widget.installEventFilter(f)
+    widget.update()
 
 
 def ms(duration):
@@ -45,6 +121,7 @@ class _Curtain(QWidget):
         target.installEventFilter(self)
         self.show()
         self.raise_()
+        hold(self)
         self._anim = QVariantAnimation(self)
         self._anim.setDuration(ms)
         self._anim.setStartValue(1.0)
@@ -66,6 +143,7 @@ class _Curtain(QWidget):
         self.update()
 
     def _done(self):
+        release(self)
         target = self.parentWidget()
         if target is not None:
             target.removeEventFilter(self)

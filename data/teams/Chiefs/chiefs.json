@@ -99,7 +99,7 @@
      "frontKitFile": "kits_2010/home_front.webp",
      "backKitFile": "kits_2010/home_back.webp",
      "previewFile": "kits_2010/home_preview.png",
-     "color": "",
+     "color": "#202120",
      "model3d": {
       "collar": "stand"
      }
@@ -108,7 +108,7 @@
      "frontKitFile": "kits_2010/away_front.webp",
      "backKitFile": "kits_2010/away_back.webp",
      "previewFile": "kits_2010/away_preview.png",
-     "color": "",
+     "color": "#d0d3cf",
      "model3d": {
       "collar": "stand"
      }
@@ -280,13 +280,13 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": ""
+     "color": "#1e1a19"
     },
     "away": {
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": ""
+     "color": "#e6e6e5"
     }
    },
    "roles": {
@@ -370,13 +370,13 @@
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": ""
+     "color": "#171515"
     },
     "away": {
      "frontKitFile": "kits_2024/away_front.webp",
      "backKitFile": "kits_2024/away_back.webp",
      "previewFile": "kits_2024/away_preview.png",
-     "color": ""
+     "color": "#dddcdb"
     }
    },
    "roles": {
@@ -535,7 +535,7 @@
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": "",
+     "color": "#302e2a",
      "model3d": {
       "collar": "stand"
      }
@@ -544,7 +544,7 @@
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": "",
+     "color": "#f0f0ef",
      "model3d": {
       "collar": "stand"
      }
@@ -632,7 +632,7 @@
      "frontKitFile": "kits_2019/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
-     "color": "",
+     "color": "#1f1d1b",
      "model3d": {
       "collar": "stand"
      }
@@ -641,7 +641,7 @@
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": "",
+     "color": "#eff0ee",
      "model3d": {
       "collar": "stand"
      }
@@ -900,7 +900,7 @@
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": "",
+     "color": "#302e2a",
      "model3d": {
       "collar": "stand"
      }
@@ -909,7 +909,7 @@
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": "",
+     "color": "#f0f0ef",
      "model3d": {
       "collar": "stand"
      }
@@ -975,6 +975,97 @@
     "155701"
    ],
    "enabled": false,
+   "primaryStadium": "52"
+  },
+  "2013": {
+   "name": "Chiefs",
+   "type": "club",
+   "category": "Super 14",
+   "group": "southern_hemisphere",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2013/home_front.webp",
+     "backKitFile": "kits_2013/home_back.webp",
+     "previewFile": "kits_2013/home_preview.png",
+     "color": "#232320",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2010/away_front.webp",
+     "backKitFile": "kits_2010/away_back.webp",
+     "previewFile": "kits_2010/away_preview.png",
+     "color": "#d0d3cf",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "143917",
+    "viceCaptain": "156125",
+    "longGK": "143917",
+    "shortGK": "143917",
+    "longPunt": "143917",
+    "shortPunt": "143917",
+    "kickoff": "143917"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "156124",
+    "153319",
+    "155495",
+    "156125",
+    "155496",
+    "142956",
+    "142760",
+    "156128",
+    "143200",
+    "143917",
+    "143265",
+    "156147",
+    "142856",
+    "155610",
+    "152746",
+    "155507",
+    "155506",
+    "155477",
+    "155497",
+    "143461",
+    "148057",
+    "153996",
+    "155566",
+    "129337",
+    "152892",
+    "103753",
+    "142738",
+    "155499",
+    "143135",
+    "155505",
+    "155523",
+    "155522",
+    "155525",
+    "156126",
+    "155009",
+    "156186"
+   ],
+   "enabled": true,
    "primaryStadium": "52"
   }
  }

@@ -21,13 +21,13 @@
      "frontKitFile": "kits_2009/home_wc_front.webp",
      "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2009/home_preview.png",
-     "color": ""
+     "color": "#970805"
     },
     "away": {
      "frontKitFile": "kits_2009/away_wc_front.webp",
      "backKitFile": "kits_2009/away_back.webp",
      "previewFile": "kits_2009/away_preview.png",
-     "color": ""
+     "color": "#b9b9ae"
     }
    },
    "roles": {
@@ -105,13 +105,13 @@
      "frontKitFile": "kits_2009/home_front.webp",
      "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2009/home_preview_2.png",
-     "color": ""
+     "color": "#980705"
     },
     "away": {
      "frontKitFile": "kits_2009/away_front.webp",
      "backKitFile": "kits_2009/away_back.webp",
      "previewFile": "kits_2009/away_preview_2.png",
-     "color": ""
+     "color": "#bbb9ae"
     }
    },
    "roles": {
@@ -190,7 +190,7 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview_2.png",
-     "color": "",
+     "color": "#e50719",
      "variants": {
       "rwc_2023": {
        "label": "RWC 2023",
@@ -204,7 +204,7 @@
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview_2.png",
-     "color": "",
+     "color": "#dd0618",
      "variants": {
       "rwc_2023": {
        "label": "RWC 2023",
@@ -343,13 +343,13 @@
      "frontKitFile": "kits_2009/home_front.webp",
      "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#980705"
     },
     "away": {
      "frontKitFile": "kits_2009/away_front.webp",
      "backKitFile": "kits_2009/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#bbb9ae"
     }
    },
    "roles": {
@@ -430,13 +430,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview_2.png",
-     "color": ""
+     "color": "#e50719"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview_2.png",
-     "color": ""
+     "color": "#dd0618"
     }
    },
    "roles": {
@@ -515,13 +515,13 @@
      "frontKitFile": "kits_2016/home_front.webp",
      "backKitFile": "kits_2016/home_back.webp",
      "previewFile": "kits_2016/home_preview.png",
-     "color": ""
+     "color": "#df0100"
     },
     "away": {
      "frontKitFile": "kits_2016/away_front.webp",
      "backKitFile": "kits_2016/away_back.webp",
      "previewFile": "kits_2016/away_preview.png",
-     "color": ""
+     "color": "#bbbbb2"
     }
    },
    "roles": {
@@ -605,13 +605,13 @@
      "frontKitFile": "kits_2020/home_front.webp",
      "backKitFile": "kits_2020/home_back.webp",
      "previewFile": "kits_2020/home_preview.png",
-     "color": ""
+     "color": "#c40201"
     },
     "away": {
      "frontKitFile": "kits_2020/away_front.webp",
      "backKitFile": "kits_2020/away_back.webp",
      "previewFile": "kits_2020/away_preview.png",
-     "color": ""
+     "color": "#d00804"
     }
    },
    "roles": {
@@ -692,13 +692,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview_2.png",
-     "color": ""
+     "color": "#e50719"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview_2.png",
-     "color": ""
+     "color": "#dd0618"
     }
    },
    "roles": {
@@ -769,13 +769,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview_2.png",
-     "color": ""
+     "color": "#e50719"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview_2.png",
-     "color": ""
+     "color": "#dd0618"
     }
    },
    "roles": {
@@ -842,55 +842,6 @@
     "148291",
     "148292"
    ],
-   "variant": {
-    "world_cup": {
-     "label": "Rugby World Cup 2023",
-     "players": [
-      "145384",
-      "146602",
-      "144313",
-      "144157",
-      "144960",
-      "145632",
-      "146132",
-      "145478",
-      "145468",
-      "146325",
-      "146352",
-      "144257",
-      "142315",
-      "145965",
-      "144391",
-      "144539",
-      "145246",
-      "142337",
-      "155119",
-      "146308",
-      "143650",
-      "145404",
-      "145422",
-      "146776",
-      "146666",
-      "146777",
-      "145418",
-      "145420",
-      "146778",
-      "146425",
-      "146717",
-      "11273",
-      "146125"
-     ],
-     "roles": {
-      "captain": "145468",
-      "viceCaptain": "146325",
-      "longGK": "146325",
-      "shortGK": "146325",
-      "longPunt": "146325",
-      "shortPunt": "146325",
-      "kickoff": "146325"
-     }
-    }
-   },
    "primaryStadium": "62"
   },
   "2017": {
@@ -914,13 +865,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview_2.png",
-     "color": ""
+     "color": "#e50719"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview_2.png",
-     "color": ""
+     "color": "#dd0618"
     }
    },
    "roles": {
@@ -998,13 +949,13 @@
      "frontKitFile": "kits_2018_2/home_front.webp",
      "backKitFile": "kits_2018_2/home_back.webp",
      "previewFile": "kits_2018_2/home_preview.png",
-     "color": ""
+     "color": "#c40101"
     },
     "away": {
      "frontKitFile": "kits_2018_2/away_front.webp",
      "backKitFile": "kits_2020/away_back.webp",
      "previewFile": "kits_2018_2/away_preview.png",
-     "color": ""
+     "color": "#ebece8"
     }
    },
    "roles": {
@@ -1090,18 +1041,18 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview_2.png",
-     "color": ""
+     "color": "#e50719"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview_2.png",
-     "color": ""
+     "color": "#dd0618"
     }
    },
    "roles": {
     "captain": "155009",
-    "viceCaptain": "",
+    "viceCaptain": "145468",
     "longGK": "155026",
     "shortGK": "155026",
     "longPunt": "155026",
@@ -1172,13 +1123,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview_2.png",
-     "color": ""
+     "color": "#e50719"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview_2.png",
-     "color": ""
+     "color": "#dd0618"
     }
    },
    "roles": {
@@ -1248,18 +1199,18 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview_2.png",
-     "color": ""
+     "color": "#e50719"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview_2.png",
-     "color": ""
+     "color": "#dd0618"
     }
    },
    "roles": {
-    "captain": "",
-    "viceCaptain": "",
+    "captain": "143650",
+    "viceCaptain": "144257",
     "longGK": "146717",
     "shortGK": "146717",
     "longPunt": "146717",
@@ -1297,7 +1248,7 @@
     "144157",
     "156462",
     "146125",
-    "158931",
+    "155119",
     "145965",
     "142315",
     "154191",

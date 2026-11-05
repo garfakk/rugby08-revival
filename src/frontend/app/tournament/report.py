@@ -74,13 +74,39 @@ def venue_name(ds, f) -> str:
     return info.get("name", "") if info else ""
 
 
-def _scorers(t, side, key):
+_EVENT_KIND = {"tries": "try", "conversions": "conversion", "penalties": "penalty", "drop_goals": "drop"}
+
+
+def _minutes(events, team_id, pid, kind):
+    return sorted(int(e["minute"]) for e in events or []
+                  if e.get("team") == team_id and e.get("pid") == pid and e.get("kind") == kind
+                  and int(e.get("minute") or 0) > 0)
+
+
+def _scorers(t, side, key, events=None):
+    """"Name 12' 40'" per scorer; a count ("Name 2") when the times are unknown."""
     counts = Counter()
+    times = {}
     for line in side.players:
         n = getattr(line, key)
         if n and line.pid:
-            counts[t.player_name(line.pid)] += n
-    return ", ".join(f"{name}{f' {n}' if n > 1 else ''}" for name, n in counts.most_common())
+            name = t.player_name(line.pid)
+            counts[name] += n
+            times.setdefault(name, []).extend(_minutes(events, side.team_id, line.pid, _EVENT_KIND.get(key)))
+    parts = []
+    for name, n in counts.most_common():
+        mins = sorted(times.get(name, []))
+        if len(mins) == n:
+            parts.append(f"{name} " + " ".join(f"{m}'" for m in mins))
+        else:
+            parts.append(f"{name}{f' {n}' if n > 1 else ''}")
+    return ", ".join(parts)
+
+
+def card_label(t, line, events, side) -> str:
+    kind = "red" if line.red_cards else "yellow"
+    mins = _minutes(events, side.team_id, line.pid, kind)
+    return f"{t.player_name(line.pid)} ({kind}{' ' + ' '.join(f'{m}' + chr(39) for m in mins) if mins else ''})"
 
 
 def match_report(t, f) -> str:
@@ -96,17 +122,13 @@ def match_report(t, f) -> str:
         parts = []
         for key, label in (("tries", "Tries"), ("conversions", "Cons"), ("penalties", "Pens"),
                            ("drop_goals", "Drops")):
-            s = _scorers(t, side, key)
+            s = _scorers(t, side, key, r.events)
             if s:
                 parts.append(f"{label}: {s}")
         if side.penalty_tries:
             parts.append(f"Penalty tries: {side.penalty_tries}")
-        cards = []
-        for line in side.players:
-            if line.red_cards:
-                cards.append(f"{t.player_name(line.pid)} (red)")
-            elif line.yellow_cards:
-                cards.append(f"{t.player_name(line.pid)} (yellow)")
+        cards = [card_label(t, line, r.events, side) for line in side.players
+                 if line.red_cards or line.yellow_cards]
         if cards:
             parts.append("Cards: " + ", ".join(cards))
         hurt = [t.player_name(l.pid) for l in side.players if l.injured and l.pid]

@@ -98,7 +98,9 @@ def expand_pattern(path, n):
 def asset_status(root, rel, spec, check_size=False):
     """(state, detail, count) for a team asset path.
 
-    state: "empty" | "ok" | "missing" | "partial" | "size" | "archive" | "outside"
+    state: "empty" | "ok" | "missing" | "partial" | "size" | "archive" | "bad" | "outside"
+    A kit's .big/.fsh (spec "archive_entries") is read: "ok" with its
+    entries all there, "partial" short of them, "bad" when it will not read.
     An image of another size than the game's is "ok" (the mod resizes it); "size" only with `check_size`
     (the data audit in tests).
     """
@@ -129,7 +131,16 @@ def asset_status(root, rel, spec, check_size=False):
     if not os.path.isfile(full):
         return "missing", "file not found", 0
     if ext in (".fsh", ".big"):
-        return "archive", ext[1:].upper() + " archive", 1
+        want_entries = spec.get("archive_entries")
+        if not want_entries:
+            return "archive", ext[1:].upper() + " archive", 1
+        got = kit_files.archive_frame_count(full)
+        if not got:
+            return "bad", f"{ext[1:].upper()} not readable", 0
+        if got < want_entries:
+            return "partial", f"{ext[1:].upper()} {got}/{want_entries} entries", got
+        return "ok", ext[1:].upper() + (f" · {want_entries} entries" if want_entries > 1 else ""), \
+            frames or 1
     want = spec.get("size")
     if want and check_size:
         got = image_size(full)
@@ -145,6 +156,7 @@ STATUS_STYLE = {
     "partial": (WARN, "PARTIAL"),
     "size": (WARN, "SIZE"),
     "archive": (INFO, "ARCHIVE"),
+    "bad": (DANGER_LITE, "UNREADABLE"),
     "outside": (WARN, "OUTSIDE"),
 }
 
@@ -1336,8 +1348,11 @@ class AssetField(FieldBase):
         self._status = asset_status(self.root, self._value, self.spec)
         path = self._value.replace("%", "1", 1) if "%" in self._value else self._value
         full = os.path.join(self.root, path) if self._value else ""
+        if self.spec.get("archive_entries") and kit_files.is_archive(full):
+            full = kit_files.back_file(full) if self.spec.get("frames") else kit_files.front_file(full)
         ext = os.path.splitext(full)[1].lower()
-        self._thumb = load_pixmap(full, 96) if ext in (".png", ".jpg", ".jpeg", ".bmp") else QPixmap()
+        self._thumb = (load_pixmap(full, 96) if full and ext in (".png", ".jpg", ".jpeg", ".bmp")
+                       else QPixmap())
         self.setToolTip(f"{self.spec.get('note', '')}\n{os.path.join(self.root, self._value)}"
                         if self._value else self.spec.get("note", ""))
         self.update()
@@ -1862,7 +1877,8 @@ class FrameStrip(QWidget):
     def set_pattern(self, root, pattern):
         self.root, self.pattern = root or "", pattern or ""
         self._pix = []
-        if kit_files.is_strip(self.pattern):      # one file per shirt, unpacked
+        if kit_files.is_strip(self.pattern) or (      # one file per shirt, unpacked
+                self.pattern.lower().endswith(".fsh") and self.count == kit_files.BACK_COUNT):
             self.root, self.pattern = "", kit_files.back_pattern(os.path.join(self.root, self.pattern))
         if self.pattern:
             for i in range(1, self.count + 1):
@@ -2663,7 +2679,7 @@ def open_issues_popover(screen, anchor, issues, on_pick):
     for key, msg, sev in order:
         popup.add_row(msg, key, tag=sev.upper(), tag_color=SEVERITY_COLOR.get(sev))
     if not issues:
-        popup.add_row("nothing to fix — the game will read this record as written", None,
+        popup.add_row("nothing to fix", None,
                       disabled=True)
     popup.size_to(max(1, len(issues)))
     popup.picked.connect(lambda k: on_pick(k) if k is not None else None)

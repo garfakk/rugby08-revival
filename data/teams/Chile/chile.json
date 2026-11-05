@@ -19,14 +19,14 @@
     "home": {
      "frontKitFile": "kits_2024/home_front.png",
      "backKitFile": "kits_2024/home_back/home_back_%.png",
-     "previewFile": "",
-     "color": ""
+     "previewFile": "kits_2024/home_preview.png",
+     "color": "#072c8c"
     },
     "away": {
      "frontKitFile": "kits_2024/away_front.png",
      "backKitFile": "kits_2024/away_back/away_back_%.png",
-     "previewFile": "",
-     "color": ""
+     "previewFile": "kits_2024/away_preview.png",
+     "color": "#e5e4e4"
     }
    },
    "roles": {
@@ -49,7 +49,7 @@
     "158860",
     "158855",
     "158863",
-    "158864",
+    "152857",
     "158871",
     "158868",
     "158869",
@@ -87,7 +87,7 @@
       "158860",
       "158855",
       "158863",
-      "158864",
+      "152857",
       "158871",
       "158868",
       "158869",
@@ -149,14 +149,14 @@
     "home": {
      "frontKitFile": "kits_2024/home_front.png",
      "backKitFile": "kits_2024/home_back/home_back_%.png",
-     "previewFile": "",
-     "color": ""
+     "previewFile": "kits_2024/home_preview.png",
+     "color": "#072c8c"
     },
     "away": {
      "frontKitFile": "kits_2024/away_front.png",
      "backKitFile": "kits_2024/away_back/away_back_%.png",
-     "previewFile": "",
-     "color": ""
+     "previewFile": "kits_2024/away_preview.png",
+     "color": "#e5e4e4"
     }
    },
    "roles": {
@@ -192,13 +192,13 @@
     "158880",
     "158867",
     "158859",
-    "158864",
+    "158873",
     "158865",
     "158861",
     "158884",
     "158862",
     "158856",
-    "158873",
+    "152857",
     "158857",
     "158885",
     "158883",

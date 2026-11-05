@@ -297,9 +297,80 @@ def _decode_a8r8g8b8(data, width, height):
   return arr[..., [2, 1, 0, 3]].copy()  # BGRA -> RGBA
 
 
+def fsh_entries(data):
+  """[(tag, block bytes)] of an FSH file's bytes: each entry's whole block
+  (16-byte header, pixels and any attachment), in directory order."""
+  if data[:4] not in FSH_MAGICS:
+    raise ValueError(f"Not an FSH/SHPI file (magic={data[:4]!r})")
+  count = struct.unpack_from("<I", data, 8)[0]
+  records = [(data[16 + i * 8:20 + i * 8].decode("latin-1"),
+              struct.unpack_from("<I", data, 20 + i * 8)[0]) for i in range(count)]
+  ends = sorted(off for _, off in records)[1:] + [len(data)]
+  end_of = dict(zip(sorted(off for _, off in records), ends))
+  return [(tag, data[off:end_of[off]]) for tag, off in records]
+
+
+def build_fsh(header_id, entries):
+  """An FSH file from `header_id` (4 bytes, e.g. b"G359") and [(tag, block)]:
+  the blocks are laid out in order, 16-byte aligned after the directory."""
+  head = 16 + 8 * len(entries)
+  offset = (head + 15) // 16 * 16
+  directory, body = b"", b""
+  for tag, block in entries:
+    directory += tag.encode("latin-1")[:4].ljust(4, b"\0") + struct.pack("<I", offset + len(body))
+    pad = (-len(block)) % 16
+    body += block + b"\0" * pad
+  out = b"SHPI" + struct.pack("<I", offset + len(body)) + struct.pack("<I", len(entries)) + header_id[:4]
+  return out + directory + b"\0" * (offset - head) + body
+
+
+# Adboard sets: stadiums whose stock set has nine boards (the French club
+# grounds: Castres, Le Parc, Perpignan, La Beaujoire) look up ads7/ads8, which
+# a seven-board set (the World Cup one, forced everywhere by stadiumadsandpads)
+# lacks: the game shows its missing-texture image there.
+ADBOARD_TAGS = [f"ads{i}" for i in range(9)]
+ADBOARD_SPARES = {"ads7": "ads4", "ads8": "ads5"}     # same 256x256 boards
+
+
+def complete_adboards(data, spares=None):
+  """`data` (an adboard FSH) with every board ADBOARD_TAGS names: a missing
+  ads7/ads8 is taken from `spares` ({tag: block}) when given, else copied from
+  the set's own board of the same size. Returns the bytes (unchanged when
+  nothing is missing)."""
+  entries = fsh_entries(data)
+  have = {tag for tag, _ in entries}
+  missing = [t for t in ADBOARD_SPARES if t not in have]
+  if not missing:
+    return data
+  blocks = dict(entries)
+  for tag in missing:
+    block = (spares or {}).get(tag) or blocks.get(ADBOARD_SPARES[tag])
+    if block is None:
+      continue
+    entries.append((tag, block))
+  return build_fsh(data[12:16], entries)
+
+
 # Extract a bitmap asset from a .FSH file as a PIL RGBA image. The entry is
 # selected by `index` (position in the directory). The bitmap format and
 # dimensions are read from the entry header.
+def fsh_entry_image(block):
+  """PIL RGBA image of one fsh_entries() block (ValueError if its format
+  is not one the mod reads)."""
+  code_word, width, height = struct.unpack_from("<IHH", block, 0)
+  code = code_word & 0xFF
+  if code not in FSH_CODE_NAMES:
+    raise ValueError(f"Unsupported bitmap format 0x{code:02X}")
+  data = block[16:16 + _fsh_pixel_data_size(code, width, height)]
+  if code == FSH_CODE_A8R8G8B8:
+    rgba = _decode_a8r8g8b8(data, width, height)
+  elif code == FSH_CODE_DXT1:
+    rgba = _decode_dxt1(data, width, height)
+  else:
+    rgba = _decode_dxt5(data, width, height)
+  return Image.fromarray(rgba, 'RGBA')
+
+
 def extract_asset_from_fsh_file(fsh_file_path, index):
   with open(fsh_file_path, 'rb') as fsh_file:
     records = _read_fsh_directory(fsh_file)

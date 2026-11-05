@@ -20,13 +20,13 @@
      "frontKitFile": "kits_2009/home_front.webp",
      "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2009/home_preview.png",
-     "color": ""
+     "color": "#d5d7cd"
     },
     "away": {
      "frontKitFile": "kits_2009/away_front.webp",
      "backKitFile": "kits_2009/away_back.webp",
      "previewFile": "kits_2009/away_preview.png",
-     "color": "",
+     "color": "#b4b4a9",
      "model3d": {
       "collar": "stand"
      }

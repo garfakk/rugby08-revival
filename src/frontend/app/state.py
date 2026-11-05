@@ -472,6 +472,7 @@ class MatchConfig:
     haka_home: bool = False                # reR08 ENABLE_HAKA
     haka_away: bool = False
     trophy_lift: str = "stock"             # stock, off, on, <trophy name> — reR08 ENABLE_TROPHY_LIFT
+    trophy_lifter: str = ""                # who lifts per result, "" = the winner (tournament/trophy.py)
     stadium_flags: Optional[bool] = None   # None=stock, reR08 ENABLE_STADIUM_FLAGS otherwise
     kick_assist: bool = False              # reR08 ENABLE_EASY_GOALKICK (needs wind)
 

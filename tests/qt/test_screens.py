@@ -435,6 +435,45 @@ def test_player_editor_edit_save(window, qapp):
     window.show_main()
 
 
+def test_player_editor_star_marker(window, qapp):
+    """The Skills tab hides the star above the head (hide_star) apart from
+    the star ability, and shows it again when cleared."""
+    from screens.player_editor import TAB_SKILLS
+    pid = str(window.data.teams["10002"]["2024"]["players"][0])
+    window.open_player(pid, "2024")
+    _wait(qapp, lambda: window.screen_player_editor.record_id == pid, 10)
+    editor = window.screen_player_editor
+    tab = editor.tabs[TAB_SKILLS]
+    shown = [""] + list(tab.star_attribute.options)          # blank = "— none"
+    assert sum(1 for v in shown if v in ("", "0")) == 1      # listed once
+    tab.star_attribute._emit("5")
+    tab.star_marker._emit("yes")
+    stats = editor.session.working["stats"]["2024"]
+    assert stats["star_attribute"] == "5" and stats["hide_star"] == "yes"
+    tab.refresh()
+    assert tab.star_marker.value() == "yes"
+    tab.star_marker._emit("")
+    assert not editor.session.working["stats"]["2024"].get("hide_star")
+    # star commentary: an expert-mode field of its own
+    from shared.user_prefs import user_prefs
+    expert = user_prefs.expert_mode
+    try:
+        user_prefs.expert_mode = False
+        tab.refresh()
+        assert tab.star_voice.isHidden()
+        user_prefs.expert_mode = True
+        tab.refresh()
+        assert not tab.star_voice.isHidden()
+        tab.star_voice._emit("4")
+        assert editor.session.working["stats"]["2024"]["star_voice"] == "4"
+        editor.undo()
+    finally:
+        user_prefs.expert_mode = expert
+    editor.undo()
+    editor.undo()
+    window.show_main()
+
+
 def test_player_editor_all_seasons_box(window, qapp):
     """A card's ALL SEASONS box (ticked by default) sends its edits to every
     season; unticked, only the season shown changes."""

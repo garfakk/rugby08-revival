@@ -250,7 +250,7 @@ class TeamEditorScreen(EditorScreen):
 
         def check(key, rel, spec_key):
             state, detail, _ = asset_status(root, rel, ASSET_SPECS.get(spec_key))
-            if state in ("missing", "outside", "size"):
+            if state in ("missing", "outside", "size", "bad"):
                 issues.append((key, f"{key}: {detail}", "warn"))
             elif state == "partial":
                 issues.append((key, f"{key}: {detail}", "info"))
@@ -281,10 +281,7 @@ class TeamEditorScreen(EditorScreen):
             font = style["font"]
             if font and not SN.resolve_font(font, root)[2]:
                 out.append((f"shirtName.font.{name}", f"shirt names: the {name} kit's font {font} "
-                            f"is not found ({SN.DEFAULT_FONT} is used)", "warn"))
-            if kit.get("backKitFile", "").lower().endswith(".fsh"):
-                out.append((f"shirtNames.kits.{name}", f"shirt names: the {name} kit's back "
-                            "numbers are one .fsh file, names need images", "info"))
+                            f"was not found, using {SN.DEFAULT_FONT}", "warn"))
         return out
 
     def tab_for_issue(self, key):
@@ -360,8 +357,8 @@ class TeamEditorScreen(EditorScreen):
             more = f" (+{n - 1} more)" if n > 1 else ""
             other = (f"; also {', '.join(where(s) for s, _, _ in bad[1:])}"
                     if len(bad) > 1 else "")
-            raise SaveError(f"squad {where(season)} is incomplete — {first}{more}{other}. "
-                            "Fill every player slot 1-22 before saving.")
+            raise SaveError(f"squad {where(season)} is incomplete: {first}{more}{other}. "
+                            "Fill slots 1-22 before saving.")
         path = self.ds.teams_file_path.get(self.record_id)
         save_team(path, self.record_id, self.session.working)
         self.ds.teams[self.record_id] = copy.deepcopy(self.session.working)
@@ -444,7 +441,7 @@ class TeamEditorScreen(EditorScreen):
 
     def open_player(self, pid):
         if self._open_player_cb is None:
-            self.shell.footer.set_status("Open the player editor from Tools to edit players", FG_SECONDARY)
+            self.shell.footer.set_status("Open the player editor from Tools", FG_SECONDARY)
             return
         self.guard_dirty(lambda: self._open_player_cb(pid, self.season))
 
@@ -485,7 +482,7 @@ class TeamEditorScreen(EditorScreen):
 
             self.show_dialog(FormDialog(
                 self, "Add season" if action == "add" else "Duplicate season",
-                "Every field of a season is independent: name, kits, crest, squad and roles.",
+                "Each season has its own name, kits, crest, squad and roles.",
                 {"year": year, "source": source},
                 [("CANCEL", "neutral", "cancel"), ("ADD SEASON", "primary", "ok")], done))
         elif action == "delete":
@@ -494,8 +491,8 @@ class TeamEditorScreen(EditorScreen):
                 return
             season = self.season
             self.confirm(f"Delete season {season_label(season)}?",
-                         "The season's name, kits, squad and roles are removed from this team "
-                         "(Ctrl+Z to undo until you save).", "DELETE SEASON",
+                         "Its name, kits, squad and roles will be removed from this team.",
+                         "DELETE SEASON",
                          lambda: self._delete_season(season))
 
     def _delete_season(self, season):
@@ -546,15 +543,16 @@ class TeamEditorScreen(EditorScreen):
                 self.variant = vid
                 self.refresh_all()
                 self.shell.footer.set_status(
-                    f"Variant {V.variant_label(self.season_block(), vid)} added — it starts as a "
-                    "copy of the default; only what you change is stored", GREEN)
+                    f"Variant {V.variant_label(self.season_block(), vid)} added, copied from the default",
+                    GREEN)
 
             self.show_dialog(FormDialog(
                 self, "Add variant",
-                f"A squad for one competition in season {season_label(season)} — players, "
-                "roles and set plays only — named after the competition's id (world_cup, "
-                "six_nations…). It is the default squad until you change it. A kit's "
-                "competition version is a kit variant, added on the Kits tab.",
+                f"A squad for one competition in season {season_label(season)}: players, roles "
+                "and set plays. Named after a tournament (rwc_2023, six_nations_2024…: that "
+                "edition only) or a competition (world_cup: any edition that asks for it); "
+                "starts as a copy of the default. Competition kits are kit variants "
+                "(Kits tab).",
                 {"family": family, "other": other, "label": label},
                 [("CANCEL", "neutral", "cancel"), ("ADD VARIANT", "primary", "ok")], done))
         elif action == "rename" and self.variant:
@@ -575,8 +573,8 @@ class TeamEditorScreen(EditorScreen):
         elif action == "reset" and self.variant:
             vid = self.variant
             self.confirm(f"Reset {V.variant_label(block, vid)} to default?",
-                         "Its squad, roles and set plays are dropped; it then shows the "
-                         "season's default (Ctrl+Z to undo until you save).", "RESET",
+                         "Its squad, roles and set plays will be replaced by the season's default.",
+                         "RESET",
                          lambda: self.edit(f"reset variant {vid}",
                                            lambda w: T.clear_variant(w[season], vid), view_hint=hint))
         elif action == "delete" and self.variant:
@@ -588,8 +586,7 @@ class TeamEditorScreen(EditorScreen):
                 self.variant = V.DEFAULT
                 self.refresh_all()
             self.confirm(f"Delete variant {V.variant_label(block, vid)}?",
-                         "Competitions asking for it use the default squad instead "
-                         "(Ctrl+Z to undo until you save).", "DELETE VARIANT", go)
+                         "Competitions using it will get the default squad.", "DELETE VARIANT", go)
 
     # ── whole-team create / duplicate / delete ───────────────────────────
     def new_record(self):
@@ -634,10 +631,10 @@ class TeamEditorScreen(EditorScreen):
         folder_hint = ""
         self.show_dialog(FormDialog(
             self, "Duplicate team" if duplicate else "New team",
-            ("A copy of every season of this team, as a new team with its own folder."
+            ("Copies every season into a new team with its own folder."
              if duplicate else
-             "Creates a new team folder with one blank season. Its files are created "
-             f"immediately in {os.path.basename(teams_dir)}/."),
+             "Creates a team folder with one blank season in "
+             f"{os.path.basename(teams_dir)}/."),
             fields, [("CANCEL", "neutral", "cancel"),
                      ("CREATE", "primary", "ok")], done, footer=folder_hint))
 
@@ -698,12 +695,11 @@ class TeamEditorScreen(EditorScreen):
             else:
                 self.refresh_all()
             self.shell.footer.set_status(
-                f"Deleted {name} — {outcome}", FG_SECONDARY)
+                f"Deleted {name}: {outcome}", FG_SECONDARY)
 
-        text = ("The team is deleted in your edits: the game and this tool stop loading "
-                "it, the data pack is not changed. Restore it from Tools › My edits."
+        text = ("The team is removed in your edits. The data pack is unchanged and you can "
+                "restore it from Tools › My edits."
                 if saves_to_user_edits() else
-                f"{os.path.basename(path)} is renamed to …deleted-<date> so the game and "
-                f"this tool stop loading it. Image files in the team folder are kept, and "
-                f"the file can be restored by renaming it back.")
+                f"{os.path.basename(path)} will be renamed to …deleted-<date>. Image files "
+                f"stay, and renaming the file back restores the team.")
         self.confirm(f"Delete team {name}?", text + memberships, "DELETE TEAM", do_delete)

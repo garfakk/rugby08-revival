@@ -63,6 +63,8 @@ class StatComparison(QWidget):
     def reveal(self):
         if self._anim is not None:
             self._anim.stop()
+            self._anim.deleteLater()
+            self._anim = None
         if not motion.enabled():
             self.set_progress(1.0)
             return
@@ -73,7 +75,10 @@ class StatComparison(QWidget):
         self._anim.setEndValue(1.0)
         self._anim.setEasingCurve(QEasingCurve.Linear)
         self._anim.valueChanged.connect(lambda v: self.set_progress(float(v)))
-        self._anim.start()
+        anim = motion.track(self._anim)
+        # from the first frame on screen: reveal() is called while the
+        # screen is still being filled, and that time came off the reveal
+        motion.after_paint(self, lambda: anim.state() == anim.Stopped and anim is self._anim and anim.start())
 
     def _row_progress(self, i):
         n = max(1, len(self.rows))

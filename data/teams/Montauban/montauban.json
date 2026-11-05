@@ -107,13 +107,13 @@
      "frontKitFile": "kits_2009/home_front.webp",
      "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2009/home_preview.png",
-     "color": ""
+     "color": "#66a358"
     },
     "away": {
      "frontKitFile": "kits_2009/away_front.webp",
      "backKitFile": "kits_2009/away_back.webp",
      "previewFile": "kits_2009/away_preview.png",
-     "color": ""
+     "color": "#181a18"
     }
    },
    "roles": {
@@ -179,86 +179,84 @@
    "type": "club",
    "category": "Top 14",
    "group": "france",
-   "ball": "",
-   "banners": "",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
    "pads": "",
    "logos": {
-    "main": "",
-    "frontend": "",
-    "small": "",
-    "left": "",
-    "right": ""
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
    },
    "kits": {
     "home": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
+     "frontKitFile": "kits_2009/home_front.webp",
+     "backKitFile": "kits_2009/home_back.webp",
+     "previewFile": "kits_2009/home_preview.png",
+     "color": "#66a358"
     },
     "away": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
+     "frontKitFile": "kits_2009/away_front.webp",
+     "backKitFile": "kits_2009/away_back.webp",
+     "previewFile": "kits_2009/away_preview.png",
+     "color": "#181a18"
     }
    },
    "roles": {
-    "captain": "",
-    "viceCaptain": "",
-    "longGK": "158441",
-    "shortGK": "158441",
-    "longPunt": "158441",
-    "shortPunt": "158441",
-    "kickoff": "158441"
+    "captain": "158369",
+    "viceCaptain": "122018",
+    "longGK": "158369",
+    "shortGK": "158369",
+    "longPunt": "158369",
+    "shortPunt": "158369",
+    "kickoff": "158369"
    },
    "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
+    "up": "classic",
+    "down": "classic",
+    "left": "classic",
+    "right": "loop"
    },
    "players": [
-    "148019",
+    "152886",
     "158430",
-    "148024",
+    "148019",
     "142982",
     "154002",
     "154003",
     "122018",
     "158371",
     "153333",
-    "158441",
-    "142890",
+    "158369",
+    "158372",
     "158435",
     "158370",
-    "158372",
-    "156818",
-    "158373",
-    "147553",
-    "156269",
-    "114723",
-    "158433",
-    "158429",
-    "158355",
-    "156392",
-    "152851",
-    "158374",
     "158344",
-    "158476",
+    "156818",
+    "154000",
+    "148024",
+    "157401",
     "152965",
     "158480",
-    "158436",
+    "158334",
+    "156269",
+    "147553",
+    "114723",
+    "152851",
+    "158355",
     "158486",
-    "158469",
-    "158369",
+    "158373",
     "153274",
-    "152886",
-    "158471",
-    "157401",
-    "158428"
+    "158476",
+    "158441",
+    "156392",
+    "158436",
+    "158469",
+    "158428",
+    "158433",
+    "158954"
    ],
-   "enabled": false,
    "primaryStadium": "23"
   }
  }

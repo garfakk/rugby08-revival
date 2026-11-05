@@ -41,8 +41,11 @@ def _path(tid, suffix="") -> str:
 
 def _write(path, data) -> None:
     tmp = path + ".tmp"
+    # dumps, not dump: only the one-shot encoder runs in C (dump streams
+    # through the pure-Python one, ~8x slower on a tournament save)
+    text = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
     with open(tmp, "w", encoding="utf-8") as fh:
-        json.dump(data, fh, ensure_ascii=False, separators=(",", ":"))
+        fh.write(text)
     os.replace(tmp, path)
 
 

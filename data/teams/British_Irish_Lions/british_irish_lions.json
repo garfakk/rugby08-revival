@@ -18,19 +18,13 @@
     "home": {
      "frontKitFile": "kits_2009/home_front.png",
      "backKitFile": "kits_2009/home_back/home_back_%.png",
-     "previewFile": "",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
+     "previewFile": "kits_2009/home_preview.png",
+     "color": "#a71917"
     }
    },
    "roles": {
     "captain": "110195",
-    "viceCaptain": "",
+    "viceCaptain": "100235",
     "longGK": "142576",
     "shortGK": "142576",
     "longPunt": "142576",
@@ -105,19 +99,13 @@
     "home": {
      "frontKitFile": "kits_2009/home_front.png",
      "backKitFile": "kits_2009/home_back/home_back_%.png",
-     "previewFile": "",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
+     "previewFile": "kits_2009/home_preview.png",
+     "color": "#a71917"
     }
    },
    "roles": {
     "captain": "142437",
-    "viceCaptain": "",
+    "viceCaptain": "143015",
     "longGK": "11409",
     "shortGK": "11409",
     "longPunt": "11409",
@@ -151,13 +139,13 @@
     "11006",
     "142497",
     "127577",
-    "158298",
+    "105071",
     "152463",
     "157527",
     "152929",
     "12301",
     "119410",
-    "105071",
+    "158298",
     "143536",
     "156907",
     "100235",
@@ -197,19 +185,19 @@
     "home": {
      "frontKitFile": "kits_2017/home_front.png",
      "backKitFile": "kits_2017/home_back/home_back_%.png",
-     "previewFile": "",
-     "color": ""
+     "previewFile": "kits_2017/home_preview.png",
+     "color": "#b60202"
     },
     "away": {
      "frontKitFile": "kits_2017/away_front.png",
      "backKitFile": "kits_2017/away_back/away_back_%.png",
-     "previewFile": "",
-     "color": ""
+     "previewFile": "kits_2017/away_preview.png",
+     "color": "#0c2135"
     }
    },
    "roles": {
     "captain": "156496",
-    "viceCaptain": "",
+    "viceCaptain": "11409",
     "longGK": "11409",
     "shortGK": "11409",
     "longPunt": "11409",
@@ -291,19 +279,13 @@
     "home": {
      "frontKitFile": "kits_2021/home_front.png",
      "backKitFile": "kits_2021/home_back/home_back_%.png",
-     "previewFile": "",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
+     "previewFile": "kits_2021/home_preview.png",
+     "color": "#6c0a0e"
     }
    },
    "roles": {
     "captain": "142437",
-    "viceCaptain": "",
+    "viceCaptain": "144366",
     "longGK": "142987",
     "shortGK": "142987",
     "longPunt": "142987",
@@ -378,20 +360,14 @@
    "kits": {
     "home": {
      "frontKitFile": "kits_2025/home_front.png",
-     "backKitFile": "kits_2025/home_back/home_back_%.png",
-     "previewFile": "",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
+     "backKitFile": "kits_2025/home_back.webp",
+     "previewFile": "kits_2025/home_preview.png",
+     "color": "#891220"
     }
    },
    "roles": {
     "captain": "11773",
-    "viceCaptain": "",
+    "viceCaptain": "152546",
     "longGK": "145217",
     "shortGK": "145217",
     "longPunt": "145217",

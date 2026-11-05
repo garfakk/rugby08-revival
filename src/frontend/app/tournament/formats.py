@@ -25,13 +25,19 @@ A template is a JSON file describing a competition's structure and rules:
                                        # with the clubs of that category that season
                                        # (or a list of categories, e.g. a league's old names)
    "from_season": "2022", "to_season": "2019",   # optional: the seasons of the data it covers
-   "variant": "world_cup",             # optional: competition squads/kits (app/variants.py)
+   "variant": "world_cup",             # optional: competition squads/kits (app/variants.py),
+                                       # one id or a list, most specific first
    "team_variants": {"1004": ""}}      # optional per-team exception ("" = default)
 
-Every team plays its season's `variant` squad when it has one, else its
-default — so the generic world_cup template with season 2024 plays the RWC
-2023 squads, with 2028 the RWC 2027 ones. Independently, each kit worn is
-that kit's `variant` version (a tournament patch) when the kit has one.
+Squads and kits (app/variants.py) are picked by id, most specific first:
+the template's own id, then its `variant`(s). Each team plays the first of
+them its season has as a squad variant, else its default squad; each kit
+worn is, independently, the first of them the kit has (a tournament
+patch), else the plain kit. So a variant named after an edition
+(rwc_2023, six_nations_2024, lions_2025) is that edition's with nothing
+else to set, and one named after the competition (world_cup) serves any
+edition that asks for it: the generic world_cup template with season 2024
+plays the RWC 2023 squads, with 2028 the RWC 2027 ones.
 
 Built-in templates ship as flat files in assets/data/competitions/; a data
 pack can add or override them (same id) inside its competition definitions,
@@ -289,7 +295,8 @@ def editions(ds, templates=None, default_season="") -> dict:
     cache = {}
 
     def usable_for(tpl, season):
-        key = (str(tpl.get("variant") or ""), repr(sorted((tpl.get("team_variants") or {}).items())), season)
+        key = (str(tpl.get("id") or ""), repr(tpl.get("variant") or ""),
+               repr(sorted((tpl.get("team_variants") or {}).items())), season)
         if key not in cache:
             cache[key] = playable_teams(ds, tpl, season)
         return cache[key]

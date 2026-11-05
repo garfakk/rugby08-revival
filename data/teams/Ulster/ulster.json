@@ -104,7 +104,7 @@
      "frontKitFile": "kits_2009/home_front.webp",
      "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2009/home_preview.png",
-     "color": "",
+     "color": "#d3d6d2",
      "model3d": {
       "collar": "stand",
       "fit": "loose"
@@ -114,7 +114,7 @@
      "frontKitFile": "kits_2009/away_front.webp",
      "backKitFile": "kits_2009/away_back.webp",
      "previewFile": "kits_2009/away_preview.png",
-     "color": "",
+     "color": "#1b1617",
      "model3d": {
       "collar": "stand",
       "fit": "loose"
@@ -196,7 +196,7 @@
      "frontKitFile": "kits_2009/home_front.webp",
      "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2009/home_preview.png",
-     "color": "",
+     "color": "#d3d6d2",
      "model3d": {
       "fit": "loose",
       "collar": "stand"
@@ -206,7 +206,7 @@
      "frontKitFile": "kits_2009/away_front.webp",
      "backKitFile": "kits_2009/away_back.webp",
      "previewFile": "kits_2009/away_preview.png",
-     "color": "",
+     "color": "#1b1617",
      "model3d": {
       "fit": "loose",
       "collar": "stand"
@@ -287,13 +287,13 @@
      "frontKitFile": "kits_2017/home_front.webp",
      "backKitFile": "kits_2017/home_back.webp",
      "previewFile": "kits_2017/home_preview.png",
-     "color": ""
+     "color": "#ecede9"
     },
     "away": {
      "frontKitFile": "kits_2017/away_front.webp",
      "backKitFile": "kits_2017/away_back.webp",
      "previewFile": "kits_2017/away_preview.png",
-     "color": ""
+     "color": "#16a8ee"
     }
    },
    "roles": {
@@ -374,21 +374,21 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
+     "frontKitFile": "kits_2019/home_front.webp",
+     "backKitFile": "kits_2019/home_back.webp",
+     "previewFile": "kits_2019/home_preview.png",
+     "color": "#edeeeb"
     },
     "away": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
+     "frontKitFile": "kits_2019/away_front.webp",
+     "backKitFile": "kits_2019/away_back.webp",
+     "previewFile": "kits_2019/away_preview.png",
+     "color": "#171914"
     }
    },
    "roles": {
-    "captain": "",
-    "viceCaptain": "",
+    "captain": "105071",
+    "viceCaptain": "10645",
     "longGK": "144057",
     "shortGK": "144057",
     "longPunt": "144057",
@@ -403,13 +403,13 @@
    },
    "players": [
     "157327",
-    "142299",
+    "105071",
     "155471",
     "156968",
-    "142301",
+    "10645",
     "157689",
     "157074",
-    "152531",
+    "157415",
     "152802",
     "144057",
     "152541",
@@ -429,12 +429,12 @@
     "157414",
     "157582",
     "153414",
-    "10645",
+    "142301",
     "119932",
     "156842",
-    "157415",
+    "152531",
     "157663",
-    "105071",
+    "142299",
     "157191",
     "157785",
     "157617",
@@ -449,7 +449,6 @@
     "155434",
     "157813"
    ],
-   "enabled": false,
    "primaryStadium": "18"
   },
   "2019": {
@@ -472,13 +471,13 @@
      "frontKitFile": "kits_2019/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
-     "color": ""
+     "color": "#edeeeb"
     },
     "away": {
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": ""
+     "color": "#171914"
     }
    },
    "roles": {
@@ -757,13 +756,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#e9e8e8"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#e9a903"
     }
    },
    "roles": {
@@ -802,11 +801,11 @@
     "157567",
     "156730",
     "157689",
-    "156968",
+    "152802",
     "155319",
     "157861",
     "158035",
-    "152802",
+    "156968",
     "156729",
     "142301",
     "156676",
@@ -851,13 +850,13 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": ""
+     "color": "#e9e9e8"
     },
     "away": {
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": ""
+     "color": "#1a2747"
     }
    },
    "roles": {
@@ -936,13 +935,13 @@
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": ""
+     "color": "#e6e6e5"
     },
     "away": {
      "frontKitFile": "kits_2024/away_front.webp",
      "backKitFile": "kits_2024/away_back.webp",
      "previewFile": "kits_2024/away_preview.png",
-     "color": ""
+     "color": "#0a4f8a"
     }
    },
    "roles": {
@@ -1096,6 +1095,97 @@
     "157123"
    ],
    "enabled": false,
+   "primaryStadium": "18"
+  },
+  "2013": {
+   "name": "Ulster",
+   "type": "club",
+   "category": "Celtic League",
+   "group": "other_european",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2013/home_front.webp",
+     "backKitFile": "kits_2013/home_back.webp",
+     "previewFile": "kits_2013/home_preview.png",
+     "color": "#bcbfb8",
+     "model3d": {
+      "fit": "loose",
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2009/away_front.webp",
+     "backKitFile": "kits_2009/away_back.webp",
+     "previewFile": "kits_2009/away_preview.png",
+     "color": "#1b1617",
+     "model3d": {
+      "fit": "loose",
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "157354",
+    "viceCaptain": "105071",
+    "longGK": "157354",
+    "shortGK": "157354",
+    "longPunt": "157354",
+    "shortPunt": "157354",
+    "kickoff": "157354"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "123967",
+    "105071",
+    "142979",
+    "157409",
+    "155309",
+    "125184",
+    "158294",
+    "158287",
+    "104169",
+    "157354",
+    "143577",
+    "158293",
+    "157414",
+    "119932",
+    "156566",
+    "157344",
+    "142744",
+    "156847",
+    "122646",
+    "157415",
+    "158290",
+    "157412",
+    "154152",
+    "157413",
+    "157411",
+    "108526",
+    "156899",
+    "156950",
+    "156522",
+    "155551",
+    "157416",
+    "157410",
+    "156579",
+    "156945"
+   ],
+   "enabled": true,
    "primaryStadium": "18"
   }
  }

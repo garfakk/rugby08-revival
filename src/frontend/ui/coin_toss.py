@@ -929,7 +929,7 @@ class CoinTossOverlay(QWidget):
             self._show(f"{self._team(winner)} WIN THE TOSS")
         self._set_buttons([])
         if winner in self.humans:
-            self.sub.setText("Click the end you want, or halfway to kick off")
+            self.sub.setText("Pick an end, or the halfway line to kick off")
             self.pitch.offer((LEFT, KICK, RIGHT), winner)
         else:
             self._later(lambda: self._on_decision(self.toss.cpu_decision()))

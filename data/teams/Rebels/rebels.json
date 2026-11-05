@@ -20,13 +20,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#101e2d"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#0f1b29"
     }
    },
    "roles": {
@@ -106,13 +106,13 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": ""
+     "color": "#0e1a29"
     },
     "away": {
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": ""
+     "color": "#db2c4c"
     }
    },
    "roles": {
@@ -191,13 +191,13 @@
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": ""
+     "color": "#1a213d"
     },
     "away": {
      "frontKitFile": "kits_2024/away_front.webp",
      "backKitFile": "kits_2024/away_back.webp",
      "previewFile": "kits_2024/away_preview.png",
-     "color": ""
+     "color": "#1d233d"
     }
    },
    "roles": {
@@ -273,7 +273,7 @@
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": "",
+     "color": "#050d38",
      "model3d": {
       "fit": "loose",
       "collar": "stand"
@@ -283,7 +283,7 @@
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": "",
+     "color": "#070e36",
      "model3d": {
       "fit": "loose",
       "collar": "stand"
@@ -364,7 +364,7 @@
      "frontKitFile": "kits_2019/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
-     "color": "",
+     "color": "#1b1f42",
      "model3d": {
       "collar": "stand"
      }
@@ -373,7 +373,7 @@
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": "",
+     "color": "#1d1231",
      "model3d": {
       "collar": "stand"
      }
@@ -428,7 +428,6 @@
     "155716",
     "158650",
     "144848",
-    "155312",
     "158684",
     "158613",
     "155513",
@@ -589,6 +588,97 @@
     "144848",
     "158613",
     "152891"
+   ],
+   "enabled": false,
+   "primaryStadium": "2"
+  },
+  "2014": {
+   "name": "Rebels",
+   "type": "club",
+   "category": "Super Rugby",
+   "group": "southern_hemisphere",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2014/home_front.webp",
+     "backKitFile": "kits_2014/home_back.webp",
+     "previewFile": "kits_2014/home_preview.png",
+     "color": "#0e2042",
+     "model3d": {
+      "fit": "loose",
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.webp",
+     "backKitFile": "kits_2018/away_back.webp",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "#070e36",
+     "model3d": {
+      "fit": "loose",
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "155639",
+    "viceCaptain": "142792",
+    "longGK": "145353",
+    "shortGK": "145353",
+    "longPunt": "155639",
+    "shortPunt": "155639",
+    "kickoff": "155639"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153101",
+    "155680",
+    "153102",
+    "145110",
+    "144157",
+    "145014",
+    "158573",
+    "154559",
+    "142792",
+    "155639",
+    "145457",
+    "145353",
+    "158585",
+    "144780",
+    "142358",
+    "144848",
+    "154011",
+    "156078",
+    "157480",
+    "145293",
+    "154863",
+    "158588",
+    "153100",
+    "155643",
+    "153949",
+    "158613",
+    "155526",
+    "155716",
+    "158650",
+    "155312",
+    "155747",
+    "146201",
+    "145233",
+    "158677"
    ],
    "enabled": false,
    "primaryStadium": "2"

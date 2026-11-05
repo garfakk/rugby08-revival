@@ -38,11 +38,29 @@ def _team_asset_path(ds: DataStore, team_id: str, relative_path: str) -> str:
     return _relative_to_mod_data(os.path.join(team_root, relative_path))
 
 
+def _asset_on_disk(path: str) -> bool:
+    """A file, or a "%" frame pattern with at least one frame on disk."""
+    if not path:
+        return False
+    if "%" in path:
+        return any(os.path.isfile(path.replace("%", str(i))) for i in (1, 2))
+    return os.path.isfile(path)
+
+
 def _tournament_asset_path(ds: DataStore, tournament_id, relative_path: str) -> str:
     if not tournament_id or not relative_path:
         return ""
     folder = ds.tournaments_folder_path.get(tournament_id, "")
-    return _relative_to_mod_data(os.path.join(folder, relative_path))
+    full = os.path.normpath(os.path.join(folder, relative_path))
+    # Missing file: "" so the caller falls back (home team's ball, logo, ...).
+    return _relative_to_mod_data(full) if _asset_on_disk(full) else ""
+
+
+def _existing_ball(path: str) -> str:
+    """`path` (relative to the mod data) when its frames exist, else ""."""
+    if not path:
+        return ""
+    return path if _asset_on_disk(os.path.join(config.mod_data_directory, path)) else ""
 
 
 def _selected_kit_data(ds: DataStore, slot: TeamSlot) -> dict:
@@ -156,6 +174,8 @@ def _player_to_match_data(player: dict, season=None) -> dict:
         "star_attribute": to_int(player.get("star_attribute", 0), 0),
         # Hidden (no UI): roster-only switch for the star above the head
         "hide_star": to_bool(player.get("hide_star", False)),
+        # Whose star commentary (0 none, 2..26 a class's real player): .rdf +0x51
+        "star_voice": to_int(player.get("star_voice", 0), 0),
         "attack": to_int(player.get("attack", 0), 0),
         "defense": to_int(player.get("defense", 0), 0),
         "speed": to_int(player.get("speed", 0), 0),
@@ -270,6 +290,14 @@ def _build_team_match_data(ds: DataStore, slot: TeamSlot, is_home: bool) -> dict
     return team
 
 
+def _stadium_flags(cfg):
+    """Any World Cup match left on "stock" (quick match, tournament,
+    challenge) gets the World Cup stadium dressing; an explicit off is kept."""
+    if cfg.stadium_flags is None and cfg.match_type == "world_cup":
+        return True
+    return cfg.stadium_flags
+
+
 def build_match_data(ds: DataStore, cfg: MatchConfig):
     """Returns the backend match_data dict, or None if the selection is
     incomplete. Difficulty/half length/home side are the three newly-exposed
@@ -285,12 +313,17 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
     ball_entry = cfg.ball_choice
     if isinstance(ball_entry, dict):
         source = ball_entry.get("source")
+        # A picked ball whose files are missing (a tournament without one, say)
+        # falls back to the home team's own.
         if source == "teams_json":
-            selected_ball = _team_asset_path(ds, ball_entry.get("team_id"), ball_entry.get("path", ""))
+            picked = _team_asset_path(ds, ball_entry.get("team_id"), ball_entry.get("path", ""))
         elif source == "tournament":
-            selected_ball = _tournament_asset_path(ds, ball_entry.get("team_id"), ball_entry.get("path", ""))
+            picked = _tournament_asset_path(ds, ball_entry.get("team_id"), ball_entry.get("path", ""))
         elif ball_entry.get("path"):
-            selected_ball = _relative_to_mod_data(ball_entry.get("path"))
+            picked = _relative_to_mod_data(ball_entry.get("path"))
+        else:
+            picked = ""
+        selected_ball = _existing_ball(picked) or selected_ball
 
     stadium_id = 70  # default (Stade de France)
     if cfg.stadium and cfg.stadium.get("stadium_id"):
@@ -417,7 +450,8 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
         "haka_home": cfg.haka_home,
         "haka_away": cfg.haka_away,
         "trophy_lift": cfg.trophy_lift,
-        "stadium_flags": cfg.stadium_flags,
+        "trophy_lifter": cfg.trophy_lifter,
+        "stadium_flags": _stadium_flags(cfg),
         "kick_assist": cfg.kick_assist,
         "mission_state": mission_state,
         "mission_nis": list(cfg.mission_nis),

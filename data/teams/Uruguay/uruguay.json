@@ -20,7 +20,7 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": "",
+     "color": "#13abeb",
      "variants": {
       "rwc_2023": {
        "label": "RWC 2023",
@@ -34,7 +34,7 @@
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": "",
+     "color": "#07a5e6",
      "variants": {
       "rwc_2023": {
        "label": "RWC 2023",
@@ -152,7 +152,7 @@
    "primaryStadium": "43"
   },
   "2010": {
-   "enabled": true,
+   "enabled": false,
    "name": "Uruguay",
    "type": "international",
    "category": "International",
@@ -172,7 +172,7 @@
      "frontKitFile": "kits_2010/home_front.webp",
      "backKitFile": "kits_2010/home_back.webp",
      "previewFile": "kits_2010/home_preview.png",
-     "color": "",
+     "color": "#4d8cba",
      "model3d": {
       "fit": "loose",
       "collar": "open"
@@ -182,7 +182,7 @@
      "frontKitFile": "kits_2010/away_front.webp",
      "backKitFile": "kits_2010/away_back.webp",
      "previewFile": "kits_2010/away_preview.png",
-     "color": "",
+     "color": "#1f2020",
      "model3d": {
       "fit": "loose",
       "collar": "open"
@@ -211,8 +211,8 @@
     "153044",
     "154787",
     "144462",
-    "154792",
     "154798",
+    "154792",
     "144211",
     "144528",
     "154797",
@@ -265,13 +265,13 @@
      "frontKitFile": "kits_2016/home_front.webp",
      "backKitFile": "kits_2016/home_back.webp",
      "previewFile": "kits_2016/home_preview.png",
-     "color": ""
+     "color": "#2179d9"
     },
     "away": {
      "frontKitFile": "kits_2016/away_front.webp",
      "backKitFile": "kits_2016/away_back.webp",
      "previewFile": "kits_2016/away_preview.png",
-     "color": ""
+     "color": "#4a91df"
     }
    },
    "roles": {
@@ -350,13 +350,13 @@
      "frontKitFile": "kits_2020/home_front.webp",
      "backKitFile": "kits_2020/home_back.webp",
      "previewFile": "kits_2020/home_preview.png",
-     "color": ""
+     "color": "#08b6d8"
     },
     "away": {
      "frontKitFile": "kits_2020/away_front.webp",
      "backKitFile": "kits_2020/away_back.webp",
      "previewFile": "kits_2020/away_preview.png",
-     "color": ""
+     "color": "#0e223f"
     }
    },
    "roles": {
@@ -435,13 +435,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#13abeb"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#07a5e6"
     }
    },
    "roles": {
@@ -523,13 +523,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#13abeb"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#07a5e6"
     }
    },
    "roles": {
@@ -613,13 +613,13 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": ""
+     "color": "#13abeb"
     },
     "away": {
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": ""
+     "color": "#07a5e6"
     }
    },
    "roles": {
@@ -677,55 +677,6 @@
     "154784",
     "154826"
    ],
-   "variant": {
-    "world_cup": {
-     "label": "Rugby World Cup 2023",
-     "players": [
-      "145119",
-      "144598",
-      "146353",
-      "145642",
-      "146114",
-      "145026",
-      "146096",
-      "145044",
-      "144211",
-      "144528",
-      "145337",
-      "145586",
-      "145166",
-      "146763",
-      "144609",
-      "144424",
-      "144541",
-      "146759",
-      "146503",
-      "145357",
-      "145543",
-      "146115",
-      "146157",
-      "146198",
-      "146540",
-      "145088",
-      "145370",
-      "146760",
-      "146761",
-      "146762",
-      "146505",
-      "146764",
-      "146765"
-     ],
-     "roles": {
-      "captain": "145586",
-      "viceCaptain": "144528",
-      "longGK": "144528",
-      "shortGK": "144528",
-      "longPunt": "144528",
-      "shortPunt": "144528",
-      "kickoff": "144528"
-     }
-    }
-   },
    "primaryStadium": "43"
   },
   "2025": {
@@ -749,13 +700,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#13abeb"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#07a5e6"
     }
    },
    "roles": {
@@ -814,55 +765,6 @@
     "148487",
     "148488"
    ],
-   "variant": {
-    "world_cup": {
-     "label": "Rugby World Cup 2023",
-     "players": [
-      "145119",
-      "144598",
-      "146353",
-      "145642",
-      "146114",
-      "145026",
-      "146096",
-      "145044",
-      "144211",
-      "144528",
-      "145337",
-      "145586",
-      "145166",
-      "146763",
-      "144609",
-      "144424",
-      "144541",
-      "146759",
-      "146503",
-      "145357",
-      "145543",
-      "146115",
-      "146157",
-      "146198",
-      "146540",
-      "145088",
-      "145370",
-      "146760",
-      "146761",
-      "146762",
-      "146505",
-      "146764",
-      "146765"
-     ],
-     "roles": {
-      "captain": "145586",
-      "viceCaptain": "144528",
-      "longGK": "144528",
-      "shortGK": "144528",
-      "longPunt": "144528",
-      "shortPunt": "144528",
-      "kickoff": "144528"
-     }
-    }
-   },
    "primaryStadium": "43"
   },
   "2026": {
@@ -886,13 +788,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#13abeb"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#07a5e6"
     }
    },
    "roles": {
@@ -947,55 +849,6 @@
     "148496",
     "148497"
    ],
-   "variant": {
-    "world_cup": {
-     "label": "Rugby World Cup 2023",
-     "players": [
-      "145119",
-      "144598",
-      "146353",
-      "145642",
-      "146114",
-      "145026",
-      "146096",
-      "145044",
-      "144211",
-      "144528",
-      "145337",
-      "145586",
-      "145166",
-      "146763",
-      "144609",
-      "144424",
-      "144541",
-      "146759",
-      "146503",
-      "145357",
-      "145543",
-      "146115",
-      "146157",
-      "146198",
-      "146540",
-      "145088",
-      "145370",
-      "146760",
-      "146761",
-      "146762",
-      "146505",
-      "146764",
-      "146765"
-     ],
-     "roles": {
-      "captain": "145586",
-      "viceCaptain": "144528",
-      "longGK": "144528",
-      "shortGK": "144528",
-      "longPunt": "144528",
-      "shortPunt": "144528",
-      "kickoff": "144528"
-     }
-    }
-   },
    "primaryStadium": "43"
   },
   "2018": {
@@ -1019,13 +872,13 @@
      "frontKitFile": "kits_2018_2/home_front.webp",
      "backKitFile": "kits_2018_2/home_back.webp",
      "previewFile": "kits_2018_2/home_preview.png",
-     "color": ""
+     "color": "#42acd5"
     },
     "away": {
      "frontKitFile": "kits_2018_2/away_front.webp",
      "backKitFile": "kits_2018_2/away_back.webp",
      "previewFile": "kits_2018_2/away_preview.png",
-     "color": "",
+     "color": "#348abb",
      "model3d": {
       "fit": "loose",
       "collar": "open"
@@ -1117,13 +970,13 @@
      "frontKitFile": "kits_2019_2/home_front.webp",
      "backKitFile": "kits_2019_2/home_back.webp",
      "previewFile": "kits_2019_2/home_preview.png",
-     "color": ""
+     "color": "#2c7f97"
     },
     "away": {
      "frontKitFile": "kits_2019_2/away_front.webp",
      "backKitFile": "kits_2019_2/away_back.webp",
      "previewFile": "kits_2019_2/away_preview.png",
-     "color": ""
+     "color": "#217187"
     }
    },
    "roles": {
@@ -1182,7 +1035,7 @@
    "primaryStadium": "43"
   },
   "2009": {
-   "enabled": true,
+   "enabled": false,
    "name": "Uruguay",
    "type": "international",
    "category": "International",
@@ -1202,7 +1055,7 @@
      "frontKitFile": "kits_2009_2/home_front.webp",
      "backKitFile": "kits_2010/home_back.webp",
      "previewFile": "kits_2009_2/home_preview.png",
-     "color": "",
+     "color": "#4b89b7",
      "model3d": {
       "fit": "loose",
       "collar": "open"
@@ -1212,7 +1065,7 @@
      "frontKitFile": "kits_2009_2/away_front.webp",
      "backKitFile": "kits_2010/away_back.webp",
      "previewFile": "kits_2009_2/away_preview.png",
-     "color": "",
+     "color": "#1f1f1f",
      "model3d": {
       "fit": "loose",
       "collar": "open"
@@ -1241,8 +1094,8 @@
     "153044",
     "154787",
     "144462",
-    "154792",
     "154798",
+    "154792",
     "144211",
     "144528",
     "154800",

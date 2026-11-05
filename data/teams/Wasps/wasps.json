@@ -106,13 +106,13 @@
      "frontKitFile": "kits_2009/home_front.webp",
      "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2009/home_preview.png",
-     "color": ""
+     "color": "#171818"
     },
     "away": {
      "frontKitFile": "kits_2009/away_front.webp",
      "backKitFile": "kits_2009/away_back.webp",
      "previewFile": "kits_2009/away_preview.png",
-     "color": "",
+     "color": "#c5911c",
      "model3d": {
       "collar": "stand"
      }
@@ -198,7 +198,7 @@
      "frontKitFile": "kits_2010/home_front.webp",
      "backKitFile": "kits_2010/home_back.webp",
      "previewFile": "kits_2010/home_preview.png",
-     "color": "",
+     "color": "#191c19",
      "model3d": {
       "collar": "stand"
      }
@@ -207,7 +207,7 @@
      "frontKitFile": "kits_2010/away_front.webp",
      "backKitFile": "kits_2010/away_back.webp",
      "previewFile": "kits_2010/away_preview.png",
-     "color": "",
+     "color": "#d19f15",
      "model3d": {
       "collar": "stand"
      }
@@ -276,28 +276,28 @@
    "type": "club",
    "category": "Premiership",
    "group": "england",
-   "ball": "",
-   "banners": "",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
    "pads": "",
    "logos": {
-    "main": "",
-    "frontend": "",
-    "small": "",
-    "left": "",
-    "right": ""
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
    },
    "kits": {
     "home": {
      "frontKitFile": "kits_2017/home_front.webp",
      "backKitFile": "kits_2017/home_back.webp",
      "previewFile": "kits_2017/home_preview.png",
-     "color": ""
+     "color": "#f2dc02"
     },
     "away": {
      "frontKitFile": "kits_2017/away_front.webp",
      "backKitFile": "kits_2017/away_back.webp",
      "previewFile": "kits_2017/away_preview.png",
-     "color": ""
+     "color": "#dac612"
     }
    },
    "roles": {
@@ -380,7 +380,7 @@
      "frontKitFile": "kits_2018_2/home_front.webp",
      "backKitFile": "kits_2018_2/home_back.webp",
      "previewFile": "kits_2018_2/home_preview.png",
-     "color": "",
+     "color": "#1e201b",
      "model3d": {
       "collar": "stand"
      }
@@ -389,7 +389,7 @@
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": "",
+     "color": "#e5e7e3",
      "model3d": {
       "collar": "stand"
      }
@@ -475,7 +475,7 @@
      "frontKitFile": "kits_2019_2/home_front.webp",
      "backKitFile": "kits_2019_2/home_back.webp",
      "previewFile": "kits_2019_2/home_preview.png",
-     "color": "",
+     "color": "#1c1e18",
      "model3d": {
       "collar": "stand"
      }
@@ -484,7 +484,7 @@
      "frontKitFile": "kits_2019_2/away_front.webp",
      "backKitFile": "kits_2019_2/away_back.webp",
      "previewFile": "kits_2019_2/away_preview.png",
-     "color": "",
+     "color": "#ebece7",
      "model3d": {
       "collar": "stand"
      }
@@ -760,20 +760,20 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#141211"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#e6e5e4"
     }
    },
    "roles": {
     "captain": "152475",
     "viceCaptain": "144474",
-    "longGK": "155569",
-    "shortGK": "155569",
+    "longGK": "152475",
+    "shortGK": "152475",
     "longPunt": "152475",
     "shortPunt": "152475",
     "kickoff": "152475"
@@ -857,13 +857,13 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": ""
+     "color": "#26231a"
     },
     "away": {
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": ""
+     "color": "#3d97ab"
     }
    },
    "roles": {
@@ -897,6 +897,7 @@
     "157816",
     "152832",
     "157307",
+    "156997",
     "155690",
     "153965",
     "157565",

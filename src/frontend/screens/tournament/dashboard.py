@@ -59,7 +59,7 @@ TABLE, FIXTURES, BRACKET = range(len(VIEWS))
 ROUND_SHOWN = 6           # the round's other matches on Home
 HEADLINES_SHOWN = 3       # news items on Home
 # MORE menu actions only offered in expert mode (tagged EXPERT there)
-_EXPERT_ACTIONS = {"simulate", "late_start", "sim_end"}
+_EXPERT_ACTIONS = {"simulate", "late_start", "sim_title", "sim_end"}
 
 
 def _without_round(f) -> str:
@@ -172,9 +172,10 @@ class TournamentDashboardScreen(Screen):
         root.addWidget(body, stretch=1)
 
         self._build_home(self.pages[HOME].layout_)
-        # the squad screen without its own header / hint bar; B goes back
-        # to the tabs
-        self.squad = TournamentSquadScreen(on_back=lambda: self.tabs.setFocus(), embedded=True)
+        # the squad screen without its own header / hint bar; B (or Up off
+        # the top of the sheet) goes back to the tabs, its hints show here
+        self.squad = TournamentSquadScreen(on_back=self._squad_back, embedded=True,
+                                           on_hints=lambda: self._update_hints())
         self.pages[TEAM].layout_.addWidget(self.squad, stretch=1)
         self._build_competition(self.pages[COMP].layout_)
         self.stats_holder = self.pages[STATS].layout_
@@ -453,10 +454,21 @@ class TournamentDashboardScreen(Screen):
         else:
             self.refresh()
 
+    def _squad_back(self):
+        self.tabs.setFocus()
+        self._update_hints()
+
     def _update_hints(self):
+        if not hasattr(self, "hints"):
+            return
+        if self.tabs.index() == TEAM and self.squad.has_focus_inside():
+            self.hints.set_hints(self.squad.hint_items())
+            return
         hints = [("A", "select"), ("LB", "prev tab"), ("RB", "next tab")]
         if self.tabs.index() == COMP:
             hints.append(("X", "change view"))
+        elif self.tabs.index() == TEAM:
+            hints.append(("↓", "edit the squad"))
         elif self.tabs.index() == HOME and self.more_btn.isVisible():
             hints.append(("Y", "more"))
         self.hints.set_hints(hints + [("B", "back")])
@@ -469,6 +481,11 @@ class TournamentDashboardScreen(Screen):
             return
         if action in (Action.TAB_PREV, Action.TAB_NEXT):
             self.tabs.step(1 if action == Action.TAB_NEXT else -1)
+            event.accept()
+            return
+        if (action == Action.NAV_DOWN and self.tabs.index() == TEAM and self.squad.session
+                and not self.squad.has_focus_inside()):
+            self.squad.enter()       # the sheet keeps its own focus map
             event.accept()
             return
         if action == Action.ALT and self.tabs.index() == COMP:
@@ -574,9 +591,12 @@ class TournamentDashboardScreen(Screen):
         if user_prefs.expert_mode:
             if due:
                 out.append(("Simulate this match", "simulate",
-                            "auto-generate or enter the result, injuries and bans"))
+                            "set the result, injuries and bans"))
                 out.append(("Play from a given minute", "late_start",
-                            "start your match late, with the score you set"))
+                            "kick off from a minute and score you choose"))
+            if not t.finished and self._alive_humans() and self.session.title_match_ahead():
+                out.append(("Simulate to your title match", "sim_title",
+                            "every match before your final or title decider, yours included"))
             if not t.finished and self._alive_humans():
                 out.append(("Simulate to the end", "sim_end", "every match left, yours included"))
         return out
@@ -610,11 +630,11 @@ class TournamentDashboardScreen(Screen):
             self._set_primary("CONTINUE", self._continue)
         else:
             if not humans:
-                title, info = "spectator mode", "Simulate the tournament to see who wins."
+                title, info = "spectator mode", "Simulate to see who wins."
             elif not alive:
                 title = "your campaign is over"
                 info = "  ·  ".join([f"{t.team_name(h)}: {report.campaign_summary(t, h)}" for h in humans]
-                                    + ["Simulate the rest to see who lifts the trophy."])
+                                    + ["Simulate the rest to find the winner."])
             else:
                 title, info = "waiting for the draw", "The other matches decide your next opponent."
             self._show_message("out of the running" if humans and not alive else "waiting", "",
@@ -1006,7 +1026,7 @@ class TournamentDashboardScreen(Screen):
     def _build_prefs(self, v):
         """The options chosen in the wizard, changed for the rest of the
         tournament (read again at each match: a change applies from the next)."""
-        v.addWidget(Note("Changes are saved at once and apply from your next match.", color=FG_TERTIARY))
+        v.addWidget(Note("Changes apply from your next match.", color=FG_TERTIARY))
         # MATCH only: the squad rules (injuries, fatigue, suspensions) are
         # fixed for the whole tournament
         self.prefs = PrefsPanel(groups=("match",))
@@ -1087,9 +1107,8 @@ class TournamentDashboardScreen(Screen):
             if role == "ok":
                 self._run(lambda: self.session.enter_result(f, view.result()))
         ConfirmDialog(self, "Expert · simulate your match",
-                      f"{report.fixture_caption(self.t, f)}: AUTO-GENERATE draws a simulated result; "
-                      "change any event, injury or ban, or enter your own. The score follows from "
-                      "the events. You can UNDO it afterwards.",
+                      f"{report.fixture_caption(self.t, f)}: AUTO-GENERATE draws a result. Edit any "
+                      "event, injury or ban, or enter your own; the score follows the events.",
                       [("CANCEL", "neutral", "cancel"), ("RECORD", "primary", "ok")], go,
                       content=view, width=820)
 
@@ -1119,13 +1138,35 @@ class TournamentDashboardScreen(Screen):
                 self._message = ""
                 self.on_play(self.session, f, start=(picked["minute"], picked["home"], picked["away"]))
         ConfirmDialog(self, "Expert · play from a given minute",
-                      f"{report.fixture_caption(self.t, f)}: the match starts at this minute with "
-                      "this score, then is played as usual.",
+                      f"{report.fixture_caption(self.t, f)}: the match starts at this minute and score.",
                       [("CANCEL", "neutral", "cancel"), ("PLAY", "primary", "ok")], go,
                       content=content, width=640)
 
     def _continue(self):
         self._run(self.session.advance_to_human)
+
+    def _sim_to_title(self):
+        """Expert mode: simulate up to your final or title decider, your own
+        matches included; PLAY FOR THE TITLE has your team win each of them
+        on the way, so the last match is for the trophy."""
+        from ui import CycleRow
+        choices = ["Plays for the title", "As simulated"]
+        picked = {"for_title": True}
+        content = transparent(QWidget(), "simTitle")
+        v = QVBoxLayout(content)
+        v.setContentsMargins(0, 0, 0, 0)
+        v.setSpacing(0)
+        v.addWidget(CycleRow("Your Team", choices, choices[0],
+                             lambda c: picked.__setitem__("for_title", c == choices[0])))
+
+        def go(role):
+            if role == "ok":
+                self._run(lambda: self.session.simulate_to_title_match(picked["for_title"]))
+        ConfirmDialog(self, "Expert · simulate to your title match?",
+                      "Every match before your final or title decider is simulated, yours included. "
+                      "Playing for the title, your team wins each of its matches on the way.",
+                      [("CANCEL", "neutral", "cancel"), ("SIMULATE", "primary", "ok")], go,
+                      content=content, width=640)
 
     def _sim_to_end(self):
         expert = bool(self._alive_humans())    # decides your matches too
@@ -1138,8 +1179,8 @@ class TournamentDashboardScreen(Screen):
                     return [f for f in self.t.fixtures if f.played and f.id not in played]
                 self._run(run)
         ConfirmDialog(self, "Expert · simulate to the end?" if expert else "Simulate to the end?",
-                      "Every remaining match, including your team's, is simulated." if expert
-                      else "Every remaining match is simulated.",
+                      "Every remaining match, yours included, will be simulated." if expert
+                      else "Every remaining match will be simulated.",
                       [("CANCEL", "neutral", "cancel"), ("SIMULATE", "primary", "ok")], go)
 
     def _leave(self):
@@ -1147,7 +1188,7 @@ class TournamentDashboardScreen(Screen):
             if role == "ok":
                 self.on_back_cb()
         ConfirmDialog(self, "Back to the main menu?",
-                      "Your progression is saved. You can resume this tournament later.",
+                      "Your progress is saved.",
                       [("STAY", "neutral", "cancel"), ("MAIN MENU", "primary", "ok")], go)
 
     def _more_menu(self):
@@ -1162,7 +1203,7 @@ class TournamentDashboardScreen(Screen):
                           tag_color=EXPERT if expert else None)
         popup.size_to(len(items))
         actions = {"simulate": self._simulate, "late_start": self._late_start,
-                   "sim_end": self._sim_to_end}
+                   "sim_title": self._sim_to_title, "sim_end": self._sim_to_end}
         # after the popup has closed: a dialog opened from inside the pick
         # would lose its focus to the popup's own teardown
         popup.picked.connect(lambda data: QTimer.singleShot(0, actions[data]))
@@ -1220,7 +1261,7 @@ def _source_label(r):
             return "real result: cancelled, draw awarded"
         return "real result" + (" (scorers generated)" if real.get("scorers") == "generated" else "")
     if real.get("diverged"):
-        return "simulated: this match didn't happen in reality"
+        return "simulated (not played in reality)"
     return {"game": "played in the game", "forfeit": "awarded (forfeit)",
             "manual": "entered manually"}.get(r.source, "simulated")
 
@@ -1278,7 +1319,7 @@ class MatchReportView(QWidget):
             any_line = False
             for key, label in (("tries", "tries"), ("conversions", "conversions"), ("penalties", "penalties"),
                                ("drop_goals", "drop goals")):
-                s = report._scorers(t, side, key)
+                s = report._scorers(t, side, key, r.events)
                 if s:
                     any_line = True
                     col.addWidget(eyebrow_label(label, color=ACCENT, size=9))
@@ -1286,7 +1327,7 @@ class MatchReportView(QWidget):
             if side.penalty_tries:
                 any_line = True
                 col.addWidget(Note(f"Penalty tries: {side.penalty_tries}", color=FG_PRIMARY))
-            cards = [(t.player_name(l.pid), "red" if l.red_cards else "yellow")
+            cards = [(report.card_label(t, l, r.events, side), "red" if l.red_cards else "yellow")
                      for l in side.players if l.red_cards or l.yellow_cards]
             if cards:
                 any_line = True

@@ -294,3 +294,12 @@ def test_shirt_names_lettered_on_the_back_textures(tmp_path, monkeypatch, run_ma
     for i in range(22):
         assert plain["team_A"][i].tobytes() != named["team_A"][i].tobytes(), f"shirt {i + 1}"
         assert plain["team_B"][i].tobytes() == named["team_B"][i].tobytes()
+
+
+@pytest.mark.parametrize("match_type, flags, expected", [
+    ("world_cup", None, True), ("world_cup", False, False),
+    ("exhibition", None, None), ("exhibition", True, True)])
+def test_world_cup_stadium_flags_default_on(ds, match_type, flags, expected):
+    cfg = make_match_config(ds)
+    cfg.match_type, cfg.stadium_flags = match_type, flags
+    assert build_match_data(ds, cfg)["stadium_flags"] is expected

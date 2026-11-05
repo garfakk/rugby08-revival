@@ -443,19 +443,20 @@ class TeamColumn(QWidget):
     def _season(self):
         return self._slot().season or (self.screen.ds.seasons() or [""])[-1]
 
-    def init_random(self, season, category, avoid=None):
+    def init_random(self, season, category, avoid=None, among=None):
         """Startup only: force the SAME randomly-picked season and category
         on both columns, so home/away start in sync (an international vs.
         international opener, not a country vs. a club) — each stays
         independently editable afterward. `avoid` is the other column's
-        team, so the two sides never open on the same team."""
+        team, so the two sides never open on the same team; `among`, when
+        given, the teams the pick is made from."""
         idx = self.season_row.index_of(season)
         self.season_row.set_index(idx if idx is not None else 0)
         self._slot().season = season
         cats = self.screen.ds.categories_for(season) if season else []
         cat_idx = cats.index(category) if category in cats else 0
         self.category_row.set_values(cats, index=cat_idx)
-        self._reload_teams_for_category(pick_random=True, avoid=avoid)
+        self._reload_teams_for_category(pick_random=True, avoid=avoid, among=among)
 
     def _reload_teams(self, season, pick_random, avoid=None):
         """Season changed — refill the category list for the new season
@@ -473,7 +474,7 @@ class TeamColumn(QWidget):
         self.category_row.set_values(cats, index=cat_idx)
         self._reload_teams_for_category(pick_random, avoid=avoid)
 
-    def _reload_teams_for_category(self, pick_random, avoid=None):
+    def _reload_teams_for_category(self, pick_random, avoid=None, among=None):
         ds = self.screen.ds
         slot = self._slot()
         season = slot.season
@@ -486,7 +487,8 @@ class TeamColumn(QWidget):
             return
         prev = slot.team_id
         if pick_random or prev not in team_ids:
-            choices = [t for t in team_ids if t != avoid] or team_ids
+            pool = [t for t in team_ids if among is None or t in among] or team_ids
+            choices = [t for t in pool if t != avoid] or pool
             idx = team_ids.index(random.choice(choices))
         else:
             idx = team_ids.index(prev)
@@ -651,6 +653,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
         # first on_show does the (now cheap) 3D load.
         self._defer_3d = True
         self._first_show = True
+        self._reroll = False             # see new_match
         self.ds = ds
         self.cfg = MatchConfig()
         # Split in two so the backend can start working (file prep, the
@@ -680,17 +683,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
         # The pick is a (season, category) pair with at least two teams, so
         # home and away always come from the same competition and season
         # and are never the same team.
-        seasons = self.ds.seasons()
-        pairs = [(s, c) for s in seasons for c in self.ds.categories_for(s) if c
-                 if len(self.ds.teams_for(s, c)) >= 2]
-        if pairs:
-            season, category = random.choice(pairs)
-        else:
-            season = random.choice(seasons) if seasons else None
-            cats = self.ds.categories_for(season) if season else []
-            category = random.choice(cats) if cats else None
-        self.home_col.init_random(season, category)
-        self.away_col.init_random(season, category, avoid=self.cfg.home.team_id)
+        self.roll_opening()
         self.on_team_changed("home")   # sync cfg.stadium from the initial pick
         self._apply_picker_style(first=True)
 
@@ -701,6 +694,32 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self._defer_3d = False
         self._pick_mannequins()
         self._start_preload()
+
+    def roll_opening(self):
+        """Two random, different teams of one season and one category. A
+        category can span groups (URC: European and South African sides),
+        and the groups picker shows the group as the category, so both
+        teams also share their group."""
+        seasons = self.ds.seasons()
+        index = self.home_col.index
+        pools = {}
+        for s in seasons:
+            for c in self.ds.categories_for(s):
+                if not c:
+                    continue
+                for tid in self.ds.teams_for(s, c):
+                    pools.setdefault((s, c, index.group(tid)), []).append(tid)
+        pools = {k: v for k, v in pools.items() if len(v) >= 2}
+        among = None
+        if pools:
+            season, category, group = random.choice(list(pools))
+            among = pools[(season, category, group)]
+        else:
+            season = random.choice(seasons) if seasons else None
+            cats = self.ds.categories_for(season) if season else []
+            category = random.choice(cats) if cats else None
+        self.home_col.init_random(season, category, among=among)
+        self.away_col.init_random(season, category, avoid=self.cfg.home.team_id, among=among)
 
     def _pick_mannequins(self):
         """Which two mannequins (of MANNEQUIN_POOL's 8) wear the kits — two
@@ -754,44 +773,22 @@ class MatchSetupScreen(KickoffTransition, Screen):
         style = style if style in STYLE_IDS else DEFAULT_STYLE
         if style == self._picker_style and not first:
             return
-        previous, self._picker_style = self._picker_style, style
+        self._picker_style = style
         for col in (self.home_col, self.away_col):
             col.set_style(style)
-        if style != "classic" and (first or previous == "classic"):
-            self._restore_last_match()
 
-    # last match: reopen on it (user_data/last_match.json)
-    def _last_match_path(self):
-        from shared.app_paths import user_data_directory
-        return os.path.join(user_data_directory(), "last_match.json")
+    def new_match(self):
+        """Opened from the main menu: the groups picker ("Category first")
+        rolls a new random pair on the next show. Not on the first show,
+        which keeps the pair rolled (and preloaded) at build time, nor on a
+        return from the game or the squad editor, which keep their teams."""
+        self._reroll = True
 
-    def _save_last_match(self):
-        import json
-        try:
-            data = {side: list(col.pick()) for side, col in (("home", self.home_col), ("away", self.away_col))}
-            os.makedirs(os.path.dirname(self._last_match_path()), exist_ok=True)
-            with open(self._last_match_path(), "w", encoding="utf-8") as f:
-                json.dump(data, f)
-        except Exception as e:
-            log.warning(f"could not remember the last match: {e}")
-
-    def _restore_last_match(self):
-        import json
-        try:
-            with open(self._last_match_path(), encoding="utf-8") as f:
-                data = json.load(f)
-            picks = {}
-            for side in ("home", "away"):
-                tid, season, kit = data[side]
-                if str(tid) not in self.ds.teams:
-                    return
-                picks[side] = (str(tid), str(season), kit)
-        except (OSError, ValueError, KeyError, TypeError):
-            return
-        if picks["home"][0] == picks["away"][0]:
-            return      # keep the random pair: never a team against itself
-        self.home_col.set_pick(*picks["home"])
-        self.away_col.set_pick(*picks["away"])
+    def _maybe_reroll(self):
+        reroll, self._reroll = self._reroll, False
+        if reroll and not self._first_show and self._picker_style != "classic":
+            self.roll_opening()
+            self.on_team_changed("home")   # the stadium follows the home team
 
     def _on_team_data_changed(self, tid):
         for col in (self.home_col, self.away_col):
@@ -808,6 +805,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self.reset_kickoff_visuals()
         self._apply_expert_mode()      # picks up a Settings toggle flipped meanwhile
         self._apply_picker_style()     # same, for Settings > Quick Match Picker
+        self._maybe_reroll()
         self._apply_coin_toss_lock()   # same, for Settings > Coin Toss Before Match
         if difficulty.preferred() != self._preferred_difficulty:   # Settings > Preferred Difficulty
             self._preferred_difficulty = difficulty.preferred()
@@ -1524,8 +1522,6 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self.play_btn.setFocus()
 
     def _launch(self, cfg):
-        if self._picker_style != "classic":
-            self._save_last_match()
         match_data = build_match_data(self.ds, cfg)
         if match_data is None:
             return
@@ -1602,6 +1598,7 @@ class MatchSetupContainer(QWidget):
             ds, on_back, on_play_begin, on_play_reveal, self._open_squad_editor,
             on_edit_mission=self._open_mission_editor)
         self.stack.addWidget(self.setup_screen)
+        self.new_match = self.setup_screen.new_match
         self._editing_side = None
         self.mission_editor_screen = None
 

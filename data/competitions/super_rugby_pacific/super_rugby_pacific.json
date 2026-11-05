@@ -6,5 +6,5 @@
   "logo": "assets/tournament_logo.png",
   "logo_frontend": "assets/logo_frontend.png",
   "pitch_logo": "assets/pitch_logos/pitch_logo_%.png",
-  "ball": "assets/ball/ball_%.png"
+  "ball": "../super_rugby/assets/ball/ball_%.png"
 }

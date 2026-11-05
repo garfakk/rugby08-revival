@@ -21,6 +21,7 @@ from app import appearance as A
 from app import team_ops as T
 from app import player_ops as P
 from app import star_classes
+from shared.user_prefs import user_prefs
 from app.game_data import (
     POSITIONS, POSITION_ALIASES, SKIN_TONES, TAPES, FEET, SOCKS, BOOT_STYLES,
     SHIRT_POSITIONS,
@@ -287,7 +288,7 @@ class ProfileTab(PlayerTab):
                           lambda st: st.update(self._position_fixes(st)), coalesce=False)
         self.screen.shell.footer.set_status(
             "Rewrote " + ", ".join(f"{k.replace('position', 'position ')} → {position_name(v)}"
-                                   for k, v in fixes.items()) + " (Ctrl+Z to undo)", GREEN)
+                                   for k, v in fixes.items()), GREEN)
 
     def refresh(self):
         record = self.record()
@@ -308,14 +309,14 @@ class ProfileTab(PlayerTab):
         shirts = sorted(fits)
         self.fit_note.setText(("Fits shirt" + ("s " if len(shirts) > 1 else " ") +
                                ", ".join(map(str, shirts))) if shirts else
-                              "Fits no starting shirt — check the positions.")
+                              "Fits no starting shirt. Check the positions.")
         generic = [stats.get(k) for k in self.positions if stats.get(k) in POSITION_ALIASES]
         self.fix_btn.setVisible(bool(generic))
         if generic:
             self.fix_btn.setText(f"REWRITE “{generic[0]}” AS {position_name(POSITION_ALIASES[generic[0]]).upper()}")
         sources = self.screen.ds.players_sources.get(self.screen.record_id, [])
         self.file_note.setText("Defined in " + ", ".join(os.path.basename(x) for x in sources)
-                               + ("  — the last one is used" if len(sources) > 1 else ""))
+                               + ("  (the last one is used)" if len(sources) > 1 else ""))
         memberships = self.screen.ds.memberships(self.screen.record_id, with_variants=True)
         self.squads_note.setText(f"In {len(memberships)} squad list(s)." if memberships else
                                  "Not in any squad.")
@@ -405,7 +406,7 @@ class RatingsTab(PlayerTab):
         self.screen.edit(f"copy ratings from {season_label(source)}", fn,
                          view_hint={"season": target, "tab": self.index})
         self.screen.shell.footer.set_status(
-            f"Copied {counter.get('n', 0)} rating(s) from {season_label(source)} (Ctrl+Z to undo)", GREEN)
+            f"Copied {counter.get('n', 0)} rating(s) from {season_label(source)}", GREEN)
 
     def copy_previous_value(self, field):
         prev = previous_season(self.record(), self.screen.season)
@@ -822,11 +823,11 @@ class AppearanceTab(PlayerTab):
             else:
                 self.face_thumb.set_text(f"FACE\n{face}")
                 self.face_note.setText(
-                    f"Stock face {face} — data.gob not found, can't extract it"
+                    f"Stock face {face} (data.gob not found)"
                     if not os.path.isfile(config.R08_data_gob_filepath) else f"Stock face {face}")
         else:
             self.face_thumb.set_text("GENERIC")
-            self.face_note.setText("No head set, the game uses its generic face (666).")
+            self.face_note.setText("No head set: generic face (666).")
 
     def hints(self, focused):
         if isinstance(focused, LayerStackField):
@@ -845,9 +846,9 @@ TENDENCY_NAMES = ["default", "scrum", "lineout", "tackler", "runner", "passer", 
 # patches_dll ENABLE_STARPLAYERS). Names verified against the game's class
 # factory, see app/star_classes.py.
 STAR_PLAYER_NAMES = star_classes.NAMES
-# Offered in the picker: "— none" plus the 25 named classes (not 1, the
-# generic base class).
-STAR_PLAYER_CHOICES = [0] + list(range(2, 27))
+# Offered in the picker: the 25 named classes (not 1, the generic base
+# class). "— none" is the field's blank entry, so 0 isn't listed again.
+STAR_PLAYER_CHOICES = list(range(2, 27))
 SKILLS = [
     ("ss_command", "Command"), ("ss_passer", "Passer"), ("ss_play_maker", "Playmaker"),
     ("ss_scoring", "Try scorer"), ("ss_goal_kicker", "Goal kicker"),
@@ -896,9 +897,28 @@ class SkillsTab(PlayerTab):
         self.star_attribute.edited.connect(
             lambda v: self.edit_stat("star player ability", "star_attribute", v, coalesce=False))
         g.add(self.star_attribute)
+        # The yellow star over the head is separate from the ability: hidden,
+        # the player keeps the class's abilities without the marker
+        # (roster flag hide_star, see backend/game_files_processor.py).
+        self.star_marker = self.register("hide_star", ChoiceField(
+            "Star above head", ["yes"], allow_blank=True, blank_label="Shown",
+            display=lambda v: "Hidden"))
+        self.star_marker.edited.connect(
+            lambda v: self.edit_stat("star marker", "hide_star", v, coalesce=False))
+        g.add(self.star_marker)
+        # Whose star commentary the player gets ("It's a try for Brian
+        # O'Driscoll", ODR_* lines, crowd): .rdf +0x51, read by
+        # rugby08patches.dll instead of the star class. Expert mode only.
+        self.star_voice = self.register("star_voice", ChoiceField(
+            "Star commentary", [str(i) for i in STAR_PLAYER_CHOICES], allow_blank=True,
+            blank_label=STAR_PLAYER_NAMES[0],
+            display=lambda v: STAR_PLAYER_NAMES.get(int(v), v) if str(v).isdigit() else str(v)))
+        self.star_voice.edited.connect(
+            lambda v: self.edit_stat("star commentary", "star_voice", v, coalesce=False))
+        g.add(self.star_voice)
         left.add(g)
         self.add_scope(left, "extra ratings", ("crashball", "gap_defense", "special_ability",
-                                               "star_attribute"))
+                                               "star_attribute", "hide_star", "star_voice"))
 
         left.v.addStretch(1)
         row.addWidget(left)
@@ -930,6 +950,10 @@ class SkillsTab(PlayerTab):
             f.set_reference(prev.get(key) if prev else None)
         self.tendency.set_value(stats.get("special_ability", ""))
         self.star_attribute.set_value(str(stats.get("star_attribute") or ""))
+        self.star_marker.set_value("yes" if str(stats.get("hide_star", "")).strip().lower()
+                                   in TRUE_WORDS or stats.get("hide_star") is True else "")
+        self.star_voice.setVisible(bool(user_prefs.expert_mode))
+        self.star_voice.set_value(str(stats.get("star_voice") or ""))
         self.skills.set_values(k for k, _ in SKILLS
                                if str(stats.get(k, "")).strip().lower() in TRUE_WORDS)
 

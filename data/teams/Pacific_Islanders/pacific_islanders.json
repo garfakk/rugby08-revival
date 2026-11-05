@@ -18,8 +18,8 @@
     "home": {
      "frontKitFile": "kits_2008/home_front.png",
      "backKitFile": "kits_2008/home_back/home_back_%.png",
-     "previewFile": "",
-     "color": ""
+     "previewFile": "kits_2008/home_preview.png",
+     "color": "#c9c9c9"
     },
     "away": {
      "frontKitFile": "",
@@ -29,13 +29,13 @@
     }
    },
    "roles": {
-    "captain": "",
-    "viceCaptain": "",
-    "longGK": "",
-    "shortGK": "",
-    "longPunt": "",
-    "shortPunt": "",
-    "kickoff": ""
+    "captain": "147449",
+    "viceCaptain": "148221",
+    "longGK": "154504",
+    "shortGK": "154504",
+    "longPunt": "154504",
+    "shortPunt": "154504",
+    "kickoff": "154504"
    },
    "setPlays": {
     "left": "",
@@ -43,9 +43,39 @@
     "right": "",
     "down": ""
    },
-   "players": [],
-   "group": "representatives",
-   "enabled": true
+   "players": [
+    "148058",
+    "148223",
+    "142919",
+    "143435",
+    "153561",
+    "147465",
+    "148221",
+    "143022",
+    "147449",
+    "154504",
+    "142682",
+    "148212",
+    "108942",
+    "158952",
+    "148064",
+    "142695",
+    "112654",
+    "156606",
+    "148225",
+    "143056",
+    "148057",
+    "148059",
+    "147458",
+    "143224",
+    "147446",
+    "143112",
+    "143788",
+    "143920",
+    "148054",
+    "147460"
+   ],
+   "group": "representatives"
   }
  }
 }

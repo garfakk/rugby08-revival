@@ -486,3 +486,35 @@ def test_millennium_roof_closed_in_the_rain_and_the_cold(ds):
         f.stadium_id = "36"                     # Cardiff Arms Park next door: open to the rain
         assert not weather.forecast(t, f, ds)["roof_closed"]
     assert seen == {True, False}
+
+
+def _pinned_pool_stages():
+    import glob
+    import json
+    import os
+    from conftest import REAL_DATA
+    for path in sorted(glob.glob(os.path.join(REAL_DATA, "competitions", "*", "*.json"))):
+        with open(path, encoding="utf-8") as fh:
+            comp = json.load(fh)
+        for season, entry in (comp.get("seasons") or {}).items():
+            for spec in ((entry or {}).get("template") or {}).get("stages", []):
+                if spec.get("kind", "round_robin") == "round_robin" and spec.get("fixtures"):
+                    yield pytest.param(spec, id=f"{comp.get('id')}-{season}")
+
+
+@pytest.mark.parametrize("spec", list(_pinned_pool_stages()))
+def test_pinned_calendar_rounds_are_full(spec):
+    """A real calendar's pool rounds each hold every pool's full set of
+    matches (RWC 2023's staggered pools used to split into rounds of 8, 5, 3...)."""
+    fx = sorted(spec["fixtures"], key=lambda f: (f["date"], f.get("time", "")))
+    rounds = scheduler._fixed_rounds(fx)
+    per_group = {}
+    for r, f in zip(rounds, fx):
+        per_group.setdefault(f["group"], {}).setdefault(r, []).append(f)
+    for gid, by_round in per_group.items():
+        teams = {t for f in spec["fixtures"] if f["group"] == gid for t in (f["home"], f["away"])}
+        assert sorted(by_round) == list(range(1, len(by_round) + 1)), gid
+        for r, games in by_round.items():
+            assert len(games) == len(teams) // 2, (gid, r)
+            playing = [t for f in games for t in (f["home"], f["away"])]
+            assert len(playing) == len(set(playing)), (gid, r)

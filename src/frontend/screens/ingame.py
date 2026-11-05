@@ -681,7 +681,7 @@ class GameWidget(QWidget):
 
         if config.simulation_mode:
             self._stop_progress(hide=True)
-            self._show_message("Simulation mode — returning in 2 s…")
+            self._show_message("Simulation mode: returning in 2 s…")
             QTimer.singleShot(2000, self._on_game_ended)
             return
 
@@ -737,8 +737,8 @@ class GameWidget(QWidget):
         if IS_LINUX and not HAS_XDOTOOL:
             self._track_boot = False
             self._show_message(
-                "Game is launching in its own window.\n"
-                "(install 'xdotool' to embed it here)"
+                "The game opens in its own window.\n"
+                "(Install xdotool to embed it here.)"
             )
             return
 

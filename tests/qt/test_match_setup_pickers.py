@@ -84,19 +84,54 @@ def test_team_change_falls_back_to_the_nearest_season(setup, qapp):
     assert setup.cfg.home.team_id == short and setup.cfg.home.season in ds.teams[short]
 
 
-def test_last_match_is_remembered_and_a_bad_file_ignored(setup, qapp, tmp_path):
+@pytest.mark.parametrize("style", ["classic", "groups"])
+def test_random_opening_is_one_season_and_category(setup, qapp, monkeypatch, style):
+    use(setup, style, qapp)
+    ds, ix = setup.ds, setup.home_col.index
+    # a category spanning two groups, like the URC's European and South African sides
+    season = next(s for s in ds.seasons() if len(ds.teams_for(s, ds.categories_for(s)[0])) >= 4)
+    category = ds.categories_for(season)[0]
+    tids = sorted(ds.teams_for(season, category))
+    groups = {t: ("north" if i % 2 else "south") for i, t in enumerate(tids)}
+    monkeypatch.setattr(ix, "group", lambda t: groups.get(t, "other"))
+    for _ in range(30):
+        setup.roll_opening()
+        h, a = setup.cfg.home, setup.cfg.away
+        assert h.team_id != a.team_id and h.season == a.season
+        assert ds.teams[h.team_id][h.season]["category"] == ds.teams[a.team_id][a.season]["category"]
+        assert ix.group(h.team_id) == ix.group(a.team_id)
+
+
+def _pairs(window, qapp, setup, new, n=12):
+    seen = set()
+    for _ in range(n):
+        window.show_main()
+        qapp.processEvents()
+        window.show_match_setup(new=new)
+        qapp.processEvents()
+        seen.add((setup.cfg.home.team_id, setup.cfg.home.season,
+                  setup.cfg.away.team_id, setup.cfg.away.season))
+    return seen
+
+
+def test_groups_roll_a_new_pair_from_the_menu(window, setup, qapp):
     use(setup, "groups", qapp)
-    want = (setup.cfg.away.team_id, setup.cfg.home.team_id)
-    setup.home_col.set_pick(*setup.away_col.pick())
-    setup.away_col.set_pick(want[1], setup.cfg.home.season, None)
-    want = (setup.cfg.home.team_id, setup.cfg.away.team_id)
-    setup._save_last_match()
-    setup.home_col._adopt_team(setup.home_col.index.in_group(setup.home_col.group_picker.current())[-1])
-    setup._restore_last_match()
-    assert (setup.cfg.home.team_id, setup.cfg.away.team_id) == want
-    (tmp_path / "last_match.json").write_text("{nope")
-    setup._restore_last_match()                       # no crash
-    assert (setup.cfg.home.team_id, setup.cfg.away.team_id) == want
+    assert len(_pairs(window, qapp, setup, new=True)) > 1
+    h, a = setup.cfg.home, setup.cfg.away
+    assert h.team_id != a.team_id and h.season == a.season
+
+
+def test_return_to_the_screen_keeps_the_pair(window, setup, qapp):
+    use(setup, "groups", qapp)
+    window.show_match_setup(new=True)
+    qapp.processEvents()
+    assert len(_pairs(window, qapp, setup, new=False)) == 1   # back from the game
+
+
+def test_classic_keeps_its_pick_from_the_menu(window, setup, qapp):
+    window.show_match_setup(new=True)
+    qapp.processEvents()
+    assert len(_pairs(window, qapp, setup, new=True)) == 1
 
 
 def test_back_to_classic_restores_the_rows(setup, qapp):

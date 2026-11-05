@@ -60,3 +60,38 @@ def test_every_team_has_one_known_group():
         if len(groups) != 1 or not groups <= set(GROUPS):
             bad.append(f"{tid}: {sorted(map(str, groups))}")
     assert not bad
+
+
+def test_rwc_2023_variants_only_in_season_2024():
+    """The RWC 2023 squads and kit patches belong to season 2024 (the
+    2023-2024 season, which the rwc_2023 tournament plays). Elsewhere they
+    would be picked up by any later World Cup that asks for the competition's
+    variant, or by an edition resolving to another season. Only teams that
+    played that World Cup have them."""
+    teams = raw()[0]
+    stray = []
+    for tid, seasons in sorted(teams.items()):
+        for season, info in seasons.items():
+            if season == "2024":
+                continue
+            for vid, block in (info.get(V.VARIANT_KEY) or {}).items():
+                if vid == "rwc_2023" or "Rugby World Cup 2023" in (block.get("label") or ""):
+                    stray.append(f"{tid} {season}: squad variant {vid}")
+            for name, kit in (info.get("kits") or {}).items():
+                if "rwc_2023" in (kit.get(V.KIT_VARIANTS_KEY) or {}):
+                    stray.append(f"{tid} {season}: {name} kit variant rwc_2023")
+    assert not stray, stray
+
+
+def test_rwc_2023_kit_patch_only_with_the_squad():
+    """A 2024 kit patch for rwc_2023 on a team without the squad: a team
+    that did not play the tournament."""
+    teams = raw()[0]
+    odd = []
+    for tid, seasons in sorted(teams.items()):
+        info = seasons.get("2024") or {}
+        patched = any("rwc_2023" in (k.get(V.KIT_VARIANTS_KEY) or {})
+                      for k in (info.get("kits") or {}).values())
+        if patched and "world_cup" not in (info.get(V.VARIANT_KEY) or {}):
+            odd.append(tid)
+    assert not odd, odd

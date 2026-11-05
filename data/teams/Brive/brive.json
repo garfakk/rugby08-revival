@@ -20,7 +20,7 @@
      "frontKitFile": "kits_2009/away_front.webp",
      "backKitFile": "kits_2009/away_back.webp",
      "previewFile": "kits_2009/away_preview.png",
-     "color": "",
+     "color": "#1b1b1b",
      "model3d": {
       "fit": "loose"
      }
@@ -29,7 +29,7 @@
      "frontKitFile": "kits_2009/home_front.webp",
      "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2009/home_preview.png",
-     "color": "",
+     "color": "#c5c4c4",
      "model3d": {
       "fit": "loose"
      }
@@ -114,13 +114,13 @@
      "frontKitFile": "kits_2010/home_front.webp",
      "backKitFile": "kits_2009/away_back.webp",
      "previewFile": "kits_2010/home_preview.png",
-     "color": ""
+     "color": "#1c1918"
     },
     "away": {
      "frontKitFile": "kits_2010/away_front.webp",
      "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2010/away_preview.png",
-     "color": ""
+     "color": "#c5c5c5"
     }
    },
    "roles": {
@@ -199,13 +199,13 @@
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": ""
+     "color": "#6a6b65"
     },
     "away": {
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": ""
+     "color": "#cac8c6"
     }
    },
    "roles": {
@@ -294,13 +294,13 @@
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#1b1b19"
     },
     "away": {
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#e9e8e7"
     }
    },
    "roles": {
@@ -383,13 +383,13 @@
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": ""
+     "color": "#1a1a1a"
     },
     "away": {
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": ""
+     "color": "#ebebeb"
     }
    },
    "roles": {
@@ -477,15 +477,15 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2019/home_front.webp",
-     "backKitFile": "kits_2019/home_back.webp",
-     "previewFile": "kits_2019/home_preview.png",
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
      "color": ""
     },
     "away": {
-     "frontKitFile": "kits_2019/away_front.webp",
-     "backKitFile": "kits_2019/away_back.webp",
-     "previewFile": "kits_2019/away_preview.png",
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
      "color": ""
     }
    },
@@ -903,6 +903,91 @@
     "154397"
    ],
    "enabled": false,
+   "primaryStadium": "23"
+  },
+  "2017": {
+   "name": "Brive",
+   "type": "club",
+   "category": "Top 14",
+   "group": "france",
+   "ball": "logos_1/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2017/home_front.webp",
+     "backKitFile": "kits_2017/home_back.webp",
+     "previewFile": "kits_2017/home_preview.png",
+     "color": "#161813"
+    },
+    "away": {
+     "frontKitFile": "kits_2017/away_front.webp",
+     "backKitFile": "kits_2017/away_back.webp",
+     "previewFile": "kits_2017/away_preview.png",
+     "color": "#c4c7c0"
+    }
+   },
+   "roles": {
+    "captain": "156220",
+    "viceCaptain": "158494",
+    "longGK": "154007",
+    "shortGK": "154007",
+    "longPunt": "158496",
+    "shortPunt": "158496",
+    "kickoff": "158496"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "155223",
+    "153194",
+    "155241",
+    "156220",
+    "158493",
+    "158503",
+    "153379",
+    "158494",
+    "145641",
+    "158496",
+    "154151",
+    "154164",
+    "115147",
+    "154545",
+    "154007",
+    "154886",
+    "153845",
+    "158505",
+    "158514",
+    "154325",
+    "153083",
+    "154397",
+    "158498",
+    "155600",
+    "147450",
+    "144561",
+    "155211",
+    "158509",
+    "158487",
+    "154235",
+    "158495",
+    "156270",
+    "143166",
+    "142287",
+    "158490",
+    "156173",
+    "146475"
+   ],
    "primaryStadium": "23"
   }
  }

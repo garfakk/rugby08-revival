@@ -282,11 +282,8 @@ class MissionEditorScreen(Screen):
         v.setSpacing(16)
 
         v.addWidget(Note(
-            "Schema is verified against the 93 stock mission files the game "
-            "ships with. Behaviour beyond a plain kickoff (a non-default "
-            "start mode, or objectives, dropped into an ordinary exhibition "
-            "match) has not been confirmed in-game — treat it as "
-            "experimental.", color=FG_MUTED))
+            "Only a plain kick-off is confirmed in the game. Other start modes "
+            "and objectives are experimental.", color=FG_MUTED))
 
         # ── start mode ───────────────────────────────────────────────────
         start_card = SectionCard("Start state")

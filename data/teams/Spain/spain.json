@@ -20,7 +20,7 @@
      "frontKitFile": "kits_2010_2/home_front.webp",
      "backKitFile": "kits_2010_2/home_back.webp",
      "previewFile": "kits_2010_2/home_preview.png",
-     "color": "",
+     "color": "#b13032",
      "model3d": {
       "collar": "stand"
      }
@@ -29,7 +29,7 @@
      "frontKitFile": "kits_2010_2/away_front.webp",
      "backKitFile": "kits_2010_2/away_back.webp",
      "previewFile": "kits_2010_2/away_preview.png",
-     "color": "",
+     "color": "#17283a",
      "model3d": {
       "collar": "stand"
      }
@@ -262,7 +262,7 @@
      "frontKitFile": "kits_2009_3/away_front.webp",
      "backKitFile": "kits_2009_3/away_back.webp",
      "previewFile": "kits_2009_3/home_preview.png",
-     "color": "",
+     "color": "#912625",
      "model3d": {
       "fit": "loose"
      }
@@ -271,7 +271,7 @@
      "frontKitFile": "kits_2009_3/away_front.webp",
      "backKitFile": "kits_2009_3/away_back.webp",
      "previewFile": "kits_2009_3/away_preview.png",
-     "color": "",
+     "color": "#912625",
      "model3d": {
       "fit": "loose"
      }

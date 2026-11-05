@@ -105,7 +105,7 @@
      "frontKitFile": "kits_2009/home_front.webp",
      "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2009/home_preview.png",
-     "color": "",
+     "color": "#0e3325",
      "model3d": {
       "fit": "loose",
       "collar": "stand"
@@ -115,7 +115,7 @@
      "frontKitFile": "kits_2009/away_front.webp",
      "backKitFile": "kits_2009/away_back.webp",
      "previewFile": "kits_2009/away_preview.png",
-     "color": "",
+     "color": "#d6d6d2",
      "model3d": {
       "fit": "loose",
       "collar": "stand"
@@ -200,7 +200,7 @@
      "frontKitFile": "kits_2010/home_front.webp",
      "backKitFile": "kits_2010/home_back.webp",
      "previewFile": "kits_2010/home_preview.png",
-     "color": "",
+     "color": "#0a2018",
      "model3d": {
       "collar": "stand"
      }
@@ -209,7 +209,7 @@
      "frontKitFile": "kits_2010/away_front.webp",
      "backKitFile": "kits_2010/away_back.webp",
      "previewFile": "kits_2010/away_preview.png",
-     "color": "",
+     "color": "#bbbeba",
      "model3d": {
       "collar": "stand"
      }
@@ -298,7 +298,7 @@
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": "",
+     "color": "#166454",
      "model3d": {
       "fit": "loose",
       "collar": "open"
@@ -308,7 +308,7 @@
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": "",
+     "color": "#508fd3",
      "model3d": {
       "collar": "stand"
      }
@@ -593,13 +593,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#116f47"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#0c6442"
     }
    },
    "roles": {
@@ -685,13 +685,13 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": ""
+     "color": "#0d463c"
     },
     "away": {
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": ""
+     "color": "#d5d5d5"
     }
    },
    "roles": {
@@ -775,7 +775,7 @@
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": "",
+     "color": "#166454",
      "model3d": {
       "fit": "loose",
       "collar": "open"
@@ -785,7 +785,7 @@
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": "",
+     "color": "#508fd3",
      "model3d": {
       "collar": "stand"
      }
@@ -875,19 +875,19 @@
     "home": {
      "frontKitFile": "kits_2019/home_front.png",
      "backKitFile": "kits_2019/home_back/home_back_%.png",
-     "previewFile": "",
-     "color": ""
+     "previewFile": "kits_2019/home_preview.png",
+     "color": "#064d31"
     },
     "away": {
      "frontKitFile": "kits_2019/away_front.png",
      "backKitFile": "kits_2019/away_back/away_back_%.png",
-     "previewFile": "",
-     "color": ""
+     "previewFile": "kits_2019/away_preview.png",
+     "color": "#edefea"
     }
    },
    "roles": {
-    "captain": "144471",
-    "viceCaptain": "156917",
+    "captain": "156917",
+    "viceCaptain": "143080",
     "longGK": "157545",
     "shortGK": "157545",
     "longPunt": "157545",
@@ -901,41 +901,40 @@
     "down": ""
    },
    "players": [
-    "153987",
+    "157722",
     "156888",
     "156581",
     "154671",
-    "155239",
+    "152472",
     "156917",
     "154276",
-    "157094",
-    "156961",
-    "144471",
-    "157722",
-    "153985",
-    "156602",
+    "155239",
     "153787",
     "157545",
-    "154149",
-    "156547",
-    "156923",
-    "157196",
-    "157227",
-    "156618",
-    "143080",
-    "155500",
-    "157048",
-    "153027",
-    "156644",
-    "156887",
-    "142853",
-    "156717",
-    "157730",
-    "157016",
     "121726",
+    "154149",
     "153742",
     "157734",
-    "152472",
+    "143080",
+    "142853",
+    "144471",
+    "153027",
+    "156923",
+    "156717",
+    "157227",
+    "156644",
+    "157094",
+    "156961",
+    "153985",
+    "156602",
+    "156547",
+    "157196",
+    "156618",
+    "155500",
+    "157048",
+    "156887",
+    "157730",
+    "157016",
     "155388",
     "157732"
    ],

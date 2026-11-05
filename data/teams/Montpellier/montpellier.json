@@ -20,13 +20,13 @@
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": ""
+     "color": "#222845"
     },
     "away": {
      "frontKitFile": "kits_2024/away_front.webp",
      "backKitFile": "kits_2024/away_back.webp",
      "previewFile": "kits_2024/away_preview.png",
-     "color": ""
+     "color": "#c2c8cf"
     }
    },
    "roles": {
@@ -110,7 +110,7 @@
      "frontKitFile": "kits_2009/home_front.webp",
      "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2009/home_preview.png",
-     "color": "",
+     "color": "#082c7d",
      "model3d": {
       "fit": "loose"
      }
@@ -119,7 +119,7 @@
      "frontKitFile": "kits_2009/away_front.webp",
      "backKitFile": "kits_2009/away_back.webp",
      "previewFile": "kits_2009/away_preview.png",
-     "color": "",
+     "color": "#a50c09",
      "model3d": {
       "fit": "loose"
      }
@@ -190,7 +190,6 @@
    "primaryStadium": "30"
   },
   "2010": {
-   "enabled": false,
    "name": "Montpellier",
    "type": "club",
    "category": "Top 14",
@@ -207,26 +206,32 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2022/home_front.webp",
-     "backKitFile": "kits_2022/home_back.webp",
-     "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "frontKitFile": "kits_2009/home_front.webp",
+     "backKitFile": "kits_2009/home_back.webp",
+     "previewFile": "kits_2009/home_preview.png",
+     "color": "#082c7d",
+     "model3d": {
+      "fit": "loose"
+     }
     },
     "away": {
-     "frontKitFile": "kits_2022/away_front.webp",
-     "backKitFile": "kits_2022/away_back.webp",
-     "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "frontKitFile": "kits_2009/away_front.webp",
+     "backKitFile": "kits_2009/away_back.webp",
+     "previewFile": "kits_2009/away_preview.png",
+     "color": "#a50c09",
+     "model3d": {
+      "fit": "loose"
+     }
     }
    },
    "roles": {
-    "captain": "",
-    "viceCaptain": "",
-    "longGK": "147136",
-    "shortGK": "147136",
-    "longPunt": "147136",
-    "shortPunt": "147136",
-    "kickoff": "147136"
+    "captain": "128442",
+    "viceCaptain": "153480",
+    "longGK": "153480",
+    "shortGK": "153480",
+    "longPunt": "153480",
+    "shortPunt": "153480",
+    "kickoff": "153480"
    },
    "setPlays": {
     "up": "classic",
@@ -237,49 +242,46 @@
    "players": [
     "153499",
     "153484",
-    "153475",
+    "154037",
     "153495",
     "153476",
+    "153491",
     "128442",
-    "156266",
     "153501",
     "153486",
-    "131286",
+    "153480",
     "153503",
-    "153481",
     "144585",
-    "152872",
-    "147136",
-    "154037",
-    "153478",
     "153502",
-    "154045",
+    "152872",
+    "153500",
     "153477",
-    "153483",
-    "153479",
-    "153470",
-    "153491",
-    "147556",
-    "153505",
-    "153471",
-    "153488",
-    "153504",
-    "153497",
-    "156375",
+    "153478",
     "153282",
-    "153496",
-    "156234",
+    "153471",
+    "156266",
+    "153470",
     "153473",
-    "147559",
-    "153482",
-    "156268",
-    "156218",
+    "153504",
     "148068",
-    "154044",
+    "153498",
+    "154039",
+    "153497",
     "154041",
-    "154042",
-    "153494",
-    "153489"
+    "154040",
+    "153488",
+    "153485",
+    "147556",
+    "147559",
+    "142965",
+    "147136",
+    "153479",
+    "153505",
+    "154045",
+    "153482",
+    "154044",
+    "154046",
+    "156234"
    ],
    "primaryStadium": "30"
   },
@@ -304,13 +306,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#0b2951"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#eaeaea"
     }
    },
    "roles": {
@@ -403,13 +405,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#0b2951"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#eaeaea"
     }
    },
    "roles": {
@@ -498,13 +500,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#0b2951"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#eaeaea"
     }
    },
    "roles": {
@@ -590,13 +592,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#0b2951"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#eaeaea"
     }
    },
    "roles": {
@@ -689,13 +691,13 @@
      "frontKitFile": "kits_2017/home_front.webp",
      "backKitFile": "kits_2017/home_back.webp",
      "previewFile": "kits_2017/home_preview.png",
-     "color": ""
+     "color": "#011139"
     },
     "away": {
      "frontKitFile": "kits_2017/away_front.webp",
      "backKitFile": "kits_2017/away_back.webp",
      "previewFile": "kits_2017/away_preview.png",
-     "color": ""
+     "color": "#ccd0ce"
     }
    },
    "roles": {
@@ -775,13 +777,13 @@
      "frontKitFile": "kits_2018_2/home_front.webp",
      "backKitFile": "kits_2018_2/home_back.webp",
      "previewFile": "kits_2018_2/home_preview.png",
-     "color": ""
+     "color": "#51a8dc"
     },
     "away": {
      "frontKitFile": "kits_2018_2/away_front.webp",
      "backKitFile": "kits_2018_2/away_back.webp",
      "previewFile": "kits_2018_2/away_preview.png",
-     "color": ""
+     "color": "#071a45"
     }
    },
    "roles": {
@@ -869,13 +871,13 @@
      "frontKitFile": "kits_2019/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
-     "color": ""
+     "color": "#02163b"
     },
     "away": {
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": ""
+     "color": "#eaece9"
     }
    },
    "roles": {
@@ -962,13 +964,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#0b2951"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#eaeaea"
     }
    },
    "roles": {
@@ -989,7 +991,7 @@
    "players": [
     "145106",
     "143798",
-    "145552",
+    "153548",
     "144923",
     "11318",
     "145595",
@@ -1007,9 +1009,8 @@
     "152446",
     "154081",
     "128442",
-    "144395",
+    "154660",
     "155055",
-    "153548",
     "155064",
     "146707",
     "154295",
@@ -1018,9 +1019,7 @@
     "155048",
     "152719",
     "144905",
-    "154660",
     "153473",
-    "152329",
     "155049",
     "152448",
     "155052",
@@ -1050,13 +1049,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#0b2951"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#eaeaea"
     }
    },
    "roles": {
@@ -1111,8 +1110,7 @@
     "155049",
     "152448",
     "144242",
-    "155052",
-    "155067"
+    "155052"
    ],
    "primaryStadium": "30"
   },
@@ -1136,13 +1134,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#0b2951"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#eaeaea"
     }
    },
    "roles": {
@@ -1230,13 +1228,13 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": ""
+     "color": "#042a53"
     },
     "away": {
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": ""
+     "color": "#eaeae9"
     }
    },
    "roles": {
@@ -1323,13 +1321,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#0b2951"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#eaeaea"
     }
    },
    "roles": {
@@ -1422,13 +1420,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#0b2951"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#eaeaea"
     }
    },
    "roles": {

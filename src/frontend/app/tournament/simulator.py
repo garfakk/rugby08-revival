@@ -232,7 +232,9 @@ _TACKLE_WEIGHT = {"back_row": 1.6, "lock": 1.3, "centre": 1.2, "hooker": 1.1,
 _TACTICAL_SUBS = {5: ("prop", "hooker"), 6: ("lock", "back_row"), 7: ("scrum_half", "centre", "fly_half")}
 
 
-def simulate(t, fixture, rng) -> MatchResult:
+def simulate(t, fixture, rng, boost=None) -> MatchResult:
+    """`boost`: (team id, rating points) added to that team's day form —
+    expert mode's play for the title (engine._simulate_for_the_title)."""
     opts = t.options or {}
     variance = float(opts.get("sim_variance", 1.0))
     injury_rate = float(opts.get("injury_rate", 1.0)) if opts.get("injuries", True) else 0.0
@@ -248,6 +250,10 @@ def simulate(t, fixture, rng) -> MatchResult:
     gap = class_gap(t, fixture.home, fixture.away)
     home.form = rng.gauss(0, DAY_FORM_SIGMA * variance) + edge + gap / 2
     away.form = rng.gauss(0, DAY_FORM_SIGMA * variance) - gap / 2
+    if boost:
+        for side in sides:
+            if side.team_id == boost[0]:
+                side.form += boost[1]
     events = []
     shares = []
 

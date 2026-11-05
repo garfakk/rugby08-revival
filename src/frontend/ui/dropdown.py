@@ -499,6 +499,8 @@ class PopupList(QWidget):
         popup can show while it stays open."""
         rows_h = max(1, row_count) * (OptionRow.ROW_H + ROW_SPACING)
         self.scroll.setFixedHeight(min(self._max_list_h, rows_h))
+        self.layout().invalidate()      # drop size hints cached before the change
+        self.layout().activate()
         self.setFixedHeight(self.layout().totalSizeHint().height())
 
     def set_toolbar_widget(self, widget):

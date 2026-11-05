@@ -10,7 +10,7 @@ Typical flow:
   ... game ...
   s.finish_game(f, result_dict)    (or s.simulate(f), s.forfeit(f, team))
 """
-from . import bridge, engine, persistence, selection
+from . import bridge, engine, lineups, persistence, selection, trophy
 from .model import Tournament
 
 
@@ -79,6 +79,23 @@ class TournamentSession:
         self.save()
         return done
 
+    def simulate_to_title_match(self, for_title=False) -> list:
+        """Expert mode: everything up to a user's final or title decider
+        (engine.simulate_to_title_match); returns the fixtures simulated."""
+        self._checkpoint()
+        done = engine.simulate_to_title_match(self.t, for_title)
+        self.save()
+        return done
+
+    def title_match_ahead(self) -> bool:
+        """Whether a user's team still has matches before its title match
+        (simulating to it would change something)."""
+        due = self.human_fixture()
+        if due is not None:
+            return not engine.is_title_match(self.t, due)
+        humans = [tid for tid, e in self.t.teams.items() if e.human]
+        return not self.t.finished and any(not engine.is_eliminated(self.t, h) for h in humans)
+
     def simulate_to_end(self):
         self._checkpoint()
         engine.simulate_to_end(self.t)
@@ -89,6 +106,9 @@ class TournamentSession:
         """Selections ready + crash snapshot; returns (MatchConfig, repairs).
         The round's AI matches kicking off earlier are played first."""
         engine.simulate_earlier(self.t)
+        # a match that decides a competition with no final: the day's other
+        # matches first, so the right team lifts the trophy (tournament/trophy.py)
+        trophy.decider_prelude(self.t, fixture, engine.simulate_fixture)
         repairs = engine.prepare_fixture(self.t, fixture)
         self.save()
         persistence.snapshot(self.t, "prematch")
@@ -142,21 +162,94 @@ class TournamentSession:
         return done
 
     # ── squad management ──
-    def set_selection(self, team_id, players, positions=None, roles=None):
+    # A human team's default lineup is what every match starts from (see
+    # lineups.py); entry.selection is only the 22 of the next match.
+    def _lineup(self, team_id, players, positions=None, roles=None, set_plays=None):
         entry = self.t.teams[team_id]
+        base = lineups.default(entry) or entry.selection
         sel = {"players": list(players),
-               "positions": list(positions or entry.selection.get("positions") or []),
-               "set_plays": dict(entry.selection.get("set_plays") or entry.set_plays),
-               "manual": True}
+               "positions": list(positions or base.get("positions") or []),
+               "set_plays": dict(set_plays if set_plays is not None
+                                 else (base.get("set_plays") or entry.set_plays))}
         sel["roles"] = selection.pick_roles(self.t, team_id, sel["players"], roles)
-        entry.selection = sel
+        return sel
+
+    def set_selection(self, team_id, players, positions=None, roles=None, set_plays=None):
+        """The team's default lineup (also the next match's 22 until that
+        match is prepared). Returns validate()'s (errors, warnings)."""
+        entry = self.t.teams[team_id]
+        sel = self._lineup(team_id, players, positions, roles, set_plays)
+        lineups.set_default(entry, sel)
+        entry.selection = dict(sel, manual=True)
         self.save()
         return selection.validate(self.t, team_id, sel)
 
-    def auto_select(self, team_id):
+    def set_match_selection(self, team_id, players, roles=None, set_plays=None):
+        """This match only (match setup's squad editor): the default lineup
+        is left as it is, and the next match starts from it again."""
         entry = self.t.teams[team_id]
-        entry.selection = selection.auto_select(self.t, team_id)
+        sel = self._lineup(team_id, players, entry.selection.get("positions"), roles,
+                           set_plays if set_plays is not None else entry.selection.get("set_plays"))
+        entry.selection = dict(sel, manual=True)
+        self.save()
+
+    def auto_select(self, team_id):
+        """The best 22 now, made the default lineup (set plays kept)."""
+        entry = self.t.teams[team_id]
+        plays = (lineups.default(entry) or entry.selection).get("set_plays")
+        sel = selection.auto_select(self.t, team_id)
+        if plays:
+            sel["set_plays"] = dict(plays)
         if entry.human:
-            entry.selection["manual"] = True
+            lineups.set_default(entry, sel)
+            lineups.set_source(entry, None)      # not an edit of a saved lineup
+            sel["manual"] = True
+        entry.selection = sel
         self.save()
         return entry.selection
+
+    def set_auto_lineup(self, team_id, on):
+        """Pick the best 22 before every match instead of the default."""
+        entry = self.t.teams[team_id]
+        lineups.set_auto(entry, on)
+        if not on and not lineups.default(entry).get("players"):
+            lineups.set_default(entry, entry.selection)
+        self.save()
+
+    def load_lineup(self, team_id, lineup, source=None):
+        """Make a saved or played lineup the default. Players no longer in
+        the squad are dropped and the gaps filled with the best cover.
+        `source`: the saved lineup's name (None: a played one)."""
+        entry = self.t.teams[team_id]
+        lineups.set_source(entry, source)
+        squad = set(entry.squad)
+        current = (lineups.default(entry) or entry.selection).get("players", [])
+        pids = [p if p in squad else None for p in lineup.get("players", [])[:22]]
+        spare = [p for p in dict.fromkeys(list(current) + list(entry.squad)) if p not in pids]
+        pids = [p or spare.pop(0) for p in pids if p or spare]
+        roles = lineup.get("roles") or {}
+        return self.set_selection(team_id, pids, lineup.get("positions"), roles,
+                                  lineup.get("set_plays"))
+
+    def update_lineup(self, team_id, index):
+        """Write the default lineup (its edits) back into saved lineup
+        `index`, under its own name."""
+        entry = self.t.teams[team_id]
+        items = lineups.saved(entry)
+        if 0 <= index < len(items):
+            lineups.save_as(entry, items[index]["name"], lineups.default(entry) or entry.selection)
+            self.save()
+
+    def save_lineup(self, team_id, name) -> int:
+        entry = self.t.teams[team_id]
+        i = lineups.save_as(entry, name, lineups.default(entry) or entry.selection)
+        self.save()
+        return i
+
+    def rename_lineup(self, team_id, index, name):
+        lineups.rename(self.t.teams[team_id], index, name)
+        self.save()
+
+    def delete_lineup(self, team_id, index):
+        lineups.delete(self.t.teams[team_id], index)
+        self.save()

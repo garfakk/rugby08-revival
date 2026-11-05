@@ -68,7 +68,7 @@
      "frontKitFile": "kits_2009/home_front.webp",
      "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2009/home_preview.png",
-     "color": "",
+     "color": "#202020",
      "model3d": {
       "fit": "loose",
       "collar": "stand"
@@ -78,7 +78,7 @@
      "frontKitFile": "kits_2009/away_front.webp",
      "backKitFile": "kits_2009/away_back.webp",
      "previewFile": "kits_2009/away_preview.png",
-     "color": "",
+     "color": "#d7d9d1",
      "model3d": {
       "fit": "loose",
       "collar": "stand"

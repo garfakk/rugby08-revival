@@ -20,13 +20,13 @@
      "frontKitFile": "kits_2019/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
-     "color": ""
+     "color": "#03188e"
     },
     "away": {
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": ""
+     "color": "#b60a05"
     }
    },
    "roles": {
@@ -208,13 +208,13 @@
      "frontKitFile": "kits_2017/home_front.webp",
      "backKitFile": "kits_2017/home_back.webp",
      "previewFile": "kits_2017/home_preview.png",
-     "color": ""
+     "color": "#030b33"
     },
     "away": {
      "frontKitFile": "kits_2017/away_front.webp",
      "backKitFile": "kits_2017/away_back.webp",
      "previewFile": "kits_2017/away_preview.png",
-     "color": ""
+     "color": "#dadbd5"
     }
    },
    "roles": {
@@ -261,13 +261,10 @@
     "156152",
     "144960",
     "154968",
-    "158496",
     "144769",
     "154014",
     "154976",
-    "154007",
     "158528",
-    "145821",
     "156299",
     "144277",
     "158530",
@@ -276,11 +273,9 @@
     "155619",
     "158532",
     "155024",
-    "144966",
     "158531",
     "158523",
     "153645",
-    "158517",
     "158526",
     "158533"
    ],

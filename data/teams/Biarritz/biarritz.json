@@ -22,7 +22,7 @@
      "frontKitFile": "kits_2009/home_front.webp",
      "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": "",
+     "color": "#ac0616",
      "model3d": {
       "fit": "loose"
      }
@@ -31,7 +31,7 @@
      "frontKitFile": "kits_2009/away_front.webp",
      "backKitFile": "kits_2009/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": "",
+     "color": "#dbddd7",
      "model3d": {
       "fit": "loose"
      }
@@ -94,7 +94,6 @@
     "142598",
     "155453",
     "155046",
-    "155442",
     "153273"
    ]
   },
@@ -120,13 +119,13 @@
      "frontKitFile": "kits_2010/home_front.webp",
      "backKitFile": "kits_2010/home_back.webp",
      "previewFile": "kits_2010/home_preview.png",
-     "color": ""
+     "color": "#d7d8d4"
     },
     "away": {
      "frontKitFile": "kits_2010/away_front.webp",
      "backKitFile": "kits_2010/away_back.webp",
      "previewFile": "kits_2010/away_preview.png",
-     "color": ""
+     "color": "#a90a09"
     }
    },
    "roles": {
@@ -149,9 +148,9 @@
     "155439",
     "156241",
     "155448",
-    "154275",
-    "155450",
     "130109",
+    "155450",
+    "103625",
     "153178",
     "124855",
     "155456",
@@ -164,7 +163,7 @@
     "153758",
     "155446",
     "156238",
-    "103625",
+    "154275",
     "152897",
     "154329",
     "155466",
@@ -190,6 +189,104 @@
     "155453"
    ]
   },
+  "2022": {
+   "name": "Biarritz",
+   "type": "club",
+   "category": "Top 14",
+   "group": "france",
+   "ball": "ball_2/ball_%.png",
+   "banners": "banners_2/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_2/logo.png",
+    "small": "logos_2/logo_small.png",
+    "left": "logos_2/logo_left.png",
+    "right": "logos_2/logo_right.png",
+    "frontend": "logos_2/logo_frontend.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022_2/home_front.webp",
+     "backKitFile": "kits_2022_2/home_back.webp",
+     "previewFile": "kits_2022_2/home_preview.png",
+     "color": "#d62e20"
+    },
+    "away": {
+     "frontKitFile": "kits_2022_2/away_front.webp",
+     "backKitFile": "kits_2022_2/away_back.webp",
+     "previewFile": "kits_2022_2/away_preview.png",
+     "color": "#151616"
+    }
+   },
+   "roles": {
+    "captain": "155434",
+    "viceCaptain": "155434",
+    "longGK": "155434",
+    "shortGK": "155434",
+    "longPunt": "155434",
+    "shortPunt": "155434",
+    "kickoff": "155434"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153080",
+    "154339",
+    "155056",
+    "154332",
+    "153727",
+    "155430",
+    "142338",
+    "110021",
+    "155410",
+    "155434",
+    "153098",
+    "153779",
+    "153092",
+    "145916",
+    "152909",
+    "153194",
+    "152437",
+    "158511",
+    "154644",
+    "153594",
+    "145514",
+    "155433",
+    "146797",
+    "155427",
+    "155424",
+    "156306",
+    "156593",
+    "152971",
+    "155401",
+    "155422",
+    "155049",
+    "154217",
+    "152901",
+    "155400",
+    "155414",
+    "152973",
+    "152888",
+    "155418",
+    "158541",
+    "155437",
+    "153049",
+    "157005",
+    "154168",
+    "155403",
+    "146545",
+    "154101",
+    "155407",
+    "155420",
+    "155075"
+   ],
+   "enabled": true,
+   "primaryStadium": "22"
+  },
   "2023": {
    "name": "Biarritz",
    "type": "club",
@@ -212,13 +309,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview_2.png",
-     "color": ""
+     "color": "#d62e20"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview_2.png",
-     "color": ""
+     "color": "#151616"
     }
    },
    "roles": {
@@ -303,13 +400,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview_2.png",
-     "color": ""
+     "color": "#d62e20"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview_2.png",
-     "color": ""
+     "color": "#151616"
     }
    },
    "roles": {
@@ -373,105 +470,6 @@
     "155422"
    ],
    "enabled": false
-  },
-  "2022": {
-   "name": "Biarritz",
-   "type": "club",
-   "category": "Top 14",
-   "group": "france",
-   "ball": "ball_2/ball_%.png",
-   "banners": "banners_2/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_2/logo.png",
-    "small": "logos_2/logo_small.png",
-    "left": "logos_2/logo_left.png",
-    "right": "logos_2/logo_right.png",
-    "frontend": "logos_2/logo_frontend.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2022/home_front.webp",
-     "backKitFile": "kits_2022/home_back.webp",
-     "previewFile": "kits_2022/home_preview_2.png",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "kits_2022/away_front.webp",
-     "backKitFile": "kits_2022/away_back.webp",
-     "previewFile": "kits_2022/away_preview_2.png",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "155434",
-    "viceCaptain": "155434",
-    "longGK": "155434",
-    "shortGK": "155434",
-    "longPunt": "155434",
-    "shortPunt": "155434",
-    "kickoff": "155434"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "153080",
-    "154339",
-    "155056",
-    "154332",
-    "153727",
-    "155430",
-    "142338",
-    "110021",
-    "142286",
-    "155434",
-    "153098",
-    "153779",
-    "153092",
-    "145916",
-    "152909",
-    "153194",
-    "152437",
-    "158511",
-    "154644",
-    "153594",
-    "145514",
-    "155433",
-    "146797",
-    "155427",
-    "155424",
-    "156306",
-    "156593",
-    "152971",
-    "155401",
-    "155422",
-    "155049",
-    "154217",
-    "152901",
-    "155400",
-    "155414",
-    "152973",
-    "152888",
-    "155418",
-    "155410",
-    "158541",
-    "155437",
-    "153049",
-    "157005",
-    "154168",
-    "155403",
-    "146545",
-    "154101",
-    "155407",
-    "155420",
-    "155075"
-   ],
-   "enabled": false,
-   "primaryStadium": "22"
   },
   "2008": {
    "name": "Biarritz",
@@ -589,13 +587,13 @@
      "frontKitFile": "kits_2010/home_front.webp",
      "backKitFile": "kits_2010/home_back.webp",
      "previewFile": "kits_2010/home_preview.png",
-     "color": ""
+     "color": "#d7d8d4"
     },
     "away": {
      "frontKitFile": "kits_2010/away_front.webp",
      "backKitFile": "kits_2010/away_back.webp",
      "previewFile": "kits_2010/away_preview.png",
-     "color": ""
+     "color": "#a90a09"
     }
    },
    "roles": {
@@ -680,13 +678,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview_2.png",
-     "color": ""
+     "color": "#d62e20"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview_2.png",
-     "color": ""
+     "color": "#151616"
     }
    },
    "roles": {
@@ -779,13 +777,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview_2.png",
-     "color": ""
+     "color": "#d62e20"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview_2.png",
-     "color": ""
+     "color": "#151616"
     }
    },
    "roles": {
@@ -878,13 +876,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview_2.png",
-     "color": ""
+     "color": "#d62e20"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview_2.png",
-     "color": ""
+     "color": "#151616"
     }
    },
    "roles": {

@@ -20,13 +20,13 @@
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": ""
+     "color": "#c9cccc"
     },
     "away": {
      "frontKitFile": "kits_2024/away_front.webp",
      "backKitFile": "kits_2024/away_back.webp",
      "previewFile": "kits_2024/away_preview.png",
-     "color": ""
+     "color": "#d7c72e"
     }
    },
    "roles": {
@@ -110,7 +110,7 @@
      "frontKitFile": "kits_2009/home_front.webp",
      "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2009/home_preview.png",
-     "color": "",
+     "color": "#7acfdc",
      "model3d": {
       "collar": "stand"
      }
@@ -119,7 +119,7 @@
      "frontKitFile": "kits_2009/away_front.webp",
      "backKitFile": "kits_2009/away_back.webp",
      "previewFile": "kits_2009/away_preview.png",
-     "color": "",
+     "color": "#ae2107",
      "model3d": {
       "collar": "stand"
      }
@@ -206,7 +206,7 @@
      "frontKitFile": "kits_2010/home_front.webp",
      "backKitFile": "kits_2010/home_back.webp",
      "previewFile": "kits_2010/home_preview.png",
-     "color": "",
+     "color": "#cdcecd",
      "model3d": {
       "collar": "stand"
      }
@@ -215,7 +215,7 @@
      "frontKitFile": "kits_2010/away_front.webp",
      "backKitFile": "kits_2010/away_back.webp",
      "previewFile": "kits_2010/away_preview.png",
-     "color": "",
+     "color": "#ac1e07",
      "model3d": {
       "collar": "stand"
      }
@@ -305,13 +305,13 @@
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/home_preview.png",
-     "color": ""
+     "color": "#9dcad2"
     },
     "away": {
      "frontKitFile": "kits_2019/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": ""
+     "color": "#b81702"
     }
    },
    "roles": {
@@ -397,13 +397,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#7eb1e1"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#de0e27"
     }
    },
    "roles": {
@@ -493,13 +493,13 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": ""
+     "color": "#77aee0"
     },
     "away": {
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": ""
+     "color": "#dc1b2b"
     }
    },
    "roles": {
@@ -587,7 +587,7 @@
      "frontKitFile": "kits_2010/home_front.webp",
      "backKitFile": "kits_2010/home_back.webp",
      "previewFile": "kits_2010/home_preview.png",
-     "color": "",
+     "color": "#cdcecd",
      "model3d": {
       "collar": "stand"
      }
@@ -596,7 +596,7 @@
      "frontKitFile": "kits_2010/away_front.webp",
      "backKitFile": "kits_2010/away_back.webp",
      "previewFile": "kits_2010/away_preview.png",
-     "color": "",
+     "color": "#ac1e07",
      "model3d": {
       "collar": "stand"
      }
@@ -687,7 +687,7 @@
      "frontKitFile": "kits_2010/home_front.webp",
      "backKitFile": "kits_2010/home_back.webp",
      "previewFile": "kits_2010/home_preview.png",
-     "color": "",
+     "color": "#cdcecd",
      "model3d": {
       "collar": "stand"
      }
@@ -696,7 +696,7 @@
      "frontKitFile": "kits_2010/away_front.webp",
      "backKitFile": "kits_2010/away_back.webp",
      "previewFile": "kits_2010/away_preview.png",
-     "color": "",
+     "color": "#ac1e07",
      "model3d": {
       "collar": "stand"
      }
@@ -791,7 +791,7 @@
      "frontKitFile": "kits_2010/home_front.webp",
      "backKitFile": "kits_2010/home_back.webp",
      "previewFile": "kits_2010/home_preview.png",
-     "color": "",
+     "color": "#cdcecd",
      "model3d": {
       "collar": "stand"
      }
@@ -800,7 +800,7 @@
      "frontKitFile": "kits_2010/away_front.webp",
      "backKitFile": "kits_2010/away_back.webp",
      "previewFile": "kits_2010/away_preview.png",
-     "color": "",
+     "color": "#ac1e07",
      "model3d": {
       "collar": "stand"
      }

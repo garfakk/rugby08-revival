@@ -47,7 +47,7 @@ class MainMenuScreen(Screen):
         menu_col.addStretch(1)
 
         items = [
-            ("QUICK MATCH", "", self.mw.show_match_setup, False),
+            ("QUICK MATCH", "", lambda: self.mw.show_match_setup(new=True), False),
             ("GAME MODES", "", self.mw.show_game_modes, False),
             ("TOOLS", "", self.mw.show_tools, False),
             ("SETTINGS", "", self.mw.show_settings, False),
@@ -102,7 +102,7 @@ class MainMenuScreen(Screen):
         # Kept on self: a QAbstractAnimation whose only reference is local
         # is garbage-collected mid-flight, leaving the tiles parked at
         # whatever opacity they had reached.
-        self._entrance_group = group
+        self._entrance_group = motion.track(group)
         group.start()
 
     def keyPressEvent(self, event):

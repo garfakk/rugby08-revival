@@ -20,13 +20,13 @@
      "frontKitFile": "kits_2019/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
-     "color": ""
+     "color": "#6c1e36"
     },
     "away": {
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": ""
+     "color": "#ebece9"
     }
    },
    "roles": {
@@ -112,13 +112,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#430e2a"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#c1c6c9"
     }
    },
    "roles": {
@@ -205,13 +205,13 @@
      "frontKitFile": "kits_2024/away_front.webp",
      "backKitFile": "kits_2024/away_back.webp",
      "previewFile": "kits_2024/away_preview.png",
-     "color": ""
+     "color": "#4c1f26"
     },
     "away": {
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": ""
+     "color": "#e0e0e0"
     }
    },
    "roles": {
@@ -299,13 +299,13 @@
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": ""
+     "color": "#4e060b"
     },
     "away": {
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": ""
+     "color": "#431b35"
     }
    },
    "roles": {
@@ -393,13 +393,13 @@
      "frontKitFile": "kits_2023_2/home_front.webp",
      "backKitFile": "kits_2023_2/home_back.webp",
      "previewFile": "kits_2023_2/home_preview.png",
-     "color": ""
+     "color": "#4d1030"
     },
     "away": {
      "frontKitFile": "kits_2023_2/away_front.webp",
      "backKitFile": "kits_2023_2/away_back.webp",
      "previewFile": "kits_2023_2/away_preview.png",
-     "color": ""
+     "color": "#e9e7e6"
     }
    },
    "roles": {
@@ -746,7 +746,6 @@
    "primaryStadium": "69"
   },
   "2017": {
-   "enabled": false,
    "name": "Bordeaux-Bègles",
    "type": "club",
    "category": "Top 14",
@@ -763,26 +762,26 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
+     "frontKitFile": "kits_2018/away_front.webp",
+     "backKitFile": "kits_2018/away_back.webp",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": "#4e060b"
     },
     "away": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
+     "frontKitFile": "kits_2018/home_front.webp",
+     "backKitFile": "kits_2018/home_back.webp",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "#431b35"
     }
    },
    "roles": {
     "captain": "147244",
-    "viceCaptain": "146879",
-    "longGK": "148831",
-    "shortGK": "148831",
-    "longPunt": "148831",
-    "shortPunt": "148831",
-    "kickoff": "148831"
+    "viceCaptain": "152892",
+    "longGK": "155319",
+    "shortGK": "155319",
+    "longPunt": "155319",
+    "shortPunt": "155319",
+    "kickoff": "155319"
    },
    "setPlays": {
     "up": "miss",
@@ -793,49 +792,42 @@
    "players": [
     "145469",
     "144382",
-    "145631",
-    "144975",
-    "144338",
-    "142638",
-    "148904",
-    "145129",
-    "142443",
-    "148831",
-    "148900",
-    "146892",
-    "148930",
-    "147244",
-    "146879",
-    "148096",
-    "145406",
-    "117861",
-    "148837",
-    "145021",
-    "114310",
-    "148788",
-    "148942",
-    "144677",
-    "144967",
-    "148938",
-    "144306",
-    "144808",
-    "144781",
-    "145163",
-    "147496",
-    "148928",
     "124596",
-    "148941",
-    "148635",
-    "148927",
-    "146141",
-    "148793",
-    "144583",
-    "148940",
-    "148779",
-    "148943",
-    "148944",
-    "144934",
-    "146667"
+    "117861",
+    "144781",
+    "152892",
+    "152776",
+    "145129",
+    "144306",
+    "155319",
+    "152905",
+    "147244",
+    "114310",
+    "158961",
+    "145163",
+    "145406",
+    "153648",
+    "153081",
+    "155403",
+    "153592",
+    "153333",
+    "153820",
+    "144808",
+    "153039",
+    "158957",
+    "158958",
+    "152891",
+    "158959",
+    "144967",
+    "152897",
+    "152901",
+    "152899",
+    "152903",
+    "158960",
+    "158962",
+    "154154",
+    "152908",
+    "152909"
    ],
    "primaryStadium": "69"
   },
@@ -1348,7 +1340,7 @@
     "154428",
     "154442",
     "147312",
-    "154444",
+    "154445",
     "154411",
     "145093",
     "154451",
@@ -1361,7 +1353,6 @@
     "154436",
     "154416",
     "152858",
-    "154445",
     "152862",
     "152864",
     "154429",
@@ -1441,9 +1432,9 @@
     "154470",
     "152858",
     "147312",
-    "154444",
+    "154445",
     "154412",
-    "154473",
+    "154449",
     "154451",
     "154457",
     "154452",
@@ -1461,11 +1452,9 @@
     "154440",
     "154432",
     "154433",
-    "154445",
     "154446",
     "154414",
     "154418",
-    "154449",
     "154426",
     "154015",
     "154454",

@@ -301,8 +301,8 @@ class TournamentWizardScreen(Screen):
         else:
             self.reality.hide()
             grid.hide()
-        self.reality_note = Note("Reality mode: the other teams' matches get their real results, with "
-                                 "the real injuries and bans. Yours are played as usual.", color=FG_TERTIARY)
+        self.reality_note = Note("Reality mode: other teams' matches use their real results, "
+                                 "injuries and bans. Yours are played.", color=FG_TERTIARY)
         sv.addWidget(self.reality_note)
         self.reality_note.setVisible(REALITY_OFFERED)
         v.addWidget(w)
@@ -621,7 +621,7 @@ class TournamentWizardScreen(Screen):
         here = probs.get(self._step, []) if self._step else []    # NEXT waits for a pick
         last = self._step == len(STEPS) - 1
         shown = [p for p in (here or (all_found if last else [])) if p is not NO_TEAM]
-        self.problems.setText(("⚠  " + "; ".join(shown[:3]) + (" …" if len(shown) > 3 else "")) if shown else "")
+        self.problems.setText(("; ".join(shown[:3]) + (" …" if len(shown) > 3 else "")) if shown else "")
         self.next_btn.setText("DONE" if self._page == DRAW_PAGE else
                               ("START TOURNAMENT" if last else "NEXT"))
         self.next_btn.setEnabled(self._page == DRAW_PAGE or

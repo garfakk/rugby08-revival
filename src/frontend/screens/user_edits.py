@@ -262,8 +262,8 @@ class UserEditsScreen(Screen):
             for c in conflicts[:MAX_ROWS]:
                 self._conflict_row(kind, c)
             if len(conflicts) > MAX_ROWS:
-                self.rows_v.addWidget(Note(f"… and {len(conflicts) - MAX_ROWS} more: yours are "
-                                           "kept unless you TAKE ALL FROM THE RELEASE",
+                self.rows_v.addWidget(Note(f"… and {len(conflicts) - MAX_ROWS} more (yours are "
+                                           "kept unless you TAKE ALL FROM THE RELEASE)",
                                            color=FG_TERTIARY))
         else:
             paths = changed_paths(MISSING if env["base"] is None else env["base"],
@@ -315,7 +315,7 @@ class UserEditsScreen(Screen):
             f.set_value(choice)
         self.bulk = choice
         self._say(f"Every conflict set to {'yours' if choice == 'mine' else 'the release'}"
-                  " — APPLY MY CHOICES to save.")
+                  ". APPLY MY CHOICES to save.")
 
     def _apply(self):
         if not self.current:
@@ -340,7 +340,7 @@ class UserEditsScreen(Screen):
         kind, rid = self.current
         env = self.edits.get(kind, rid)
         name = self._name(kind, rid)
-        what = ("It exists only in your edits: it is removed." if env["base"] is None else
+        what = ("It only exists in your edits and will be removed." if env["base"] is None else
                 "The data pack's version is used again.")
 
         def done(role):
@@ -383,7 +383,7 @@ class UserEditsScreen(Screen):
 
     def _import(self):
         """An edits export: its manifest.json (the folder), or a zip of it."""
-        path, _ = QFileDialog.getOpenFileName(self, "Import edits — pick the export's manifest.json",
+        path, _ = QFileDialog.getOpenFileName(self, "Import edits (pick the export's manifest.json)",
                                               os.path.join(user_data_directory(), "exported_edits"),
                                               "Edits export (manifest.json *.zip)")
         if not path:
@@ -400,10 +400,9 @@ class UserEditsScreen(Screen):
             self.ds.refresh_record(kind, rid)
         text = f"Imported {len(out['records'])} record(s), {out['files']} file(s)"
         if out["skipped"]:
-            text += (f"; {len(out['skipped'])} left out (you already edit them: write or drop "
-                     "your edit first)")
+            text += (f"; {len(out['skipped'])} skipped (already in your edits)")
         if out["file_clashes"]:
-            text += f"; {len(out['file_clashes'])} file(s) already present with other content kept"
+            text += f"; {len(out['file_clashes'])} existing file(s) kept"
         self._say(text, GREEN if not out["skipped"] else WARN)
         self.reload()
 
@@ -418,8 +417,8 @@ class UserEditsScreen(Screen):
                 self._promote(keys)
         self._dialog = ConfirmDialog(
             self, "Write the edits into the data pack?",
-            f"{len(keys)} record(s) are written into the data pack files and leave My edits."
-            + (f" {blocked} with conflicts are left out: settle them first." if blocked else ""),
+            f"{len(keys)} record(s) will be written into the data pack and removed from My edits."
+            + (f" {blocked} with conflicts are left out." if blocked else ""),
             [("CANCEL", "neutral", "cancel"), ("WRITE", "primary", "ok")], done)
 
     def _promote(self, keys):

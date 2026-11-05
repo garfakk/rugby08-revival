@@ -168,8 +168,8 @@ class RosterImportScreen(Screen):
         browse.clicked.connect(self._browse)
         frow.addWidget(browse)
         fcard.add_layout(frow)
-        self.file_summary = Note("Choose a .ros saved roster (community patches) or a raw .rdf "
-                                 "roster file.", color=FG_SECONDARY, size=T_LABEL)
+        self.file_summary = Note("Choose a .ros roster (community patches) or a raw .rdf file.",
+                                 color=FG_SECONDARY, size=T_LABEL)
         fcard.add(self.file_summary)
         left.addWidget(fcard)
 
@@ -255,11 +255,11 @@ class RosterImportScreen(Screen):
         self.file_summary.setText(
             f"{'Saved roster (.ros)' if roster['kind'] == 'ros' else 'Raw roster (.rdf)'} · "
             f"{len(roster['players'])} players · {len(roster['teams'])} teams with a squad\n"
-            f"{multi} players are in more than one squad (club and country), "
-            f"{sum(1 for rid in roster['players'] if rid not in in_squads)} are in none.\n"
-            + (f"Birth years: the file runs {self.plan.birth_offset} years behind the mod "
-               f"(read from {self.plan.offset_evidence} players both know)."
-               if self.plan.offset_evidence else "Birth years: no shared players to read the shift from."))
+            f"{multi} players are in several squads (club and country), "
+            f"{sum(1 for rid in roster['players'] if rid not in in_squads)} in none.\n"
+            + (f"Birth years: the file is {self.plan.birth_offset} years behind the mod "
+               f"(from {self.plan.offset_evidence} shared players)."
+               if self.plan.offset_evidence else "Birth years: no shared players to compare."))
         self._on_options()
         self._refresh_teams()
         self.set_status(f"Read {os.path.basename(path)}", GREEN)
@@ -367,13 +367,13 @@ class RosterImportScreen(Screen):
         self.t_category.set_options(self.ds.all_categories())
         self.t_category.set_value(c.category)
         if c.link == "new":
-            self.t_link_note.setText("A new team folder is created with one season.")
+            self.t_link_note.setText("A new team folder with one season will be created.")
         else:
             has = self.plan.season in self.ds.teams.get(c.link, {})
             self.t_link_note.setText(
                 f"Season {self.plan.season} of {self._existing_name(c.link)} "
-                + ("gets its squad, roles and set plays replaced; kits, crest and assets stay."
-                   if has else "is added as a copy of its latest season, with the imported squad."))
+                + ("will have its squad, roles and set plays replaced. Kits, crest and assets stay."
+                   if has else "will be added as a copy of its latest season, with the imported squad."))
         players = self.roster["players"]
         lines = []
         for i, rid in enumerate(c.team["squad"][:30]):
@@ -610,8 +610,8 @@ class RosterImportScreen(Screen):
         else:
             note = {
                 ("update", "exact"): "Same surname and initial, and nothing contradicts it.",
-                ("update", "check"): "The name fits but the evidence is thin or disagrees — check it.",
-                ("create", "none"): "No player with this surname — a new player will be created.",
+                ("update", "check"): "The name fits but the evidence is weak or conflicting. Check it.",
+                ("create", "none"): "No player with this surname. A new player will be created.",
             }.get((c.decision, c.confidence), "")
         return (f"<table cellspacing='4'>{''.join(rows)}</table>"
                 f"<p style='color:{FG_SECONDARY}'>{note}</p>")
@@ -680,7 +680,7 @@ class RosterImportScreen(Screen):
     # ── step 4: things the import cannot do as-is ────────────────────────
     def _build_issues_page(self, lay):
         self.issue_empty = SectionCard("nothing to decide")
-        self.issue_empty.add(Note("Every value in the file fits the mod. Continue to the review.",
+        self.issue_empty.add(Note("Everything in the file fits the mod.",
                                   color=FG_SECONDARY, size=T_LABEL))
         lay.addWidget(self.issue_empty)
         self.issue_cards = {}
@@ -771,22 +771,21 @@ class RosterImportScreen(Screen):
             if "squads" not in self.plan.groups:
                 break
             target = "new team" if t.link == "new" else f"into {self._existing_name(t.link)}"
-            team_lines.append(f"· {t.name} — season {self.plan.season}, {target}")
+            team_lines.append(f"· {t.name}, season {self.plan.season}, {target}")
             if t.link == "new":
                 files.add(f"{t.name}/  (new team folder)")
             else:
                 files.add(os.path.basename(self.ds.teams_file_path.get(t.link, "")))
         warn = []
         if s["players_to_check"]:
-            warn.append(f"{s['players_to_check']} name matches were not confirmed — step 3 "
-                        f"“matches to check”.")
+            warn.append(f"{s['players_to_check']} name matches are unconfirmed (step 3, matches to check).")
         if not teams and self.plan.scope == "squads":
-            warn.append("No team is selected, so no player is in scope.")
+            warn.append("No team selected: no players to import.")
         for t in teams:
             kept = [r for r in t.team["squad"][:self.plan.squad_size]
                     if self.plan.players.get(r) and self.plan.players[r].decision != P.SKIP]
             if len(kept) < 22 and "squads" in self.plan.groups:
-                warn.append(f"{t.name}: {len(kept)} players after skips — the game needs 22.")
+                warn.append(f"{t.name}: {len(kept)} players after skips; the game needs 22.")
         html = (
             f"<p><b>Season {self.plan.season}</b> · birth years +{self.plan.birth_offset} · "
             f"importing: {', '.join(groups) or 'nothing'}</p>"
@@ -795,7 +794,7 @@ class RosterImportScreen(Screen):
             + (f"<p><b>Your decisions</b><br>{'<br>'.join(answers)}</p>" if answers else "") +
             f"<p><b>Teams</b>: {s['teams_new']} new, {s['teams_update']} updated"
             f"{'<br>' + '<br>'.join(team_lines) if team_lines else ''}</p>"
-            f"<p><b>Files written</b> (a .bak of each original is kept on first save):<br>"
+            f"<p><b>Files written</b> (originals are backed up as .bak on first save):<br>"
             f"{'<br>'.join(sorted(files)) or '—'}</p>"
         )
         if warn:
@@ -872,7 +871,7 @@ class RosterImportScreen(Screen):
             self.set_status("Choose a roster file first", WARN)
             return False
         if target >= STEP_PLAYERS and self.plan.scope == "squads" and not self.plan.selected_teams():
-            self.set_status("Select at least one team (or import every player on step 1)", WARN)
+            self.set_status("Select a team, or import every player on step 1", WARN)
             return False
         return True
 
@@ -905,8 +904,7 @@ class RosterImportScreen(Screen):
         self.roster = None
         self._imported = None
         self.path.set_value("")
-        self.file_summary.setText("Choose a .ros saved roster (community patches) or a raw "
-                                  ".rdf roster file.")
+        self.file_summary.setText("Choose a .ros roster (community patches) or a raw .rdf file.")
         self.team_list.set_items([])
         self.table.setRowCount(0)
         self.plan_resolutions_reset()

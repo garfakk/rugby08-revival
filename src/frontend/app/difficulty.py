@@ -153,6 +153,11 @@ PROFILES = {
             "cpu_lineout_keep": 85,    # contested CPU throws kept at least
             "cpu_lineout_steal": 12,   # contested human throws stolen at least
             "cpu_jackal": 10,          # extra chance per ruck the CPU defence jackals
+            # Possession governor at the human team's rucks (replaces stock +
+            # cpu_jackal there): "grace,base,step,cap" - the first rucks of an
+            # attack are never contested, then base% + step% a phase up to cap%.
+            # Median attack ~8 rucks (was ~5); long attacks still get turned over.
+            "cpu_ruck_contest": "2,6,3,25",
             "cpu_ruck_secure": 50,     # human jackals refused on a CPU ruck
             # fly-half kick share by zone: deep own end, own half, opp half,
             # opp 22 (alternates: two kicks in a row halve the next chance)
@@ -167,10 +172,12 @@ PROFILES = {
         "mental_floor": 96,
         "endurance_floor": 99,
         "skills": 99,
-        "all_skills": ["ss_tackle_breaker", "ss_scoring"],   # every player, any position
+        # every player but the front five: tackle breaking on props and locks
+        # kept them up in contact, offloading (and dropping) far too often
+        "all_skills": ["ss_tackle_breaker", "ss_scoring"],
         "stars": 99,
         "star_pool": "all",
-        "stars_front_five": True,
+        "stars_front_five": False,   # every star class breaks tackles: not props/locks (offloads)
         "forward_weight_kg": 4,
         "forward_height_cm": 2,
         "human_endurance_cap": 70,
@@ -180,6 +187,7 @@ PROFILES = {
             "cpu_lineout_keep": 97,
             "cpu_lineout_steal": 25,
             "cpu_jackal": 25,
+            "cpu_ruck_contest": "1,10,4,35",   # median attack ~6 rucks (was ~3)
             "cpu_ruck_secure": 85,
             "cpu_fh_kick": "65,40,15,5",
             "cpu_setplay_slow": 20,
@@ -220,8 +228,9 @@ def boost_player(player: dict, profile: dict, star_class: int = 0,
         p[key] = _clamp(max(p[key], profile["endurance_floor"]))
     for skill in POSITION_SKILLS.get(p.get("pos1"), [])[:profile["skills"]]:
         p[skill] = True
-    for skill in profile.get("all_skills", []):
-        p[skill] = True
+    if p.get("pos1") not in FRONT_FIVE:
+        for skill in profile.get("all_skills", []):
+            p[skill] = True
     if p.get("pos1") in FORWARDS:
         p["weight"] = p.get("weight", 0) + profile["forward_weight_kg"]
         p["height"] = p.get("height", 0) + profile["forward_height_cm"]

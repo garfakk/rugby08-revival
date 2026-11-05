@@ -20,7 +20,7 @@
      "frontKitFile": "kits_2009/home_front.webp",
      "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2009/home_preview.png",
-     "color": "",
+     "color": "#17181f",
      "model3d": {
       "collar": "stand"
      }
@@ -29,7 +29,7 @@
      "frontKitFile": "kits_2009/away_front.webp",
      "backKitFile": "kits_2009/away_back.webp",
      "previewFile": "kits_2009/away_preview.png",
-     "color": "",
+     "color": "#d7d7d3",
      "model3d": {
       "collar": "stand"
      }
@@ -112,7 +112,7 @@
      "frontKitFile": "kits_2009/home_front.webp",
      "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2009/home_preview.png",
-     "color": "",
+     "color": "#17181f",
      "model3d": {
       "collar": "stand"
      }
@@ -121,7 +121,7 @@
      "frontKitFile": "kits_2009/away_front.webp",
      "backKitFile": "kits_2009/away_back.webp",
      "previewFile": "kits_2009/away_preview.png",
-     "color": "",
+     "color": "#d7d7d3",
      "model3d": {
       "collar": "stand"
      }
@@ -202,7 +202,16 @@
      "frontKitFile": "kits_2017/home_front.webp",
      "backKitFile": "kits_2017/home_back.webp",
      "previewFile": "kits_2017/home_preview.png",
-     "color": ""
+     "color": "#1b1915"
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.webp",
+     "backKitFile": "kits_2018/away_back.webp",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "#b40000",
+     "model3d": {
+      "collar": "stand"
+     }
     }
    },
    "roles": {
@@ -289,7 +298,7 @@
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": "",
+     "color": "#1a1b17",
      "model3d": {
       "collar": "stand"
      }
@@ -298,7 +307,7 @@
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": "",
+     "color": "#b40000",
      "model3d": {
       "collar": "stand"
      }
@@ -307,8 +316,8 @@
    "roles": {
     "captain": "153026",
     "viceCaptain": "153790",
-    "longGK": "153790",
-    "shortGK": "153790",
+    "longGK": "10172",
+    "shortGK": "10172",
     "longPunt": "144491",
     "shortPunt": "153013",
     "kickoff": "144491"
@@ -393,7 +402,7 @@
      "frontKitFile": "kits_2019/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
-     "color": "",
+     "color": "#2d2d3f",
      "model3d": {
       "collar": "stand"
      }
@@ -402,7 +411,7 @@
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": "",
+     "color": "#2a2a3a",
      "model3d": {
       "collar": "stand"
      }
@@ -496,13 +505,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#191739"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#d3401f"
     }
    },
    "roles": {
@@ -588,13 +597,13 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": ""
+     "color": "#11102b"
     },
     "away": {
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": ""
+     "color": "#d23f1e"
     }
    },
    "roles": {
@@ -676,13 +685,13 @@
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": ""
+     "color": "#151d26"
     },
     "away": {
      "frontKitFile": "kits_2024/away_front.webp",
      "backKitFile": "kits_2024/away_back.webp",
      "previewFile": "kits_2024/away_preview.png",
-     "color": ""
+     "color": "#aaa7ab"
     }
    },
    "roles": {
@@ -1112,6 +1121,100 @@
     "157141"
    ],
    "enabled": false,
+   "primaryStadium": "29"
+  },
+  "2014": {
+   "name": "Edinburgh",
+   "type": "club",
+   "category": "Pro12",
+   "group": "other_european",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2014/home_front.webp",
+     "backKitFile": "kits_2014/home_back.webp",
+     "previewFile": "kits_2014/home_preview.png",
+     "color": "#9b181d"
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.webp",
+     "backKitFile": "kits_2018/away_back.webp",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "#b40000",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "153029",
+    "viceCaptain": "143410",
+    "longGK": "158990",
+    "shortGK": "158990",
+    "longPunt": "158990",
+    "shortPunt": "158990",
+    "kickoff": "158990"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "147033",
+    "143410",
+    "142421",
+    "144591",
+    "156977",
+    "144347",
+    "156618",
+    "153012",
+    "153029",
+    "158990",
+    "156582",
+    "158993",
+    "157076",
+    "153018",
+    "157541",
+    "156083",
+    "143781",
+    "158987",
+    "157472",
+    "153026",
+    "156141",
+    "148223",
+    "143177",
+    "157510",
+    "158988",
+    "155474",
+    "153154",
+    "153272",
+    "153153",
+    "158989",
+    "154705",
+    "156701",
+    "158230",
+    "152491",
+    "158991",
+    "158992",
+    "142524",
+    "158926",
+    "156820",
+    "153019",
+    "157488",
+    "142516",
+    "156547"
+   ],
    "primaryStadium": "29"
   }
  }

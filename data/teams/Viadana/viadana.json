@@ -20,20 +20,20 @@
      "frontKitFile": "kits_2009/home_front.webp",
      "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2009/home_preview.png",
-     "color": ""
+     "color": "#171717"
     },
     "away": {
      "frontKitFile": "kits_2009/away_front.webp",
      "backKitFile": "kits_2009/away_back.webp",
      "previewFile": "kits_2009/away_preview.png",
-     "color": ""
+     "color": "#c09502"
     }
    },
    "roles": {
-    "captain": "156398",
-    "viceCaptain": "143465",
-    "longGK": "158819",
-    "shortGK": "158819",
+    "captain": "143465",
+    "viceCaptain": "143371",
+    "longGK": "158813",
+    "shortGK": "158813",
     "longPunt": "158819",
     "shortPunt": "158819",
     "kickoff": "158819"
@@ -61,7 +61,7 @@
     "143371",
     "158820",
     "158318",
-    "158800",
+    "158811",
     "158801",
     "158807",
     "156697",
@@ -71,7 +71,7 @@
     "155277",
     "147447",
     "155292",
-    "158811",
+    "158800",
     "158808",
     "158809",
     "158815",

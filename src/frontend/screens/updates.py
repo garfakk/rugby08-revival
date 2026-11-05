@@ -333,7 +333,7 @@ class UpdatesScreen(Screen):
             return
         current = (c.current if c else "") or "unknown"
         if not c or not c.available:
-            blocked = (f"A newer data release needs program {c.blocked} or later: update the program first."
+            blocked = (f"A newer data release needs program {c.blocked} or later. Update the program first."
                        if c and c.blocked else "Up to date.")
             card.show_state(f"Version {current}", blocked, WARN if c and c.blocked else GREEN)
             return
@@ -412,10 +412,10 @@ class UpdatesScreen(Screen):
             self._idle()
             if not err:
                 self._show_data(self.result)
-                self._say("Data update cancelled: nothing was changed. It resumes where it stopped.", WARN)
+                self._say("Data update cancelled. It can resume where it stopped.", WARN)
             else:
                 self._show_data(self.result)
-                self._say(f"The data update failed, nothing was changed: {err}", DANGER_LITE)
+                self._say(f"Data update failed: {err}", DANGER_LITE)
         card.show_state(card.headline.text(), "Starting…", FG_SECONDARY,
                         [("CANCEL", "neutral", lambda: self._job and self._job.cancel())])
         card.bar.set_value(0)
@@ -446,7 +446,7 @@ class UpdatesScreen(Screen):
             self._idle()
             self._show_program(self.result)
             if err:
-                self._say(f"The program update could not be downloaded: {err}", DANGER_LITE)
+                self._say(f"Program update download failed: {err}", DANGER_LITE)
         card.show_state(card.headline.text(), "Starting…", FG_SECONDARY,
                         [("CANCEL", "neutral", lambda: self._job and self._job.cancel())])
         card.bar.set_value(0)
@@ -465,8 +465,7 @@ class UpdatesScreen(Screen):
             self.on_quit()
         self._dialog = ConfirmDialog(
             self, f"Install version {c.release.version}?",
-            "The installer is downloaded and verified. The mod closes now, the installer updates it "
-            "(your data, settings and tournaments are kept), then opens it again.",
+            "The mod will close, update and reopen. Your data, settings and tournaments are kept.",
             [("LATER", "neutral", "cancel"), ("INSTALL NOW", "primary", "ok")], go)
 
     # ── from a file ─────────────────────────────────────────────────────
@@ -503,7 +502,7 @@ class UpdatesScreen(Screen):
         try:
             entry = self.updates.install(path)
         except UpdateError as e:
-            self._say(f"The update failed, nothing was changed: {e}", DANGER_LITE)
+            self._say(f"Update failed: {e}", DANGER_LITE)
             return
         self._say(f"Installed {entry['name']} ({entry['summary']}). {RESTART}", GREEN)
         self.reload()

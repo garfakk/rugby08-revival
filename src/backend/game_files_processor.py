@@ -118,6 +118,8 @@ def create_mission_file(match_data):
         trophy_lift = match_data.get("trophy_lift")
         if trophy_lift and trophy_lift not in ("stock", "off"):
             mission_attrs["trophy_lift"] = trophy_lift   # reR08 ENABLE_TROPHY_LIFT
+            if match_data.get("trophy_lifter"):
+                mission_attrs["trophy_lifter"] = match_data["trophy_lifter"]
         stadium_flags = match_data.get("stadium_flags")
         if stadium_flags is not None:
             # reR08 ENABLE_STADIUM_FLAGS — no-op on stadiums without RWC
@@ -335,6 +337,19 @@ def _copy_optional_adboards(match_data):
         log.warning(f"Ignoring missing adboards asset: {source}")
         return
     destination = os.path.join(config.game_launcher_directory, game_filenames["adboards"])
+    # A seven-board set leaves the nine-board grounds with missing textures
+    # (complete_adboards, backend.mod_utils): the missing boards are added.
+    try:
+        with open(source, "rb") as f:
+            data = f.read()
+        full = complete_adboards(data)
+        if full is not data:
+            with open(destination, "wb") as f:
+                f.write(full)
+            log.info(f"Adboards {adboards}: ads7/ads8 added for the nine-board grounds")
+            return
+    except (OSError, ValueError, struct.error) as e:
+        log.warning(f"Adboards {adboards} not checked: {e}")
     copy_file(source, destination)
 
 
@@ -454,7 +469,7 @@ def edit_graphics_files(match_data):
         replace_asset_in_fsh_file(logos_filepath, logo_right_source_filepath, index = 3)
 
     # Create front kit .big file (either copy .big file or create it from images)
-    if match_data[team]['kit_front'][-4:] == ".big":
+    if match_data[team]['kit_front'].lower().endswith(".big"):
       # Copy BIG file into game directory
       copy_file(kit_front_source_filepath, kit_front_big_filepath)
 
@@ -471,9 +486,24 @@ def edit_graphics_files(match_data):
         log.warning(f"could not remove temp file {kit_front_fsh_filepath}: {e}")
 
     # Create back kit .fsh file (either copy .fsh file or create it from images)
-    if match_data[team]['kit_back'][-4:] == ".fsh":
-      # Copy FSH file into game directory
+    if match_data[team]['kit_back'].lower().endswith(".fsh"):
+      # Copy FSH file into game directory; shirt names are lettered onto its
+      # decoded entries and written back over the named shirts only, the
+      # others keep the file's own pixels
       copy_file(kit_back_source_filepath, kit_back_fsh_filepath)
+      if match_data[team].get('shirt_names'):
+        kit_back_pattern = kit_files.back_pattern(kit_back_source_filepath)
+        printer, names = shirt_name_printer(match_data[team], kit_back_pattern) if kit_back_pattern else (None, [])
+        for index_file, name in enumerate(names[:22]):
+          if printer is None or not name:
+            continue
+          try:
+            image = printer.render(index_file, name)
+          except Exception as e:
+            log.warning(f"shirt name {name!r} not printed: {e}")
+            continue
+          if image:
+            replace_asset_in_fsh_file(kit_back_fsh_filepath, image, index = index_file)
 
     else:
       # Create .fsh file from images (a strip is unpacked to one file per shirt)
@@ -888,8 +918,11 @@ def write_players_data_to_roster(roster_filepath, match_data):
         goal_kicking_style_value = goal_kicking_style_values.get(player.get("goal_kicking_style"), 0)
         log.debug(f"Player {player['name']} ({player['roster_id']}) goal kicking style: {player.get('goal_kicking_style', 'default')} (value: {goal_kicking_style_value})")
         file.write(bytes([goal_kicking_style_value]))
-        
-        file.seek(file.tell() + 1)
+
+        # Write the star commentary voice (+0x51, 0 = none, 2..26 = whose star
+        # lines; read by rugby08patches.dll instead of the star class)
+        voice = player.get("star_voice", 0) or 0
+        file.write(bytes([voice if 2 <= voice <= 26 else 0]))
 
         # Write player boot style value (new location, to allow more values using exe patch)
         if has_custom_boots(player):

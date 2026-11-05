@@ -5,12 +5,18 @@ Both channels can share one repository: the tag prefix tells them apart
 (v0.4 = program, data-2026.10.24 = data). Drafts and pre-releases are never
 offered.
 """
+import os
 import re
 from dataclasses import dataclass, field
 
 from . import net
 
 API = "https://api.github.com"
+API_ENV = "R08_UPDATE_API"      # a test server standing in for GitHub (packaging/update_lab.py)
+
+
+def api_base():
+    return (os.environ.get(API_ENV) or API).rstrip("/")
 
 
 def version_key(text):
@@ -46,7 +52,7 @@ def _parse(item, prefix):
 
 def releases(repo, prefix):
     """The channel's published releases, newest version first."""
-    data = net.get_json(f"{API}/repos/{repo}/releases?per_page=50")
+    data = net.get_json(f"{api_base()}/repos/{repo}/releases?per_page=50")
     if not isinstance(data, list):
         raise net.NetError(f"unexpected answer for {repo}'s releases")
     found = [r for r in (_parse(item, prefix) for item in data if isinstance(item, dict)) if r]

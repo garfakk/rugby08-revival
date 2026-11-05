@@ -324,3 +324,12 @@ def test_one_channel_failing_does_not_hide_the_other(server, install):
             "data": sources.DEFAULTS["data"] | {"repo": REPO}}
     res = schedule.check_all(updates.journal_dir, str(root), "0.4", 1, srcs=srcs)
     assert res.program_error and res.data.available
+
+
+def test_update_api_can_be_pointed_at_a_test_server(monkeypatch):
+    """R08_UPDATE_API stands in for api.github.com (packaging/update_lab.py)."""
+    from app.updater import releases as R
+    monkeypatch.delenv(R.API_ENV, raising=False)
+    assert R.api_base() == "https://api.github.com"
+    monkeypatch.setenv(R.API_ENV, "http://127.0.0.1:18765/")
+    assert R.api_base() == "http://127.0.0.1:18765"

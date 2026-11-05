@@ -83,6 +83,15 @@ Check For Updates). Program and data have separate life cycles and tags:
 - Draft and pre-release releases are never offered: `DRAFT=1 ./publish.sh ...` to check a
   release before making it public.
 
+### Trying updates without GitHub (update lab)
+`python src/packaging/update_lab.py` builds a sandbox install (`../rugby08-update-lab`, the data
+pack as symlinks: your repo data is never written) and a fake GitHub on localhost
+(`R08_UPDATE_API`). `setup` once, then e.g. `edit teams/England/england.json`,
+`publish-data 2026.11.10`, `publish-program 0.4`, `run` (starts the mod on the sandbox and checks at
+start). `--corrupt PATH`, `--min-program`, `--schema`, `--bad-sums`, `--no-installer` and
+`unpublish` simulate broken releases; `status` and `reset` show and rewind the lab. See the
+script's `--help`.
+
 ### Antivirus
 What the updater does to stay clear of heuristics: the running exe never rewrites itself or
 drops scripts/helpers; program updates run the same Inno installer users run by hand, visibly,

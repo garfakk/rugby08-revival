@@ -29,6 +29,7 @@ from screens.player_tabs import (
     TAB_APPEARANCE, TAB_SKILLS, TAB_TEAMS,
     position_name, normalise_birthdate,
 )
+from ui import motion
 from ui.broadcast import Card, display_label, eyebrow_label, tracked_font
 from ui.editor_kit import (
     Avatar, Badge, FormDialog, ConfirmDialog, TextField, NumberField, ChoiceField,
@@ -118,7 +119,10 @@ class PlayerEditorScreen(EditorScreen):
         self._row_cache = {}       # pid -> (record, facts)
         self._warm_job = None
         self._warm_timer = QTimer(self)
-        self._warm_timer.setInterval(0)
+        # Paced, not back to back: a tick every frame or so leaves the event
+        # loop free in between, and none at all while something animates
+        # (one player's head check alone can take tens of ms).
+        self._warm_timer.setInterval(15)
         self._warm_timer.timeout.connect(self._warm_step)
 
     def _build_no_season_page(self):
@@ -208,7 +212,7 @@ class PlayerEditorScreen(EditorScreen):
 
         self.edit("search online", mutate, view_hint={"tab": TAB_PROFILE, "season": season})
         self.refresh_all()
-        self.shell.footer.set_status("Applied fields from online search (Ctrl+Z to undo)", GREEN)
+        self.shell.footer.set_status("Fields applied from the online search", GREEN)
 
     # ── identity pane (above the season/tabs/preview row, not the list) ───
     def _build_identity_pane(self):
@@ -274,6 +278,7 @@ class PlayerEditorScreen(EditorScreen):
         self.shirt_name.label_width = 88
         self.shirt_name.edited.connect(self._edit_shirt_name)
         small_row.addWidget(self.shirt_name, stretch=1)
+        self.shirt_name.setVisible(False)      # hidden for now; saved overrides still apply
 
         # The name the commentators say, picked from the game's recorded
         # clips (shared/commentary.py). The list is searchable; each row
@@ -412,6 +417,8 @@ class PlayerEditorScreen(EditorScreen):
         job = self._warm_job
         if job is None:
             self._warm_timer.stop()
+            return
+        if motion.animating():
             return
         items, recheck, dirty = job
         end = time.perf_counter() + self.CHUNK_SECONDS
@@ -645,12 +652,13 @@ class PlayerEditorScreen(EditorScreen):
         if len(sources) > 1:
             issues.append(("record",
                            f"also defined in {', '.join(os.path.basename(s) for s in sources[:-1])}"
-                           f" — only {os.path.basename(sources[-1])} is used", "warn"))
+                           f"; only {os.path.basename(sources[-1])} is used", "warn"))
         return issues
 
     def tab_for_issue(self, key):
         key = key.split(".")[0]          # "skin_overlay.2" belongs to its field
-        if key in ("crashball", "gap_defense", "special_ability") or key.startswith("ss_"):
+        if key in ("crashball", "gap_defense", "special_ability", "star_attribute",
+                   "hide_star", "star_voice") or key.startswith("ss_"):
             return TAB_SKILLS
         if key in APPEARANCE_KEYS:
             return TAB_APPEARANCE
@@ -715,7 +723,7 @@ class PlayerEditorScreen(EditorScreen):
     # ── cross-navigation ─────────────────────────────────────────────────
     def open_team(self, tid, season=None, shirt=None, variant=""):
         if self._open_team_cb is None:
-            self.shell.footer.set_status("Open the team editor from Tools to edit teams", FG_SECONDARY)
+            self.shell.footer.set_status("Open the team editor from Tools", FG_SECONDARY)
             return
         self.guard_dirty(lambda: self._open_team_cb(tid, season, shirt, variant))
 
@@ -747,8 +755,7 @@ class PlayerEditorScreen(EditorScreen):
                                  blank_label="Blank season (all ratings 50)",
                                  display=lambda s: f"Copy of {season_label(s)}")
             source.set_value(self.season if action == "duplicate" else (sorted(stats)[-1] if stats else ""))
-            hint = ("Squads that list this player in a season he doesn't have fall back to the "
-                    "nearest season's ratings.")
+            hint = ("Squads using a season this player lacks fall back to the nearest one.")
             if team_seasons:
                 hint += (f" Squad seasons without ratings: "
                         f"{', '.join(season_label(s) for s in team_seasons)}.")
@@ -784,10 +791,10 @@ class PlayerEditorScreen(EditorScreen):
             season = self.season
             users = [f"{m[1]} {season_label(m[2])}" for m in self.ds.memberships(self.record_id)
                     if m[2] == season]
-            extra = (f" {', '.join(users)} will fall back to another season's ratings." if users else "")
+            extra = (f" {', '.join(users)} will use another season's ratings." if users else "")
             self.confirm(f"Delete season {season_label(season)}?",
-                         f"Ratings, positions and appearance for {season_label(season)} are removed."
-                         f"{extra} Ctrl+Z undoes until you save.", "DELETE SEASON",
+                         f"Ratings, positions and appearance for {season_label(season)} will be removed."
+                         f"{extra}", "DELETE SEASON",
                          lambda: self._delete_season(season))
 
     def _delete_season(self, season):
@@ -840,10 +847,9 @@ class PlayerEditorScreen(EditorScreen):
 
         self.show_dialog(FormDialog(
             self, "Duplicate player" if duplicate else "New player",
-            ("A copy of every season of this player under a new id. Squads are not changed."
-             if duplicate else "The player is kept in your edits straight away, as part of the "
-             "chosen file." if saves_to_user_edits() else
-             "The player is written to the chosen file straight away."),
+            ("Copies every season under a new id. Squads are unchanged."
+             if duplicate else "Saved to your edits right away, in the chosen file."
+             if saves_to_user_edits() else "Written to the chosen file right away."),
             fields, [("CANCEL", "neutral", "cancel"), ("CREATE", "primary", "ok")], done))
 
     def _create_player(self, name, path, year, position, duplicate):
@@ -876,13 +882,13 @@ class PlayerEditorScreen(EditorScreen):
         remove = SegmentField("Also remove from squads", ["yes", "no"])
         remove.set_value("yes" if memberships else "no")
         sources = self.ds.players_sources.get(pid, [])
-        text = (f"{name} (id {pid}) is removed from "
+        text = (f"{name} (id {pid}) will be removed from "
                 f"{', '.join(os.path.basename(s) for s in sources) or 'its file'}.")
         if memberships:
-            text += (f" He is listed in {len(memberships)} squad(s): "
+            text += (f" Listed in {len(memberships)} squad(s): "
                      + ", ".join(f"{m[1]} {m[2]} #{m[3]}" for m in memberships[:5])
                      + ("…" if len(memberships) > 5 else "")
-                     + ". Removing him shifts later shirts up and clears roles he holds.")
+                     + ". Later shirts move up and his roles are cleared.")
 
         def done(role):
             self._dialog = None

@@ -188,8 +188,8 @@ class ChallengeModeScreen(Screen):
         bl.setSpacing(6)
         self.count_label = eyebrow_label("challenges", color=ACCENT, size=13)
         bl.addWidget(self.count_label)
-        bl.addWidget(Note("Step into a match already under way: the score, the clock and the "
-                          "squads are set. Pick your difficulty and half length, then finish the job.",
+        bl.addWidget(Note("A match already under way, with the score, clock and squads set. "
+                          "Pick a difficulty and half length, then finish it.",
                           color=FG_SECONDARY))
         bl.addSpacing(14)
         self.list_layout = QVBoxLayout()

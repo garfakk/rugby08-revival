@@ -28,20 +28,55 @@ def pick_season(seasons, wanted) -> str:
     return V.pick_season(seasons, wanted)
 
 
-def team_variant(template, team_id) -> str:
-    """The variant a template asks of `team_id` — for its squad and,
-    independently, its kits: its "team_variants" entry, else its "variant"
-    — "" = the default."""
-    per_team = (template or {}).get("team_variants") or {}
+def _ids(value) -> list:
+    """A variant field: one id or a list of them, blanks dropped."""
+    values = value if isinstance(value, (list, tuple)) else [value]
+    return [str(v) for v in values if v]
+
+
+def variant_choices(template, team_id) -> list:
+    """The variants a template asks of `team_id`, most specific first —
+    for its squad and, independently, each of its kits; the first one the
+    team (or the kit) has is used, else the default.
+
+    A template's own id always comes first, so a squad or kit variant
+    named after an edition (rwc_2023, six_nations_2024, lions_2025) is
+    picked by that edition with nothing else to set; then its "variant"
+    (one id or a list: "world_cup", the competition's squads of any
+    edition). A "team_variants" entry for the team replaces the lot
+    ("" = the default squad and kits)."""
+    template = template or {}
+    per_team = template.get("team_variants") or {}
     if str(team_id) in per_team:
-        return str(per_team[str(team_id)] or "")
-    return str((template or {}).get("variant") or "")
+        return _ids(per_team[str(team_id)])
+    out = []
+    for vid in _ids(template.get("id")) + _ids(template.get("variant")):
+        if vid not in out:
+            out.append(vid)
+    return out
+
+
+def team_variant(template, team_id) -> str:
+    """The first variant the template asks of `team_id` ("" = none)."""
+    choices = variant_choices(template, team_id)
+    return choices[0] if choices else ""
+
+
+def first_variant(choices, available) -> str:
+    """The first of `choices` in `available`, else "" (the default)."""
+    return next((v for v in choices if v in available), "")
 
 
 def entry_variant(ds, template, team_id, season) -> str:
-    """team_variant() if the team really has it in `season`, else ""."""
-    wanted = team_variant(template, team_id)
-    return wanted if wanted in ds.variants_of(team_id, season) else ""
+    """The squad variant `team_id` plays in `season`: the first of the
+    template's choices the team has there, else "" (its default squad)."""
+    return first_variant(variant_choices(template, team_id), ds.variants_of(team_id, season))
+
+
+def kit_variant(template, team_id, kit) -> str:
+    """The version of `kit` (a stored kit dict) the template dresses
+    `team_id` in: the first of its choices the kit has, else the plain kit."""
+    return first_variant(variant_choices(template, team_id), V.kit_variant_ids(kit))
 
 
 def default_participants(template, season) -> dict:
@@ -54,8 +89,16 @@ def default_participants(template, season) -> dict:
 
 
 def usable_squad(ds, team_id, season, variant="") -> list:
-    info = ds.team_season(team_id, season, variant)
-    return [str(p) for p in info.get("players", []) if p and str(p) in ds.players
+    # The players list as ds.team_season() would resolve it, read in place:
+    # resolving deep-copies the whole season block, and the tournament
+    # wizard asks this for every team and season.
+    from app import variants as V
+    info = ((ds.teams or {}).get(str(team_id)) or {}).get(str(season))
+    if not isinstance(info, dict):
+        return []
+    over = V.overrides(info, variant if V.has_variant(info, variant) else V.DEFAULT)
+    players = over["players"] if "players" in over else info.get("players", [])
+    return [str(p) for p in players or [] if p and str(p) in ds.players
             and "stats" in ds.players[str(p)]]
 
 
@@ -314,6 +357,91 @@ def simulate_until_human(t) -> list:
             # unresolvable ref — should not happen with a valid template
             log.warning("tournament %s: day %s has nothing playable", t.id, t.day)
             break
+    return done
+
+
+# play for the title: rolls per step, and the form boost (rating points) of
+# each step — natural results first, a bigger push only when they never win
+TITLE_ROLLS = 20
+TITLE_BOOSTS = (0.0, 1.5, 3.0, 5.0, 8.0, 12.0, 20.0, 35.0)
+
+
+def is_title_match(t, fixture) -> bool:
+    """The match that hands out the trophy: a final, or the decider of a
+    competition with no final (tournament/trophy.py)."""
+    from . import trophy
+    return bool(fixture.final or trophy.is_decider(t, fixture))
+
+
+def _wins(t, result, team_id) -> int:
+    """0 a loss or a draw, 1 a win, 2 a win with every table point going."""
+    if result.winner_id() != team_id:
+        return 0
+    own, opp = result.side(team_id), result.opponent(team_id)
+    rules = t.template.get("points") or standings.DEFAULT_POINTS
+    pts = standings.match_points(rules, own, opp)[0]
+    best = rules.get("win", 4) + (1 if rules.get("try_bonus") else 0)
+    return 2 if pts >= best else 1
+
+
+def _simulate_for_the_title(t, fixture, team_id):
+    """`fixture` simulated as usual, then rolled again (each roll seeded) until
+    `team_id` wins it — with a try bonus where there is one — so the team
+    reaches its title match. Natural rolls come first; only when none wins
+    is the team's form pushed, step by step (TITLE_BOOSTS)."""
+    if fixture.played or not fixture.ready:
+        return None
+    prepare_fixture(t, fixture)
+    best = simulator.simulate(t, fixture, fixture_rng(t, fixture))
+    grade = _wins(t, best, team_id)
+    for step, boost in enumerate(TITLE_BOOSTS):
+        if grade == 2 or (grade and step):
+            break                   # a win: a bonus one is only tried for in its own step
+        for i in range(TITLE_ROLLS):
+            result = simulator.simulate(t, fixture, fixture_rng(t, fixture, f"title{step}:{i}"),
+                                        boost=(team_id, boost) if boost else None)
+            g = _wins(t, result, team_id)
+            if g > grade:
+                best, grade = result, g
+            if grade == 2:
+                break
+    record_result(t, fixture, best)
+    return best
+
+
+def simulate_to_title_match(t, for_title=False) -> list:
+    """Expert mode: every match, the users' included, until a user's title
+    match is due (their final, or the deciding round of a competition with
+    no final) — that one is left to play. `for_title`: a user's team wins
+    each of its matches on the way (a match between two users' teams is
+    simulated as it comes). Stops too when no user's team is left in it.
+    Returns the fixtures simulated."""
+    done = []
+    guard = 0
+    while not t.finished and guard < 10000:
+        guard += 1
+        humans = [tid for tid, e in t.teams.items() if e.human]
+        if not any(not is_eliminated(t, h) for h in humans):
+            break
+        due = next_human_fixture(t)
+        if due is not None and is_title_match(t, due):
+            break
+        day = t.day
+        sims = []
+        for f in list(t.fixtures_on(day)):
+            if f.played or not f.ready:
+                continue
+            mine = [tid for tid in (f.home, f.away) if t.teams[tid].human]
+            if mine and is_title_match(t, f):
+                continue              # another user's title match on this day: theirs to play
+            if for_title and len(mine) == 1:
+                _simulate_for_the_title(t, f, mine[0])
+            else:
+                simulate_fixture(t, f)
+            sims.append(f)
+        done += sims
+        if not sims:
+            break                     # nothing playable today (a ref the template can't resolve)
     return done
 
 

@@ -100,7 +100,7 @@
      "frontKitFile": "kits_2010/home_front.webp",
      "backKitFile": "kits_2010/home_back.webp",
      "previewFile": "kits_2010/home_preview.png",
-     "color": "",
+     "color": "#e2e3df",
      "model3d": {
       "collar": "stand"
      }
@@ -109,7 +109,7 @@
      "frontKitFile": "kits_2010/away_front.webp",
      "backKitFile": "kits_2010/away_back.webp",
      "previewFile": "kits_2010/away_preview.png",
-     "color": "",
+     "color": "#dc5616",
      "model3d": {
       "collar": "stand"
      }
@@ -190,7 +190,7 @@
      "frontKitFile": "kits_2018_2/home_front.webp",
      "backKitFile": "kits_2018_2/home_back.webp",
      "previewFile": "kits_2018_2/home_preview.png",
-     "color": "",
+     "color": "#df770f",
      "model3d": {
       "collar": "stand"
      }
@@ -199,7 +199,7 @@
      "frontKitFile": "kits_2018_2/away_front.webp",
      "backKitFile": "kits_2018_2/away_back.webp",
      "previewFile": "kits_2018_2/away_preview.png",
-     "color": "",
+     "color": "#d66f01",
      "model3d": {
       "collar": "stand"
      }
@@ -231,7 +231,7 @@
     "145622",
     "156612",
     "157070",
-    "145094",
+    "157718",
     "157609",
     "154069",
     "157768",
@@ -249,7 +249,6 @@
     "157184",
     "157092",
     "157623",
-    "157718",
     "157050",
     "157038",
     "157753",
@@ -290,7 +289,7 @@
      "frontKitFile": "kits_2019/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
-     "color": "",
+     "color": "#e89901",
      "model3d": {
       "collar": "stand"
      }
@@ -299,7 +298,7 @@
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": "",
+     "color": "#ebece9",
      "model3d": {
       "collar": "stand"
      }
@@ -554,7 +553,7 @@
      "frontKitFile": "kits_2018_2/home_front.webp",
      "backKitFile": "kits_2018_2/home_back.webp",
      "previewFile": "kits_2018_2/home_preview.png",
-     "color": "",
+     "color": "#df770f",
      "model3d": {
       "collar": "stand"
      }
@@ -563,7 +562,7 @@
      "frontKitFile": "kits_2018_2/away_front.webp",
      "backKitFile": "kits_2018_2/away_back.webp",
      "previewFile": "kits_2018_2/away_preview.png",
-     "color": "",
+     "color": "#d66f01",
      "model3d": {
       "collar": "stand"
      }
@@ -797,6 +796,107 @@
     "154080",
     "157694",
     "157784"
+   ],
+   "enabled": false,
+   "primaryStadium": "37"
+  },
+  "2014": {
+   "name": "Cheetahs",
+   "type": "club",
+   "category": "Super Rugby",
+   "group": "southern_hemisphere",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2014/home_front.webp",
+     "backKitFile": "kits_2014/home_back.webp",
+     "previewFile": "kits_2014/home_preview.png",
+     "color": "#d6d8d0",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2014/away_front.webp",
+     "backKitFile": "kits_2014/away_back.webp",
+     "previewFile": "kits_2014/away_preview.png",
+     "color": "#b33f02",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "157070",
+    "shortGK": "157070",
+    "longPunt": "157070",
+    "shortPunt": "157070",
+    "kickoff": "157070"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "154080",
+    "154612",
+    "144255",
+    "157693",
+    "157271",
+    "157172",
+    "154054",
+    "145622",
+    "156610",
+    "157070",
+    "145094",
+    "156971",
+    "154069",
+    "157768",
+    "156980",
+    "157054",
+    "157042",
+    "157181",
+    "157158",
+    "157155",
+    "157175",
+    "156612",
+    "157623",
+    "157609",
+    "157184",
+    "157092",
+    "157718",
+    "157050",
+    "157038",
+    "157753",
+    "157274",
+    "157179",
+    "154085",
+    "144859",
+    "155055",
+    "157263",
+    "157275",
+    "157712",
+    "157695",
+    "144769",
+    "157265",
+    "157157",
+    "153639",
+    "157784",
+    "157055",
+    "157266"
    ],
    "enabled": false,
    "primaryStadium": "37"

@@ -44,9 +44,25 @@ class PlayerRig:
         self.height = height
         # The head sits on top of the body, so the neck is the body's own top.
         self.neck_y = float(self.hi[1])
+        self.neck = self._estimate_neck(parts)
 
         self.weights = [self._part_weights(p.positions, getattr(p, 'is_head', False))
                         for p in parts]
+
+    def _estimate_neck(self, parts):
+        """Pivot the head turns on: the middle of its neck where it goes into
+        the collar. The neck is set forward of the body's axis (z ~ +3.8 on
+        the stock head), so turning about z = 0 swung it sideways through the
+        collar; a pivot at the collar rim also swung the buried part of the
+        neck back out through the back of it when nodding."""
+        heads = [p.positions for p in parts if getattr(p, 'is_head', False)]
+        if heads:
+            hp = np.concatenate(heads)
+            stub = hp[hp[:, 1] < self.neck_y]
+            if len(stub):
+                c = stub.mean(0)
+                return np.array([0.0, c[1], c[2]], dtype=np.float32)
+        return np.array([0.0, self.neck_y, 0.0], dtype=np.float32)
 
     def _estimate_shoulder_y(self, allpos, hip_y, height, n_bins=40):
         """Height of the arm's own centreline, measured off the mesh.
@@ -289,18 +305,20 @@ class IdleAnimation:
         _bend(pos, nrm, leg_l, hip_l, 'z', lean)
         _bend(pos, nrm, leg_r, hip_r, 'z', lean)
 
+        # ── Head: looks around slowly, off the torso's own beat. Turned before
+        # the torso (its parent), about the bind-pose neck, so the torso then
+        # carries it — turning it afterwards about the same, now stale, pivot
+        # slid the neck through the collar.
+        head = weights.get('head')
+        if head is not None:
+            _bend(pos, nrm, head, rig.neck, 'x', np.deg2rad(2.5) * breath)
+            _bend(pos, nrm, head, rig.neck, 'y', np.deg2rad(9.0) * glance)
+
         # ── Torso: weight shifting hip to hip, with a slight settled lean.
         waist = np.array([0.0, rig.hip_y, 0.0], dtype=np.float32)
         _bend(pos, nrm, weights['torso'], waist, 'x', np.deg2rad(2.0))
         _bend(pos, nrm, weights['torso'], waist, 'z', np.deg2rad(2.2) * sway)
         _bend(pos, nrm, weights['torso'], waist, 'y', np.deg2rad(3.0) * -sway)
-
-        # ── Head: looks around slowly, off the torso's own beat.
-        head = weights.get('head')
-        if head is not None:
-            neck = np.array([0.0, rig.neck_y, 0.0], dtype=np.float32)
-            _bend(pos, nrm, head, neck, 'y', np.deg2rad(9.0) * glance)
-            _bend(pos, nrm, head, neck, 'x', np.deg2rad(2.5) * breath)
 
         # ── Chest rising on the breath, and the whole body with it.
         pos[:, 1] += rig.height * 0.0035 * breath
@@ -428,22 +446,22 @@ class RelaxedWaitAnimation:
         _bend(pos, nrm, w['arm_r'], sh_r, 'z', (drop - splay))
         _bend(pos, nrm, w['arm_r'], sh_r, 'x', -fore)
 
+        # ── Head: looks about on its own clock, and stays level against the
+        # shoulder roll rather than tipping with it. Turned before the torso,
+        # which then carries it (see IdleAnimation).
+        head = w.get('head')
+        if head is not None:
+            _bend(pos, nrm, head, rig.neck, 'x', np.deg2rad(1.6) * breath + np.deg2rad(drift_x))
+            _bend(pos, nrm, head, rig.neck, 'z', np.deg2rad(-3.2) * shift)
+            _bend(pos, nrm, head, rig.neck, 'y',
+                  np.deg2rad(14.0) * glance + np.deg2rad(drift_y) - np.deg2rad(2.5) * shift_lag)
+
         # ── Torso: hip drops over the loaded leg, chest counter-leans to keep
         # the head over the middle, chest opens on the breath.
         waist = np.array([0.0, rig.hip_y, 0.0], dtype=np.float32)
         _bend(pos, nrm, w['torso'], waist, 'x', np.deg2rad(2.2 - 0.8 * breath))
         _bend(pos, nrm, w['torso'], waist, 'z', np.deg2rad(3.4) * shift)
         _bend(pos, nrm, w['torso'], waist, 'y', np.deg2rad(3.0) * -shift_lag)
-
-        # ── Head: looks about on its own clock, and stays level against the
-        # shoulder roll rather than tipping with it.
-        head = w.get('head')
-        if head is not None:
-            neck = np.array([0.0, rig.neck_y, 0.0], dtype=np.float32)
-            _bend(pos, nrm, head, neck, 'y',
-                  np.deg2rad(14.0) * glance + np.deg2rad(drift_y) - np.deg2rad(2.5) * shift_lag)
-            _bend(pos, nrm, head, neck, 'z', np.deg2rad(-3.2) * shift)
-            _bend(pos, nrm, head, neck, 'x', np.deg2rad(1.6) * breath + np.deg2rad(drift_x))
 
         # ── Hips travel with the ankle tilt, so the body stays over the feet.
         dx = self.leg_len * np.sin(tilt)

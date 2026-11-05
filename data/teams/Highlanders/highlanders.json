@@ -96,7 +96,7 @@
      "frontKitFile": "kits_2010/home_front.webp",
      "backKitFile": "kits_2010/home_back.webp",
      "previewFile": "kits_2010/home_preview.png",
-     "color": "",
+     "color": "#1c2358",
      "model3d": {
       "collar": "stand"
      }
@@ -105,7 +105,7 @@
      "frontKitFile": "kits_2010/away_front.webp",
      "backKitFile": "kits_2010/away_back.webp",
      "previewFile": "kits_2010/away_preview.png",
-     "color": "",
+     "color": "#651520",
      "model3d": {
       "collar": "stand"
      }
@@ -182,7 +182,7 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": "",
+     "color": "#0c112d",
      "model3d": {
       "collar": "stand"
      }
@@ -191,7 +191,7 @@
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": "",
+     "color": "#7dca16",
      "model3d": {
       "collar": "stand"
      }
@@ -278,13 +278,13 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": ""
+     "color": "#161c30"
     },
     "away": {
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": ""
+     "color": "#620f19"
     }
    },
    "roles": {
@@ -372,13 +372,13 @@
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": ""
+     "color": "#12192b"
     },
     "away": {
      "frontKitFile": "kits_2024/away_front.webp",
      "backKitFile": "kits_2024/away_back.webp",
      "previewFile": "kits_2024/away_preview.png",
-     "color": ""
+     "color": "#550f17"
     }
    },
    "roles": {
@@ -537,7 +537,7 @@
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": "",
+     "color": "#021c49",
      "model3d": {
       "collar": "stand"
      }
@@ -546,7 +546,7 @@
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": "",
+     "color": "#d5d9d0",
      "model3d": {
       "collar": "stand"
      }
@@ -585,13 +585,13 @@
     "153669",
     "144950",
     "154682",
-    "145557",
     "158592",
     "155698",
     "155528",
     "153958",
-    "146573",
     "156813",
+    "146573",
+    "145557",
     "154683",
     "146633",
     "153662",
@@ -612,33 +612,33 @@
    "type": "club",
    "category": "Super Rugby",
    "group": "southern_hemisphere",
-   "ball": "",
-   "banners": "",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
    "pads": "",
    "logos": {
-    "main": "",
-    "frontend": "",
-    "small": "",
-    "left": "",
-    "right": ""
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
    },
    "kits": {
     "home": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
+     "frontKitFile": "kits_2018/home_front.webp",
+     "backKitFile": "kits_2018/home_back.webp",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": "#021c49"
     },
     "away": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
+     "frontKitFile": "kits_2018/away_front.webp",
+     "backKitFile": "kits_2018/away_back.webp",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "#d5d9d0"
     }
    },
    "roles": {
-    "captain": "",
-    "viceCaptain": "",
+    "captain": "158563",
+    "viceCaptain": "143263",
     "longGK": "153958",
     "shortGK": "153958",
     "longPunt": "153958",
@@ -653,7 +653,7 @@
    },
    "players": [
     "155711",
-    "144950",
+    "158563",
     "145557",
     "153951",
     "155527",
@@ -667,7 +667,7 @@
     "158591",
     "153668",
     "153669",
-    "158563",
+    "144950",
     "145473",
     "155528",
     "155630",
@@ -686,7 +686,6 @@
     "155759",
     "158629",
     "158667",
-    "145006",
     "154682",
     "154692",
     "158672",
@@ -696,11 +695,9 @@
     "157666",
     "158592",
     "158568",
-    "157075",
     "154668",
     "155737"
    ],
-   "enabled": false,
    "primaryStadium": "51"
   },
   "2020": {
@@ -883,7 +880,7 @@
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": "",
+     "color": "#021c49",
      "model3d": {
       "collar": "stand"
      }
@@ -892,7 +889,7 @@
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": "",
+     "color": "#d5d9d0",
      "model3d": {
       "collar": "stand"
      }

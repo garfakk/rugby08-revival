@@ -99,7 +99,7 @@
      "frontKitFile": "kits_2009/home_front.webp",
      "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2009/home_preview.png",
-     "color": "",
+     "color": "#0d4329",
      "model3d": {
       "fit": "loose",
       "collar": "stand"
@@ -109,7 +109,7 @@
      "frontKitFile": "kits_2009/away_front.webp",
      "backKitFile": "kits_2009/away_back.webp",
      "previewFile": "kits_2009/away_preview.png",
-     "color": "",
+     "color": "#8e8e8e",
      "model3d": {
       "fit": "loose",
       "collar": "stand"
@@ -186,13 +186,13 @@
      "frontKitFile": "kits_2009/home_front.webp",
      "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2009/home_preview.png",
-     "color": ""
+     "color": "#0d4329"
     },
     "away": {
      "frontKitFile": "kits_2009/away_front.webp",
      "backKitFile": "kits_2009/away_back.webp",
      "previewFile": "kits_2009/away_preview.png",
-     "color": ""
+     "color": "#8e8e8e"
     }
    },
    "roles": {
@@ -264,13 +264,13 @@
      "frontKitFile": "kits_2017_2/home_front.webp",
      "backKitFile": "kits_2017_2/home_back.webp",
      "previewFile": "kits_2017_2/home_preview.png",
-     "color": ""
+     "color": "#07572e"
     },
     "away": {
      "frontKitFile": "kits_2017_2/away_front.webp",
      "backKitFile": "kits_2017_2/away_back.webp",
      "previewFile": "kits_2017_2/away_preview.png",
-     "color": ""
+     "color": "#a5a7a3"
     }
    },
    "roles": {
@@ -301,7 +301,7 @@
     "152670",
     "157003",
     "157085",
-    "156396",
+    "152546",
     "155363",
     "156531",
     "152671",
@@ -358,13 +358,13 @@
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": ""
+     "color": "#3f940d"
     },
     "away": {
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": ""
+     "color": "#5dc0a5"
     }
    },
    "roles": {
@@ -395,7 +395,7 @@
     "152670",
     "157003",
     "157047",
-    "156396",
+    "152546",
     "157140",
     "156531",
     "152671",
@@ -450,13 +450,13 @@
      "frontKitFile": "kits_2019/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
-     "color": ""
+     "color": "#033a03"
     },
     "away": {
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": ""
+     "color": "#0c2a53"
     }
    },
    "roles": {
@@ -486,7 +486,7 @@
     "152545",
     "152670",
     "157003",
-    "156396",
+    "152546",
     "157047",
     "157140",
     "156531",
@@ -601,7 +601,7 @@
     "156626",
     "157569",
     "152801",
-    "156396",
+    "152546",
     "156988",
     "157047",
     "157583",
@@ -689,7 +689,7 @@
     "157863",
     "144213",
     "152671",
-    "156396",
+    "152546",
     "157003",
     "152801",
     "156531",
@@ -731,13 +731,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#063c1e"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#202220"
     }
    },
    "roles": {
@@ -790,7 +790,7 @@
     "157989",
     "157958",
     "158063",
-    "156396",
+    "152546",
     "157027",
     "158000",
     "152539",
@@ -825,13 +825,13 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": ""
+     "color": "#0a4836"
     },
     "away": {
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": ""
+     "color": "#171717"
     }
    },
    "roles": {
@@ -861,7 +861,7 @@
     "153075",
     "152670",
     "11816",
-    "156396",
+    "152546",
     "157047",
     "157068",
     "156531",
@@ -909,13 +909,13 @@
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": ""
+     "color": "#063426"
     },
     "away": {
      "frontKitFile": "kits_2024/away_front.webp",
      "backKitFile": "kits_2024/away_back.webp",
      "previewFile": "kits_2024/away_preview.png",
-     "color": ""
+     "color": "#c9a2a2"
     }
    },
    "roles": {
@@ -963,7 +963,7 @@
     "152528",
     "158063",
     "157990",
-    "156396",
+    "152546",
     "158144",
     "158153",
     "157988",
@@ -1038,7 +1038,7 @@
     "152670",
     "157003",
     "157085",
-    "156396",
+    "152546",
     "155363",
     "156531",
     "152671",

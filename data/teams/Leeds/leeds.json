@@ -109,13 +109,13 @@
      "frontKitFile": "kits_2010/home_front.webp",
      "backKitFile": "kits_2010/home_back.webp",
      "previewFile": "kits_2010/home_preview.png",
-     "color": ""
+     "color": "#071331"
     },
     "away": {
      "frontKitFile": "kits_2010/away_front.webp",
      "backKitFile": "kits_2010/away_back.webp",
      "previewFile": "kits_2010/away_preview.png",
-     "color": ""
+     "color": "#daddd9"
     }
    },
    "roles": {
@@ -139,9 +139,9 @@
     "156871",
     "157295",
     "156765",
-    "156791",
-    "108880",
     "152334",
+    "108880",
+    "156791",
     "146843",
     "157404",
     "156834",
@@ -196,7 +196,7 @@
      "frontKitFile": "kits_2009/home_front.webp",
      "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2009/home_preview.png",
-     "color": "",
+     "color": "#131c30",
      "model3d": {
       "fit": "loose",
       "collar": "open"
@@ -206,7 +206,7 @@
      "frontKitFile": "kits_2009/away_front.webp",
      "backKitFile": "kits_2009/away_back.webp",
      "previewFile": "kits_2009/away_preview.png",
-     "color": "",
+     "color": "#d9dbd3",
      "model3d": {
       "fit": "loose",
       "collar": "open"
@@ -235,8 +235,8 @@
     "157295",
     "157329",
     "108880",
-    "156791",
     "152334",
+    "156791",
     "157288",
     "157281",
     "156935",

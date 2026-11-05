@@ -23,6 +23,13 @@ Kit fronts ship as lossless WebP too. An older edit can still name the .png
 a pack file used to be: migrate_kit_files() points such paths at the packed
 file the data now has (only when the old file is gone and the new one is
 there).
+
+A kit can also ship the game's own files instead of images (an option; images
+stay the standard): the shirt front as a .big archive holding its kit.fsh,
+the back numbers as one .fsh of 22 entries. The game gets them as they are.
+Everything that needs images asks the same calls as above: front_file()
+decodes the .big's texture, back_pattern() / back_file() the .fsh's entries,
+cached in the temp folder like a strip.
 """
 import hashlib
 import os
@@ -36,6 +43,18 @@ BACK_COUNT = 22
 GRID_COLS = 4
 KIT_FILE_KEYS = ("frontKitFile", "backKitFile")
 _CACHE = "kit_backs"
+
+
+ARCHIVE_EXTS = (".big", ".fsh")
+
+
+def is_archive(path) -> bool:
+    """A game file (.big front, .fsh backs) rather than an image."""
+    return bool(path) and "%" not in path and path.lower().endswith(ARCHIVE_EXTS)
+
+
+def _needs_unpack(path) -> bool:
+    return is_strip(path) or is_archive(path)
 
 
 def is_strip(path) -> bool:
@@ -63,8 +82,51 @@ def is_column(size) -> bool:
     return bool(w) and h > 2 * w
 
 
+def _fsh_bytes(path) -> bytes:
+    """The FSH inside `path`: the file itself, or a .big's first .fsh."""
+    if path.lower().endswith(".big"):
+        from shared.omodel.bigfile import BigArchive
+        big = BigArchive.open(path)
+        name = big.find(".FSH")
+        if not name:
+            raise OSError(f"{path}: no .fsh inside")
+        return big.read(name)
+    with open(path, "rb") as f:
+        return f.read()
+
+
+def archive_frames(path, numbers=None) -> list:
+    """The bitmaps of an archive (`numbers` 1-based, all by default), as
+    PIL images; an entry that will not decode gives None."""
+    import struct
+    from backend import mod_utils as M
+    try:
+        entries = M.fsh_entries(_fsh_bytes(path))
+    except (ValueError, struct.error) as e:
+        raise OSError(f"{path}: {e}") from e
+    out = []
+    for n in numbers or range(1, len(entries) + 1):
+        try:
+            out.append(M.fsh_entry_image(entries[n - 1][1]) if n <= len(entries) else None)
+        except (ValueError, struct.error, IndexError):
+            out.append(None)
+    return out
+
+
+def archive_frame_count(path) -> int:
+    """Entries of an archive's FSH (0 when unreadable)."""
+    import struct
+    from backend import mod_utils as M
+    try:
+        return len(M.fsh_entries(_fsh_bytes(path)))
+    except (OSError, ValueError, struct.error):
+        return 0
+
+
 def strip_frames(path) -> list:
     """The sheet's square frames, shirt 1 first, as PIL images."""
+    if is_archive(path):
+        return [im for im in archive_frames(path) if im is not None]
     with Image.open(path) as im:
         im.load()
         cell, cols, count = _layout(im.size)
@@ -105,21 +167,24 @@ def _unpack(path, numbers):
     wanted = [n for n in numbers if not os.path.isfile(os.path.join(folder, f"back_{n}.png"))]
     if wanted:
         os.makedirs(folder, exist_ok=True)
-        frames = strip_frames(path)
+        if is_archive(path):
+            frames = dict(zip(wanted, archive_frames(path, wanted)))
+        else:
+            frames = dict(enumerate(strip_frames(path), 1))
         for n in wanted:
-            if 1 <= n <= len(frames):
+            if frames.get(n) is not None:
                 out = os.path.join(folder, f"back_{n}.png")
                 tmp = f"{out}.{os.getpid()}.tmp"
-                frames[n - 1].save(tmp, "PNG", compress_level=1)
+                frames[n].save(tmp, "PNG", compress_level=1)
                 os.replace(tmp, out)
     return folder
 
 
 def back_pattern(path, count=BACK_COUNT):
-    """Absolute %-pattern of one image file per shirt for `path` (a strip, or
-    already a %-pattern). A missing or unreadable strip gives "" (logged by
-    the caller's own missing-file handling)."""
-    if not is_strip(path):
+    """Absolute %-pattern of one image file per shirt for `path` (a strip, a
+    .fsh, or already a %-pattern). A missing or unreadable strip gives ""
+    (logged by the caller's own missing-file handling)."""
+    if not _needs_unpack(path):
         return path
     try:
         return os.path.join(_unpack(path, range(1, count + 1)), "back_%.png")
@@ -131,10 +196,32 @@ def back_file(path, number=1):
     """Absolute path of shirt `number`'s back for `path` (strip or %-pattern)."""
     if not path:
         return ""
-    if not is_strip(path):
+    if not _needs_unpack(path):
         return path.replace("%", str(number), 1)
     try:
         return os.path.join(_unpack(path, [number]), f"back_{number}.png")
+    except OSError:
+        return ""
+
+
+def front_file(path):
+    """An image of the shirt front for `path`: the decoded texture of a .big
+    (or .fsh) front, cached; an image path is returned unchanged; "" when
+    the archive will not read."""
+    if not is_archive(path):
+        return path
+    try:
+        folder = _cache_dir(path)
+        out = os.path.join(folder, "front.png")
+        if not os.path.isfile(out):
+            frame = archive_frames(path, [1])[0]
+            if frame is None:
+                return ""
+            os.makedirs(folder, exist_ok=True)
+            tmp = f"{out}.{os.getpid()}.tmp"
+            frame.save(tmp, "PNG", compress_level=1)
+            os.replace(tmp, out)
+        return out
     except OSError:
         return ""
 

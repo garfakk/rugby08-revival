@@ -20,7 +20,7 @@
      "frontKitFile": "kits_2008/home_wc_front.webp",
      "backKitFile": "kits_2008/home_back.webp",
      "previewFile": "kits_2008/home_preview.png",
-     "color": "",
+     "color": "#a60512",
      "model3d": {
       "collar": "stand"
      }
@@ -29,7 +29,7 @@
      "frontKitFile": "kits_2008/away_wc_front.webp",
      "backKitFile": "kits_2008/away_wc_back.webp",
      "previewFile": "kits_2008/away_preview.png",
-     "color": "",
+     "color": "#222129",
      "model3d": {
       "collar": "stand"
      }
@@ -110,7 +110,7 @@
      "frontKitFile": "kits_2009/home_front.webp",
      "backKitFile": "kits_2008/home_back.webp",
      "previewFile": "kits_2009/home_preview.png",
-     "color": "",
+     "color": "#5b2522",
      "model3d": {
       "collar": "stand"
      }
@@ -119,7 +119,7 @@
      "frontKitFile": "kits_2009/away_front.webp",
      "backKitFile": "kits_2009/away_back.webp",
      "previewFile": "kits_2009/away_preview.png",
-     "color": "",
+     "color": "#263342",
      "model3d": {
       "collar": "stand"
      }
@@ -146,9 +146,9 @@
     "143943",
     "147672",
     "147657",
-    "147670",
-    "154247",
     "147664",
+    "154247",
+    "147670",
     "154246",
     "154255",
     "147666",
@@ -205,7 +205,7 @@
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": "",
+     "color": "#dadad9",
      "variants": {
       "rwc_2023": {
        "label": "RWC 2023",
@@ -219,7 +219,7 @@
      "frontKitFile": "kits_2024/away_front.webp",
      "backKitFile": "kits_2024/away_back.webp",
      "previewFile": "kits_2024/away_preview.png",
-     "color": "",
+     "color": "#122248",
      "variants": {
       "rwc_2023": {
        "label": "RWC 2023",
@@ -358,13 +358,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#e3e1e0"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#1a3357"
     }
    },
    "roles": {
@@ -456,13 +456,13 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": ""
+     "color": "#e3e2e1"
     },
     "away": {
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": ""
+     "color": "#1a3357"
     }
    },
    "roles": {
@@ -525,55 +525,6 @@
     "154561",
     "146144"
    ],
-   "variant": {
-    "world_cup": {
-     "label": "Rugby World Cup 2023",
-     "players": [
-      "146046",
-      "146298",
-      "146585",
-      "146213",
-      "146715",
-      "144912",
-      "146813",
-      "145089",
-      "145726",
-      "145307",
-      "146533",
-      "145317",
-      "146072",
-      "146817",
-      "144981",
-      "144913",
-      "145398",
-      "146368",
-      "144980",
-      "146814",
-      "146816",
-      "144921",
-      "144223",
-      "144137",
-      "146809",
-      "144914",
-      "146810",
-      "146811",
-      "146812",
-      "146444",
-      "146815",
-      "146344",
-      "146163"
-     ],
-     "roles": {
-      "captain": "144912",
-      "viceCaptain": "145307",
-      "longGK": "145307",
-      "shortGK": "145307",
-      "longPunt": "145307",
-      "shortPunt": "144981",
-      "kickoff": "145307"
-     }
-    }
-   },
    "primaryStadium": "44"
   },
   "2010": {
@@ -1000,7 +951,7 @@
      "frontKitFile": "kits_2016/home_front.webp",
      "backKitFile": "kits_2016/home_back.webp",
      "previewFile": "kits_2016/home_preview.png",
-     "color": "",
+     "color": "#da0f09",
      "model3d": {
       "collar": "stand"
      }
@@ -1009,7 +960,7 @@
      "frontKitFile": "kits_2016/away_front.webp",
      "backKitFile": "kits_2016/away_back.webp",
      "previewFile": "kits_2016/away_preview.png",
-     "color": ""
+     "color": "#0c1a2b"
     }
    },
    "roles": {
@@ -1185,7 +1136,7 @@
      "frontKitFile": "kits_2018_2/home_front.webp",
      "backKitFile": "kits_2016/home_back.webp",
      "previewFile": "kits_2018_2/home_preview.png",
-     "color": "",
+     "color": "#da0906",
      "model3d": {
       "collar": "stand"
      }
@@ -1194,7 +1145,7 @@
      "frontKitFile": "kits_2018_2/away_front.webp",
      "backKitFile": "kits_2016/away_back.webp",
      "previewFile": "kits_2018_2/away_preview.png",
-     "color": "",
+     "color": "#09192c",
      "model3d": {
       "collar": "stand"
      }
@@ -1280,13 +1231,13 @@
      "frontKitFile": "kits_2020/home_front.webp",
      "backKitFile": "kits_2020/home_back.webp",
      "previewFile": "kits_2020/home_preview.png",
-     "color": ""
+     "color": "#e6e6e5"
     },
     "away": {
      "frontKitFile": "kits_2020/away_front.webp",
      "backKitFile": "kits_2020/away_back.webp",
      "previewFile": "kits_2020/away_preview.png",
-     "color": ""
+     "color": "#1e2a37"
     }
    },
    "roles": {
@@ -1456,13 +1407,13 @@
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": ""
+     "color": "#dadad9"
     },
     "away": {
      "frontKitFile": "kits_2024/away_front.webp",
      "backKitFile": "kits_2024/away_back.webp",
      "previewFile": "kits_2024/away_preview.png",
-     "color": ""
+     "color": "#122248"
     }
    },
    "roles": {
@@ -1528,55 +1479,6 @@
     "147809",
     "146811"
    ],
-   "variant": {
-    "world_cup": {
-     "label": "Rugby World Cup 2023",
-     "players": [
-      "146046",
-      "146298",
-      "146585",
-      "146213",
-      "146715",
-      "144912",
-      "146813",
-      "145089",
-      "145726",
-      "145307",
-      "146533",
-      "145317",
-      "146072",
-      "146817",
-      "144981",
-      "144913",
-      "145398",
-      "146368",
-      "144980",
-      "146814",
-      "146816",
-      "144921",
-      "144223",
-      "144137",
-      "146809",
-      "144914",
-      "146810",
-      "146811",
-      "146812",
-      "146444",
-      "146815",
-      "146344",
-      "146163"
-     ],
-     "roles": {
-      "captain": "144912",
-      "viceCaptain": "145307",
-      "longGK": "145307",
-      "shortGK": "145307",
-      "longPunt": "145307",
-      "shortPunt": "144981",
-      "kickoff": "145307"
-     }
-    }
-   },
    "primaryStadium": "44"
   },
   "2026": {
@@ -1600,13 +1502,13 @@
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": ""
+     "color": "#dadad9"
     },
     "away": {
      "frontKitFile": "kits_2024/away_front.webp",
      "backKitFile": "kits_2024/away_back.webp",
      "previewFile": "kits_2024/away_preview.png",
-     "color": ""
+     "color": "#122248"
     }
    },
    "roles": {
@@ -1676,55 +1578,6 @@
     "147835",
     "147836"
    ],
-   "variant": {
-    "world_cup": {
-     "label": "Rugby World Cup 2023",
-     "players": [
-      "146046",
-      "146298",
-      "146585",
-      "146213",
-      "146715",
-      "144912",
-      "146813",
-      "145089",
-      "145726",
-      "145307",
-      "146533",
-      "145317",
-      "146072",
-      "146817",
-      "144981",
-      "144913",
-      "145398",
-      "146368",
-      "144980",
-      "146814",
-      "146816",
-      "144921",
-      "144223",
-      "144137",
-      "146809",
-      "144914",
-      "146810",
-      "146811",
-      "146812",
-      "146444",
-      "146815",
-      "146344",
-      "146163"
-     ],
-     "roles": {
-      "captain": "144912",
-      "viceCaptain": "145307",
-      "longGK": "145307",
-      "shortGK": "145307",
-      "longPunt": "145307",
-      "shortPunt": "144981",
-      "kickoff": "145307"
-     }
-    }
-   },
    "primaryStadium": "44"
   },
   "2019": {
@@ -1747,13 +1600,13 @@
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": ""
+     "color": "#dadad9"
     },
     "away": {
      "frontKitFile": "kits_2024/away_front.webp",
      "backKitFile": "kits_2024/away_back.webp",
      "previewFile": "kits_2024/away_preview.png",
-     "color": ""
+     "color": "#122248"
     }
    },
    "roles": {

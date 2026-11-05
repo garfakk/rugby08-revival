@@ -19,14 +19,14 @@
     "home": {
      "frontKitFile": "kits_2020/home_front.png",
      "backKitFile": "kits_2020/home_back/home_back_%.png",
-     "previewFile": "",
-     "color": ""
+     "previewFile": "kits_2020/home_preview.png",
+     "color": "#761613"
     },
     "away": {
      "frontKitFile": "kits_2020/away_front.png",
      "backKitFile": "kits_2020/away_back/away_back_%.png",
-     "previewFile": "",
-     "color": ""
+     "previewFile": "kits_2020/away_preview.png",
+     "color": "#133572"
     }
    },
    "roles": {
@@ -49,7 +49,7 @@
     "158888",
     "158893",
     "158897",
-    "158898",
+    "156922",
     "158899",
     "158900",
     "158903",
@@ -61,14 +61,14 @@
     "158915",
     "158917",
     "158887",
-    "158892",
+    "157668",
     "158890",
     "158895",
     "158904",
     "158906",
     "158907",
     "158889",
-    "158891",
+    "157757",
     "158896",
     "158901",
     "158902",
@@ -85,7 +85,7 @@
       "158888",
       "158893",
       "158897",
-      "158898",
+      "156922",
       "158899",
       "158900",
       "158903",
@@ -97,14 +97,14 @@
       "158915",
       "158917",
       "158887",
-      "158892",
+      "157668",
       "158890",
       "158895",
       "158904",
       "158906",
       "158907",
       "158889",
-      "158891",
+      "157757",
       "158896",
       "158901",
       "158902",
@@ -145,19 +145,19 @@
     "home": {
      "frontKitFile": "kits_2020/home_front.png",
      "backKitFile": "kits_2020/home_back/home_back_%.png",
-     "previewFile": "",
-     "color": ""
+     "previewFile": "kits_2020/home_preview.png",
+     "color": "#761613"
     },
     "away": {
      "frontKitFile": "kits_2020/away_front.png",
      "backKitFile": "kits_2020/away_back/away_back_%.png",
-     "previewFile": "",
-     "color": ""
+     "previewFile": "kits_2020/away_preview.png",
+     "color": "#133572"
     }
    },
    "roles": {
     "captain": "158917",
-    "viceCaptain": "",
+    "viceCaptain": "158913",
     "longGK": "158907",
     "shortGK": "158907",
     "longPunt": "158907",
@@ -173,7 +173,7 @@
    "players": [
     "157668",
     "158889",
-    "158891",
+    "157757",
     "156922",
     "158896",
     "158904",
@@ -189,11 +189,11 @@
     "158897",
     "158902",
     "158932",
-    "158916",
+    "158905",
     "158908",
     "158894",
     "158890",
-    "158905",
+    "158916",
     "158893",
     "158895",
     "158934",

@@ -156,14 +156,19 @@ def test_stars_legend_some_starters_no_front_five():
 def test_stars_fit_the_position():
     out = D.boost_team(_team(), "immortal")["players"]
     for p in out:
+        if p["pos1"] in D.FRONT_FIVE:
+            continue                         # no star class for props, hooker, locks
         assert SC.position_fit(p["star_attribute"], p["pos1"]) > 0
     assert SC.CLASSES[out[9]["star_attribute"]][0][0] == "fly_half"
     assert SC.CLASSES[out[8]["star_attribute"]][0][0] == "scrum_half"
 
 
 def test_stars_immortal_whole_team_distinct_backs():
+    """Everyone but the front five: every class breaks tackles, and props and
+    locks kept up in contact offloaded (and dropped the ball) far too often."""
     out = D.boost_team(_team(), "immortal")["players"]
-    assert all(p.get("star_attribute") for p in out)
+    assert all(p.get("star_attribute") for p in out if p["pos1"] not in D.FRONT_FIVE)
+    assert not any(p.get("star_attribute") for p in out if p["pos1"] in D.FRONT_FIVE)
     backs = [p["star_attribute"] for p in out[8:15]]
     assert len(set(backs)) == len(backs)
 
@@ -188,7 +193,8 @@ def test_given_stars_hidden_existing_star_kept_and_shown():
     out = D.boost_team(team, "immortal")["players"]
     assert out[9]["star_attribute"] == 3
     assert not out[9].get("hide_star")
-    assert all(p["hide_star"] for i, p in enumerate(out) if i != 9)
+    assert all(p["hide_star"] for i, p in enumerate(out)
+               if i != 9 and p["pos1"] not in D.FRONT_FIVE)
     assert all(not p.get("hide_star") for p in D.tire_team(_team(), "immortal")["players"])
 
 
@@ -199,3 +205,38 @@ def test_immortal_attackers_are_sharper_than_legend():
     for key in ("attack", "speed", "acceleration", "agility"):
         assert imm[key] >= 90 and imm[key] > leg[key]
     assert imm["ss_tackle_breaker"] and not leg.get("ss_tackle_breaker")
+    front = D.boost_player(dict(base, pos1="tighthead_prop"), D.PROFILES["immortal"])
+    assert not front.get("ss_tackle_breaker")       # no tackle breaking up front (offloads)
+
+
+def test_star_voices_of_the_real_stars():
+    """Each class's real player carries that class as his star commentary
+    (data/players/players.json), in every season, and nobody else does."""
+    import json, os
+    path = os.path.join(os.path.dirname(__file__), "..", "..", "data", "players", "players.json")
+    if not os.path.isfile(path):
+        pytest.skip("no data pack")
+    players = json.load(open(path, encoding="utf-8"))
+    voiced = {}
+    for pid, p in players.items():
+        voices = {st.get("star_voice") for st in (p.get("stats") or {}).values()}
+        voices.discard(None)
+        if voices:
+            assert len(voices) == 1 and all(st.get("star_voice") for st in p["stats"].values()), pid
+            voiced[int(voices.pop())] = p
+    assert sorted(voiced) == list(range(2, 27))
+    assert voiced[4]["first_name"] == "Brian" and voiced[4]["last_name"] == "O'Driscoll"
+    assert voiced[6]["first_name"] == "Shane" and voiced[13]["first_name"] == "George"
+
+
+def test_ruck_contest_lets_attacks_build():
+    """cpu_ruck_contest (reR08 possession governor): every level protects the
+    first ruck(s) of an attack and caps the per-ruck contest; immortal
+    contests sooner, more and harder than legend."""
+    rules = {}
+    for name in ("legend", "immortal"):
+        grace, base, step, cap = (int(v) for v in D.PROFILES[name]["cpu_edge"]["cpu_ruck_contest"].split(","))
+        assert grace >= 1 and 0 < base <= cap <= 50 and step > 0
+        rules[name] = (grace, base, step, cap)
+    leg, imm = rules["legend"], rules["immortal"]
+    assert imm[0] <= leg[0] and imm[1] > leg[1] and imm[3] > leg[3]

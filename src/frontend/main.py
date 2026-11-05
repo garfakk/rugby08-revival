@@ -4,6 +4,7 @@ main.py — Application entry point
 App shell: ScreenManager owns navigation with a real back-history stack;
 DataStore loads teams/players/stadiums/tournaments once, at startup.
 """
+import gc
 import os
 import sys
 import argparse
@@ -156,7 +157,7 @@ try:
 except AttributeError:      # Qt < 5.14
     pass
 
-from ui import APP_STYLESHEET
+from ui import APP_STYLESHEET, motion
 from ui.theme import register_fonts
 from app.shell import ScreenManager
 from app.state import DataStore
@@ -296,6 +297,12 @@ class MainWindow(QMainWindow):
         try:
             delay = next(self._boot)
         except StopIteration:
+            # Everything built so far (the data above all) lives as long as
+            # the app: out of the collector's sight, a full collection no
+            # longer walks it — one took ~70 ms, a visible hitch in any
+            # animation it landed in.
+            gc.collect()
+            gc.freeze()
             self._boot_done = True
             self.booted.emit()
             self._open_when_ready()
@@ -434,9 +441,11 @@ class MainWindow(QMainWindow):
     def _open_menus(self):
         # Idle-time preparation of the match-setup 3D previews (see
         # MatchSetupScreen.prewarm) — after the splash, before anyone gets there.
-        QTimer.singleShot(1200, self.screen_match_setup.prewarm)
+        # Both wait for the menu's entrance (and any other motion) to end:
+        # each blocks the GUI thread for a while.
+        motion.when_idle(self.screen_match_setup.prewarm, delay=1200)
         # Same for the player editor's list (thousands of players).
-        QTimer.singleShot(1500, self.screen_player_editor.prewarm)
+        motion.when_idle(self.screen_player_editor.prewarm, delay=1500)
         self._menus_ready = True
         self._start_gamepads()
         self.screen_main.play_entrance()
@@ -539,8 +548,8 @@ class MainWindow(QMainWindow):
                  else f"The menu track \"{missing[0]['title']}\" is")
         size = f" (about {total_mb:.0f} MB)" if total_mb >= 1 else ""
         text = (f"{count} not installed. Download {'them' if len(missing) > 1 else 'it'} "
-                f"now{size}? Creative Commons tracks, fetched unmodified from the artists' "
-                f"pages (see assets/audio/menu/CREDITS.md).")
+                f"now{size}? Creative Commons tracks from the artists' pages "
+                f"(see assets/audio/menu/CREDITS.md).")
 
         def choice(role):
             if role == "ok":
@@ -565,8 +574,8 @@ class MainWindow(QMainWindow):
             from ui.editor_kit import ConfirmDialog
             titles = ", ".join(title for title, _err in failed)
             ConfirmDialog(self.centralWidget(), "Music download failed",
-                          f"Could not download: {titles} (details in the log). The menus "
-                          f"play whatever is installed.",
+                          f"Couldn't download: {titles} (see the log). The menus will "
+                          f"play what is installed.",
                           [("OK", "primary", "ok")], lambda _role: None, cancel_role="ok")
 
     def changeEvent(self, event):
@@ -775,7 +784,11 @@ class MainWindow(QMainWindow):
         self.screens.show_screen(self.screen_main, push_history=False)
         self.screens.reset_history()
 
-    def show_match_setup(self):
+    def show_match_setup(self, new=False):
+        """`new`: opened from the main menu, a fresh random pair (see
+        MatchSetupScreen.new_match); a return from the game keeps the teams."""
+        if new:
+            self.screen_match_setup.new_match()
         self.screens.show_screen(self.screen_match_setup)
 
     def show_game_modes(self):
@@ -917,7 +930,7 @@ class MainWindow(QMainWindow):
             match_data = build_match_data(self.data, cfg)
             if not match_data:
                 session.abandon_game()
-                self.show_tournament("This match could not be set up for the game.")
+                self.show_tournament("Couldn't set up this match.")
                 return
             self._tournament_fixture = fixture
             self.start_match(match_data)
@@ -928,7 +941,8 @@ class MainWindow(QMainWindow):
 
         def edit_squad(name):
             """EDIT SQUAD: the quick match squad editor on the tournament's
-            squad; confirm saves the selection and updates this match."""
+            squad, for this match only — the default lineup (the dashboard's
+            Squad tab) is left as it is."""
             from app.tournament import bridge
             slot = cfg.home if name == "home" else cfg.away
             tid = slot.team_id
@@ -942,9 +956,8 @@ class MainWindow(QMainWindow):
                 pids = [to_pid[int(src)] for src in result.get("players_id", []) if int(src) in to_pid]
                 roles = {k: to_pid[int(v)] for k, v in (result.get("roles") or {}).items()
                          if v is not None and int(v) in to_pid}
-                session.set_selection(tid, pids, roles=roles)
-                session.t.teams[tid].selection["set_plays"] = dict(result.get("set_plays") or {})
-                session.save()
+                session.set_match_selection(tid, pids, roles=roles,
+                                            set_plays=dict(result.get("set_plays") or {}))
                 slot.lineup, slot.players = bridge.side_lineup(session.t, fixture, tid)
                 close()
             widget = SquadEditorScreen(name, session.t.team_name(tid), players, lineup,
@@ -1103,6 +1116,8 @@ def main():
     app = QApplication(sys.argv)
     register_fonts()
     app.setStyleSheet(APP_STYLESHEET)
+    from ui import perf
+    perf.start_if_requested()         # R08_PERF=1: log what stalls the GUI thread
 
     window = MainWindow()  # __init__ already applies the current windowed-mode setting
 

@@ -367,7 +367,7 @@ class TournamentHubScreen(Screen):
             # The save already holds the pre-match state (begin_game saves
             # before launching), so the marker only needs clearing.
             session.abandon_game()
-        self.on_open(session, "Your last match was not completed. It is still to be played."
+        self.on_open(session, "Your last match wasn't finished. It's still to play."
                      if interrupted else "")
 
     def _delete(self):

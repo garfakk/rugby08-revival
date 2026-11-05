@@ -6,22 +6,22 @@
    "type": "club",
    "category": "Premiership",
    "group": "england",
-   "ball": "",
-   "banners": "",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
    "pads": "",
    "logos": {
-    "main": "",
-    "frontend": "",
-    "small": "",
-    "left": "",
-    "right": ""
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
    },
    "kits": {
     "home": {
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": "",
+     "color": "#050b52",
      "shirtName": {
       "area": [
        0.1664,
@@ -35,7 +35,7 @@
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": "",
+     "color": "#d7c502",
      "shirtName": {
       "area": [
        0.1547,
@@ -47,8 +47,8 @@
     }
    },
    "roles": {
-    "captain": "",
-    "viceCaptain": "",
+    "captain": "143711",
+    "viceCaptain": "144768",
     "longGK": "143711",
     "shortGK": "143711",
     "longPunt": "143711",
@@ -92,7 +92,6 @@
     "154343",
     "157374",
     "156695",
-    "155312",
     "155309",
     "143536",
     "148312",
@@ -138,7 +137,7 @@
      "frontKitFile": "kits_2019/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
-     "color": "",
+     "color": "#2f334c",
      "shirtName": {
       "area": [
        0.0976,
@@ -152,7 +151,7 @@
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": "",
+     "color": "#20221e",
      "shirtName": {
       "area": [
        0.0956,
@@ -215,13 +214,11 @@
     "155321",
     "155327",
     "155336",
-    "155349",
     "155333",
     "155310",
     "144866",
     "155311",
     "155364",
-    "155347",
     "155312",
     "155340",
     "155330",
@@ -255,13 +252,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#113257"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#e6e5e4"
     }
    },
    "roles": {
@@ -319,14 +316,12 @@
     "155363",
     "157765",
     "158118",
-    "155367",
     "155358",
     "155375",
     "155370",
     "155372",
     "155356",
-    "155364",
-    "155371"
+    "155364"
    ],
    "primaryStadium": "79"
   },
@@ -351,7 +346,7 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": "",
+     "color": "#041d4c",
      "shirtName": {
       "color": "#ffffff",
       "area": [
@@ -366,7 +361,7 @@
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": "",
+     "color": "#e7e6e6",
      "shirtName": {
       "area": [
        0.1551,
@@ -436,7 +431,6 @@
     "155362",
     "155365",
     "153291",
-    "155384",
     "155385",
     "155350",
     "155367",
@@ -468,7 +462,7 @@
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": "",
+     "color": "#16274e",
      "shirtName": {
       "color": "#ffffff",
       "area": [
@@ -483,7 +477,7 @@
      "frontKitFile": "kits_2024/away_front.webp",
      "backKitFile": "kits_2024/away_back.webp",
      "previewFile": "kits_2024/away_preview.png",
-     "color": "",
+     "color": "#212120",
      "shirtName": {
       "area": [
        0.1551,
@@ -579,7 +573,7 @@
      "frontKitFile": "kits_2009/home_front.webp",
      "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2009/home_preview.png",
-     "color": "",
+     "color": "#282e3b",
      "model3d": {
       "fit": "loose",
       "collar": "stand"
@@ -589,7 +583,7 @@
      "frontKitFile": "kits_2009/away_front.webp",
      "backKitFile": "kits_2009/away_back.webp",
      "previewFile": "kits_2009/away_preview.png",
-     "color": "",
+     "color": "#dbdbd7",
      "model3d": {
       "fit": "loose",
       "collar": "stand"
@@ -772,13 +766,13 @@
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": ""
+     "color": "#050b52"
     },
     "away": {
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": ""
+     "color": "#d7c502"
     }
    },
    "roles": {
@@ -905,7 +899,7 @@
     "144391",
     "155374",
     "155334",
-    "155352",
+    "155327",
     "155354",
     "155328",
     "155339",
@@ -914,7 +908,6 @@
     "155335",
     "155350",
     "155332",
-    "155327",
     "155324",
     "155009",
     "155320",
@@ -925,11 +918,9 @@
     "144866",
     "155347",
     "156544",
-    "155364",
     "155316",
     "155343",
-    "155330",
-    "155355"
+    "155330"
    ],
    "primaryStadium": "79"
   },
@@ -1010,7 +1001,6 @@
     "155363",
     "155354",
     "155349",
-    "155360",
     "155326",
     "155358",
     "155340",
@@ -1052,7 +1042,7 @@
      "frontKitFile": "kits_2009/home_front.webp",
      "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2009/home_preview.png",
-     "color": "",
+     "color": "#282e3b",
      "model3d": {
       "fit": "loose",
       "collar": "stand"
@@ -1062,7 +1052,7 @@
      "frontKitFile": "kits_2009/away_front.webp",
      "backKitFile": "kits_2009/away_back.webp",
      "previewFile": "kits_2009/away_preview.png",
-     "color": "",
+     "color": "#dbdbd7",
      "model3d": {
       "fit": "loose",
       "collar": "stand"

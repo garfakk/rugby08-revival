@@ -20,7 +20,13 @@
      "frontKitFile": "kits_2017/home_front.webp",
      "backKitFile": "kits_2017/home_back.webp",
      "previewFile": "kits_2017/home_preview.png",
-     "color": ""
+     "color": "#1c1c1a"
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.webp",
+     "backKitFile": "kits_2018/away_back.webp",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "#eaebe8"
     }
    },
    "roles": {
@@ -106,7 +112,13 @@
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": ""
+     "color": "#edeeeb"
+    },
+    "home": {
+     "frontKitFile": "kits_2018/home_front.webp",
+     "backKitFile": "kits_2018/home_back.webp",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": "#161813"
     }
    },
    "roles": {
@@ -194,13 +206,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#131319"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#d1d2d2"
     }
    },
    "roles": {
@@ -289,13 +301,13 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": ""
+     "color": "#1f1e21"
     },
     "away": {
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": ""
+     "color": "#e9e8e8"
     }
    },
    "roles": {
@@ -386,13 +398,13 @@
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": ""
+     "color": "#252325"
     },
     "away": {
      "frontKitFile": "kits_2024/away_front.webp",
      "backKitFile": "kits_2024/away_back.webp",
      "previewFile": "kits_2024/away_preview.png",
-     "color": ""
+     "color": "#dadbdb"
     }
    },
    "roles": {
@@ -476,18 +488,18 @@
      "frontKitFile": "kits_2010/home_front.webp",
      "backKitFile": "kits_2010/home_back.webp",
      "previewFile": "kits_2010/home_preview.png",
-     "color": ""
+     "color": "#c7cbc9"
     },
     "away": {
      "frontKitFile": "kits_2010/away_front.webp",
      "backKitFile": "kits_2010/away_back.webp",
      "previewFile": "kits_2010/away_preview.png",
-     "color": ""
+     "color": "#d3d5cc"
     }
    },
    "roles": {
     "captain": "156590",
-    "viceCaptain": "157185",
+    "viceCaptain": "159009",
     "longGK": "156590",
     "shortGK": "156590",
     "longPunt": "156590",
@@ -502,31 +514,40 @@
    },
    "players": [
     "152484",
-    "155327",
-    "144669",
-    "157185",
-    "156977",
-    "156959",
-    "156558",
-    "156646",
-    "145194",
+    "158997",
+    "159001",
+    "159005",
+    "159006",
+    "158258",
+    "159008",
+    "159009",
+    "159011",
     "156590",
-    "144160",
-    "144433",
-    "156844",
-    "156551",
+    "159016",
+    "159012",
+    "156892",
+    "157559",
     "157461",
-    "156780",
-    "156984",
-    "145532",
-    "156978",
-    "157420",
-    "157387",
-    "156828",
-    "156999",
-    "156608"
+    "159002",
+    "159003",
+    "159004",
+    "153322",
+    "158998",
+    "155287",
+    "159000",
+    "159007",
+    "157306",
+    "157542",
+    "159010",
+    "158999",
+    "154159",
+    "159013",
+    "159014",
+    "159015",
+    "159017",
+    "159018",
+    "159019"
    ],
-   "enabled": true,
    "primaryStadium": "6"
   },
   "2018": {
@@ -549,13 +570,13 @@
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": ""
+     "color": "#161813"
     },
     "away": {
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": ""
+     "color": "#eaebe8"
     }
    },
    "roles": {

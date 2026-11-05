@@ -1,7 +1,6 @@
 {
  "2083": {
   "2011": {
-   "enabled": false,
    "name": "La Rochelle",
    "type": "club",
    "category": "Top 14",
@@ -21,7 +20,7 @@
      "frontKitFile": "kits_2011/home_front.webp",
      "backKitFile": "kits_2011/home_back.webp",
      "previewFile": "kits_2011/home_preview.png",
-     "color": "",
+     "color": "#d3d3d2",
      "model3d": {
       "collar": "stand"
      }
@@ -30,20 +29,20 @@
      "frontKitFile": "kits_2011/away_front.webp",
      "backKitFile": "kits_2011/away_back.webp",
      "previewFile": "kits_2011/away_preview.png",
-     "color": "",
+     "color": "#838278",
      "model3d": {
       "collar": "stand"
      }
     }
    },
    "roles": {
-    "captain": "150422",
-    "viceCaptain": "150427",
-    "longGK": "150422",
-    "shortGK": "150422",
-    "longPunt": "150421",
-    "shortPunt": "150421",
-    "kickoff": "150421"
+    "captain": "155092",
+    "viceCaptain": "147446",
+    "longGK": "153763",
+    "shortGK": "153763",
+    "longPunt": "153763",
+    "shortPunt": "153763",
+    "kickoff": "153763"
    },
    "setPlays": {
     "up": "classic",
@@ -53,50 +52,48 @@
    },
    "players": [
     "148018",
-    "150445",
-    "150426",
-    "150427",
+    "150425",
+    "155085",
+    "155088",
     "150428",
-    "150429",
-    "148739",
-    "150433",
-    "149180",
-    "146885",
-    "150434",
-    "150422",
+    "155092",
+    "156263",
+    "155096",
+    "155099",
+    "153763",
+    "155108",
+    "154311",
     "147446",
-    "147460",
-    "150421",
-    "147162",
-    "150432",
-    "150439",
+    "154044",
+    "155100",
+    "155081",
+    "154195",
+    "155094",
     "150440",
-    "150424",
+    "155098",
     "150423",
-    "150437",
-    "150435",
-    "145512",
-    "150430",
+    "147460",
+    "155083",
+    "153055",
+    "155090",
     "142368",
     "150436",
-    "150438",
-    "145332",
-    "150441",
-    "150444",
-    "150447",
-    "150425",
-    "150446",
-    "150431",
+    "155101",
+    "152965",
+    "155080",
+    "155111",
+    "155112",
+    "155086",
+    "155095",
+    "155077",
     "146329",
-    "150442",
+    "155113",
     "150452",
     "150443",
-    "150448",
+    "155082",
     "150453",
-    "150454",
-    "150449",
-    "150450",
-    "150451"
+    "155103",
+    "155093"
    ],
    "primaryStadium": "65"
   },
@@ -121,7 +118,7 @@
      "frontKitFile": "kits_2019/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
-     "color": "",
+     "color": "#181a15",
      "model3d": {
       "collar": "stand"
      }
@@ -130,7 +127,7 @@
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": "",
+     "color": "#e8e9e5",
      "model3d": {
       "collar": "stand"
      }
@@ -220,7 +217,7 @@
      "frontKitFile": "kits_2019/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
-     "color": "",
+     "color": "#181a15",
      "model3d": {
       "collar": "stand"
      }
@@ -229,7 +226,7 @@
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": "",
+     "color": "#e8e9e5",
      "model3d": {
       "collar": "stand"
      }
@@ -325,7 +322,7 @@
      "frontKitFile": "kits_2017/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2017/home_preview.png",
-     "color": "",
+     "color": "#d5d7cd",
      "model3d": {
       "collar": "stand"
      }
@@ -334,7 +331,7 @@
      "frontKitFile": "kits_2017/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2017/away_preview.png",
-     "color": "",
+     "color": "#161812",
      "model3d": {
       "collar": "stand"
      }
@@ -427,7 +424,7 @@
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": "",
+     "color": "#1e201b",
      "model3d": {
       "collar": "stand"
      }
@@ -436,7 +433,7 @@
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": "",
+     "color": "#e9ebe6",
      "model3d": {
       "collar": "stand"
      }
@@ -447,9 +444,9 @@
     "viceCaptain": "145621",
     "longGK": "152745",
     "shortGK": "152745",
-    "longPunt": "144828",
+    "longPunt": "124230",
     "shortPunt": "152745",
-    "kickoff": "144828"
+    "kickoff": "124230"
    },
    "setPlays": {
     "up": "classic",
@@ -501,8 +498,7 @@
     "153990",
     "156256",
     "154854",
-    "156283",
-    "152962"
+    "156283"
    ],
    "primaryStadium": "65"
   },
@@ -527,7 +523,7 @@
      "frontKitFile": "kits_2019_2/home_front.webp",
      "backKitFile": "kits_2019_2/home_back.webp",
      "previewFile": "kits_2019_2/home_preview.png",
-     "color": "",
+     "color": "#181a15",
      "model3d": {
       "collar": "stand"
      }
@@ -536,7 +532,7 @@
      "frontKitFile": "kits_2019_2/away_front.webp",
      "backKitFile": "kits_2019_2/away_back.webp",
      "previewFile": "kits_2019_2/away_preview.png",
-     "color": "",
+     "color": "#e8e9e5",
      "model3d": {
       "collar": "stand"
      }
@@ -627,7 +623,7 @@
      "frontKitFile": "kits_2019/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
-     "color": "",
+     "color": "#181a15",
      "model3d": {
       "collar": "stand"
      }
@@ -636,7 +632,7 @@
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": "",
+     "color": "#e8e9e5",
      "model3d": {
       "collar": "stand"
      }
@@ -676,7 +672,7 @@
     "144529",
     "146537",
     "152959",
-    "145705",
+    "146665",
     "152966",
     "152745",
     "144690",
@@ -686,7 +682,6 @@
     "153605",
     "153796",
     "152957",
-    "146665",
     "152965",
     "152497",
     "153798",
@@ -722,7 +717,7 @@
      "frontKitFile": "kits_2019/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
-     "color": "",
+     "color": "#181a15",
      "model3d": {
       "collar": "stand"
      }
@@ -731,7 +726,7 @@
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": "",
+     "color": "#e8e9e5",
      "model3d": {
       "collar": "stand"
      }
@@ -818,13 +813,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#1a1918"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#edbc1f"
     }
    },
    "roles": {
@@ -907,13 +902,13 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": ""
+     "color": "#181f25"
     },
     "away": {
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": ""
+     "color": "#e8ba25"
     }
    },
    "roles": {
@@ -1000,13 +995,13 @@
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": ""
+     "color": "#161615"
     },
     "away": {
      "frontKitFile": "kits_2024/away_front.webp",
      "backKitFile": "kits_2024/away_back.webp",
      "previewFile": "kits_2024/away_preview.png",
-     "color": ""
+     "color": "#e3e2e2"
     }
    },
    "roles": {
@@ -1093,7 +1088,7 @@
      "frontKitFile": "kits_2019/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
-     "color": "",
+     "color": "#181a15",
      "model3d": {
       "collar": "stand"
      }
@@ -1102,7 +1097,7 @@
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": "",
+     "color": "#e8e9e5",
      "model3d": {
       "collar": "stand"
      }
@@ -1197,7 +1192,7 @@
      "frontKitFile": "kits_2019/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
-     "color": "",
+     "color": "#181a15",
      "model3d": {
       "collar": "stand"
      }
@@ -1206,7 +1201,7 @@
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": "",
+     "color": "#e8e9e5",
      "model3d": {
       "collar": "stand"
      }
@@ -1302,7 +1297,7 @@
      "frontKitFile": "kits_2019/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
-     "color": "",
+     "color": "#181a15",
      "model3d": {
       "collar": "stand"
      }
@@ -1311,7 +1306,7 @@
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": "",
+     "color": "#e8e9e5",
      "model3d": {
       "collar": "stand"
      }
@@ -1377,7 +1372,6 @@
    "primaryStadium": "65"
   },
   "2010": {
-   "enabled": true,
    "name": "La Rochelle",
    "type": "club",
    "category": "Top 14",
@@ -1397,7 +1391,7 @@
      "frontKitFile": "kits_2010/home_front.webp",
      "backKitFile": "kits_2010/home_back.webp",
      "previewFile": "kits_2010/home_preview.png",
-     "color": "",
+     "color": "#403f3a",
      "model3d": {
       "collar": "stand"
      }
@@ -1406,7 +1400,7 @@
      "frontKitFile": "kits_2010/away_front.webp",
      "backKitFile": "kits_2010/away_back.webp",
      "previewFile": "kits_2010/away_preview.png",
-     "color": "",
+     "color": "#d5d4cf",
      "model3d": {
       "collar": "stand"
      }
@@ -1431,8 +1425,8 @@
     "155080",
     "155077",
     "155081",
-    "155087",
     "155088",
+    "155089",
     "155090",
     "155091",
     "155092",
@@ -1443,20 +1437,18 @@
     "154311",
     "155107",
     "155111",
-    "155078",
     "155082",
     "155084",
-    "155089",
-    "155093",
-    "155098",
-    "153763",
     "155085",
     "155086",
-    "155079",
-    "155094",
+    "155078",
+    "155093",
+    "155098",
     "155095",
     "155096",
+    "155094",
     "155099",
+    "153763",
     "155101",
     "155102",
     "155105",

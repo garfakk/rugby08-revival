@@ -218,9 +218,24 @@ class SlotAvatar(_DragSource, QWidget):
         self.issue_color = None
         self.carrying = False
         self.empty_label = ""
+        self.value = None           # optional text drawn in the ring instead of the initials
+        self.value_color = None
         self.compact = size == "compact"
         self._init_dnd()
         self.setFixedSize(*((98, 68) if self.compact else (128, 100)))
+
+    def set_compact(self, on):
+        if on != self.compact:
+            self.compact = on
+            self.setFixedSize(*((98, 68) if on else (128, 100)))
+            self.update()
+
+    def set_value(self, value, color=None):
+        """A rating (or any short text) shown in the ring in place of the
+        initials — None puts the initials back."""
+        self.value = value
+        self.value_color = color
+        self.update()
 
     def set_player(self, player, is_captain=False):
         self.player = player
@@ -281,9 +296,13 @@ class SlotAvatar(_DragSource, QWidget):
         p.drawEllipse(QRectF(cx - d / 2, cy - d / 2, d, d))
 
         p.setFont(tracked_font(FONT_DISPLAY, 13 if self.compact else 19, QFont.Bold, track=0.5))
-        p.setPen(QColor(FG_SECONDARY if self.player else FG_MUTED))
-        p.drawText(QRectF(cx - d / 2, cy - d / 2, d, d), Qt.AlignCenter,
-                   initials(self.player) if self.player else (self.empty_label or "?"))
+        if self.player and self.value not in (None, ""):
+            p.setPen(QColor(self.value_color or FG_PRIMARY))
+            text = str(self.value)
+        else:
+            p.setPen(QColor(FG_SECONDARY if self.player else FG_MUTED))
+            text = initials(self.player) if self.player else (self.empty_label or "?")
+        p.drawText(QRectF(cx - d / 2, cy - d / 2, d, d), Qt.AlignCenter, text)
 
         badges = list(self.badges) or (["C"] if self.is_captain else [])
         if badges:
@@ -342,7 +361,14 @@ class SubChip(_DragSource, QWidget):
         self.show_number = show_number
         self.empty_label = ""       # shown on an empty chip (an "add" item)
         self.removable = False      # draws a × that emits remove_requested
+        self.value = None           # optional rating drawn at the right end
+        self.value_color = None
         self._init_dnd()
+
+    def set_value(self, value, color=None):
+        self.value = value
+        self.value_color = color
+        self.update()
 
     def set_player(self, player):
         self.player = player
@@ -417,6 +443,14 @@ class SubChip(_DragSource, QWidget):
             p.setPen(QColor(FG_SECONDARY))
             p.drawText(self._cross_rect(), Qt.AlignCenter, "×")
             right = 26
+        if self.player is not None and self.value not in (None, ""):
+            p.setFont(tracked_font(FONT_DISPLAY, 13, QFont.Bold, track=0.2))
+            text = str(self.value)
+            w = p.fontMetrics().horizontalAdvance(text) + 4
+            p.setPen(QColor(self.value_color or FG_PRIMARY))
+            p.drawText(QRectF(self.width() - w - right, 0, w, self.height()),
+                       Qt.AlignRight | Qt.AlignVCenter, text)
+            right += w + 6
         if self.badges:
             p.setFont(tracked_font(FONT_DISPLAY, 9, QFont.Bold, track=0))
             text = self.badges[0] + (f"+{len(self.badges) - 1}" if len(self.badges) > 1 else "")
@@ -558,12 +592,16 @@ class PlayerPickerPopup(QWidget):
         self._popup.hide()
 
     def open_for(self, title, entries, current_pid, taken_by, anchor, screen,
-                 tags=None, subtitles=None, search=None, mode=FITS):
+                 tags=None, subtitles=None, search=None, mode=FITS, highlight=None):
         """`entries`: [(pid, name, fits)] for the WHOLE squad, already in the
         order they should appear. `taken_by`: {pid: shirt_number} for every
         OTHER filled slot. `tags`: optional {pid: (text, color)} overrides.
         `search`: optional [(pid, name, fits)] the SEARCH view filters.
-        `mode`: the view it opens on."""
+        `mode`: the view it opens on. `highlight`: a pid to open on (ALL is
+        shown when he doesn't fit the shirt) instead of the current one."""
+        if highlight is not None and mode == FITS and not any(
+                pid == highlight and (fits or pid == current_pid) for pid, _, fits in entries):
+            mode = ALL
         self._entries = list(entries)
         self._search = list(search) if search is not None else None
         self._query = ""
@@ -588,6 +626,11 @@ class PlayerPickerPopup(QWidget):
         # list rather than resizing the popup under the cursor.
         self._popup.size_to(max(len(self._entries), len(self._search or ())))
         self._rebuild()
+        if highlight is not None:
+            rows = self._visible_entries()
+            index = next((i for i, (pid, _, _) in enumerate(rows) if pid == highlight), None)
+            if index is not None:
+                self._popup.set_highlight(index)
         self._popup.open_at(anchor, screen)
         # ensureWidgetVisible needs a laid-out scroll area, and open_at shows
         # without spinning the event loop, so defer the first scroll.

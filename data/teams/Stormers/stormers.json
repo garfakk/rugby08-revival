@@ -103,7 +103,7 @@
      "frontKitFile": "kits_2010/home_front.webp",
      "backKitFile": "kits_2010/home_back.webp",
      "previewFile": "kits_2010/home_preview.png",
-     "color": "",
+     "color": "#031e3d",
      "model3d": {
       "collar": "stand"
      }
@@ -112,7 +112,7 @@
      "frontKitFile": "kits_2010/away_front.webp",
      "backKitFile": "kits_2010/away_back.webp",
      "previewFile": "kits_2010/away_preview.png",
-     "color": "",
+     "color": "#c4c7c3",
      "model3d": {
       "collar": "stand"
      }
@@ -186,13 +186,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#0d2b87"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#211f1e"
     }
    },
    "roles": {
@@ -282,13 +282,13 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": ""
+     "color": "#0b2880"
     },
     "away": {
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": ""
+     "color": "#9f9d99"
     }
    },
    "roles": {
@@ -336,10 +336,9 @@
     "156429",
     "157053",
     "145090",
-    "155903",
     "156183",
     "154650",
-    "155066",
+    "158967",
     "157623",
     "158155",
     "157983",
@@ -372,13 +371,13 @@
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": ""
+     "color": "#09267a"
     },
     "away": {
      "frontKitFile": "kits_2024/away_front.webp",
      "backKitFile": "kits_2024/away_back.webp",
      "previewFile": "kits_2024/away_preview.png",
-     "color": ""
+     "color": "#372a2c"
     }
    },
    "roles": {
@@ -413,23 +412,22 @@
     "157734",
     "153776",
     "158072",
-    "157908",
+    "157811",
     "156183",
     "154088",
     "158111",
     "157058",
     "156457",
     "158011",
-    "157811",
+    "157908",
     "158155",
     "157809",
     "144490",
     "157053",
     "157071",
-    "155066",
+    "158967",
     "156980",
     "158009",
-    "155903",
     "143310",
     "152434",
     "154083",
@@ -466,13 +464,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#0d2b87"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#211f1e"
     }
    },
    "roles": {
@@ -549,7 +547,7 @@
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": "",
+     "color": "#0a41d9",
      "model3d": {
       "collar": "stand"
      }
@@ -558,7 +556,7 @@
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": "",
+     "color": "#231e1b",
      "model3d": {
       "collar": "stand"
      }
@@ -609,7 +607,7 @@
     "157768",
     "158658",
     "157051",
-    "155066",
+    "158967",
     "144550",
     "154088",
     "158603",
@@ -641,7 +639,7 @@
      "frontKitFile": "kits_2019/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
-     "color": "",
+     "color": "#0302a8",
      "model3d": {
       "collar": "stand"
      }
@@ -650,7 +648,7 @@
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": "",
+     "color": "#1f1e19",
      "model3d": {
       "collar": "stand"
      }
@@ -708,7 +706,7 @@
     "152318",
     "157071",
     "157621",
-    "155066",
+    "158967",
     "157911",
     "157768",
     "157914",
@@ -740,13 +738,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#0d2b87"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#211f1e"
     }
    },
    "roles": {
@@ -784,7 +782,7 @@
     "154049",
     "157071",
     "157713",
-    "155066",
+    "158967",
     "157188",
     "158675",
     "157979",
@@ -822,7 +820,7 @@
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": "",
+     "color": "#0a41d9",
      "model3d": {
       "collar": "stand"
      }
@@ -831,7 +829,7 @@
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": "",
+     "color": "#231e1b",
      "model3d": {
       "collar": "stand"
      }
@@ -880,7 +878,7 @@
     "158627",
     "157768",
     "157051",
-    "155066",
+    "158967",
     "157039",
     "144550",
     "158603",

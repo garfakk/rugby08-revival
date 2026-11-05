@@ -16,7 +16,6 @@ test_data_assets.py::test_team_asset_sizes[Bordeaux/2082/2022]
 test_data_assets.py::test_team_asset_sizes[Canada/1003/2008]
 test_data_assets.py::test_team_asset_sizes[Canada/1003/2018]
 test_data_assets.py::test_team_asset_sizes[Canada/1003/2019]
-test_data_assets.py::test_team_asset_sizes[Canada/1003/2024]
 test_data_assets.py::test_team_asset_sizes[Castres/2029/2018]
 test_data_assets.py::test_team_asset_sizes[Castres/2029/2019]
 test_data_assets.py::test_team_asset_sizes[Castres/2029/2022]
@@ -51,7 +50,6 @@ test_data_assets.py::test_team_asset_sizes[Toulon/2088/2022]
 test_data_assets.py::test_team_asset_sizes[Toulouse/10101/2022]
 test_data_assets.py::test_team_asset_sizes[USA/1021/2008]
 test_data_assets.py::test_team_asset_sizes[USA/1021/2009]
-test_data_assets.py::test_team_asset_sizes[USA/1021/2024]
 
 # kit/ball files referenced but not on disk (misnamed wc files, missing back numbers, wc previews)
 
@@ -61,13 +59,10 @@ test_data_assets.py::test_team_asset_sizes[USA/1021/2024]
 test_data_competitions.py::test_template_runs_with_default_entrants[european_cup]
 test_data_competitions.py::test_template_runs_with_default_entrants[premiership]
 test_data_competitions.py::test_template_runs_with_default_entrants[pro14]
-test_data_competitions.py::test_template_runs_with_default_entrants[rwc_2019]
-test_data_competitions.py::test_template_runs_with_default_entrants[rwc_2023]
 test_data_competitions.py::test_template_runs_with_default_entrants[super_rugby]
 test_data_competitions.py::test_template_runs_with_default_entrants[super_rugby_pacific]
 test_data_competitions.py::test_template_runs_with_default_entrants[top_14]
 test_data_competitions.py::test_template_runs_with_default_entrants[urc]
-test_data_competitions.py::test_template_runs_with_default_entrants[world_cup]
 
 # stock face ids missing from src/assets/data/stock_faces.json
 test_data_players.py::test_stock_faces_exist
@@ -75,11 +70,9 @@ test_data_players.py::test_stock_faces_exist
 # same as above
 
 # team folder without <folder>.json: the team is silently skipped
-test_data_teams.py::test_folder_has_team_json[Chile]
 
 # team season the game cannot use as is (e.g. fewer than 22 players)
 
 # competition editions whose branding files (ball, logo, stadium graphics, pitch logos, adboards)
 # are not made yet: the match keeps its usual textures for those
 test_data_competitions.py::test_branding_assets_exist[competitions/six_nations]
-test_data_competitions.py::test_branding_assets_exist[competitions/world_cup]

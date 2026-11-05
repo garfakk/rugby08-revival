@@ -22,6 +22,7 @@ FEATURES = (
     "returning",
     "stats",
     "news",
+    "lineups",
 )
 
 for _name in FEATURES:

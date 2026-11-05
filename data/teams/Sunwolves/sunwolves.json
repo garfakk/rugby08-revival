@@ -20,7 +20,7 @@
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": "",
+     "color": "#da3504",
      "model3d": {
       "collar": "stand"
      }
@@ -28,8 +28,8 @@
     "away": {
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
-     "previewFile": "",
-     "color": ""
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "#1b1c19"
     }
    },
    "roles": {
@@ -121,13 +121,13 @@
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": ""
+     "color": "#da3504"
     },
     "away": {
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
-     "previewFile": "",
-     "color": ""
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "#1b1c19"
     }
    },
    "roles": {

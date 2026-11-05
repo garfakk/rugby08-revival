@@ -20,13 +20,13 @@
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": ""
+     "color": "#0c332f"
     },
     "away": {
      "frontKitFile": "kits_2024/away_front.webp",
      "backKitFile": "kits_2024/away_back.webp",
      "previewFile": "kits_2024/away_preview.png",
-     "color": ""
+     "color": "#dddcdb"
     }
    },
    "roles": {
@@ -113,13 +113,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#094236"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#14463a"
     }
    },
    "roles": {
@@ -212,13 +212,13 @@
      "frontKitFile": "kits_2017/home_front.webp",
      "backKitFile": "kits_2017/home_back.webp",
      "previewFile": "kits_2017/home_preview.png",
-     "color": ""
+     "color": "#d8dad4"
     },
     "away": {
      "frontKitFile": "kits_2017/away_front.webp",
      "backKitFile": "kits_2017/away_back.webp",
      "previewFile": "kits_2017/away_preview.png",
-     "color": ""
+     "color": "#0b462d"
     }
    },
    "roles": {
@@ -308,7 +308,7 @@
      "frontKitFile": "kits_2018_2/home_front.webp",
      "backKitFile": "kits_2018_2/home_back.webp",
      "previewFile": "kits_2018_2/home_preview.png",
-     "color": "",
+     "color": "#e4e6e2",
      "model3d": {
       "collar": "stand"
      }
@@ -317,7 +317,7 @@
      "frontKitFile": "kits_2018_2/away_front.webp",
      "backKitFile": "kits_2018_2/away_back.webp",
      "previewFile": "kits_2018_2/away_preview.png",
-     "color": ""
+     "color": "#10605b"
     }
    },
    "roles": {
@@ -358,7 +358,7 @@
     "146402",
     "153486",
     "142289",
-    "152358",
+    "145594",
     "144552",
     "153598",
     "153479",
@@ -405,7 +405,7 @@
      "frontKitFile": "kits_2019_2/home_front.webp",
      "backKitFile": "kits_2019_2/home_back.webp",
      "previewFile": "kits_2019_2/home_preview.png",
-     "color": "",
+     "color": "#799e9b",
      "model3d": {
       "collar": "stand"
      }
@@ -414,7 +414,7 @@
      "frontKitFile": "kits_2019_2/away_front.webp",
      "backKitFile": "kits_2019_2/away_back.webp",
      "previewFile": "kits_2019_2/away_preview.png",
-     "color": ""
+     "color": "#14554f"
     }
    },
    "roles": {
@@ -468,7 +468,7 @@
     "153591",
     "153604",
     "153587",
-    "152358",
+    "145594",
     "153588",
     "154280",
     "144227",
@@ -502,13 +502,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#094236"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#14463a"
     }
    },
    "roles": {
@@ -555,7 +555,7 @@
     "153585",
     "154281",
     "154279",
-    "152358",
+    "145594",
     "153586",
     "153588",
     "153589",
@@ -599,13 +599,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#094236"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#14463a"
     }
    },
    "roles": {
@@ -638,7 +638,7 @@
     "145558",
     "145656",
     "144227",
-    "152501",
+    "146420",
     "145269",
     "146186",
     "152958",
@@ -655,10 +655,8 @@
     "153589",
     "152392",
     "154231",
-    "154291",
     "146402",
     "152426",
-    "146643",
     "154059",
     "154283",
     "154006",
@@ -666,7 +664,6 @@
     "152974",
     "153602",
     "154285",
-    "146420",
     "153604",
     "153603"
    ],
@@ -692,13 +689,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#094236"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#14463a"
     }
    },
    "roles": {
@@ -736,10 +733,9 @@
     "146186",
     "145473",
     "144552",
-    "153594",
+    "146402",
     "145519",
     "142351",
-    "146402",
     "146508",
     "152974",
     "145771",
@@ -784,13 +780,13 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": ""
+     "color": "#0e3530"
     },
     "away": {
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": ""
+     "color": "#ebebeb"
     }
    },
    "roles": {
@@ -877,13 +873,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#094236"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#14463a"
     }
    },
    "roles": {
@@ -976,13 +972,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#094236"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#14463a"
     }
    },
    "roles": {

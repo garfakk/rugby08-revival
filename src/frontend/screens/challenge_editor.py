@@ -301,9 +301,9 @@ class ChallengeEditorScreen(Screen):
 
         # ── player choices ───────────────────────────────────────────────
         card = SectionCard("Left to the player")
-        card.add(Note("A field set to \"player picks\" is chosen on the match presentation "
-                      "screen before kick-off, starting from the value set above. A fixed "
-                      "kit is shown there but cannot be changed.", color=FG_MUTED))
+        card.add(Note("\"Player picks\" fields are chosen before kick-off, starting from "
+                      "the value above. A fixed kit is shown but can't be changed.",
+                      color=FG_MUTED))
         grid = FieldGrid(columns=2)
         for key, label in ch.CHOOSABLE.items():
             self._user_choice_field(grid, key, label)
@@ -312,9 +312,8 @@ class ChallengeEditorScreen(Screen):
 
         # ── start state ──────────────────────────────────────────────────
         card = SectionCard("Start state")
-        card.add(Note("A non-default start mode, restart positions and objectives follow "
-                      "the same schema as the mission editor, and the same caveat: only "
-                      "a plain kick-off has been confirmed in-game.", color=FG_MUTED))
+        card.add(Note("Same as the mission editor: only a plain kick-off is confirmed "
+                      "in the game.", color=FG_MUTED))
         grid = FieldGrid(columns=2)
         self._choice(grid, "mission_mode_name", "start mode", gsv.mission_mode_names[1:],
                      allow_blank=True, blank="kick-off (default)")
@@ -328,11 +327,10 @@ class ChallengeEditorScreen(Screen):
             self.focus.register(f)
         self._bound.append((self._mode_min, self._refresh_mode_time))
         card.add(grid)
-        card.add(Note("Restart spot (penalty / lineout, used when no restart position is "
-                      "set below): metres from the goal line the side in possession "
-                      "attacks, metres across from the middle (+ = right as it faces the "
-                      "posts) and, for a penalty, the jersey of the player penalised.",
-                      color=FG_MUTED))
+        card.add(Note("Restart spot for a penalty or lineout when no position is set below: "
+                      "metres from the goal line being attacked, metres across from the "
+                      "middle (+ = right, facing the posts) and, for a penalty, the "
+                      "penalised player's jersey.", color=FG_MUTED))
         grid = FieldGrid(columns=3)
         self._spot = {}
         for key, label, lo, hi in (("metres_out", "metres out", 0, 100),
@@ -777,5 +775,5 @@ class ChallengeEditorScreen(Screen):
                 self.reload_list(select=first)
         self._dialog = ConfirmDialog(
             self, "Delete challenge?",
-            f"{self._display_name(self.cid)} will be removed from mod_data/challenges.",
+            f"{self._display_name(self.cid)} will be removed.",
             [("CANCEL", "neutral", "cancel"), ("DELETE", "danger", "delete")], chosen)

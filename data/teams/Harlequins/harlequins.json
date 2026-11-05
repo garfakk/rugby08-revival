@@ -20,7 +20,7 @@
      "frontKitFile": "kits_2009/home_front.webp",
      "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2009/home_preview.png",
-     "color": "",
+     "color": "#221d1d",
      "model3d": {
       "fit": "loose",
       "collar": "stand"
@@ -39,7 +39,7 @@
      "frontKitFile": "kits_2009/away_front.webp",
      "backKitFile": "kits_2009/away_back.webp",
      "previewFile": "kits_2009/away_preview.png",
-     "color": "",
+     "color": "#b3b9b8",
      "model3d": {
       "fit": "loose",
       "collar": "stand"
@@ -134,7 +134,7 @@
      "frontKitFile": "kits_2010/home_front.webp",
      "backKitFile": "kits_2010/home_back.webp",
      "previewFile": "kits_2010/home_preview.png",
-     "color": "",
+     "color": "#211f1e",
      "model3d": {
       "collar": "stand"
      }
@@ -143,7 +143,7 @@
      "frontKitFile": "kits_2010/away_front.webp",
      "backKitFile": "kits_2010/away_back.webp",
      "previewFile": "kits_2010/away_preview.png",
-     "color": "",
+     "color": "#dadcd8",
      "model3d": {
       "collar": "stand"
      }
@@ -228,7 +228,7 @@
      "frontKitFile": "kits_2017/home_front.webp",
      "backKitFile": "kits_2017/home_back.webp",
      "previewFile": "kits_2017/home_preview.png",
-     "color": "",
+     "color": "#3f3633",
      "shirtName": {
       "area": [
        0.101,
@@ -242,7 +242,7 @@
      "frontKitFile": "kits_2017/away_front.webp",
      "backKitFile": "kits_2017/away_back.webp",
      "previewFile": "kits_2017/away_preview.png",
-     "color": "",
+     "color": "#cd170c",
      "shirtName": {
       "area": [
        0.101,
@@ -337,7 +337,7 @@
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": "",
+     "color": "#9eacaf",
      "shirtName": {
       "area": [
        0.08,
@@ -351,7 +351,7 @@
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": "",
+     "color": "#b40907",
      "shirtName": {
       "area": [
        0.08,
@@ -454,7 +454,7 @@
      "frontKitFile": "kits_2019/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
-     "color": "",
+     "color": "#32282a",
      "shirtName": {
       "area": [
        0.1088,
@@ -468,7 +468,7 @@
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": "",
+     "color": "#13a01a",
      "shirtName": {
       "area": [
        0.1088,
@@ -570,7 +570,7 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": "",
+     "color": "#7d9a98",
      "shirtName": {
       "area": [
        0.1105,
@@ -584,7 +584,7 @@
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": "",
+     "color": "#cc1c31",
      "shirtName": {
       "area": [
        0.118,
@@ -680,7 +680,7 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": "",
+     "color": "#2a3523",
      "shirtName": {
       "area": [
        0.118,
@@ -694,7 +694,7 @@
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": "",
+     "color": "#a2c7d6",
      "shirtName": {
       "area": [
        0.1162,
@@ -792,7 +792,7 @@
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": "",
+     "color": "#23201d",
      "shirtName": {
       "area": [
        0.1105,
@@ -806,7 +806,7 @@
      "frontKitFile": "kits_2024/away_front.webp",
      "backKitFile": "kits_2024/away_back.webp",
      "previewFile": "kits_2024/away_preview.png",
-     "color": "",
+     "color": "#dbdbda",
      "shirtName": {
       "area": [
        0.118,

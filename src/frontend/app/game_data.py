@@ -519,10 +519,12 @@ ASSET_SPECS = {
     "logos.small":  {"frames": 0, "size": (128, 64), "ext": (".png",), "note": ""},
     "logos.left":   {"frames": 0, "size": (128, 64), "ext": (".png",), "note": ""},
     "logos.right":  {"frames": 0, "size": (128, 64), "ext": (".png",), "note": ""},
+    # Kits: images are the standard; the game's own files also work (a .big
+    # front holding its kit.fsh, a .fsh of the 22 backs), checked by entries.
     "frontKitFile": {"frames": 0, "size": (1024, 1024), "ext": (".png", ".webp", ".big"),
-                     "note": ""},
+                     "archive_entries": 1, "note": ""},
     "backKitFile":  {"frames": 22, "size": (1024, 1024), "ext": (".png", ".webp", ".fsh"),
-                     "note": ""},
+                     "archive_entries": 22, "note": ""},
     "previewFile":  {"frames": 0, "size": None, "ext": (".png",),
                      "note": ""},
 }

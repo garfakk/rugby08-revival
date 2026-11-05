@@ -112,7 +112,7 @@
      "frontKitFile": "kits_2009/home_front.webp",
      "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2009/home_preview.png",
-     "color": "",
+     "color": "#15513b",
      "model3d": {
       "fit": "loose",
       "collar": "stand"
@@ -122,7 +122,7 @@
      "frontKitFile": "kits_2009/away_front.webp",
      "backKitFile": "kits_2009/away_back.webp",
      "previewFile": "kits_2009/away_preview.png",
-     "color": "",
+     "color": "#81b7c9",
      "model3d": {
       "fit": "loose",
       "collar": "stand"
@@ -210,7 +210,7 @@
      "frontKitFile": "kits_2010/home_front.webp",
      "backKitFile": "kits_2010/home_back.webp",
      "previewFile": "kits_2010/home_preview.png",
-     "color": "",
+     "color": "#11332b",
      "model3d": {
       "collar": "stand"
      }
@@ -219,7 +219,7 @@
      "frontKitFile": "kits_2010/away_front.webp",
      "backKitFile": "kits_2010/away_back.webp",
      "previewFile": "kits_2010/away_preview.png",
-     "color": "",
+     "color": "#a6abb6",
      "model3d": {
       "collar": "stand"
      }
@@ -308,13 +308,13 @@
      "frontKitFile": "kits_2017/home_front.webp",
      "backKitFile": "kits_2017/home_back.webp",
      "previewFile": "kits_2017/home_preview.png",
-     "color": ""
+     "color": "#164517"
     },
     "away": {
      "frontKitFile": "kits_2017/away_front.webp",
      "backKitFile": "kits_2017/away_back.webp",
      "previewFile": "kits_2017/away_preview.png",
-     "color": ""
+     "color": "#b7e001"
     }
    },
    "roles": {
@@ -398,7 +398,7 @@
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": "",
+     "color": "#032617",
      "model3d": {
       "collar": "stand"
      }
@@ -407,7 +407,7 @@
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": "",
+     "color": "#e9e9e5",
      "model3d": {
       "collar": "stand"
      }
@@ -498,7 +498,7 @@
      "frontKitFile": "kits_2019/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
-     "color": "",
+     "color": "#042e1e",
      "model3d": {
       "collar": "stand"
      }
@@ -507,7 +507,7 @@
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": "",
+     "color": "#e6e6e3",
      "model3d": {
       "collar": "stand"
      }
@@ -794,13 +794,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#0e382e"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#e2e1e0"
     }
    },
    "roles": {
@@ -885,13 +885,13 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": ""
+     "color": "#09392f"
     },
     "away": {
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": ""
+     "color": "#a10f23"
     }
    },
    "roles": {
@@ -945,7 +945,6 @@
     "144834",
     "152487",
     "158034",
-    "153374",
     "157959",
     "154663",
     "155392",
@@ -979,13 +978,13 @@
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": ""
+     "color": "#28a849"
     },
     "away": {
      "frontKitFile": "kits_2024/away_front.webp",
      "backKitFile": "kits_2024/away_back.webp",
      "previewFile": "kits_2024/away_preview.png",
-     "color": ""
+     "color": "#1e1e1e"
     }
    },
    "roles": {
@@ -1135,6 +1134,96 @@
     "144323"
    ],
    "enabled": false,
+   "primaryStadium": "8"
+  },
+  "2014": {
+   "name": "Leicester",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2014/home_front.webp",
+     "backKitFile": "kits_2014/home_back.webp",
+     "previewFile": "kits_2014/home_preview.png",
+     "color": "#084944"
+    },
+    "away": {
+     "frontKitFile": "kits_2017/away_front.webp",
+     "backKitFile": "kits_2017/away_back.webp",
+     "previewFile": "kits_2017/away_preview.png",
+     "color": "#b7e001"
+    }
+   },
+   "roles": {
+    "captain": "126969",
+    "viceCaptain": "157527",
+    "longGK": "126969",
+    "shortGK": "126969",
+    "longPunt": "126969",
+    "shortPunt": "126969",
+    "kickoff": "126969"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "142590",
+    "157527",
+    "125828",
+    "157326",
+    "156627",
+    "156573",
+    "127577",
+    "155316",
+    "12301",
+    "126969",
+    "157551",
+    "119169",
+    "157528",
+    "157498",
+    "143126",
+    "154642",
+    "156982",
+    "157355",
+    "157509",
+    "157374",
+    "158232",
+    "104324",
+    "158994",
+    "156400",
+    "156602",
+    "157480",
+    "145420",
+    "144571",
+    "155581",
+    "158995",
+    "155561",
+    "156670",
+    "152314",
+    "146459",
+    "156107",
+    "119410",
+    "156873",
+    "157062",
+    "154147",
+    "154720",
+    "156865",
+    "158996"
+   ],
    "primaryStadium": "8"
   }
  }

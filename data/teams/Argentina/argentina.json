@@ -20,7 +20,7 @@
      "frontKitFile": "kits_2008/home_wc_front.webp",
      "backKitFile": "kits_2009/away_back.webp",
      "previewFile": "kits_2008/home_preview.png",
-     "color": "",
+     "color": "#72a6b9",
      "model3d": {
       "fit": "tight",
       "collar": "stand"
@@ -30,7 +30,7 @@
      "frontKitFile": "kits_2008/away_wc_front.webp",
      "backKitFile": "kits_2008/away_back.webp",
      "previewFile": "kits_2008/away_preview.png",
-     "color": "",
+     "color": "#052374",
      "model3d": {
       "fit": "loose",
       "collar": "open"
@@ -112,7 +112,7 @@
      "frontKitFile": "kits_2009/home_front.webp",
      "backKitFile": "kits_2009/away_back.webp",
      "previewFile": "kits_2009/home_preview.png",
-     "color": "",
+     "color": "#6b9ab0",
      "model3d": {
       "fit": "tight",
       "collar": "stand"
@@ -145,7 +145,7 @@
     "142976",
     "153269",
     "127813",
-    "123245",
+    "144757",
     "153268",
     "153267",
     "143433",
@@ -164,7 +164,7 @@
     "143770",
     "147131",
     "128321",
-    "144757",
+    "123245",
     "147129",
     "112263",
     "147132",
@@ -202,7 +202,7 @@
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": ""
+     "color": "#6ea4e1"
     }
    },
    "roles": {
@@ -294,7 +294,7 @@
      "frontKitFile": "kits_2019/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
-     "color": ""
+     "color": "#7ab6dc"
     }
    },
    "roles": {
@@ -386,7 +386,7 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": "",
+     "color": "#73a9e6",
      "model3d": {
       "fit": "tight",
       "collar": "open"
@@ -478,7 +478,7 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": "",
+     "color": "#65a1e7",
      "model3d": {
       "collar": "stand"
      }
@@ -543,55 +543,6 @@
     "146818",
     "142332"
    ],
-   "variant": {
-    "world_cup": {
-     "label": "Rugby World Cup 2023",
-     "players": [
-      "145139",
-      "144794",
-      "146269",
-      "144615",
-      "142308",
-      "144571",
-      "146287",
-      "145279",
-      "145514",
-      "145186",
-      "144757",
-      "144719",
-      "145103",
-      "146356",
-      "146092",
-      "146089",
-      "142598",
-      "142310",
-      "144544",
-      "146819",
-      "146820",
-      "142370",
-      "146608",
-      "146657",
-      "142353",
-      "145024",
-      "146478",
-      "146818",
-      "144576",
-      "145367",
-      "146821",
-      "146354",
-      "142366"
-     ],
-     "roles": {
-      "captain": "144794",
-      "viceCaptain": "145186",
-      "longGK": "146092",
-      "shortGK": "146092",
-      "longPunt": "146092",
-      "shortPunt": "145186",
-      "kickoff": "146092"
-     }
-    }
-   },
    "primaryStadium": "43"
   },
   "2024": {
@@ -614,7 +565,7 @@
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": "",
+     "color": "#65a1e7",
      "variants": {
       "rwc_2023": {
        "label": "RWC 2023",
@@ -631,7 +582,7 @@
      "frontKitFile": "kits_2024/away_front.webp",
      "backKitFile": "kits_2024/away_wc_back.webp",
      "previewFile": "kits_2024/away_preview.png",
-     "color": "",
+     "color": "#141c35",
      "variants": {
       "rwc_2023": {
        "label": "RWC 2023",
@@ -770,7 +721,7 @@
      "frontKitFile": "kits_2010/home_front.webp",
      "backKitFile": "kits_2010/home_back.webp",
      "previewFile": "kits_2010/home_preview.png",
-     "color": ""
+     "color": "#7e9db3"
     }
    },
    "roles": {
@@ -851,7 +802,7 @@
      "frontKitFile": "kits_2016/home_front.webp",
      "backKitFile": "kits_2016/home_back.webp",
      "previewFile": "kits_2016/home_preview.png",
-     "color": ""
+     "color": "#2b77dc"
     }
    },
    "roles": {
@@ -929,7 +880,7 @@
      "frontKitFile": "kits_2025/home_front.webp",
      "backKitFile": "kits_2025/home_back.webp",
      "previewFile": "kits_2025/home_preview.png",
-     "color": ""
+     "color": "#71a9cf"
     }
    },
    "roles": {
@@ -987,55 +938,186 @@
     "153114",
     "153709"
    ],
-   "variant": {
-    "world_cup": {
-     "label": "Rugby World Cup 2023",
-     "players": [
-      "145139",
-      "144794",
-      "146269",
-      "144615",
-      "142308",
-      "144571",
-      "146287",
-      "145279",
-      "145514",
-      "145186",
-      "144757",
-      "144719",
-      "145103",
-      "146356",
-      "146092",
-      "146089",
-      "142598",
-      "142310",
-      "144544",
-      "146819",
-      "146820",
-      "142370",
-      "146608",
-      "146657",
-      "142353",
-      "145024",
-      "146478",
-      "146818",
-      "144576",
-      "145367",
-      "146821",
-      "146354",
-      "142366"
-     ],
-     "roles": {
-      "captain": "144794",
-      "viceCaptain": "145186",
-      "longGK": "146092",
-      "shortGK": "146092",
-      "longPunt": "146092",
-      "shortPunt": "145186",
-      "kickoff": "146092"
-     }
+   "primaryStadium": "43"
+  },
+  "2013": {
+   "enabled": true,
+   "name": "Argentina",
+   "type": "international",
+   "category": "International",
+   "group": "international",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2013/home_front.webp",
+     "backKitFile": "kits_2013/home_back.webp",
+     "previewFile": "kits_2013/home_preview.png",
+     "color": "#d8dad5"
     }
    },
+   "roles": {
+    "captain": "142976",
+    "viceCaptain": "127813",
+    "longGK": "127813",
+    "shortGK": "127813",
+    "longPunt": "127813",
+    "shortPunt": "127813",
+    "kickoff": "127813"
+   },
+   "setPlays": {
+    "up": "miss_pivot",
+    "down": "pivot",
+    "left": "classic",
+    "right": "pocket"
+   },
+   "players": [
+    "100182",
+    "147140",
+    "153282",
+    "156238",
+    "103959",
+    "147147",
+    "147134",
+    "142976",
+    "153112",
+    "127813",
+    "143796",
+    "123245",
+    "155455",
+    "143126",
+    "153116",
+    "142598",
+    "142590",
+    "142353",
+    "153272",
+    "131923",
+    "100074",
+    "144757",
+    "153114",
+    "153111",
+    "142753",
+    "153268",
+    "153559",
+    "145186",
+    "156962",
+    "153137",
+    "147169",
+    "120945",
+    "145514",
+    "153125",
+    "152870",
+    "153120",
+    "153082",
+    "143211",
+    "147171",
+    "147172",
+    "158324",
+    "147153",
+    "158323",
+    "153565",
+    "158326",
+    "158939",
+    "142323",
+    "158341",
+    "147165",
+    "147174"
+   ],
+   "primaryStadium": "43"
+  },
+  "2020": {
+   "name": "Argentina",
+   "type": "international",
+   "category": "International",
+   "group": "international",
+   "ball": "ball_2/ball_%.png",
+   "banners": "banners_2/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_2/logo.png",
+    "frontend": "logos_2/logo_frontend.png",
+    "small": "logos_2/logo_small.png",
+    "left": "logos_2/logo_left.png",
+    "right": "logos_2/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2019/home_front.webp",
+     "backKitFile": "kits_2019/home_back.webp",
+     "previewFile": "kits_2019/home_preview.png",
+     "color": "#7ab6dc"
+    }
+   },
+   "roles": {
+    "captain": "144571",
+    "viceCaptain": "145200",
+    "longGK": "142366",
+    "shortGK": "142366",
+    "longPunt": "142366",
+    "shortPunt": "142366",
+    "kickoff": "142366"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "145200",
+    "144794",
+    "142353",
+    "153122",
+    "145024",
+    "144571",
+    "142310",
+    "145279",
+    "153964",
+    "142366",
+    "144757",
+    "144719",
+    "153114",
+    "142332",
+    "145367",
+    "145139",
+    "144529",
+    "144576",
+    "142370",
+    "153108",
+    "153124",
+    "144544",
+    "146092",
+    "153963",
+    "144994",
+    "145514",
+    "145392",
+    "153109",
+    "146820",
+    "153117",
+    "153709",
+    "144989",
+    "153967",
+    "153710",
+    "153138",
+    "144466",
+    "146186",
+    "158945",
+    "158946",
+    "158729",
+    "146287",
+    "146818",
+    "153972",
+    "145103",
+    "153115"
+   ],
    "primaryStadium": "43"
   },
   "2012": {
@@ -1134,105 +1216,6 @@
     "123245",
     "145186",
     "142753"
-   ],
-   "primaryStadium": "43"
-  },
-  "2013": {
-   "enabled": false,
-   "name": "Argentina",
-   "type": "international",
-   "category": "International",
-   "group": "international",
-   "ball": "ball_1/ball_%.png",
-   "banners": "banners_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "142976",
-    "viceCaptain": "120945",
-    "longGK": "153268",
-    "shortGK": "153268",
-    "longPunt": "127813",
-    "shortPunt": "127813",
-    "kickoff": "147149"
-   },
-   "setPlays": {
-    "up": "miss_pivot",
-    "down": "pivot",
-    "left": "classic",
-    "right": "pocket"
-   },
-   "players": [
-    "100182",
-    "147140",
-    "143390",
-    "147148",
-    "103959",
-    "147147",
-    "147134",
-    "142976",
-    "145083",
-    "127813",
-    "143796",
-    "153268",
-    "143446",
-    "143126",
-    "147149",
-    "142598",
-    "142590",
-    "142353",
-    "147156",
-    "131923",
-    "100074",
-    "144757",
-    "145109",
-    "147150",
-    "142753",
-    "123245",
-    "147167",
-    "145186",
-    "147157",
-    "147159",
-    "147169",
-    "120945",
-    "145514",
-    "147160",
-    "147170",
-    "147161",
-    "142477",
-    "143211",
-    "147171",
-    "147172",
-    "147173",
-    "147153",
-    "147152",
-    "142862",
-    "144844",
-    "147168",
-    "142323",
-    "147163",
-    "147165",
-    "147174"
    ],
    "primaryStadium": "43"
   },
@@ -1506,99 +1489,6 @@
    ],
    "primaryStadium": "43"
   },
-  "2020": {
-   "name": "Argentina",
-   "type": "international",
-   "category": "International",
-   "group": "international",
-   "ball": "ball_2/ball_%.png",
-   "banners": "banners_2/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_2/logo.png",
-    "frontend": "logos_2/logo_frontend.png",
-    "small": "logos_2/logo_small.png",
-    "left": "logos_2/logo_left.png",
-    "right": "logos_2/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "144571",
-    "viceCaptain": "145200",
-    "longGK": "142366",
-    "shortGK": "142366",
-    "longPunt": "142366",
-    "shortPunt": "142366",
-    "kickoff": "142366"
-   },
-   "setPlays": {
-    "up": "miss",
-    "down": "loop",
-    "left": "pivot",
-    "right": "pocket"
-   },
-   "players": [
-    "145200",
-    "144794",
-    "142353",
-    "153122",
-    "145024",
-    "144571",
-    "142310",
-    "145279",
-    "153964",
-    "142366",
-    "144757",
-    "144719",
-    "153114",
-    "142332",
-    "145367",
-    "145139",
-    "145392",
-    "144576",
-    "142370",
-    "153108",
-    "153124",
-    "144544",
-    "146092",
-    "153963",
-    "144994",
-    "145514",
-    "144529",
-    "153109",
-    "146820",
-    "153117",
-    "153709",
-    "144989",
-    "153967",
-    "153710",
-    "153138",
-    "144466",
-    "146186",
-    "158945",
-    "158946",
-    "158729",
-    "146287",
-    "146818",
-    "153972",
-    "145103",
-    "153115"
-   ],
-   "primaryStadium": "43"
-  },
   "2021": {
    "enabled": false,
    "name": "Argentina",
@@ -1713,7 +1603,7 @@
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": ""
+     "color": "#65a1e7"
     },
     "away": {
      "frontKitFile": "",
@@ -1788,55 +1678,6 @@
     "147222",
     "147223"
    ],
-   "variant": {
-    "world_cup": {
-     "label": "Rugby World Cup 2023",
-     "players": [
-      "145139",
-      "144794",
-      "146269",
-      "144615",
-      "142308",
-      "144571",
-      "146287",
-      "145279",
-      "145514",
-      "145186",
-      "144757",
-      "144719",
-      "145103",
-      "146356",
-      "146092",
-      "146089",
-      "142598",
-      "142310",
-      "144544",
-      "146819",
-      "146820",
-      "142370",
-      "146608",
-      "146657",
-      "142353",
-      "145024",
-      "146478",
-      "146818",
-      "144576",
-      "145367",
-      "146821",
-      "146354",
-      "142366"
-     ],
-     "roles": {
-      "captain": "144794",
-      "viceCaptain": "145186",
-      "longGK": "146092",
-      "shortGK": "146092",
-      "longPunt": "146092",
-      "shortPunt": "145186",
-      "kickoff": "146092"
-     }
-    }
-   },
    "primaryStadium": "43"
   }
  }

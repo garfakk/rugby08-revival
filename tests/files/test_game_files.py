@@ -68,11 +68,19 @@ def test_weather_defaults(game_dir, match_data):
 
 def test_advanced_fields_omitted_by_default(game_dir, match_data):
     _, root = write_mission(game_dir, match_data)
-    for attr in ("anthem", "haka0", "haka1", "trophy_lift", "stadium_flags", "kickassist",
+    for attr in ("anthem", "haka0", "haka1", "trophy_lift", "trophy_lifter", "stadium_flags", "kickassist",
                  "cpu_lineout_keep", "cpu_jackal"):
         assert attr not in root.attrib
     assert root.find("EVENTS") is None
     assert list(root.find("OBJECTIVES")) == []
+
+
+def test_trophy_lifter_written_with_the_trophy(game_dir, match_data):
+    lifter = "home_win:home;away_win:home;draw:home"
+    _, root = write_mission(game_dir, dict(match_data, trophy_lift="on", trophy_lifter=lifter))
+    assert root.get("trophy_lift") == "on" and root.get("trophy_lifter") == lifter
+    _, root = write_mission(game_dir, dict(match_data, trophy_lift="stock", trophy_lifter=lifter))
+    assert root.get("trophy_lifter") is None             # no trophy, nobody to lift it
 
 
 def test_advanced_fields_written(game_dir, match_data):
@@ -163,6 +171,24 @@ def test_roster_height_rounded_to_nearest_inch(game_dir, match_data):
     rid = gsv.players_roster_id["team_A"][0]
     rec = next(p for p in roster["players"].values() if p["roster_id"] == rid)
     assert rec["height_cm"] == 178
+
+
+def test_roster_star_voice_byte(game_dir, match_data):
+    """star_voice -> record byte +0x51 (whose star commentary, read by
+    rugby08patches.dll), apart from the star class at +0x4e."""
+    md = copy.deepcopy(match_data)
+    md["team_A"]["players"][0].update(star_voice=4, star_attribute=7)
+    md["team_A"]["players"][1].update(star_voice=0, star_attribute=4)
+    md["team_A"]["players"][2]["star_voice"] = 99             # out of range: none
+    GFP.edit_roster_file(md)
+    data = open(os.path.join(game_dir, gsv.game_filenames["roster"]), "rb").read()
+    pos = {}
+    for off in range(4, len(data) - 0x64, 0x64):
+        pos.setdefault(int.from_bytes(data[off:off + 2], "little"), off)
+    ids = gsv.players_roster_id["team_A"]
+    assert (data[pos[ids[0]] + 0x4e], data[pos[ids[0]] + 0x51]) == (7, 4)
+    assert (data[pos[ids[1]] + 0x4e], data[pos[ids[1]] + 0x51]) == (4, 0)
+    assert data[pos[ids[2]] + 0x51] == 0
 
 
 def test_roster_skipped_without_22_players(game_dir, match_data):

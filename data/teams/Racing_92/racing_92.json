@@ -21,13 +21,13 @@
      "frontKitFile": "kits_2010/home_front.webp",
      "backKitFile": "kits_2010/home_back.webp",
      "previewFile": "kits_2010/home_preview.png",
-     "color": ""
+     "color": "#59acd8"
     },
     "away": {
      "frontKitFile": "kits_2010/away_front.webp",
      "backKitFile": "kits_2010/away_back.webp",
      "previewFile": "kits_2010/away_preview.png",
-     "color": ""
+     "color": "#1c2739"
     }
    },
    "roles": {
@@ -73,12 +73,11 @@
     "143933",
     "153578",
     "153574",
-    "156089",
+    "158965",
     "153572",
-    "156219",
+    "150423",
     "153580",
     "153568",
-    "152447",
     "147030",
     "153564",
     "153566",
@@ -154,7 +153,7 @@
     "153556",
     "153559",
     "153560",
-    "156089",
+    "158965",
     "153569",
     "153572",
     "104099",
@@ -458,7 +457,6 @@
    "primaryStadium": "20"
   },
   "2017": {
-   "enabled": false,
    "name": "Racing 92",
    "type": "club",
    "category": "Top 14",
@@ -475,21 +473,21 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
+     "frontKitFile": "kits_2018_2/home_front.webp",
+     "backKitFile": "kits_2018_2/home_back.webp",
+     "previewFile": "kits_2018_2/home_preview.png",
+     "color": "#a4c7dd"
     },
     "away": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
+     "frontKitFile": "kits_2018_2/away_front.webp",
+     "backKitFile": "kits_2018_2/away_back.webp",
+     "previewFile": "kits_2018_2/away_preview.png",
+     "color": "#01133b"
     }
    },
    "roles": {
     "captain": "143425",
-    "viceCaptain": "143279",
+    "viceCaptain": "118634",
     "longGK": "143425",
     "shortGK": "143425",
     "longPunt": "143425",
@@ -503,53 +501,47 @@
     "right": "pocket"
    },
    "players": [
-    "144493",
+    "101364",
     "118634",
     "144313",
-    "144594",
     "144992",
-    "142500",
-    "151828",
-    "142800",
+    "156238",
+    "152451",
+    "144966",
+    "153653",
     "145093",
     "143425",
     "144757",
-    "143279",
     "143253",
+    "155559",
     "142717",
     "144270",
+    "152885",
     "144339",
-    "145791",
-    "147148",
-    "142673",
-    "148798",
-    "146885",
-    "142427",
-    "101364",
+    "153649",
+    "152447",
+    "142954",
+    "153654",
+    "155100",
+    "152496",
+    "153999",
+    "158963",
+    "153323",
     "130080",
-    "150421",
-    "144916",
-    "142539",
-    "146899",
-    "142648",
-    "146884",
-    "151826",
-    "151593",
-    "101588",
+    "154211",
+    "158965",
     "142614",
-    "148771",
-    "151570",
-    "143636",
-    "151825",
-    "145380",
-    "149214",
-    "151831",
-    "145783",
-    "144739",
-    "150985",
-    "145936",
-    "145502",
-    "151830"
+    "158964",
+    "154527",
+    "142800",
+    "157005",
+    "153572",
+    "153763",
+    "155571",
+    "154005",
+    "158517",
+    "144916",
+    "101588"
    ],
    "primaryStadium": "70"
   },
@@ -574,7 +566,7 @@
      "frontKitFile": "kits_2018_2/home_front.webp",
      "backKitFile": "kits_2018_2/home_back.webp",
      "previewFile": "kits_2018_2/home_preview.png",
-     "color": "",
+     "color": "#a4c7dd",
      "model3d": {
       "collar": "stand"
      }
@@ -583,7 +575,7 @@
      "frontKitFile": "kits_2018_2/away_front.webp",
      "backKitFile": "kits_2018_2/away_back.webp",
      "previewFile": "kits_2018_2/away_preview.png",
-     "color": "",
+     "color": "#01133b",
      "model3d": {
       "collar": "stand"
      }
@@ -634,7 +626,7 @@
     "152885",
     "145093",
     "152447",
-    "152315",
+    "148690",
     "156238",
     "101588",
     "143425",
@@ -674,13 +666,13 @@
      "frontKitFile": "kits_2019_2/home_front.webp",
      "backKitFile": "kits_2019_2/home_back.webp",
      "previewFile": "kits_2019_2/home_preview.png",
-     "color": ""
+     "color": "#b1c7d8"
     },
     "away": {
      "frontKitFile": "kits_2019_2/away_front.webp",
      "backKitFile": "kits_2019_2/away_back.webp",
      "previewFile": "kits_2019_2/away_preview.png",
-     "color": ""
+     "color": "#03104a"
     }
    },
    "roles": {
@@ -718,7 +710,7 @@
     "152326",
     "146137",
     "144561",
-    "152315",
+    "148690",
     "145093",
     "144322",
     "144297",
@@ -818,7 +810,6 @@
     "153771",
     "153765",
     "153652",
-    "146377",
     "152447",
     "152451",
     "144888",
@@ -942,13 +933,13 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": ""
+     "color": "#80b5ea"
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": ""
+     "color": "#252b34"
     }
    },
    "roles": {
@@ -987,7 +978,7 @@
     "145565",
     "153774",
     "153653",
-    "146438",
+    "156261",
     "145936",
     "152891",
     "146453",
@@ -1002,7 +993,6 @@
     "152392",
     "144916",
     "153046",
-    "156261",
     "153765",
     "153768",
     "146150",
@@ -1037,13 +1027,13 @@
      "frontKitFile": "kits_2023_2/home_front.webp",
      "backKitFile": "kits_2023_2/home_back.webp",
      "previewFile": "kits_2023_2/home_preview.png",
-     "color": ""
+     "color": "#252a33"
     },
     "away": {
      "frontKitFile": "kits_2023_2/away_front.webp",
      "backKitFile": "kits_2023_2/away_back.webp",
      "previewFile": "kits_2023_2/away_preview.png",
-     "color": ""
+     "color": "#272c36"
     }
    },
    "roles": {
@@ -1130,13 +1120,13 @@
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": ""
+     "color": "#a4b6c7"
     },
     "away": {
      "frontKitFile": "kits_2024/away_front.webp",
      "backKitFile": "kits_2024/away_back.webp",
      "previewFile": "kits_2024/away_preview.png",
-     "color": ""
+     "color": "#121929"
     }
    },
    "roles": {
@@ -1488,7 +1478,7 @@
     "154916",
     "154917",
     "154918",
-    "156219",
+    "150423",
     "143933",
     "154919",
     "143560",

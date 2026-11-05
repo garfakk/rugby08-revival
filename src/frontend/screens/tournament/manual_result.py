@@ -181,7 +181,7 @@ class ManualResultView(QWidget):
         self.tie_box = QWidget()
         th = QHBoxLayout(self.tie_box)
         th.setContentsMargins(0, 0, 0, 0)
-        th.addWidget(QLabel("Level knockout match — winner:"))
+        th.addWidget(QLabel("Level knockout match. Winner:"))
         self.winner = QComboBox()
         self.winner.addItem(t.team_name(fixture.home), fixture.home)
         self.winner.addItem(t.team_name(fixture.away), fixture.away)
