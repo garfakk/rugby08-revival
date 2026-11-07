@@ -1510,7 +1510,7 @@
     "home": {
      "frontKitFile": "kits_2020/home_front.webp",
      "backKitFile": "kits_2020/home_back.webp",
-     "previewFile": "",
+     "previewFile": "kits_2020/home_preview.png",
      "color": "#d9aa15"
     }
    },
