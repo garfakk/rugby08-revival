@@ -215,9 +215,9 @@
        "shirtName": {
         "area": [
          0.0761,
-         0.259,
+         0.2605,
          0.84,
-         0.0879
+         0.098
         ],
         "color": "#dddddd"
        }
@@ -225,12 +225,15 @@
      },
      "shirtName": {
       "area": [
-       0.0761,
-       0.7802,
+       0.08,
+       0.3044,
        0.84,
-       0.0879
+       0.098
       ],
-      "color": "#dddddd"
+      "color": "#dddddd",
+      "size": 25,
+      "outline": "#0b1f4b",
+      "outlineWidth": 4
      }
     },
     "away": {
@@ -247,9 +250,9 @@
        "shirtName": {
         "area": [
          0.0761,
-         0.2598,
+         0.2613,
          0.84,
-         0.0879
+         0.098
         ],
         "color": "#101429"
        }
@@ -257,12 +260,15 @@
      },
      "shirtName": {
       "area": [
-       0.0761,
-       0.7031,
+       0.08,
+       0.3082,
        0.84,
-       0.0879
+       0.098
       ],
-      "color": "#101429"
+      "color": "#101429",
+      "outline": "#ffffff",
+      "outlineWidth": 4,
+      "size": 27
      }
     }
    },
@@ -601,10 +607,10 @@
      "color": "#171a2c",
      "shirtName": {
       "area": [
-       0.1045,
-       0.707,
+       0.1104,
+       0.325,
        0.7793,
-       0.0879
+       0.098
       ],
       "color": "#f5f5f5"
      }
@@ -616,10 +622,10 @@
      "color": "#c977e9",
      "shirtName": {
       "area": [
-       0.1045,
-       0.707,
+       0.1104,
+       0.3308,
        0.7793,
-       0.0879
+       0.088
       ],
       "color": "#121529"
      }
@@ -1115,10 +1121,10 @@
      "color": "#191d34",
      "shirtName": {
       "area": [
-       0.0761,
-       0.6758,
+       0.08,
+       0.2723,
        0.84,
-       0.0879
+       0.098
       ],
       "color": "#e6e7e6"
      }
@@ -1130,12 +1136,12 @@
      "color": "#0b5ca8",
      "shirtName": {
       "area": [
-       0.0761,
-       0.6758,
+       0.08,
+       0.2855,
        0.84,
-       0.0879
+       0.068
       ],
-      "color": "#f5f5f5"
+      "color": "#181f38"
      }
     }
    },
@@ -1313,6 +1319,104 @@
    "shirtNames": {
     "enabled": true
    },
+   "primaryStadium": "29"
+  },
+  "2013": {
+   "enabled": true,
+   "name": "Scotland",
+   "type": "international",
+   "category": "International",
+   "group": "international",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2013/home_front.webp",
+     "backKitFile": "kits_2013/home_back.webp",
+     "previewFile": "kits_2013/home_preview.png",
+     "color": "#07113a"
+    },
+    "away": {
+     "frontKitFile": "kits_2013/away_front.webp",
+     "backKitFile": "kits_2013/away_back.webp",
+     "previewFile": "kits_2013/away_preview.png",
+     "color": "#c3c3bf"
+    }
+   },
+   "roles": {
+    "captain": "142870",
+    "viceCaptain": "153029",
+    "longGK": "153021",
+    "shortGK": "153021",
+    "longPunt": "153021",
+    "shortPunt": "153021",
+    "kickoff": "144433"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "158298",
+    "143410",
+    "142377",
+    "142497",
+    "142764",
+    "147034",
+    "142870",
+    "152860",
+    "153029",
+    "153021",
+    "157488",
+    "156820",
+    "143830",
+    "152794",
+    "144433",
+    "143312",
+    "144073",
+    "143781",
+    "147032",
+    "153012",
+    "153287",
+    "153403",
+    "143620",
+    "143028",
+    "144591",
+    "153028",
+    "153030",
+    "142524",
+    "153148",
+    "156504",
+    "156837",
+    "153288",
+    "147033",
+    "153017",
+    "153025",
+    "143687",
+    "143099",
+    "158254",
+    "153014",
+    "153022",
+    "153009",
+    "152791",
+    "153153",
+    "142990",
+    "153026",
+    "153027",
+    "142796",
+    "156547",
+    "157426"
+   ],
    "primaryStadium": "29"
   },
   "2007": {
@@ -1570,104 +1674,6 @@
     "142378",
     "147039",
     "142859"
-   ],
-   "primaryStadium": "29"
-  },
-  "2013": {
-   "enabled": true,
-   "name": "Scotland",
-   "type": "international",
-   "category": "International",
-   "group": "international",
-   "ball": "ball/ball_%.png",
-   "banners": "banners/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos/logo.png",
-    "frontend": "logos/logo_frontend.png",
-    "small": "logos/logo_small.png",
-    "left": "logos/logo_left.png",
-    "right": "logos/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2013/home_front.webp",
-     "backKitFile": "kits_2013/home_back.webp",
-     "previewFile": "kits_2013/home_preview.png",
-     "color": "#07113a"
-    },
-    "away": {
-     "frontKitFile": "kits_2013/away_front.webp",
-     "backKitFile": "kits_2013/away_back.webp",
-     "previewFile": "kits_2013/away_preview.png",
-     "color": "#c3c3bf"
-    }
-   },
-   "roles": {
-    "captain": "142870",
-    "viceCaptain": "153029",
-    "longGK": "153021",
-    "shortGK": "153021",
-    "longPunt": "153021",
-    "shortPunt": "153021",
-    "kickoff": "144433"
-   },
-   "setPlays": {
-    "up": "miss",
-    "down": "loop",
-    "left": "pivot",
-    "right": "pocket"
-   },
-   "players": [
-    "158298",
-    "143410",
-    "142377",
-    "142497",
-    "142764",
-    "147034",
-    "142870",
-    "152860",
-    "153029",
-    "153021",
-    "157488",
-    "156820",
-    "143830",
-    "152794",
-    "144433",
-    "143312",
-    "144073",
-    "143781",
-    "147032",
-    "153012",
-    "153287",
-    "153403",
-    "143620",
-    "143028",
-    "144591",
-    "153028",
-    "153030",
-    "142524",
-    "153148",
-    "156504",
-    "156837",
-    "153288",
-    "147033",
-    "153017",
-    "153025",
-    "143687",
-    "143099",
-    "158254",
-    "153014",
-    "153022",
-    "153009",
-    "152791",
-    "153153",
-    "142990",
-    "153026",
-    "153027",
-    "142796",
-    "156547",
-    "157426"
    ],
    "primaryStadium": "29"
   },

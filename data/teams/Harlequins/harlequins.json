@@ -139,13 +139,17 @@
       "collar": "stand"
      },
      "shirtName": {
+      "enabled": true,
       "area": [
-       0.2131,
-       0.8211,
+       0.1994,
+       0.1777,
        0.6012,
        0.0879
       ],
-      "color": "#000000"
+      "color": "#ffffff",
+      "size": 29,
+      "outline": "#111111",
+      "outlineWidth": 2
      }
     },
     "away": {
@@ -157,7 +161,16 @@
       "collar": "stand"
      },
      "shirtName": {
-      "enabled": false
+      "enabled": true,
+      "area": [
+       0.1994,
+       0.1738,
+       0.6012,
+       0.0879
+      ],
+      "size": 29,
+      "outline": "#ffffff",
+      "outlineWidth": 2
      }
     }
    },

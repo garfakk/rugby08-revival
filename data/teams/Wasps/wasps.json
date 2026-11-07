@@ -1,91 +1,5 @@
 {
  "10149": {
-  "2008": {
-   "name": "Wasps",
-   "type": "club",
-   "category": "Premiership",
-   "group": "england",
-   "ball": "",
-   "banners": "",
-   "pads": "",
-   "logos": {
-    "main": "",
-    "frontend": "",
-    "small": "",
-    "left": "",
-    "right": ""
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "",
-    "viceCaptain": "",
-    "longGK": "113608",
-    "shortGK": "113608",
-    "longPunt": "113608",
-    "shortPunt": "113608",
-    "kickoff": "113608"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "102258",
-    "13651",
-    "157495",
-    "101071",
-    "117861",
-    "124676",
-    "127594",
-    "146846",
-    "121641",
-    "113608",
-    "156736",
-    "124484",
-    "156737",
-    "113330",
-    "146838",
-    "157421",
-    "156843",
-    "157313",
-    "157317",
-    "157492",
-    "143435",
-    "157554",
-    "156725",
-    "157497",
-    "156941",
-    "157494",
-    "126500",
-    "107085",
-    "157514",
-    "157401",
-    "157318",
-    "146869",
-    "100021",
-    "157316",
-    "157314",
-    "157315",
-    "157312"
-   ],
-   "enabled": false,
-   "primaryStadium": "79"
-  },
   "2009": {
    "name": "Wasps",
    "type": "club",
@@ -108,13 +22,7 @@
      "previewFile": "kits_2009/home_preview.png",
      "color": "#171818",
      "shirtName": {
-      "area": [
-       0.1848,
-       0.8525,
-       0.6383,
-       0.0879
-      ],
-      "color": "#deded5"
+      "enabled": false
      }
     },
     "away": {
@@ -128,9 +36,9 @@
      "shirtName": {
       "area": [
        0.1102,
-       0.2218,
+       0.2073,
        0.7719,
-       0.0879
+       0.098
       ],
       "color": "#2824a4"
      }
@@ -226,9 +134,9 @@
      "shirtName": {
       "area": [
        0.2053,
-       0.6839,
+       0.1411,
        0.6012,
-       0.0879
+       0.098
       ],
       "color": "#f5f5f5"
      }
@@ -244,9 +152,9 @@
      "shirtName": {
       "area": [
        0.1975,
-       0.7119,
+       0.1572,
        0.6012,
-       0.0879
+       0.05
       ],
       "color": "#000000"
      }
@@ -335,13 +243,7 @@
      "previewFile": "kits_2017/home_preview.png",
      "color": "#f2dc02",
      "shirtName": {
-      "area": [
-       0.1539,
-       0.8467,
-       0.6531,
-       0.0879
-      ],
-      "color": "#f5f5f5"
+      "enabled": false
      }
     },
     "away": {
@@ -350,13 +252,7 @@
      "previewFile": "kits_2017/away_preview.png",
      "color": "#dac612",
      "shirtName": {
-      "area": [
-       0.1695,
-       0.8148,
-       0.6531,
-       0.0879
-      ],
-      "color": "#000000"
+      "enabled": false
      }
     }
    },
@@ -450,11 +346,11 @@
      "shirtName": {
       "area": [
        0.1332,
-       0.7497,
+       0.3459,
        0.757,
-       0.0879
+       0.068
       ],
-      "color": "#f5f5f5"
+      "color": "#000000"
      }
     },
     "away": {
@@ -468,9 +364,9 @@
      "shirtName": {
       "area": [
        0.1332,
-       0.7497,
+       0.3499,
        0.757,
-       0.0879
+       0.068
       ],
       "color": "#000000"
      }
@@ -564,13 +460,13 @@
       "collar": "stand"
      },
      "shirtName": {
+      "enabled": true,
       "area": [
        0.1586,
-       0.7647,
+       0.332,
        0.6828,
-       0.0439
-      ],
-      "color": "#000000"
+       0.0879
+      ]
      }
     },
     "away": {
@@ -582,13 +478,13 @@
       "collar": "stand"
      },
      "shirtName": {
+      "enabled": true,
       "area": [
-       0.1625,
-       0.7666,
+       0.1586,
+       0.3281,
        0.6828,
-       0.0557
-      ],
-      "color": "#000000"
+       0.0879
+      ]
      }
     }
    },
@@ -659,6 +555,310 @@
    "shirtNames": {
     "enabled": true
    }
+  },
+  "2022": {
+   "name": "Wasps",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.webp",
+     "backKitFile": "kits_2022/home_back.webp",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": "#141211",
+     "shirtName": {
+      "area": [
+       0.1104,
+       0.3139,
+       0.7793,
+       0.098
+      ],
+      "color": "#111111"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.webp",
+     "backKitFile": "kits_2022/away_back.webp",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": "#e6e5e4",
+     "shirtName": {
+      "area": [
+       0.1045,
+       0.3421,
+       0.7793,
+       0.068
+      ],
+      "color": "#052763"
+     }
+    }
+   },
+   "roles": {
+    "captain": "152475",
+    "viceCaptain": "144474",
+    "longGK": "152475",
+    "shortGK": "152475",
+    "longPunt": "152475",
+    "shortPunt": "152475",
+    "kickoff": "152475"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "157245",
+    "152471",
+    "156258",
+    "152481",
+    "156253",
+    "152485",
+    "142360",
+    "152433",
+    "144474",
+    "152475",
+    "152477",
+    "144257",
+    "155744",
+    "155421",
+    "145924",
+    "157604",
+    "156699",
+    "156420",
+    "158229",
+    "157892",
+    "157674",
+    "152510",
+    "145632",
+    "153659",
+    "156550",
+    "156817",
+    "145248",
+    "155690",
+    "156997",
+    "153002",
+    "155569",
+    "154071",
+    "157816",
+    "157307",
+    "157117",
+    "157565",
+    "155381",
+    "156726",
+    "157927",
+    "156801",
+    "152832",
+    "146480",
+    "156602",
+    "157891",
+    "158022",
+    "153027",
+    "153965",
+    "156440"
+   ],
+   "enabled": true,
+   "primaryStadium": "7",
+   "shirtNames": {
+    "enabled": true
+   }
+  },
+  "2023": {
+   "name": "Wasps",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2023/home_front.webp",
+     "backKitFile": "kits_2023/home_back.webp",
+     "previewFile": "kits_2023/home_preview.png",
+     "color": "#26231a",
+     "shirtName": {
+      "enabled": true,
+      "area": [
+       0.1512,
+       0.272,
+       0.6977,
+       0.0879
+      ],
+      "color": "#ffffff",
+      "outline": "#111111",
+      "outlineWidth": 5
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2023/away_front.webp",
+     "backKitFile": "kits_2023/away_back.webp",
+     "previewFile": "kits_2023/away_preview.png",
+     "color": "#3d97ab",
+     "shirtName": {
+      "enabled": true,
+      "area": [
+       0.1512,
+       0.2739,
+       0.6977,
+       0.0879
+      ],
+      "outline": "#ffffff",
+      "outlineWidth": 4
+     }
+    }
+   },
+   "roles": {
+    "captain": "158031",
+    "viceCaptain": "144474",
+    "longGK": "158031",
+    "shortGK": "158031",
+    "longPunt": "144474",
+    "shortPunt": "144474",
+    "kickoff": "144474"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "156258",
+    "156440",
+    "156420",
+    "153794",
+    "152481",
+    "156817",
+    "142360",
+    "157892",
+    "144474",
+    "158031",
+    "156801",
+    "157178",
+    "157816",
+    "152832",
+    "157307",
+    "156997",
+    "155690",
+    "153965",
+    "157565",
+    "158229",
+    "157117",
+    "155381",
+    "157927",
+    "157891",
+    "158022"
+   ],
+   "enabled": true,
+   "primaryStadium": "7",
+   "shirtNames": {
+    "enabled": true
+   }
+  },
+  "2008": {
+   "name": "Wasps",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "113608",
+    "shortGK": "113608",
+    "longPunt": "113608",
+    "shortPunt": "113608",
+    "kickoff": "113608"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "102258",
+    "13651",
+    "157495",
+    "101071",
+    "117861",
+    "124676",
+    "127594",
+    "146846",
+    "121641",
+    "113608",
+    "156736",
+    "124484",
+    "156737",
+    "113330",
+    "146838",
+    "157421",
+    "156843",
+    "157313",
+    "157317",
+    "157492",
+    "143435",
+    "157554",
+    "156725",
+    "157497",
+    "156941",
+    "157494",
+    "126500",
+    "107085",
+    "157514",
+    "157401",
+    "157318",
+    "146869",
+    "100021",
+    "157316",
+    "157314",
+    "157315",
+    "157312"
+   ],
+   "enabled": false,
+   "primaryStadium": "79"
   },
   "2020": {
    "name": "Wasps",
@@ -844,213 +1044,6 @@
    ],
    "enabled": false,
    "primaryStadium": "7"
-  },
-  "2022": {
-   "name": "Wasps",
-   "type": "club",
-   "category": "Premiership",
-   "group": "england",
-   "ball": "logos_1/ball_%.png",
-   "banners": "logos_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2022/home_front.webp",
-     "backKitFile": "kits_2022/home_back.webp",
-     "previewFile": "kits_2022/home_preview.png",
-     "color": "#141211",
-     "shirtName": {
-      "area": [
-       0.1045,
-       0.7542,
-       0.7793,
-       0.0879
-      ],
-      "color": "#f5f5f5"
-     }
-    },
-    "away": {
-     "frontKitFile": "kits_2022/away_front.webp",
-     "backKitFile": "kits_2022/away_back.webp",
-     "previewFile": "kits_2022/away_preview.png",
-     "color": "#e6e5e4",
-     "shirtName": {
-      "area": [
-       0.1045,
-       0.7592,
-       0.7793,
-       0.0879
-      ],
-      "color": "#052763"
-     }
-    }
-   },
-   "roles": {
-    "captain": "152475",
-    "viceCaptain": "144474",
-    "longGK": "152475",
-    "shortGK": "152475",
-    "longPunt": "152475",
-    "shortPunt": "152475",
-    "kickoff": "152475"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "157245",
-    "152471",
-    "156258",
-    "152481",
-    "156253",
-    "152485",
-    "142360",
-    "152433",
-    "144474",
-    "152475",
-    "152477",
-    "144257",
-    "155744",
-    "155421",
-    "145924",
-    "157604",
-    "156699",
-    "156420",
-    "158229",
-    "157892",
-    "157674",
-    "152510",
-    "145632",
-    "153659",
-    "156550",
-    "156817",
-    "145248",
-    "155690",
-    "156997",
-    "153002",
-    "155569",
-    "154071",
-    "157816",
-    "157307",
-    "157117",
-    "157565",
-    "155381",
-    "156726",
-    "157927",
-    "156801",
-    "152832",
-    "146480",
-    "156602",
-    "157891",
-    "158022",
-    "153027",
-    "153965",
-    "156440"
-   ],
-   "enabled": true,
-   "primaryStadium": "7",
-   "shirtNames": {
-    "enabled": true
-   }
-  },
-  "2023": {
-   "name": "Wasps",
-   "type": "club",
-   "category": "Premiership",
-   "group": "england",
-   "ball": "logos_1/ball_%.png",
-   "banners": "logos_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2023/home_front.webp",
-     "backKitFile": "kits_2023/home_back.webp",
-     "previewFile": "kits_2023/home_preview.png",
-     "color": "#26231a",
-     "shirtName": {
-      "area": [
-       0.1551,
-       0.8173,
-       0.6977,
-       0.0879
-      ],
-      "color": "#f5f5f5"
-     }
-    },
-    "away": {
-     "frontKitFile": "kits_2023/away_front.webp",
-     "backKitFile": "kits_2023/away_back.webp",
-     "previewFile": "kits_2023/away_preview.png",
-     "color": "#3d97ab",
-     "shirtName": {
-      "enabled": false
-     }
-    }
-   },
-   "roles": {
-    "captain": "158031",
-    "viceCaptain": "144474",
-    "longGK": "158031",
-    "shortGK": "158031",
-    "longPunt": "144474",
-    "shortPunt": "144474",
-    "kickoff": "144474"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "156258",
-    "156440",
-    "156420",
-    "153794",
-    "152481",
-    "156817",
-    "142360",
-    "157892",
-    "144474",
-    "158031",
-    "156801",
-    "157178",
-    "157816",
-    "152832",
-    "157307",
-    "156997",
-    "155690",
-    "153965",
-    "157565",
-    "158229",
-    "157117",
-    "155381",
-    "157927",
-    "157891",
-    "158022"
-   ],
-   "enabled": true,
-   "primaryStadium": "7",
-   "shirtNames": {
-    "enabled": true
-   }
   },
   "2024": {
    "name": "Wasps",

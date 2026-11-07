@@ -59,7 +59,7 @@ TABLE, FIXTURES, BRACKET = range(len(VIEWS))
 ROUND_SHOWN = 6           # the round's other matches on Home
 HEADLINES_SHOWN = 3       # news items on Home
 # MORE menu actions only offered in expert mode (tagged EXPERT there)
-_EXPERT_ACTIONS = {"simulate", "late_start", "sim_title", "sim_end"}
+_EXPERT_ACTIONS = {"simulate", "late_start", "forced", "sim_title", "sim_end"}
 
 
 def _without_round(f) -> str:
@@ -123,7 +123,8 @@ class TournamentDashboardScreen(Screen):
     def __init__(self, ds, on_back, on_play):
         super().__init__(on_back=on_back)
         self.ds = ds
-        self.on_play = on_play        # fn(session, fixture, start=None): start = (minute, home, away)
+        self.on_play = on_play        # fn(session, fixture, start=None, force=None): start = (minute, home, away),
+                                      # force = (winner id, forfeit)
         self.session = None
         self._message = ""
         self._mine_only = False
@@ -609,6 +610,8 @@ class TournamentDashboardScreen(Screen):
                             "set the result, injuries and bans"))
                 out.append(("Play from a given minute", "late_start",
                             "kick off from a minute and score you choose"))
+                out.append(("Play but force the result", "forced",
+                            "play it, the result you choose is recorded"))
             if not t.finished and self._alive_humans() and self.session.title_match_ahead():
                 out.append(("Simulate to your title match", "sim_title",
                             "every match before your final or title decider, yours included"))
@@ -1193,6 +1196,46 @@ class TournamentDashboardScreen(Screen):
                       [("CANCEL", "neutral", "cancel"), ("PLAY", "primary", "ok")], go,
                       content=content, width=640)
 
+    def _forced(self):
+        """Expert mode: play your match as usual, but the result recorded is
+        the one picked here whatever happens in the game: a win, a loss
+        (penalty tries make up the score when the game disagrees) or a
+        forfeit (the template's walkover)."""
+        f = self.session.human_fixture()
+        if not f:
+            return
+        from ui import CycleRow
+        t = self.t
+        mine = [tid for tid in (f.home, f.away) if t.teams[tid].human]
+        choices = {}      # label -> (winner, forfeit)
+        for tid in mine:
+            other = f.away if tid == f.home else f.home
+            name = t.team_name(tid) if len(mine) > 1 else "Your team"
+            choices[f"{name} wins"] = (tid, False)
+            choices[f"{name} loses"] = (other, False)
+            choices[f"{name} forfeits"] = (other, True)
+        if len(mine) > 1:   # both managed: "home wins" is "away loses"
+            choices = {k: v for k, v in choices.items() if not k.endswith(" loses")}
+        labels = list(choices)
+        picked = {"force": choices[labels[0]]}
+        content = transparent(QWidget(), "forcedResult")
+        v = QVBoxLayout(content)
+        v.setContentsMargins(0, 0, 0, 0)
+        v.setSpacing(0)
+        v.addWidget(CycleRow("Result", labels, labels[0],
+                             lambda c: picked.__setitem__("force", choices[c])))
+
+        def go(role):
+            if role == "ok":
+                self._message = ""
+                self.on_play(self.session, f, force=picked["force"])
+        ConfirmDialog(self, "Expert · play but force the result",
+                      f"{report.fixture_caption(t, f)}: the match plays as usual, but this result "
+                      "is recorded whatever the outcome. A score that disagrees gets penalty tries; "
+                      "a match left early or forfeited is a walkover.",
+                      [("CANCEL", "neutral", "cancel"), ("PLAY", "primary", "ok")], go,
+                      content=content, width=640)
+
     def _continue(self):
         self._run(self.session.advance_to_human)
 
@@ -1253,7 +1296,7 @@ class TournamentDashboardScreen(Screen):
             popup.add_row(label, data, subtitle=sub, tag="EXPERT" if expert else "",
                           tag_color=EXPERT if expert else None)
         popup.size_to(len(items))
-        actions = {"simulate": self._simulate, "late_start": self._late_start,
+        actions = {"simulate": self._simulate, "late_start": self._late_start, "forced": self._forced,
                    "sim_title": self._sim_to_title, "sim_end": self._sim_to_end}
         # after the popup has closed: a dialog opened from inside the pick
         # would lose its focus to the popup's own teardown

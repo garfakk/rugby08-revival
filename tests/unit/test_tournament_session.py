@@ -86,6 +86,45 @@ def test_forfeit(session):
     assert row.lost >= 1
 
 
+def _forced_game(session, home_tries, away_tries, winner_of, forfeit=False, result=True):
+    session.advance_to_human()
+    fixture = session.human_fixture()
+    session.begin_game(fixture)
+    winner = winner_of(fixture)
+    game = _game_result(home_tries, away_tries) if result else None
+    session.finish_forced(fixture, game, winner, forfeit)
+    assert fixture.played and fixture.result.winner_id() == winner
+    assert not persistence.has_snapshot(session.t.id, "prematch")
+    return fixture
+
+
+def test_forced_win_keeps_a_winning_score(session):
+    f = _forced_game(session, 3, 0, lambda f: f.home)
+    assert (f.result.home.points, f.result.away.points) == (15, 0)
+    assert not f.result.extra.get("forced")
+
+
+def test_forced_win_overturns_a_loss(session):
+    f = _forced_game(session, 0, 3, lambda f: f.home)
+    assert f.result.home.penalty_tries == 3 and f.result.home.points == 21
+    assert f.result.away.points == 15 and f.result.extra["forced"]
+
+
+def test_forced_win_overturns_a_draw(session):
+    f = _forced_game(session, 1, 1, lambda f: f.home)
+    assert (f.result.home.points, f.result.away.points) == (12, 5)
+
+
+def test_forced_forfeit_is_a_walkover(session):
+    f = _forced_game(session, 3, 0, lambda f: f.away, forfeit=True)
+    assert f.result.decided_by == "forfeit"
+
+
+def test_forced_result_left_early(session):
+    f = _forced_game(session, 0, 0, lambda f: f.home, result=False)
+    assert f.result.decided_by == "forfeit"
+
+
 def test_simulate_human_fixture_and_to_end(session):
     session.advance_to_human()
     session.simulate(session.human_fixture())

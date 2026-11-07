@@ -1,97 +1,5 @@
 {
  "10137": {
-  "2008": {
-   "name": "Leicester",
-   "type": "club",
-   "category": "Premiership",
-   "group": "england",
-   "ball": "",
-   "banners": "",
-   "pads": "",
-   "logos": {
-    "main": "",
-    "frontend": "",
-    "small": "",
-    "left": "",
-    "right": ""
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "",
-    "viceCaptain": "",
-    "longGK": "120135",
-    "shortGK": "120135",
-    "longPunt": "120135",
-    "shortPunt": "120135",
-    "kickoff": "120135"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "157355",
-    "156744",
-    "156391",
-    "156400",
-    "146831",
-    "146830",
-    "157523",
-    "155316",
-    "100792",
-    "120135",
-    "143920",
-    "147896",
-    "156234",
-    "155322",
-    "118337",
-    "124937",
-    "156684",
-    "156879",
-    "157560",
-    "157357",
-    "155458",
-    "157354",
-    "157529",
-    "157525",
-    "127577",
-    "142590",
-    "156947",
-    "156765",
-    "143656",
-    "146954",
-    "143168",
-    "156681",
-    "157513",
-    "156892",
-    "12301",
-    "142764",
-    "156609",
-    "147446",
-    "157356",
-    "157353",
-    "129815",
-    "157527",
-    "157528"
-   ],
-   "enabled": false,
-   "primaryStadium": "8"
-  },
   "2009": {
    "name": "Leicester",
    "type": "club",
@@ -120,11 +28,14 @@
      "shirtName": {
       "area": [
        0.08,
-       0.1502,
+       0.2004,
        0.84,
-       0.0879
+       0.1176
       ],
-      "color": "#f5f5f5"
+      "color": "#f5f5f5",
+      "outline": "#111111",
+      "outlineWidth": 4,
+      "size": 32
      }
     },
     "away": {
@@ -139,9 +50,9 @@
      "shirtName": {
       "area": [
        0.1646,
-       0.289,
+       0.2755,
        0.6902,
-       0.0879
+       0.098
       ],
       "color": "#141414"
      }
@@ -238,11 +149,13 @@
      "shirtName": {
       "area": [
        0.1975,
-       0.7908,
+       0.1459,
        0.6012,
-       0.0879
+       0.101
       ],
-      "color": "#f5f5f5"
+      "color": "#f5f5f5",
+      "outline": "#111111",
+      "outlineWidth": 3
      }
     },
     "away": {
@@ -256,9 +169,9 @@
      "shirtName": {
       "area": [
        0.1975,
-       0.6758,
+       0.1411,
        0.6012,
-       0.0879
+       0.098
       ],
       "color": "#000000"
      }
@@ -354,9 +267,9 @@
      "shirtName": {
       "area": [
        0.078,
-       0.0639,
+       0.2155,
        0.84,
-       0.0703
+       0.1108
       ],
       "color": "#f5f5f5"
      }
@@ -367,13 +280,13 @@
      "previewFile": "kits_2017/away_preview.png",
      "color": "#b7e001",
      "shirtName": {
+      "enabled": true,
       "area": [
-       0.078,
-       0.4443,
+       0.08,
+       0.4102,
        0.84,
-       0.0439
-      ],
-      "color": "#000000"
+       0.0879
+      ]
      }
     }
    },
@@ -467,12 +380,12 @@
      },
      "shirtName": {
       "area": [
-       0.1293,
-       0.8055,
+       0.1215,
+       0.3752,
        0.757,
-       0.0879
+       0.0837
       ],
-      "color": "#f5f5f5"
+      "color": "#000000"
      }
     },
     "away": {
@@ -486,9 +399,9 @@
      "shirtName": {
       "area": [
        0.1289,
-       0.8072,
+       0.3748,
        0.7422,
-       0.0879
+       0.088
       ],
       "color": "#000000"
      }
@@ -587,13 +500,14 @@
       "collar": "stand"
      },
      "shirtName": {
+      "enabled": true,
       "area": [
-       0.1328,
-       0.8288,
+       0.1289,
+       0.1674,
        0.7422,
        0.0879
       ],
-      "color": "#f5f5f5"
+      "color": "#ffffff"
      }
     },
     "away": {
@@ -605,13 +519,13 @@
       "collar": "stand"
      },
      "shirtName": {
+      "enabled": true,
       "area": [
-       0.1328,
-       0.8096,
+       0.1289,
+       0.3652,
        0.7422,
-       0.0557
-      ],
-      "color": "#41005a"
+       0.0879
+      ]
      }
     }
    },
@@ -684,6 +598,509 @@
    "shirtNames": {
     "enabled": true
    }
+  },
+  "2022": {
+   "name": "Leicester",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.webp",
+     "backKitFile": "kits_2022/home_back.webp",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": "#0e382e",
+     "shirtName": {
+      "enabled": false
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.webp",
+     "backKitFile": "kits_2022/away_back.webp",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": "#e2e1e0",
+     "shirtName": {
+      "enabled": false
+     }
+    }
+   },
+   "roles": {
+    "captain": "10542",
+    "viceCaptain": "12301",
+    "longGK": "10542",
+    "shortGK": "10542",
+    "longPunt": "10542",
+    "shortPunt": "10542",
+    "kickoff": "10542"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "144505",
+    "144794",
+    "125828",
+    "152338",
+    "158311",
+    "156257",
+    "145574",
+    "144859",
+    "12301",
+    "10542",
+    "153374",
+    "152336",
+    "156820",
+    "155821",
+    "11907",
+    "157725",
+    "154663",
+    "156441",
+    "157925",
+    "156924",
+    "152340",
+    "156190",
+    "152434",
+    "152461",
+    "156403",
+    "142272",
+    "145103",
+    "11888",
+    "157207",
+    "157154",
+    "155620",
+    "141334",
+    "158034",
+    "156933",
+    "154074",
+    "152976",
+    "155315",
+    "155122",
+    "156974",
+    "146019",
+    "156976",
+    "158144"
+   ],
+   "enabled": true,
+   "primaryStadium": "8",
+   "shirtNames": {
+    "enabled": true
+   }
+  },
+  "2023": {
+   "name": "Leicester",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2023/home_front.webp",
+     "backKitFile": "kits_2023/home_back.webp",
+     "previewFile": "kits_2023/home_preview.png",
+     "color": "#09392f",
+     "shirtName": {
+      "enabled": false
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2023/away_front.webp",
+     "backKitFile": "kits_2023/away_back.webp",
+     "previewFile": "kits_2023/away_preview.png",
+     "color": "#a10f23",
+     "shirtName": {
+      "enabled": false
+     }
+    }
+   },
+   "roles": {
+    "captain": "144824",
+    "viceCaptain": "12301",
+    "longGK": "144824",
+    "shortGK": "144824",
+    "longPunt": "11907",
+    "shortPunt": "144824",
+    "kickoff": "11907"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153080",
+    "144794",
+    "125828",
+    "152338",
+    "158311",
+    "156257",
+    "145574",
+    "144859",
+    "12301",
+    "144824",
+    "141334",
+    "152336",
+    "156820",
+    "152436",
+    "11907",
+    "157207",
+    "152461",
+    "156441",
+    "157925",
+    "158144",
+    "152340",
+    "152510",
+    "157146",
+    "142272",
+    "155821",
+    "146019",
+    "157154",
+    "156190",
+    "152434",
+    "11888",
+    "157245",
+    "157650",
+    "144834",
+    "152487",
+    "158034",
+    "157959",
+    "154663",
+    "155392",
+    "158145",
+    "152976",
+    "155122",
+    "156933",
+    "158092",
+    "158146"
+   ],
+   "enabled": true,
+   "primaryStadium": "8",
+   "shirtNames": {
+    "enabled": true
+   }
+  },
+  "2024": {
+   "name": "Leicester",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.webp",
+     "backKitFile": "kits_2024/home_back.webp",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": "#28a849",
+     "shirtName": {
+      "enabled": false
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.webp",
+     "backKitFile": "kits_2024/away_back.webp",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": "#1e1e1e",
+     "shirtName": {
+      "enabled": false
+     }
+    }
+   },
+   "roles": {
+    "captain": "156257",
+    "viceCaptain": "12301",
+    "longGK": "144824",
+    "shortGK": "144824",
+    "longPunt": "144824",
+    "shortPunt": "144824",
+    "kickoff": "144824"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153080",
+    "144794",
+    "125828",
+    "152338",
+    "11888",
+    "156257",
+    "145574",
+    "144859",
+    "12301",
+    "144824",
+    "157733",
+    "145404",
+    "152336",
+    "152477",
+    "11907",
+    "158082",
+    "157154",
+    "156441",
+    "155550",
+    "157146",
+    "155362",
+    "157769",
+    "152487",
+    "157207",
+    "152461",
+    "157612",
+    "156820",
+    "158034",
+    "157959",
+    "142272",
+    "146019",
+    "152340",
+    "144811",
+    "158145",
+    "158146",
+    "157725",
+    "158092",
+    "152436",
+    "157650",
+    "157081"
+   ],
+   "enabled": true,
+   "primaryStadium": "8",
+   "shirtNames": {
+    "enabled": true
+   }
+  },
+  "2014": {
+   "name": "Leicester",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2014/home_front.webp",
+     "backKitFile": "kits_2014/home_back.webp",
+     "previewFile": "kits_2014/home_preview.png",
+     "color": "#084944",
+     "shirtName": {
+      "area": [
+       0.1787,
+       0.2038,
+       0.6309,
+       0.078
+      ],
+      "color": "#f5f5f5"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2017/away_front.webp",
+     "backKitFile": "kits_2017/away_back.webp",
+     "previewFile": "kits_2017/away_preview.png",
+     "color": "#b7e001",
+     "shirtName": {
+      "area": [
+       0.08,
+       0.4069,
+       0.84,
+       0.0931
+      ],
+      "color": "#000000"
+     }
+    }
+   },
+   "roles": {
+    "captain": "126969",
+    "viceCaptain": "157527",
+    "longGK": "126969",
+    "shortGK": "126969",
+    "longPunt": "126969",
+    "shortPunt": "126969",
+    "kickoff": "126969"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "142590",
+    "157527",
+    "125828",
+    "157326",
+    "156627",
+    "156573",
+    "127577",
+    "155316",
+    "12301",
+    "126969",
+    "157551",
+    "119169",
+    "157528",
+    "157498",
+    "143126",
+    "154642",
+    "156982",
+    "157355",
+    "157509",
+    "157374",
+    "158232",
+    "104324",
+    "158994",
+    "156400",
+    "156602",
+    "157480",
+    "145420",
+    "144571",
+    "155581",
+    "158995",
+    "155561",
+    "156670",
+    "152314",
+    "146459",
+    "156107",
+    "119410",
+    "156873",
+    "157062",
+    "154147",
+    "154720",
+    "156865",
+    "158996"
+   ],
+   "primaryStadium": "8",
+   "shirtNames": {
+    "enabled": true
+   }
+  },
+  "2008": {
+   "name": "Leicester",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "120135",
+    "shortGK": "120135",
+    "longPunt": "120135",
+    "shortPunt": "120135",
+    "kickoff": "120135"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "157355",
+    "156744",
+    "156391",
+    "156400",
+    "146831",
+    "146830",
+    "157523",
+    "155316",
+    "100792",
+    "120135",
+    "143920",
+    "147896",
+    "156234",
+    "155322",
+    "118337",
+    "124937",
+    "156684",
+    "156879",
+    "157560",
+    "157357",
+    "155458",
+    "157354",
+    "157529",
+    "157525",
+    "127577",
+    "142590",
+    "156947",
+    "156765",
+    "143656",
+    "146954",
+    "143168",
+    "156681",
+    "157513",
+    "156892",
+    "12301",
+    "142764",
+    "156609",
+    "147446",
+    "157356",
+    "157353",
+    "129815",
+    "157527",
+    "157528"
+   ],
+   "enabled": false,
+   "primaryStadium": "8"
   },
   "2020": {
    "name": "Leicester",
@@ -879,330 +1296,6 @@
    "enabled": false,
    "primaryStadium": "8"
   },
-  "2022": {
-   "name": "Leicester",
-   "type": "club",
-   "category": "Premiership",
-   "group": "england",
-   "ball": "logos_1/ball_%.png",
-   "banners": "logos_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2022/home_front.webp",
-     "backKitFile": "kits_2022/home_back.webp",
-     "previewFile": "kits_2022/home_preview.png",
-     "color": "#0e382e",
-     "shirtName": {
-      "area": [
-       0.118,
-       0.0611,
-       0.7719,
-       0.0557
-      ],
-      "color": "#f5f5f5"
-     }
-    },
-    "away": {
-     "frontKitFile": "kits_2022/away_front.webp",
-     "backKitFile": "kits_2022/away_back.webp",
-     "previewFile": "kits_2022/away_preview.png",
-     "color": "#e2e1e0",
-     "shirtName": {
-      "enabled": false
-     }
-    }
-   },
-   "roles": {
-    "captain": "10542",
-    "viceCaptain": "12301",
-    "longGK": "10542",
-    "shortGK": "10542",
-    "longPunt": "10542",
-    "shortPunt": "10542",
-    "kickoff": "10542"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "144505",
-    "144794",
-    "125828",
-    "152338",
-    "158311",
-    "156257",
-    "145574",
-    "144859",
-    "12301",
-    "10542",
-    "153374",
-    "152336",
-    "156820",
-    "155821",
-    "11907",
-    "157725",
-    "154663",
-    "156441",
-    "157925",
-    "156924",
-    "152340",
-    "156190",
-    "152434",
-    "152461",
-    "156403",
-    "142272",
-    "145103",
-    "11888",
-    "157207",
-    "157154",
-    "155620",
-    "141334",
-    "158034",
-    "156933",
-    "154074",
-    "152976",
-    "155315",
-    "155122",
-    "156974",
-    "146019",
-    "156976",
-    "158144"
-   ],
-   "enabled": true,
-   "primaryStadium": "8",
-   "shirtNames": {
-    "enabled": true
-   }
-  },
-  "2023": {
-   "name": "Leicester",
-   "type": "club",
-   "category": "Premiership",
-   "group": "england",
-   "ball": "logos_1/ball_%.png",
-   "banners": "logos_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2023/home_front.webp",
-     "backKitFile": "kits_2023/home_back.webp",
-     "previewFile": "kits_2023/home_preview.png",
-     "color": "#09392f",
-     "shirtName": {
-      "area": [
-       0.1551,
-       0.8023,
-       0.6977,
-       0.0879
-      ],
-      "color": "#f5f5f5"
-     }
-    },
-    "away": {
-     "frontKitFile": "kits_2023/away_front.webp",
-     "backKitFile": "kits_2023/away_back.webp",
-     "previewFile": "kits_2023/away_preview.png",
-     "color": "#a10f23",
-     "shirtName": {
-      "enabled": false
-     }
-    }
-   },
-   "roles": {
-    "captain": "144824",
-    "viceCaptain": "12301",
-    "longGK": "144824",
-    "shortGK": "144824",
-    "longPunt": "11907",
-    "shortPunt": "144824",
-    "kickoff": "11907"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "153080",
-    "144794",
-    "125828",
-    "152338",
-    "158311",
-    "156257",
-    "145574",
-    "144859",
-    "12301",
-    "144824",
-    "141334",
-    "152336",
-    "156820",
-    "152436",
-    "11907",
-    "157207",
-    "152461",
-    "156441",
-    "157925",
-    "158144",
-    "152340",
-    "152510",
-    "157146",
-    "142272",
-    "155821",
-    "146019",
-    "157154",
-    "156190",
-    "152434",
-    "11888",
-    "157245",
-    "157650",
-    "144834",
-    "152487",
-    "158034",
-    "157959",
-    "154663",
-    "155392",
-    "158145",
-    "152976",
-    "155122",
-    "156933",
-    "158092",
-    "158146"
-   ],
-   "enabled": true,
-   "primaryStadium": "8",
-   "shirtNames": {
-    "enabled": true
-   }
-  },
-  "2024": {
-   "name": "Leicester",
-   "type": "club",
-   "category": "Premiership",
-   "group": "england",
-   "ball": "logos_1/ball_%.png",
-   "banners": "logos_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2024/home_front.webp",
-     "backKitFile": "kits_2024/home_back.webp",
-     "previewFile": "kits_2024/home_preview.png",
-     "color": "#28a849",
-     "shirtName": {
-      "area": [
-       0.1311,
-       0.7884,
-       0.7496,
-       0.0703
-      ],
-      "color": "#f5f5f5"
-     }
-    },
-    "away": {
-     "frontKitFile": "kits_2024/away_front.webp",
-     "backKitFile": "kits_2024/away_back.webp",
-     "previewFile": "kits_2024/away_preview.png",
-     "color": "#1e1e1e",
-     "shirtName": {
-      "area": [
-       0.1311,
-       0.7862,
-       0.7496,
-       0.0879
-      ],
-      "color": "#e0e0e0"
-     }
-    }
-   },
-   "roles": {
-    "captain": "156257",
-    "viceCaptain": "12301",
-    "longGK": "144824",
-    "shortGK": "144824",
-    "longPunt": "144824",
-    "shortPunt": "144824",
-    "kickoff": "144824"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "153080",
-    "144794",
-    "125828",
-    "152338",
-    "11888",
-    "156257",
-    "145574",
-    "144859",
-    "12301",
-    "144824",
-    "157733",
-    "145404",
-    "152336",
-    "152477",
-    "11907",
-    "158082",
-    "157154",
-    "156441",
-    "155550",
-    "157146",
-    "155362",
-    "157769",
-    "152487",
-    "157207",
-    "152461",
-    "157612",
-    "156820",
-    "158034",
-    "157959",
-    "142272",
-    "146019",
-    "152340",
-    "144811",
-    "158145",
-    "158146",
-    "157725",
-    "158092",
-    "152436",
-    "157650",
-    "157081"
-   ],
-   "enabled": true,
-   "primaryStadium": "8",
-   "shirtNames": {
-    "enabled": true
-   }
-  },
   "2016": {
    "name": "Leicester",
    "type": "club",
@@ -1291,117 +1384,6 @@
    ],
    "enabled": false,
    "primaryStadium": "8"
-  },
-  "2014": {
-   "name": "Leicester",
-   "type": "club",
-   "category": "Premiership",
-   "group": "england",
-   "ball": "logos_1/ball_%.png",
-   "banners": "logos_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2014/home_front.webp",
-     "backKitFile": "kits_2014/home_back.webp",
-     "previewFile": "kits_2014/home_preview.png",
-     "color": "#084944",
-     "shirtName": {
-      "area": [
-       0.1787,
-       0.7817,
-       0.6309,
-       0.0879
-      ],
-      "color": "#f5f5f5"
-     }
-    },
-    "away": {
-     "frontKitFile": "kits_2017/away_front.webp",
-     "backKitFile": "kits_2017/away_back.webp",
-     "previewFile": "kits_2017/away_preview.png",
-     "color": "#b7e001",
-     "shirtName": {
-      "area": [
-       0.078,
-       0.4443,
-       0.84,
-       0.0439
-      ],
-      "color": "#000000"
-     }
-    }
-   },
-   "roles": {
-    "captain": "126969",
-    "viceCaptain": "157527",
-    "longGK": "126969",
-    "shortGK": "126969",
-    "longPunt": "126969",
-    "shortPunt": "126969",
-    "kickoff": "126969"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "142590",
-    "157527",
-    "125828",
-    "157326",
-    "156627",
-    "156573",
-    "127577",
-    "155316",
-    "12301",
-    "126969",
-    "157551",
-    "119169",
-    "157528",
-    "157498",
-    "143126",
-    "154642",
-    "156982",
-    "157355",
-    "157509",
-    "157374",
-    "158232",
-    "104324",
-    "158994",
-    "156400",
-    "156602",
-    "157480",
-    "145420",
-    "144571",
-    "155581",
-    "158995",
-    "155561",
-    "156670",
-    "152314",
-    "146459",
-    "156107",
-    "119410",
-    "156873",
-    "157062",
-    "154147",
-    "154720",
-    "156865",
-    "158996"
-   ],
-   "primaryStadium": "8",
-   "shirtNames": {
-    "enabled": true
-   }
   }
  }
 }

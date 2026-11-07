@@ -1,90 +1,5 @@
 {
  "10139": {
-  "2008": {
-   "name": "London Irish",
-   "type": "club",
-   "category": "Premiership",
-   "group": "england",
-   "ball": "",
-   "banners": "",
-   "pads": "",
-   "logos": {
-    "main": "",
-    "frontend": "",
-    "small": "",
-    "left": "",
-    "right": ""
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "",
-    "viceCaptain": "",
-    "longGK": "123245",
-    "shortGK": "123245",
-    "longPunt": "104313",
-    "shortPunt": "104313",
-    "kickoff": "104313"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "154519",
-    "156888",
-    "156742",
-    "124488",
-    "156692",
-    "157553",
-    "110021",
-    "157557",
-    "156407",
-    "156243",
-    "143788",
-    "143224",
-    "123245",
-    "156887",
-    "104313",
-    "143272",
-    "157384",
-    "157550",
-    "157555",
-    "156697",
-    "157378",
-    "147134",
-    "156850",
-    "156898",
-    "157382",
-    "156870",
-    "156864",
-    "156761",
-    "146842",
-    "156886",
-    "157383",
-    "146835",
-    "156687",
-    "157381",
-    "157379",
-    "157552"
-   ],
-   "enabled": false,
-   "primaryStadium": "7"
-  },
   "2009": {
    "name": "London Irish",
    "type": "club",
@@ -111,13 +26,15 @@
       "collar": "stand"
      },
      "shirtName": {
+      "enabled": true,
       "area": [
        0.1512,
-       0.8084,
+       0.2066,
        0.6977,
        0.0879
       ],
-      "color": "#f5f5f5"
+      "outline": "#ffffff",
+      "outlineWidth": 3
      }
     },
     "away": {
@@ -130,7 +47,15 @@
       "collar": "stand"
      },
      "shirtName": {
-      "enabled": false
+      "enabled": true,
+      "area": [
+       0.1438,
+       0.1969,
+       0.7125,
+       0.0879
+      ],
+      "outline": "#ffffff",
+      "outlineWidth": 3
      }
     }
    },
@@ -220,13 +145,16 @@
       "collar": "stand"
      },
      "shirtName": {
+      "enabled": true,
       "area": [
-       0.2014,
-       0.6761,
+       0.1994,
+       0.1676,
        0.6012,
        0.0879
       ],
-      "color": "#f5f5f5"
+      "color": "#ffffff",
+      "outline": "#111111",
+      "outlineWidth": 2
      }
     },
     "away": {
@@ -238,13 +166,15 @@
       "collar": "stand"
      },
      "shirtName": {
+      "enabled": true,
       "area": [
-       0.2014,
-       0.676,
+       0.1994,
+       0.1755,
        0.6012,
        0.0879
       ],
-      "color": "#000000"
+      "outline": "#ffffff",
+      "outlineWidth": 2
      }
     }
    },
@@ -342,9 +272,9 @@
      "shirtName": {
       "area": [
        0.1268,
-       0.291,
+       0.2925,
        0.7348,
-       0.0879
+       0.098
       ],
       "color": "#ffffff"
      }
@@ -360,9 +290,9 @@
      "shirtName": {
       "area": [
        0.1463,
-       0.2676,
+       0.2691,
        0.7348,
-       0.0879
+       0.098
       ],
       "color": "#ffffff"
      }
@@ -436,6 +366,413 @@
    "shirtNames": {
     "enabled": true
    }
+  },
+  "2022": {
+   "name": "London Irish",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.webp",
+     "backKitFile": "kits_2022/home_back.webp",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": "#116f47",
+     "shirtName": {
+      "area": [
+       0.118,
+       0.1715,
+       0.7719,
+       0.098
+      ],
+      "color": "#f5f5f5"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.webp",
+     "backKitFile": "kits_2022/away_back.webp",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": "#0c6442",
+     "shirtName": {
+      "area": [
+       0.118,
+       0.1715,
+       0.7719,
+       0.098
+      ],
+      "color": "#052662"
+     }
+    }
+   },
+   "roles": {
+    "captain": "145239",
+    "viceCaptain": "153097",
+    "longGK": "145239",
+    "shortGK": "145239",
+    "longPunt": "145239",
+    "shortPunt": "145239",
+    "kickoff": "145239"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "157215",
+    "142598",
+    "153985",
+    "144157",
+    "142307",
+    "157612",
+    "152432",
+    "144238",
+    "153097",
+    "145239",
+    "157733",
+    "146820",
+    "153093",
+    "152788",
+    "157760",
+    "157996",
+    "154331",
+    "144542",
+    "157225",
+    "146287",
+    "144323",
+    "154109",
+    "145420",
+    "153350",
+    "153006",
+    "157146",
+    "157062",
+    "155382",
+    "157057",
+    "157974",
+    "152473",
+    "157742",
+    "157734",
+    "142280",
+    "157780",
+    "157761",
+    "157732",
+    "157224",
+    "157731",
+    "152467",
+    "157721",
+    "157959",
+    "152507"
+   ],
+   "enabled": true,
+   "primaryStadium": "7",
+   "shirtNames": {
+    "enabled": true
+   }
+  },
+  "2023": {
+   "name": "London Irish",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2023/home_front.webp",
+     "backKitFile": "kits_2023/home_back.webp",
+     "previewFile": "kits_2023/home_preview.png",
+     "color": "#0d463c",
+     "shirtName": {
+      "area": [
+       0.118,
+       0.2381,
+       0.7719,
+       0.098
+      ],
+      "color": "#f5f5f5",
+      "enabled": true
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2023/away_front.webp",
+     "backKitFile": "kits_2023/away_back.webp",
+     "previewFile": "kits_2023/away_preview.png",
+     "color": "#d5d5d5",
+     "shirtName": {
+      "enabled": true,
+      "area": [
+       0.1141,
+       0.2377,
+       0.7719,
+       0.0879
+      ]
+     }
+    }
+   },
+   "roles": {
+    "captain": "157612",
+    "viceCaptain": "145239",
+    "longGK": "145239",
+    "shortGK": "145239",
+    "longPunt": "145239",
+    "shortPunt": "145239",
+    "kickoff": "145239"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "153985",
+    "142598",
+    "155388",
+    "144219",
+    "142307",
+    "157612",
+    "152432",
+    "145380",
+    "144323",
+    "145239",
+    "157733",
+    "144991",
+    "152467",
+    "157734",
+    "157974",
+    "157057",
+    "155382",
+    "144542",
+    "155378",
+    "152507",
+    "144811",
+    "154109",
+    "146287",
+    "146820",
+    "152473",
+    "157224",
+    "157953",
+    "157215",
+    "142280",
+    "157730",
+    "144157",
+    "157780",
+    "158081",
+    "157742",
+    "157145",
+    "157760",
+    "153093",
+    "157996",
+    "157732",
+    "146608",
+    "157200"
+   ],
+   "enabled": true,
+   "primaryStadium": "7",
+   "shirtNames": {
+    "enabled": true
+   }
+  },
+  "2019": {
+   "name": "London Irish",
+   "type": "club",
+   "category": "Championship",
+   "group": "england",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2019/home_front.webp",
+     "backKitFile": "kits_2019/home_back.webp",
+     "previewFile": "kits_2019/home_preview.png",
+     "color": "#064d31",
+     "shirtName": {
+      "enabled": true,
+      "area": [
+       0.08,
+       0.3301,
+       0.84,
+       0.0879
+      ]
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2019/away_front.webp",
+     "backKitFile": "kits_2019/away_back.webp",
+     "previewFile": "kits_2019/away_preview.png",
+     "color": "#edefea",
+     "shirtName": {
+      "enabled": true
+     }
+    }
+   },
+   "roles": {
+    "captain": "156917",
+    "viceCaptain": "143080",
+    "longGK": "157545",
+    "shortGK": "157545",
+    "longPunt": "157545",
+    "shortPunt": "157545",
+    "kickoff": "157545"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "157722",
+    "156888",
+    "156581",
+    "154671",
+    "152472",
+    "156917",
+    "154276",
+    "155239",
+    "153787",
+    "157545",
+    "121726",
+    "154149",
+    "153742",
+    "157734",
+    "143080",
+    "142853",
+    "144471",
+    "153027",
+    "156923",
+    "156717",
+    "157227",
+    "156644",
+    "157094",
+    "156961",
+    "153985",
+    "156602",
+    "156547",
+    "157196",
+    "156618",
+    "155500",
+    "157048",
+    "156887",
+    "157730",
+    "157016",
+    "155388",
+    "157732"
+   ],
+   "enabled": true,
+   "primaryStadium": "7"
+  },
+  "2008": {
+   "name": "London Irish",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "",
+   "banners": "",
+   "pads": "",
+   "logos": {
+    "main": "",
+    "frontend": "",
+    "small": "",
+    "left": "",
+    "right": ""
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "123245",
+    "shortGK": "123245",
+    "longPunt": "104313",
+    "shortPunt": "104313",
+    "kickoff": "104313"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "154519",
+    "156888",
+    "156742",
+    "124488",
+    "156692",
+    "157553",
+    "110021",
+    "157557",
+    "156407",
+    "156243",
+    "143788",
+    "143224",
+    "123245",
+    "156887",
+    "104313",
+    "143272",
+    "157384",
+    "157550",
+    "157555",
+    "156697",
+    "157378",
+    "147134",
+    "156850",
+    "156898",
+    "157382",
+    "156870",
+    "156864",
+    "156761",
+    "146842",
+    "156886",
+    "157383",
+    "146835",
+    "156687",
+    "157381",
+    "157379",
+    "157552"
+   ],
+   "enabled": false,
+   "primaryStadium": "7"
   },
   "2020": {
    "name": "London Irish",
@@ -630,224 +967,6 @@
    "enabled": false,
    "primaryStadium": "7"
   },
-  "2022": {
-   "name": "London Irish",
-   "type": "club",
-   "category": "Premiership",
-   "group": "england",
-   "ball": "logos_1/ball_%.png",
-   "banners": "logos_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2022/home_front.webp",
-     "backKitFile": "kits_2022/home_back.webp",
-     "previewFile": "kits_2022/home_preview.png",
-     "color": "#116f47",
-     "shirtName": {
-      "area": [
-       0.118,
-       0.184,
-       0.7719,
-       0.0879
-      ],
-      "color": "#f5f5f5"
-     }
-    },
-    "away": {
-     "frontKitFile": "kits_2022/away_front.webp",
-     "backKitFile": "kits_2022/away_back.webp",
-     "previewFile": "kits_2022/away_preview.png",
-     "color": "#0c6442",
-     "shirtName": {
-      "area": [
-       0.118,
-       0.189,
-       0.7719,
-       0.0879
-      ],
-      "color": "#052662"
-     }
-    }
-   },
-   "roles": {
-    "captain": "145239",
-    "viceCaptain": "153097",
-    "longGK": "145239",
-    "shortGK": "145239",
-    "longPunt": "145239",
-    "shortPunt": "145239",
-    "kickoff": "145239"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "157215",
-    "142598",
-    "153985",
-    "144157",
-    "142307",
-    "157612",
-    "152432",
-    "144238",
-    "153097",
-    "145239",
-    "157733",
-    "146820",
-    "153093",
-    "152788",
-    "157760",
-    "157996",
-    "154331",
-    "144542",
-    "157225",
-    "146287",
-    "144323",
-    "154109",
-    "145420",
-    "153350",
-    "153006",
-    "157146",
-    "157062",
-    "155382",
-    "157057",
-    "157974",
-    "152473",
-    "157742",
-    "157734",
-    "142280",
-    "157780",
-    "157761",
-    "157732",
-    "157224",
-    "157731",
-    "152467",
-    "157721",
-    "157959",
-    "152507"
-   ],
-   "enabled": true,
-   "primaryStadium": "7",
-   "shirtNames": {
-    "enabled": true
-   }
-  },
-  "2023": {
-   "name": "London Irish",
-   "type": "club",
-   "category": "Premiership",
-   "group": "england",
-   "ball": "logos_1/ball_%.png",
-   "banners": "logos_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2023/home_front.webp",
-     "backKitFile": "kits_2023/home_back.webp",
-     "previewFile": "kits_2023/home_preview.png",
-     "color": "#0d463c",
-     "shirtName": {
-      "area": [
-       0.118,
-       0.2476,
-       0.7719,
-       0.0879
-      ],
-      "color": "#f5f5f5"
-     }
-    },
-    "away": {
-     "frontKitFile": "kits_2023/away_front.webp",
-     "backKitFile": "kits_2023/away_back.webp",
-     "previewFile": "kits_2023/away_preview.png",
-     "color": "#d5d5d5",
-     "shirtName": {
-      "enabled": false
-     }
-    }
-   },
-   "roles": {
-    "captain": "157612",
-    "viceCaptain": "145239",
-    "longGK": "145239",
-    "shortGK": "145239",
-    "longPunt": "145239",
-    "shortPunt": "145239",
-    "kickoff": "145239"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "153985",
-    "142598",
-    "155388",
-    "144219",
-    "142307",
-    "157612",
-    "152432",
-    "145380",
-    "144323",
-    "145239",
-    "157733",
-    "144991",
-    "152467",
-    "157734",
-    "157974",
-    "157057",
-    "155382",
-    "144542",
-    "155378",
-    "152507",
-    "144811",
-    "154109",
-    "146287",
-    "146820",
-    "152473",
-    "157224",
-    "157953",
-    "157215",
-    "142280",
-    "157730",
-    "144157",
-    "157780",
-    "158081",
-    "157742",
-    "157145",
-    "157760",
-    "153093",
-    "157996",
-    "157732",
-    "146608",
-    "157200"
-   ],
-   "enabled": true,
-   "primaryStadium": "7",
-   "shirtNames": {
-    "enabled": true
-   }
-  },
   "2016": {
    "name": "London Irish",
    "type": "club",
@@ -947,91 +1066,6 @@
     "157756"
    ],
    "enabled": false,
-   "primaryStadium": "7"
-  },
-  "2019": {
-   "name": "London Irish",
-   "type": "club",
-   "category": "Championship",
-   "group": "england",
-   "ball": "logos_1/ball_%.png",
-   "banners": "logos_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2019/home_front.webp",
-     "backKitFile": "kits_2019/home_back.webp",
-     "previewFile": "kits_2019/home_preview.png",
-     "color": "#064d31"
-    },
-    "away": {
-     "frontKitFile": "kits_2019/away_front.webp",
-     "backKitFile": "kits_2019/away_back.webp",
-     "previewFile": "kits_2019/away_preview.png",
-     "color": "#edefea"
-    }
-   },
-   "roles": {
-    "captain": "156917",
-    "viceCaptain": "143080",
-    "longGK": "157545",
-    "shortGK": "157545",
-    "longPunt": "157545",
-    "shortPunt": "157545",
-    "kickoff": "157545"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "157722",
-    "156888",
-    "156581",
-    "154671",
-    "152472",
-    "156917",
-    "154276",
-    "155239",
-    "153787",
-    "157545",
-    "121726",
-    "154149",
-    "153742",
-    "157734",
-    "143080",
-    "142853",
-    "144471",
-    "153027",
-    "156923",
-    "156717",
-    "157227",
-    "156644",
-    "157094",
-    "156961",
-    "153985",
-    "156602",
-    "156547",
-    "157196",
-    "156618",
-    "155500",
-    "157048",
-    "156887",
-    "157730",
-    "157016",
-    "155388",
-    "157732"
-   ],
-   "enabled": true,
    "primaryStadium": "7"
   }
  }

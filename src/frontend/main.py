@@ -247,6 +247,7 @@ class MainWindow(QMainWindow):
         self._boot_done = False
         self.tournament = None
         self._tournament_fixture = None
+        self._tournament_force = None
         # The window and the intro splash come up at once; the data and the
         # screens are built behind it, one step per event-loop turn so the
         # splash keeps animating (see _boot_steps).
@@ -907,11 +908,13 @@ class MainWindow(QMainWindow):
         self.screens.show_screen(self.screen_tournament, push_history=False)
         self.screens.reset_history()
 
-    def play_tournament_match(self, session, fixture, start=None):
+    def play_tournament_match(self, session, fixture, start=None, force=None):
         """Dashboard PLAY -> the pre-match presentation (kits) -> kick off.
         BACK from the presentation drops the pre-match snapshot again.
         `start` = (minute, home points, away points): expert mode's MORE >
-        Play from a given minute (the stock mid-match restart)."""
+        Play from a given minute (the stock mid-match restart).
+        `force` = (winner team id, forfeit): expert mode's MORE > Play but
+        force the result (session.finish_forced), recorded whatever happens."""
         from app.match_data_builder import build_match_data
         from app.tournament import calendar, report, weather
         from screens.tournament.common import competition_emblem
@@ -951,6 +954,7 @@ class MainWindow(QMainWindow):
                 self.show_tournament("Couldn't set up this match.")
                 return
             self._tournament_fixture = fixture
+            self._tournament_force = force
             self.start_match(match_data)
 
         def back():
@@ -1011,10 +1015,13 @@ class MainWindow(QMainWindow):
         the dashboard's full-time recap (which also shows the game's match
         report: `match_data`, `result`)."""
         session, fixture = self.tournament, self._tournament_fixture
+        force, self._tournament_force = self._tournament_force, None
         self._tournament_fixture = None
         from screens.tournament import moments
         before = moments.snapshot(session.t)
-        if not result or result.get("finished") is False:
+        if force:
+            done = session.finish_forced(fixture, result, *force)
+        elif not result or result.get("finished") is False:
             humans = [tid for tid in (fixture.home, fixture.away) if session.t.teams[tid].human]
             if not humans:
                 session.abandon_game()

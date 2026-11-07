@@ -1,92 +1,5 @@
 {
  "10145": {
-  "2008": {
-   "name": "Saracens",
-   "type": "club",
-   "category": "Premiership",
-   "group": "england",
-   "ball": "logos_1/ball_%.png",
-   "banners": "logos_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "",
-    "viceCaptain": "",
-    "longGK": "156688",
-    "shortGK": "156688",
-    "longPunt": "143112",
-    "shortPunt": "143112",
-    "kickoff": "143112"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "156937",
-    "142788",
-    "112654",
-    "157347",
-    "156759",
-    "154521",
-    "156640",
-    "156905",
-    "156734",
-    "156688",
-    "143112",
-    "157517",
-    "156758",
-    "157518",
-    "157520",
-    "157344",
-    "157343",
-    "147449",
-    "156713",
-    "157519",
-    "156738",
-    "156885",
-    "157348",
-    "157345",
-    "156784",
-    "156686",
-    "156723",
-    "157342",
-    "129445",
-    "156648",
-    "153577",
-    "143182",
-    "152017",
-    "157346",
-    "142719",
-    "153501",
-    "158244",
-    "157516"
-   ],
-   "enabled": false,
-   "primaryStadium": "79"
-  },
   "2009": {
    "name": "Saracens",
    "type": "club",
@@ -115,9 +28,9 @@
      "shirtName": {
       "area": [
        0.1102,
-       0.8581,
+       0.227,
        0.7719,
-       0.0879
+       0.098
       ],
       "color": "#f5f5f5"
      }
@@ -134,9 +47,9 @@
      "shirtName": {
       "area": [
        0.1254,
-       0.2112,
+       0.1957,
        0.757,
-       0.0879
+       0.098
       ],
       "color": "#f5f5f5"
      }
@@ -227,13 +140,7 @@
      "previewFile": "kits_2010/home_preview.png",
      "color": "#1b1e1a",
      "shirtName": {
-      "area": [
-       0.1936,
-       0.6914,
-       0.6012,
-       0.0879
-      ],
-      "color": "#f5f5f5"
+      "enabled": false
      }
     },
     "away": {
@@ -242,13 +149,7 @@
      "previewFile": "kits_2010/away_preview.png",
      "color": "#dcdeda",
      "shirtName": {
-      "area": [
-       0.1936,
-       0.6914,
-       0.6012,
-       0.0879
-      ],
-      "color": "#000000"
+      "enabled": false
      }
     }
    },
@@ -337,9 +238,9 @@
      "shirtName": {
       "area": [
        0.0683,
-       0.763,
+       0.2153,
        0.84,
-       0.0879
+       0.058
       ],
       "color": "#ffffff"
      }
@@ -350,13 +251,7 @@
      "previewFile": "kits_2017/away_preview.png",
      "color": "#d90b07",
      "shirtName": {
-      "area": [
-       0.0722,
-       0.6758,
-       0.84,
-       0.0879
-      ],
-      "color": "#ffffff"
+      "enabled": false
      }
     }
    },
@@ -451,9 +346,9 @@
      "shirtName": {
       "area": [
        0.1145,
-       0.2832,
+       0.2847,
        0.7867,
-       0.0879
+       0.098
       ],
       "color": "#fffdff"
      }
@@ -466,9 +361,9 @@
      "shirtName": {
       "area": [
        0.1145,
-       0.2871,
+       0.2886,
        0.7867,
-       0.0879
+       0.098
       ],
       "color": "#525152"
      }
@@ -564,9 +459,9 @@
      "shirtName": {
       "area": [
        0.0805,
-       0.2559,
+       0.2574,
        0.8312,
-       0.0879
+       0.098
       ],
       "color": "#ffffff"
      }
@@ -579,9 +474,9 @@
      "shirtName": {
       "area": [
        0.0805,
-       0.1973,
+       0.1988,
        0.8312,
-       0.0879
+       0.098
       ],
       "color": "#ffffff"
      }
@@ -657,6 +552,433 @@
    "shirtNames": {
     "enabled": true
    }
+  },
+  "2022": {
+   "name": "Saracens",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.webp",
+     "backKitFile": "kits_2022/home_back.webp",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": "#151514",
+     "shirtName": {
+      "area": [
+       0.0957,
+       0.355,
+       0.8164,
+       0.098
+      ],
+      "color": "#ffffff"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.webp",
+     "backKitFile": "kits_2022/away_back.webp",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": "#af1721",
+     "shirtName": {
+      "area": [
+       0.0957,
+       0.355,
+       0.8164,
+       0.098
+      ],
+      "color": "#f0f0f0"
+     }
+    }
+   },
+   "roles": {
+    "captain": "11006",
+    "viceCaptain": "10719",
+    "longGK": "152329",
+    "shortGK": "152329",
+    "longPunt": "11006",
+    "shortPunt": "11006",
+    "kickoff": "11006"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "152463",
+    "10719",
+    "145637",
+    "152465",
+    "153009",
+    "158242",
+    "142273",
+    "142279",
+    "152916",
+    "11006",
+    "156554",
+    "145193",
+    "152329",
+    "152794",
+    "158244",
+    "144926",
+    "144511",
+    "157709",
+    "146674",
+    "145920",
+    "154058",
+    "157837",
+    "157222",
+    "157648",
+    "11131",
+    "157607",
+    "157031",
+    "10433",
+    "11773",
+    "157573",
+    "153017",
+    "145283",
+    "157021",
+    "154259",
+    "145117",
+    "157890",
+    "157773",
+    "157209",
+    "146285",
+    "157999",
+    "158002",
+    "158083",
+    "157998",
+    "145943"
+   ],
+   "enabled": true,
+   "primaryStadium": "78",
+   "shirtNames": {
+    "enabled": true
+   }
+  },
+  "2023": {
+   "name": "Saracens",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2023/home_front.webp",
+     "backKitFile": "kits_2023/home_back.webp",
+     "previewFile": "kits_2023/home_preview.png",
+     "color": "#1e1a1a",
+     "shirtName": {
+      "area": [
+       0.0957,
+       0.355,
+       0.8164,
+       0.098
+      ],
+      "color": "#ffffff"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2023/away_front.webp",
+     "backKitFile": "kits_2023/away_back.webp",
+     "previewFile": "kits_2023/away_preview.png",
+     "color": "#22263e",
+     "shirtName": {
+      "area": [
+       0.118,
+       0.355,
+       0.7719,
+       0.098
+      ],
+      "color": "#050405"
+     }
+    }
+   },
+   "roles": {
+    "captain": "11006",
+    "viceCaptain": "11773",
+    "longGK": "11006",
+    "shortGK": "11006",
+    "longPunt": "11006",
+    "shortPunt": "11006",
+    "kickoff": "158244"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "152463",
+    "10719",
+    "145117",
+    "11773",
+    "157869",
+    "145920",
+    "142273",
+    "142279",
+    "154058",
+    "11006",
+    "156554",
+    "145193",
+    "152329",
+    "11131",
+    "158244",
+    "145943",
+    "144511",
+    "157709",
+    "157573",
+    "158242",
+    "152916",
+    "157837",
+    "10433",
+    "157858",
+    "152794",
+    "158002",
+    "145283",
+    "158083",
+    "156699",
+    "152465",
+    "144926",
+    "146674",
+    "153017",
+    "157648",
+    "157222",
+    "158079",
+    "157591",
+    "157021",
+    "157000",
+    "157999",
+    "157998",
+    "157985",
+    "157014",
+    "154071",
+    "157607"
+   ],
+   "enabled": true,
+   "primaryStadium": "78",
+   "shirtNames": {
+    "enabled": true
+   }
+  },
+  "2024": {
+   "name": "Saracens",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.webp",
+     "backKitFile": "kits_2024/home_back.webp",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": "#151413",
+     "shirtName": {
+      "area": [
+       0.1067,
+       0.3157,
+       0.7867,
+       0.098
+      ],
+      "color": "#e6e7e6"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.webp",
+     "backKitFile": "kits_2024/away_back.webp",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": "#1e2f3f",
+     "shirtName": {
+      "area": [
+       0.1104,
+       0.3097,
+       0.7793,
+       0.098
+      ],
+      "color": "#002488"
+     }
+    }
+   },
+   "roles": {
+    "captain": "11006",
+    "viceCaptain": "11773",
+    "longGK": "11006",
+    "shortGK": "11006",
+    "longPunt": "11006",
+    "shortPunt": "11006",
+    "kickoff": "11006"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "152463",
+    "10719",
+    "157858",
+    "11773",
+    "157869",
+    "146287",
+    "142273",
+    "142279",
+    "154058",
+    "11006",
+    "156554",
+    "145193",
+    "146820",
+    "157648",
+    "158244",
+    "145943",
+    "144511",
+    "157709",
+    "152465",
+    "145920",
+    "155815",
+    "157837",
+    "157760",
+    "146674",
+    "10433",
+    "158079",
+    "152916",
+    "152794",
+    "145117",
+    "158083",
+    "153985",
+    "152329",
+    "158199",
+    "157245",
+    "157985",
+    "154642",
+    "157883",
+    "157573",
+    "144926",
+    "157209",
+    "157999"
+   ],
+   "enabled": true,
+   "primaryStadium": "78",
+   "shirtNames": {
+    "enabled": true
+   }
+  },
+  "2008": {
+   "name": "Saracens",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "156688",
+    "shortGK": "156688",
+    "longPunt": "143112",
+    "shortPunt": "143112",
+    "kickoff": "143112"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "156937",
+    "142788",
+    "112654",
+    "157347",
+    "156759",
+    "154521",
+    "156640",
+    "156905",
+    "156734",
+    "156688",
+    "143112",
+    "157517",
+    "156758",
+    "157518",
+    "157520",
+    "157344",
+    "157343",
+    "147449",
+    "156713",
+    "157519",
+    "156738",
+    "156885",
+    "157348",
+    "157345",
+    "156784",
+    "156686",
+    "156723",
+    "157342",
+    "129445",
+    "156648",
+    "153577",
+    "143182",
+    "152017",
+    "157346",
+    "142719",
+    "153501",
+    "158244",
+    "157516"
+   ],
+   "enabled": false,
+   "primaryStadium": "79"
   },
   "2020": {
    "name": "Saracens",
@@ -848,346 +1170,6 @@
    ],
    "enabled": false,
    "primaryStadium": "78"
-  },
-  "2022": {
-   "name": "Saracens",
-   "type": "club",
-   "category": "Premiership",
-   "group": "england",
-   "ball": "logos_1/ball_%.png",
-   "banners": "logos_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2022/home_front.webp",
-     "backKitFile": "kits_2022/home_back.webp",
-     "previewFile": "kits_2022/home_preview.png",
-     "color": "#151514",
-     "shirtName": {
-      "area": [
-       0.0957,
-       0.3535,
-       0.8164,
-       0.0879
-      ],
-      "color": "#ffffff"
-     }
-    },
-    "away": {
-     "frontKitFile": "kits_2022/away_front.webp",
-     "backKitFile": "kits_2022/away_back.webp",
-     "previewFile": "kits_2022/away_preview.png",
-     "color": "#af1721",
-     "shirtName": {
-      "area": [
-       0.0957,
-       0.3535,
-       0.8164,
-       0.0879
-      ],
-      "color": "#f0f0f0"
-     }
-    }
-   },
-   "roles": {
-    "captain": "11006",
-    "viceCaptain": "10719",
-    "longGK": "152329",
-    "shortGK": "152329",
-    "longPunt": "11006",
-    "shortPunt": "11006",
-    "kickoff": "11006"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "152463",
-    "10719",
-    "145637",
-    "152465",
-    "153009",
-    "158242",
-    "142273",
-    "142279",
-    "152916",
-    "11006",
-    "156554",
-    "145193",
-    "152329",
-    "152794",
-    "158244",
-    "144926",
-    "144511",
-    "157709",
-    "146674",
-    "145920",
-    "154058",
-    "157837",
-    "157222",
-    "157648",
-    "11131",
-    "157607",
-    "157031",
-    "10433",
-    "11773",
-    "157573",
-    "153017",
-    "145283",
-    "157021",
-    "154259",
-    "145117",
-    "157890",
-    "157773",
-    "157209",
-    "146285",
-    "157999",
-    "158002",
-    "158083",
-    "157998",
-    "145943"
-   ],
-   "enabled": true,
-   "primaryStadium": "78",
-   "shirtNames": {
-    "enabled": true
-   }
-  },
-  "2023": {
-   "name": "Saracens",
-   "type": "club",
-   "category": "Premiership",
-   "group": "england",
-   "ball": "logos_1/ball_%.png",
-   "banners": "logos_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2023/home_front.webp",
-     "backKitFile": "kits_2023/home_back.webp",
-     "previewFile": "kits_2023/home_preview.png",
-     "color": "#1e1a1a",
-     "shirtName": {
-      "area": [
-       0.0957,
-       0.3535,
-       0.8164,
-       0.0879
-      ],
-      "color": "#ffffff"
-     }
-    },
-    "away": {
-     "frontKitFile": "kits_2023/away_front.webp",
-     "backKitFile": "kits_2023/away_back.webp",
-     "previewFile": "kits_2023/away_preview.png",
-     "color": "#22263e",
-     "shirtName": {
-      "area": [
-       0.118,
-       0.3535,
-       0.7719,
-       0.0879
-      ],
-      "color": "#050405"
-     }
-    }
-   },
-   "roles": {
-    "captain": "11006",
-    "viceCaptain": "11773",
-    "longGK": "11006",
-    "shortGK": "11006",
-    "longPunt": "11006",
-    "shortPunt": "11006",
-    "kickoff": "158244"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "152463",
-    "10719",
-    "145117",
-    "11773",
-    "157869",
-    "145920",
-    "142273",
-    "142279",
-    "154058",
-    "11006",
-    "156554",
-    "145193",
-    "152329",
-    "11131",
-    "158244",
-    "145943",
-    "144511",
-    "157709",
-    "157573",
-    "158242",
-    "152916",
-    "157837",
-    "10433",
-    "157858",
-    "152794",
-    "158002",
-    "145283",
-    "158083",
-    "156699",
-    "152465",
-    "144926",
-    "146674",
-    "153017",
-    "157648",
-    "157222",
-    "158079",
-    "157591",
-    "157021",
-    "157000",
-    "157999",
-    "157998",
-    "157985",
-    "157014",
-    "154071",
-    "157607"
-   ],
-   "enabled": true,
-   "primaryStadium": "78",
-   "shirtNames": {
-    "enabled": true
-   }
-  },
-  "2024": {
-   "name": "Saracens",
-   "type": "club",
-   "category": "Premiership",
-   "group": "england",
-   "ball": "logos_1/ball_%.png",
-   "banners": "logos_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2024/home_front.webp",
-     "backKitFile": "kits_2024/home_back.webp",
-     "previewFile": "kits_2024/home_preview.png",
-     "color": "#151413",
-     "shirtName": {
-      "area": [
-       0.1105,
-       0.1045,
-       0.7867,
-       0.0879
-      ],
-      "color": "#e6e7e6"
-     }
-    },
-    "away": {
-     "frontKitFile": "kits_2024/away_front.webp",
-     "backKitFile": "kits_2024/away_back.webp",
-     "previewFile": "kits_2024/away_preview.png",
-     "color": "#1e2f3f",
-     "shirtName": {
-      "area": [
-       0.1162,
-       0.0704,
-       0.7793,
-       0.0557
-      ],
-      "color": "#002488"
-     }
-    }
-   },
-   "roles": {
-    "captain": "11006",
-    "viceCaptain": "11773",
-    "longGK": "11006",
-    "shortGK": "11006",
-    "longPunt": "11006",
-    "shortPunt": "11006",
-    "kickoff": "11006"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "152463",
-    "10719",
-    "157858",
-    "11773",
-    "157869",
-    "146287",
-    "142273",
-    "142279",
-    "154058",
-    "11006",
-    "156554",
-    "145193",
-    "146820",
-    "157648",
-    "158244",
-    "145943",
-    "144511",
-    "157709",
-    "152465",
-    "145920",
-    "155815",
-    "157837",
-    "157760",
-    "146674",
-    "10433",
-    "158079",
-    "152916",
-    "152794",
-    "145117",
-    "158083",
-    "153985",
-    "152329",
-    "158199",
-    "157245",
-    "157985",
-    "154642",
-    "157883",
-    "157573",
-    "144926",
-    "157209",
-    "157999"
-   ],
-   "enabled": true,
-   "primaryStadium": "78",
-   "shirtNames": {
-    "enabled": true
-   }
   },
   "2016": {
    "name": "Saracens",

@@ -1,97 +1,5 @@
 {
  "10141": {
-  "2008": {
-   "name": "Newcastle",
-   "type": "club",
-   "category": "Premiership",
-   "group": "england",
-   "ball": "logos_1/ball_%.png",
-   "banners": "logos_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "",
-    "viceCaptain": "",
-    "longGK": "126969",
-    "shortGK": "126969",
-    "longPunt": "126969",
-    "shortPunt": "126969",
-    "kickoff": "126969"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "157311",
-    "156655",
-    "143529",
-    "157479",
-    "157484",
-    "157480",
-    "156891",
-    "156882",
-    "156881",
-    "157485",
-    "157486",
-    "126969",
-    "157309",
-    "154530",
-    "119169",
-    "156277",
-    "156890",
-    "157488",
-    "116704",
-    "157483",
-    "157487",
-    "157482",
-    "157303",
-    "157491",
-    "156750",
-    "114008",
-    "157302",
-    "157304",
-    "157489",
-    "156589",
-    "156815",
-    "157308",
-    "153009",
-    "112189",
-    "157490",
-    "157310",
-    "157307",
-    "157306",
-    "156712",
-    "157305",
-    "156632",
-    "158269",
-    "156157"
-   ],
-   "enabled": false,
-   "primaryStadium": "11"
-  },
   "2009": {
    "name": "Newcastle",
    "type": "club",
@@ -120,9 +28,9 @@
      "shirtName": {
       "area": [
        0.1254,
-       0.263,
+       0.2466,
        0.757,
-       0.0879
+       0.098
       ],
       "color": "#f5f5f5"
      }
@@ -139,9 +47,9 @@
      "shirtName": {
       "area": [
        0.1293,
-       0.262,
+       0.2465,
        0.757,
-       0.0879
+       0.098
       ],
       "color": "#2924a4"
      }
@@ -233,13 +141,16 @@
       "collar": "stand"
      },
      "shirtName": {
+      "enabled": true,
       "area": [
-       0.2092,
-       0.7706,
+       0.1994,
+       0.1128,
        0.6012,
        0.0879
       ],
-      "color": "#f5f5f5"
+      "color": "#ffffff",
+      "outline": "#111111",
+      "outlineWidth": 2
      }
     },
     "away": {
@@ -253,9 +164,9 @@
      "shirtName": {
       "area": [
        0.2092,
-       0.6378,
+       0.1459,
        0.6012,
-       0.0703
+       0.05
       ],
       "color": "#000000"
      }
@@ -339,13 +250,7 @@
      "previewFile": "kits_2017/home_preview.png",
      "color": "#181915",
      "shirtName": {
-      "area": [
-       0.1459,
-       0.5938,
-       0.7199,
-       0.0879
-      ],
-      "color": "#ffffff"
+      "enabled": true
      }
     },
     "away": {
@@ -354,13 +259,7 @@
      "previewFile": "kits_2017/away_preview.png",
      "color": "#da4c02",
      "shirtName": {
-      "area": [
-       0.1551,
-       0.623,
-       0.6977,
-       0.0557
-      ],
-      "color": "#ffffff"
+      "enabled": true
      }
     }
    },
@@ -453,9 +352,9 @@
      "shirtName": {
       "area": [
        0.1342,
-       0.2715,
+       0.273,
        0.7353,
-       0.0879
+       0.098
       ],
       "color": "#ffffff"
      }
@@ -471,9 +370,9 @@
      "shirtName": {
       "area": [
        0.1307,
-       0.6172,
+       0.2857,
        0.7348,
-       0.0879
+       0.058
       ],
       "color": "#ffffff"
      }
@@ -571,9 +470,9 @@
      "shirtName": {
       "area": [
        0.0865,
-       0.6914,
+       0.2847,
        0.8387,
-       0.0879
+       0.098
       ],
       "color": "#ffffff"
      }
@@ -589,9 +488,9 @@
      "shirtName": {
       "area": [
        0.0943,
-       0.7109,
+       0.3286,
        0.8387,
-       0.0703
+       0.058
       ],
       "color": "#ffffff"
      }
@@ -669,105 +568,6 @@
     "enabled": true
    }
   },
-  "2021": {
-   "name": "Newcastle",
-   "type": "club",
-   "category": "Premiership",
-   "group": "england",
-   "ball": "logos_1/ball_%.png",
-   "banners": "logos_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
-    },
-    "away": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "",
-    "viceCaptain": "",
-    "longGK": "157587",
-    "shortGK": "157587",
-    "longPunt": "152871",
-    "shortPunt": "157587",
-    "kickoff": "152871"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "152359",
-    "156914",
-    "154642",
-    "144614",
-    "152751",
-    "152871",
-    "156388",
-    "152333",
-    "156601",
-    "157587",
-    "157646",
-    "152348",
-    "157214",
-    "152478",
-    "157106",
-    "152429",
-    "157930",
-    "156608",
-    "155518",
-    "156918",
-    "157611",
-    "156641",
-    "156591",
-    "153114",
-    "126969",
-    "153285",
-    "157305",
-    "158224",
-    "157489",
-    "157276",
-    "157660",
-    "153293",
-    "156637",
-    "146356",
-    "153812",
-    "158032",
-    "157730",
-    "157823",
-    "155007",
-    "157454",
-    "157822",
-    "157933",
-    "157212",
-    "155297",
-    "157748",
-    "153025",
-    "157568",
-    "157638",
-    "157984",
-    "158030"
-   ],
-   "enabled": false,
-   "primaryStadium": "11"
-  },
   "2022": {
    "name": "Newcastle",
    "type": "club",
@@ -790,13 +590,13 @@
      "previewFile": "kits_2022/home_preview.png",
      "color": "#141514",
      "shirtName": {
+      "enabled": true,
       "area": [
-       0.1162,
-       0.6562,
+       0.1104,
+       0.2735,
        0.7793,
        0.0879
-      ],
-      "color": "#ffffff"
+      ]
      }
     },
     "away": {
@@ -805,13 +605,13 @@
      "previewFile": "kits_2022/away_preview.png",
      "color": "#ec010b",
      "shirtName": {
+      "enabled": true,
       "area": [
-       0.1162,
-       0.6562,
+       0.1104,
+       0.2735,
        0.7793,
        0.0879
-      ],
-      "color": "#eeeeee"
+      ]
      }
     }
    },
@@ -911,9 +711,9 @@
      "shirtName": {
       "area": [
        0.1162,
-       0.2949,
+       0.2964,
        0.7793,
-       0.0879
+       0.098
       ],
       "color": "#ffffff"
      }
@@ -926,9 +726,9 @@
      "shirtName": {
       "area": [
        0.1162,
-       0.2949,
+       0.2964,
        0.7793,
-       0.0879
+       0.098
       ],
       "color": "#eeefee"
      }
@@ -1028,9 +828,9 @@
      "shirtName": {
       "area": [
        0.1162,
-       0.2793,
+       0.2808,
        0.7793,
-       0.0879
+       0.098
       ],
       "color": "#e6e7e6"
      }
@@ -1043,9 +843,9 @@
      "shirtName": {
       "area": [
        0.1105,
-       0.2793,
+       0.2808,
        0.7867,
-       0.0879
+       0.098
       ],
       "color": "#e6e7e6"
      }
@@ -1116,6 +916,197 @@
    "shirtNames": {
     "enabled": true
    }
+  },
+  "2008": {
+   "name": "Newcastle",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "126969",
+    "shortGK": "126969",
+    "longPunt": "126969",
+    "shortPunt": "126969",
+    "kickoff": "126969"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "157311",
+    "156655",
+    "143529",
+    "157479",
+    "157484",
+    "157480",
+    "156891",
+    "156882",
+    "156881",
+    "157485",
+    "157486",
+    "126969",
+    "157309",
+    "154530",
+    "119169",
+    "156277",
+    "156890",
+    "157488",
+    "116704",
+    "157483",
+    "157487",
+    "157482",
+    "157303",
+    "157491",
+    "156750",
+    "114008",
+    "157302",
+    "157304",
+    "157489",
+    "156589",
+    "156815",
+    "157308",
+    "153009",
+    "112189",
+    "157490",
+    "157310",
+    "157307",
+    "157306",
+    "156712",
+    "157305",
+    "156632",
+    "158269",
+    "156157"
+   ],
+   "enabled": false,
+   "primaryStadium": "11"
+  },
+  "2021": {
+   "name": "Newcastle",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "157587",
+    "shortGK": "157587",
+    "longPunt": "152871",
+    "shortPunt": "157587",
+    "kickoff": "152871"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "152359",
+    "156914",
+    "154642",
+    "144614",
+    "152751",
+    "152871",
+    "156388",
+    "152333",
+    "156601",
+    "157587",
+    "157646",
+    "152348",
+    "157214",
+    "152478",
+    "157106",
+    "152429",
+    "157930",
+    "156608",
+    "155518",
+    "156918",
+    "157611",
+    "156641",
+    "156591",
+    "153114",
+    "126969",
+    "153285",
+    "157305",
+    "158224",
+    "157489",
+    "157276",
+    "157660",
+    "153293",
+    "156637",
+    "146356",
+    "153812",
+    "158032",
+    "157730",
+    "157823",
+    "155007",
+    "157454",
+    "157822",
+    "157933",
+    "157212",
+    "155297",
+    "157748",
+    "153025",
+    "157568",
+    "157638",
+    "157984",
+    "158030"
+   ],
+   "enabled": false,
+   "primaryStadium": "11"
   },
   "2016": {
    "name": "Newcastle",

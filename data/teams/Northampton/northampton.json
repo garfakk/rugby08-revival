@@ -28,9 +28,9 @@
      "shirtName": {
       "area": [
        0.0874,
-       0.2084,
+       0.2219,
        0.84,
-       0.0879
+       0.068
       ],
       "color": "#f5f5f5"
      }
@@ -46,10 +46,10 @@
      },
      "shirtName": {
       "area": [
-       0.1336,
-       0.0959,
+       0.114,
+       0.1168,
        0.7719,
-       0.0879
+       0.098
       ],
       "color": "#2824a4"
      }
@@ -139,9 +139,9 @@
      "shirtName": {
       "area": [
        0.1936,
-       0.6927,
+       0.1888,
        0.6012,
-       0.0557
+       0.058
       ],
       "color": "#f5f5f5"
      }
@@ -155,13 +155,13 @@
       "collar": "stand"
      },
      "shirtName": {
+      "enabled": true,
       "area": [
-       0.1936,
-       0.8533,
+       0.1994,
+       0.1266,
        0.6012,
-       0.0703
-      ],
-      "color": "#000000"
+       0.0879
+      ]
      }
     }
    },
@@ -249,9 +249,9 @@
      "shirtName": {
       "area": [
        0.1385,
-       0.126,
+       0.1125,
        0.7348,
-       0.0879
+       0.098
       ],
       "color": "#ffffff"
      }
@@ -262,13 +262,13 @@
      "previewFile": "kits_2017/away_preview.png",
      "color": "#cdd0c9",
      "shirtName": {
+      "enabled": true,
       "area": [
-       0.2,
-       0.86,
-       0.6,
-       0.06
-      ],
-      "color": "#1a1a1a"
+       0.08,
+       0.1837,
+       0.84,
+       0.0879
+      ]
      }
     }
    },
@@ -364,9 +364,9 @@
      "shirtName": {
       "area": [
        0.1123,
-       0.2012,
+       0.2027,
        0.7793,
-       0.0879
+       0.098
       ],
       "color": "#fffdff"
      }
@@ -379,9 +379,9 @@
      "shirtName": {
       "area": [
        0.1141,
-       0.3389,
+       0.3072,
        0.7719,
-       0.0439
+       0.0755
       ],
       "color": "#000000"
      }
@@ -481,9 +481,9 @@
      "shirtName": {
       "area": [
        0.1123,
-       0.2012,
+       0.2027,
        0.7793,
-       0.0879
+       0.098
       ],
       "color": "#fffdff"
      }
@@ -496,9 +496,9 @@
      "shirtName": {
       "area": [
        0.1084,
-       0.1973,
+       0.1988,
        0.7793,
-       0.0879
+       0.098
       ],
       "color": "#000000"
      }
@@ -565,6 +565,333 @@
     "155005",
     "152341",
     "157841"
+   ],
+   "enabled": true,
+   "primaryStadium": "10",
+   "shirtNames": {
+    "enabled": true
+   }
+  },
+  "2022": {
+   "name": "Northampton",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2022/home_front.webp",
+     "backKitFile": "kits_2022/home_back.webp",
+     "previewFile": "kits_2022/home_preview.png",
+     "color": "#146945",
+     "shirtName": {
+      "enabled": false,
+      "area": [
+       0.08,
+       0.0481,
+       0.84,
+       0.0879
+      ]
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2022/away_front.webp",
+     "backKitFile": "kits_2022/away_back.webp",
+     "previewFile": "kits_2022/away_preview.png",
+     "color": "#c9c7be",
+     "shirtName": {
+      "enabled": false
+     }
+    }
+   },
+   "roles": {
+    "captain": "142987",
+    "viceCaptain": "156510",
+    "longGK": "142987",
+    "shortGK": "142987",
+    "longPunt": "142987",
+    "shortPunt": "142987",
+    "kickoff": "142987"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "156510",
+    "145427",
+    "152354",
+    "142278",
+    "144219",
+    "118007",
+    "11008",
+    "157697",
+    "10072",
+    "142987",
+    "156995",
+    "152782",
+    "152466",
+    "154063",
+    "152469",
+    "156727",
+    "156855",
+    "156716",
+    "152482",
+    "156958",
+    "157995",
+    "152491",
+    "152506",
+    "153952",
+    "152503",
+    "157799",
+    "152468",
+    "157615",
+    "156417",
+    "157632",
+    "157503",
+    "154643",
+    "158045",
+    "154652",
+    "144549",
+    "158066",
+    "157738",
+    "157951",
+    "157840",
+    "157841",
+    "157129",
+    "158094"
+   ],
+   "enabled": true,
+   "primaryStadium": "10",
+   "shirtNames": {
+    "enabled": true
+   }
+  },
+  "2023": {
+   "name": "Northampton",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2023/home_front.webp",
+     "backKitFile": "kits_2023/home_back.webp",
+     "previewFile": "kits_2023/home_preview.png",
+     "color": "#117957",
+     "shirtName": {
+      "area": [
+       0.08,
+       0.3091,
+       0.84,
+       0.0775
+      ],
+      "color": "#eeefee"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2023/away_front.webp",
+     "backKitFile": "kits_2023/away_back.webp",
+     "previewFile": "kits_2023/away_preview.png",
+     "color": "#e9e8e7",
+     "shirtName": {
+      "area": [
+       0.118,
+       0.3203,
+       0.7719,
+       0.078
+      ],
+      "color": "#052662"
+     }
+    }
+   },
+   "roles": {
+    "captain": "11008",
+    "viceCaptain": "156437",
+    "longGK": "156437",
+    "shortGK": "156437",
+    "longPunt": "156437",
+    "shortPunt": "156437",
+    "kickoff": "156437"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "156510",
+    "145427",
+    "152354",
+    "118007",
+    "152482",
+    "155741",
+    "11008",
+    "157697",
+    "10072",
+    "156437",
+    "152468",
+    "152782",
+    "152466",
+    "156417",
+    "152469",
+    "157748",
+    "155402",
+    "156716",
+    "152758",
+    "157819",
+    "153096",
+    "157632",
+    "156995",
+    "153952",
+    "152506",
+    "156994",
+    "142278",
+    "152503",
+    "157937",
+    "157738",
+    "156727",
+    "154063",
+    "154643",
+    "156997",
+    "158066",
+    "157995",
+    "157799",
+    "158094",
+    "158045",
+    "158093",
+    "157129"
+   ],
+   "enabled": true,
+   "primaryStadium": "10",
+   "shirtNames": {
+    "enabled": true
+   }
+  },
+  "2024": {
+   "name": "Northampton",
+   "type": "club",
+   "category": "Premiership",
+   "group": "england",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2024/home_front.webp",
+     "backKitFile": "kits_2024/home_back.webp",
+     "previewFile": "kits_2024/home_preview.png",
+     "color": "#141412",
+     "shirtName": {
+      "area": [
+       0.08,
+       0.3331,
+       0.84,
+       0.068
+      ],
+      "color": "#e6e7e6",
+      "enabled": true
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2024/away_front.webp",
+     "backKitFile": "kits_2024/away_back.webp",
+     "previewFile": "kits_2024/away_preview.png",
+     "color": "#e2e0dd",
+     "shirtName": {
+      "area": [
+       0.08,
+       0.3059,
+       0.84,
+       0.098
+      ],
+      "color": "#002460"
+     }
+    }
+   },
+   "roles": {
+    "captain": "11008",
+    "viceCaptain": "118007",
+    "longGK": "156437",
+    "shortGK": "156437",
+    "longPunt": "156437",
+    "shortPunt": "156437",
+    "kickoff": "156437"
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [
+    "156510",
+    "152470",
+    "152359",
+    "152482",
+    "152506",
+    "118007",
+    "11008",
+    "157819",
+    "10072",
+    "156437",
+    "156417",
+    "152782",
+    "152466",
+    "152468",
+    "152469",
+    "145427",
+    "158081",
+    "156420",
+    "145559",
+    "157697",
+    "157995",
+    "158051",
+    "158066",
+    "152473",
+    "155741",
+    "158094",
+    "158095",
+    "157736",
+    "157178",
+    "157937",
+    "152503",
+    "158156",
+    "152354",
+    "157748",
+    "152758",
+    "156997",
+    "157632",
+    "158093",
+    "156995"
    ],
    "enabled": true,
    "primaryStadium": "10",
@@ -757,332 +1084,6 @@
    ],
    "enabled": false,
    "primaryStadium": "10"
-  },
-  "2022": {
-   "name": "Northampton",
-   "type": "club",
-   "category": "Premiership",
-   "group": "england",
-   "ball": "logos_1/ball_%.png",
-   "banners": "logos_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2022/home_front.webp",
-     "backKitFile": "kits_2022/home_back.webp",
-     "previewFile": "kits_2022/home_preview.png",
-     "color": "#146945",
-     "shirtName": {
-      "area": [
-       0.0741,
-       0.8408,
-       0.84,
-       0.0879
-      ],
-      "color": "#f0f0f0"
-     }
-    },
-    "away": {
-     "frontKitFile": "kits_2022/away_front.webp",
-     "backKitFile": "kits_2022/away_back.webp",
-     "previewFile": "kits_2022/away_preview.png",
-     "color": "#c9c7be",
-     "shirtName": {
-      "enabled": false
-     }
-    }
-   },
-   "roles": {
-    "captain": "142987",
-    "viceCaptain": "156510",
-    "longGK": "142987",
-    "shortGK": "142987",
-    "longPunt": "142987",
-    "shortPunt": "142987",
-    "kickoff": "142987"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "156510",
-    "145427",
-    "152354",
-    "142278",
-    "144219",
-    "118007",
-    "11008",
-    "157697",
-    "10072",
-    "142987",
-    "156995",
-    "152782",
-    "152466",
-    "154063",
-    "152469",
-    "156727",
-    "156855",
-    "156716",
-    "152482",
-    "156958",
-    "157995",
-    "152491",
-    "152506",
-    "153952",
-    "152503",
-    "157799",
-    "152468",
-    "157615",
-    "156417",
-    "157632",
-    "157503",
-    "154643",
-    "158045",
-    "154652",
-    "144549",
-    "158066",
-    "157738",
-    "157951",
-    "157840",
-    "157841",
-    "157129",
-    "158094"
-   ],
-   "enabled": true,
-   "primaryStadium": "10",
-   "shirtNames": {
-    "enabled": true
-   }
-  },
-  "2023": {
-   "name": "Northampton",
-   "type": "club",
-   "category": "Premiership",
-   "group": "england",
-   "ball": "logos_1/ball_%.png",
-   "banners": "logos_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2023/home_front.webp",
-     "backKitFile": "kits_2023/home_back.webp",
-     "previewFile": "kits_2023/home_preview.png",
-     "color": "#117957",
-     "shirtName": {
-      "area": [
-       0.0741,
-       0.6992,
-       0.84,
-       0.0879
-      ],
-      "color": "#eeefee"
-     }
-    },
-    "away": {
-     "frontKitFile": "kits_2023/away_front.webp",
-     "backKitFile": "kits_2023/away_back.webp",
-     "previewFile": "kits_2023/away_preview.png",
-     "color": "#e9e8e7",
-     "shirtName": {
-      "area": [
-       0.118,
-       0.6992,
-       0.7719,
-       0.0879
-      ],
-      "color": "#052662"
-     }
-    }
-   },
-   "roles": {
-    "captain": "11008",
-    "viceCaptain": "156437",
-    "longGK": "156437",
-    "shortGK": "156437",
-    "longPunt": "156437",
-    "shortPunt": "156437",
-    "kickoff": "156437"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "156510",
-    "145427",
-    "152354",
-    "118007",
-    "152482",
-    "155741",
-    "11008",
-    "157697",
-    "10072",
-    "156437",
-    "152468",
-    "152782",
-    "152466",
-    "156417",
-    "152469",
-    "157748",
-    "155402",
-    "156716",
-    "152758",
-    "157819",
-    "153096",
-    "157632",
-    "156995",
-    "153952",
-    "152506",
-    "156994",
-    "142278",
-    "152503",
-    "157937",
-    "157738",
-    "156727",
-    "154063",
-    "154643",
-    "156997",
-    "158066",
-    "157995",
-    "157799",
-    "158094",
-    "158045",
-    "158093",
-    "157129"
-   ],
-   "enabled": true,
-   "primaryStadium": "10",
-   "shirtNames": {
-    "enabled": true
-   }
-  },
-  "2024": {
-   "name": "Northampton",
-   "type": "club",
-   "category": "Premiership",
-   "group": "england",
-   "ball": "logos_1/ball_%.png",
-   "banners": "logos_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2024/home_front.webp",
-     "backKitFile": "kits_2024/home_back.webp",
-     "previewFile": "kits_2024/home_preview.png",
-     "color": "#141412",
-     "shirtName": {
-      "area": [
-       0.0859,
-       0.0627,
-       0.84,
-       0.0879
-      ],
-      "color": "#e6e7e6"
-     }
-    },
-    "away": {
-     "frontKitFile": "kits_2024/away_front.webp",
-     "backKitFile": "kits_2024/away_back.webp",
-     "previewFile": "kits_2024/away_preview.png",
-     "color": "#e2e0dd",
-     "shirtName": {
-      "area": [
-       0.0859,
-       0.7344,
-       0.84,
-       0.0879
-      ],
-      "color": "#002460"
-     }
-    }
-   },
-   "roles": {
-    "captain": "11008",
-    "viceCaptain": "118007",
-    "longGK": "156437",
-    "shortGK": "156437",
-    "longPunt": "156437",
-    "shortPunt": "156437",
-    "kickoff": "156437"
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [
-    "156510",
-    "152470",
-    "152359",
-    "152482",
-    "152506",
-    "118007",
-    "11008",
-    "157819",
-    "10072",
-    "156437",
-    "156417",
-    "152782",
-    "152466",
-    "152468",
-    "152469",
-    "145427",
-    "158081",
-    "156420",
-    "145559",
-    "157697",
-    "157995",
-    "158051",
-    "158066",
-    "152473",
-    "155741",
-    "158094",
-    "158095",
-    "157736",
-    "157178",
-    "157937",
-    "152503",
-    "158156",
-    "152354",
-    "157748",
-    "152758",
-    "156997",
-    "157632",
-    "158093",
-    "156995"
-   ],
-   "enabled": true,
-   "primaryStadium": "10",
-   "shirtNames": {
-    "enabled": true
-   }
   },
   "2016": {
    "name": "Northampton",

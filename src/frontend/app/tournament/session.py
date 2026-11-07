@@ -134,6 +134,26 @@ class TournamentSession:
         self.save()
         return done
 
+    def finish_forced(self, fixture, game_result, winner, forfeit=False) -> list:
+        """Expert mode's play but force the result: `winner` takes the match
+        whatever happened in the game. `forfeit`: the other side forfeits it
+        (the template's walkover). Otherwise the game's result is kept, with
+        penalty tries awarded to `winner` until it leads when it didn't win;
+        a match left before full time is a walkover too."""
+        loser = fixture.away if winner == fixture.home else fixture.home
+        finished = game_result and game_result.get("finished") is not False
+        if forfeit or not finished:
+            return self.forfeit(fixture, loser)
+        self._checkpoint()
+        result = bridge.from_game_result(self.t, fixture, game_result,
+                                         engine.fixture_rng(self.t, fixture, "game"))
+        force_winner(result, winner)
+        engine.record_result(self.t, fixture, result)
+        done = [fixture] + engine.simulate_day(self.t)
+        persistence.drop_snapshot(self.t.id, "prematch")
+        self.save()
+        return done
+
     def prepare(self, fixture):
         """Selections ready for a fixture without playing or simulating it
         (the manual result form lists the players of both squads), after
@@ -259,3 +279,15 @@ class TournamentSession:
     def delete_lineup(self, team_id, index):
         lineups.delete(self.t.teams[team_id], index)
         self.save()
+
+
+def force_winner(result, winner):
+    """`winner` takes `result`: unchanged when it already won, else penalty
+    tries (7 points each, no scorer) until it leads, any draw decider dropped."""
+    if result.winner_id() == winner:
+        return result
+    mine, theirs = result.side(winner), result.opponent(winner)
+    mine.penalty_tries += (theirs.points - mine.points) // 7 + 1
+    result.winner, result.decided_by, result.shootout = None, "", []
+    result.extra["forced"] = True
+    return result
