@@ -30,7 +30,7 @@ The possibilities are infinite, and future updates will include:
 
 
 ## Current status
-The latest release is v0.3. Please note that it is still in development, so expect to find bugs.
+The latest release is v0.4. Please note that it is still in development, so expect to find bugs.
 
 Already available:
 - Quick match with any team and season, kit choice, coin toss, weather and wind
