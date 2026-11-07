@@ -174,6 +174,11 @@ from screens.user_edits import UserEditsScreen
 from screens.updates import UpdatesScreen
 from ui.update_notice import UpdateNotice
 from screens.challenge_editor import ChallengeEditorScreen
+from screens.tournament_editor import TournamentEditorScreen
+
+# The tournament editor (Tools, the hub's CREATE YOUR OWN) is built but not
+# offered yet: no entry point leads to it while this is False.
+TOURNAMENT_EDITOR_ENABLED = False
 from screens.squad_editor import SquadEditorScreen
 from screens.challenge_mode import ChallengeModeScreen
 from screens.challenge_result import ChallengeResultScreen
@@ -712,7 +717,8 @@ class MainWindow(QMainWindow):
         self.screen_tools = ToolsScreen(
             self.data, self.show_main, self.show_team_editor, self.show_player_editor,
             on_import=self.show_roster_import, on_challenge_editor=self.show_challenge_editor,
-            on_edits=self.show_user_edits, on_updates=self.show_updates)
+            on_edits=self.show_user_edits, on_updates=self.show_updates,
+            on_tournament_editor=self.show_tournament_editor if TOURNAMENT_EDITOR_ENABLED else None)
         editor_back = lambda: self.screens.go_back(default=self.screen_tools)
         self.screen_user_edits = UserEditsScreen(self.data, editor_back,
                                                  open_team=self.open_team,
@@ -726,6 +732,8 @@ class MainWindow(QMainWindow):
         yield
         self.screen_challenge_editor = ChallengeEditorScreen(
             self.data, editor_back, on_edit_squad=self.edit_challenge_squad)
+        self.screen_tournament_editor = TournamentEditorScreen(
+            self.data, editor_back, on_play=self.play_custom_tournament)
         yield
         self.screen_challenge_mode = ChallengeModeScreen(
             self.data, lambda: self.screens.go_back(default=self.screen_game_modes),
@@ -739,7 +747,8 @@ class MainWindow(QMainWindow):
         yield
         self.screen_tournament_hub = TournamentHubScreen(
             self.data, self.show_main_game_modes, on_new=self.show_tournament_wizard,
-            on_open=self.open_tournament)
+            on_open=self.open_tournament,
+            on_create=self.show_tournament_editor if TOURNAMENT_EDITOR_ENABLED else None)
         self.screen_tournament_wizard = TournamentWizardScreen(
             self.data, lambda: self.screens.go_back(default=self.screen_tournament_hub),
             on_created=self.begin_tournament)
@@ -764,6 +773,7 @@ class MainWindow(QMainWindow):
             self.screen_player_editor,
             self.screen_roster_import,
             self.screen_challenge_editor,
+            self.screen_tournament_editor,
             self.screen_challenge_mode,
             self.screen_tournament_hub,
             self.screen_tournament_wizard,
@@ -858,6 +868,14 @@ class MainWindow(QMainWindow):
         self.screens.reset_history()
 
     def show_tournament_wizard(self):
+        self.screens.show_screen(self.screen_tournament_wizard)
+
+    def show_tournament_editor(self):
+        self.screens.show_screen(self.screen_tournament_editor)
+
+    def play_custom_tournament(self, template_id):
+        """The tournament editor's PLAY IT: New tournament, on that one."""
+        self.screen_tournament_wizard.open_on(template_id)
         self.screens.show_screen(self.screen_tournament_wizard)
 
     def open_tournament(self, session, message=""):
@@ -998,13 +1016,13 @@ class MainWindow(QMainWindow):
         before = moments.snapshot(session.t)
         if not result or result.get("finished") is False:
             humans = [tid for tid in (fixture.home, fixture.away) if session.t.teams[tid].human]
-            if len(humans) != 1:
-                # both sides managed: no way to tell who walked off
+            if not humans:
                 session.abandon_game()
                 return
             # the user left before full time: their team forfeits it (the
-            # template's walkover score)
-            done = session.forfeit(fixture, humans[0])
+            # template's walkover score). Both sides managed: no way to tell
+            # who walked off, so both forfeit.
+            done = session.forfeit(fixture, humans[0] if len(humans) == 1 else None)
         else:
             done = session.finish_game(fixture, result)
         self.screen_tournament.queue_moments(before, done, game=(match_data, result))

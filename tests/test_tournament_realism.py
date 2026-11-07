@@ -4,6 +4,7 @@ plausible range, and surprises still happen.
 
 Run from the repo root:  python3 -m unittest discover -s tests -v
 """
+import copy
 import os
 import random
 import sys
@@ -20,7 +21,7 @@ from app.tournament import calendar, engine, formats, reputation, simulator, wea
 from stadium_data_loader import StadiumDataLoader  # noqa: E402
 from team_data_loader import TeamDataLoader  # noqa: E402
 
-TEMPLATES = os.path.join(ROOT, "src", "assets", "data", "competitions")
+TEMPLATES = os.path.join(DATA, "competitions")
 
 
 class Store:
@@ -74,7 +75,7 @@ class TournamentRealism(unittest.TestCase):
         cls.parts = {"pools": pools}
 
     def _tournament(self, seed=1):
-        return engine.create_tournament(self.ds, self.templates["world_cup"], "2024", self.parts, seed=seed)
+        return engine.create_tournament(self.ds, self.templates["rwc_2023"], "2024", self.parts, seed=seed)
 
     def _series(self, t, a, b, n):
         f = t.fixtures[0]
@@ -162,10 +163,25 @@ class TournamentWeather(unittest.TestCase):
         cls.templates = formats.load_templates([TEMPLATES])
 
     def _six_nations(self, seed=1):
-        return engine.create_tournament(self.ds, self.templates["six_nations"], "2024", seed=seed)
+        return engine.create_tournament(self.ds, self.templates["six_nations_2024"], "2024", seed=seed)
+
+    def _undated_six_nations(self):
+        """The 2024 edition without its real fixtures, scheduled from a
+        "calendar" window instead."""
+        tpl = copy.deepcopy(self.templates["six_nations_2024"])
+        for stage in tpl["stages"]:
+            stage.pop("fixtures", None)
+            stage["calendar"] = {"start": "02-03", "offsets": [0, 7, 21, 35, 42]}
+        return engine.create_tournament(self.ds, tpl, "2024", seed=1)
 
     def test_calendar_follows_the_season(self):
         t = self._six_nations()
+        dates = sorted({calendar.fixture_date(t, f) for f in t.fixtures})
+        # the real 2024 edition: its own Friday/Saturday/Sunday fixtures
+        self.assertEqual([d.isoformat() for d in dates],
+                         ["2024-02-02", "2024-02-03", "2024-02-10", "2024-02-11", "2024-02-24",
+                          "2024-02-25", "2024-03-09", "2024-03-10", "2024-03-16"])
+        t = self._undated_six_nations()
         dates = sorted({calendar.fixture_date(t, f) for f in t.fixtures})
         self.assertEqual([d.isoformat() for d in dates],
                          ["2024-02-03", "2024-02-10", "2024-02-24", "2024-03-09", "2024-03-16"])
@@ -179,7 +195,7 @@ class TournamentWeather(unittest.TestCase):
         self.assertEqual((days[-1].year, days[-1].month), (2024, 6))
 
     def test_old_saves_get_dates(self):
-        t = self._six_nations()
+        t = self._undated_six_nations()
         for f in t.fixtures:
             f.date = ""
         self.assertEqual(calendar.fixture_date(t, t.fixtures[0]).isoformat(), "2024-02-03")

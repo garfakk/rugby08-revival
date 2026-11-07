@@ -6,9 +6,12 @@ After an action plays matches, the dashboard hands what changed to
 
   MatchdayRecap    full time: your match big (the score counts up), the
                    other results sliding in, your pool position moving
+                   (only for a round you played in: a round without your
+                   match is shown on the dashboard's Home instead)
   StageCard        a new stage or knockout round begins ("QUARTER-FINALS")
   EliminationCard  your last team is out
-  ChampionMoment   the final whistle of the tournament: crest, confetti
+  ChampionMoment   the final whistle of the tournament: crest, and rays + confetti
+                   when a human team won
 
 Each is painted on a clock (ms since it started), so it can be skipped to
 its final frame at any time: the first key or click shows the whole
@@ -128,12 +131,13 @@ def moments_after(ds, t, before: Before, done, game=None) -> list:
     for the recap's match statistics."""
     out = []
     played = [f for f in (done or []) if f.played]
-    if played:
-        # one round per recap: the round of your match, else the last one
-        # played (a whole bye round, or the final after simulating to the end)
-        humans = set(human_ids(t))
-        mine = [f for f in played if f.home in humans or f.away in humans]
-        out.append(MatchdayRecap(ds, t, before, max(f.day for f in (mine or played)), game=game))
+    humans = set(human_ids(t))
+    mine = [f for f in played if f.home in humans or f.away in humans]
+    if mine:
+        # one round per recap: the round of your match. A round without
+        # it (a bye, the rest after you are out) has no recap: Home lists
+        # its results (dashboard "no match for you").
+        out.append(MatchdayRecap(ds, t, before, max(f.day for f in mine), game=game))
     humans = human_ids(t)
     if t.finished and not before.finished:
         out.append(ChampionMoment(ds, t))
@@ -476,7 +480,7 @@ class MatchdayRecap(MomentOverlay):
             st = t.stage(self.mine.stage_id)
             if st and len(st.groups) > 1:
                 self.eyebrow += f"  ·  {self._group_name(self.mine)}".upper()
-        self.title = "FULL TIME" if self.mine else "AROUND THE GROUNDS"
+        self.title = "FULL TIME"
         n_others = min(len(self.others), self.MAX_OTHERS)
         self._others_start = 1500 if self.mine else 500
         self.DURATION = self._others_start + n_others * 90 + 500
@@ -586,6 +590,8 @@ class MatchdayRecap(MomentOverlay):
         match), with its colour."""
         r = self.mine.result
         w = self._score(self.mine)[2]
+        if w is None and r.decided_by == "forfeit":
+            return "FORFEITED", DANGER_LITE           # double forfeit
         if w is None:
             return "DRAW", WARN
         if w == self.focus_team:
@@ -831,7 +837,7 @@ class ChampionMoment(MomentOverlay):
 
     def open(self, host, on_close=None):
         super().open(host, on_close)
-        if motion.enabled():
+        if self.won and motion.enabled():
             self._age.start()
             self._confetti_timer.start()
 
@@ -845,9 +851,9 @@ class ChampionMoment(MomentOverlay):
     def paint_moment(self, p, ms):
         w, h = self.vw, self.vh
         cy = h * 0.36
-        # rays behind the crest
+        # rays behind the crest, only when a human team won
         ra = _ease(_phase(ms, 300, 900))
-        if ra > 0:
+        if self.won and ra > 0:
             p.save()
             p.translate(w / 2, cy)
             spin = (self._age.elapsed() / 9000.0) if self._age.isValid() else 0

@@ -18,7 +18,7 @@ re-opening the picker, or picking a head browsed before, costs no re-decode.
 
 An optional skin-tone filter narrows the STOCK grid — see
 app.stock_faces.available_attributes(): the filter row is built entirely
-from whatever assets/data/stock_face_attributes.xml actually defines, so
+from whatever assets/stock_game/faces.json actually defines, so
 it only appears once there's data, and only for whichever category(ies)
 are tagged. tools/classify_stock_faces.py only tags the ~192 generic
 filler faces (from the developers' own ethnicity label in each one's
@@ -236,7 +236,7 @@ class FacePicker(QWidget):
         v.addWidget(self.search)
 
         # Attribute filters — stock only, and only for whichever categories
-        # assets/data/stock_face_attributes.xml actually has values for
+        # assets/stock_game/faces.json actually has values for
         # (skin_tone, for ~192 of the 557 faces, as of writing).
         self._filter_fields = {}
         self.filter_row = QHBoxLayout()

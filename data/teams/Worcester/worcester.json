@@ -23,6 +23,15 @@
      "color": "#0b1b38",
      "model3d": {
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.1232,
+       0.1924,
+       0.7496,
+       0.0879
+      ],
+      "color": "#f5f5f5"
      }
     },
     "away": {
@@ -32,6 +41,15 @@
      "color": "#cb2220",
      "model3d": {
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.1311,
+       0.2413,
+       0.7496,
+       0.0879
+      ],
+      "color": "#f5f5f5"
      }
     }
    },
@@ -93,7 +111,10 @@
     "158314"
    ],
    "enabled": true,
-   "primaryStadium": "76"
+   "primaryStadium": "76",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2010": {
    "name": "Worcester",
@@ -115,13 +136,31 @@
      "frontKitFile": "kits_2010/home_front.webp",
      "backKitFile": "kits_2010/home_back.webp",
      "previewFile": "kits_2010/home_preview.png",
-     "color": "#010f55"
+     "color": "#010f55",
+     "shirtName": {
+      "area": [
+       0.1395,
+       0.743,
+       0.7306,
+       0.0879
+      ],
+      "color": "#f5f5f5"
+     }
     },
     "away": {
      "frontKitFile": "kits_2010/away_front.webp",
      "backKitFile": "kits_2010/away_back.webp",
      "previewFile": "kits_2010/away_preview.png",
-     "color": "#c90201"
+     "color": "#c90201",
+     "shirtName": {
+      "area": [
+       0.1402,
+       0.3555,
+       0.7273,
+       0.0703
+      ],
+      "color": "#000000"
+     }
     }
    },
    "roles": {
@@ -181,7 +220,10 @@
     "158277"
    ],
    "enabled": true,
-   "primaryStadium": "76"
+   "primaryStadium": "76",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2017": {
    "name": "Worcester",
@@ -203,13 +245,31 @@
      "frontKitFile": "kits_2017/home_front.webp",
      "backKitFile": "kits_2017/home_back.webp",
      "previewFile": "kits_2017/home_preview.png",
-     "color": "#010839"
+     "color": "#010839",
+     "shirtName": {
+      "area": [
+       0.2057,
+       0.7731,
+       0.616,
+       0.0879
+      ],
+      "color": "#f5f5f5"
+     }
     },
     "away": {
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": "#1fbfd7"
+     "color": "#1fbfd7",
+     "shirtName": {
+      "area": [
+       0.2021,
+       0.7413,
+       0.6309,
+       0.0879
+      ],
+      "color": "#000000"
+     }
     }
    },
    "roles": {
@@ -278,7 +338,10 @@
     "155340"
    ],
    "enabled": true,
-   "primaryStadium": "76"
+   "primaryStadium": "76",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2018": {
    "name": "Worcester",
@@ -300,13 +363,31 @@
      "frontKitFile": "kits_2019/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
-     "color": "#021e3e"
+     "color": "#021e3e",
+     "shirtName": {
+      "area": [
+       0.2021,
+       0.7876,
+       0.6309,
+       0.0557
+      ],
+      "color": "#f5f5f5"
+     }
     },
     "away": {
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": "#1fbfd7"
+     "color": "#1fbfd7",
+     "shirtName": {
+      "area": [
+       0.2021,
+       0.7413,
+       0.6309,
+       0.0879
+      ],
+      "color": "#000000"
+     }
     }
    },
    "roles": {
@@ -370,7 +451,10 @@
     "157570"
    ],
    "enabled": true,
-   "primaryStadium": "76"
+   "primaryStadium": "76",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2019": {
    "name": "Worcester",
@@ -392,13 +476,31 @@
      "frontKitFile": "kits_2019/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
-     "color": "#021e3e"
+     "color": "#021e3e",
+     "shirtName": {
+      "area": [
+       0.2021,
+       0.7876,
+       0.6309,
+       0.0557
+      ],
+      "color": "#f5f5f5"
+     }
     },
     "away": {
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": "#1fbfd7"
+     "color": "#1fbfd7",
+     "shirtName": {
+      "area": [
+       0.2021,
+       0.7413,
+       0.6309,
+       0.0879
+      ],
+      "color": "#000000"
+     }
     }
    },
    "roles": {
@@ -469,7 +571,10 @@
     "157723"
    ],
    "enabled": true,
-   "primaryStadium": "76"
+   "primaryStadium": "76",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2022": {
    "name": "Worcester",
@@ -491,13 +596,31 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": "#0e0f24"
+     "color": "#0e0f24",
+     "shirtName": {
+      "area": [
+       0.118,
+       0.4561,
+       0.7719,
+       0.0439
+      ],
+      "color": "#052662"
+     }
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": "#0e50a0"
+     "color": "#0e50a0",
+     "shirtName": {
+      "area": [
+       0.118,
+       0.4561,
+       0.7719,
+       0.0439
+      ],
+      "color": "#052662"
+     }
     }
    },
    "roles": {
@@ -561,7 +684,10 @@
     "157770"
    ],
    "enabled": true,
-   "primaryStadium": "76"
+   "primaryStadium": "76",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2024": {
    "name": "Worcester",

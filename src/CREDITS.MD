@@ -14,8 +14,17 @@ Credits:
     - 2009-2010: [TRF Patch 10](https://www.therugbyforum.com/threads/trf-rugby-10-patch.18881) by Intercept King JDV, with fixed kits by Bogdam
     - 2007-2009: [MUP Patch 2009](https://www.therugbyforum.com/threads/mup-v-1-2-season-2008-09.15872), [MegaUpdatePatch](https://www.therugbyforum.com/threads/megaupdatepatch-mup09.8241) by Fa'atau82, v1.2 release by uli85
 - Heads:
-    - [jim546](https://github.com/jimw546/jimw546-s-Rugby-08-stuff), [JPilky](https://www.therugbyforum.com/threads/trf-custom-face-design-tracker.47791), EN9ne, Pieter1989 and TommyDelpe
     - [Rugby 08 Original Update Workshop](https://www.therugbyforum.com/threads/rugby-08-original-update-workshop.49742): Carel du preez and the workshop's contributors
+    - [jim546](https://github.com/jimw546/jimw546-s-Rugby-08-stuff), [JPilky](https://www.therugbyforum.com/threads/trf-custom-face-design-tracker.47791), EN9ne, Pieter1989 and TommyDelpe
+- Trophies: the Bouclier de Brennus (Top 14) is textured from [Musée du Vieux Toulouse – Bouclier de Brennus](https://commons.wikimedia.org/wiki/File:Mus%C3%A9e_du_Vieux_Toulouse_-_Bouclier_de_Brennus.jpg) by Frédéric Neupont, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) (the texture, adapted, is under the same licence); converted to the game's format with [otools](https://bitbucket.org/fifam/otools) by Dmitri
+- Rosters: the 2008-09 base roster comes from the [MUP Patch 2009](https://www.therugbyforum.com/threads/mup-v-1-2-season-2008-09.15872) by Fa'atau82 and uli85
+- Code and tools:
+    - Commentary decoder: a port of utkdec.c from [vgmstream](https://github.com/vgmstream/vgmstream), based on Andrew D'Addesio's [utkencode](https://github.com/daddesio/utkencode) (public domain)
+    - Stock team names for roster import: the teams.csv of Rugeditor
+- Fonts (all [SIL Open Font License 1.1](https://openfontlicense.org)):
+    - Interface: [Barlow and Barlow Condensed](https://github.com/jpt/barlow) by Jeremy Tribby
+    - Shirt names: Barlow Condensed, [Oswald](https://github.com/googlefonts/OswaldFont) (Vernon Adams), [Anton](https://github.com/googlefonts/AntonFont) (Vernon Adams), Bebas Neue (Dharma Type), Saira Condensed (Omnibus-Type), [Teko](https://github.com/googlefonts/teko) (Indian Type Foundry), [Graduate](https://github.com/etunni/graduate) (Eduardo Tunni), Alfa Slab One (José María Solé), Russo One (Jovanny Lemonad), Black Ops One (James Grieshaber, Eben Sorkin)
+- Built with Python, PyQt5, NumPy, Pillow, PyOpenGL and Wine (on Linux)
 - Music:
     - Title: [Midnight Ride](https://archive.org/details/GSP-AP_Collection_V1-4), Artist: GeoSuPhat (George P. Peterson), License: CC BY 3.0  
     - Title: [Rompo Todo](https://archive.org/details/OrquestaDePerros-RolesYOficios) , Artist: Orquesta de Perros, License: CC BY 3.0  
@@ -23,4 +32,6 @@ Credits:
     - Title: [Meet Me In The Mountains](https://freemusicarchive.org/music/lemon-knife/ignite/meet-me-in-the-mountains/), Artist: Lemon Knife, License: CC BY 4.0  
     - Title: [Trepabalcones](https://freemusicarchive.org/music/Bam_Bam/Bam_Bam_1851/03_Trepabalcones/), Artist: Bam Bam, License: CC BY-NC-ND 2.5 MX  
     - Title: [King of Clubs](https://freemusicarchive.org/music/Noise_Problems/NP50th_Pony_Pack/Pony_Pack_07/), Artist: Noise Problems Selections, License: CC BY-NC-SA 3.0 US  
-    - Title: [Rock Metal Energetic Instrumental](https://freemusicarchive.org/music/alex-productions/single/rock-metal-energetic-instrumental/) (loading screen), Artist: Alex Productions, License: CC BY-NC 4.0  
+    - Title: [Rock Metal Energetic Instrumental](https://freemusicarchive.org/music/alex-productions/single/rock-metal-energetic-instrumental/) (loading screen), Artist: Alex Productions, License: CC BY-NC 4.0
+
+Rugby 08 is developed by HB Studios and published by EA Sports. R08 Revival is an unofficial fan project, not affiliated with or endorsed by either; it needs your own copy of the game.  

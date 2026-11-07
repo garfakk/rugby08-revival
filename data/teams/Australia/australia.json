@@ -1230,8 +1230,8 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2014/home_front.png",
-     "backKitFile": "kits_2014/home_back/home_back_%.png",
+     "frontKitFile": "kits_2014/home_front.webp",
+     "backKitFile": "kits_2014/home_back.webp",
      "previewFile": "kits_2014/home_preview.png",
      "color": "#af7d2e"
     }

@@ -1,9 +1,3285 @@
 {
   "id": "5008",
   "name": "The Rugby Championship",
-  "seasonal": false,
+  "seasonal": true,
   "pads": "assets/stadium_graphics.fsh",
   "logo": "assets/tournament_logo.png",
   "logo_frontend": "assets/tournament_logo.png",
-  "pitch_logo": "assets/pitch_logos/pitch_logo_%.png"
+  "pitch_logo": "assets/pitch_logos/pitch_logo_%.png",
+  "seasons": {
+    "2012": {
+      "template": {
+        "id": "rugby_championship_2012",
+        "name": "The Rugby Championship 2012",
+        "order": 15.14,
+        "description": "The 2012 Rugby Championship as it was played: the real fixtures, dates and grounds, with each nation's season 2012 squad (or the nearest one in the data). Points: 4 a win, 2 a draw, a bonus point for 4 tries and for losing by 7 or less.",
+        "season": "2012",
+        "match_type": "tri_nations",
+        "variant": "rugby_championship",
+        "venue": "home",
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "tries": 4
+          },
+          "losing_bonus": {
+            "margin": 7
+          }
+        },
+        "tiebreakers": [
+          "wins",
+          "points_diff",
+          "tries_for",
+          "head_to_head",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            4
+          ],
+          "yellow_accumulation": 4,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "table",
+            "name": "Championship",
+            "kind": "round_robin",
+            "legs": 2,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Table"
+            },
+            "fixtures": [
+              {
+                "date": "2012-08-18",
+                "time": "17:00",
+                "group": "A",
+                "home": "1015",
+                "away": "1001",
+                "stadium": "56",
+                "venue": "Newlands Stadium, Cape Town",
+                "real_score": "27–6",
+                "real_tries": [
+                  3,
+                  0
+                ]
+              },
+              {
+                "date": "2012-08-18",
+                "time": "20:05",
+                "group": "A",
+                "home": "1002",
+                "away": "1010",
+                "stadium": "1",
+                "venue": "Stadium Australia, Sydney",
+                "real_score": "19–27",
+                "real_tries": [
+                  1,
+                  2
+                ]
+              },
+              {
+                "date": "2012-08-25",
+                "time": "16:10",
+                "group": "A",
+                "home": "1001",
+                "away": "1015",
+                "stadium": "43",
+                "venue": "Estadio Malvinas Argentinas, Mendoza",
+                "real_score": "16–16",
+                "real_tries": [
+                  1,
+                  1
+                ]
+              },
+              {
+                "date": "2012-08-25",
+                "time": "19:35",
+                "group": "A",
+                "home": "1010",
+                "away": "1002",
+                "stadium": "49",
+                "venue": "Eden Park, Auckland",
+                "real_score": "22–0",
+                "real_tries": [
+                  1,
+                  0
+                ]
+              },
+              {
+                "date": "2012-09-08",
+                "time": "18:35",
+                "group": "A",
+                "home": "1002",
+                "away": "1015",
+                "stadium": "31",
+                "venue": "Subiaco Oval, Perth",
+                "real_score": "26–19",
+                "real_tries": [
+                  2,
+                  1
+                ]
+              },
+              {
+                "date": "2012-09-08",
+                "time": "19:35",
+                "group": "A",
+                "home": "1010",
+                "away": "1001",
+                "stadium": "50",
+                "venue": "Wellington Regional Stadium, Wellington",
+                "real_score": "21–5",
+                "real_tries": [
+                  2,
+                  1
+                ]
+              },
+              {
+                "date": "2012-09-15",
+                "time": "19:35",
+                "group": "A",
+                "home": "1010",
+                "away": "1015",
+                "stadium": "51",
+                "venue": "Forsyth Barr Stadium, Dunedin",
+                "real_score": "21–11",
+                "real_tries": [
+                  2,
+                  1
+                ]
+              },
+              {
+                "date": "2012-09-15",
+                "time": "20:05",
+                "group": "A",
+                "home": "1002",
+                "away": "1001",
+                "stadium": "2",
+                "venue": "Robina Stadium, Gold Coast",
+                "real_score": "23–19",
+                "real_tries": [
+                  2,
+                  2
+                ]
+              },
+              {
+                "date": "2012-09-29",
+                "time": "17:00",
+                "group": "A",
+                "home": "1015",
+                "away": "1002",
+                "stadium": "55",
+                "venue": "Loftus Versfeld Stadium, Pretoria",
+                "real_score": "31–8",
+                "real_tries": [
+                  3,
+                  1
+                ]
+              },
+              {
+                "date": "2012-09-29",
+                "time": "20:10",
+                "group": "A",
+                "home": "1001",
+                "away": "1010",
+                "stadium": "43",
+                "venue": "Estadio Ciudad de La Plata, La Plata",
+                "real_score": "15–54",
+                "real_tries": [
+                  2,
+                  4
+                ]
+              },
+              {
+                "date": "2012-10-06",
+                "time": "17:00",
+                "group": "A",
+                "home": "1015",
+                "away": "1010",
+                "stadium": "57",
+                "venue": "FNB Stadium, Johannesburg",
+                "real_score": "16–32",
+                "real_tries": [
+                  1,
+                  4
+                ]
+              },
+              {
+                "date": "2012-10-06",
+                "time": "20:10",
+                "group": "A",
+                "home": "1001",
+                "away": "1002",
+                "stadium": "43",
+                "venue": "Estadio Gigante de Arroyito, Rosario",
+                "real_score": "19–25",
+                "real_tries": [
+                  1,
+                  1
+                ]
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "table": {
+              "A": [
+                "1001",
+                "1002",
+                "1010",
+                "1015"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "1010",
+          "table": [
+            "1010",
+            "1002",
+            "1015",
+            "1001"
+          ]
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2012_Rugby_Championship"
+        ],
+        "_venue_note": "Game stadium stand-ins: Estadio Ciudad de La Plata, La Plata → Buenos Aires (43); Estadio Gigante de Arroyito, Rosario → Buenos Aires (43); Estadio Malvinas Argentinas, Mendoza → Buenos Aires (43); Robina Stadium, Gold Coast → Brisbane (2)."
+      }
+    },
+    "2013": {
+      "template": {
+        "id": "rugby_championship_2013",
+        "name": "The Rugby Championship 2013",
+        "order": 15.13,
+        "description": "The 2013 Rugby Championship as it was played: the real fixtures, dates and grounds, with each nation's season 2013 squad (or the nearest one in the data). Points: 4 a win, 2 a draw, a bonus point for 4 tries and for losing by 7 or less.",
+        "season": "2013",
+        "match_type": "tri_nations",
+        "variant": "rugby_championship",
+        "venue": "home",
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "tries": 4
+          },
+          "losing_bonus": {
+            "margin": 7
+          }
+        },
+        "tiebreakers": [
+          "wins",
+          "points_diff",
+          "tries_for",
+          "head_to_head",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            4
+          ],
+          "yellow_accumulation": 4,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "table",
+            "name": "Championship",
+            "kind": "round_robin",
+            "legs": 2,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Table"
+            },
+            "fixtures": [
+              {
+                "date": "2013-08-17",
+                "time": "17:00",
+                "group": "A",
+                "home": "1015",
+                "away": "1001",
+                "stadium": "57",
+                "venue": "FNB Stadium, Johannesburg",
+                "real_score": "73–13",
+                "real_tries": [
+                  9,
+                  1
+                ]
+              },
+              {
+                "date": "2013-08-17",
+                "time": "20:05",
+                "group": "A",
+                "home": "1002",
+                "away": "1010",
+                "stadium": "1",
+                "venue": "Stadium Australia, Sydney",
+                "real_score": "29–47",
+                "real_tries": [
+                  2,
+                  6
+                ]
+              },
+              {
+                "date": "2013-08-24",
+                "time": "16:10",
+                "group": "A",
+                "home": "1001",
+                "away": "1015",
+                "stadium": "43",
+                "venue": "Estadio Malvinas Argentinas, Mendoza",
+                "real_score": "17–22",
+                "real_tries": [
+                  2,
+                  1
+                ]
+              },
+              {
+                "date": "2013-08-24",
+                "time": "19:35",
+                "group": "A",
+                "home": "1010",
+                "away": "1002",
+                "stadium": "50",
+                "venue": "Wellington Regional Stadium, Wellington",
+                "real_score": "27–16",
+                "real_tries": [
+                  2,
+                  1
+                ]
+              },
+              {
+                "date": "2013-09-07",
+                "time": "19:35",
+                "group": "A",
+                "home": "1010",
+                "away": "1001",
+                "stadium": "52",
+                "venue": "Waikato Stadium, Hamilton",
+                "real_score": "28–13",
+                "real_tries": [
+                  3,
+                  1
+                ]
+              },
+              {
+                "date": "2013-09-07",
+                "time": "20:05",
+                "group": "A",
+                "home": "1002",
+                "away": "1015",
+                "stadium": "2",
+                "venue": "Lang Park, Brisbane",
+                "real_score": "12–38",
+                "real_tries": [
+                  0,
+                  4
+                ]
+              },
+              {
+                "date": "2013-09-14",
+                "time": "18:05",
+                "group": "A",
+                "home": "1002",
+                "away": "1001",
+                "stadium": "31",
+                "venue": "Subiaco Oval, Perth",
+                "real_score": "14–13",
+                "real_tries": [
+                  1,
+                  1
+                ]
+              },
+              {
+                "date": "2013-09-14",
+                "time": "19:35",
+                "group": "A",
+                "home": "1010",
+                "away": "1015",
+                "stadium": "49",
+                "venue": "Eden Park, Auckland",
+                "real_score": "29–15",
+                "real_tries": [
+                  4,
+                  2
+                ]
+              },
+              {
+                "date": "2013-09-28",
+                "time": "17:00",
+                "group": "A",
+                "home": "1015",
+                "away": "1002",
+                "stadium": "56",
+                "venue": "Newlands Stadium, Cape Town",
+                "real_score": "28–8",
+                "real_tries": [
+                  3,
+                  1
+                ]
+              },
+              {
+                "date": "2013-09-28",
+                "time": "19:40",
+                "group": "A",
+                "home": "1001",
+                "away": "1010",
+                "stadium": "43",
+                "venue": "Estadio Ciudad de La Plata, La Plata",
+                "real_score": "15–33",
+                "real_tries": [
+                  0,
+                  4
+                ]
+              },
+              {
+                "date": "2013-10-05",
+                "time": "17:00",
+                "group": "A",
+                "home": "1015",
+                "away": "1010",
+                "stadium": "57",
+                "venue": "Ellis Park Stadium, Johannesburg",
+                "real_score": "27–38",
+                "real_tries": [
+                  4,
+                  5
+                ]
+              },
+              {
+                "date": "2013-10-05",
+                "time": "19:40",
+                "group": "A",
+                "home": "1001",
+                "away": "1002",
+                "stadium": "43",
+                "venue": "Estadio Gigante de Arroyito, Rosario",
+                "real_score": "17–54",
+                "real_tries": [
+                  2,
+                  7
+                ]
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "table": {
+              "A": [
+                "1001",
+                "1002",
+                "1010",
+                "1015"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "1010",
+          "table": [
+            "1010",
+            "1015",
+            "1002",
+            "1001"
+          ]
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2013_Rugby_Championship"
+        ],
+        "_venue_note": "Game stadium stand-ins: Estadio Ciudad de La Plata, La Plata → Buenos Aires (43); Estadio Gigante de Arroyito, Rosario → Buenos Aires (43); Estadio Malvinas Argentinas, Mendoza → Buenos Aires (43)."
+      }
+    },
+    "2014": {
+      "template": {
+        "id": "rugby_championship_2014",
+        "name": "The Rugby Championship 2014",
+        "order": 15.12,
+        "description": "The 2014 Rugby Championship as it was played: the real fixtures, dates and grounds, with each nation's season 2014 squad (or the nearest one in the data). Points: 4 a win, 2 a draw, a bonus point for 4 tries and for losing by 7 or less.",
+        "season": "2014",
+        "match_type": "tri_nations",
+        "variant": "rugby_championship",
+        "venue": "home",
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "tries": 4
+          },
+          "losing_bonus": {
+            "margin": 7
+          }
+        },
+        "tiebreakers": [
+          "wins",
+          "points_diff",
+          "tries_for",
+          "head_to_head",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            4
+          ],
+          "yellow_accumulation": 4,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "table",
+            "name": "Championship",
+            "kind": "round_robin",
+            "legs": 2,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Table"
+            },
+            "fixtures": [
+              {
+                "date": "2014-08-16",
+                "time": "17:05",
+                "group": "A",
+                "home": "1015",
+                "away": "1001",
+                "stadium": "55",
+                "venue": "Loftus Versfeld Stadium, Pretoria",
+                "real_score": "13–6",
+                "real_tries": [
+                  1,
+                  0
+                ]
+              },
+              {
+                "date": "2014-08-16",
+                "time": "20:05",
+                "group": "A",
+                "home": "1002",
+                "away": "1010",
+                "stadium": "1",
+                "venue": "Stadium Australia, Sydney",
+                "real_score": "12–12",
+                "real_tries": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "date": "2014-08-23",
+                "time": "16:40",
+                "group": "A",
+                "home": "1001",
+                "away": "1015",
+                "stadium": "43",
+                "venue": "Estadio Padre Ernesto Martearena, Salta",
+                "real_score": "31–33",
+                "real_tries": [
+                  3,
+                  3
+                ]
+              },
+              {
+                "date": "2014-08-23",
+                "time": "19:35",
+                "group": "A",
+                "home": "1010",
+                "away": "1002",
+                "stadium": "49",
+                "venue": "Eden Park, Auckland",
+                "real_score": "51–20",
+                "real_tries": [
+                  6,
+                  2
+                ]
+              },
+              {
+                "date": "2014-09-06",
+                "time": "18:05",
+                "group": "A",
+                "home": "1002",
+                "away": "1015",
+                "stadium": "31",
+                "venue": "Subiaco Oval, Perth",
+                "real_score": "24–23",
+                "real_tries": [
+                  2,
+                  1
+                ]
+              },
+              {
+                "date": "2014-09-06",
+                "time": "19:35",
+                "group": "A",
+                "home": "1010",
+                "away": "1001",
+                "stadium": "50",
+                "venue": "McLean Park, Napier",
+                "real_score": "28–9",
+                "real_tries": [
+                  4,
+                  0
+                ]
+              },
+              {
+                "date": "2014-09-13",
+                "time": "19:35",
+                "group": "A",
+                "home": "1010",
+                "away": "1015",
+                "stadium": "50",
+                "venue": "Wellington Regional Stadium, Wellington",
+                "real_score": "14–10",
+                "real_tries": [
+                  1,
+                  1
+                ]
+              },
+              {
+                "date": "2014-09-13",
+                "time": "20:05",
+                "group": "A",
+                "home": "1002",
+                "away": "1001",
+                "stadium": "2",
+                "venue": "Robina Stadium, Gold Coast",
+                "real_score": "32–25",
+                "real_tries": [
+                  3,
+                  3
+                ]
+              },
+              {
+                "date": "2014-09-27",
+                "time": "17:05",
+                "group": "A",
+                "home": "1015",
+                "away": "1002",
+                "stadium": "56",
+                "venue": "Newlands Stadium, Cape Town",
+                "real_score": "28–10",
+                "real_tries": [
+                  4,
+                  1
+                ]
+              },
+              {
+                "date": "2014-09-27",
+                "time": "19:10",
+                "group": "A",
+                "home": "1001",
+                "away": "1010",
+                "stadium": "43",
+                "venue": "Estadio Ciudad de La Plata, La Plata",
+                "real_score": "13–34",
+                "real_tries": [
+                  1,
+                  4
+                ]
+              },
+              {
+                "date": "2014-10-04",
+                "time": "17:05",
+                "group": "A",
+                "home": "1015",
+                "away": "1010",
+                "stadium": "57",
+                "venue": "Ellis Park Stadium, Johannesburg",
+                "real_score": "27–25",
+                "real_tries": [
+                  3,
+                  3
+                ]
+              },
+              {
+                "date": "2014-10-04",
+                "time": "19:40",
+                "group": "A",
+                "home": "1001",
+                "away": "1002",
+                "stadium": "43",
+                "venue": "Estadio Malvinas Argentinas, Mendoza",
+                "real_score": "21–17",
+                "real_tries": [
+                  2,
+                  2
+                ]
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "table": {
+              "A": [
+                "1001",
+                "1002",
+                "1010",
+                "1015"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "1010",
+          "table": [
+            "1010",
+            "1015",
+            "1002",
+            "1001"
+          ]
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2014_Rugby_Championship"
+        ],
+        "_venue_note": "Game stadium stand-ins: Estadio Ciudad de La Plata, La Plata → Buenos Aires (43); Estadio Malvinas Argentinas, Mendoza → Buenos Aires (43); Estadio Padre Ernesto Martearena, Salta → Buenos Aires (43); McLean Park, Napier → Wellington (50); Robina Stadium, Gold Coast → Brisbane (2)."
+      }
+    },
+    "2015": {
+      "template": {
+        "id": "rugby_championship_2015",
+        "name": "The Rugby Championship 2015",
+        "order": 15.11,
+        "description": "The 2015 Rugby Championship as it was played (single round, World Cup year): the real fixtures, dates and grounds, with each nation's season 2015 squad (or the nearest one in the data). Points: 4 a win, 2 a draw, a bonus point for 4 tries and for losing by 7 or less.",
+        "season": "2015",
+        "match_type": "tri_nations",
+        "variant": "rugby_championship",
+        "venue": "home",
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "tries": 4
+          },
+          "losing_bonus": {
+            "margin": 7
+          }
+        },
+        "tiebreakers": [
+          "wins",
+          "points_diff",
+          "tries_for",
+          "head_to_head",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            4
+          ],
+          "yellow_accumulation": 4,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "table",
+            "name": "Championship",
+            "kind": "round_robin",
+            "legs": 1,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Table"
+            },
+            "fixtures": [
+              {
+                "date": "2015-07-17",
+                "time": "19:35",
+                "group": "A",
+                "home": "1010",
+                "away": "1001",
+                "stadium": "48",
+                "venue": "Rugby League Park, Christchurch",
+                "real_score": "39–18",
+                "real_tries": [
+                  5,
+                  2
+                ]
+              },
+              {
+                "date": "2015-07-18",
+                "time": "20:05",
+                "group": "A",
+                "home": "1002",
+                "away": "1015",
+                "stadium": "2",
+                "venue": "Lang Park, Brisbane",
+                "real_score": "24–20",
+                "real_tries": [
+                  3,
+                  2
+                ]
+              },
+              {
+                "date": "2015-07-25",
+                "time": "17:05",
+                "group": "A",
+                "home": "1015",
+                "away": "1010",
+                "stadium": "57",
+                "venue": "Ellis Park Stadium, Johannesburg",
+                "real_score": "20–27",
+                "real_tries": [
+                  2,
+                  3
+                ]
+              },
+              {
+                "date": "2015-07-25",
+                "time": "19:40",
+                "group": "A",
+                "home": "1001",
+                "away": "1002",
+                "stadium": "43",
+                "venue": "Estadio Malvinas Argentinas, Mendoza",
+                "real_score": "9–34",
+                "real_tries": [
+                  0,
+                  4
+                ]
+              },
+              {
+                "date": "2015-08-08",
+                "time": "17:05",
+                "group": "A",
+                "home": "1015",
+                "away": "1001",
+                "stadium": "58",
+                "venue": "Kings Park Stadium, Durban",
+                "real_score": "25–37",
+                "real_tries": [
+                  3,
+                  4
+                ]
+              },
+              {
+                "date": "2015-08-08",
+                "time": "20:05",
+                "group": "A",
+                "home": "1002",
+                "away": "1010",
+                "stadium": "1",
+                "venue": "Stadium Australia, Sydney",
+                "real_score": "27–19",
+                "real_tries": [
+                  3,
+                  2
+                ]
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "table": {
+              "A": [
+                "1001",
+                "1002",
+                "1010",
+                "1015"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "1002",
+          "table": [
+            "1002",
+            "1010",
+            "1001",
+            "1015"
+          ]
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2015_Rugby_Championship"
+        ],
+        "_venue_note": "Game stadium stand-ins: Estadio Malvinas Argentinas, Mendoza → Buenos Aires (43)."
+      }
+    },
+    "2016": {
+      "template": {
+        "id": "rugby_championship_2016",
+        "name": "The Rugby Championship 2016",
+        "order": 15.1,
+        "description": "The 2016 Rugby Championship as it was played: the real fixtures, dates and grounds, with each nation's season 2016 squad (or the nearest one in the data). Points: 4 a win, 2 a draw, a bonus point for 3 tries more than the opponent and for losing by 7 or less.",
+        "season": "2016",
+        "match_type": "tri_nations",
+        "variant": "rugby_championship",
+        "venue": "home",
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "margin": 3
+          },
+          "losing_bonus": {
+            "margin": 7
+          }
+        },
+        "tiebreakers": [
+          "wins",
+          "points_diff",
+          "tries_for",
+          "head_to_head",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            4
+          ],
+          "yellow_accumulation": 4,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "table",
+            "name": "Championship",
+            "kind": "round_robin",
+            "legs": 2,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Table"
+            },
+            "fixtures": [
+              {
+                "date": "2016-08-20",
+                "time": "17:05",
+                "group": "A",
+                "home": "1015",
+                "away": "1001",
+                "stadium": "55",
+                "venue": "Mbombela Stadium, Nelspruit",
+                "real_score": "30–23",
+                "real_tries": [
+                  3,
+                  2
+                ]
+              },
+              {
+                "date": "2016-08-20",
+                "time": "20:05",
+                "group": "A",
+                "home": "1002",
+                "away": "1010",
+                "stadium": "1",
+                "venue": "Stadium Australia, Sydney",
+                "real_score": "8–42",
+                "real_tries": [
+                  1,
+                  6
+                ]
+              },
+              {
+                "date": "2016-08-27",
+                "time": "16:40",
+                "group": "A",
+                "home": "1001",
+                "away": "1015",
+                "stadium": "43",
+                "venue": "Estadio Padre Ernesto Martearena, Salta",
+                "real_score": "26–24",
+                "real_tries": [
+                  2,
+                  2
+                ]
+              },
+              {
+                "date": "2016-08-27",
+                "time": "19:35",
+                "group": "A",
+                "home": "1010",
+                "away": "1002",
+                "stadium": "50",
+                "venue": "Wellington Regional Stadium, Wellington",
+                "real_score": "29–9",
+                "real_tries": [
+                  4,
+                  0
+                ]
+              },
+              {
+                "date": "2016-09-10",
+                "time": "19:35",
+                "group": "A",
+                "home": "1010",
+                "away": "1001",
+                "stadium": "52",
+                "venue": "Waikato Stadium, Hamilton",
+                "real_score": "57–22",
+                "real_tries": [
+                  8,
+                  1
+                ]
+              },
+              {
+                "date": "2016-09-10",
+                "time": "20:05",
+                "group": "A",
+                "home": "1002",
+                "away": "1015",
+                "stadium": "2",
+                "venue": "Lang Park, Brisbane",
+                "real_score": "23–17",
+                "real_tries": [
+                  2,
+                  2
+                ]
+              },
+              {
+                "date": "2016-09-17",
+                "time": "18:05",
+                "group": "A",
+                "home": "1002",
+                "away": "1001",
+                "stadium": "31",
+                "venue": "Perth Oval, Perth",
+                "real_score": "36–20",
+                "real_tries": [
+                  5,
+                  2
+                ]
+              },
+              {
+                "date": "2016-09-17",
+                "time": "19:35",
+                "group": "A",
+                "home": "1010",
+                "away": "1015",
+                "stadium": "48",
+                "venue": "Rugby League Park, Christchurch",
+                "real_score": "41–13",
+                "real_tries": [
+                  6,
+                  1
+                ]
+              },
+              {
+                "date": "2016-10-01",
+                "time": "17:05",
+                "group": "A",
+                "home": "1015",
+                "away": "1002",
+                "stadium": "55",
+                "venue": "Loftus Versfeld Stadium, Pretoria",
+                "real_score": "18–10",
+                "real_tries": [
+                  0,
+                  1
+                ]
+              },
+              {
+                "date": "2016-10-01",
+                "time": "19:10",
+                "group": "A",
+                "home": "1001",
+                "away": "1010",
+                "stadium": "43",
+                "venue": "José Amalfitani Stadium, Buenos Aires",
+                "real_score": "17–36",
+                "real_tries": [
+                  2,
+                  5
+                ]
+              },
+              {
+                "date": "2016-10-08",
+                "time": "17:00",
+                "group": "A",
+                "home": "1015",
+                "away": "1010",
+                "stadium": "58",
+                "venue": "Kings Park Stadium, Durban",
+                "real_score": "15–57",
+                "real_tries": [
+                  0,
+                  9
+                ]
+              },
+              {
+                "date": "2016-10-08",
+                "time": "19:30",
+                "group": "A",
+                "home": "1001",
+                "away": "1002",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London, England",
+                "real_score": "21–33",
+                "real_tries": [
+                  2,
+                  4
+                ]
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "table": {
+              "A": [
+                "1001",
+                "1002",
+                "1010",
+                "1015"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "1010",
+          "table": [
+            "1010",
+            "1002",
+            "1015",
+            "1001"
+          ]
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2016_Rugby_Championship"
+        ],
+        "_venue_note": "Game stadium stand-ins: Estadio Padre Ernesto Martearena, Salta → Buenos Aires (43); Mbombela Stadium, Nelspruit → Pretoria (55)."
+      }
+    },
+    "2017": {
+      "template": {
+        "id": "rugby_championship_2017",
+        "name": "The Rugby Championship 2017",
+        "order": 15.09,
+        "description": "The 2017 Rugby Championship as it was played: the real fixtures, dates and grounds, with each nation's season 2017 squad (or the nearest one in the data). Points: 4 a win, 2 a draw, a bonus point for 3 tries more than the opponent and for losing by 7 or less.",
+        "season": "2017",
+        "match_type": "tri_nations",
+        "variant": "rugby_championship",
+        "venue": "home",
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "margin": 3
+          },
+          "losing_bonus": {
+            "margin": 7
+          }
+        },
+        "tiebreakers": [
+          "wins",
+          "points_diff",
+          "tries_for",
+          "head_to_head",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            4
+          ],
+          "yellow_accumulation": 4,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "table",
+            "name": "Championship",
+            "kind": "round_robin",
+            "legs": 2,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Table"
+            },
+            "fixtures": [
+              {
+                "date": "2017-08-19",
+                "time": "17:05",
+                "group": "A",
+                "home": "1015",
+                "away": "1001",
+                "stadium": "58",
+                "venue": "Nelson Mandela Bay Stadium, Port Elizabeth",
+                "real_score": "37–15",
+                "real_tries": [
+                  4,
+                  2
+                ]
+              },
+              {
+                "date": "2017-08-19",
+                "time": "20:00",
+                "group": "A",
+                "home": "1002",
+                "away": "1010",
+                "stadium": "1",
+                "venue": "Stadium Australia, Sydney",
+                "real_score": "34–54",
+                "real_tries": [
+                  4,
+                  8
+                ]
+              },
+              {
+                "date": "2017-08-26",
+                "time": "16:30",
+                "group": "A",
+                "home": "1001",
+                "away": "1015",
+                "stadium": "43",
+                "venue": "Estadio Padre Ernesto Martearena, Salta",
+                "real_score": "23–41",
+                "real_tries": [
+                  2,
+                  5
+                ]
+              },
+              {
+                "date": "2017-08-26",
+                "time": "19:35",
+                "group": "A",
+                "home": "1010",
+                "away": "1002",
+                "stadium": "51",
+                "venue": "Forsyth Barr Stadium, Dunedin",
+                "real_score": "35–29",
+                "real_tries": [
+                  5,
+                  5
+                ]
+              },
+              {
+                "date": "2017-09-09",
+                "time": "18:00",
+                "group": "A",
+                "home": "1002",
+                "away": "1015",
+                "stadium": "31",
+                "venue": "Perth Oval, Perth",
+                "real_score": "23–23",
+                "real_tries": [
+                  2,
+                  2
+                ]
+              },
+              {
+                "date": "2017-09-09",
+                "time": "19:35",
+                "group": "A",
+                "home": "1010",
+                "away": "1001",
+                "stadium": "52",
+                "venue": "Yarrow Stadium, New Plymouth",
+                "real_score": "39–22",
+                "real_tries": [
+                  6,
+                  1
+                ]
+              },
+              {
+                "date": "2017-09-16",
+                "time": "19:35",
+                "group": "A",
+                "home": "1010",
+                "away": "1015",
+                "stadium": "49",
+                "venue": "North Harbour Stadium, Albany",
+                "real_score": "57–0",
+                "real_tries": [
+                  8,
+                  0
+                ]
+              },
+              {
+                "date": "2017-09-16",
+                "time": "20:00",
+                "group": "A",
+                "home": "1002",
+                "away": "1001",
+                "stadium": "4",
+                "venue": "Canberra Stadium, Canberra",
+                "real_score": "45–20",
+                "real_tries": [
+                  6,
+                  2
+                ]
+              },
+              {
+                "date": "2017-09-30",
+                "time": "17:05",
+                "group": "A",
+                "home": "1015",
+                "away": "1002",
+                "stadium": "37",
+                "venue": "Free State Stadium, Bloemfontein",
+                "real_score": "27–27",
+                "real_tries": [
+                  3,
+                  3
+                ]
+              },
+              {
+                "date": "2017-09-30",
+                "time": "19:30",
+                "group": "A",
+                "home": "1001",
+                "away": "1010",
+                "stadium": "43",
+                "venue": "José Amalfitani Stadium, Buenos Aires",
+                "real_score": "10–36",
+                "real_tries": [
+                  1,
+                  5
+                ]
+              },
+              {
+                "date": "2017-10-07",
+                "time": "17:05",
+                "group": "A",
+                "home": "1015",
+                "away": "1010",
+                "stadium": "56",
+                "venue": "Newlands Stadium, Cape Town",
+                "real_score": "24–25",
+                "real_tries": [
+                  3,
+                  3
+                ]
+              },
+              {
+                "date": "2017-10-07",
+                "time": "19:30",
+                "group": "A",
+                "home": "1001",
+                "away": "1002",
+                "stadium": "43",
+                "venue": "Estadio Malvinas Argentinas, Mendoza",
+                "real_score": "20–37",
+                "real_tries": [
+                  2,
+                  5
+                ]
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "table": {
+              "A": [
+                "1001",
+                "1002",
+                "1010",
+                "1015"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "1010",
+          "table": [
+            "1010",
+            "1002",
+            "1015",
+            "1001"
+          ]
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2017_Rugby_Championship"
+        ],
+        "_venue_note": "Game stadium stand-ins: Estadio Malvinas Argentinas, Mendoza → Buenos Aires (43); Estadio Padre Ernesto Martearena, Salta → Buenos Aires (43); Nelson Mandela Bay Stadium, Port Elizabeth → Durban (58); North Harbour Stadium, Albany → Auckland (49); Yarrow Stadium, New Plymouth → Hamilton (52)."
+      }
+    },
+    "2018": {
+      "template": {
+        "id": "rugby_championship_2018",
+        "name": "The Rugby Championship 2018",
+        "order": 15.08,
+        "description": "The 2018 Rugby Championship as it was played: the real fixtures, dates and grounds, with each nation's season 2018 squad (or the nearest one in the data). Points: 4 a win, 2 a draw, a bonus point for 3 tries more than the opponent and for losing by 7 or less.",
+        "season": "2018",
+        "match_type": "tri_nations",
+        "variant": "rugby_championship",
+        "venue": "home",
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "margin": 3
+          },
+          "losing_bonus": {
+            "margin": 7
+          }
+        },
+        "tiebreakers": [
+          "wins",
+          "points_diff",
+          "tries_for",
+          "head_to_head",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            4
+          ],
+          "yellow_accumulation": 4,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "table",
+            "name": "Championship",
+            "kind": "round_robin",
+            "legs": 2,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Table"
+            },
+            "fixtures": [
+              {
+                "date": "2018-08-18",
+                "time": "17:05",
+                "group": "A",
+                "home": "1015",
+                "away": "1001",
+                "stadium": "58",
+                "venue": "Kings Park Stadium, Durban",
+                "real_score": "34–21",
+                "real_tries": [
+                  6,
+                  3
+                ]
+              },
+              {
+                "date": "2018-08-18",
+                "time": "19:45",
+                "group": "A",
+                "home": "1002",
+                "away": "1010",
+                "stadium": "1",
+                "venue": "Stadium Australia, Sydney",
+                "real_score": "13–38",
+                "real_tries": [
+                  1,
+                  6
+                ]
+              },
+              {
+                "date": "2018-08-25",
+                "time": "16:10",
+                "group": "A",
+                "home": "1001",
+                "away": "1015",
+                "stadium": "43",
+                "venue": "Estadio Malvinas Argentinas, Mendoza",
+                "real_score": "32–19",
+                "real_tries": [
+                  4,
+                  3
+                ]
+              },
+              {
+                "date": "2018-08-25",
+                "time": "19:35",
+                "group": "A",
+                "home": "1010",
+                "away": "1002",
+                "stadium": "49",
+                "venue": "Eden Park, Auckland",
+                "real_score": "40–12",
+                "real_tries": [
+                  6,
+                  2
+                ]
+              },
+              {
+                "date": "2018-09-08",
+                "time": "19:35",
+                "group": "A",
+                "home": "1010",
+                "away": "1001",
+                "stadium": "50",
+                "venue": "Trafalgar Park, Nelson",
+                "real_score": "46–24",
+                "real_tries": [
+                  6,
+                  3
+                ]
+              },
+              {
+                "date": "2018-09-08",
+                "time": "20:05",
+                "group": "A",
+                "home": "1002",
+                "away": "1015",
+                "stadium": "2",
+                "venue": "Lang Park, Brisbane",
+                "real_score": "23–18",
+                "real_tries": [
+                  2,
+                  2
+                ]
+              },
+              {
+                "date": "2018-09-15",
+                "time": "19:35",
+                "group": "A",
+                "home": "1010",
+                "away": "1015",
+                "stadium": "50",
+                "venue": "Wellington Regional Stadium, Wellington",
+                "real_score": "34–36",
+                "real_tries": [
+                  6,
+                  5
+                ]
+              },
+              {
+                "date": "2018-09-15",
+                "time": "20:05",
+                "group": "A",
+                "home": "1002",
+                "away": "1001",
+                "stadium": "2",
+                "venue": "Robina Stadium, Gold Coast",
+                "real_score": "19–23",
+                "real_tries": [
+                  3,
+                  2
+                ]
+              },
+              {
+                "date": "2018-09-29",
+                "time": "17:05",
+                "group": "A",
+                "home": "1015",
+                "away": "1002",
+                "stadium": "58",
+                "venue": "Nelson Mandela Bay Stadium, Port Elizabeth",
+                "real_score": "23–12",
+                "real_tries": [
+                  2,
+                  2
+                ]
+              },
+              {
+                "date": "2018-09-29",
+                "time": "19:40",
+                "group": "A",
+                "home": "1001",
+                "away": "1010",
+                "stadium": "43",
+                "venue": "José Amalfitani Stadium, Buenos Aires",
+                "real_score": "17–35",
+                "real_tries": [
+                  2,
+                  5
+                ]
+              },
+              {
+                "date": "2018-10-06",
+                "time": "17:05",
+                "group": "A",
+                "home": "1015",
+                "away": "1010",
+                "stadium": "55",
+                "venue": "Loftus Versfeld Stadium, Pretoria",
+                "real_score": "30–32",
+                "real_tries": [
+                  3,
+                  4
+                ]
+              },
+              {
+                "date": "2018-10-06",
+                "time": "19:40",
+                "group": "A",
+                "home": "1001",
+                "away": "1002",
+                "stadium": "43",
+                "venue": "Estadio Padre Ernesto Martearena, Salta",
+                "real_score": "34–45",
+                "real_tries": [
+                  4,
+                  6
+                ]
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "table": {
+              "A": [
+                "1001",
+                "1002",
+                "1010",
+                "1015"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "1010",
+          "table": [
+            "1010",
+            "1015",
+            "1002",
+            "1001"
+          ]
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2018_Rugby_Championship"
+        ],
+        "_venue_note": "Game stadium stand-ins: Estadio Malvinas Argentinas, Mendoza → Buenos Aires (43); Estadio Padre Ernesto Martearena, Salta → Buenos Aires (43); Nelson Mandela Bay Stadium, Port Elizabeth → Durban (58); Robina Stadium, Gold Coast → Brisbane (2); Trafalgar Park, Nelson → Wellington (50)."
+      }
+    },
+    "2019": {
+      "template": {
+        "id": "rugby_championship_2019",
+        "name": "The Rugby Championship 2019",
+        "order": 15.07,
+        "description": "The 2019 Rugby Championship as it was played (single round, World Cup year): the real fixtures, dates and grounds, with each nation's season 2019 squad (or the nearest one in the data). Points: 4 a win, 2 a draw, a bonus point for 3 tries more than the opponent and for losing by 7 or less.",
+        "season": "2019",
+        "match_type": "tri_nations",
+        "variant": "rugby_championship",
+        "venue": "home",
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "margin": 3
+          },
+          "losing_bonus": {
+            "margin": 7
+          }
+        },
+        "tiebreakers": [
+          "wins",
+          "points_diff",
+          "tries_for",
+          "head_to_head",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            4
+          ],
+          "yellow_accumulation": 4,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "table",
+            "name": "Championship",
+            "kind": "round_robin",
+            "legs": 1,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Table"
+            },
+            "fixtures": [
+              {
+                "date": "2019-07-20",
+                "time": "15:05",
+                "group": "A",
+                "home": "1001",
+                "away": "1010",
+                "stadium": "43",
+                "venue": "José Amalfitani Stadium, Buenos Aires",
+                "real_score": "16–20",
+                "real_tries": [
+                  1,
+                  2
+                ]
+              },
+              {
+                "date": "2019-07-20",
+                "time": "17:05",
+                "group": "A",
+                "home": "1015",
+                "away": "1002",
+                "stadium": "57",
+                "venue": "Ellis Park Stadium, Johannesburg",
+                "real_score": "35–17",
+                "real_tries": [
+                  5,
+                  2
+                ]
+              },
+              {
+                "date": "2019-07-27",
+                "time": "19:35",
+                "group": "A",
+                "home": "1010",
+                "away": "1015",
+                "stadium": "50",
+                "venue": "Wellington Regional Stadium, Wellington",
+                "real_score": "16–16",
+                "real_tries": [
+                  1,
+                  1
+                ]
+              },
+              {
+                "date": "2019-07-27",
+                "time": "19:45",
+                "group": "A",
+                "home": "1002",
+                "away": "1001",
+                "stadium": "2",
+                "venue": "Lang Park, Brisbane",
+                "real_score": "16–10",
+                "real_tries": [
+                  1,
+                  1
+                ]
+              },
+              {
+                "date": "2019-08-10",
+                "time": "16:40",
+                "group": "A",
+                "home": "1001",
+                "away": "1015",
+                "stadium": "43",
+                "venue": "Estadio Padre Ernesto Martearena, Salta",
+                "real_score": "13–46",
+                "real_tries": [
+                  1,
+                  5
+                ]
+              },
+              {
+                "date": "2019-08-10",
+                "time": "19:45",
+                "group": "A",
+                "home": "1002",
+                "away": "1010",
+                "stadium": "31",
+                "venue": "Perth Stadium, Perth",
+                "real_score": "47–26",
+                "real_tries": [
+                  6,
+                  4
+                ]
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "table": {
+              "A": [
+                "1001",
+                "1002",
+                "1010",
+                "1015"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "1015",
+          "table": [
+            "1015",
+            "1002",
+            "1010",
+            "1001"
+          ]
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2019_Rugby_Championship"
+        ],
+        "_venue_note": "Game stadium stand-ins: Estadio Padre Ernesto Martearena, Salta → Buenos Aires (43)."
+      }
+    },
+    "2020": {
+      "template": {
+        "id": "rugby_championship_2020",
+        "name": "The Rugby Championship 2020",
+        "order": 15.06,
+        "description": "The 2020 Rugby Championship (played as the Tri Nations) as it was played (all in Australia, South Africa withdrew): the real fixtures, dates and grounds, with each nation's season 2020 squad (or the nearest one in the data). Points: 4 a win, 2 a draw, a bonus point for 3 tries more than the opponent and for losing by 7 or less.",
+        "season": "2020",
+        "match_type": "tri_nations",
+        "variant": "rugby_championship",
+        "venue": "home",
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "margin": 3
+          },
+          "losing_bonus": {
+            "margin": 7
+          }
+        },
+        "tiebreakers": [
+          "wins",
+          "points_diff",
+          "tries_for",
+          "head_to_head",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            4
+          ],
+          "yellow_accumulation": 4,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "table",
+            "name": "Championship",
+            "kind": "round_robin",
+            "legs": 2,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Table"
+            },
+            "fixtures": [
+              {
+                "date": "2020-10-31",
+                "time": "19:45",
+                "group": "A",
+                "home": "1002",
+                "away": "1010",
+                "stadium": "1",
+                "venue": "Stadium Australia, Sydney",
+                "real_score": "5–43",
+                "real_tries": [
+                  1,
+                  6
+                ]
+              },
+              {
+                "date": "2020-11-07",
+                "time": "19:45",
+                "group": "A",
+                "home": "1002",
+                "away": "1010",
+                "stadium": "2",
+                "venue": "Lang Park, Brisbane",
+                "real_score": "24–22",
+                "real_tries": [
+                  2,
+                  3
+                ]
+              },
+              {
+                "date": "2020-11-14",
+                "time": "17:10",
+                "group": "A",
+                "home": "1010",
+                "away": "1001",
+                "stadium": "3",
+                "venue": "Western Sydney Stadium, Sydney",
+                "real_score": "15–25",
+                "real_tries": [
+                  2,
+                  1
+                ]
+              },
+              {
+                "date": "2020-11-21",
+                "time": "19:45",
+                "group": "A",
+                "home": "1001",
+                "away": "1002",
+                "stadium": "3",
+                "venue": "Newcastle International Sports Centre, Newcastle",
+                "real_score": "15–15",
+                "real_tries": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "date": "2020-11-28",
+                "time": "19:45",
+                "group": "A",
+                "home": "1001",
+                "away": "1010",
+                "stadium": "3",
+                "venue": "Newcastle International Sports Centre, Newcastle",
+                "real_score": "0–38",
+                "real_tries": [
+                  0,
+                  5
+                ]
+              },
+              {
+                "date": "2020-12-05",
+                "time": "19:45",
+                "group": "A",
+                "home": "1002",
+                "away": "1001",
+                "stadium": "3",
+                "venue": "Western Sydney Stadium, Sydney",
+                "real_score": "16–16",
+                "real_tries": [
+                  1,
+                  1
+                ]
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "table": {
+              "A": [
+                "1001",
+                "1002",
+                "1010"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "1010",
+          "table": [
+            "1010",
+            "1001",
+            "1002"
+          ]
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2020_Tri_Nations_Series"
+        ],
+        "_venue_note": "Game stadium stand-ins: Newcastle International Sports Centre, Newcastle → Sydney (3)."
+      }
+    },
+    "2021": {
+      "template": {
+        "id": "rugby_championship_2021",
+        "name": "The Rugby Championship 2021",
+        "order": 15.05,
+        "description": "The 2021 Rugby Championship as it was played: the real fixtures, dates and grounds, with each nation's season 2021 squad (or the nearest one in the data). Points: 4 a win, 2 a draw, a bonus point for 3 tries more than the opponent and for losing by 7 or less.",
+        "season": "2021",
+        "match_type": "tri_nations",
+        "variant": "rugby_championship",
+        "venue": "home",
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "margin": 3
+          },
+          "losing_bonus": {
+            "margin": 7
+          }
+        },
+        "tiebreakers": [
+          "wins",
+          "points_diff",
+          "tries_for",
+          "head_to_head",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            4
+          ],
+          "yellow_accumulation": 4,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "table",
+            "name": "Championship",
+            "kind": "round_robin",
+            "legs": 2,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Table"
+            },
+            "fixtures": [
+              {
+                "date": "2021-08-14",
+                "time": "17:05",
+                "group": "A",
+                "home": "1015",
+                "away": "1001",
+                "stadium": "58",
+                "venue": "Nelson Mandela Bay Stadium, Port Elizabeth",
+                "real_score": "32–12",
+                "real_tries": [
+                  3,
+                  0
+                ]
+              },
+              {
+                "date": "2021-08-14",
+                "time": "19:05",
+                "group": "A",
+                "home": "1010",
+                "away": "1002",
+                "stadium": "49",
+                "venue": "Eden Park, Auckland",
+                "real_score": "57–22",
+                "real_tries": [
+                  8,
+                  3
+                ]
+              },
+              {
+                "date": "2021-08-21",
+                "time": "17:05",
+                "group": "A",
+                "home": "1001",
+                "away": "1015",
+                "stadium": "58",
+                "venue": "Nelson Mandela Bay Stadium, Port Elizabeth",
+                "real_score": "10–29",
+                "real_tries": [
+                  1,
+                  2
+                ]
+              },
+              {
+                "date": "2021-09-05",
+                "time": "14:00",
+                "group": "A",
+                "home": "1002",
+                "away": "1010",
+                "stadium": "31",
+                "venue": "Perth Stadium, Perth",
+                "real_score": "21–38",
+                "real_tries": [
+                  3,
+                  6
+                ]
+              },
+              {
+                "date": "2021-09-12",
+                "time": "17:05",
+                "group": "A",
+                "home": "1010",
+                "away": "1001",
+                "stadium": "2",
+                "venue": "Robina Stadium, Gold Coast",
+                "real_score": "39–0",
+                "real_tries": [
+                  5,
+                  0
+                ]
+              },
+              {
+                "date": "2021-09-12",
+                "time": "20:05",
+                "group": "A",
+                "home": "1015",
+                "away": "1002",
+                "stadium": "2",
+                "venue": "Robina Stadium, Gold Coast",
+                "real_score": "26–28",
+                "real_tries": [
+                  3,
+                  1
+                ]
+              },
+              {
+                "date": "2021-09-18",
+                "time": "17:05",
+                "group": "A",
+                "home": "1002",
+                "away": "1015",
+                "stadium": "2",
+                "venue": "Lang Park, Brisbane",
+                "real_score": "30–17",
+                "real_tries": [
+                  4,
+                  1
+                ]
+              },
+              {
+                "date": "2021-09-18",
+                "time": "20:05",
+                "group": "A",
+                "home": "1001",
+                "away": "1010",
+                "stadium": "2",
+                "venue": "Lang Park, Brisbane",
+                "real_score": "13–36",
+                "real_tries": [
+                  1,
+                  5
+                ]
+              },
+              {
+                "date": "2021-09-25",
+                "time": "17:05",
+                "group": "A",
+                "home": "1010",
+                "away": "1015",
+                "stadium": "2",
+                "venue": "North Queensland Stadium, Townsville",
+                "real_score": "19–17",
+                "real_tries": [
+                  1,
+                  1
+                ]
+              },
+              {
+                "date": "2021-09-25",
+                "time": "20:05",
+                "group": "A",
+                "home": "1002",
+                "away": "1001",
+                "stadium": "2",
+                "venue": "North Queensland Stadium, Townsville",
+                "real_score": "27–8",
+                "real_tries": [
+                  3,
+                  1
+                ]
+              },
+              {
+                "date": "2021-10-02",
+                "time": "17:05",
+                "group": "A",
+                "home": "1001",
+                "away": "1002",
+                "stadium": "2",
+                "venue": "Robina Stadium, Gold Coast",
+                "real_score": "17–32",
+                "real_tries": [
+                  2,
+                  5
+                ]
+              },
+              {
+                "date": "2021-10-02",
+                "time": "20:05",
+                "group": "A",
+                "home": "1015",
+                "away": "1010",
+                "stadium": "2",
+                "venue": "Robina Stadium, Gold Coast",
+                "real_score": "31–29",
+                "real_tries": [
+                  2,
+                  3
+                ]
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "table": {
+              "A": [
+                "1001",
+                "1002",
+                "1010",
+                "1015"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "1010",
+          "table": [
+            "1010",
+            "1002",
+            "1015",
+            "1001"
+          ]
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2021_Rugby_Championship"
+        ],
+        "_venue_note": "Game stadium stand-ins: Nelson Mandela Bay Stadium, Port Elizabeth → Durban (58); North Queensland Stadium, Townsville → Brisbane (2); Robina Stadium, Gold Coast → Brisbane (2)."
+      }
+    },
+    "2022": {
+      "template": {
+        "id": "rugby_championship_2022",
+        "name": "The Rugby Championship 2022",
+        "order": 15.04,
+        "description": "The 2022 Rugby Championship as it was played: the real fixtures, dates and grounds, with each nation's season 2022 squad (or the nearest one in the data). Points: 4 a win, 2 a draw, a bonus point for 3 tries more than the opponent and for losing by 7 or less.",
+        "season": "2022",
+        "match_type": "tri_nations",
+        "variant": "rugby_championship",
+        "venue": "home",
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "margin": 3
+          },
+          "losing_bonus": {
+            "margin": 7
+          }
+        },
+        "tiebreakers": [
+          "wins",
+          "points_diff",
+          "tries_for",
+          "head_to_head",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            4
+          ],
+          "yellow_accumulation": 4,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "table",
+            "name": "Championship",
+            "kind": "round_robin",
+            "legs": 2,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Table"
+            },
+            "fixtures": [
+              {
+                "date": "2022-08-06",
+                "time": "16:05",
+                "group": "A",
+                "home": "1001",
+                "away": "1002",
+                "stadium": "43",
+                "venue": "Estadio Malvinas Argentinas, Mendoza",
+                "real_score": "26–41",
+                "real_tries": [
+                  2,
+                  5
+                ]
+              },
+              {
+                "date": "2022-08-06",
+                "time": "17:05",
+                "group": "A",
+                "home": "1015",
+                "away": "1010",
+                "stadium": "55",
+                "venue": "Mbombela Stadium, Mbombela",
+                "real_score": "26–10",
+                "real_tries": [
+                  2,
+                  1
+                ]
+              },
+              {
+                "date": "2022-08-13",
+                "time": "16:05",
+                "group": "A",
+                "home": "1001",
+                "away": "1002",
+                "stadium": "43",
+                "venue": "Estadio San Juan del Bicentenario, San Juan",
+                "real_score": "48–17",
+                "real_tries": [
+                  7,
+                  2
+                ]
+              },
+              {
+                "date": "2022-08-13",
+                "time": "17:05",
+                "group": "A",
+                "home": "1015",
+                "away": "1010",
+                "stadium": "57",
+                "venue": "Ellis Park Stadium, Johannesburg",
+                "real_score": "23–35",
+                "real_tries": [
+                  2,
+                  4
+                ]
+              },
+              {
+                "date": "2022-08-27",
+                "time": "15:00",
+                "group": "A",
+                "home": "1002",
+                "away": "1015",
+                "stadium": "1",
+                "venue": "Adelaide Oval, Adelaide",
+                "real_score": "25–17",
+                "real_tries": [
+                  3,
+                  2
+                ]
+              },
+              {
+                "date": "2022-08-27",
+                "time": "19:45",
+                "group": "A",
+                "home": "1010",
+                "away": "1001",
+                "stadium": "48",
+                "venue": "Rugby League Park, Christchurch",
+                "real_score": "18–25",
+                "real_tries": [
+                  2,
+                  1
+                ]
+              },
+              {
+                "date": "2022-09-03",
+                "time": "19:05",
+                "group": "A",
+                "home": "1010",
+                "away": "1001",
+                "stadium": "52",
+                "venue": "Waikato Stadium, Hamilton",
+                "real_score": "53–3",
+                "real_tries": [
+                  7,
+                  0
+                ]
+              },
+              {
+                "date": "2022-09-03",
+                "time": "19:35",
+                "group": "A",
+                "home": "1002",
+                "away": "1015",
+                "stadium": "3",
+                "venue": "Sydney Football Stadium, Sydney",
+                "real_score": "8–24",
+                "real_tries": [
+                  1,
+                  4
+                ]
+              },
+              {
+                "date": "2022-09-15",
+                "time": "19:45",
+                "group": "A",
+                "home": "1002",
+                "away": "1010",
+                "stadium": "1",
+                "venue": "Docklands Stadium, Melbourne",
+                "real_score": "37–39",
+                "real_tries": [
+                  4,
+                  5
+                ]
+              },
+              {
+                "date": "2022-09-17",
+                "time": "16:10",
+                "group": "A",
+                "home": "1001",
+                "away": "1015",
+                "stadium": "43",
+                "venue": "Estadio Libertadores de América, Buenos Aires",
+                "real_score": "20–36",
+                "real_tries": [
+                  2,
+                  5
+                ]
+              },
+              {
+                "date": "2022-09-24",
+                "time": "17:05",
+                "group": "A",
+                "home": "1015",
+                "away": "1001",
+                "stadium": "58",
+                "venue": "Kings Park Stadium, Durban",
+                "real_score": "38–21",
+                "real_tries": [
+                  5,
+                  3
+                ]
+              },
+              {
+                "date": "2022-09-24",
+                "time": "19:05",
+                "group": "A",
+                "home": "1010",
+                "away": "1002",
+                "stadium": "49",
+                "venue": "Eden Park, Auckland",
+                "real_score": "40–14",
+                "real_tries": [
+                  5,
+                  2
+                ]
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "table": {
+              "A": [
+                "1001",
+                "1002",
+                "1010",
+                "1015"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "1010",
+          "table": [
+            "1010",
+            "1015",
+            "1002",
+            "1001"
+          ]
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2022_Rugby_Championship"
+        ],
+        "_venue_note": "Game stadium stand-ins: Adelaide Oval, Adelaide → Australia Stadium (1); Docklands Stadium, Melbourne → Australia Stadium (1); Estadio Malvinas Argentinas, Mendoza → Buenos Aires (43); Estadio San Juan del Bicentenario, San Juan → Buenos Aires (43); Mbombela Stadium, Mbombela → Pretoria (55)."
+      }
+    },
+    "2023": {
+      "template": {
+        "id": "rugby_championship_2023",
+        "name": "The Rugby Championship 2023",
+        "order": 15.03,
+        "description": "The 2023 Rugby Championship as it was played (single round, World Cup year): the real fixtures, dates and grounds, with each nation's season 2023 squad (or the nearest one in the data). Points: 4 a win, 2 a draw, a bonus point for 3 tries more than the opponent and for losing by 7 or less.",
+        "season": "2023",
+        "match_type": "tri_nations",
+        "variant": "rugby_championship",
+        "venue": "home",
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "margin": 3
+          },
+          "losing_bonus": {
+            "margin": 7
+          }
+        },
+        "tiebreakers": [
+          "wins",
+          "points_diff",
+          "tries_for",
+          "head_to_head",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            4
+          ],
+          "yellow_accumulation": 4,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "table",
+            "name": "Championship",
+            "kind": "round_robin",
+            "legs": 1,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Table"
+            },
+            "fixtures": [
+              {
+                "date": "2023-07-08",
+                "time": "16:10",
+                "group": "A",
+                "home": "1001",
+                "away": "1010",
+                "stadium": "43",
+                "venue": "Estadio Malvinas Argentinas, Mendoza",
+                "real_score": "12–41",
+                "real_tries": [
+                  2,
+                  7
+                ]
+              },
+              {
+                "date": "2023-07-08",
+                "time": "17:05",
+                "group": "A",
+                "home": "1015",
+                "away": "1002",
+                "stadium": "55",
+                "venue": "Loftus Versfeld Stadium, Pretoria",
+                "real_score": "43–12",
+                "real_tries": [
+                  6,
+                  2
+                ]
+              },
+              {
+                "date": "2023-07-15",
+                "time": "19:05",
+                "group": "A",
+                "home": "1010",
+                "away": "1015",
+                "stadium": "49",
+                "venue": "Mount Smart Stadium, Auckland",
+                "real_score": "35–20",
+                "real_tries": [
+                  4,
+                  3
+                ]
+              },
+              {
+                "date": "2023-07-15",
+                "time": "19:45",
+                "group": "A",
+                "home": "1002",
+                "away": "1001",
+                "stadium": "3",
+                "venue": "Western Sydney Stadium, Sydney",
+                "real_score": "31–34",
+                "real_tries": [
+                  4,
+                  4
+                ]
+              },
+              {
+                "date": "2023-07-29",
+                "time": "17:05",
+                "group": "A",
+                "home": "1015",
+                "away": "1001",
+                "stadium": "57",
+                "venue": "Ellis Park Stadium, Johannesburg",
+                "real_score": "22–21",
+                "real_tries": [
+                  3,
+                  2
+                ]
+              },
+              {
+                "date": "2023-07-29",
+                "time": "19:45",
+                "group": "A",
+                "home": "1002",
+                "away": "1010",
+                "stadium": "1",
+                "venue": "Melbourne Cricket Ground, Melbourne",
+                "real_score": "7–38",
+                "real_tries": [
+                  1,
+                  6
+                ]
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "table": {
+              "A": [
+                "1001",
+                "1002",
+                "1010",
+                "1015"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "1010",
+          "table": [
+            "1010",
+            "1015",
+            "1001",
+            "1002"
+          ]
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2023_Rugby_Championship"
+        ],
+        "_venue_note": "Game stadium stand-ins: Estadio Malvinas Argentinas, Mendoza → Buenos Aires (43); Melbourne Cricket Ground, Melbourne → Australia Stadium (1)."
+      }
+    },
+    "2024": {
+      "template": {
+        "id": "rugby_championship_2024",
+        "name": "The Rugby Championship 2024",
+        "order": 15.02,
+        "description": "The 2024 Rugby Championship as it was played: the real fixtures, dates and grounds, with each nation's season 2024 squad (or the nearest one in the data). Points: 4 a win, 2 a draw, a bonus point for 3 tries more than the opponent and for losing by 7 or less.",
+        "season": "2024",
+        "match_type": "tri_nations",
+        "variant": "rugby_championship",
+        "venue": "home",
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "margin": 3
+          },
+          "losing_bonus": {
+            "margin": 7
+          }
+        },
+        "tiebreakers": [
+          "wins",
+          "points_diff",
+          "tries_for",
+          "head_to_head",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            4
+          ],
+          "yellow_accumulation": 4,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "table",
+            "name": "Championship",
+            "kind": "round_robin",
+            "legs": 2,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Table"
+            },
+            "fixtures": [
+              {
+                "date": "2024-08-10",
+                "time": "14:45",
+                "group": "A",
+                "home": "1002",
+                "away": "1015",
+                "stadium": "2",
+                "venue": "Suncorp Stadium, Brisbane",
+                "real_score": "7–33",
+                "real_tries": [
+                  1,
+                  5
+                ]
+              },
+              {
+                "date": "2024-08-10",
+                "time": "19:05",
+                "group": "A",
+                "home": "1010",
+                "away": "1001",
+                "stadium": "50",
+                "venue": "Sky Stadium, Wellington",
+                "real_score": "30–38",
+                "real_tries": [
+                  3,
+                  4
+                ]
+              },
+              {
+                "date": "2024-08-17",
+                "time": "19:05",
+                "group": "A",
+                "home": "1010",
+                "away": "1001",
+                "stadium": "49",
+                "venue": "Eden Park, Auckland",
+                "real_score": "42–10",
+                "real_tries": [
+                  6,
+                  1
+                ]
+              },
+              {
+                "date": "2024-08-17",
+                "time": "19:45",
+                "group": "A",
+                "home": "1002",
+                "away": "1015",
+                "stadium": "31",
+                "venue": "Optus Stadium, Perth",
+                "real_score": "12–30",
+                "real_tries": [
+                  0,
+                  4
+                ]
+              },
+              {
+                "date": "2024-08-31",
+                "time": "17:00",
+                "group": "A",
+                "home": "1015",
+                "away": "1010",
+                "stadium": "57",
+                "venue": "Ellis Park Stadium, Johannesburg",
+                "real_score": "31–27",
+                "real_tries": [
+                  3,
+                  4
+                ]
+              },
+              {
+                "date": "2024-08-31",
+                "time": "19:00",
+                "group": "A",
+                "home": "1001",
+                "away": "1002",
+                "stadium": "43",
+                "venue": "Estadio Jorge Luis Hirschi, La Plata",
+                "real_score": "19–20",
+                "real_tries": [
+                  1,
+                  2
+                ]
+              },
+              {
+                "date": "2024-09-07",
+                "time": "16:00",
+                "group": "A",
+                "home": "1001",
+                "away": "1002",
+                "stadium": "43",
+                "venue": "Estadio Brigadier General Estanislao López, Santa Fe",
+                "real_score": "67–27",
+                "real_tries": [
+                  9,
+                  3
+                ]
+              },
+              {
+                "date": "2024-09-07",
+                "time": "17:00",
+                "group": "A",
+                "home": "1015",
+                "away": "1010",
+                "stadium": "56",
+                "venue": "Cape Town Stadium, Cape Town",
+                "real_score": "18–12",
+                "real_tries": [
+                  2,
+                  0
+                ]
+              },
+              {
+                "date": "2024-09-21",
+                "time": "15:45",
+                "group": "A",
+                "home": "1002",
+                "away": "1010",
+                "stadium": "1",
+                "venue": "Accor Stadium, Sydney",
+                "real_score": "28–31",
+                "real_tries": [
+                  4,
+                  4
+                ]
+              },
+              {
+                "date": "2024-09-21",
+                "time": "18:00",
+                "group": "A",
+                "home": "1001",
+                "away": "1015",
+                "stadium": "43",
+                "venue": "Estadio Único Madre de Ciudades, Santiago del Estero",
+                "real_score": "29–28",
+                "real_tries": [
+                  4,
+                  3
+                ]
+              },
+              {
+                "date": "2024-09-28",
+                "time": "17:00",
+                "group": "A",
+                "home": "1015",
+                "away": "1001",
+                "stadium": "55",
+                "venue": "Mbombela Stadium, Mbombela",
+                "real_score": "48–7",
+                "real_tries": [
+                  7,
+                  1
+                ]
+              },
+              {
+                "date": "2024-09-28",
+                "time": "19:05",
+                "group": "A",
+                "home": "1010",
+                "away": "1002",
+                "stadium": "50",
+                "venue": "Sky Stadium, Wellington",
+                "real_score": "33–13",
+                "real_tries": [
+                  5,
+                  1
+                ]
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "table": {
+              "A": [
+                "1001",
+                "1002",
+                "1010",
+                "1015"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "1015",
+          "table": [
+            "1015",
+            "1010",
+            "1001",
+            "1002"
+          ]
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2024_Rugby_Championship"
+        ],
+        "_venue_note": "Game stadium stand-ins: Estadio Brigadier General Estanislao López, Santa Fe → Buenos Aires (43); Estadio Jorge Luis Hirschi, La Plata → Buenos Aires (43); Estadio Único Madre de Ciudades, Santiago del Estero → Buenos Aires (43); Mbombela Stadium, Mbombela → Pretoria (55)."
+      }
+    },
+    "2025": {
+      "template": {
+        "id": "rugby_championship_2025",
+        "name": "The Rugby Championship 2025",
+        "order": 15.01,
+        "description": "The 2025 Rugby Championship as it was played: the real fixtures, dates and grounds, with each nation's season 2025 squad (or the nearest one in the data). Points: 4 a win, 2 a draw, a bonus point for 3 tries more than the opponent and for losing by 7 or less.",
+        "season": "2025",
+        "match_type": "tri_nations",
+        "variant": "rugby_championship",
+        "venue": "home",
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "margin": 3
+          },
+          "losing_bonus": {
+            "margin": 7
+          }
+        },
+        "tiebreakers": [
+          "wins",
+          "points_diff",
+          "tries_for",
+          "head_to_head",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            4
+          ],
+          "yellow_accumulation": 4,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "table",
+            "name": "Championship",
+            "kind": "round_robin",
+            "legs": 2,
+            "match_subtype": "none",
+            "group_names": {
+              "A": "Table"
+            },
+            "fixtures": [
+              {
+                "date": "2025-08-16",
+                "time": "17:10",
+                "group": "A",
+                "home": "1015",
+                "away": "1002",
+                "stadium": "57",
+                "venue": "Ellis Park Stadium, Johannesburg",
+                "real_score": "22–38",
+                "real_tries": [
+                  3,
+                  6
+                ]
+              },
+              {
+                "date": "2025-08-16",
+                "time": "18:10",
+                "group": "A",
+                "home": "1001",
+                "away": "1010",
+                "stadium": "43",
+                "venue": "Estadio Mario Alberto Kempes, Córdoba",
+                "real_score": "24–41",
+                "real_tries": [
+                  3,
+                  6
+                ]
+              },
+              {
+                "date": "2025-08-23",
+                "time": "17:10",
+                "group": "A",
+                "home": "1015",
+                "away": "1002",
+                "stadium": "56",
+                "venue": "DHL Stadium, Cape Town",
+                "real_score": "30–22",
+                "real_tries": [
+                  3,
+                  3
+                ]
+              },
+              {
+                "date": "2025-08-23",
+                "time": "18:10",
+                "group": "A",
+                "home": "1001",
+                "away": "1010",
+                "stadium": "43",
+                "venue": "José Amalfitani Stadium, Buenos Aires",
+                "real_score": "29–23",
+                "real_tries": [
+                  2,
+                  3
+                ]
+              },
+              {
+                "date": "2025-09-06",
+                "time": "14:30",
+                "group": "A",
+                "home": "1002",
+                "away": "1001",
+                "stadium": "2",
+                "venue": "North Queensland Stadium, Townsville",
+                "real_score": "28–24",
+                "real_tries": [
+                  4,
+                  2
+                ]
+              },
+              {
+                "date": "2025-09-06",
+                "time": "19:05",
+                "group": "A",
+                "home": "1010",
+                "away": "1015",
+                "stadium": "49",
+                "venue": "Eden Park, Auckland",
+                "real_score": "24–17",
+                "real_tries": [
+                  3,
+                  2
+                ]
+              },
+              {
+                "date": "2025-09-13",
+                "time": "14:00",
+                "group": "A",
+                "home": "1002",
+                "away": "1001",
+                "stadium": "3",
+                "venue": "Sydney Football Stadium, Sydney",
+                "real_score": "26–28",
+                "real_tries": [
+                  4,
+                  1
+                ]
+              },
+              {
+                "date": "2025-09-13",
+                "time": "19:05",
+                "group": "A",
+                "home": "1010",
+                "away": "1015",
+                "stadium": "50",
+                "venue": "Wellington Regional Stadium, Wellington",
+                "real_score": "10–43",
+                "real_tries": [
+                  1,
+                  6
+                ]
+              },
+              {
+                "date": "2025-09-27",
+                "time": "17:05",
+                "group": "A",
+                "home": "1010",
+                "away": "1002",
+                "stadium": "49",
+                "venue": "Eden Park, Auckland",
+                "real_score": "33–24",
+                "real_tries": [
+                  4,
+                  3
+                ]
+              },
+              {
+                "date": "2025-09-27",
+                "time": "17:10",
+                "group": "A",
+                "home": "1015",
+                "away": "1001",
+                "stadium": "58",
+                "venue": "Kings Park Stadium, Durban",
+                "real_score": "67–30",
+                "real_tries": [
+                  9,
+                  3
+                ]
+              },
+              {
+                "date": "2025-10-04",
+                "time": "14:00",
+                "group": "A",
+                "home": "1001",
+                "away": "1015",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London, England",
+                "real_score": "27–29",
+                "real_tries": [
+                  3,
+                  4
+                ]
+              },
+              {
+                "date": "2025-10-04",
+                "time": "17:45",
+                "group": "A",
+                "home": "1002",
+                "away": "1010",
+                "stadium": "31",
+                "venue": "Perth Stadium, Perth",
+                "real_score": "14–28",
+                "real_tries": [
+                  1,
+                  4
+                ]
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "table": {
+              "A": [
+                "1001",
+                "1002",
+                "1010",
+                "1015"
+              ]
+            }
+          }
+        },
+        "history": {
+          "_comment": "What really happened — reference only, the engine ignores it.",
+          "champion": "1015",
+          "table": [
+            "1015",
+            "1010",
+            "1002",
+            "1001"
+          ]
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2025_Rugby_Championship"
+        ],
+        "_venue_note": "Game stadium stand-ins: Estadio Mario Alberto Kempes, Córdoba → Buenos Aires (43); North Queensland Stadium, Townsville → Brisbane (2)."
+      }
+    }
+  }
 }

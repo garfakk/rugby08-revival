@@ -436,6 +436,8 @@ def ref_label(t, ref) -> str:
     if ":" not in ref:
         return t.team_name(ref)
     sid, rest = ref.split(":", 1)
+    if rest[:1] == "S" and rest[1:].isdigit():
+        return f"Seed {rest[1:]}"
     if rest.startswith("P") and "#" in rest:
         pos, n = rest[1:].split("#")
         place = {"1": "group winner", "2": "runner-up", "3": "third place"}.get(pos, f"#{pos}")

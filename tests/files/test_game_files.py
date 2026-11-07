@@ -67,8 +67,9 @@ def test_weather_defaults(game_dir, match_data):
 
 
 def test_advanced_fields_omitted_by_default(game_dir, match_data):
-    _, root = write_mission(game_dir, match_data)
-    for attr in ("anthem", "haka0", "haka1", "trophy_lift", "trophy_lifter", "stadium_flags", "kickassist",
+    # no anthem / intro: two teams without a stock anthem
+    _, root = write_mission(game_dir, dict(match_data, anthem=None, intro=None))
+    for attr in ("anthem", "intro", "haka0", "haka1", "trophy_lift", "trophy_lifter", "stadium_flags", "kickassist",
                  "cpu_lineout_keep", "cpu_jackal"):
         assert attr not in root.attrib
     assert root.find("EVENTS") is None
@@ -84,7 +85,7 @@ def test_trophy_lifter_written_with_the_trophy(game_dir, match_data):
 
 
 def test_advanced_fields_written(game_dir, match_data):
-    md = dict(match_data, anthem="home", haka_away=True, trophy_lift="on", stadium_flags=False,
+    md = dict(match_data, anthem=13, intro="anthem", haka_away=True, trophy_lift="on", stadium_flags=False,
               kick_assist=True, cpu_edge={"cpu_lineout_keep": 97, "cpu_jackal": 25,
                                                    "cpu_fh_kick": "65,40,15,5"},
               precip_mode="snow", snow_intensity=12.0, breath=True,
@@ -99,7 +100,7 @@ def test_advanced_fields_written(game_dir, match_data):
               cards=[{"team": "away", "jersey": "12", "type": "yellow", "minute": 46},
                      {"team": "home", "jersey": None}])
     _, root = write_mission(game_dir, md)
-    assert root.get("anthem") == "home" and root.get("haka1") == "1"
+    assert root.get("anthem") == "13" and root.get("intro") == "anthem" and root.get("haka1") == "1"
     assert root.get("stadium_flags") == "off" and root.get("kickassist") == "on"
     assert root.get("cpu_lineout_keep") == "97" and root.get("cpu_jackal") == "25"
     assert root.get("cpu_fh_kick") == "65,40,15,5"

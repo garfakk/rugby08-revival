@@ -114,10 +114,6 @@ def match_report(t, f) -> str:
     if not r:
         return "Not played yet."
     lines = [f"{t.team_name(f.home)} {r.score_text()} {t.team_name(f.away)}"]
-    if r.source == "game":
-        lines.append("Played in the game.")
-    elif r.source == "forfeit":
-        lines.append("Awarded (forfeit).")
     for side in (r.home, r.away):
         parts = []
         for key, label in (("tries", "Tries"), ("conversions", "Cons"), ("penalties", "Pens"),

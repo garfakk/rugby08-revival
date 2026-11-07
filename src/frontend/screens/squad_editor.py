@@ -29,6 +29,7 @@ from ui.theme import (
 )
 
 # Shared with the team editor's squad tab.
+from ui.team_sheet import is_star  # noqa: E402
 from ui.team_sheet import (   # noqa: E402
     POSITION_FOR_NUMBER, SHEET_ROWS, STARTERS, SUBSTITUTES, SQUAD_SIZE,
     POSITION_NAMES, ACCEPTED_POSITIONS, SlotAvatar, SubChip, StatsPanel,
@@ -526,7 +527,8 @@ class SquadEditorScreen(Screen):
 
         self._picker_slot = number
         self.picker.open_for(title, self._picker_entries(number),
-                             self.assignment.get(number), taken_by, anchor, self)
+                             self.assignment.get(number), taken_by, anchor, self,
+                             stars=lambda pid: is_star(self.players.get(pid)))
         self._update_hints()
 
     def _on_picker_pick(self, pid):

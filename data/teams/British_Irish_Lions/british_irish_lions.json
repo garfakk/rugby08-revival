@@ -16,8 +16,8 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2009/home_front.png",
-     "backKitFile": "kits_2009/home_back/home_back_%.png",
+     "frontKitFile": "kits_2009/home_front.webp",
+     "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2009/home_preview.png",
      "color": "#a71917"
     }
@@ -97,8 +97,8 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2009/home_front.png",
-     "backKitFile": "kits_2009/home_back/home_back_%.png",
+     "frontKitFile": "kits_2009/home_front.webp",
+     "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2009/home_preview.png",
      "color": "#a71917"
     }
@@ -183,14 +183,14 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2017/home_front.png",
-     "backKitFile": "kits_2017/home_back/home_back_%.png",
+     "frontKitFile": "kits_2017/home_front.webp",
+     "backKitFile": "kits_2017/home_back.webp",
      "previewFile": "kits_2017/home_preview.png",
      "color": "#b60202"
     },
     "away": {
-     "frontKitFile": "kits_2017/away_front.png",
-     "backKitFile": "kits_2017/away_back/away_back_%.png",
+     "frontKitFile": "kits_2017/away_front.webp",
+     "backKitFile": "kits_2017/away_back.webp",
      "previewFile": "kits_2017/away_preview.png",
      "color": "#0c2135"
     }
@@ -277,8 +277,8 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2021/home_front.png",
-     "backKitFile": "kits_2021/home_back/home_back_%.png",
+     "frontKitFile": "kits_2021/home_front.webp",
+     "backKitFile": "kits_2021/home_back.webp",
      "previewFile": "kits_2021/home_preview.png",
      "color": "#6c0a0e"
     }
@@ -359,10 +359,20 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2025/home_front.png",
+     "frontKitFile": "kits_2025/home_front.webp",
      "backKitFile": "kits_2025/home_back.webp",
      "previewFile": "kits_2025/home_preview.png",
-     "color": "#891220"
+     "color": "#891220",
+     "shirtName": {
+      "area": [
+       0.1067,
+       0.2313,
+       0.7867,
+       0.0974
+      ],
+      "color": "#e6e6e6",
+      "size": 33
+     }
     }
    },
    "roles": {
@@ -429,7 +439,10 @@
     "10433",
     "11816"
    ],
-   "group": "representatives"
+   "group": "representatives",
+   "shirtNames": {
+    "enabled": true
+   }
   }
  }
 }

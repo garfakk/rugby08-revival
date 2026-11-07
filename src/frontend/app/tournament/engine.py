@@ -156,9 +156,14 @@ def create_tournament(ds, template, season, participants=None, humans=(), option
     for spec in template.get("stages", []):
         stage = scheduler.build_stage(spec, participants.get(spec["id"], {}))
         t.stages.append(stage)
+        if stage.kind == "knockout" and participants.get(spec["id"]):
+            # a cup's draw: the seeds its first round names ("cup:S3")
+            t.components.setdefault("draws", {})[stage.id] = [
+                tid for teams in participants[spec["id"]].values() for tid in teams]
         day = scheduler.schedule_stage(t, stage, day)
     if t.stages:
         t.stages[0].status = "active"
+    resolve_refs(t)           # seeds are known from the start
     scheduler.assign_stadiums(t, list(ds.stadiums))
     t.components["stadium_ids"] = list(ds.stadiums)
     weather.keep_stadiums(t, ds)
@@ -188,6 +193,9 @@ def resolve_ref(t, ref):
     if ":" not in ref:
         return ref if ref in t.teams else None
     sid, rest = ref.split(":", 1)
+    seed = _seed(t, sid, rest)
+    if seed is not False:
+        return seed
     stage = t.stage(sid)
     if not stage or stage.status != "done":
         return None
@@ -203,6 +211,16 @@ def resolve_ref(t, ref):
     tab = standings.group_table(t, stage, group)
     pos = int(pos)
     return tab[pos - 1].team_id if len(tab) >= pos else None
+
+
+def _seed(t, sid, rest):
+    """"<stage>:S<n>": the n-th team of a knockout stage's draw (a cup); None
+    when the draw is shorter, False when the ref is not a seed."""
+    draw = (t.components.get("draws") or {}).get(sid)
+    if draw is None or not rest.startswith("S") or not rest[1:].isdigit():
+        return False
+    n = int(rest[1:])
+    return draw[n - 1] if 0 < n <= len(draw) and draw[n - 1] in t.teams else None
 
 
 def resolve_refs(t) -> None:
@@ -479,7 +497,10 @@ def _could_be(t, ref, team_id) -> bool:
             return src.involves(team_id)
         return any(_could_be(t, r, team_id) for r in (src.home_ref, src.away_ref) if r)
     if ":" in ref:
-        sid = ref.split(":", 1)[0]
+        sid, rest = ref.split(":", 1)
+        seed = _seed(t, sid, rest)
+        if seed is not False:
+            return seed == team_id
         stage = t.stage(sid)
         if stage and stage.status != "done":
             return any(team_id in g.teams for g in stage.groups)

@@ -21,14 +21,15 @@ from ui.theme import BG_BASE, ACCENT, FG_SECONDARY, FG_MUTED
 
 class ToolsScreen(Screen):
     def __init__(self, ds, on_back, on_team_editor, on_player_editor, on_import=None,
-                 on_challenge_editor=None, on_edits=None, on_updates=None):
+                 on_challenge_editor=None, on_edits=None, on_updates=None,
+                 on_tournament_editor=None):
         super().__init__(on_back=on_back)
         self.ds = ds
         self._build(on_team_editor, on_player_editor, on_import, on_challenge_editor, on_edits,
-                    on_updates)
+                    on_updates, on_tournament_editor)
 
     def _build(self, on_team_editor, on_player_editor, on_import=None, on_challenge_editor=None,
-               on_edits=None, on_updates=None):
+               on_edits=None, on_updates=None, on_tournament_editor=None):
         root = QVBoxLayout(self)
         root.setContentsMargins(0, 0, 0, 0)
         root.setSpacing(0)
@@ -50,11 +51,12 @@ class ToolsScreen(Screen):
             ("MY EDITS", "", on_edits, on_edits is None),
             ("UPDATES", "", on_updates, on_updates is None),
         ]
+        if on_tournament_editor is not None:
+            items.insert(2, ("TOURNAMENT EDITOR", "", on_tournament_editor, False))
         if config.developper_mode:
             items.extend([
                 ("IMPORT ROSTER", "", on_import, on_import is None),
                 ("CHALLENGE EDITOR", "", on_challenge_editor, on_challenge_editor is None),
-                ("TOURNAMENT EDITOR", "", None, True),
             ])
         self.edits_tile = None
         for title, subtitle, slot, soon in items:

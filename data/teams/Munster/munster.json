@@ -1210,8 +1210,8 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2013/home_front.png",
-     "backKitFile": "kits_2013/home_back/home_back_%.png",
+     "frontKitFile": "kits_2013/home_front.webp",
+     "backKitFile": "kits_2013/home_back.webp",
      "previewFile": "kits_2013/home_preview.png",
      "color": "#720d15",
      "model3d": {
@@ -1220,8 +1220,8 @@
      }
     },
     "away": {
-     "frontKitFile": "kits_2013/away_front.png",
-     "backKitFile": "kits_2013/away_back/away_back_%.png",
+     "frontKitFile": "kits_2013/away_front.webp",
+     "backKitFile": "kits_2013/away_back.webp",
      "previewFile": "kits_2013/away_preview.png",
      "color": "#0f1214",
      "model3d": {

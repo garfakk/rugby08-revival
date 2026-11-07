@@ -450,7 +450,8 @@ class MatchConfig:
     controllers: dict = field(default_factory=dict)
     # In the game, no device can join a team given no human above (reR08
     # controller_lock: the pause-menu controller screen can't move anyone to
-    # the opponent). Tournament and challenge matches; quick match leaves it off.
+    # the opponent). Tournament (one managed side) and challenge matches; quick
+    # match and tournament matches between two managed teams leave it off.
     lock_controllers: bool = False
 
     # ── Advanced/.mis fields (config.advanced_user) ─────────────────────
@@ -468,11 +469,14 @@ class MatchConfig:
     precip_mode: str = "stock"             # stock, none, rain, snow — overrides `rain` above when set
     snow_intensity: Optional[float] = None  # 0..26, reR08 ENABLE_SNOWFX
     breath: Optional[bool] = None          # None=stock, reR08 ENABLE_BREATH otherwise
-    anthem: str = "stock"                  # stock, home, away — reR08 ENABLE_ANTHEM
+    anthem: str = "auto"                   # auto, home, away, off — gsv.anthem_choices
     haka_home: bool = False                # reR08 ENABLE_HAKA
     haka_away: bool = False
     trophy_lift: str = "stock"             # stock, off, on, <trophy name> — reR08 ENABLE_TROPHY_LIFT
     trophy_lifter: str = ""                # who lifts per result, "" = the winner (tournament/trophy.py)
+    # the competition's own trophy (competition_branding.apply): {"ceremony":
+    # a trophy_lift_choices name, "model"/"texture": paths under mod data}
+    trophy: dict = field(default_factory=dict)
     stadium_flags: Optional[bool] = None   # None=stock, reR08 ENABLE_STADIUM_FLAGS otherwise
     kick_assist: bool = False              # reR08 ENABLE_EASY_GOALKICK (needs wind)
 

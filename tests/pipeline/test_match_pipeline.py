@@ -303,3 +303,13 @@ def test_world_cup_stadium_flags_default_on(ds, match_type, flags, expected):
     cfg = make_match_config(ds)
     cfg.match_type, cfg.stadium_flags = match_type, flags
     assert build_match_data(ds, cfg)["stadium_flags"] is expected
+
+
+def test_tournament_both_sides_managed_unlocks_controllers(ds):
+    import copy
+    t = engine.create_tournament(ds, copy.deepcopy(TEMPLATE), "2024", humans=["10002", "10001"], seed=5)
+    fixture = next(f for f in t.fixtures if {f.home, f.away} == {"10002", "10001"})
+    cfg = bridge.to_match_config(ds, t, fixture)
+    assert cfg.lock_controllers is False              # pause menu can move a device to either team
+    assert {c["zone"] for c in cfg.controllers.values()} == {"home", "away"}
+    assert build_match_data(ds, cfg)["lock_controllers"] is False

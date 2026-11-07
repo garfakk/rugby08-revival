@@ -285,6 +285,21 @@ class TournamentDashboardScreen(Screen):
         hv.addLayout(row)
         left.addWidget(self.hero)
 
+        # the last round played when you had no match in it (a bye, or
+        # the rounds after you are out): its results, in place of a recap
+        w, lv = section("last round")
+        self.rest_section = w
+        self.rest_title = w.title
+        self.rest_grid = QGridLayout()
+        self.rest_grid.setHorizontalSpacing(10)
+        self.rest_grid.setVerticalSpacing(10)
+        lv.addLayout(self.rest_grid)
+        self.rest_more = compact_button("ALL MATCHES  →", "ghost")
+        self.rest_more.clicked.connect(lambda: self._open_view(FIXTURES))
+        self.focus.register(self.rest_more)
+        lv.addWidget(self.rest_more, alignment=Qt.AlignRight)
+        left.addWidget(w)
+
         # the other matches of the next match's round
         w, lv = section("this round")
         self.round_section = w
@@ -650,7 +665,7 @@ class TournamentDashboardScreen(Screen):
 
         self._refresh_side()
 
-        cards = self._refresh_round(upcoming if not t.finished else None)
+        cards = self._refresh_rest_round() + self._refresh_round(upcoming if not t.finished else None)
 
         clear_layout(self.news_list)
         news = list(reversed(t.news))[:HEADLINES_SHOWN]
@@ -665,6 +680,42 @@ class TournamentDashboardScreen(Screen):
         if animate and self.tabs.index() == HOME:
             motion.fade_in(self.hero, ms=260)
             motion.stagger_in(cards + items, start=120)
+
+    def rest_day(self):
+        """The last round played, when none of your teams had a match in
+        it (None otherwise, or with no team managed)."""
+        t = self.t
+        humans = set(self._human_ids())
+        played = [f.day for f in t.fixtures if f.played]
+        if not humans or not played or t.finished:
+            return None
+        day = max(played)
+        if any(f.day == day and (f.home in humans or f.away in humans) for f in t.fixtures):
+            return None
+        return day
+
+    def _refresh_rest_round(self):
+        """Home's "no match for you" section: the results of the last round
+        when you had no match in it."""
+        t = self.t
+        clear_layout(self.rest_grid)
+        day = self.rest_day()
+        games = [f for f in t.fixtures if day is not None and f.day == day and f.played]
+        self.rest_section.setVisible(bool(games))
+        if not games:
+            return []
+        self.rest_title.set_title(f"{report.round_title(t, day)} · no match for you")
+        self.rest_title.set_right(f"{len(games)} matches" if len(games) > ROUND_SHOWN else "")
+        self.rest_more.setVisible(len(games) > ROUND_SHOWN)
+        humans = set(self._human_ids())
+        cards = []
+        for i, g in enumerate(games[:ROUND_SHOWN]):
+            card = ScoreCard(self.ds, t, g, highlight=humans, caption=_without_round(g))
+            card.activated.connect(lambda fid=g.id: self._report(fid))
+            self._register_dynamic(card)
+            self.rest_grid.addWidget(card, i // 2, i % 2)
+            cards.append(card)
+        return cards
 
     def _refresh_round(self, f):
         """The other matches of `f`'s round (its earlier kick-offs with their
@@ -1253,19 +1304,6 @@ def _ref(t, ref):
     return ref_label(t, ref)
 
 
-def _source_label(r):
-    """How a result came about, for the report's meta line."""
-    real = (r.extra or {}).get("reality") or {}
-    if r.source == "real":
-        if real.get("cancelled"):
-            return "real result: cancelled, draw awarded"
-        return "real result" + (" (scorers generated)" if real.get("scorers") == "generated" else "")
-    if real.get("diverged"):
-        return "simulated (not played in reality)"
-    return {"game": "played in the game", "forfeit": "awarded (forfeit)",
-            "manual": "entered manually"}.get(r.source, "simulated")
-
-
 class MatchReportView(QWidget):
     """A played match: crests, score, scorers side by side, cards, injuries,
     player of the match, then the match statistics (scoring, kicks,
@@ -1303,8 +1341,7 @@ class MatchReportView(QWidget):
                 top.addWidget(score)
         v.addLayout(top)
         meta = [calendar.short_date(calendar.fixture_date(t, f)), report.venue_name(ds, f),
-                weather.forecast(t, f, ds)["summary"] if f.stadium_id else "",
-                _source_label(r)]
+                weather.forecast(t, f, ds)["summary"] if f.stadium_id else ""]
         if r.decided_by:
             meta.append(r.score_text().split(" ", 1)[-1].strip("()"))
         meta_label = eyebrow_label("  ·  ".join(m for m in meta if m), color=FG_TERTIARY, size=10)

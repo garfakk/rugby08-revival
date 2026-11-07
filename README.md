@@ -38,7 +38,7 @@ Already available:
 - Legend and immortal difficulties
 - Team and player editors, with your edits kept apart from the data pack
 
-The kits/heads/textures used are from [MUP Patch 2009](https://www.therugbyforum.com/threads/mup-v-1-2-season-2008-09.15872), [TRF Patch 10](https://www.therugbyforum.com/threads/trf-rugby-10-patch.18881) and [jim546](https://github.com/jimw546/jimw546-s-Rugby-08-stuff)'s creations for this demo, a big thanks for their work.
+The kits, heads and textures come from the work of [The Rugby Forum](https://www.therugbyforum.com/forums/ea-rugby-08.92) community: jim546, ama1 (TRF24 Mod), peter83, the TRF Patch 10 and MUP Patch 2009 teams, the Rugby 08 Original Update Workshop, and many more. See [CREDITS.MD](src/CREDITS.MD) for the full list, which is also shown in the mod under About. A big thanks for their work.
 
 ## Installation
 You can find the installer exe in the releases. Alternatively you can run the program directly with python:

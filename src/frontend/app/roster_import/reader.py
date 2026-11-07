@@ -12,8 +12,8 @@ Two containers hold the same roster:
     sections are simply in the other order.
 
 Team names are not stored in a roster (they live in the game's string
-files); the stock names come from Rugeditor's teams.csv, bundled in
-assets/data. Team block index + 1 is the game's team id.
+files); the stock names come from Rugeditor's teams.csv, bundled as
+assets/stock_game/teams.csv. Team block index + 1 is the game's team id.
 """
 import csv
 import os
@@ -60,7 +60,7 @@ ROLE_KEYS = ["captain", "viceCaptain", "longGK", "shortGK", "longPunt", "shortPu
 TEAM_PERFORMANCE = ["attack", "defence", "scrums", "lineouts", "rucking", "kicking", "technique",
                     "stamina", "flair", "rating"]
 
-TEAMS_CSV = os.path.join(assets_directory(), "data", "rugby08_teams.csv")
+TEAMS_CSV = os.path.join(assets_directory(), "stock_game", "teams.csv")
 
 
 class RosterError(Exception):

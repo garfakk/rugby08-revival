@@ -54,7 +54,13 @@ class TournamentDataLoader:
            "logo_frontend": "...",               # optional PNG for the menus only (the
                                                  # in-game "logo" when absent), as teams'
                                                  # logos.frontend
-           "template": {...}}                       # optional, app/tournament/formats.py
+           "template": {...},                       # optional, app/tournament/formats.py
+           "trophy": {"ceremony": "TenNations",     # optional: the competition's own trophy,
+                      "model": "assets/trophy/x.o",  # lifted in that reR08 ceremony, its
+                      "texture": "assets/trophy/x.fsh"},  # files standing in for the stock
+                                                     # one (gsv.trophy_files) that match only
+           "disabled": true}                        # optional: its templates are not offered
+                                                    # (its textures still are)
 
           {"id": "world_cup", "name": "World Cup", "seasonal": true,
            "seasons": {"2023": {"ball": "...", "logo": "...", "template": {...}}}}

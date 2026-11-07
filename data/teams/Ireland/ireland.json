@@ -214,6 +214,15 @@
        "frontKitFile": "kits_2024/home_wc_front.webp",
        "previewFile": "kits_2024/home_wc_preview.png"
       }
+     },
+     "shirtName": {
+      "area": [
+       0.09,
+       0.2637,
+       0.8238,
+       0.0879
+      ],
+      "color": "#dde1db"
      }
     },
     "away": {
@@ -227,6 +236,15 @@
        "frontKitFile": "kits_2024/away_wc_front.webp",
        "previewFile": "kits_2024/away_wc_preview.png"
       }
+     },
+     "shirtName": {
+      "area": [
+       0.09,
+       0.2637,
+       0.8238,
+       0.0879
+      ],
+      "color": "#181827"
      }
     }
    },
@@ -337,6 +355,9 @@
       "kickoff": "11409"
      }
     }
+   },
+   "shirtNames": {
+    "enabled": true
    }
   },
   "2010": {
@@ -644,13 +665,31 @@
      "frontKitFile": "kits_2025/home_front.webp",
      "backKitFile": "kits_2025/home_back.webp",
      "previewFile": "kits_2025/home_preview.png",
-     "color": "#168474"
+     "color": "#168474",
+     "shirtName": {
+      "area": [
+       0.09,
+       0.2637,
+       0.8238,
+       0.0879
+      ],
+      "color": "#e1e4de"
+     }
     },
     "away": {
      "frontKitFile": "kits_2025/away_front.webp",
      "backKitFile": "kits_2025/away_back.webp",
      "previewFile": "kits_2025/away_preview.png",
-     "color": "#cfd2d0"
+     "color": "#cfd2d0",
+     "shirtName": {
+      "area": [
+       0.09,
+       0.2637,
+       0.8238,
+       0.0879
+      ],
+      "color": "#181827"
+     }
     }
    },
    "roles": {
@@ -721,7 +760,10 @@
     "152542",
     "152528",
     "146492"
-   ]
+   ],
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2016": {
    "enabled": true,

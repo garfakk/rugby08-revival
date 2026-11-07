@@ -111,6 +111,15 @@
      "model3d": {
       "fit": "loose",
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.1102,
+       0.8581,
+       0.7719,
+       0.0879
+      ],
+      "color": "#f5f5f5"
      }
     },
     "away": {
@@ -121,6 +130,15 @@
      "model3d": {
       "fit": "loose",
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.1254,
+       0.2112,
+       0.757,
+       0.0879
+      ],
+      "color": "#f5f5f5"
      }
     }
    },
@@ -182,7 +200,10 @@
     "158241"
    ],
    "enabled": true,
-   "primaryStadium": "79"
+   "primaryStadium": "79",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2010": {
    "name": "Saracens",
@@ -204,13 +225,31 @@
      "frontKitFile": "kits_2010/home_front.webp",
      "backKitFile": "kits_2010/home_back.webp",
      "previewFile": "kits_2010/home_preview.png",
-     "color": "#1b1e1a"
+     "color": "#1b1e1a",
+     "shirtName": {
+      "area": [
+       0.1936,
+       0.6914,
+       0.6012,
+       0.0879
+      ],
+      "color": "#f5f5f5"
+     }
     },
     "away": {
      "frontKitFile": "kits_2010/away_front.webp",
      "backKitFile": "kits_2010/away_back.webp",
      "previewFile": "kits_2010/away_preview.png",
-     "color": "#dcdeda"
+     "color": "#dcdeda",
+     "shirtName": {
+      "area": [
+       0.1936,
+       0.6914,
+       0.6012,
+       0.0879
+      ],
+      "color": "#000000"
+     }
     }
    },
    "roles": {
@@ -269,7 +308,10 @@
     "153860"
    ],
    "enabled": true,
-   "primaryStadium": "79"
+   "primaryStadium": "79",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2017": {
    "name": "Saracens",
@@ -291,13 +333,31 @@
      "frontKitFile": "kits_2017/home_front.webp",
      "backKitFile": "kits_2017/home_back.webp",
      "previewFile": "kits_2017/home_preview.png",
-     "color": "#1f1e1b"
+     "color": "#1f1e1b",
+     "shirtName": {
+      "area": [
+       0.0683,
+       0.763,
+       0.84,
+       0.0879
+      ],
+      "color": "#ffffff"
+     }
     },
     "away": {
      "frontKitFile": "kits_2017/away_front.webp",
      "backKitFile": "kits_2017/away_back.webp",
      "previewFile": "kits_2017/away_preview.png",
-     "color": "#d90b07"
+     "color": "#d90b07",
+     "shirtName": {
+      "area": [
+       0.0722,
+       0.6758,
+       0.84,
+       0.0879
+      ],
+      "color": "#ffffff"
+     }
     }
    },
    "roles": {
@@ -362,7 +422,10 @@
     "142273"
    ],
    "enabled": true,
-   "primaryStadium": "78"
+   "primaryStadium": "78",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2018": {
    "name": "Saracens",
@@ -384,13 +447,31 @@
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": "#211b16"
+     "color": "#211b16",
+     "shirtName": {
+      "area": [
+       0.1145,
+       0.2832,
+       0.7867,
+       0.0879
+      ],
+      "color": "#fffdff"
+     }
     },
     "away": {
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": "#dddeda"
+     "color": "#dddeda",
+     "shirtName": {
+      "area": [
+       0.1145,
+       0.2871,
+       0.7867,
+       0.0879
+      ],
+      "color": "#525152"
+     }
     }
    },
    "roles": {
@@ -454,7 +535,10 @@
     "157204"
    ],
    "enabled": true,
-   "primaryStadium": "78"
+   "primaryStadium": "78",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2019": {
    "name": "Saracens",
@@ -476,13 +560,31 @@
      "frontKitFile": "kits_2019/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
-     "color": "#181a15"
+     "color": "#181a15",
+     "shirtName": {
+      "area": [
+       0.0805,
+       0.2559,
+       0.8312,
+       0.0879
+      ],
+      "color": "#ffffff"
+     }
     },
     "away": {
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": "#c50404"
+     "color": "#c50404",
+     "shirtName": {
+      "area": [
+       0.0805,
+       0.1973,
+       0.8312,
+       0.0879
+      ],
+      "color": "#ffffff"
+     }
     }
    },
    "roles": {
@@ -551,7 +653,10 @@
     "157773"
    ],
    "enabled": true,
-   "primaryStadium": "78"
+   "primaryStadium": "78",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2020": {
    "name": "Saracens",
@@ -764,13 +869,31 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": "#151514"
+     "color": "#151514",
+     "shirtName": {
+      "area": [
+       0.0957,
+       0.3535,
+       0.8164,
+       0.0879
+      ],
+      "color": "#ffffff"
+     }
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": "#af1721"
+     "color": "#af1721",
+     "shirtName": {
+      "area": [
+       0.0957,
+       0.3535,
+       0.8164,
+       0.0879
+      ],
+      "color": "#f0f0f0"
+     }
     }
    },
    "roles": {
@@ -835,7 +958,10 @@
     "145943"
    ],
    "enabled": true,
-   "primaryStadium": "78"
+   "primaryStadium": "78",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2023": {
    "name": "Saracens",
@@ -857,13 +983,31 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": "#1e1a1a"
+     "color": "#1e1a1a",
+     "shirtName": {
+      "area": [
+       0.0957,
+       0.3535,
+       0.8164,
+       0.0879
+      ],
+      "color": "#ffffff"
+     }
     },
     "away": {
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": "#22263e"
+     "color": "#22263e",
+     "shirtName": {
+      "area": [
+       0.118,
+       0.3535,
+       0.7719,
+       0.0879
+      ],
+      "color": "#050405"
+     }
     }
    },
    "roles": {
@@ -929,7 +1073,10 @@
     "157607"
    ],
    "enabled": true,
-   "primaryStadium": "78"
+   "primaryStadium": "78",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2024": {
    "name": "Saracens",
@@ -951,13 +1098,31 @@
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": "#151413"
+     "color": "#151413",
+     "shirtName": {
+      "area": [
+       0.1105,
+       0.1045,
+       0.7867,
+       0.0879
+      ],
+      "color": "#e6e7e6"
+     }
     },
     "away": {
      "frontKitFile": "kits_2024/away_front.webp",
      "backKitFile": "kits_2024/away_back.webp",
      "previewFile": "kits_2024/away_preview.png",
-     "color": "#1e2f3f"
+     "color": "#1e2f3f",
+     "shirtName": {
+      "area": [
+       0.1162,
+       0.0704,
+       0.7793,
+       0.0557
+      ],
+      "color": "#002488"
+     }
     }
    },
    "roles": {
@@ -1019,7 +1184,10 @@
     "157999"
    ],
    "enabled": true,
-   "primaryStadium": "78"
+   "primaryStadium": "78",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2016": {
    "name": "Saracens",

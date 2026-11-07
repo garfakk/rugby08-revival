@@ -73,6 +73,14 @@ def apply(ds, cfg, choice: str) -> bool:
     if _on_disk(folder, adboards):
         cfg.adboards = os.path.relpath(os.path.join(folder, adboards),
                                        config.mod_data_directory).replace("\\", "/")
+    trophy = info.get("trophy") or {}
+    if (isinstance(trophy, dict) and trophy.get("ceremony")
+            and all(_on_disk(folder, (trophy.get(k) or "").strip()) for k in ("model", "texture"))):
+        # the competition's own trophy, lifted in that ceremony (match_data_builder)
+        cfg.trophy = {"ceremony": str(trophy["ceremony"]),
+                      **{k: os.path.relpath(os.path.join(folder, trophy[k].strip()),
+                                            config.mod_data_directory).replace("\\", "/")
+                         for k in ("model", "texture")}}
     ball = (info.get("ball") or "").strip()
     if _on_disk(folder, ball):
         cfg.ball_choice = {"source": "tournament", "team_id": tid, "path": ball}

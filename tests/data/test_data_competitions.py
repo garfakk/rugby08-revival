@@ -6,14 +6,13 @@ import os
 import pytest
 
 from app.tournament import engine, formats
-from conftest import REAL_DATA, SRC
+from conftest import REAL_DATA
 
 from realdata import HAS_DATA, load_json, store
 
 pytestmark = pytest.mark.data
 
-TEMPLATE_DIRS = [os.path.join(SRC, "assets", "data", "competitions"),
-                 os.path.join(REAL_DATA, "competitions")]
+TEMPLATE_DIRS = [os.path.join(REAL_DATA, "competitions")]
 
 
 def _templates():

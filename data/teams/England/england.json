@@ -206,6 +206,15 @@
        "frontKitFile": "kits_2024/home_wc_front.webp",
        "previewFile": "kits_2024/home_wc_preview.png"
       }
+     },
+     "shirtName": {
+      "area": [
+       0.1734,
+       0.1935,
+       0.6531,
+       0.0879
+      ],
+      "color": "#050405"
      }
     },
     "away": {
@@ -219,6 +228,15 @@
        "frontKitFile": "kits_2024/away_wc_front.webp",
        "previewFile": "kits_2024/away_rwc_2023_preview.png"
       }
+     },
+     "shirtName": {
+      "area": [
+       0.1734,
+       0.1816,
+       0.6531,
+       0.0879
+      ],
+      "color": "#ececec"
      }
     }
    },
@@ -330,6 +348,9 @@
       "kickoff": "11006"
      }
     }
+   },
+   "shirtNames": {
+    "enabled": true
    }
   },
   "2010": {
@@ -916,13 +937,31 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": "#e9e9e8"
+     "color": "#e9e9e8",
+     "shirtName": {
+      "area": [
+       0.1437,
+       0.2229,
+       0.7125,
+       0.0879
+      ],
+      "color": "#050505"
+     }
     },
     "away": {
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": "#171315"
+     "color": "#171315",
+     "shirtName": {
+      "area": [
+       0.1364,
+       0.2134,
+       0.7273,
+       0.0879
+      ],
+      "color": "#ffffff"
+     }
     }
    },
    "roles": {
@@ -987,7 +1026,10 @@
     "152429",
     "152432",
     "152433"
-   ]
+   ],
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2025": {
    "name": "England",
@@ -1011,13 +1053,31 @@
      "frontKitFile": "kits_2025/home_front.webp",
      "backKitFile": "kits_2025/home_back.webp",
      "previewFile": "kits_2025/home_preview.png",
-     "color": "#e7e7e6"
+     "color": "#e7e7e6",
+     "shirtName": {
+      "area": [
+       0.1734,
+       0.1934,
+       0.6531,
+       0.0879
+      ],
+      "color": "#050405"
+     }
     },
     "away": {
      "frontKitFile": "kits_2025/away_front.webp",
      "backKitFile": "kits_2025/away_back.webp",
      "previewFile": "kits_2025/away_preview.png",
-     "color": "#810b27"
+     "color": "#810b27",
+     "shirtName": {
+      "area": [
+       0.1734,
+       0.1816,
+       0.6531,
+       0.0879
+      ],
+      "color": "#ececec"
+     }
     }
    },
    "roles": {
@@ -1081,7 +1141,10 @@
     "152474",
     "152509",
     "152503"
-   ]
+   ],
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2026": {
    "enabled": true,
@@ -1110,8 +1173,8 @@
      "shirtName": {
       "color": "#111111",
       "area": [
-       0.1813,
-       0.1963,
+       0.1734,
+       0.2011,
        0.6531,
        0.1084
       ]
@@ -1124,8 +1187,8 @@
      "color": "#1a1a21",
      "shirtName": {
       "area": [
-       0.1813,
-       0.1963,
+       0.1734,
+       0.1987,
        0.6531,
        0.1084
       ]
@@ -1196,6 +1259,88 @@
     "spacing": 6,
     "arch": 0
    }
+  },
+  "2011": {
+   "enabled": true,
+   "name": "England",
+   "type": "international",
+   "category": "International",
+   "group": "international",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "stadium": "",
+   "primaryStadium": "14",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2011/home_front.webp",
+     "backKitFile": "kits_2011/home_back.webp",
+     "previewFile": "kits_2011/home_preview.png",
+     "color": "#e9eee8"
+    },
+    "away": {
+     "frontKitFile": "kits_2011/away_front.webp",
+     "backKitFile": "kits_2011/away_back.webp",
+     "previewFile": "kits_2011/away_preview.png",
+     "color": "#1d1819"
+    }
+   },
+   "roles": {
+    "captain": "116085",
+    "viceCaptain": "118805",
+    "longGK": "126969",
+    "shortGK": "126969",
+    "longPunt": "126969",
+    "shortPunt": "126969",
+    "kickoff": "126969"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "120222",
+    "115791",
+    "125828",
+    "156400",
+    "117861",
+    "157503",
+    "124676",
+    "128070",
+    "12301",
+    "126969",
+    "128476",
+    "118805",
+    "116085",
+    "141334",
+    "122830",
+    "125898",
+    "116704",
+    "101071",
+    "108880",
+    "107949",
+    "114008",
+    "106493",
+    "127577",
+    "118007",
+    "118703",
+    "157556",
+    "129815",
+    "104313",
+    "142470",
+    "156523",
+    "107085",
+    "143949"
+   ]
   },
   "2007": {
    "enabled": false,
@@ -1301,88 +1446,6 @@
     "143199",
     "146837",
     "124676"
-   ]
-  },
-  "2011": {
-   "enabled": true,
-   "name": "England",
-   "type": "international",
-   "category": "International",
-   "group": "international",
-   "ball": "ball/ball_%.png",
-   "banners": "banners/banner_%.png",
-   "pads": "",
-   "stadium": "",
-   "primaryStadium": "14",
-   "logos": {
-    "main": "logos/logo.png",
-    "frontend": "logos/logo_frontend.png",
-    "small": "logos/logo_small.png",
-    "left": "logos/logo_left.png",
-    "right": "logos/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2011/home_front.png",
-     "backKitFile": "kits_2011/home_back/home_back_%.png",
-     "previewFile": "kits_2011/home_preview.png",
-     "color": "#e9eee8"
-    },
-    "away": {
-     "frontKitFile": "kits_2011/away_front.png",
-     "backKitFile": "kits_2011/away_back/away_back_%.png",
-     "previewFile": "kits_2011/away_preview.png",
-     "color": "#1d1819"
-    }
-   },
-   "roles": {
-    "captain": "116085",
-    "viceCaptain": "118805",
-    "longGK": "126969",
-    "shortGK": "126969",
-    "longPunt": "126969",
-    "shortPunt": "126969",
-    "kickoff": "126969"
-   },
-   "setPlays": {
-    "up": "miss",
-    "down": "loop",
-    "left": "pivot",
-    "right": "pocket"
-   },
-   "players": [
-    "120222",
-    "115791",
-    "125828",
-    "156400",
-    "117861",
-    "157503",
-    "124676",
-    "128070",
-    "12301",
-    "126969",
-    "128476",
-    "118805",
-    "116085",
-    "141334",
-    "122830",
-    "125898",
-    "116704",
-    "101071",
-    "108880",
-    "107949",
-    "114008",
-    "106493",
-    "127577",
-    "118007",
-    "118703",
-    "157556",
-    "129815",
-    "104313",
-    "142470",
-    "156523",
-    "107085",
-    "143949"
    ]
   },
   "2012": {

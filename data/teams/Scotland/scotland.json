@@ -211,8 +211,26 @@
        "label": "RWC 2023",
        "frontKitFile": "kits_2024/home_wc_front.webp",
        "backKitFile": "kits_2024/home_wc_back.webp",
-       "previewFile": "kits_2024/home_wc_preview.png"
+       "previewFile": "kits_2024/home_wc_preview.png",
+       "shirtName": {
+        "area": [
+         0.0761,
+         0.259,
+         0.84,
+         0.0879
+        ],
+        "color": "#dddddd"
+       }
       }
+     },
+     "shirtName": {
+      "area": [
+       0.0761,
+       0.7802,
+       0.84,
+       0.0879
+      ],
+      "color": "#dddddd"
      }
     },
     "away": {
@@ -225,8 +243,26 @@
        "label": "RWC 2023",
        "frontKitFile": "kits_2024/away_wc_front.webp",
        "backKitFile": "kits_2024/away_wc_back.webp",
-       "previewFile": "kits_2024/away_wc_preview.png"
+       "previewFile": "kits_2024/away_wc_preview.png",
+       "shirtName": {
+        "area": [
+         0.0761,
+         0.2598,
+         0.84,
+         0.0879
+        ],
+        "color": "#101429"
+       }
       }
+     },
+     "shirtName": {
+      "area": [
+       0.0761,
+       0.7031,
+       0.84,
+       0.0879
+      ],
+      "color": "#101429"
      }
     }
    },
@@ -346,7 +382,10 @@
      }
     }
    },
-   "primaryStadium": "29"
+   "primaryStadium": "29",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2010": {
    "name": "Scotland",
@@ -559,13 +598,31 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": "#171a2c"
+     "color": "#171a2c",
+     "shirtName": {
+      "area": [
+       0.1045,
+       0.707,
+       0.7793,
+       0.0879
+      ],
+      "color": "#f5f5f5"
+     }
     },
     "away": {
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": "#c977e9"
+     "color": "#c977e9",
+     "shirtName": {
+      "area": [
+       0.1045,
+       0.707,
+       0.7793,
+       0.0879
+      ],
+      "color": "#121529"
+     }
     }
    },
    "roles": {
@@ -629,7 +686,10 @@
     "153785",
     "152789"
    ],
-   "primaryStadium": "29"
+   "primaryStadium": "29",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2016": {
    "enabled": true,
@@ -1052,13 +1112,31 @@
      "frontKitFile": "kits_2025_2/home_front.webp",
      "backKitFile": "kits_2025_2/home_back.webp",
      "previewFile": "kits_2025_2/home_preview.png",
-     "color": "#191d34"
+     "color": "#191d34",
+     "shirtName": {
+      "area": [
+       0.0761,
+       0.6758,
+       0.84,
+       0.0879
+      ],
+      "color": "#e6e7e6"
+     }
     },
     "away": {
      "frontKitFile": "kits_2025_2/away_front.webp",
      "backKitFile": "kits_2025_2/away_back.webp",
      "previewFile": "kits_2025_2/away_preview.png",
-     "color": "#0b5ca8"
+     "color": "#0b5ca8",
+     "shirtName": {
+      "area": [
+       0.0761,
+       0.6758,
+       0.84,
+       0.0879
+      ],
+      "color": "#f5f5f5"
+     }
     }
    },
    "roles": {
@@ -1127,7 +1205,10 @@
     "156438",
     "144179"
    ],
-   "primaryStadium": "29"
+   "primaryStadium": "29",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2026": {
    "enabled": true,
@@ -1510,14 +1591,14 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2013/home_front.png",
-     "backKitFile": "kits_2013/home_back/home_back_%.png",
+     "frontKitFile": "kits_2013/home_front.webp",
+     "backKitFile": "kits_2013/home_back.webp",
      "previewFile": "kits_2013/home_preview.png",
      "color": "#07113a"
     },
     "away": {
-     "frontKitFile": "kits_2013/away_front.png",
-     "backKitFile": "kits_2013/away_back/away_back_%.png",
+     "frontKitFile": "kits_2013/away_front.webp",
+     "backKitFile": "kits_2013/away_back.webp",
      "previewFile": "kits_2013/away_preview.png",
      "color": "#c3c3bf"
     }

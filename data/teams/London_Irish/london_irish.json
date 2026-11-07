@@ -109,6 +109,15 @@
      "model3d": {
       "fit": "loose",
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.1512,
+       0.8084,
+       0.6977,
+       0.0879
+      ],
+      "color": "#f5f5f5"
      }
     },
     "away": {
@@ -119,6 +128,9 @@
      "model3d": {
       "fit": "loose",
       "collar": "stand"
+     },
+     "shirtName": {
+      "enabled": false
      }
     }
    },
@@ -178,7 +190,10 @@
     "156498"
    ],
    "enabled": true,
-   "primaryStadium": "7"
+   "primaryStadium": "7",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2010": {
    "name": "London Irish",
@@ -203,6 +218,15 @@
      "color": "#0a2018",
      "model3d": {
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.2014,
+       0.6761,
+       0.6012,
+       0.0879
+      ],
+      "color": "#f5f5f5"
      }
     },
     "away": {
@@ -212,6 +236,15 @@
      "color": "#bbbeba",
      "model3d": {
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.2014,
+       0.676,
+       0.6012,
+       0.0879
+      ],
+      "color": "#000000"
      }
     }
    },
@@ -276,7 +309,10 @@
     "157555"
    ],
    "enabled": true,
-   "primaryStadium": "7"
+   "primaryStadium": "7",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2018": {
    "name": "London Irish",
@@ -302,6 +338,15 @@
      "model3d": {
       "fit": "loose",
       "collar": "open"
+     },
+     "shirtName": {
+      "area": [
+       0.1268,
+       0.291,
+       0.7348,
+       0.0879
+      ],
+      "color": "#ffffff"
      }
     },
     "away": {
@@ -311,6 +356,15 @@
      "color": "#508fd3",
      "model3d": {
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.1463,
+       0.2676,
+       0.7348,
+       0.0879
+      ],
+      "color": "#ffffff"
      }
     }
    },
@@ -378,7 +432,10 @@
     "157756"
    ],
    "enabled": true,
-   "primaryStadium": "7"
+   "primaryStadium": "7",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2020": {
    "name": "London Irish",
@@ -593,13 +650,31 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": "#116f47"
+     "color": "#116f47",
+     "shirtName": {
+      "area": [
+       0.118,
+       0.184,
+       0.7719,
+       0.0879
+      ],
+      "color": "#f5f5f5"
+     }
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": "#0c6442"
+     "color": "#0c6442",
+     "shirtName": {
+      "area": [
+       0.118,
+       0.189,
+       0.7719,
+       0.0879
+      ],
+      "color": "#052662"
+     }
     }
    },
    "roles": {
@@ -663,7 +738,10 @@
     "152507"
    ],
    "enabled": true,
-   "primaryStadium": "7"
+   "primaryStadium": "7",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2023": {
    "name": "London Irish",
@@ -685,13 +763,25 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": "#0d463c"
+     "color": "#0d463c",
+     "shirtName": {
+      "area": [
+       0.118,
+       0.2476,
+       0.7719,
+       0.0879
+      ],
+      "color": "#f5f5f5"
+     }
     },
     "away": {
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": "#d5d5d5"
+     "color": "#d5d5d5",
+     "shirtName": {
+      "enabled": false
+     }
     }
    },
    "roles": {
@@ -753,7 +843,10 @@
     "157200"
    ],
    "enabled": true,
-   "primaryStadium": "7"
+   "primaryStadium": "7",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2016": {
    "name": "London Irish",
@@ -873,14 +966,14 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2019/home_front.png",
-     "backKitFile": "kits_2019/home_back/home_back_%.png",
+     "frontKitFile": "kits_2019/home_front.webp",
+     "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
      "color": "#064d31"
     },
     "away": {
-     "frontKitFile": "kits_2019/away_front.png",
-     "backKitFile": "kits_2019/away_back/away_back_%.png",
+     "frontKitFile": "kits_2019/away_front.webp",
+     "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
      "color": "#edefea"
     }

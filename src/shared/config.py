@@ -176,6 +176,9 @@ class Config:
     self.directory_challenges = os.path.join(self.mod_data_directory, "challenges")
     # Tournament saves are the user's progress, not data: user_data/.
     self.directory_tournament_saves = os.path.join(user_data_directory(), "tournaments")
+    # Tournaments the user designed (Tools > Tournament editor): their own
+    # work, read live (no overlay mirror to rebuild), never touched by updates.
+    self.directory_custom_tournaments = os.path.join(user_data_directory(), "custom_tournaments")
     # The user's own edits of teams and players, laid over the data pack
     # (frontend/app/user_edits.py): a new data pack never overwrites them.
     self.directory_user_edits = os.path.join(user_data_directory(), "edits")

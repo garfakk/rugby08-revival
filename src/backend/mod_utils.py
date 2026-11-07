@@ -35,6 +35,53 @@ def copy_file(source, destination):
 #    print(f"Unable to copy {source.split('/')[-1]}")
     return False
 
+def repair_fsh_chains(data):
+  """`data` (an FSH, or a .big holding uncompressed ones) with every entry's
+  chunk chain ending inside its FSH: a chunk whose next offset leads past the
+  end gets next 0 (last chunk). The game follows those offsets while loading
+  and read past the texture, crashing at random (Rugby08.exe+0x3638b6).
+  Returns `data` itself when nothing needed fixing."""
+  fixed = None
+  start = data.find(b"SHPI")
+  while start != -1:
+    size, count = struct.unpack_from("<II", data, start + 4)
+    end = min(start + size, len(data))
+    for k in range(min(count, 4096)):
+      if start + 24 + 8 * k > end:
+        break
+      pos = start + struct.unpack_from("<I", data, start + 20 + 8 * k)[0]
+      for _hop in range(64):
+        if pos + 16 > end:
+          break
+        word = struct.unpack_from("<I", fixed or data, pos)[0]
+        step = word >> 8
+        if not step:
+          break
+        if pos + step + 16 > end:
+          fixed = fixed or bytearray(data)
+          struct.pack_into("<I", fixed, pos, word & 0xFF)
+          break
+        pos += step
+    start = data.find(b"SHPI", start + 4)
+  return bytes(fixed) if fixed is not None else data
+
+
+def copy_texture_file(source, destination):
+  """copy_file for a face/texture .big or .fsh, repairing its chunk chains."""
+  try:
+    with open(source, "rb") as f:
+      data = f.read()
+    repaired = repair_fsh_chains(data)
+    if repaired is data:
+      return copy_file(source, destination)
+    log.warning(f"{os.path.basename(source)}: broken texture chunk chain repaired")
+    with open(destination, "wb") as f:
+      f.write(repaired)
+    return True
+  except Exception as e:
+    log.error(f"Unable to copy {source} into {destination}: {e}")
+    return False
+
 # This function adds an image to a .FSH file -- EXPERIMENTAL
 def add_image_to_fsh_file(fsh_file_path, image_file_path, dimensions, position):
     # WARNING add_image_to_fsh_file is experimental and may be unstable
@@ -348,6 +395,42 @@ def complete_adboards(data, spares=None):
     if block is None:
       continue
     entries.append((tag, block))
+  return build_fsh(data[12:16], entries)
+
+
+# The roof flags of the World Cup dressing (stadium_flags): the stadium's
+# "baus"/"bwal" banner shapes take each playing team's "_wcb" texture, a
+# 256x512 DXT1 portrait flag only the stock national teams' banner files carry.
+# A team built from the banners template (or a custom FSH without it) has none
+# and the game shows its missing-texture image on the roof.
+WCB_TAG = "_wcb"
+WCB_SIZE = (256, 512)
+
+
+def _wcb_block(pixels):
+  """The "_wcb" entry: DXT1 chunk, then the 16-byte name chunk ending the
+  chain (0x70, next 0) like the stock entries. The game follows each chunk's
+  next offset: one pointing past the end of the file made it read whatever
+  memory lay there and crash at random while loading (Rugby08.exe+0x3638b6)."""
+  header = struct.pack("<IHH", 0x60 | (16 + len(pixels)) << 8, *WCB_SIZE) + b"\0" * 8
+  name = struct.pack("<I", 0x70) + WCB_TAG.encode() + b"\0" * 8
+  return header + pixels + name
+
+
+def complete_banners(data, flag=None):
+  """`data` (a team banners FSH) with the roof-flag texture "_wcb": made from
+  `flag` (a PIL image) or, by default, the file's own "_flB" flag banner.
+  Returns the bytes (unchanged when "_wcb" is there or no flag can be read)."""
+  entries = fsh_entries(data)
+  blocks = dict(entries)
+  if WCB_TAG in blocks:
+    return data
+  if flag is None:
+    if "_flB" not in blocks:
+      return data
+    flag = fsh_entry_image(blocks["_flB"])
+  pixels = _encode_dxt1(_image_to_rgba_array(flag, WCB_SIZE))
+  entries.append((WCB_TAG, _wcb_block(pixels)))
   return build_fsh(data[12:16], entries)
 
 

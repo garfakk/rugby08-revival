@@ -23,6 +23,7 @@ from app.ratings import position_overall
 from app.season import season_label
 from app import plugin_lookup
 from backend.mod_utils import stock_head_path, stock_kit_paths
+from ui.team_sheet import STAR, STAR_COLOR, is_star
 from screens.editor_base import EditorScreen
 from screens.player_tabs import (
     ProfileTab, RatingsTab, AppearanceTab, SkillsTab, TeamsTab, TAB_PROFILE, TAB_RATINGS,
@@ -389,6 +390,7 @@ class PlayerEditorScreen(EditorScreen):
             "pos": pos,
             "short": POSITION_SHORT.get(pos, pos[:3].upper() if pos else "—"),
             "ovr": position_overall(block) if block else None,
+            "star": is_star(block),
         }
 
     def _cached_facts(self, pid, record):
@@ -466,11 +468,13 @@ class PlayerEditorScreen(EditorScreen):
             errors, ovr, pos, short = f["errors"], f["ovr"], f["pos"], f["short"]
             teams = sorted(team_names.get(pid, []))
             rows.append({
-                "id": pid, "text": record.get("display_name") or record.get("last_name") or pid,
+                "id": pid, "text": (f"{STAR} " if f["star"] else "")
+                                   + (record.get("display_name") or record.get("last_name") or pid),
                 "tag": f"{errors} ERR" if errors else f"{short}  {ovr if ovr is not None else ''}",
                 "color": DANGER_LITE if errors else FG_TERTIARY,
                 "search": f"{pid} {record.get('first_name', '')} {record.get('last_name', '')} "
-                          f"{pos.replace('_', ' ')} {short} {' '.join(teams)}",
+                          f"{pos.replace('_', ' ')} {short} {' '.join(teams)}"
+                          + (" star" if f["star"] else ""),
                 "errors": errors,
                 "issues": f["issues"],
                 "group": teams[0] if teams else "", "groups": teams,
@@ -573,8 +577,10 @@ class PlayerEditorScreen(EditorScreen):
             pos = block.get("position1", "")
             short = POSITION_SHORT.get(pos, pos[:3].upper() if pos else "—")
             ovr = position_overall(block)
-            items.append((s, season_label(s), f"{short}  {ovr}" if ovr is not None else short,
-                         FG_TERTIARY, False))
+            tag = f"{short}  {ovr}" if ovr is not None else short
+            star = is_star(block)
+            items.append((s, season_label(s), f"{STAR} {tag}" if star else tag,
+                         STAR_COLOR if star else FG_TERTIARY, False))
         self.season_list.set_items(items, keep_data=self.season)
         self.season_list.set_selected(self.season)
 

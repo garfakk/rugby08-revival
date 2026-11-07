@@ -35,6 +35,7 @@ from shared.config import *
 
 from shared.log import get_logger
 from shared import kit_files
+from shared.game_text import game_name
 
 log = get_logger(__name__)
 
@@ -107,10 +108,13 @@ def create_mission_file(match_data):
         }
 
         # ── advanced: presentation (each a real reR08 patch, default-on) ───
+        # reR08 ENABLE_ANTHEM: anthem = a stock team code (match_data_builder
+        # resolves it); intro = "anthem" / "club" forces that intro.
         anthem = match_data.get("anthem")
-        if anthem in ("home", "away"):
-            # reR08 ENABLE_ANTHEM.
-            mission_attrs["anthem"] = anthem
+        if anthem is not None and str(anthem).isdigit():
+            mission_attrs["anthem"] = str(anthem)
+        if match_data.get("intro") in ("anthem", "club"):
+            mission_attrs["intro"] = match_data["intro"]
         if match_data.get("haka_home"):
             mission_attrs["haka0"] = "1"          # reR08 ENABLE_HAKA
         if match_data.get("haka_away"):
@@ -353,6 +357,22 @@ def _copy_optional_adboards(match_data):
     copy_file(source, destination)
 
 
+def _add_roof_flag(banners_filepath):
+    """Give a team banners file the roof-flag texture the World Cup stadium
+    dressing looks up ("_wcb", complete_banners in backend.mod_utils); without
+    it the game paints its missing-texture image on the roof flags."""
+    try:
+        with open(banners_filepath, "rb") as f:
+            data = f.read()
+        full = complete_banners(data)
+        if full is not data:
+            with open(banners_filepath, "wb") as f:
+                f.write(full)
+            log.debug(f"{os.path.basename(banners_filepath)}: _wcb roof flag added")
+    except (OSError, ValueError, struct.error) as e:
+        log.warning(f"Roof flag not added to {banners_filepath}: {e}")
+
+
 # This function copies all the graphics files (logos, kits, etc) into the game folder and edit them if necessary
 def edit_graphics_files(match_data):
 
@@ -362,8 +382,20 @@ def edit_graphics_files(match_data):
   tournament_logo_source_filepath = os.path.join(config.mod_data_directory, match_data['tournament_logo'])
   if copy_file(tournament_logo_template_filepath, tournament_logo_filepath):
     #   add_image_to_fsh_file(tournament_logo_filepath, tournament_logo_source_filepath, fsh_image_sizes["tournament_logo"], fsh_files_offsets["tournament_logo"])
-      replace_asset_in_fsh_file(tournament_logo_filepath, tournament_logo_source_filepath, index = 0)
+      if match_data.get('tournament_logo'):
+        replace_asset_in_fsh_file(tournament_logo_filepath, tournament_logo_source_filepath, index = 0)
+      else:
+        # no tournament logo: a fully transparent one, not the template's
+        replace_asset_in_fsh_file(tournament_logo_filepath,
+                                  Image.new("RGBA", fsh_image_sizes["tournament_logo"], (0, 0, 0, 0)),
+                                  index = 0)
  
+  # The competition's own trophy, standing in for the lifted ceremony's stock
+  # one (match_data_builder._trophy_files): this match only, cleaned before the next
+  for game_name, source in (match_data.get('trophy_files') or {}).items():
+    copy_file(os.path.join(config.mod_data_directory, source),
+              os.path.join(config.game_launcher_directory, game_name))
+
   # Create ball file (either copy .fsh file or create it from images)
   ball_filepath = os.path.join(config.game_launcher_directory, game_filenames['ball'])
   if match_data['ball'][-4:] == ".fsh":
@@ -410,6 +442,7 @@ def edit_graphics_files(match_data):
                 banner_image_filepath = os.path.join(config.mod_data_directory, match_data[team]['banners'].replace("%", str(index+1)))
                 #   add_image_to_fsh_file(banners_filepath, banner_image_filepath, fsh_image_sizes['banners'], fsh_files_offsets["banner_1"] + (fsh_files_offsets["banner_n"] * index))
                 replace_asset_in_fsh_file(banners_filepath, banner_image_filepath, index = index)
+    _add_roof_flag(banners_filepath)
 
 
     # Create crowd file
@@ -653,6 +686,8 @@ def generated_game_filenames():
             names.add(value)
     for faces in face_id_for_custom_faces.values():
         names.update(face['filename'] for face in faces)
+    for files in trophy_files.values():          # a competition's own trophy
+        names.update(files.values())
     return names
 
 # Removes what a previous match left in the game folder, so nothing stale
@@ -841,7 +876,9 @@ def write_players_data_to_roster(roster_filepath, match_data):
         file.write(commentary)
 
         # Write Player Name
-        player_name = player["name"].encode("utf-8")[:14]
+        # plain ASCII only (the game's font): an accent left in a user's own
+        # edit is dropped here, never drawn as garbage
+        player_name = game_name(player["name"]).encode("ascii", "ignore")[:14]
         file.write(player_name.ljust(14, b"\x00"))
 
         # Skip empty space
@@ -999,7 +1036,7 @@ def write_players_data_to_roster(roster_filepath, match_data):
             face_id = face_id_for_custom_faces_by_roster_id.get(player['roster_id'])['face_id']
             custom_face_filepath = os.path.join(config.mod_data_directory, player_face)
             game_face_filepath = os.path.join(config.game_launcher_directory, face_id_for_custom_faces_by_roster_id[player['roster_id']]['filename'])
-            copy_file(custom_face_filepath, game_face_filepath)
+            copy_texture_file(custom_face_filepath, game_face_filepath)
         
         else:
             face_id = player_default_values['face']

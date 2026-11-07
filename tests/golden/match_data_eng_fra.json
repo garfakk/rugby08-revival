@@ -1,6 +1,6 @@
 {
  "adboards": "",
- "anthem": "stock",
+ "anthem": 5,
  "ball": "teams/England/ball/ball_%.png",
  "banners": "teams/England/banners/banner_%.png",
  "breath": null,
@@ -15,6 +15,7 @@
  "haka_home": false,
  "halftime_length": 1,
  "home_team_side": "left",
+ "intro": "anthem",
  "kick_assist": false,
  "kick_off": "home",
  "lock_controllers": false,
@@ -2959,6 +2960,7 @@
   ]
  },
  "tournament_logo": "teams/England/logos/logo.png",
+ "trophy_files": {},
  "trophy_lift": "stock",
  "trophy_lifter": "",
  "user_controlled_team": 1,

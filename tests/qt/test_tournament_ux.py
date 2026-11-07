@@ -545,9 +545,9 @@ def test_squad_lineups_panel(qapp, dash, session):
     qapp.processEvents()
     sq = dash.squad
     entry = session.t.teams[sq.team_id]
-    assert lineups.is_auto(entry) and sq.mode_field.value() == "auto"
+    assert lineups.is_auto(entry)
     sq._swap(0, 2)
-    assert not lineups.is_auto(entry) and sq.mode_field.value() == "default"
+    assert not lineups.is_auto(entry)
     session.save_lineup(sq.team_id, "Props swapped")
     sq.refresh()
     assert "PROPS SWAPPED" in sq.lineup_title.text()
@@ -596,8 +596,8 @@ def test_squad_list_takes_any_player_to_the_sheet(qapp, dash, session):
 
 
 def test_squad_lineup_use_keeps_the_focus_in_the_panel(qapp, dash, session):
-    """USE rebuilds the rows: the focus lands on the used row's next button,
-    not on the deleted USE button (keys would go nowhere)."""
+    """LOAD rebuilds the rows: the focus lands on the loaded row's next
+    button, not on the deleted LOAD button (keys would go nowhere)."""
     from PyQt5.QtWidgets import QApplication
     from app.tournament import lineups
     from screens.tournament.dashboard import TEAM
@@ -612,7 +612,7 @@ def test_squad_lineup_use_keeps_the_focus_in_the_panel(qapp, dash, session):
     sq.toggle_panel("lineups")
     qapp.processEvents()
     use = sq._row_buttons[0][0]
-    assert use.text() == "USE"
+    assert use.text() == "LOAD"
     use.setFocus()
     QTest.keyClick(use, Qt.Key_Return)
     for _ in range(3):
@@ -696,29 +696,97 @@ def test_squad_fits_a_short_window(qapp, dash, session):
     assert sq.sheet_rows[-1].indexOf(sq.shirts[15]) >= 0
 
 
-def test_squad_edited_saved_lineup_updates_or_reverts(qapp, dash, session):
-    """A saved lineup changed on the sheet is shown as edited: UPDATE writes
-    the change into it, REVERT puts it back on the sheet."""
+def test_squad_saves_and_loads_lineups(qapp, dash, session):
+    """The Lineups pane: save the team sheet under a name, load an older one
+    back. Saving on auto pick keeps the 22 the sheet shows."""
     from app.tournament import lineups
     from screens.tournament.dashboard import TEAM
     dash.tabs.set_index(TEAM)
     qapp.processEvents()
     sq = dash.squad
     entry = session.t.teams[sq.team_id]
+    assert lineups.is_auto(entry)
+    shown = list(sq._players())
+    session.save_lineup(sq.team_id, "Auto pick", sq._sel())
+    assert lineups.saved(entry)[0]["players"] == shown
     sq._swap(0, 2)
-    session.save_lineup(sq.team_id, "Plan A")
+    plan_a = list(sq._players())
+    session.save_lineup(sq.team_id, "Plan A", sq._sel())
+    sq._swap(3, 4)
+    session.save_lineup(sq.team_id, "Plan B", sq._sel())
     sq.refresh()
-    original = list(sq._players())
-    sq._swap(3, 4)
-    assert sq.lineup_title.text() == "YOUR LINEUP · PLAN A (EDITED)"
-    assert sq._edited_index() == 0
-    assert [b.text() for b in sq._row_buttons[0]][:2] == ["UPDATE", "REVERT"]
-    sq._load(lineups.saved(entry)[0], row=0)            # REVERT
-    assert sq._players() == original and sq.lineup_title.text() == "YOUR LINEUP · PLAN A"
-    sq._swap(3, 4)
-    edited = list(sq._players())
-    sq._update(0)                                        # UPDATE
-    assert lineups.saved(entry)[0]["players"] == edited
-    assert sq.lineup_title.text() == "YOUR LINEUP · PLAN A" and sq._edited_index() is None
-    sq._do_auto()                                        # no longer from Plan A
-    assert lineups.source(entry) is None
+    sq.toggle_panel("lineups")
+    qapp.processEvents()
+    assert [item["name"] for item in lineups.saved(entry)] == ["Auto pick", "Plan A", "Plan B"]
+    assert [b.text() for b in sq._row_buttons[2]] == ["RENAME", "DELETE"]      # Plan B: in use
+    sq._load(lineups.saved(entry)[1], row=1)
+    assert sq._players() == plan_a and sq.lineup_title.text() == "YOUR LINEUP · PLAN A"
+    assert [b.text() for b in sq._row_buttons[1]] == ["RENAME", "DELETE"]
+    assert [b.text() for b in sq._row_buttons[2]] == ["LOAD", "RENAME", "DELETE"]
+    sq.toggle_panel("lineups")
+
+
+def test_squad_loads_a_previous_match_lineup(qapp, dash, session):
+    """Previous matches are listed under the saved lineups (no XV rating
+    anywhere): LOAD puts that match's 22 back on the team sheet."""
+    from app.tournament import engine, lineups
+    from screens.tournament.dashboard import TEAM
+    dash.tabs.set_index(TEAM)
+    qapp.processEvents()
+    sq = dash.squad
+    t = session.t
+    while not lineups.played(t, sq.team_id) and not t.finished:
+        engine.simulate_day(t, include_human=True)
+    (f, played_sel), *_ = lineups.played(t, sq.team_id)
+    sq._swap(0, 2)                                       # the sheet moves on
+    assert sq._players() != played_sel["players"]
+    sq.refresh()
+    sq.toggle_panel("lineups")
+    qapp.processEvents()
+    from PyQt5.QtWidgets import QLabel
+    panel = sq.panels["lineups"][0]
+    texts = [w.text().upper() for w in panel.findChildren(QLabel) if w.isVisible()]
+    assert "PREVIOUS MATCHES" in texts and not any(x.startswith("XV ") for x in texts)
+    load = sq._row_buttons[-1][0]
+    assert load.text() == "LOAD"
+    load.click()
+    qapp.processEvents()
+    assert sq._players() == [p for p in played_sel["players"]]
+    sq.toggle_panel("lineups")
+
+
+def test_a_round_without_your_match_shows_on_home(qapp, ds, data_dir, no_motion):
+    """A three-team pool: you rest one round. It plays no recap of its own;
+    Home lists its results under "<round> · no match for you" until your
+    next match is played."""
+    from app.tournament.session import TournamentSession
+    from screens.tournament import TournamentDashboardScreen
+    tpl = dict(copy.deepcopy(TEMPLATE), stages=[TEMPLATE["stages"][0]],
+               participants={"default": {"pools": {"A": ["10002", "10001", "1015"]}}})
+    # round robin of three: 10001 plays rounds 1 and 3, rests in round 2
+    s = TournamentSession.new(ds, tpl, "2024", humans=["10001"], seed=5)
+    d = TournamentDashboardScreen(ds, on_back=lambda: None, on_play=lambda s_, f: None)
+    d.resize(1600, 900)
+    d.set_session(s)
+    d.show()
+    d.on_show()
+    qapp.processEvents()
+    assert not d.rest_section.isVisibleTo(d)
+
+    f = s.human_fixture()
+    d._run(lambda: s.simulate(f))                       # round 1, then round 2 without you
+    qapp.processEvents()
+    assert [f.day for f in s.t.fixtures if f.played] == [0, 1]
+    shown = _close_all(qapp, d)
+    assert shown.count("MatchdayRecap") == 1            # your round only
+    assert d.rest_day() == 1
+    assert d.rest_section.isVisibleTo(d) and d.rest_grid.count() == 1
+    assert "NO MATCH FOR YOU" in d.rest_title._title
+
+    g = s.human_fixture()
+    d._run(lambda: s.simulate(g))                       # round 3: yours again
+    qapp.processEvents()
+    _close_all(qapp, d)
+    assert d.rest_day() is None and not d.rest_section.isVisibleTo(d)
+    d.close()
+    d.deleteLater()

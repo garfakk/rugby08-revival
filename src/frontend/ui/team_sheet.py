@@ -18,9 +18,15 @@ from PyQt5.QtCore import Qt, QRectF, QTimer, QMimeData, QPoint, pyqtSignal
 from ui.broadcast import SegmentedToggle, tracked_font, draw_frame
 from ui.dropdown import PopupList
 from ui.theme import (
-    BG_BASE, BG_CARD, BG_RAISED, BG_HIGHLIGHT, BORDER, ACCENT, WARN,
+    BG_BASE, BG_CARD, BG_RAISED, BG_HIGHLIGHT, BORDER, ACCENT, WARN, AWAY_TINT,
     FG_PRIMARY, FG_SECONDARY, FG_TERTIARY, FG_MUTED, FONT_DISPLAY,
 )
+
+# A star player (a star class in his season's "star_attribute", see
+# app/star_classes.py): marked with this star, in this gold, wherever he is
+# listed — team sheets, the player picker, the squad lists, the player editor.
+STAR = "★"
+STAR_COLOR = AWAY_TINT
 
 # ── Domain constants ─────────────────────────────────────────────────────
 POSITION_FOR_NUMBER = {
@@ -107,6 +113,38 @@ def fits_shirt(player: dict, number: int) -> bool:
         return True
     return bool(accepted & {player.get("position1", ""), player.get("position2", ""),
                              player.get("position3", "")})
+
+
+def is_star(player) -> bool:
+    """True for a star player: a star class in "star_attribute" of the season
+    block (or flat player dict) given. Class 1 is the generic base class,
+    which the game shows no star for: not marked either."""
+    return star_class(player) > 1
+
+
+def star_class(player) -> int:
+    """The player's star class (app/star_classes.py), 0 for none."""
+    if not player:
+        return 0
+    try:
+        return int(str(player.get("star_attribute") or 0).strip() or 0)
+    except ValueError:
+        return 0
+
+
+def _paint_star(p, x, y, size):
+    """A gold five-pointed star, centred on (x, y)."""
+    import math
+    from PyQt5.QtGui import QPolygonF
+    from PyQt5.QtCore import QPointF
+    pts = []
+    for i in range(10):
+        r = size / 2 if i % 2 == 0 else size / 4.6
+        a = -math.pi / 2 + i * math.pi / 5
+        pts.append(QPointF(x + r * math.cos(a), y + r * math.sin(a)))
+    p.setPen(QPen(QColor(BG_BASE), 1.2))
+    p.setBrush(QColor(STAR_COLOR))
+    p.drawPolygon(QPolygonF(pts))
 
 
 def last_name(player: dict) -> str:
@@ -304,6 +342,11 @@ class SlotAvatar(_DragSource, QWidget):
             text = initials(self.player) if self.player else (self.empty_label or "?")
         p.drawText(QRectF(cx - d / 2, cy - d / 2, d, d), Qt.AlignCenter, text)
 
+        if is_star(self.player):
+            # on the ring's upper left, the role badges being on its right
+            sz = 20 if self.compact else 26
+            _paint_star(p, cx - d / 2 + sz / 2 - 6, cy - d / 2 + sz / 2 - 5, sz)
+
         badges = list(self.badges) or (["C"] if self.is_captain else [])
         if badges:
             p.setFont(tracked_font(FONT_DISPLAY, 9 if self.compact else 11, QFont.Bold, track=0))
@@ -469,6 +512,10 @@ class SubChip(_DragSource, QWidget):
             p.drawText(QRectF(left, 0, self.width() - left - right, self.height()),
                        Qt.AlignLeft | Qt.AlignVCenter, self.empty_label)
             return
+        if is_star(self.player):
+            _paint_star(p, left + 7, self.height() / 2, 14)
+            p.setPen(QColor(self.issue_color or FG_PRIMARY))
+            left += 18
         name = p.fontMetrics().elidedText(last_name(self.player), Qt.ElideRight,
                                           int(self.width() - left - right))
         p.drawText(QRectF(left, 0, self.width() - left - right, self.height()),
@@ -582,6 +629,7 @@ class PlayerPickerPopup(QWidget):
         self._taken_by = {}
         self._tags = {}
         self._subtitles = {}
+        self._stars = None
         self._mode = FITS
         self._seg_modes = [FITS, ALL]   # segment index -> view
 
@@ -592,7 +640,7 @@ class PlayerPickerPopup(QWidget):
         self._popup.hide()
 
     def open_for(self, title, entries, current_pid, taken_by, anchor, screen,
-                 tags=None, subtitles=None, search=None, mode=FITS, highlight=None):
+                 tags=None, subtitles=None, search=None, mode=FITS, highlight=None, stars=None):
         """`entries`: [(pid, name, fits)] for the WHOLE squad, already in the
         order they should appear. `taken_by`: {pid: shirt_number} for every
         OTHER filled slot. `tags`: optional {pid: (text, color)} overrides.
@@ -608,6 +656,7 @@ class PlayerPickerPopup(QWidget):
         self._current_pid, self._taken_by = current_pid, taken_by
         self._tags = tags or {}
         self._subtitles = subtitles or {}
+        self._stars = stars          # optional pid -> bool: star players get a ★
         self._mode = mode if (mode != SEARCH or self._search is not None) else FITS
         fit_count = sum(1 for pid, _, fits in self._entries
                         if fits or pid == current_pid)
@@ -703,6 +752,8 @@ class PlayerPickerPopup(QWidget):
                 tag, tag_col = f"#{self._taken_by[pid]}", WARN
             else:
                 tag, tag_col = "", None
+            if self._stars is not None and pid is not None and self._stars(pid):
+                name = f"{STAR} {name}"
             self._popup.add_row(name, pid, tag=tag, tag_color=tag_col,
                                 selected=(pid == self._current_pid),
                                 subdued=not fits, subtitle=self._subtitles.get(pid, ""))

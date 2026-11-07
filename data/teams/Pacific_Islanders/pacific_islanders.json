@@ -16,16 +16,10 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2008/home_front.png",
-     "backKitFile": "kits_2008/home_back/home_back_%.png",
+     "frontKitFile": "kits_2008/home_front.webp",
+     "backKitFile": "kits_2008/home_back.webp",
      "previewFile": "kits_2008/home_preview.png",
      "color": "#c9c9c9"
-    },
-    "away": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
     }
    },
    "roles": {

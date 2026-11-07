@@ -109,13 +109,31 @@
      "frontKitFile": "kits_2010/home_front.webp",
      "backKitFile": "kits_2010/home_back.webp",
      "previewFile": "kits_2010/home_preview.png",
-     "color": "#071331"
+     "color": "#071331",
+     "shirtName": {
+      "area": [
+       0.1936,
+       0.6914,
+       0.6012,
+       0.0879
+      ],
+      "color": "#f5f5f5"
+     }
     },
     "away": {
      "frontKitFile": "kits_2010/away_front.webp",
      "backKitFile": "kits_2010/away_back.webp",
      "previewFile": "kits_2010/away_preview.png",
-     "color": "#daddd9"
+     "color": "#daddd9",
+     "shirtName": {
+      "area": [
+       0.1936,
+       0.6914,
+       0.6012,
+       0.0879
+      ],
+      "color": "#000000"
+     }
     }
    },
    "roles": {
@@ -174,7 +192,10 @@
     "157329",
     "156530"
    ],
-   "primaryStadium": "11"
+   "primaryStadium": "11",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2009": {
    "name": "Leeds",

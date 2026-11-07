@@ -20,13 +20,31 @@
      "frontKitFile": "kits_2008/home_wc_front.webp",
      "backKitFile": "kits_2008/home_wc_back.webp",
      "previewFile": "kits_2008/home_preview.png",
-     "color": "#9d0604"
+     "color": "#9d0604",
+     "shirtName": {
+      "area": [
+       0.08,
+       0.2441,
+       0.84,
+       0.0879
+      ],
+      "color": "#ffffff"
+     }
     },
     "away": {
      "frontKitFile": "kits_2008/away_wc_front.webp",
      "backKitFile": "kits_2008/away_wc_back.webp",
      "previewFile": "kits_2008/away_preview.png",
-     "color": "#42403f"
+     "color": "#42403f",
+     "shirtName": {
+      "area": [
+       0.08,
+       0.2441,
+       0.84,
+       0.0879
+      ],
+      "color": "#ffffff"
+     }
     }
    },
    "roles": {
@@ -82,7 +100,10 @@
     "147087",
     "144126"
    ],
-   "primaryStadium": "32"
+   "primaryStadium": "32",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2009": {
    "name": "Wales",
@@ -193,8 +214,26 @@
        "label": "RWC 2023",
        "frontKitFile": "kits_2024/home_wc_front.webp",
        "backKitFile": "kits_2024/home_wc_back.webp",
-       "previewFile": "kits_2024/home_wc_preview.png"
+       "previewFile": "kits_2024/home_wc_preview.png",
+       "shirtName": {
+        "area": [
+         0.0761,
+         0.2598,
+         0.84,
+         0.0879
+        ],
+        "color": "#e7e7e6"
+       }
       }
+     },
+     "shirtName": {
+      "area": [
+       0.0761,
+       0.6758,
+       0.84,
+       0.0879
+      ],
+      "color": "#e7e7e6"
      }
     },
     "away": {
@@ -207,8 +246,26 @@
        "label": "RWC 2023",
        "frontKitFile": "kits_2024/away_wc_front.webp",
        "backKitFile": "kits_2024/away_wc_back.webp",
-       "previewFile": "kits_2024/away_wc_preview.png"
+       "previewFile": "kits_2024/away_wc_preview.png",
+       "shirtName": {
+        "area": [
+         0.0761,
+         0.2598,
+         0.84,
+         0.0879
+        ],
+        "color": "#eaea10"
+       }
       }
+     },
+     "shirtName": {
+      "area": [
+       0.0761,
+       0.6836,
+       0.84,
+       0.0879
+      ],
+      "color": "#eaeaea"
      }
     }
    },
@@ -330,7 +387,10 @@
      }
     }
    },
-   "primaryStadium": "32"
+   "primaryStadium": "32",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2010": {
    "name": "Wales",
@@ -918,13 +978,31 @@
      "frontKitFile": "kits_2025_2/home_front.webp",
      "backKitFile": "kits_2025_2/home_back.webp",
      "previewFile": "kits_2025_2/home_preview.png",
-     "color": "#dd0711"
+     "color": "#dd0711",
+     "shirtName": {
+      "area": [
+       0.0761,
+       0.66,
+       0.84,
+       0.0879
+      ],
+      "color": "#f5f5f5"
+     }
     },
     "away": {
      "frontKitFile": "kits_2025_2/away_front.webp",
      "backKitFile": "kits_2025_2/away_back.webp",
      "previewFile": "kits_2025_2/away_preview.png",
-     "color": "#dddcdb"
+     "color": "#dddcdb",
+     "shirtName": {
+      "area": [
+       0.0761,
+       0.6758,
+       0.84,
+       0.0879
+      ],
+      "color": "#087531"
+     }
     }
    },
    "roles": {
@@ -992,7 +1070,10 @@
     "156433",
     "156414"
    ],
-   "primaryStadium": "32"
+   "primaryStadium": "32",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2026": {
    "enabled": true,
@@ -1391,8 +1472,8 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2013/home_front.png",
-     "backKitFile": "kits_2013/home_back/home_back_%.png",
+     "frontKitFile": "kits_2013/home_front.webp",
+     "backKitFile": "kits_2013/home_back.webp",
      "previewFile": "kits_2013/home_preview.png",
      "color": "#b70101"
     },

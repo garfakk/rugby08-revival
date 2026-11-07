@@ -20,7 +20,10 @@
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": "#a70416"
+     "color": "#a70416",
+     "model3d": {
+      "collar": "stand"
+     }
     },
     "away": {
      "frontKitFile": "kits_2024/away_front.webp",
@@ -204,7 +207,10 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": "#ae0a19"
+     "color": "#ae0a19",
+     "model3d": {
+      "collar": "stand"
+     }
     },
     "away": {
      "frontKitFile": "kits_2023/away_front.webp",
@@ -425,8 +431,8 @@
     "143300",
     "153666",
     "154507",
-    "143373",
     "154532",
+    "143373",
     "154491",
     "154519",
     "154489",

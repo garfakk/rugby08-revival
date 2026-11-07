@@ -74,7 +74,7 @@ DEFAULTS = {
     "wind_power": None,
     "wind_dir_deg": 0,
     "breath": None,
-    "anthem": "stock",
+    "anthem": "auto",
     "haka_home": False,
     "haka_away": False,
     "trophy_lift": "stock",
@@ -164,6 +164,9 @@ def normalise(data: dict) -> dict:
     if out["kick_off"] not in KICK_OFFS:
         out["kick_off"] = DEFAULTS["kick_off"]
     out["user_choice"] = [k for k in out.get("user_choice") or [] if k in CHOOSABLE]
+    # "stock" was the old name of the automatic anthem.
+    if out["anthem"] not in gsv.anthem_choices:
+        out["anthem"] = DEFAULTS["anthem"]
     return out
 
 

@@ -25,10 +25,10 @@
      "shirtName": {
       "color": "#ffffff",
       "area": [
-       0.1551,
-       0.2383,
-       0.6977,
-       0.1348
+       0.114,
+       0.2528,
+       0.7719,
+       0.1152
       ]
      }
     },
@@ -40,8 +40,8 @@
      "shirtName": {
       "color": "#ffffff",
       "area": [
-       0.1551,
-       0.2383,
+       0.1512,
+       0.2454,
        0.6977,
        0.1348
       ]
@@ -145,8 +145,8 @@
      "shirtName": {
       "color": "#ffffff",
       "area": [
-       0.1551,
-       0.2293,
+       0.1512,
+       0.2412,
        0.6977,
        0.126
       ]
@@ -159,8 +159,8 @@
      "color": "#cbb74e",
      "shirtName": {
       "area": [
-       0.1551,
-       0.2378,
+       0.1512,
+       0.2497,
        0.6977,
        0.126
       ]
@@ -252,6 +252,17 @@
      "color": "#212124",
      "model3d": {
       "fit": "loose"
+     },
+     "shirtName": {
+      "area": [
+       0.1549,
+       0.1226,
+       0.6902,
+       0.1093
+      ],
+      "color": "#0b1f4b",
+      "outline": "#ffffff",
+      "outlineWidth": 2
      }
     },
     "away": {
@@ -261,6 +272,18 @@
      "color": "#dadad7",
      "model3d": {
       "fit": "loose"
+     },
+     "shirtName": {
+      "area": [
+       0.08,
+       0.2136,
+       0.84,
+       0.101
+      ],
+      "color": "#ffffff",
+      "size": 31,
+      "outline": "#0b1f4b",
+      "outlineWidth": 3
      }
     }
    },
@@ -317,7 +340,10 @@
     "156649"
    ],
    "enabled": true,
-   "primaryStadium": "9"
+   "primaryStadium": "9",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2010": {
    "name": "Bath",
@@ -342,6 +368,17 @@
      "color": "#1e201e",
      "model3d": {
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.2014,
+       0.2351,
+       0.6012,
+       0.1224
+      ],
+      "color": "#f5f5f5",
+      "outline": "#0b1f4b",
+      "outlineWidth": 3
      }
     },
     "away": {
@@ -351,6 +388,15 @@
      "color": "#302951",
      "model3d": {
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.1994,
+       0.1994,
+       0.6012,
+       0.0879
+      ],
+      "color": "#000000"
      }
     }
    },
@@ -406,7 +452,10 @@
     "158304"
    ],
    "enabled": true,
-   "primaryStadium": "9"
+   "primaryStadium": "9",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2017": {
    "name": "Bath",
@@ -428,13 +477,33 @@
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": "#082190"
+     "color": "#082190",
+     "shirtName": {
+      "area": [
+       0.1607,
+       0.1799,
+       0.6902,
+       0.1093
+      ],
+      "color": "#f5f5f5",
+      "size": 32
+     }
     },
     "away": {
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": "#b8bab3"
+     "color": "#b8bab3",
+     "shirtName": {
+      "area": [
+       0.1686,
+       0.2228,
+       0.6902,
+       0.0846
+      ],
+      "color": "#000000",
+      "size": 31
+     }
     }
    },
    "roles": {
@@ -505,7 +574,10 @@
     "157455"
    ],
    "enabled": true,
-   "primaryStadium": "9"
+   "primaryStadium": "9",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2018": {
    "name": "Bath",
@@ -527,13 +599,32 @@
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": "#082190"
+     "color": "#082190",
+     "shirtName": {
+      "area": [
+       0.1607,
+       0.1799,
+       0.6902,
+       0.0974
+      ],
+      "color": "#f5f5f5",
+      "size": 32
+     }
     },
     "away": {
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": "#b8bab3"
+     "color": "#b8bab3",
+     "shirtName": {
+      "area": [
+       0.1686,
+       0.2228,
+       0.6902,
+       0.0798
+      ],
+      "color": "#000000"
+     }
     }
    },
    "roles": {
@@ -604,7 +695,10 @@
     "154855"
    ],
    "enabled": true,
-   "primaryStadium": "9"
+   "primaryStadium": "9",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2019": {
    "name": "Bath",
@@ -629,6 +723,9 @@
      "color": "#0407a7",
      "model3d": {
       "collar": "stand"
+     },
+     "shirtName": {
+      "enabled": false
      }
     },
     "away": {
@@ -638,6 +735,9 @@
      "color": "#1920c3",
      "model3d": {
       "collar": "stand"
+     },
+     "shirtName": {
+      "enabled": false
      }
     }
    },
@@ -709,7 +809,10 @@
     "157772"
    ],
    "enabled": true,
-   "primaryStadium": "9"
+   "primaryStadium": "9",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2022": {
    "name": "Bath",
@@ -731,13 +834,34 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": "#0633e4"
+     "color": "#0633e4",
+     "shirtName": {
+      "area": [
+       0.114,
+       0.248,
+       0.7719,
+       0.0676
+      ],
+      "color": "#111111",
+      "outline": "#ffffff",
+      "outlineWidth": 1
+     }
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": "#e8e8e7"
+     "color": "#e8e8e7",
+     "shirtName": {
+      "area": [
+       0.114,
+       0.2351,
+       0.7719,
+       0.0798
+      ],
+      "color": "#052662",
+      "size": 31
+     }
     }
    },
    "roles": {
@@ -805,7 +929,10 @@
     "152436"
    ],
    "enabled": true,
-   "primaryStadium": "9"
+   "primaryStadium": "9",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2008": {
    "enabled": false,

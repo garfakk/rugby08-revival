@@ -280,7 +280,7 @@
   },
   "2018": {
    "enabled": true,
-   "name": "Bordeaux-Bègles",
+   "name": "Bordeaux",
    "type": "club",
    "category": "Top 14",
    "group": "france",
@@ -374,7 +374,7 @@
   },
   "2023": {
    "enabled": true,
-   "name": "Bordeaux-Bègles",
+   "name": "Bordeaux",
    "type": "club",
    "category": "Top 14",
    "group": "france",
@@ -463,6 +463,92 @@
     "154175",
     "154180",
     "153640"
+   ],
+   "primaryStadium": "69"
+  },
+  "2017": {
+   "name": "Bordeaux",
+   "type": "club",
+   "category": "Top 14",
+   "group": "france",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018/away_front.webp",
+     "backKitFile": "kits_2018/away_back.webp",
+     "previewFile": "kits_2018/home_preview.png",
+     "color": "#4e060b"
+    },
+    "away": {
+     "frontKitFile": "kits_2018/home_front.webp",
+     "backKitFile": "kits_2018/home_back.webp",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "#431b35"
+    }
+   },
+   "roles": {
+    "captain": "147244",
+    "viceCaptain": "152892",
+    "longGK": "155319",
+    "shortGK": "155319",
+    "longPunt": "155319",
+    "shortPunt": "155319",
+    "kickoff": "155319"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "cross_kick",
+    "right": "pocket"
+   },
+   "players": [
+    "145469",
+    "144382",
+    "124596",
+    "117861",
+    "144781",
+    "152892",
+    "152776",
+    "145129",
+    "144306",
+    "155319",
+    "152905",
+    "147244",
+    "114310",
+    "158961",
+    "145163",
+    "145406",
+    "153648",
+    "153081",
+    "155403",
+    "153592",
+    "153333",
+    "153820",
+    "144808",
+    "153039",
+    "158957",
+    "158958",
+    "152891",
+    "158959",
+    "144967",
+    "152897",
+    "152901",
+    "152899",
+    "152903",
+    "158960",
+    "158962",
+    "154154",
+    "152908",
+    "152909"
    ],
    "primaryStadium": "69"
   },
@@ -742,92 +828,6 @@
     "148940",
     "146141",
     "148936"
-   ],
-   "primaryStadium": "69"
-  },
-  "2017": {
-   "name": "Bordeaux-Bègles",
-   "type": "club",
-   "category": "Top 14",
-   "group": "france",
-   "ball": "ball/ball_%.png",
-   "banners": "banners/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos/logo.png",
-    "frontend": "logos/logo_frontend.png",
-    "small": "logos/logo_small.png",
-    "left": "logos/logo_left.png",
-    "right": "logos/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2018/away_front.webp",
-     "backKitFile": "kits_2018/away_back.webp",
-     "previewFile": "kits_2018/home_preview.png",
-     "color": "#4e060b"
-    },
-    "away": {
-     "frontKitFile": "kits_2018/home_front.webp",
-     "backKitFile": "kits_2018/home_back.webp",
-     "previewFile": "kits_2018/away_preview.png",
-     "color": "#431b35"
-    }
-   },
-   "roles": {
-    "captain": "147244",
-    "viceCaptain": "152892",
-    "longGK": "155319",
-    "shortGK": "155319",
-    "longPunt": "155319",
-    "shortPunt": "155319",
-    "kickoff": "155319"
-   },
-   "setPlays": {
-    "up": "miss",
-    "down": "loop",
-    "left": "cross_kick",
-    "right": "pocket"
-   },
-   "players": [
-    "145469",
-    "144382",
-    "124596",
-    "117861",
-    "144781",
-    "152892",
-    "152776",
-    "145129",
-    "144306",
-    "155319",
-    "152905",
-    "147244",
-    "114310",
-    "158961",
-    "145163",
-    "145406",
-    "153648",
-    "153081",
-    "155403",
-    "153592",
-    "153333",
-    "153820",
-    "144808",
-    "153039",
-    "158957",
-    "158958",
-    "152891",
-    "158959",
-    "144967",
-    "152897",
-    "152901",
-    "152899",
-    "152903",
-    "158960",
-    "158962",
-    "154154",
-    "152908",
-    "152909"
    ],
    "primaryStadium": "69"
   },

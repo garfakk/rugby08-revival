@@ -103,3 +103,40 @@ def test_set_selection_and_auto_select(session):
     sel = session.auto_select(HUMAN)
     assert sel["manual"] and len(sel["players"]) == 22
     assert persistence.load(session.t.id).teams[HUMAN].selection == sel
+
+
+def test_double_forfeit_both_sides_lose(ds, data_dir):
+    s = TournamentSession.new(ds, copy.deepcopy(TEMPLATE), "2024", humans=["10002", "10001"], seed=11)
+    while True:
+        s.advance_to_human()
+        fixture = s.human_fixture()
+        if {fixture.home, fixture.away} == {"10002", "10001"}:
+            break
+        s.simulate(fixture)
+    s.forfeit(fixture, None)                       # both managed, match left
+    r = fixture.result
+    assert fixture.played and r.winner_id() is None and r.score_text() == "0-0 (forfeit)"
+    stage = s.t.stage("pools")
+    rows = {row.team_id: row for row in standings.group_table(s.t, stage, stage.group("A"))}
+    for tid in ("10002", "10001"):
+        assert rows[tid].form[-1] == "L"
+    assert rows["10002"].lost + rows["10002"].won + rows["10002"].drawn == rows["10002"].played
+    assert rows["10002"].drawn == sum(1 for f in rows["10002"].form if f == "D")
+
+
+def test_double_forfeit_knockout_sends_one_team_through(ds, data_dir):
+    final = {"id": "ko_only", "name": "KO", "venue": "neutral",
+             "stages": [{"id": "pools", "name": "Pool", "kind": "round_robin", "legs": 1},
+                        {"id": "ko", "name": "Final", "kind": "knockout", "rounds": [
+                            {"id": "final", "name": "Final", "final": True,
+                             "ties": [["pools:A1", "pools:A2"]]}]}],
+             "participants": {"default": {"pools": {"A": ["10002", "10001"]}}}}
+    s = TournamentSession.new(ds, final, "2024", humans=["10002", "10001"], seed=11)
+    s.advance_to_human()
+    s.simulate(s.human_fixture())                  # the pool match
+    s.advance_to_human()
+    fixture = s.human_fixture()
+    assert fixture.knockout
+    s.forfeit(fixture, None)
+    assert fixture.result.winner_id() in ("10002", "10001")
+    assert s.t.champion == fixture.result.winner_id()

@@ -1,0 +1,585 @@
+{
+  "id": "5009",
+  "name": "Heineken Cup",
+  "seasonal": true,
+  "ball": "assets/ball/ball_%.png",
+  "pads": "assets/stadium_graphics.fsh",
+  "logo": "assets/tournament_logo.png",
+  "logo_frontend": "assets/logo_frontend.png",
+  "pitch_logo": "assets/pitch_logos/pitch_logo_%.png",
+  "seasons": {
+    "2008": {
+      "template": {
+        "id": "heineken_cup_2008",
+        "name": "Heineken Cup 2007-08",
+        "order": 50.0,
+        "description": "The real 2007-08 draw: 24 clubs in six pools of four, home and away; the six pool winners and the two best runners-up into quarter-finals seeded 1-8 (1 v 8, 2 v 7, 3 v 6, 4 v 5, at the higher seed's ground), semi-finals as drawn that year (home ground of the drawn side) and the final at the Millennium Stadium, Cardiff. Clubs missing from the data are left out.",
+        "match_type": "european_cup",
+        "variant": "european_cup",
+        "venue": "home",
+        "venues": [
+          "32"
+        ],
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "tries": 4
+          },
+          "losing_bonus": {
+            "margin": 7
+          }
+        },
+        "tiebreakers": [
+          "head_to_head",
+          "tries_for",
+          "points_diff",
+          "fewest_cards",
+          "lots"
+        ],
+        "knockout_draw": "tries_then_kicks",
+        "discipline": {
+          "red_ban": [
+            1,
+            3
+          ],
+          "yellow_accumulation": 3,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "pools",
+            "name": "Pool stage",
+            "kind": "round_robin",
+            "calendar": {
+              "start": "11-10",
+              "offsets": [
+                0,
+                7,
+                28,
+                35,
+                63,
+                70
+              ]
+            },
+            "legs": 2,
+            "match_subtype": "pool",
+            "group_names": {
+              "A": "Pool 1",
+              "B": "Pool 2",
+              "C": "Pool 3",
+              "D": "Pool 4",
+              "E": "Pool 5",
+              "F": "Pool 6"
+            },
+            "qualify": 1
+          },
+          {
+            "id": "knockouts",
+            "name": "Knockout stage",
+            "kind": "knockout",
+            "calendar": {
+              "start": "04-05",
+              "offsets": [
+                0,
+                21,
+                49
+              ]
+            },
+            "rounds": [
+              {
+                "id": "qf",
+                "name": "Quarter-final",
+                "match_subtype": "quarter_final",
+                "ties": [
+                  [
+                    "pools:P1#1",
+                    "pools:P2#2"
+                  ],
+                  [
+                    "pools:P1#2",
+                    "pools:P2#1"
+                  ],
+                  [
+                    "pools:P1#3",
+                    "pools:P1#6"
+                  ],
+                  [
+                    "pools:P1#4",
+                    "pools:P1#5"
+                  ]
+                ]
+              },
+              {
+                "id": "sf",
+                "name": "Semi-final",
+                "match_subtype": "semi_final",
+                "ties": [
+                  [
+                    "W:qf1",
+                    "W:qf3"
+                  ],
+                  [
+                    "W:qf2",
+                    "W:qf4"
+                  ]
+                ]
+              },
+              {
+                "id": "final",
+                "name": "Final",
+                "match_subtype": "final",
+                "final": true,
+                "venue": "neutral",
+                "ties": [
+                  [
+                    "W:sf1",
+                    "W:sf2"
+                  ]
+                ]
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "pools": {
+              "A": [
+                "2030",
+                "10127",
+                "10130",
+                "10139"
+              ],
+              "B": [
+                "10134",
+                "10143",
+                "10148",
+                "10155"
+              ],
+              "C": [
+                "10102",
+                "10104",
+                "10128",
+                "10135"
+              ],
+              "D": [
+                "10109",
+                "10133",
+                "10145",
+                "10176"
+              ],
+              "E": [
+                "10103",
+                "10140",
+                "10146",
+                "10149"
+              ],
+              "F": [
+                "10101",
+                "10131",
+                "10137",
+                "10138"
+              ]
+            }
+          }
+        },
+        "season": "2008"
+      }
+    },
+    "2009": {
+      "template": {
+        "id": "heineken_cup_2009",
+        "name": "Heineken Cup 2008-09",
+        "order": 50.01,
+        "description": "The real 2008-09 draw: 24 clubs in six pools of four, home and away; the six pool winners and the two best runners-up into quarter-finals seeded 1-8 (1 v 8, 2 v 7, 3 v 6, 4 v 5, at the higher seed's ground), semi-finals as drawn that year (home ground of the drawn side) and the final at the Murrayfield, Edinburgh. Clubs missing from the data are left out.",
+        "match_type": "european_cup",
+        "variant": "european_cup",
+        "venue": "home",
+        "venues": [
+          "29"
+        ],
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "tries": 4
+          },
+          "losing_bonus": {
+            "margin": 7
+          }
+        },
+        "tiebreakers": [
+          "head_to_head",
+          "tries_for",
+          "points_diff",
+          "fewest_cards",
+          "lots"
+        ],
+        "knockout_draw": "tries_then_kicks",
+        "discipline": {
+          "red_ban": [
+            1,
+            3
+          ],
+          "yellow_accumulation": 3,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "pools",
+            "name": "Pool stage",
+            "kind": "round_robin",
+            "calendar": {
+              "start": "10-11",
+              "offsets": [
+                0,
+                7,
+                56,
+                63,
+                98,
+                105
+              ]
+            },
+            "legs": 2,
+            "match_subtype": "pool",
+            "group_names": {
+              "A": "Pool 1",
+              "B": "Pool 2",
+              "C": "Pool 3",
+              "D": "Pool 4",
+              "E": "Pool 5",
+              "F": "Pool 6"
+            },
+            "qualify": 1
+          },
+          {
+            "id": "knockouts",
+            "name": "Knockout stage",
+            "kind": "knockout",
+            "calendar": {
+              "start": "04-11",
+              "offsets": [
+                0,
+                21,
+                42
+              ]
+            },
+            "rounds": [
+              {
+                "id": "qf",
+                "name": "Quarter-final",
+                "match_subtype": "quarter_final",
+                "ties": [
+                  [
+                    "pools:P1#1",
+                    "pools:P2#2"
+                  ],
+                  [
+                    "pools:P1#2",
+                    "pools:P2#1"
+                  ],
+                  [
+                    "pools:P1#3",
+                    "pools:P1#6"
+                  ],
+                  [
+                    "pools:P1#4",
+                    "pools:P1#5"
+                  ]
+                ]
+              },
+              {
+                "id": "sf",
+                "name": "Semi-final",
+                "match_subtype": "semi_final",
+                "ties": [
+                  [
+                    "W:qf2",
+                    "W:qf3"
+                  ],
+                  [
+                    "W:qf1",
+                    "W:qf4"
+                  ]
+                ]
+              },
+              {
+                "id": "final",
+                "name": "Final",
+                "match_subtype": "final",
+                "final": true,
+                "venue": "neutral",
+                "ties": [
+                  [
+                    "W:sf1",
+                    "W:sf2"
+                  ]
+                ]
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "pools": {
+              "A": [
+                "10103",
+                "10140",
+                "10144",
+                "10161"
+              ],
+              "B": [
+                "2029",
+                "10131",
+                "10138",
+                "10149"
+              ],
+              "C": [
+                "2030",
+                "10127",
+                "10137",
+                "10143"
+              ],
+              "D": [
+                "10102",
+                "10135",
+                "10146",
+                "10148"
+              ],
+              "E": [
+                "10101",
+                "10105",
+                "10130",
+                "10133"
+              ],
+              "F": [
+                "10109",
+                "10128",
+                "10134",
+                "10171"
+              ]
+            }
+          }
+        },
+        "season": "2009"
+      }
+    },
+    "2010": {
+      "template": {
+        "id": "heineken_cup_2010",
+        "name": "Heineken Cup 2009-10",
+        "order": 50.02,
+        "description": "The real 2009-10 draw: 24 clubs in six pools of four, home and away; the six pool winners and the two best runners-up into quarter-finals seeded 1-8 (1 v 8, 2 v 7, 3 v 6, 4 v 5, at the higher seed's ground), semi-finals as drawn that year (home ground of the drawn side) and the final at the Stade de France, Saint-Denis. Clubs missing from the data are left out.",
+        "match_type": "european_cup",
+        "variant": "european_cup",
+        "venue": "home",
+        "venues": [
+          "70"
+        ],
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "tries": 4
+          },
+          "losing_bonus": {
+            "margin": 7
+          }
+        },
+        "tiebreakers": [
+          "head_to_head",
+          "tries_for",
+          "points_diff",
+          "fewest_cards",
+          "lots"
+        ],
+        "knockout_draw": "tries_then_kicks",
+        "discipline": {
+          "red_ban": [
+            1,
+            3
+          ],
+          "yellow_accumulation": 3,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0
+        },
+        "stages": [
+          {
+            "id": "pools",
+            "name": "Pool stage",
+            "kind": "round_robin",
+            "calendar": {
+              "start": "10-10",
+              "offsets": [
+                0,
+                7,
+                63,
+                70,
+                98,
+                105
+              ]
+            },
+            "legs": 2,
+            "match_subtype": "pool",
+            "group_names": {
+              "A": "Pool 1",
+              "B": "Pool 2",
+              "C": "Pool 3",
+              "D": "Pool 4",
+              "E": "Pool 5",
+              "F": "Pool 6"
+            },
+            "qualify": 1
+          },
+          {
+            "id": "knockouts",
+            "name": "Knockout stage",
+            "kind": "knockout",
+            "calendar": {
+              "start": "04-10",
+              "offsets": [
+                0,
+                21,
+                42
+              ]
+            },
+            "rounds": [
+              {
+                "id": "qf",
+                "name": "Quarter-final",
+                "match_subtype": "quarter_final",
+                "ties": [
+                  [
+                    "pools:P1#1",
+                    "pools:P2#2"
+                  ],
+                  [
+                    "pools:P1#2",
+                    "pools:P2#1"
+                  ],
+                  [
+                    "pools:P1#3",
+                    "pools:P1#6"
+                  ],
+                  [
+                    "pools:P1#4",
+                    "pools:P1#5"
+                  ]
+                ]
+              },
+              {
+                "id": "sf",
+                "name": "Semi-final",
+                "match_subtype": "semi_final",
+                "ties": [
+                  [
+                    "W:qf3",
+                    "W:qf4"
+                  ],
+                  [
+                    "W:qf2",
+                    "W:qf1"
+                  ]
+                ]
+              },
+              {
+                "id": "final",
+                "name": "Final",
+                "match_subtype": "final",
+                "final": true,
+                "venue": "neutral",
+                "ties": [
+                  [
+                    "W:sf1",
+                    "W:sf2"
+                  ]
+                ]
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "pools": {
+              "A": [
+                "2030",
+                "10127",
+                "10140",
+                "10142"
+              ],
+              "B": [
+                "10109",
+                "10130",
+                "10133",
+                "10134"
+              ],
+              "C": [
+                "10103",
+                "10137",
+                "10143",
+                "10176"
+              ],
+              "D": [
+                "10102",
+                "10105",
+                "10131",
+                "10148"
+              ],
+              "E": [
+                "10101",
+                "10128",
+                "10135",
+                "10144"
+              ],
+              "F": [
+                "10138",
+                "10139",
+                "10146",
+                "10156"
+              ]
+            }
+          }
+        },
+        "season": "2010"
+      }
+    }
+  }
+}

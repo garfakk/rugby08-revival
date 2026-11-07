@@ -757,6 +757,9 @@ class PopupList(QWidget):
         return True
 
 
+_GROUP = "__group__"      # data tag of a collapsible section header row
+
+
 class DropdownRow(QWidget):
     """A field that looks like the other pickers but opens a scrollable
     PopupList instead of cycling with arrows — for lists too long to click
@@ -775,6 +778,9 @@ class DropdownRow(QWidget):
         self._index = 0
         self._popup = None
         self._popup_open = False
+        # Optional callable(value) -> section name: the popup then lists the
+        # values under collapsible headers, one per name (stadiums by country).
+        self.group = None
 
     def set_values(self, values, index=0):
         self._values = list(values)
@@ -833,11 +839,15 @@ class DropdownRow(QWidget):
         # pickable row in the list, just marked; it used to be greyed out
         # and unclickable, which read as "removed from the list" rather
         # than "this is where you are".
-        for i, v in enumerate(self._values):
-            popup.add_row(self._display(v).upper(), v, selected=(v == current))
-            if v == current:
-                current_i = i
-        popup.size_to(len(self._values))
+        if self.group is None:
+            for i, v in enumerate(self._values):
+                popup.add_row(self._display(v).upper(), v, selected=(v == current))
+                if v == current:
+                    current_i = i
+            popup.size_to(len(self._values))
+        else:
+            self._fill_grouped(popup, current)
+            current_i = next((i for i, r in enumerate(popup._rows) if r.data == current), None)
         popup.picked.connect(self._on_picked)
         popup.closed.connect(self._on_popup_closed)
         popup.open_at(self, screen, gap=0, own_toggle=True)
@@ -849,11 +859,52 @@ class DropdownRow(QWidget):
         self._popup_open = True
         self.update()
 
+    def _fill_grouped(self, popup, current):
+        """Rows under one collapsible header per group. Opens with the
+        current value's group expanded; a header click (or Enter) toggles
+        it in place and keeps the highlight on the header."""
+        groups = {}
+        for v in self._values:
+            groups.setdefault(str(self.group(v) or "Other"), []).append(v)
+        names = sorted(groups, key=str.lower)
+        opened = {str(self.group(current) or "Other")} if current is not None else set()
+
+        def rebuild(highlight=None):
+            bar = popup.scroll.verticalScrollBar()
+            top = bar.value()
+            popup.clear_rows()
+            for name in names:
+                is_open = name in opened
+                popup.add_row(("▾ " if is_open else "▸ ") + name.upper(), (_GROUP, name),
+                              tag=str(len(groups[name])), subdued=True)
+                if is_open:
+                    for v in groups[name]:
+                        popup.add_row("    " + self._display(v).upper(), v, selected=(v == current))
+            popup._sync_rows()
+            if highlight is not None:
+                idx = next((i for i, r in enumerate(popup._rows) if r.data == highlight), None)
+                if idx is not None:
+                    popup.set_highlight(idx, scroll=False)
+            bar.setValue(top)
+
+        def on_group(value):
+            if isinstance(value, tuple) and value and value[0] == _GROUP:
+                opened.symmetric_difference_update({value[1]})
+                rebuild(highlight=value)
+
+        rebuild()
+        # sized for everything expanded, so the box never resizes while open
+        popup.size_to(len(self._values) + len(names))
+        popup.keep_open = lambda v: isinstance(v, tuple) and bool(v) and v[0] == _GROUP
+        popup.picked.connect(on_group)
+
     def _on_popup_closed(self):
         self._popup_open = False
         self.update()
 
     def _on_picked(self, value):
+        if isinstance(value, tuple) and value and value[0] == _GROUP:
+            return
         try:
             self._index = self._values.index(value)
         except ValueError:

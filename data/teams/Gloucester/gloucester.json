@@ -24,6 +24,17 @@
      "model3d": {
       "fit": "loose",
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.1734,
+       0.1238,
+       0.6531,
+       0.0974
+      ],
+      "color": "#f5f5f5",
+      "outline": "#0b1f4b",
+      "outlineWidth": 4
      }
     },
     "away": {
@@ -34,6 +45,17 @@
      "model3d": {
       "fit": "loose",
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.1543,
+       0.1172,
+       0.6902,
+       0.0977
+      ],
+      "color": "#0b1594",
+      "outlineWidth": 4,
+      "outline": "#ffffff"
      }
     }
    },
@@ -95,7 +117,10 @@
     "156190"
    ],
    "enabled": true,
-   "primaryStadium": "12"
+   "primaryStadium": "12",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2010": {
    "name": "Gloucester",
@@ -120,6 +145,17 @@
      "color": "#c20604",
      "model3d": {
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.1994,
+       0.1764,
+       0.6012,
+       0.0818
+      ],
+      "color": "#ffffff",
+      "outline": "#111111",
+      "outlineWidth": 3
      }
     },
     "away": {
@@ -130,6 +166,17 @@
      "model3d": {
       "fit": "loose",
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.1549,
+       0.1165,
+       0.6902,
+       0.0985
+      ],
+      "color": "#0b1594",
+      "outline": "#ffffff",
+      "outlineWidth": 4
      }
     }
    },
@@ -191,7 +238,10 @@
     "155328"
    ],
    "enabled": true,
-   "primaryStadium": "12"
+   "primaryStadium": "12",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2017": {
    "name": "Gloucester",
@@ -213,7 +263,16 @@
      "frontKitFile": "kits_2017/away_front.webp",
      "backKitFile": "kits_2017/away_back.webp",
      "previewFile": "kits_2017/away_preview.png",
-     "color": "#201f1a"
+     "color": "#201f1a",
+     "shirtName": {
+      "area": [
+       0.1275,
+       0.7827,
+       0.7645,
+       0.0879
+      ],
+      "color": "#f5f5f5"
+     }
     },
     "home": {
      "frontKitFile": "kits_2018/home_front.webp",
@@ -222,6 +281,17 @@
      "color": "#c0150e",
      "model3d": {
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.1215,
+       0.1469,
+       0.757,
+       0.0938
+      ],
+      "color": "#111111",
+      "outlineWidth": 4,
+      "outline": "#ffffff"
      }
     }
    },
@@ -287,7 +357,10 @@
     "157105"
    ],
    "enabled": true,
-   "primaryStadium": "12"
+   "primaryStadium": "12",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2018": {
    "name": "Gloucester",
@@ -312,13 +385,33 @@
      "color": "#c0150e",
      "model3d": {
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.1215,
+       0.1469,
+       0.757,
+       0.0927
+      ],
+      "color": "#000000",
+      "outline": "#ffffff",
+      "outlineWidth": 4
      }
     },
     "away": {
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": "#393c35"
+     "color": "#393c35",
+     "shirtName": {
+      "area": [
+       0.1493,
+       0.3473,
+       0.7181,
+       0.0725
+      ],
+      "color": "#000000"
+     }
     }
    },
    "roles": {
@@ -379,7 +472,10 @@
     "157736"
    ],
    "enabled": true,
-   "primaryStadium": "12"
+   "primaryStadium": "12",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2019": {
    "name": "Gloucester",
@@ -404,13 +500,31 @@
      "color": "#890610",
      "model3d": {
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.1346,
+       0.2695,
+       0.7422,
+       0.0781
+      ],
+      "color": "#1a3c70"
      }
     },
     "away": {
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": "#bdbdbb"
+     "color": "#bdbdbb",
+     "shirtName": {
+      "area": [
+       0.1328,
+       0.2694,
+       0.7422,
+       0.0748
+      ],
+      "color": "#1a3c70"
+     }
     }
    },
    "roles": {
@@ -476,7 +590,10 @@
     "154237"
    ],
    "enabled": true,
-   "primaryStadium": "12"
+   "primaryStadium": "12",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2022": {
    "name": "Gloucester",
@@ -498,13 +615,26 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": "#bc091a"
+     "color": "#bc091a",
+     "shirtName": {
+      "area": [
+       0.118,
+       0.0645,
+       0.7719,
+       0.0439
+      ],
+      "color": "#f5f5f5",
+      "enabled": false
+     }
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": "#39aceb"
+     "color": "#39aceb",
+     "shirtName": {
+      "enabled": false
+     }
     }
    },
    "roles": {
@@ -567,7 +697,10 @@
     "158090"
    ],
    "enabled": true,
-   "primaryStadium": "12"
+   "primaryStadium": "12",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2023": {
    "name": "Gloucester",
@@ -589,13 +722,31 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": "#c11623"
+     "color": "#c11623",
+     "shirtName": {
+      "area": [
+       0.1475,
+       0.3307,
+       0.7051,
+       0.0879
+      ],
+      "color": "#052662"
+     }
     },
     "away": {
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": "#2094c0"
+     "color": "#2094c0",
+     "shirtName": {
+      "area": [
+       0.1484,
+       0.332,
+       0.6995,
+       0.0879
+      ],
+      "color": "#eeefee"
+     }
     }
    },
    "roles": {
@@ -661,7 +812,10 @@
     "157856"
    ],
    "enabled": true,
-   "primaryStadium": "12"
+   "primaryStadium": "12",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2024": {
    "name": "Gloucester",
@@ -683,13 +837,31 @@
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": "#b7121f"
+     "color": "#b7121f",
+     "shirtName": {
+      "area": [
+       0.1475,
+       0.3477,
+       0.7051,
+       0.0879
+      ],
+      "color": "#002478"
+     }
     },
     "away": {
      "frontKitFile": "kits_2024/away_front.webp",
      "backKitFile": "kits_2024/away_back.webp",
      "previewFile": "kits_2024/away_preview.png",
-     "color": "#e2e1e0"
+     "color": "#e2e1e0",
+     "shirtName": {
+      "area": [
+       0.1475,
+       0.3467,
+       0.7051,
+       0.0879
+      ],
+      "color": "#002474"
+     }
     }
    },
    "roles": {
@@ -752,7 +924,10 @@
     "152430"
    ],
    "enabled": true,
-   "primaryStadium": "12"
+   "primaryStadium": "12",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2008": {
    "name": "Gloucester",

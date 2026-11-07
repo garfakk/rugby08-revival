@@ -30064,7 +30064,7 @@
     "bravery": "95",
     "fitness": "98",
     "position1": "scrum_half",
-    "position2": "",
+    "position2": "fly_half",
     "position3": "",
     "nationality": "England",
     "height": "176",
@@ -615808,7 +615808,7 @@
   }
  },
  "152319": {
-  "display_name": "J.Poï",
+  "display_name": "J.Poi",
   "first_name": "Jarrod",
   "last_name": "Poï",
   "birthdate": "1994/02/22",
@@ -632112,7 +632112,7 @@
   }
  },
  "152395": {
-  "display_name": "O.Jégou",
+  "display_name": "O.Jegou",
   "first_name": "Oscar",
   "last_name": "Jégou",
   "birthdate": "2003/05/31",
@@ -632737,7 +632737,7 @@
   }
  },
  "152400": {
-  "display_name": "T.Attissogbé",
+  "display_name": "T.Attissogbe",
   "first_name": "Théo",
   "last_name": "Attissogbé",
   "birthdate": "2004/11/19",
@@ -635717,7 +635717,7 @@
   }
  },
  "152428": {
-  "display_name": "J.Hériteau",
+  "display_name": "J.Heriteau",
   "first_name": "Julien",
   "last_name": "Hériteau",
   "birthdate": "1994/09/12",
@@ -653821,7 +653821,7 @@
   }
  },
  "152495": {
-  "display_name": "A.Pélissié",
+  "display_name": "A.Pelissie",
   "first_name": "Adrien",
   "last_name": "Pélissié",
   "birthdate": "1990/08/07",
@@ -666027,7 +666027,7 @@
   }
  },
  "152622": {
-  "display_name": "C.García",
+  "display_name": "C.Garcia",
   "first_name": "Cédric",
   "last_name": "García",
   "birthdate": "1982/12/28",
@@ -676816,7 +676816,7 @@
   }
  },
  "152645": {
-  "display_name": "C.Vergé",
+  "display_name": "C.Verge",
   "first_name": "Clément",
   "last_name": "Vergé",
   "birthdate": "2001/09/13",
@@ -677744,7 +677744,7 @@
   }
  },
  "152651": {
-  "display_name": "N.Épée",
+  "display_name": "N.Epee",
   "first_name": "Nelson",
   "last_name": "Épée",
   "birthdate": "2001/02/20",
@@ -682692,7 +682692,7 @@
   }
  },
  "152750": {
-  "display_name": "C.Traoré",
+  "display_name": "C.Traore",
   "first_name": "Chérif",
   "last_name": "Traoré",
   "birthdate": "1994/04/10",
@@ -686899,7 +686899,7 @@
   }
  },
  "152745": {
-  "display_name": "A.Balès",
+  "display_name": "A.Bales",
   "first_name": "Alexi",
   "last_name": "Balès",
   "birthdate": "1990/05/30",
@@ -705666,7 +705666,7 @@
   }
  },
  "152867": {
-  "display_name": "J.Jané",
+  "display_name": "J.Jane",
   "first_name": "Julien",
   "last_name": "Jané",
   "birthdate": "",
@@ -706680,7 +706680,7 @@
   }
  },
  "152872": {
-  "display_name": "B.Thiéry",
+  "display_name": "B.Thiery",
   "first_name": "Benjamin",
   "last_name": "Thiéry",
   "birthdate": "1984/02/06",
@@ -710532,7 +710532,7 @@
   }
  },
  "152886": {
-  "display_name": "L.Delboulbès",
+  "display_name": "L.Delboulbes",
   "first_name": "Laurent",
   "last_name": "Delboulbès",
   "birthdate": "1986/11/17",
@@ -714164,7 +714164,7 @@
   }
  },
  "152899": {
-  "display_name": "J.Dubié",
+  "display_name": "J.Dubie",
   "first_name": "Jean-Baptiste",
   "last_name": "Dubié",
   "birthdate": "1989/07/16",
@@ -742188,7 +742188,7 @@
   }
  },
  "153031": {
-  "display_name": "R.Carré",
+  "display_name": "R.Carre",
   "first_name": "Rhys",
   "last_name": "Carré",
   "birthdate": "1998/02/08",
@@ -743673,7 +743673,7 @@
   }
  },
  "153081": {
-  "display_name": "V.Cobîlaș",
+  "display_name": "V.Cobilas",
   "first_name": "Vadim",
   "last_name": "Cobîlaș",
   "birthdate": "1983/07/30",
@@ -745899,7 +745899,7 @@
   }
  },
  "153042": {
-  "display_name": "D.Kötze",
+  "display_name": "D.Kotze",
   "first_name": "Daniel",
   "last_name": "Kötze",
   "birthdate": "1987/03/28",
@@ -746452,7 +746452,7 @@
   }
  },
  "153043": {
-  "display_name": "T.Stroë",
+  "display_name": "T.Stroe",
   "first_name": "Tudor",
   "last_name": "Stroë",
   "birthdate": "1993/09/06",
@@ -746751,7 +746751,7 @@
   }
  },
  "153044": {
-  "display_name": "R.Capó",
+  "display_name": "R.Capo",
   "first_name": "Rodrigo",
   "last_name": "Capó",
   "birthdate": "1980/12/08",
@@ -752605,7 +752605,7 @@
   }
  },
  "153106": {
-  "display_name": "J.Díaz",
+  "display_name": "J.Diaz",
   "first_name": "Javier",
   "last_name": "Díaz",
   "birthdate": "1995/07/26",
@@ -752752,7 +752752,7 @@
   }
  },
  "153107": {
-  "display_name": "S.García",
+  "display_name": "S.Garcia",
   "first_name": "Santiago",
   "last_name": "García",
   "birthdate": "1992/06/19",
@@ -754094,7 +754094,7 @@
   }
  },
  "153113": {
-  "display_name": "S.González",
+  "display_name": "S.Gonzalez",
   "first_name": "Santiago",
   "last_name": "González",
   "birthdate": "1988/06/16",
@@ -755868,7 +755868,7 @@
   }
  },
  "153121": {
-  "display_name": "F.Sánchez",
+  "display_name": "F.Sanchez",
   "first_name": "Federico",
   "last_name": "Sánchez",
   "birthdate": "1988/10/26",
@@ -772634,9 +772634,9 @@
   }
  },
  "153179": {
-  "display_name": "S.Borde",
+  "display_name": "S.Tillous-Bord",
   "first_name": "Sébastien",
-  "last_name": "Borde",
+  "last_name": "Tillous-Borde",
   "birthdate": "1985/04/29",
   "commentary": "",
   "stats": {
@@ -772674,7 +772674,7 @@
     "skin_tone": "light",
     "skin": "",
     "skin_overlay": [],
-    "face": "6202",
+    "face": "4693",
     "foot": "right_footed",
     "headgear": "",
     "boot_style": "0",
@@ -772720,7 +772720,7 @@
     "skin_tone": "light",
     "skin": "",
     "skin_overlay": [],
-    "face": "6202",
+    "face": "4693",
     "foot": "right_footed",
     "headgear": "",
     "boot_style": "0",
@@ -772766,7 +772766,7 @@
     "skin_tone": "light",
     "skin": "",
     "skin_overlay": [],
-    "face": "6202",
+    "face": "4693",
     "foot": "right_footed",
     "headgear": "",
     "boot_style": "0",
@@ -772812,7 +772812,7 @@
     "skin_tone": "light",
     "skin": "",
     "skin_overlay": [],
-    "face": "6202",
+    "face": "4693",
     "foot": "right_footed",
     "headgear": "",
     "boot_style": "0",
@@ -772858,7 +772858,7 @@
     "skin_tone": "light",
     "skin": "",
     "skin_overlay": [],
-    "face": "6202",
+    "face": "4693",
     "foot": "right_footed",
     "headgear": "",
     "boot_style": "0",
@@ -772904,7 +772904,7 @@
     "skin_tone": "light",
     "skin": "",
     "skin_overlay": [],
-    "face": "6202",
+    "face": "4693",
     "foot": "right_footed",
     "headgear": "",
     "boot_style": "0",
@@ -773066,7 +773066,7 @@
   }
  },
  "153181": {
-  "display_name": "A.Lagardère",
+  "display_name": "A.Lagardere",
   "first_name": "Anthony",
   "last_name": "Lagardère",
   "birthdate": "1980/12/09",
@@ -788652,7 +788652,7 @@
   }
  },
  "153346": {
-  "display_name": "A.Müller",
+  "display_name": "A.Muller",
   "first_name": "Axel",
   "last_name": "Müller",
   "birthdate": "1993/11/25",
@@ -788937,7 +788937,7 @@
   }
  },
  "153347": {
-  "display_name": "Q.Étienne",
+  "display_name": "Q.Etienne",
   "first_name": "Quentin",
   "last_name": "Étienne",
   "birthdate": "1990/07/14",
@@ -789957,7 +789957,7 @@
   }
  },
  "153198": {
-  "display_name": "S.Fauqué",
+  "display_name": "S.Fauque",
   "first_name": "Sébastien",
   "last_name": "Fauqué",
   "birthdate": "1977/03/06",
@@ -795128,7 +795128,7 @@
   }
  },
  "153237": {
-  "display_name": "T.Aniès",
+  "display_name": "T.Anies",
   "first_name": "Thomas",
   "last_name": "Aniès",
   "birthdate": "1986/03/27",
@@ -795875,7 +795875,7 @@
   }
  },
  "153243": {
-  "display_name": "A.Planté",
+  "display_name": "A.Plante",
   "first_name": "Adrien",
   "last_name": "Planté",
   "birthdate": "1985/04/25",
@@ -799083,7 +799083,7 @@
   }
  },
  "153268": {
-  "display_name": "S.Fernández",
+  "display_name": "S.Fernandez",
   "first_name": "Santiago",
   "last_name": "Fernández",
   "birthdate": "1985/11/28",
@@ -799705,7 +799705,7 @@
   }
  },
  "153270": {
-  "display_name": "J.Fernández",
+  "display_name": "J.Fernandez",
   "first_name": "Juan",
   "last_name": "Fernández",
   "birthdate": "1981/11/19",
@@ -800284,7 +800284,7 @@
   }
  },
  "153273": {
-  "display_name": "M.Nicolás Car",
+  "display_name": "M.Nicolas Car",
   "first_name": "Manuel",
   "last_name": "Nicolás Carizza",
   "birthdate": "1984/08/23",
@@ -801204,7 +801204,7 @@
   }
  },
  "153277": {
-  "display_name": "H.San Martín",
+  "display_name": "H.San Martin",
   "first_name": "Horacio",
   "last_name": "San Martín",
   "birthdate": "1982/02/15",
@@ -801406,7 +801406,7 @@
   }
  },
  "153280": {
-  "display_name": "L.González",
+  "display_name": "L.Gonzalez",
   "first_name": "Lucas",
   "last_name": "González",
   "birthdate": "1985/11/02",
@@ -801461,7 +801461,7 @@
   }
  },
  "153281": {
-  "display_name": "S.Guzmán",
+  "display_name": "S.Guzman",
   "first_name": "Santiago",
   "last_name": "Guzmán",
   "birthdate": "1989/01/11",
@@ -813386,7 +813386,7 @@
   }
  },
  "153555": {
-  "display_name": "O.Diomandé",
+  "display_name": "O.Diomande",
   "first_name": "Olivier",
   "last_name": "Diomandé",
   "birthdate": "1974/04/26",
@@ -813680,7 +813680,7 @@
   }
  },
  "153558": {
-  "display_name": "M.Mérabet",
+  "display_name": "M.Merabet",
   "first_name": "Mehdi",
   "last_name": "Mérabet",
   "birthdate": "1985/06/21",
@@ -815288,7 +815288,7 @@
   }
  },
  "153569": {
-  "display_name": "J.Cronjé",
+  "display_name": "J.Cronje",
   "first_name": "Jacques",
   "last_name": "Cronjé",
   "birthdate": "1982/08/04",
@@ -815729,7 +815729,7 @@
   }
  },
  "153572": {
-  "display_name": "M.Lorée",
+  "display_name": "M.Loree",
   "first_name": "Mathieu",
   "last_name": "Lorée",
   "birthdate": "1987/06/18",
@@ -825153,7 +825153,7 @@
   }
  },
  "153412": {
-  "display_name": "H.Brüssow",
+  "display_name": "H.Brussow",
   "first_name": "Heinrich",
   "last_name": "Brüssow",
   "birthdate": "1986/07/21",
@@ -828036,7 +828036,7 @@
   }
  },
  "153474": {
-  "display_name": "C.Baïocco",
+  "display_name": "C.Baiocco",
   "first_name": "Clément",
   "last_name": "Baïocco",
   "birthdate": "1979/12/03",
@@ -829010,9 +829010,9 @@
   }
  },
  "153480": {
-  "display_name": "F.Trinh",
+  "display_name": "F.Trinh-Duc",
   "first_name": "François",
-  "last_name": "Trinh",
+  "last_name": "Trinh-Duc",
   "birthdate": "1986/11/11",
   "commentary": "",
   "stats": {
@@ -830614,7 +830614,7 @@
   }
  },
  "153488": {
-  "display_name": "J.Vallée",
+  "display_name": "J.Vallee",
   "first_name": "Jérôme",
   "last_name": "Vallée",
   "birthdate": "1976/04/19",
@@ -834236,7 +834236,7 @@
   }
  },
  "153585": {
-  "display_name": "G.Moïse",
+  "display_name": "G.Moise",
   "first_name": "Geoffrey",
   "last_name": "Moïse",
   "birthdate": "1991/08/20",
@@ -840315,7 +840315,7 @@
   }
  },
  "153603": {
-  "display_name": "C.Malié",
+  "display_name": "C.Malie",
   "first_name": "Charly",
   "last_name": "Malié",
   "birthdate": "1991/11/05",
@@ -842507,7 +842507,7 @@
   }
  },
  "153627": {
-  "display_name": "A.Lapègue",
+  "display_name": "A.Lapegue",
   "first_name": "Adrien",
   "last_name": "Lapègue",
   "birthdate": "1998/10/21",
@@ -842746,7 +842746,7 @@
   }
  },
  "153628": {
-  "display_name": "A.Oléon",
+  "display_name": "A.Oleon",
   "first_name": "Adrien",
   "last_name": "Oléon",
   "birthdate": "1989/03/13",
@@ -847002,7 +847002,7 @@
   }
  },
  "153660": {
-  "display_name": "K.Tu’inukuaf",
+  "display_name": "K.Tu'inukuaf",
   "first_name": "Karl",
   "last_name": "Tu’inukuafe",
   "birthdate": "1993/02/21",
@@ -853957,7 +853957,7 @@
   }
  },
  "153711": {
-  "display_name": "J.Díaz Bonill",
+  "display_name": "J.Diaz Bonill",
   "first_name": "Joaquín",
   "last_name": "Díaz Bonilla",
   "birthdate": "1989/04/12",
@@ -860603,7 +860603,7 @@
   }
  },
  "153756": {
-  "display_name": "P.Pagès",
+  "display_name": "P.Pages",
   "first_name": "Pierre",
   "last_name": "Pagès",
   "birthdate": "1990/05/16",
@@ -874386,7 +874386,7 @@
   }
  },
  "153813": {
-  "display_name": "J.Pélissié",
+  "display_name": "J.Pelissie",
   "first_name": "Jonathan",
   "last_name": "Pélissié",
   "birthdate": "1988/06/06",
@@ -878104,7 +878104,7 @@
   }
  },
  "153846": {
-  "display_name": "H.Kaabèche",
+  "display_name": "H.Kaabeche",
   "first_name": "Hamza",
   "last_name": "Kaabèche",
   "birthdate": "1996/09/23",
@@ -888029,7 +888029,7 @@
   }
  },
  "153965": {
-  "display_name": "R.Martínez",
+  "display_name": "R.Martinez",
   "first_name": "Rodrigo",
   "last_name": "Martínez",
   "birthdate": "1998/07/07",
@@ -888323,7 +888323,7 @@
   }
  },
  "153967": {
-  "display_name": "J.Luis Gonzál",
+  "display_name": "J.Luis Gonzal",
   "first_name": "José",
   "last_name": "Luis González",
   "birthdate": "1997/09/11",
@@ -888424,7 +888424,7 @@
   }
  },
  "153968": {
-  "display_name": "G.García",
+  "display_name": "G.Garcia",
   "first_name": "Gonzalo",
   "last_name": "García",
   "birthdate": "1999/03/05",
@@ -901182,7 +901182,7 @@
   }
  },
  "154013": {
-  "display_name": "P.Fa’amuasil",
+  "display_name": "P.Fa'amuasil",
   "first_name": "Pone",
   "last_name": "Fa’amuasili",
   "birthdate": "1997/02/26",
@@ -901834,7 +901834,7 @@
   }
  },
  "154045": {
-  "display_name": "O.Sarraméa",
+  "display_name": "O.Sarramea",
   "first_name": "Olivier",
   "last_name": "Sarraméa",
   "birthdate": "1975/06/05",
@@ -914460,7 +914460,7 @@
   }
  },
  "154091": {
-  "display_name": "R.Nortjé",
+  "display_name": "R.Nortje",
   "first_name": "Ruan",
   "last_name": "Nortjé",
   "birthdate": "1998/07/25",
@@ -916455,7 +916455,7 @@
   }
  },
  "154098": {
-  "display_name": "C.Gérondeau",
+  "display_name": "C.Gerondeau",
   "first_name": "Camille",
   "last_name": "Gérondeau",
   "birthdate": "1988/03/12",
@@ -917034,7 +917034,7 @@
   }
  },
  "154101": {
-  "display_name": "A.Nicoué",
+  "display_name": "A.Nicoue",
   "first_name": "Alexandre",
   "last_name": "Nicoué",
   "birthdate": "1997/02/01",
@@ -929246,7 +929246,7 @@
   }
  },
  "154180": {
-  "display_name": "G.Massé",
+  "display_name": "G.Masse",
   "first_name": "Gatien",
   "last_name": "Massé",
   "birthdate": "2002/05/02",
@@ -930132,7 +930132,7 @@
   }
  },
  "154191": {
-  "display_name": "S.Anga’Aelan",
+  "display_name": "S.Anga'Aelan",
   "first_name": "Sione",
   "last_name": "Anga’Aelangi",
   "birthdate": "1988/11/07",
@@ -931240,7 +931240,7 @@
   }
  },
  "154195": {
-  "display_name": "S.Clément",
+  "display_name": "S.Clement",
   "first_name": "Stéphane",
   "last_name": "Clément",
   "birthdate": "1987/09/03",
@@ -945584,7 +945584,7 @@
   }
  },
  "154297": {
-  "display_name": "R.Sénéca",
+  "display_name": "R.Seneca",
   "first_name": "Rémi",
   "last_name": "Sénéca",
   "birthdate": "1995/01/01",
@@ -950873,7 +950873,7 @@
   }
  },
  "154341": {
-  "display_name": "S.Onambélé",
+  "display_name": "S.Onambele",
   "first_name": "Stéphane",
   "last_name": "Onambélé",
   "birthdate": "1993/02/12",
@@ -954734,7 +954734,7 @@
   }
  },
  "154387": {
-  "display_name": "M.Smaïli",
+  "display_name": "M.Smaili",
   "first_name": "Mathieu",
   "last_name": "Smaïli",
   "birthdate": "1999/08/30",
@@ -955561,7 +955561,7 @@
   }
  },
  "154397": {
-  "display_name": "E.Hervé",
+  "display_name": "E.Herve",
   "first_name": "Enzo",
   "last_name": "Hervé",
   "birthdate": "1998/10/13",
@@ -958327,7 +958327,7 @@
   }
  },
  "154424": {
-  "display_name": "L.Ferrères",
+  "display_name": "L.Ferreres",
   "first_name": "Laurent",
   "last_name": "Ferrères",
   "birthdate": "1980/08/30",
@@ -961330,7 +961330,7 @@
   }
  },
  "154459": {
-  "display_name": "M.Jágr",
+  "display_name": "M.Jagr",
   "first_name": "Martin",
   "last_name": "Jágr",
   "birthdate": "1979/09/29",
@@ -965295,7 +965295,7 @@
   }
  },
  "154518": {
-  "display_name": "B.Bastères",
+  "display_name": "B.Basteres",
   "first_name": "Benjamin",
   "last_name": "Bastères",
   "birthdate": "1984/12/01",
@@ -966186,7 +966186,7 @@
   }
  },
  "154525": {
-  "display_name": "C.Béal",
+  "display_name": "C.Beal",
   "first_name": "Cédric",
   "last_name": "Béal",
   "birthdate": "1986/10/17",
@@ -966866,7 +966866,7 @@
   }
  },
  "154529": {
-  "display_name": "R.Barthélemy",
+  "display_name": "R.Barthelemy",
   "first_name": "Romain",
   "last_name": "Barthélemy",
   "birthdate": "1990/01/25",
@@ -989301,7 +989301,7 @@
   }
  },
  "154670": {
-  "display_name": "K.Leʻaupepe",
+  "display_name": "K.Le'aupepe",
   "first_name": "Kane",
   "last_name": "Leʻaupepe",
   "birthdate": "1992/12/03",
@@ -995880,7 +995880,7 @@
   }
  },
  "154713": {
-  "display_name": "V.Tolutaʻu",
+  "display_name": "V.Toluta'u",
   "first_name": "Vili",
   "last_name": "Tolutaʻu",
   "birthdate": "1994/01/26",
@@ -1000433,7 +1000433,7 @@
   }
  },
  "154745": {
-  "display_name": "J.Fa’anana-S",
+  "display_name": "J.Fa'anana-S",
   "first_name": "Jamason",
   "last_name": "Fa’anana-Schultz",
   "birthdate": "1996/06/13",
@@ -1002893,7 +1002893,7 @@
   }
  },
  "154774": {
-  "display_name": "J.Suárez",
+  "display_name": "J.Suarez",
   "first_name": "Joaquín",
   "last_name": "Suárez",
   "birthdate": "2003/05/11",
@@ -1003880,7 +1003880,7 @@
   }
  },
  "154785": {
-  "display_name": "J.Echeverría",
+  "display_name": "J.Echeverria",
   "first_name": "Juan",
   "last_name": "Echeverría",
   "birthdate": "1991/10/09",
@@ -1008555,7 +1008555,7 @@
   }
  },
  "154805": {
-  "display_name": "A.León",
+  "display_name": "A.Leon",
   "first_name": "Andrés de",
   "last_name": "León",
   "birthdate": "",
@@ -1011128,7 +1011128,7 @@
   }
  },
  "154823": {
-  "display_name": "I.Rodríguez",
+  "display_name": "I.Rodriguez",
   "first_name": "Ignacio",
   "last_name": "Rodríguez",
   "birthdate": "",
@@ -1011431,7 +1011431,7 @@
   }
  },
  "154826": {
-  "display_name": "M.Viñals",
+  "display_name": "M.Vinals",
   "first_name": "Mateo",
   "last_name": "Viñals",
   "birthdate": "1998/10/07",
@@ -1011679,7 +1011679,7 @@
   }
  },
  "154828": {
-  "display_name": "D.Ménage",
+  "display_name": "D.Menage",
   "first_name": "David",
   "last_name": "Ménage",
   "birthdate": "",
@@ -1012662,7 +1012662,7 @@
   }
  },
  "154835": {
-  "display_name": "M.Polutélé",
+  "display_name": "M.Polutele",
   "first_name": "Maka",
   "last_name": "Polutélé",
   "birthdate": "",
@@ -1018422,7 +1018422,7 @@
   }
  },
  "154903": {
-  "display_name": "Y.Orabé",
+  "display_name": "Y.Orabe",
   "first_name": "Yohan",
   "last_name": "Orabé",
   "birthdate": "2002/05/21",
@@ -1019065,7 +1019065,7 @@
   }
  },
  "154908": {
-  "display_name": "D.Gérard",
+  "display_name": "D.Gerard",
   "first_name": "David",
   "last_name": "Gérard",
   "birthdate": "1977/11/26",
@@ -1019835,7 +1019835,7 @@
   }
  },
  "154922": {
-  "display_name": "E.Căpățân",
+  "display_name": "E.Capatan",
   "first_name": "Eugen",
   "last_name": "Căpățână",
   "birthdate": "1986/06/18",
@@ -1020120,7 +1020120,7 @@
   }
  },
  "154923": {
-  "display_name": "A.Rădoi",
+  "display_name": "A.Radoi",
   "first_name": "Andrei",
   "last_name": "Rădoi",
   "birthdate": "1987/04/21",
@@ -1020745,7 +1020745,7 @@
   }
  },
  "154926": {
-  "display_name": "C.Pristăvița",
+  "display_name": "C.Pristavita",
   "first_name": "Constantin",
   "last_name": "Pristăvița",
   "birthdate": "1993/05/23",
@@ -1021508,7 +1021508,7 @@
   }
  },
  "154929": {
-  "display_name": "V.Popârlan",
+  "display_name": "V.Poparlan",
   "first_name": "Valentin",
   "last_name": "Popârlan",
   "birthdate": "1987/06/12",
@@ -1022565,7 +1022565,7 @@
   }
  },
  "154934": {
-  "display_name": "S.Fakaʻosilea",
+  "display_name": "S.Faka'osilea",
   "first_name": "Sione",
   "last_name": "Fakaʻosilea",
   "birthdate": "1987/01/13",
@@ -1023622,7 +1023622,7 @@
   }
  },
  "154939": {
-  "display_name": "S.Strătilă",
+  "display_name": "S.Stratila",
   "first_name": "Sabin",
   "last_name": "Strătilă",
   "birthdate": "1995/03/27",
@@ -1023723,7 +1023723,7 @@
   }
  },
  "154940": {
-  "display_name": "M.Lazăr",
+  "display_name": "M.Lazar",
   "first_name": "Mihai",
   "last_name": "Lazăr",
   "birthdate": "1986/11/03",
@@ -1025139,7 +1025139,7 @@
   }
  },
  "155083": {
-  "display_name": "J.García",
+  "display_name": "J.Garcia",
   "first_name": "Jonathan",
   "last_name": "García",
   "birthdate": "1984/12/05",
@@ -1026002,7 +1026002,7 @@
   }
  },
  "155092": {
-  "display_name": "N.Djebaïli",
+  "display_name": "N.Djebaili",
   "first_name": "Nicolas",
   "last_name": "Djebaïli",
   "birthdate": "1980/01/29",
@@ -1026081,7 +1026081,7 @@
     "fitness": "74",
     "position1": "blindside_flanker",
     "position2": "openside_flanker",
-    "position3": "",
+    "position3": "number_eight",
     "nationality": "",
     "height": "189",
     "weight": "106",
@@ -1037694,7 +1037694,7 @@
   }
  },
  "155001": {
-  "display_name": "V.Tahituʻa",
+  "display_name": "V.Tahitu'a",
   "first_name": "Viliami",
   "last_name": "Tahituʻa",
   "birthdate": "1991/10/02",
@@ -1037795,7 +1037795,7 @@
   }
  },
  "155002": {
-  "display_name": "T.Taufu’i",
+  "display_name": "T.Taufu'i",
   "first_name": "Tevita",
   "last_name": "Taufu’i",
   "birthdate": "1988/03/21",
@@ -1043762,7 +1043762,7 @@
   }
  },
  "155158": {
-  "display_name": "D.Lazăr",
+  "display_name": "D.Lazar",
   "first_name": "Dorin",
   "last_name": "Lazăr",
   "birthdate": "1990/01/23",
@@ -1044525,7 +1044525,7 @@
   }
  },
  "155163": {
-  "display_name": "C.Iliuță",
+  "display_name": "C.Iliuta",
   "first_name": "Cosmin",
   "last_name": "Iliuță",
   "birthdate": "1998/03/02",
@@ -1044966,7 +1044966,7 @@
   }
  },
  "155178": {
-  "display_name": "D.Mureșan",
+  "display_name": "D.Muresan",
   "first_name": "Domițian",
   "last_name": "Mureșan",
   "birthdate": "1995/08/01",
@@ -1045232,7 +1045232,7 @@
   }
  },
  "155183": {
-  "display_name": "D.Tică",
+  "display_name": "D.Tica",
   "first_name": "Dorin",
   "last_name": "Tică",
   "birthdate": "",
@@ -1045452,7 +1045452,7 @@
   }
  },
  "155187": {
-  "display_name": "A.Țiglă",
+  "display_name": "A.Tigla",
   "first_name": "Alexandru",
   "last_name": "Țiglă",
   "birthdate": "1993/02/19",
@@ -1045654,7 +1045654,7 @@
   }
  },
  "155199": {
-  "display_name": "V.Bocăneț",
+  "display_name": "V.Bocanet",
   "first_name": "Vlăduț",
   "last_name": "Bocăneț",
   "birthdate": "1999/04/28",
@@ -1082528,7 +1082528,7 @@
   }
  },
  "155407": {
-  "display_name": "T.Hébert",
+  "display_name": "T.Hebert",
   "first_name": "Thomas",
   "last_name": "Hébert",
   "birthdate": "2000/02/18",
@@ -1088710,7 +1088710,7 @@
   }
  },
  "155457": {
-  "display_name": "C.Albaladéjo",
+  "display_name": "C.Albaladejo",
   "first_name": "Clément",
   "last_name": "Albaladéjo",
   "birthdate": "",
@@ -1089408,7 +1089408,7 @@
   }
  },
  "155463": {
-  "display_name": "P.Bidabé",
+  "display_name": "P.Bidabe",
   "first_name": "Philippe",
   "last_name": "Bidabé",
   "birthdate": "1978/01/13",
@@ -1581194,7 +1581194,7 @@
   }
  },
  "158722": {
-  "display_name": "H.García",
+  "display_name": "H.Garcia",
   "first_name": "Hugo",
   "last_name": "García",
   "birthdate": "",
@@ -1582606,7 +1582606,7 @@
   }
  },
  "158746": {
-  "display_name": "N.Fernández",
+  "display_name": "N.Fernandez",
   "first_name": "Nicanor López",
   "last_name": "Fernández",
   "birthdate": "",
@@ -1584531,7 +1584531,7 @@
   }
  },
  "158781": {
-  "display_name": "G.Padrò",
+  "display_name": "G.Padro",
   "first_name": "Gonzalo",
   "last_name": "Padrò",
   "birthdate": "1983/06/13",
@@ -1603661,7 +1603661,7 @@
   }
  },
  "158868": {
-  "display_name": "R.Martínez",
+  "display_name": "R.Martinez",
   "first_name": "Raimundo",
   "last_name": "Martínez",
   "birthdate": "",
@@ -1604379,7 +1604379,7 @@
   }
  },
  "158874": {
-  "display_name": "R.Fernández",
+  "display_name": "R.Fernandez",
   "first_name": "Rodrigo",
   "last_name": "Fernández",
   "birthdate": "1996/02/08",
@@ -1609304,7 +1609304,7 @@
   }
  },
  "158920": {
-  "display_name": "C.Game Jiméne",
+  "display_name": "C.Game Jimene",
   "first_name": "Cristóbal",
   "last_name": "Game Jiménez",
   "birthdate": "2002/07/09",
@@ -1609689,7 +1609689,7 @@
   }
  },
  "158926": {
-  "display_name": "J.Domínguez",
+  "display_name": "J.Dominguez",
   "first_name": "Joaquín",
   "last_name": "Domínguez",
   "birthdate": "1987/03/13",
@@ -1610010,7 +1610010,7 @@
   }
  },
  "158934": {
-  "display_name": "S.Januškin",
+  "display_name": "S.Januskin",
   "first_name": "Sergey",
   "last_name": "Januškin",
   "birthdate": "1986/11/16",
@@ -1610230,7 +1610230,7 @@
   }
  },
  "158947": {
-  "display_name": "M.Galthié",
+  "display_name": "M.Galthie",
   "first_name": "Mathis",
   "last_name": "Galthié",
   "birthdate": "",
@@ -1610725,7 +1610725,7 @@
   }
  },
  "158940": {
-  "display_name": "M.Díaz",
+  "display_name": "M.Diaz",
   "first_name": "Matías",
   "last_name": "Díaz",
   "birthdate": "1993/03/16",
@@ -1616609,7 +1616609,7 @@
   }
  },
  "158979": {
-  "display_name": "M.Queirós",
+  "display_name": "M.Queiros",
   "first_name": "Manuel",
   "last_name": "Queirós",
   "birthdate": "1994/11/30",

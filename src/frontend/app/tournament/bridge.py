@@ -73,6 +73,23 @@ def editable_squad(t, fixture, tid):
     return players, lineup, to_pid
 
 
+def game_match_type(tpl, fixture) -> str:
+    """The game's competition (gsv.match_type) for a fixture: the template's
+    "match_type". A knockout game of a competition the game doesn't have
+    ("exhibition": Top 14, URC...) takes the template's "playoff_match_type",
+    else the closest the game has — "premiership" (its club league with
+    play-offs) for a club league, "world_cup" otherwise — so a semi-final
+    or a final gets the game's knockout presentation, not a friendly's."""
+    mt = tpl.get("match_type")
+    mt = mt if mt in gsv.match_type else "exhibition"
+    if mt != "exhibition" or not fixture.knockout:
+        return mt
+    playoff = tpl.get("playoff_match_type")
+    if playoff in gsv.match_type and playoff != "exhibition":
+        return playoff
+    return "premiership" if tpl.get("category") else "world_cup"
+
+
 def _game_stage(t, fixture, match_type) -> str:
     """The .mis matchsubtype (the game's competition stage) of a fixture. The
     game's competition commentary and intros need a stage: a competition
@@ -124,7 +141,7 @@ def to_match_config(ds, t, fixture) -> MatchConfig:
     cfg.difficulty = opts.get("difficulty", "pro")
     cfg.halftime_length = opts.get("halftime_length", "5m")
     tpl = t.template
-    cfg.match_type = tpl.get("match_type", "exhibition") if tpl.get("match_type") in gsv.match_type else "exhibition"
+    cfg.match_type = game_match_type(tpl, fixture)
     cfg.match_subtype = _game_stage(t, fixture, cfg.match_type)
     if tpl.get("trophy_lift", True):
         if fixture.final:
@@ -152,7 +169,10 @@ def to_match_config(ds, t, fixture) -> MatchConfig:
                            2: {"kind": "pad", "label": "GAMEPAD 1", "zone": "away"}}
     else:
         cfg.controllers = {1: {"kind": "kbd", "label": "KEYBOARD", "zone": humans[0] if humans else "home"}}
-    cfg.lock_controllers = True
+    # Lock only when the user manages one side. Both managed: the pause menu's
+    # Reassign Controllers must reach either team, and the DLL lock would close
+    # whichever side the pre-match board left without a device.
+    cfg.lock_controllers = len(humans) < 2
     return cfg
 
 
@@ -255,8 +275,12 @@ def from_game_result(t, fixture, result: dict, rng) -> MatchResult:
 
 def forfeit_result(t, fixture, losing_team) -> MatchResult:
     """Walkover: the template's forfeit score (default 25-0 / 5 tries,
-    the usual "bonus point win" award)."""
-    winner = fixture.away if losing_team == fixture.home else fixture.home
+    the usual "bonus point win" award). `losing_team` None = double forfeit
+    (both sides managed and the match was left): 0-0, no winner, both lose."""
+    if losing_team is None:
+        winner = None
+    else:
+        winner = fixture.away if losing_team == fixture.home else fixture.home
     tries = int(t.template.get("forfeit_tries", 5))
     sides = {}
     for tid in (fixture.home, fixture.away):

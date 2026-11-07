@@ -19,6 +19,7 @@ creates and saves it and opens the dashboard.
 """
 import copy
 import random
+import re
 
 from PyQt5.QtCore import QRectF, Qt, pyqtSignal
 from PyQt5.QtGui import QColor, QFont, QFontMetrics, QPainter, QPen
@@ -126,10 +127,13 @@ class CompetitionCard(ActivatableCard):
         self.update()
 
     def _title(self):
-        """The competition's name, without an edition's year ("Six Nations")."""
+        """The competition's name, without an edition's year or season
+        ("Six Nations", "Champions Cup" for "Champions Cup 2023-24")."""
         name = str(self.editions[-1].template.get("name", self.tid))
         label = self.editions[-1].label
-        return name[:-len(label)].strip() if label and name.endswith(label) else name
+        if label and name.endswith(label):
+            name = name[:-len(label)].strip()
+        return re.sub(r"\s+\d{4}(?:\s*[-/]\s*\d{2,4})?$", "", name) or name
 
     def paintEvent(self, event):
         p = QPainter(self)
@@ -140,8 +144,20 @@ class CompetitionCard(ActivatableCard):
         x = 104
         p.setFont(tracked_font(FONT_DISPLAY, 19, QFont.Bold, 1.0))
         p.setPen(QColor(FG_PRIMARY))
-        p.drawText(QRectF(x, 0, w - x - 40, h), Qt.AlignLeft | Qt.AlignVCenter,
+        mine = bool(self.tpl.get("custom"))
+        p.drawText(QRectF(x, 0 if not mine else -10, w - x - 40, h), Qt.AlignLeft | Qt.AlignVCenter,
                    self._title().upper())
+        if mine:
+            # a tournament the user made (Tournament editor)
+            p.setFont(tracked_font(FONT_DISPLAY, 9, QFont.Bold, 1.4))
+            tag = "MY TOURNAMENT"
+            tw = QFontMetrics(p.font()).horizontalAdvance(tag) + 14
+            r = QRectF(x, h / 2 + 10, tw, 16)
+            p.setPen(Qt.NoPen)
+            p.setBrush(QColor(YOU_TINT))
+            p.drawRoundedRect(r, 2, 2)
+            p.setPen(QColor(BG_BASE))
+            p.drawText(r, Qt.AlignCenter, tag)
         if self.selected:
             p.setPen(Qt.NoPen)
             p.setBrush(QColor(ACCENT))
@@ -206,6 +222,7 @@ class TournamentWizardScreen(Screen):
         self._building = False
         self._step = 0
         self._page = 0
+        self._preselect = None     # a template id to open on (open_on)
         self._build()
 
     # ── layout ───────────────────────────────────────────────────────────
@@ -368,6 +385,17 @@ class TournamentWizardScreen(Screen):
         self._build_groups({})
         self._go(0)
         motion.stagger_in(self._comp_cards[:12], step=40)
+        want, self._preselect = self._preselect, None
+        if want:
+            fam = next((e.family for e in self.by_id.values() if e.id == want), None)
+            if fam:
+                self._pick_family(fam)
+                self._go(1)
+
+    def open_on(self, template_id):
+        """Show with this template's competition picked, on SETUP (the
+        tournament editor's PLAY IT)."""
+        self._preselect = template_id
 
     def current_edition(self):
         return self.by_id.get(getattr(self, "_comp", ""))
@@ -493,8 +521,8 @@ class TournamentWizardScreen(Screen):
         tpl = self.template()
         cards = []
         for spec in tpl.get("stages", []):
-            if spec.get("kind", "round_robin") != "round_robin":
-                continue
+            if spec.get("kind", "round_robin") != "round_robin" and spec["id"] not in participants:
+                continue                # a knockout fed by refs (a cup's draw has entrants)
             names = spec.get("group_names") or {}
             groups = participants.get(spec["id"], {})
             for gid, teams in groups.items():

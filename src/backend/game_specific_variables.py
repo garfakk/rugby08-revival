@@ -64,11 +64,28 @@ WIND_VECTOR_SCALE = 1000
 # Weather precipitation IDs. Note: this is a custom setting that works only with the DLL patch
 precipitation_id = {"none": 0, "rain": 1, "snow": 3}
 
-# .mis <WEATHER anthem="..."> (reR08 ENABLE_ANTHEM). The patch also accepts
-# an arbitrary team CodeId to force any nation's anthem regardless of who's
-# playing, but that table isn't available to the mod (team records carry no
-# CodeId) — home/away/stock is the reachable subset.
-anthem_choices = ["stock", "home", "away"]
+# Pre-match anthem (reR08 ENABLE_ANTHEM, .mis MISSION intro= / anthem=).
+# Every match is played in two club slots (teams_id), so the stock game picks
+# the club intro (no anthem, no haka) and, in the World Cup intro, finds no
+# anthem for the slots' teams. The mod sends intro="anthem" and the nation's
+# stock team code instead (one anthem per match, an engine limit).
+#   auto: anthem intro when neither team is a club side and one of them has an
+#         anthem (home team's first); New Zealand performs the haka
+#   home / away: that team's anthem (the other's when it has none)
+#   off: club intro, no anthem
+anthem_choices = ["auto", "home", "away", "off"]
+
+# Stock team code -> anthem in Audio/anthems.big (exe table 0x98cdc8), by
+# team name. No stock anthem: Chile, Russia, Spain, Tunisia, Uruguay.
+anthem_codes = {
+  "argentina": 1, "australia": 2, "canada": 3, "england": 5, "fiji": 6, "france": 7,
+  "georgia": 8, "ireland": 9, "italy": 10, "japan": 11, "namibia": 12, "new zealand": 13,
+  "portugal": 14, "romania": 15, "scotland": 17, "south africa": 18, "samoa": 20,
+  "tonga": 21, "usa": 24, "united states": 24, "wales": 25,
+}
+
+# Teams that perform the haka in the anthem intro (auto mode)
+haka_teams = {"new zealand"}
 
 # .mis trophy_lift="..." (reR08 ENABLE_TROPHY_LIFT). "on" = the match's own
 # competition trophy (World Cup if none); a named trophy forces that one
@@ -79,6 +96,27 @@ trophy_lift_choices = [
     "WorldCup", "TriNations", "SixNations", "TenNations", "EuroCup",
     "Super12", "Premiership", "Bledisloe", "Elite", "WL1", "WL2", "WL3", "WLKO",
 ]
+
+# The trophy each reR08 trophy-lift ceremony shows (trophy_lift_choices): its
+# model and texture, misc/models/<name>.o and misc/textures/<name>.fsh in
+# data.gob. A competition's own trophy (competition definition "trophy") is
+# copied under these names for that match only, standing in for the stock one.
+trophy_files = {
+  "WorldCup": {"model": "fbf7142285e1a3d0ca98ab7dcb66a73d.o", "texture": "c0afaac6cbf4428134e62d33704444a6.fsh"},   # worldcup
+  "TriNations": {"model": "1391daea71437b5e76f727e81bf10fae.o", "texture": "0ef0c973a75e07fa59998aad6601b4dd.fsh"},   # trinations
+  "SixNations": {"model": "61a803eaf7b76bb03bc02ecb6bebe580.o", "texture": "16f6ef00aa02f300034084803e83a7f8.fsh"},   # sixnations
+  "TenNations": {"model": "8ed872c8ae0907487f2bfe0e6f5b9c16.o", "texture": "8261fa1c7c66925750e91ed497b22f0f.fsh"},   # tentrophies
+  "EuroCup": {"model": "1408b2efca5887a3c39b95cfb8f99e8b.o", "texture": "77ea945f4ff7705241c337ad958beae4.fsh"},   # heineken
+  "Super12": {"model": "1d4fc890a72591299c3a01cc84974c41.o", "texture": "50ce6937a335bd8c94c4b7ad81bd2945.fsh"},   # super12
+  "Premiership": {"model": "5e96572c958089fa462b6d116a8ebc54.o", "texture": "c59a0bd52420aaa35d84a949a985e30c.fsh"},   # premiership
+  "Bledisloe": {"model": "8eabe3dad781d713b161f6cf399dad22.o", "texture": "adc99c12c8cf2cf97d0ceb3ead5d6fe4.fsh"},   # bledisloe
+  "Elite": {"model": "ea7ada288e92dbcf684dd6c9658b9745.o", "texture": "5836b1395dc8d3a29e7c8c5716dad43c.fsh"},   # wl_elite
+  "WL1": {"model": "bbdfdb5789772a75b830e43512baf498.o", "texture": "0b44a259cce828b15c4abb0f484c407c.fsh"},   # wl_div1
+  "WL2": {"model": "327531b32d2d7617dff73febb3579dd1.o", "texture": "d8d25cf86a7132c62c74501bcb4043a7.fsh"},   # wl_div2
+  "WL3": {"model": "b69eee34e014fa7898932d75d18f9d8d.o", "texture": "1a70d47e579bf7315f8b5cb47db8284a.fsh"},   # wl_div3
+  "WLKO": {"model": "50727ddd29de24dab74f4ae94f260da5.o", "texture": "751a3f23bac913d916cd4b0453d2b539.fsh"},   # wl_k0
+}
+
 
 # .mis <STATE><MODE name="..."> — the values actually seen across the 93
 # stock .mis files in data.gob (KICK OFF dominates; the others are
@@ -251,7 +289,7 @@ players_roster_id = {
 face_id_for_custom_faces = {
   'team_A': [
     {'face_id': 10202, 'filename': "decedf4a5f531cfb420072621f0b2190.big"},
-    {'face_id': 10816, 'filename': "5217b83315b531cfb420072621f0b2190.big"},
+    {'face_id': 10816, 'filename': "5217b83315b531c9c658a767fa332a01.big"},
     {'face_id': 11075, 'filename': "4461fb5d77a4658c7e3933abe53f46e4.big"},
     {'face_id': 12779, 'filename': "a5af13e645bef96d7d86c510d70c8fcf.big"},
     {'face_id': 12859, 'filename': "8fe5e6f57e912f09ad2839e0180b6569.big"},
@@ -284,7 +322,7 @@ face_id_for_custom_faces = {
     {'face_id': 21577, 'filename': "165518eea871c04a3ce6a9548a2b3cfa.big"},
     {'face_id': 21911, 'filename': "9f1ab4b29fd3eb6d7e162436ef48c13d.big"},
     {'face_id': 21979, 'filename': "3039bd6a7b04aae138d3e51356473d05.big"},
-    {'face_id': 226, 'filename': "a45a79de683e2d7a4041995ff3d5cf8c.big"},
+    {'face_id': 22658, 'filename': "a45a79de683e2d7a4041995ff3d5cf8c.big"},
     {'face_id': 22867, 'filename': "ad417653e603eac0cce51682d2c32c35.big"},
     {'face_id': 2368, 'filename': "fc49174bf501d129dd1867a38e585bfe.big"},
     {'face_id': 23811, 'filename': "61dd64285b8ba71443e57b98118e7232.big"},

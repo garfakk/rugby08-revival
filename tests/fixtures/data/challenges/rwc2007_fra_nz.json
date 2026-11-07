@@ -120,7 +120,7 @@
   "wind_power": 6,
   "wind_dir_deg": 10,
   "breath": null,
-  "anthem": "stock",
+  "anthem": "auto",
   "haka_home": true,
   "haka_away": false,
   "trophy_lift": "stock",

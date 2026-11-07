@@ -116,6 +116,15 @@
      "model3d": {
       "fit": "loose",
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.1254,
+       0.263,
+       0.757,
+       0.0879
+      ],
+      "color": "#f5f5f5"
      }
     },
     "away": {
@@ -126,6 +135,15 @@
      "model3d": {
       "fit": "loose",
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.1293,
+       0.262,
+       0.757,
+       0.0879
+      ],
+      "color": "#2924a4"
      }
     }
    },
@@ -185,7 +203,10 @@
     "156157"
    ],
    "enabled": true,
-   "primaryStadium": "11"
+   "primaryStadium": "11",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2010": {
    "name": "Newcastle",
@@ -210,6 +231,15 @@
      "color": "#7d7f7c",
      "model3d": {
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.2092,
+       0.7706,
+       0.6012,
+       0.0879
+      ],
+      "color": "#f5f5f5"
      }
     },
     "away": {
@@ -219,6 +249,15 @@
      "color": "#707173",
      "model3d": {
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.2092,
+       0.6378,
+       0.6012,
+       0.0703
+      ],
+      "color": "#000000"
      }
     }
    },
@@ -273,7 +312,10 @@
     "157481"
    ],
    "enabled": true,
-   "primaryStadium": "11"
+   "primaryStadium": "11",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2017": {
    "name": "Newcastle",
@@ -295,13 +337,31 @@
      "frontKitFile": "kits_2017/home_front.webp",
      "backKitFile": "kits_2017/home_back.webp",
      "previewFile": "kits_2017/home_preview.png",
-     "color": "#181915"
+     "color": "#181915",
+     "shirtName": {
+      "area": [
+       0.1459,
+       0.5938,
+       0.7199,
+       0.0879
+      ],
+      "color": "#ffffff"
+     }
     },
     "away": {
      "frontKitFile": "kits_2017/away_front.webp",
      "backKitFile": "kits_2017/away_back.webp",
      "previewFile": "kits_2017/away_preview.png",
-     "color": "#da4c02"
+     "color": "#da4c02",
+     "shirtName": {
+      "area": [
+       0.1551,
+       0.623,
+       0.6977,
+       0.0557
+      ],
+      "color": "#ffffff"
+     }
     }
    },
    "roles": {
@@ -364,7 +424,10 @@
     "157587"
    ],
    "enabled": true,
-   "primaryStadium": "11"
+   "primaryStadium": "11",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2018": {
    "name": "Newcastle",
@@ -386,7 +449,16 @@
      "frontKitFile": "kits_2018/home_front.webp",
      "backKitFile": "kits_2018/home_back.webp",
      "previewFile": "kits_2018/home_preview.png",
-     "color": "#1a1c18"
+     "color": "#1a1c18",
+     "shirtName": {
+      "area": [
+       0.1342,
+       0.2715,
+       0.7353,
+       0.0879
+      ],
+      "color": "#ffffff"
+     }
     },
     "away": {
      "frontKitFile": "kits_2018/away_front.webp",
@@ -395,6 +467,15 @@
      "color": "#8b8c91",
      "model3d": {
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.1307,
+       0.6172,
+       0.7348,
+       0.0879
+      ],
+      "color": "#ffffff"
      }
     }
    },
@@ -461,7 +542,10 @@
     "152478"
    ],
    "enabled": true,
-   "primaryStadium": "11"
+   "primaryStadium": "11",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2019": {
    "name": "Newcastle",
@@ -483,7 +567,16 @@
      "frontKitFile": "kits_2019/home_front.webp",
      "backKitFile": "kits_2019/home_back.webp",
      "previewFile": "kits_2019/home_preview.png",
-     "color": "#565555"
+     "color": "#565555",
+     "shirtName": {
+      "area": [
+       0.0865,
+       0.6914,
+       0.8387,
+       0.0879
+      ],
+      "color": "#ffffff"
+     }
     },
     "away": {
      "frontKitFile": "kits_2019/away_front.webp",
@@ -492,6 +585,15 @@
      "color": "#188143",
      "model3d": {
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.0943,
+       0.7109,
+       0.8387,
+       0.0703
+      ],
+      "color": "#ffffff"
      }
     }
    },
@@ -562,7 +664,10 @@
     "145244"
    ],
    "enabled": true,
-   "primaryStadium": "11"
+   "primaryStadium": "11",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2021": {
    "name": "Newcastle",
@@ -683,13 +788,31 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": "#141514"
+     "color": "#141514",
+     "shirtName": {
+      "area": [
+       0.1162,
+       0.6562,
+       0.7793,
+       0.0879
+      ],
+      "color": "#ffffff"
+     }
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": "#ec010b"
+     "color": "#ec010b",
+     "shirtName": {
+      "area": [
+       0.1162,
+       0.6562,
+       0.7793,
+       0.0879
+      ],
+      "color": "#eeeeee"
+     }
     }
    },
    "roles": {
@@ -759,7 +882,10 @@
     "158084"
    ],
    "enabled": true,
-   "primaryStadium": "11"
+   "primaryStadium": "11",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2023": {
    "name": "Newcastle",
@@ -781,13 +907,31 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": "#151615"
+     "color": "#151615",
+     "shirtName": {
+      "area": [
+       0.1162,
+       0.2949,
+       0.7793,
+       0.0879
+      ],
+      "color": "#ffffff"
+     }
     },
     "away": {
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": "#0d8650"
+     "color": "#0d8650",
+     "shirtName": {
+      "area": [
+       0.1162,
+       0.2949,
+       0.7793,
+       0.0879
+      ],
+      "color": "#eeefee"
+     }
     }
    },
    "roles": {
@@ -855,7 +999,10 @@
     "158030"
    ],
    "enabled": true,
-   "primaryStadium": "11"
+   "primaryStadium": "11",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2024": {
    "name": "Newcastle",
@@ -877,13 +1024,31 @@
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": "#141514"
+     "color": "#141514",
+     "shirtName": {
+      "area": [
+       0.1162,
+       0.2793,
+       0.7793,
+       0.0879
+      ],
+      "color": "#e6e7e6"
+     }
     },
     "away": {
      "frontKitFile": "kits_2024/away_front.webp",
      "backKitFile": "kits_2024/away_back.webp",
      "previewFile": "kits_2024/away_preview.png",
-     "color": "#247e51"
+     "color": "#247e51",
+     "shirtName": {
+      "area": [
+       0.1105,
+       0.2793,
+       0.7867,
+       0.0879
+      ],
+      "color": "#e6e7e6"
+     }
     }
    },
    "roles": {
@@ -947,7 +1112,10 @@
     "157933"
    ],
    "enabled": true,
-   "primaryStadium": "11"
+   "primaryStadium": "11",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2016": {
    "name": "Newcastle",

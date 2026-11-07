@@ -185,10 +185,12 @@ class SaveCard(ActivatableCard):
 
 
 class NewTile(ActivatableCard):
-    """NEW TOURNAMENT, the first entry of the list."""
+    """NEW TOURNAMENT, the first entry of the list (and its neighbour,
+    CREATE YOUR OWN: `title`, `glyph`, `subtitle`)."""
 
-    def __init__(self, parent=None):
-        super().__init__(parent, stripe=GREEN)
+    def __init__(self, parent=None, title="NEW TOURNAMENT", glyph="+", subtitle="", stripe=GREEN):
+        super().__init__(parent, stripe=stripe)
+        self.title, self.glyph, self.subtitle = title, glyph, subtitle
         self.setFixedHeight(84)
 
     def paintEvent(self, event):
@@ -198,21 +200,31 @@ class NewTile(ActivatableCard):
         h = self.height()
         c = QRectF(34, (h - 48) / 2, 48, 48)
         p.setPen(Qt.NoPen)
-        p.setBrush(QColor(ACCENT if self.hasFocus() else GREEN))
+        p.setBrush(QColor(ACCENT if self.hasFocus() else (self._stripe or GREEN)))
         p.drawEllipse(c)
         p.setPen(QColor(BG_BASE))
-        p.setFont(tracked_font(FONT_DISPLAY, 26, QFont.Bold, 0))
-        p.drawText(c.adjusted(0, -2, 0, 0), Qt.AlignCenter, "+")
+        p.setFont(tracked_font(FONT_DISPLAY, 26 if self.glyph == "+" else 20, QFont.Bold, 0))
+        p.drawText(c.adjusted(0, -2, 0, 0), Qt.AlignCenter, self.glyph)
         p.setPen(QColor(FG_PRIMARY))
         p.setFont(tracked_font(FONT_DISPLAY, 20, QFont.Bold, 1.2))
-        p.drawText(QRectF(116, 0, self.width() - 130, h), Qt.AlignLeft | Qt.AlignVCenter, "NEW TOURNAMENT")
+        if self.subtitle:
+            p.drawText(QRectF(116, 12, self.width() - 130, h / 2 - 6), Qt.AlignLeft | Qt.AlignBottom,
+                       self.title)
+            p.setPen(QColor(FG_TERTIARY))
+            p.setFont(tracked_font(FONT_DISPLAY, 11, QFont.DemiBold, 0.4))
+            p.drawText(QRectF(116, h / 2 + 2, self.width() - 130, h / 2 - 10),
+                       Qt.AlignLeft | Qt.AlignTop, self.subtitle)
+        else:
+            p.drawText(QRectF(116, 0, self.width() - 130, h), Qt.AlignLeft | Qt.AlignVCenter, self.title)
 
 
 class TournamentHubScreen(Screen):
-    def __init__(self, ds, on_back, on_new, on_open):
+    def __init__(self, ds, on_back, on_new, on_open, on_create=None):
+        """`on_create`: the tournament editor (CREATE YOUR OWN)."""
         super().__init__(on_back=on_back)
         self.ds = ds
         self.on_new = on_new
+        self.on_create = on_create
         self.on_open = on_open
         self._saves = []
         self._cards = []
@@ -248,7 +260,18 @@ class TournamentHubScreen(Screen):
         self.new_tile.activated.connect(self.on_new)
         self.new_tile.focused.connect(lambda: self._select(None))
         self.focus.register(self.new_tile)
-        hv.addWidget(self.new_tile)
+        top = QHBoxLayout()
+        top.setSpacing(10)
+        top.addWidget(self.new_tile, stretch=1)
+        self.create_tile = None
+        if self.on_create is not None:
+            self.create_tile = NewTile(title="CREATE YOUR OWN", glyph="✎", stripe=AWAY_TINT,
+                                       subtitle="your format, your teams, your rules")
+            self.create_tile.activated.connect(self.on_create)
+            self.create_tile.focused.connect(lambda: self._select(None))
+            self.focus.register(self.create_tile)
+            top.addWidget(self.create_tile, stretch=1)
+        hv.addLayout(top)
         hv.addSpacing(30)
         # two sections: the tournaments under way, the finished ones
         self.sections = {}

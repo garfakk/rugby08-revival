@@ -1,52 +1,5 @@
 {
  "10180": {
-  "2026": {
-   "name": "French Barbarians",
-   "type": "special",
-   "category": "Representatives",
-   "ball": "logos_1/ball_%.png",
-   "banners": "logos_1/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos_1/logo.png",
-    "frontend": "logos_1/logo_frontend.png",
-    "small": "logos_1/logo_small.png",
-    "left": "logos_1/logo_left.png",
-    "right": "logos_1/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2026_2/home_front.png",
-     "backKitFile": "kits_2026_2/home_back/home_back_%.png",
-     "previewFile": "kits_2026_2/home_preview.png",
-     "color": "#0f5295"
-    },
-    "away": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
-    }
-   },
-   "roles": {
-    "captain": "",
-    "viceCaptain": "",
-    "longGK": "",
-    "shortGK": "",
-    "longPunt": "",
-    "shortPunt": "",
-    "kickoff": ""
-   },
-   "setPlays": {
-    "left": "",
-    "up": "",
-    "right": "",
-    "down": ""
-   },
-   "players": [],
-   "group": "representatives",
-   "enabled": false
-  },
   "2022": {
    "name": "French Barbarians",
    "type": "special",
@@ -63,16 +16,10 @@
    },
    "kits": {
     "home": {
-     "frontKitFile": "kits_2026_2/home_front.png",
-     "backKitFile": "kits_2026_2/home_back/home_back_%.png",
+     "frontKitFile": "kits_2026_2/home_front.webp",
+     "backKitFile": "kits_2026_2/home_back.webp",
      "previewFile": "kits_2026_2/home_preview.png",
      "color": "#0f5295"
-    },
-    "away": {
-     "frontKitFile": "",
-     "backKitFile": "",
-     "previewFile": "",
-     "color": ""
     }
    },
    "roles": {
@@ -115,6 +62,53 @@
     "155074"
    ],
    "group": "representatives"
+  },
+  "2026": {
+   "name": "French Barbarians",
+   "type": "special",
+   "category": "Representatives",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2026_2/home_front.webp",
+     "backKitFile": "kits_2026_2/home_back.webp",
+     "previewFile": "kits_2026_2/home_preview.png",
+     "color": "#0f5295"
+    },
+    "away": {
+     "frontKitFile": "",
+     "backKitFile": "",
+     "previewFile": "",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "",
+    "viceCaptain": "",
+    "longGK": "",
+    "shortGK": "",
+    "longPunt": "",
+    "shortPunt": "",
+    "kickoff": ""
+   },
+   "setPlays": {
+    "left": "",
+    "up": "",
+    "right": "",
+    "down": ""
+   },
+   "players": [],
+   "group": "representatives",
+   "enabled": false
   }
  }
 }

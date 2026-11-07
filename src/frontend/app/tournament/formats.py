@@ -5,6 +5,9 @@ A template is a JSON file describing a competition's structure and rules:
 
   {"id": "world_cup", "name": "World Cup",
    "match_type": "world_cup",          # game commentary flag (gsv.match_type)
+   "playoff_match_type": "premiership", # optional: the knockouts' one when match_type is
+                                       # "exhibition" (a competition the game lacks); else
+                                       # the closest (bridge.game_match_type)
    "branding": "default",              # competition id (data/competitions/<competition>/<competition>.json)
    "venue": "neutral" | "home",        # default for every stage
    "venues": ["70", ...],              # neutral venue rotation (stadium ids)
@@ -39,17 +42,17 @@ else to set, and one named after the competition (world_cup) serves any
 edition that asks for it: the generic world_cup template with season 2024
 plays the RWC 2023 squads, with 2028 the RWC 2027 ones.
 
-Built-in templates ship as flat files in assets/data/competitions/; a data
-pack can add or override them (same id) inside its competition definitions,
+Templates live in the data, inside the competition definitions,
 <mod data>/competitions/<competition>/<competition>.json — under "template"
 for a seasonless competition, under "seasons" -> <year> -> "template" for a
-seasonal one (see tournament_data_loader.py).
+seasonal one (see tournament_data_loader.py) — so a data update can fix
+them. A loose <id>.json in a competitions directory is read as a template
+too.
 """
 import json
 import os
 import re
 
-from shared.app_paths import assets_directory
 from shared.log import get_logger
 
 log = get_logger(__name__)
@@ -57,8 +60,10 @@ log = get_logger(__name__)
 
 def _dirs():
     from shared.config import config
-    return [os.path.join(assets_directory(), "data", "competitions"),
-            os.path.join(config.mod_data_directory, "competitions")]
+    # the user's own tournaments last: an id clash never hides a data one
+    # (theirs all start with "my_", custom.ID_PREFIX)
+    return [os.path.join(config.mod_data_directory, "competitions"),
+            config.directory_custom_tournaments]
 
 
 def _read(path):
@@ -75,12 +80,17 @@ def _templates_in(d):
             if name.endswith(".json") and os.path.isfile(path):
                 tpl = _read(path)
                 tpl.setdefault("id", os.path.splitext(name)[0])
+                if tpl.get("custom") and tpl.get("design"):
+                    from . import custom
+                    tpl = custom.template_from_file(tpl)
                 yield name, tpl
                 continue
             root_json = os.path.join(path, f"{name}.json")
             if not os.path.isfile(root_json):
                 continue
             definition = _read(root_json)
+            if definition.get("disabled"):
+                continue        # not offered (its textures still load: tournament_data_loader)
             entries = (definition.get("seasons", {}).items() if definition.get("seasonal")
                        else [("", definition)])
             for season, entry in entries:
@@ -116,9 +126,20 @@ def problems(ds, template, season, participants) -> list:
     found = []
     seen = set()
     rr = [s for s in template.get("stages", []) if s.get("kind", "round_robin") == "round_robin"]
-    if not rr:
+    # a cup: teams entered straight into a knockout stage's draw
+    cups = [s for s in template.get("stages", []) if s.get("kind") == "knockout"
+            and s["id"] in participants]
+    if not rr and not cups:
         found.append("template has no round-robin stage to enter teams into")
-    for spec in rr:
+    for spec in cups:
+        seeds = {ref for rnd in spec.get("rounds", []) for tie in rnd.get("ties", [])
+                 for ref in (tie.get("teams") if isinstance(tie, dict) else tie)
+                 if ref.startswith(spec["id"] + ":S")}
+        n = sum(len(ts) for ts in participants[spec["id"]].values())
+        if seeds and n != len(seeds):
+            found.append(f"{spec.get('name', spec['id'])}: the draw needs {len(seeds)} teams, "
+                         f"it has {n}")
+    for spec in rr + cups:
         groups = participants.get(spec["id"], {})
         if not groups:
             found.append(f"{spec.get('name', spec['id'])}: no teams")
@@ -156,6 +177,8 @@ def problems(ds, template, season, participants) -> list:
                         sid, rest = ref.split(":", 1)
                         if sid not in stage_ids:
                             found.append(f"{ref}: unknown stage")
+                        elif stage_ids[sid].get("kind") == "knockout" and rest[:1] == "S":
+                            pass                # a seed of a cup's draw (checked above)
                         elif not rest.startswith("P"):
                             gid = rest.rstrip("0123456789")
                             if gid not in participants.get(sid, {}):
@@ -189,7 +212,10 @@ class Edition:
 
 def family_of(tid, tpl) -> str:
     """The competition a template belongs to: its branding's (the RWC 2015
-    template is a "world_cup"), else its own id."""
+    template is a "world_cup"), else its own id. A tournament the user made
+    is always its own, whatever textures it borrows."""
+    if tpl.get("custom"):
+        return f"custom:{tid}"
     return str(tpl.get("branding") or tid)
 
 
@@ -242,8 +268,13 @@ def _real_edition(ds, tid, tpl, usable_for):
     parts = {sid: {gid: [t for t in ts if t in usable] for gid, ts in groups.items()}
              for sid, groups in parts.items()}
     need = needed_per_group(tpl)
-    if not parts or any(len(ts) < need for groups in parts.values() for ts in groups.values()):
+    if not tpl.get("custom") and (
+            not parts or any(len(ts) < need for groups in parts.values() for ts in groups.values())):
         return None
+    if tpl.get("custom") and not any(ts for groups in parts.values() for ts in groups.values()):
+        return None
+    # (the user's own one is offered as made: what keeps it from being
+    # played shows in the wizard, formats.problems)
     return Edition(tid, family_of(tid, tpl), tpl, season, parts,
                    str(tpl.get("branding_season") or season or tpl.get("name", tid)), missing)
 

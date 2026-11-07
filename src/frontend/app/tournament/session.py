@@ -154,7 +154,12 @@ class TournamentSession:
         persistence.drop_snapshot(self.t.id, "prematch")
 
     def forfeit(self, fixture, losing_team) -> list:
+        """`losing_team` None = double forfeit: both teams lose (a knockout
+        tie still needs a team through, drawn at random; the other forfeits)."""
         self._checkpoint()
+        if losing_team is None and fixture.knockout:
+            losing_team = engine.fixture_rng(self.t, fixture, "forfeit").choice(
+                [fixture.home, fixture.away])
         engine.record_result(self.t, fixture, bridge.forfeit_result(self.t, fixture, losing_team))
         done = [fixture] + engine.simulate_day(self.t)
         persistence.drop_snapshot(self.t.id, "prematch")
@@ -240,9 +245,10 @@ class TournamentSession:
             lineups.save_as(entry, items[index]["name"], lineups.default(entry) or entry.selection)
             self.save()
 
-    def save_lineup(self, team_id, name) -> int:
+    def save_lineup(self, team_id, name, lineup=None) -> int:
+        """Save `lineup` (default: the default lineup) under `name`."""
         entry = self.t.teams[team_id]
-        i = lineups.save_as(entry, name, lineups.default(entry) or entry.selection)
+        i = lineups.save_as(entry, name, lineup or lineups.default(entry) or entry.selection)
         self.save()
         return i
 

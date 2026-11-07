@@ -213,6 +213,9 @@
        "backKitFile": "kits_2024/home_wc_back.webp",
        "previewFile": "kits_2024/home_wc_preview.png"
       }
+     },
+     "model3d": {
+      "collar": "stand"
      }
     },
     "away": {
@@ -627,6 +630,399 @@
     "154091",
     "154089",
     "154078"
+   ],
+   "primaryStadium": "57"
+  },
+  "2016": {
+   "enabled": true,
+   "name": "South Africa",
+   "type": "international",
+   "category": "International",
+   "group": "international",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2016/home_front.webp",
+     "backKitFile": "kits_2016/home_back.webp",
+     "previewFile": "kits_2016/home_preview.png",
+     "color": "#023213",
+     "model3d": {
+      "fit": "loose",
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2016/away_front.webp",
+     "backKitFile": "kits_2022/away_back.webp",
+     "previewFile": "kits_2016/away_preview.png",
+     "color": "#ecedea",
+     "model3d": {
+      "fit": "loose",
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "143177",
+    "viceCaptain": "144501",
+    "longGK": "154059",
+    "shortGK": "154059",
+    "longPunt": "154059",
+    "shortPunt": "154059",
+    "kickoff": "154059"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "miss",
+    "right": "pocket"
+   },
+   "players": [
+    "142508",
+    "143177",
+    "153582",
+    "144501",
+    "144483",
+    "153638",
+    "154053",
+    "154073",
+    "145678",
+    "154059",
+    "143000",
+    "144434",
+    "154075",
+    "143882",
+    "154062",
+    "144289",
+    "107905",
+    "145565",
+    "154065",
+    "143824",
+    "154068",
+    "153762",
+    "143798",
+    "144550",
+    "142408",
+    "143341",
+    "142879",
+    "145407",
+    "143067",
+    "143638",
+    "143560",
+    "142645",
+    "142740",
+    "143965",
+    "143955",
+    "144395",
+    "144824",
+    "144823",
+    "144766",
+    "143085",
+    "144554",
+    "145637",
+    "145406",
+    "144769",
+    "143639",
+    "145095"
+   ],
+   "primaryStadium": "57"
+  },
+  "2018": {
+   "enabled": true,
+   "name": "South Africa",
+   "type": "international",
+   "category": "International",
+   "group": "international",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2018_2/home_front.webp",
+     "backKitFile": "kits_2018_2/home_back.webp",
+     "previewFile": "kits_2018_2/home_preview.png",
+     "color": "#0f231e",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2018/away_front.webp",
+     "backKitFile": "kits_2018/away_back.webp",
+     "previewFile": "kits_2018/away_preview.png",
+     "color": "#e4e6e1",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "144501",
+    "viceCaptain": "145407",
+    "longGK": "144824",
+    "shortGK": "144824",
+    "longPunt": "144824",
+    "shortPunt": "144824",
+    "kickoff": "144824"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "miss",
+    "right": "pocket"
+   },
+   "players": [
+    "142508",
+    "145095",
+    "144550",
+    "144501",
+    "144554",
+    "145407",
+    "144483",
+    "154073",
+    "145678",
+    "144824",
+    "154060",
+    "144434",
+    "144766",
+    "145094",
+    "154062",
+    "144289",
+    "145406",
+    "145637",
+    "145133",
+    "145622",
+    "154057",
+    "144490",
+    "153408",
+    "154049",
+    "154059",
+    "144785",
+    "144170",
+    "144937",
+    "154055",
+    "154074",
+    "154075",
+    "154048",
+    "146398",
+    "154064",
+    "143824",
+    "154051",
+    "154054",
+    "144460",
+    "144823",
+    "144769",
+    "153406",
+    "156956",
+    "145565",
+    "157257",
+    "154058",
+    "154061",
+    "154066",
+    "154070"
+   ],
+   "primaryStadium": "57"
+  },
+  "2019": {
+   "enabled": true,
+   "name": "South Africa",
+   "type": "international",
+   "category": "International",
+   "group": "international",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2019_2/home_front.webp",
+     "backKitFile": "kits_2019_2/home_back.webp",
+     "previewFile": "kits_2019_2/home_preview.png",
+     "color": "#052320",
+     "model3d": {
+      "collar": "stand"
+     }
+    },
+    "away": {
+     "frontKitFile": "kits_2019/away_front.webp",
+     "backKitFile": "kits_2019/away_back.webp",
+     "previewFile": "kits_2019/away_preview.png",
+     "color": "#e4e6e1",
+     "model3d": {
+      "collar": "stand"
+     }
+    }
+   },
+   "roles": {
+    "captain": "145407",
+    "viceCaptain": "142508",
+    "longGK": "144824",
+    "shortGK": "144824",
+    "longPunt": "144824",
+    "shortPunt": "144824",
+    "kickoff": "144824"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "miss",
+    "right": "pocket"
+   },
+   "players": [
+    "142508",
+    "144289",
+    "144550",
+    "144501",
+    "154065",
+    "145407",
+    "144483",
+    "143824",
+    "145678",
+    "144824",
+    "145094",
+    "144434",
+    "144937",
+    "144785",
+    "154062",
+    "145095",
+    "145406",
+    "145637",
+    "144554",
+    "154073",
+    "154076",
+    "144490",
+    "153408",
+    "143560",
+    "145133",
+    "144928",
+    "154072",
+    "145565",
+    "144766",
+    "154059",
+    "153776",
+    "142740",
+    "144395",
+    "154048",
+    "152646",
+    "144170",
+    "154078",
+    "144460",
+    "154077",
+    "146398"
+   ],
+   "primaryStadium": "57"
+  },
+  "2020": {
+   "enabled": true,
+   "name": "South Africa",
+   "type": "international",
+   "category": "International",
+   "group": "international",
+   "ball": "ball/ball_%.png",
+   "banners": "banners/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos/logo.png",
+    "frontend": "logos/logo_frontend.png",
+    "small": "logos/logo_small.png",
+    "left": "logos/logo_left.png",
+    "right": "logos/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2020/home_front.webp",
+     "backKitFile": "kits_2020/home_back.webp",
+     "previewFile": "kits_2020/home_preview.png",
+     "color": "#243d2c"
+    },
+    "away": {
+     "frontKitFile": "kits_2020/away_front.webp",
+     "backKitFile": "kits_2020/away_back.webp",
+     "previewFile": "kits_2020/away_preview.png",
+     "color": "#eff0ee"
+    }
+   },
+   "roles": {
+    "captain": "145407",
+    "viceCaptain": "144824",
+    "longGK": "144824",
+    "shortGK": "144824",
+    "longPunt": "144824",
+    "shortPunt": "144824",
+    "kickoff": "144824"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "miss",
+    "right": "pocket"
+   },
+   "players": [
+    "145406",
+    "144289",
+    "144550",
+    "144501",
+    "144554",
+    "145407",
+    "153408",
+    "143824",
+    "145678",
+    "144824",
+    "145094",
+    "144434",
+    "144937",
+    "144785",
+    "154062",
+    "145095",
+    "154049",
+    "142508",
+    "146398",
+    "154073",
+    "154076",
+    "144490",
+    "142740",
+    "154048",
+    "145565",
+    "152646",
+    "154078",
+    "144395",
+    "154077",
+    "154067",
+    "154079",
+    "145637",
+    "154065",
+    "154051",
+    "154052",
+    "154074",
+    "154059",
+    "143560",
+    "144766",
+    "144170",
+    "153776",
+    "144460",
+    "154072"
    ],
    "primaryStadium": "57"
   },
@@ -1196,109 +1592,6 @@
    ],
    "primaryStadium": "57"
   },
-  "2016": {
-   "enabled": true,
-   "name": "South Africa",
-   "type": "international",
-   "category": "International",
-   "group": "international",
-   "ball": "ball/ball_%.png",
-   "banners": "banners/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos/logo.png",
-    "frontend": "logos/logo_frontend.png",
-    "small": "logos/logo_small.png",
-    "left": "logos/logo_left.png",
-    "right": "logos/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2016/home_front.webp",
-     "backKitFile": "kits_2016/home_back.webp",
-     "previewFile": "kits_2016/home_preview.png",
-     "color": "#023213",
-     "model3d": {
-      "fit": "loose",
-      "collar": "stand"
-     }
-    },
-    "away": {
-     "frontKitFile": "kits_2016/away_front.webp",
-     "backKitFile": "kits_2022/away_back.webp",
-     "previewFile": "kits_2016/away_preview.png",
-     "color": "#ecedea",
-     "model3d": {
-      "fit": "loose",
-      "collar": "stand"
-     }
-    }
-   },
-   "roles": {
-    "captain": "143177",
-    "viceCaptain": "144501",
-    "longGK": "154059",
-    "shortGK": "154059",
-    "longPunt": "154059",
-    "shortPunt": "154059",
-    "kickoff": "154059"
-   },
-   "setPlays": {
-    "up": "classic",
-    "down": "dummy_switch",
-    "left": "miss",
-    "right": "pocket"
-   },
-   "players": [
-    "142508",
-    "143177",
-    "153582",
-    "144501",
-    "144483",
-    "153638",
-    "154053",
-    "154073",
-    "145678",
-    "154059",
-    "143000",
-    "144434",
-    "154075",
-    "143882",
-    "154062",
-    "144289",
-    "107905",
-    "145565",
-    "154065",
-    "143824",
-    "154068",
-    "153762",
-    "143798",
-    "144550",
-    "142408",
-    "143341",
-    "142879",
-    "145407",
-    "143067",
-    "143638",
-    "143560",
-    "142645",
-    "142740",
-    "143965",
-    "143955",
-    "144395",
-    "144824",
-    "144823",
-    "144766",
-    "143085",
-    "144554",
-    "145637",
-    "145406",
-    "144769",
-    "143639",
-    "145095"
-   ],
-   "primaryStadium": "57"
-  },
   "2017": {
    "enabled": false,
    "name": "South Africa",
@@ -1395,296 +1688,6 @@
     "144849",
     "145622",
     "148186"
-   ],
-   "primaryStadium": "57"
-  },
-  "2018": {
-   "enabled": true,
-   "name": "South Africa",
-   "type": "international",
-   "category": "International",
-   "group": "international",
-   "ball": "ball/ball_%.png",
-   "banners": "banners/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos/logo.png",
-    "frontend": "logos/logo_frontend.png",
-    "small": "logos/logo_small.png",
-    "left": "logos/logo_left.png",
-    "right": "logos/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2018_2/home_front.webp",
-     "backKitFile": "kits_2018_2/home_back.webp",
-     "previewFile": "kits_2018_2/home_preview.png",
-     "color": "#0f231e",
-     "model3d": {
-      "collar": "stand"
-     }
-    },
-    "away": {
-     "frontKitFile": "kits_2018/away_front.webp",
-     "backKitFile": "kits_2018/away_back.webp",
-     "previewFile": "kits_2018/away_preview.png",
-     "color": "#e4e6e1",
-     "model3d": {
-      "collar": "stand"
-     }
-    }
-   },
-   "roles": {
-    "captain": "144501",
-    "viceCaptain": "145407",
-    "longGK": "144824",
-    "shortGK": "144824",
-    "longPunt": "144824",
-    "shortPunt": "144824",
-    "kickoff": "144824"
-   },
-   "setPlays": {
-    "up": "classic",
-    "down": "dummy_switch",
-    "left": "miss",
-    "right": "pocket"
-   },
-   "players": [
-    "142508",
-    "145095",
-    "144550",
-    "144501",
-    "144554",
-    "145407",
-    "144483",
-    "154073",
-    "145678",
-    "144824",
-    "154060",
-    "144434",
-    "144766",
-    "145094",
-    "154062",
-    "144289",
-    "145406",
-    "145637",
-    "145133",
-    "145622",
-    "154057",
-    "144490",
-    "153408",
-    "154049",
-    "154059",
-    "144785",
-    "144170",
-    "144937",
-    "154055",
-    "154074",
-    "154075",
-    "154048",
-    "146398",
-    "154064",
-    "143824",
-    "154051",
-    "154054",
-    "144460",
-    "144823",
-    "144769",
-    "153406",
-    "156956",
-    "145565",
-    "157257",
-    "154058",
-    "154061",
-    "154066",
-    "154070"
-   ],
-   "primaryStadium": "57"
-  },
-  "2019": {
-   "enabled": true,
-   "name": "South Africa",
-   "type": "international",
-   "category": "International",
-   "group": "international",
-   "ball": "ball/ball_%.png",
-   "banners": "banners/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos/logo.png",
-    "frontend": "logos/logo_frontend.png",
-    "small": "logos/logo_small.png",
-    "left": "logos/logo_left.png",
-    "right": "logos/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2019_2/home_front.webp",
-     "backKitFile": "kits_2019_2/home_back.webp",
-     "previewFile": "kits_2019_2/home_preview.png",
-     "color": "#052320",
-     "model3d": {
-      "collar": "stand"
-     }
-    },
-    "away": {
-     "frontKitFile": "kits_2019/away_front.webp",
-     "backKitFile": "kits_2019/away_back.webp",
-     "previewFile": "kits_2019/away_preview.png",
-     "color": "#e4e6e1",
-     "model3d": {
-      "collar": "stand"
-     }
-    }
-   },
-   "roles": {
-    "captain": "145407",
-    "viceCaptain": "142508",
-    "longGK": "144824",
-    "shortGK": "144824",
-    "longPunt": "144824",
-    "shortPunt": "144824",
-    "kickoff": "144824"
-   },
-   "setPlays": {
-    "up": "classic",
-    "down": "dummy_switch",
-    "left": "miss",
-    "right": "pocket"
-   },
-   "players": [
-    "142508",
-    "144289",
-    "144550",
-    "144501",
-    "154065",
-    "145407",
-    "144483",
-    "143824",
-    "145678",
-    "144824",
-    "145094",
-    "144434",
-    "144937",
-    "144785",
-    "154062",
-    "145095",
-    "145406",
-    "145637",
-    "144554",
-    "154073",
-    "154076",
-    "144490",
-    "153408",
-    "143560",
-    "145133",
-    "144928",
-    "154072",
-    "145565",
-    "144766",
-    "154059",
-    "153776",
-    "142740",
-    "144395",
-    "154048",
-    "152646",
-    "144170",
-    "154078",
-    "144460",
-    "154077",
-    "146398"
-   ],
-   "primaryStadium": "57"
-  },
-  "2020": {
-   "enabled": true,
-   "name": "South Africa",
-   "type": "international",
-   "category": "International",
-   "group": "international",
-   "ball": "ball/ball_%.png",
-   "banners": "banners/banner_%.png",
-   "pads": "",
-   "logos": {
-    "main": "logos/logo.png",
-    "frontend": "logos/logo_frontend.png",
-    "small": "logos/logo_small.png",
-    "left": "logos/logo_left.png",
-    "right": "logos/logo_right.png"
-   },
-   "kits": {
-    "home": {
-     "frontKitFile": "kits_2020/home_front.webp",
-     "backKitFile": "kits_2020/home_back.webp",
-     "previewFile": "kits_2020/home_preview.png",
-     "color": "#243d2c"
-    },
-    "away": {
-     "frontKitFile": "kits_2020/away_front.webp",
-     "backKitFile": "kits_2020/away_back.webp",
-     "previewFile": "kits_2020/away_preview.png",
-     "color": "#eff0ee"
-    }
-   },
-   "roles": {
-    "captain": "145407",
-    "viceCaptain": "144824",
-    "longGK": "144824",
-    "shortGK": "144824",
-    "longPunt": "144824",
-    "shortPunt": "144824",
-    "kickoff": "144824"
-   },
-   "setPlays": {
-    "up": "classic",
-    "down": "dummy_switch",
-    "left": "miss",
-    "right": "pocket"
-   },
-   "players": [
-    "145406",
-    "144289",
-    "144550",
-    "144501",
-    "144554",
-    "145407",
-    "153408",
-    "143824",
-    "145678",
-    "144824",
-    "145094",
-    "144434",
-    "144937",
-    "144785",
-    "154062",
-    "145095",
-    "154049",
-    "142508",
-    "146398",
-    "154073",
-    "154076",
-    "144490",
-    "142740",
-    "154048",
-    "145565",
-    "152646",
-    "154078",
-    "144395",
-    "154077",
-    "154067",
-    "154079",
-    "145637",
-    "154065",
-    "154051",
-    "154052",
-    "154074",
-    "154059",
-    "143560",
-    "144766",
-    "144170",
-    "153776",
-    "144460",
-    "154072"
    ],
    "primaryStadium": "57"
   },

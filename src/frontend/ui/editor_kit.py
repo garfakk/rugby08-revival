@@ -95,6 +95,13 @@ def expand_pattern(path, n):
     return path.replace("%", str(n), 1)
 
 
+def _size_fits(got, want):
+    """`got` is `want` or a whole multiple of it on both sides: the mod
+    scales it down to the game's size cleanly (no stretch, no blow-up)."""
+    kx, ky = got[0] / want[0], got[1] / want[1]
+    return kx == ky and kx >= 1 and kx == int(kx)
+
+
 def asset_status(root, rel, spec, check_size=False):
     """(state, detail, count) for a team asset path.
 
@@ -144,8 +151,9 @@ def asset_status(root, rel, spec, check_size=False):
     want = spec.get("size")
     if want and check_size:
         got = image_size(full)
-        if got and tuple(got) != tuple(want):
-            return "size", f"{got[0]}×{got[1]} (expected {want[0]}×{want[1]})", 1
+        want = spec.get("game_size") or want
+        if got and not _size_fits(got, want):
+            return "size", f"{got[0]}×{got[1]} (expected {want[0]}×{want[1]} or a multiple)", 1
     return "ok", "found", 1
 
 

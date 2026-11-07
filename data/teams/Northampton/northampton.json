@@ -24,6 +24,15 @@
      "model3d": {
       "fit": "loose",
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.0874,
+       0.2084,
+       0.84,
+       0.0879
+      ],
+      "color": "#f5f5f5"
      }
     },
     "away": {
@@ -34,6 +43,15 @@
      "model3d": {
       "fit": "loose",
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.1336,
+       0.0959,
+       0.7719,
+       0.0879
+      ],
+      "color": "#2824a4"
      }
     }
    },
@@ -89,7 +107,10 @@
     "154263"
    ],
    "enabled": true,
-   "primaryStadium": "10"
+   "primaryStadium": "10",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2010": {
    "name": "Northampton",
@@ -114,6 +135,15 @@
      "color": "#154a23",
      "model3d": {
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.1936,
+       0.6927,
+       0.6012,
+       0.0557
+      ],
+      "color": "#f5f5f5"
      }
     },
     "away": {
@@ -123,6 +153,15 @@
      "color": "#dadcce",
      "model3d": {
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.1936,
+       0.8533,
+       0.6012,
+       0.0703
+      ],
+      "color": "#000000"
      }
     }
    },
@@ -181,7 +220,10 @@
     "152343"
    ],
    "enabled": true,
-   "primaryStadium": "10"
+   "primaryStadium": "10",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2017": {
    "name": "Northampton",
@@ -203,13 +245,31 @@
      "frontKitFile": "kits_2017/home_front.webp",
      "backKitFile": "kits_2017/home_back.webp",
      "previewFile": "kits_2017/home_preview.png",
-     "color": "#1f251e"
+     "color": "#1f251e",
+     "shirtName": {
+      "area": [
+       0.1385,
+       0.126,
+       0.7348,
+       0.0879
+      ],
+      "color": "#ffffff"
+     }
     },
     "away": {
      "frontKitFile": "kits_2017/away_front.webp",
      "backKitFile": "kits_2017/away_back.webp",
      "previewFile": "kits_2017/away_preview.png",
-     "color": "#cdd0c9"
+     "color": "#cdd0c9",
+     "shirtName": {
+      "area": [
+       0.2,
+       0.86,
+       0.6,
+       0.06
+      ],
+      "color": "#1a1a1a"
+     }
     }
    },
    "roles": {
@@ -272,7 +332,10 @@
     "157205"
    ],
    "enabled": true,
-   "primaryStadium": "10"
+   "primaryStadium": "10",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2018": {
    "name": "Northampton",
@@ -297,13 +360,31 @@
      "color": "#1d201a",
      "model3d": {
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.1123,
+       0.2012,
+       0.7793,
+       0.0879
+      ],
+      "color": "#fffdff"
      }
     },
     "away": {
      "frontKitFile": "kits_2018/away_front.webp",
      "backKitFile": "kits_2018/away_back.webp",
      "previewFile": "kits_2018/away_preview.png",
-     "color": "#79d073"
+     "color": "#79d073",
+     "shirtName": {
+      "area": [
+       0.1141,
+       0.3389,
+       0.7719,
+       0.0439
+      ],
+      "color": "#000000"
+     }
     }
    },
    "roles": {
@@ -368,7 +449,10 @@
     "152782"
    ],
    "enabled": true,
-   "primaryStadium": "10"
+   "primaryStadium": "10",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2019": {
    "name": "Northampton",
@@ -393,13 +477,31 @@
      "color": "#1d201a",
      "model3d": {
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.1123,
+       0.2012,
+       0.7793,
+       0.0879
+      ],
+      "color": "#fffdff"
      }
     },
     "away": {
      "frontKitFile": "kits_2019/away_front.webp",
      "backKitFile": "kits_2019/away_back.webp",
      "previewFile": "kits_2019/away_preview.png",
-     "color": "#be0201"
+     "color": "#be0201",
+     "shirtName": {
+      "area": [
+       0.1084,
+       0.1973,
+       0.7793,
+       0.0879
+      ],
+      "color": "#000000"
+     }
     }
    },
    "roles": {
@@ -465,7 +567,10 @@
     "157841"
    ],
    "enabled": true,
-   "primaryStadium": "10"
+   "primaryStadium": "10",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2020": {
    "name": "Northampton",
@@ -673,13 +778,25 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": "#146945"
+     "color": "#146945",
+     "shirtName": {
+      "area": [
+       0.0741,
+       0.8408,
+       0.84,
+       0.0879
+      ],
+      "color": "#f0f0f0"
+     }
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": "#c9c7be"
+     "color": "#c9c7be",
+     "shirtName": {
+      "enabled": false
+     }
     }
    },
    "roles": {
@@ -742,7 +859,10 @@
     "158094"
    ],
    "enabled": true,
-   "primaryStadium": "10"
+   "primaryStadium": "10",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2023": {
    "name": "Northampton",
@@ -764,13 +884,31 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": "#117957"
+     "color": "#117957",
+     "shirtName": {
+      "area": [
+       0.0741,
+       0.6992,
+       0.84,
+       0.0879
+      ],
+      "color": "#eeefee"
+     }
     },
     "away": {
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": "#e9e8e7"
+     "color": "#e9e8e7",
+     "shirtName": {
+      "area": [
+       0.118,
+       0.6992,
+       0.7719,
+       0.0879
+      ],
+      "color": "#052662"
+     }
     }
    },
    "roles": {
@@ -832,7 +970,10 @@
     "157129"
    ],
    "enabled": true,
-   "primaryStadium": "10"
+   "primaryStadium": "10",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2024": {
    "name": "Northampton",
@@ -854,13 +995,31 @@
      "frontKitFile": "kits_2024/home_front.webp",
      "backKitFile": "kits_2024/home_back.webp",
      "previewFile": "kits_2024/home_preview.png",
-     "color": "#141412"
+     "color": "#141412",
+     "shirtName": {
+      "area": [
+       0.0859,
+       0.0627,
+       0.84,
+       0.0879
+      ],
+      "color": "#e6e7e6"
+     }
     },
     "away": {
      "frontKitFile": "kits_2024/away_front.webp",
      "backKitFile": "kits_2024/away_back.webp",
      "previewFile": "kits_2024/away_preview.png",
-     "color": "#e2e0dd"
+     "color": "#e2e0dd",
+     "shirtName": {
+      "area": [
+       0.0859,
+       0.7344,
+       0.84,
+       0.0879
+      ],
+      "color": "#002460"
+     }
     }
    },
    "roles": {
@@ -920,7 +1079,10 @@
     "156995"
    ],
    "enabled": true,
-   "primaryStadium": "10"
+   "primaryStadium": "10",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2016": {
    "name": "Northampton",

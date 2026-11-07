@@ -260,31 +260,35 @@ class TournamentIntroScreen(Screen):
             self._text(p, QRectF(-w, y + 64, 2 * w, 32), label, 18, ACCENT, QFont.DemiBold, track=4.0,
                        opacity=_ease(_phase(ms, 600, 600)) * (1 - rise))
         p.restore()
-        if rise > 0 and self._titled:
-            self._text(p, QRectF(0, top1 + (EMBLEM + 104) * k, w, 26), "THE DRAW", 14, ACCENT,
-                       track=5.0, opacity=rise)
 
     def _grid(self, w):
-        """(columns per row, x of the first, height of a row of columns)."""
+        """(row and x of every column, height of a row of columns, rows).
+        Columns are split over the rows as evenly as can be (5 pools: 3 + 2,
+        not 3 + 2 hugging the left) and each row is centred."""
         cols = self._columns
         gap = 22
-        per_row = min(len(cols), max(1, int((w - 160 + gap) // (COL_W + gap))))
-        x_total = per_row * COL_W + (per_row - 1) * gap
+        max_per = min(len(cols), max(1, int((w - 160 + gap) // (COL_W + gap))))
+        rows = max(1, -(-len(cols) // max_per))
+        pos = []
+        for r in range(rows):
+            size = len(cols) // rows + (1 if r < len(cols) % rows else 0)
+            x0 = (w - (size * COL_W + (size - 1) * gap)) / 2
+            pos += [(r, x0 + k * (COL_W + gap)) for k in range(size)]
         rows_h = max(len(teams) for _n, teams in cols) * ROW_H + self._head + 4
-        return per_row, (w - x_total) / 2, rows_h, gap
+        return pos, rows_h, rows
 
     def _draw_bottom(self, w):
         if not self._columns:
             return DRAW_TOP
-        per_row, _x0, rows_h, _gap = self._grid(w)
-        rows = (len(self._columns) + per_row - 1) // per_row
+        _pos, rows_h, rows = self._grid(w)
         return DRAW_TOP + rows * (rows_h + 18)
 
     def _paint_draw(self, p, ms, w, h):
         cols = self._columns
         if not cols:
             return
-        per_row, x0, rows_h, gap = self._grid(w)
+        pos, rows_h, _rows = self._grid(w)
+        gap = 22
         top = DRAW_TOP
         # One card per pool: a pool wrapped over several columns (a league)
         # gets a single container across them, not one box per column. A
@@ -292,13 +296,13 @@ class TournamentIntroScreen(Screen):
         # only be split where the grid itself wraps to a new row.
         spans = []          # [first column, last column]
         for ci, (name, _teams) in enumerate(cols):
-            if spans and not name and ci % per_row:
+            if spans and not name and pos[ci][0] == pos[ci - 1][0]:
                 spans[-1][1] = ci
             else:
                 spans.append([ci, ci])
         for first, last in spans:
-            col_x = x0 + (first % per_row) * (COL_W + gap)
-            col_y = top + (first // per_row) * (rows_h + 18)
+            row, col_x = pos[first]
+            col_y = top + row * (rows_h + 18)
             rows = max(len(cols[c][1]) for c in range(first, last + 1))
             ca = _ease(_phase(ms, self._drops_at - 300 + first * 60, 400))
             card = QRectF(col_x, col_y, (last - first + 1) * COL_W + (last - first) * gap,
@@ -312,8 +316,8 @@ class TournamentIntroScreen(Screen):
             p.restore()
         i = 0
         for ci, (name, teams) in enumerate(cols):
-            col_x = x0 + (ci % per_row) * (COL_W + gap)
-            col_y = top + (ci // per_row) * (rows_h + 18)
+            row, col_x = pos[ci]
+            col_y = top + row * (rows_h + 18)
             ca = _ease(_phase(ms, self._drops_at - 300 + ci * 60, 400))
             if name:
                 self._text(p, QRectF(col_x + 16, col_y + 8, COL_W - 32, 26), name.upper(), 14, ACCENT,

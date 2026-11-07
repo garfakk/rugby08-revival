@@ -290,12 +290,68 @@ def _build_team_match_data(ds: DataStore, slot: TeamSlot, is_home: bool) -> dict
     return team
 
 
+def _lifting(cfg) -> bool:
+    return cfg.trophy_lift not in ("", "stock", "off", None)
+
+
+def _trophy_lift(cfg):
+    """The reR08 trophy-lift ceremony: the competition's own trophy's ("on" =
+    the match's own; a named one is kept), else cfg's."""
+    trophy = getattr(cfg, "trophy", None) or {}
+    if _lifting(cfg) and cfg.trophy_lift == "on" and trophy.get("ceremony"):
+        return trophy["ceremony"]
+    return cfg.trophy_lift
+
+
+def _trophy_files(cfg) -> dict:
+    """{game file name: path under mod data} standing in for the ceremony's stock
+    trophy (gsv.trophy_files), only when that trophy is lifted."""
+    trophy = getattr(cfg, "trophy", None) or {}
+    ceremony = _trophy_lift(cfg)
+    names = gsv.trophy_files.get(ceremony) if _lifting(cfg) else None
+    if not names or trophy.get("ceremony") != ceremony:
+        return {}
+    return {names["model"]: trophy["model"], names["texture"]: trophy["texture"]}
+
+
 def _stadium_flags(cfg):
     """Any World Cup match left on "stock" (quick match, tournament,
     challenge) gets the World Cup stadium dressing; an explicit off is kept."""
     if cfg.stadium_flags is None and cfg.match_type == "world_cup":
         return True
     return cfg.stadium_flags
+
+
+def _anthem_code(info: dict):
+    if info.get("type") == "club":
+        return None
+    return gsv.anthem_codes.get((info.get("name") or "").strip().lower())
+
+
+def _presentation(home_info: dict, away_info: dict, cfg) -> dict:
+    """Pre-match intro, anthem and haka (see gsv.anthem_choices)."""
+    mode = {"stock": "auto"}.get(cfg.anthem, cfg.anthem)
+    home_code, away_code = _anthem_code(home_info), _anthem_code(away_info)
+    no_club = "club" not in (home_info.get("type"), away_info.get("type"))
+    if mode == "away":
+        code = away_code or home_code
+    else:
+        code = home_code or away_code
+    if mode == "off":
+        code, intro = None, "club"
+    elif mode in ("home", "away"):
+        intro = "anthem" if code else None
+    else:
+        intro = "anthem" if code and no_club else None
+    auto_haka = mode != "off"
+    def haka(info):
+        return auto_haka and (info.get("name") or "").strip().lower() in gsv.haka_teams
+    return {
+        "anthem": code,
+        "intro": intro,
+        "haka_home": bool(cfg.haka_home or haka(home_info)),
+        "haka_away": bool(cfg.haka_away or haka(away_info)),
+    }
 
 
 def build_match_data(ds: DataStore, cfg: MatchConfig):
@@ -351,8 +407,11 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
 
     # The advanced panel's "tournament logo" and "stadium graphics" pickers: a
     # tournament's own files instead of the home team's.
-    logo_tid, t_info = competition_branding.resolve(ds, getattr(cfg, "tournament_logo_choice", ""))
-    if logo_tid:
+    logo_choice = getattr(cfg, "tournament_logo_choice", "")
+    logo_tid, t_info = competition_branding.resolve(ds, logo_choice)
+    if logo_choice == "none":
+        tournament_logo = ""        # no logo at all (game_files_processor writes a blank one)
+    elif logo_tid:
         tournament_logo = _tournament_asset_path(ds, logo_tid, t_info.get("logo", "")) or tournament_logo
     pads_tid, t_info = competition_branding.resolve(ds, getattr(cfg, "stadium_graphics_choice", ""))
     if pads_tid:
@@ -446,10 +505,9 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
         "precip_mode": cfg.precip_mode,
         "snow_intensity": cfg.snow_intensity,
         "breath": cfg.breath,
-        "anthem": cfg.anthem,
-        "haka_home": cfg.haka_home,
-        "haka_away": cfg.haka_away,
-        "trophy_lift": cfg.trophy_lift,
+        **_presentation(home_info, cfg.away.info(ds), cfg),
+        "trophy_lift": _trophy_lift(cfg),
+        "trophy_files": _trophy_files(cfg),
         "trophy_lifter": cfg.trophy_lifter,
         "stadium_flags": _stadium_flags(cfg),
         "kick_assist": cfg.kick_assist,

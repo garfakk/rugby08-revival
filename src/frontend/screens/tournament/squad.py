@@ -13,8 +13,8 @@ for roles / set plays and for lineups.
                and fatigue included); orange = out of position, red =
                unavailable (covered automatically before the next match).
   Squad        the whole squad with its tournament numbers.
-  Lineups      before each match: play your lineup, or auto pick the best 22;
-               lineups saved under a name; the lineup of any match played.
+  Lineups      the team sheet saved under a name, and the lineups of the matches
+               played: load one back any time.
 
 Shirts: arrows / mouse move between them, A opens the picker, drag one onto
 another to swap them. In the squad list A takes a player to the team sheet
@@ -40,9 +40,10 @@ from ui.broadcast import Card, HintBar, display_label, eyebrow_label, label_css,
 from ui.editor_kit import (ChoiceField, ConfirmDialog, FieldGrid, FormDialog, Note, TabStrip, TextField,
                            compact_button)
 from ui.side_panel import SidePanelSlide
-from ui.team_sheet import MATCH_SHEET_ROWS, POSITION_NAMES, FITS, PlayerPickerPopup, SlotAvatar, StatsPanel, SubChip
+from ui.team_sheet import (MATCH_SHEET_ROWS, POSITION_NAMES, FITS, STAR, STAR_COLOR, PlayerPickerPopup,
+                           SlotAvatar, StatsPanel, SubChip, is_star)
 from ui.theme import (ACCENT, BG_BASE, BG_PANEL, BG_RAISED, BORDER, BTN_HEIGHT, DANGER_LITE, FG_PRIMARY,
-                      FG_SECONDARY, FG_TERTIARY, GREEN, T_LABEL, WARN)
+                      FG_SECONDARY, FG_TERTIARY, T_LABEL, WARN)
 
 from .common import DataTable, PixmapLabel, Section, YOU_TINT, clear_layout, tournament_crest, transparent
 
@@ -92,10 +93,6 @@ def _abbr(p):
 
 def _pos_name(p):
     return POSITION_NAMES.get(p, _pos(p).capitalize())
-
-
-def rating_color(v):
-    return GREEN if v >= 80 else (FG_PRIMARY if v >= 65 else (WARN if v >= 50 else DANGER_LITE))
 
 
 def _note_color(note, color):
@@ -447,17 +444,10 @@ class TournamentSquadScreen(Screen):
 
     def _build_lineups_panel(self):
         panel, v = self._panel_card("Lineups", "lineups")
-        self.mode_field = ChoiceField("each match", ["default", "auto"], allow_blank=False,
-                                      display=lambda m: {"default": "Play my lineup",
-                                                         "auto": "Auto pick the best 22"}.get(m, m))
-        self.mode_field.popup_title = "each match"
-        self.mode_field.edited.connect(self._set_mode)
-        self.focus.register(self.mode_field)
-        v.addWidget(self.mode_field)
-        self.mode_note = Note("", color=FG_TERTIARY)
-        self.mode_note.setWordWrap(True)
-        v.addWidget(self.mode_note)
-        self.save_btn = StyledButton("SAVE AS A NEW LINEUP…", "neutral")
+        note = Note("Save the team sheet under a name, load it back any time.", color=FG_TERTIARY)
+        note.setWordWrap(True)
+        v.addWidget(note)
+        self.save_btn = StyledButton("SAVE THIS LINEUP…", "primary")
         self.save_btn.setMinimumHeight(BTN_HEIGHT)
         self.save_btn.clicked.connect(self._save_as)
         self.focus.register(self.save_btn)
@@ -612,17 +602,6 @@ class TournamentSquadScreen(Screen):
         i = lineups.matching(entry, self._sel())
         return lineups.saved(entry)[i]["name"] if i is not None else ""
 
-    def _edited_index(self):
-        """The saved lineup the team sheet came from and has been changed
-        since (it can be updated or reverted), or None."""
-        entry = self._entry()
-        if self._auto_mode():
-            return None
-        src = lineups.source(entry)
-        if src is None or lineups.matching(entry, self._sel()) == src:
-            return None
-        return src
-
     # ── refresh ──────────────────────────────────────────────────────────
     def refresh(self):
         if not self.session or not self.team_id:
@@ -638,9 +617,6 @@ class TournamentSquadScreen(Screen):
             title = "auto pick · the best 22 for the next match"
         else:
             name = self._lineup_name()
-            edited = self._edited_index()
-            if not name and edited is not None:
-                name = f"{lineups.saved(self._entry())[edited]['name']} (edited)"
             title = "your lineup" + (f" · {name}" if name else "")
         self.lineup_title.setText(title.upper())
         # auto mode already re-picks before every match: nothing to do now
@@ -663,7 +639,7 @@ class TournamentSquadScreen(Screen):
                 continue
             eff, _base = self._rating(p, slot)
             shirt.set_player(_sheet_player(p))
-            shirt.set_value(f"{eff:.0f}", rating_color(eff))
+            shirt.set_value(f"{eff:.0f}")
             shirt.set_issue(self._issue_color(p, slot))
             shirt.set_badges(badges.get(pid, []))
             (xv if slot < STARTERS else bench).append(eff)
@@ -725,21 +701,14 @@ class TournamentSquadScreen(Screen):
             f.set_value(plays.get(key, "") or "")
 
     def _refresh_lineups(self):
-        """The Lineups panel: the mode, the saved lineups, the played ones."""
+        """The Lineups panel: the saved lineups, the one on the sheet marked."""
         entry = self._entry()
-        auto = self._auto_mode()
-        self.mode_field.set_value("auto" if auto else "default")
-        self.mode_note.setText(
-            "The best fit 22 is picked before every match. Changing a shirt switches "
-            "to your own lineup." if auto else
-            "Every match starts from the team sheet as you set it; anyone injured or "
-            "suspended is covered for that match only.")
         focused = QApplication.focusWidget()
         for w in self._lineup_widgets:
             if focused is not None and (w is focused or w.isAncestorOf(focused)):
                 # a row's button had the focus: park it before the row goes
                 # (else it stays on the dying button, and keys go nowhere)
-                self.mode_field.setFocus()
+                self.save_btn.setFocus()
             self.focus.unregister_tree(w)
             self.lineup_rows.removeWidget(w)
             w.hide()
@@ -752,38 +721,24 @@ class TournamentSquadScreen(Screen):
             self._lineup_widgets.append(widget)
 
         saved = lineups.saved(entry)
-        add(eyebrow_label("your saved lineups", color=FG_SECONDARY, size=11))
         if not saved:
-            add(Note("None yet: SAVE AS A NEW LINEUP… keeps the team sheet under a name, "
-                     "to come back to it later."))
+            add(Note("No lineup saved yet.", color=FG_SECONDARY))
         self._row_buttons = []
-        edited = self._edited_index()
         for i, item in enumerate(saved):
-            actions = [("USE", lambda _=False, it=item, i=i: self._load(it, row=i)),
-                       ("RENAME", lambda _=False, i=i: self._rename(i)),
-                       ("DELETE", lambda _=False, i=i: self._delete(i))]
-            if i == edited:
-                # the sheet is this lineup with changes: keep them, or not
-                actions = [("UPDATE", lambda _=False, i=i: self._update(i)),
-                           ("REVERT", lambda _=False, it=item, i=i: self._load(it, row=i))] + actions[1:]
-            add(self._lineup_row(item["name"], self._xv_of(item), i == current, actions,
-                                 edited=i == edited))
+            add(self._lineup_row(item["name"], i == current, [
+                ("LOAD", lambda _=False, it=item, i=i: self._load(it, row=i)),
+                ("RENAME", lambda _=False, i=i: self._rename(i)),
+                ("DELETE", lambda _=False, i=i: self._delete(i))]))
+        # the lineups of the matches already played, latest first
         played = lineups.played(self.t, self.team_id)
         if played:
-            add(eyebrow_label("lineups of your matches", color=FG_SECONDARY, size=11))
+            add(eyebrow_label("previous matches", color=FG_SECONDARY, size=11))
         for j, (f, sel) in enumerate(played[:8]):
-            add(self._lineup_row(self._played_caption(f), self._xv_of(sel), False, [
-                ("USE", lambda _=False, s=sel, r=len(saved) + j: self._load(s, row=r)),
-            ]))
-
-    def _xv_of(self, sel):
-        t = self.t
-        positions = list(sel.get("positions") or []) + SLOT_POSITIONS[len(sel.get("positions") or []):]
-        vals = [self._rating_at(t.players[pid], positions[i], i)[0]
-                for i, pid in enumerate(sel.get("players", [])[:STARTERS]) if pid in t.players]
-        return round(sum(vals) / len(vals)) if vals else None
+            add(self._lineup_row(self._played_caption(f), False, [
+                ("LOAD", lambda _=False, s=sel, r=len(saved) + j: self._load(s, row=r))]))
 
     def _played_caption(self, f):
+        """"R3  v Clermont  W 24-17"."""
         t = self.t
         home = f.home == self.team_id
         other = t.team_name(f.away if home else f.home)
@@ -793,13 +748,13 @@ class TournamentSquadScreen(Screen):
         mark = "W" if winner == self.team_id else ("D" if winner is None else "L")
         return f"{report.round_short(t, f.day)}  v {other}  {mark} {mine}-{theirs}"
 
-    def _lineup_row(self, title, xv, current, actions, edited=False):
-        """Name and XV rating on top (the whole name: nothing squeezes it),
-        the actions under it. The lineup on the team sheet says IN USE
-        instead of offering USE."""
+    def _lineup_row(self, title, current, actions):
+        """The name on top (the whole name: nothing squeezes it), the
+        actions under it. The lineup on the team sheet says IN USE
+        instead of offering LOAD."""
         row = QWidget()
         row.setObjectName("lineupRow")
-        edge = ACCENT if current else (WARN if edited else BG_RAISED)
+        edge = ACCENT if current else BG_RAISED
         row.setStyleSheet(f"QWidget#lineupRow {{ background: {BG_RAISED};"
                           f" border-left: 3px solid {edge}; }}")
         v = QVBoxLayout(row)
@@ -811,16 +766,12 @@ class TournamentSquadScreen(Screen):
                              color=ACCENT if current else FG_PRIMARY)
         name.setMinimumWidth(1)
         top.addWidget(name, stretch=1)
-        if edited:
-            top.addWidget(eyebrow_label("edited", color=WARN, size=10))
-        if xv is not None:
-            top.addWidget(display_label(f"XV {xv}", 11, QFont.DemiBold, track=0.6, color=FG_TERTIARY))
         v.addLayout(top)
         h = QHBoxLayout()
         h.setSpacing(6)
         buttons = []
         for label, fn in actions:
-            if label == "USE" and current:
+            if label == "LOAD" and current:
                 h.addWidget(eyebrow_label("in use", color=ACCENT, size=10))
                 continue
             b = compact_button(label, "ghost" if label == "DELETE" else "neutral", height=30)
@@ -851,9 +802,10 @@ class TournamentSquadScreen(Screen):
             dim = FG_PRIMARY if shirt else FG_SECONDARY
             return [
                 {"text": shirt or "", "color": YOU_TINT, "align": Qt.AlignHCenter, "bold": True},
-                {"text": p.name, "color": DANGER_LITE if not available else dim, "bold": bool(shirt and shirt <= 15)},
+                {"text": (f"{STAR} " if is_star(p.base) else "") + p.name,
+                 "color": DANGER_LITE if not available else dim, "bold": bool(shirt and shirt <= 15)},
                 {"text": " ".join(_abbr(x) for x in p.positions[:2]), "color": FG_TERTIARY},
-                {"text": f"{eff:.0f}", "color": rating_color(eff), "bold": True, "align": Qt.AlignHCenter},
+                {"text": f"{eff:.0f}", "color": FG_PRIMARY, "bold": True, "align": Qt.AlignHCenter},
                 {"text": status, "color": DANGER_LITE if not available else
                  (WARN if status != "fit" else FG_TERTIARY)},
             ] + [{"text": s.get(k, 0) or "–", "align": Qt.AlignHCenter,
@@ -902,7 +854,10 @@ class TournamentSquadScreen(Screen):
             return
         d = _sheet_player(p)
         self.first_lbl.setText((d.get("first_name") or "").strip())
-        self.name_lbl.setText((d.get("last_name") or p.name).upper())
+        name = (d.get("last_name") or p.name).upper()
+        if is_star(p.base):
+            name = f"<span style='color:{STAR_COLOR}'>{STAR}</span> {name}"
+        self.name_lbl.setText(name)
         self.pos_lbl.setText(" / ".join(_pos_name(x).upper() for x in p.positions))
 
         eff, base = self._rating_at(p, pos, slot)
@@ -916,7 +871,7 @@ class TournamentSquadScreen(Screen):
         self.status_lbl.setText(" · ".join(notes))
         _note_color(self.status_lbl, DANGER_LITE if not available else (WARN if not fits else FG_SECONDARY))
         self.rating_lbl.setText(f"{eff:.0f}")
-        self.rating_lbl.setStyleSheet(label_css(34, QFont.Bold, rating_color(eff)))
+        self.rating_lbl.setStyleSheet(label_css(34, QFont.Bold, FG_PRIMARY))
         s = t.stats.get("players", {}).get(p.pid, {})
         self.tiles.set_values([s.get(k, 0) for k in ("apps", "tries", "points", "tackles")])
 
@@ -1039,7 +994,8 @@ class TournamentSquadScreen(Screen):
         title = f"NUMBER {number} · {_pos_name(self._slot_pos(slot)).upper()}"
         self._picker_slot = slot
         self.picker.open_for(title, entries, current, taken, self.shirts[number], self,
-                             tags=tags, subtitles=subtitles, mode=FITS, highlight=highlight)
+                             tags=tags, subtitles=subtitles, mode=FITS, highlight=highlight,
+                             stars=lambda pid: is_star(t.players[pid].base) if pid in t.players else False)
         self._keep_picker_off_panel()
         if highlight is not None:
             self._preview_from_picker(highlight)
@@ -1123,7 +1079,7 @@ class TournamentSquadScreen(Screen):
             return
         ConfirmDialog(self.window(), "Auto pick the best 22?",
                       "Your lineup on the team sheet is replaced. It isn't saved: "
-                      "LINEUPS > SAVE AS A NEW LINEUP… keeps it.",
+                      "LINEUPS > SAVE THIS LINEUP… keeps it.",
                       [("CANCEL", "neutral", "cancel"), ("AUTO PICK", "primary", "ok")],
                       lambda role: self._do_auto() if role == "ok" else self.auto_btn.setFocus())
 
@@ -1131,22 +1087,10 @@ class TournamentSquadScreen(Screen):
         self.session.auto_select(self.team_id)
         self.refresh()
 
-    def _set_mode(self, mode):
-        if mode == "auto":
-            self.session.set_auto_lineup(self.team_id, True)
-        else:
-            # take what is on show (the auto pick preview) as the lineup:
-            # an edit of no saved lineup
-            lineups.set_source(self._entry(), None)
-            sel = self._sel()
-            self.session.set_selection(self.team_id, sel.get("players", []), sel.get("positions"),
-                                       sel.get("roles"), sel.get("set_plays"))
-        self.refresh()
-
     def _load(self, sel, row=None):
         self.session.load_lineup(self.team_id, sel, source=sel.get("name"))
         self.refresh()
-        # stay on the row just used (its USE became IN USE: its next button)
+        # stay on the row just loaded (its LOAD became IN USE: its next button)
         buttons = self._row_buttons[row] if row is not None and row < len(self._row_buttons) else []
         # deferred: the rebuilt rows are only shown on the next turn, and a
         # hidden widget can't take the focus
@@ -1168,18 +1112,13 @@ class TournamentSquadScreen(Screen):
 
     def _save_as(self):
         entry = self._entry()
-        if self._auto_mode():
-            self._set_mode("default")      # a saved lineup is a lineup of your own
-        default = self._lineup_name() or f"Lineup {len(lineups.saved(entry)) + 1}"
+        default = self._lineup_name()
+        if not default or default == "auto pick":
+            default = f"Lineup {len(lineups.saved(entry)) + 1}"
         self._ask_name("Save lineup", default,
-                       lambda name: (self.session.save_lineup(self.team_id, name), self.refresh()))
-
-    def _update(self, index):
-        """Write the sheet's changes into the saved lineup they came from."""
-        self.session.update_lineup(self.team_id, index)
-        self.refresh()
-        buttons = self._row_buttons[index] if index < len(self._row_buttons) else []
-        QTimer.singleShot(0, (buttons[0] if buttons else self.save_btn).setFocus)
+                       # what the team sheet shows (the auto pick, in auto mode)
+                       lambda name: (self.session.save_lineup(self.team_id, name, self._sel()),
+                                     self.refresh()))
 
     def _rename(self, index):
         item = lineups.saved(self._entry())[index]
@@ -1209,7 +1148,7 @@ class TournamentSquadScreen(Screen):
         if opening:
             panel.raise_()
             self.focus.push_scope(panel)
-            (self.tactics_tabs if name == "roles" else self.mode_field).setFocus()
+            (self.tactics_tabs if name == "roles" else self.save_btn).setFocus()
         else:
             self.focus.pop_scope(panel)
             (self.roles_btn if name == "roles" else self.lineups_btn).setFocus()

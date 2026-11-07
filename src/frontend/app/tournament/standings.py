@@ -94,11 +94,15 @@ def _rows(fixtures, team_ids, rules) -> dict:
             row.tries_against += opp.tries
             row.yellow += own.yellow_cards
             row.red += own.red_cards
-            pts, tb, lb = match_points(rules, own, opp)
+            winner = r.winner_id()
+            if winner is None and (r.source == "forfeit" or r.decided_by == "forfeit"):
+                # double forfeit: a loss for both, not a 0-0 draw
+                pts, tb, lb = rules.get("loss", 0), 0, 0
+            else:
+                pts, tb, lb = match_points(rules, own, opp)
             row.points += pts
             row.try_bonus += tb
             row.losing_bonus += lb
-            winner = r.winner_id()
             if r.source == "forfeit" or r.decided_by == "forfeit":
                 outcome = "W" if winner == own.team_id else "L"
             elif own.points > opp.points:

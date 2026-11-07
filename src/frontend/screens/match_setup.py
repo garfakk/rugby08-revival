@@ -977,6 +977,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self._stadium_list = [(sid, info) for sid, info in stadiums if isinstance(info, dict)]
         self.stadium_row.set_values(self._stadium_list)
         self.stadium_row._display = lambda t: t[1].get("name", str(t[0]))
+        self.stadium_row.group = lambda t: t[1].get("country")
         self.stadium_row.changed.connect(self._on_stadium_changed)
         self.focus.register(self.stadium_row)
         v.addWidget(self.stadium_row)
@@ -1123,14 +1124,11 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self.focus.register(self.pitch_row)
         v.addWidget(self.pitch_row)
 
-        # Only two pitch-logo packs ship today (data/competitions/*/assets/pitch_logos)
-        # — "none" forces no logo; any tournament choice forces that pack.
-        # Defaults to the "Default" pack rather than "none" so picking a
-        # pitch logo isn't itself a hidden extra step.
+        # Pitch logo: "none" (the default: a quick match has no competition)
+        # or a competition's pack (data/competitions/*/assets/pitch_logos).
         from app import competition_branding
         self._pitch_logo_choices = [("none", "none")] + competition_branding.choices(self.ds, "pitch_logo")
-        default_index = next((i for i, (_, label) in enumerate(self._pitch_logo_choices)
-                              if label == "Default"), 0)
+        default_index = 0
         self.pitch_logo_row = SelectorRow("pitch logo")
         self.pitch_logo_row.set_values(self._pitch_logo_choices, index=default_index)
         self.pitch_logo_row._display = lambda t: t[1]
@@ -1141,17 +1139,16 @@ class MatchSetupScreen(KickoffTransition, Screen):
         v.addWidget(self.pitch_logo_row)
         self.cfg.pitch_logo_choice = self._pitch_logo_choices[default_index][0]
 
-        # Tournament logo (scoreboard / in-game graphics) and stadium graphics
-        # ("pads"): taken from the tournaments' own files, one entry per
-        # season that has the file on disk, both defaulting to the "Default"
-        # tournament.
+        # Tournament logo (scoreboard / in-game graphics): "none" (the default,
+        # a blank logo) or a competition's. Stadium graphics ("pads"): the
+        # competitions' own files, one entry per season that has the file on
+        # disk, defaulting to the "Default" competition.
         def tournament_choices(key):
             return competition_branding.choices(self.ds, key)
 
-        self._tournament_logo_choices = tournament_choices("logo")
+        self._tournament_logo_choices = [("none", "none")] + tournament_choices("logo")
         if self._tournament_logo_choices:
-            logo_index = next((i for i, (_, label) in enumerate(self._tournament_logo_choices)
-                               if label == "Default"), 0)
+            logo_index = 0
             self.tournament_logo_row = SelectorRow("tournament logo")
             self.tournament_logo_row.set_values(self._tournament_logo_choices, index=logo_index)
             self.tournament_logo_row._display = lambda t: t[1]

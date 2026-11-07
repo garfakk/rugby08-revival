@@ -106,7 +106,16 @@
      "frontKitFile": "kits_2009/home_front.webp",
      "backKitFile": "kits_2009/home_back.webp",
      "previewFile": "kits_2009/home_preview.png",
-     "color": "#171818"
+     "color": "#171818",
+     "shirtName": {
+      "area": [
+       0.1848,
+       0.8525,
+       0.6383,
+       0.0879
+      ],
+      "color": "#deded5"
+     }
     },
     "away": {
      "frontKitFile": "kits_2009/away_front.webp",
@@ -115,6 +124,15 @@
      "color": "#c5911c",
      "model3d": {
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.1102,
+       0.2218,
+       0.7719,
+       0.0879
+      ],
+      "color": "#2824a4"
      }
     }
    },
@@ -176,7 +194,10 @@
     "158227"
    ],
    "enabled": true,
-   "primaryStadium": "79"
+   "primaryStadium": "79",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2010": {
    "name": "Wasps",
@@ -201,6 +222,15 @@
      "color": "#191c19",
      "model3d": {
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.2053,
+       0.6839,
+       0.6012,
+       0.0879
+      ],
+      "color": "#f5f5f5"
      }
     },
     "away": {
@@ -210,6 +240,15 @@
      "color": "#d19f15",
      "model3d": {
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.1975,
+       0.7119,
+       0.6012,
+       0.0879
+      ],
+      "color": "#000000"
      }
     }
    },
@@ -269,7 +308,10 @@
     "158227"
    ],
    "enabled": true,
-   "primaryStadium": "79"
+   "primaryStadium": "79",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2017": {
    "name": "Wasps",
@@ -291,13 +333,31 @@
      "frontKitFile": "kits_2017/home_front.webp",
      "backKitFile": "kits_2017/home_back.webp",
      "previewFile": "kits_2017/home_preview.png",
-     "color": "#f2dc02"
+     "color": "#f2dc02",
+     "shirtName": {
+      "area": [
+       0.1539,
+       0.8467,
+       0.6531,
+       0.0879
+      ],
+      "color": "#f5f5f5"
+     }
     },
     "away": {
      "frontKitFile": "kits_2017/away_front.webp",
      "backKitFile": "kits_2017/away_back.webp",
      "previewFile": "kits_2017/away_preview.png",
-     "color": "#dac612"
+     "color": "#dac612",
+     "shirtName": {
+      "area": [
+       0.1695,
+       0.8148,
+       0.6531,
+       0.0879
+      ],
+      "color": "#000000"
+     }
     }
    },
    "roles": {
@@ -358,7 +418,10 @@
     "157014"
    ],
    "enabled": true,
-   "primaryStadium": "7"
+   "primaryStadium": "7",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2018": {
    "name": "Wasps",
@@ -383,6 +446,15 @@
      "color": "#1e201b",
      "model3d": {
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.1332,
+       0.7497,
+       0.757,
+       0.0879
+      ],
+      "color": "#f5f5f5"
      }
     },
     "away": {
@@ -392,6 +464,15 @@
      "color": "#e5e7e3",
      "model3d": {
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.1332,
+       0.7497,
+       0.757,
+       0.0879
+      ],
+      "color": "#000000"
      }
     }
    },
@@ -453,7 +534,10 @@
     "152433"
    ],
    "enabled": true,
-   "primaryStadium": "7"
+   "primaryStadium": "7",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2019": {
    "name": "Wasps",
@@ -478,6 +562,15 @@
      "color": "#1c1e18",
      "model3d": {
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.1586,
+       0.7647,
+       0.6828,
+       0.0439
+      ],
+      "color": "#000000"
      }
     },
     "away": {
@@ -487,6 +580,15 @@
      "color": "#ebece7",
      "model3d": {
       "collar": "stand"
+     },
+     "shirtName": {
+      "area": [
+       0.1625,
+       0.7666,
+       0.6828,
+       0.0557
+      ],
+      "color": "#000000"
      }
     }
    },
@@ -553,7 +655,10 @@
     "152471"
    ],
    "enabled": true,
-   "primaryStadium": "7"
+   "primaryStadium": "7",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2020": {
    "name": "Wasps",
@@ -760,13 +865,31 @@
      "frontKitFile": "kits_2022/home_front.webp",
      "backKitFile": "kits_2022/home_back.webp",
      "previewFile": "kits_2022/home_preview.png",
-     "color": "#141211"
+     "color": "#141211",
+     "shirtName": {
+      "area": [
+       0.1045,
+       0.7542,
+       0.7793,
+       0.0879
+      ],
+      "color": "#f5f5f5"
+     }
     },
     "away": {
      "frontKitFile": "kits_2022/away_front.webp",
      "backKitFile": "kits_2022/away_back.webp",
      "previewFile": "kits_2022/away_preview.png",
-     "color": "#e6e5e4"
+     "color": "#e6e5e4",
+     "shirtName": {
+      "area": [
+       0.1045,
+       0.7592,
+       0.7793,
+       0.0879
+      ],
+      "color": "#052763"
+     }
     }
    },
    "roles": {
@@ -835,7 +958,10 @@
     "156440"
    ],
    "enabled": true,
-   "primaryStadium": "7"
+   "primaryStadium": "7",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2023": {
    "name": "Wasps",
@@ -857,13 +983,25 @@
      "frontKitFile": "kits_2023/home_front.webp",
      "backKitFile": "kits_2023/home_back.webp",
      "previewFile": "kits_2023/home_preview.png",
-     "color": "#26231a"
+     "color": "#26231a",
+     "shirtName": {
+      "area": [
+       0.1551,
+       0.8173,
+       0.6977,
+       0.0879
+      ],
+      "color": "#f5f5f5"
+     }
     },
     "away": {
      "frontKitFile": "kits_2023/away_front.webp",
      "backKitFile": "kits_2023/away_back.webp",
      "previewFile": "kits_2023/away_preview.png",
-     "color": "#3d97ab"
+     "color": "#3d97ab",
+     "shirtName": {
+      "enabled": false
+     }
     }
    },
    "roles": {
@@ -909,7 +1047,10 @@
     "158022"
    ],
    "enabled": true,
-   "primaryStadium": "7"
+   "primaryStadium": "7",
+   "shirtNames": {
+    "enabled": true
+   }
   },
   "2024": {
    "name": "Wasps",

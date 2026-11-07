@@ -29,6 +29,7 @@ from ui.editor_kit import (
     FrameStrip, Thumb, Note, Badge, TabStrip, browse_assets, load_pixmap, compact_button,
     SEVERITY_COLOR, worst,
 )
+from ui.team_sheet import is_star
 from ui.team_sheet import (
     MATCH_SHEET_ROWS, SUBSTITUTES, SlotAvatar, SubChip, PlayerPickerPopup, FITS, SEARCH, POSITION_NAMES,
     POSITION_SHORT, ROLE_SHORT, last_name,
@@ -1566,6 +1567,7 @@ class SquadTab(TeamTab):
         self._picker_shirt = number
         self.picker.open_for(title, entries, current, taken, anchor, self.screen, tags=tags,
                              subtitles=subtitles, search=search,
+                             stars=lambda pid: is_star(self.stats(pid)),
                              mode=SEARCH if current is None else FITS)
 
     def _on_pick(self, pid):

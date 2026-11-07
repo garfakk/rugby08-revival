@@ -1,38 +1,48 @@
 """
 app/stock_faces.py — the game's built-in ("stock") player faces
 ===================================================================
-No Qt. A static catalog (assets/data/stock_faces.json) of every stock face
+No Qt. A static catalog (assets/stock_game/faces.json) of every stock face
 id the game ships in data.gob, with the real player name it was modelled on
-where known. Built once from the modding community's file list by hashing
+where known, and the attributes the face picker filters on (skin_tone,
+headgear, hair_color, hair_length, tape, beard) — hand-classified, since
+nothing in the game's own files describes them; edit an entry to correct it.
+The ids were found once from the modding community's file list by hashing
 md5("players/heads/<id>") and matching against data.gob's own directory —
 the same scheme backend.mod_utils.stock_head_path uses to extract one, which
 is why the id alone (no hash) is enough to fetch it.
 """
 import json
 import os
-import xml.etree.ElementTree as ET
 
 from shared.app_paths import assets_directory
 
-_CATALOG_PATH = os.path.join(assets_directory(), "data", "stock_faces.json")
-_ATTR_PATH = os.path.join(assets_directory(), "data", "stock_face_attributes.xml")
+_CATALOG_PATH = os.path.join(assets_directory(), "stock_game", "faces.json")
 
 _cache = None
+_faces = None
 _attr_cache = None
 
 
-def load_stock_faces():
-    """[{"id": int, "name": str}], sorted by id. Read once per process;
+def _load_catalog():
+    """Every catalog entry as in the file, sorted by id. Read once per process;
     an unreadable/missing catalog just yields an empty browse list rather
     than an error, same as a missing data.gob does elsewhere."""
     global _cache
     if _cache is None:
         try:
             with open(_CATALOG_PATH, "r", encoding="utf-8") as fh:
-                _cache = json.load(fh)
-        except (OSError, ValueError):
+                _cache = sorted(json.load(fh), key=lambda f: f["id"])
+        except (OSError, ValueError, KeyError, TypeError):
             _cache = []
     return _cache
+
+
+def load_stock_faces():
+    """[{"id": int, "name": str}], sorted by id."""
+    global _faces
+    if _faces is None:
+        _faces = [{"id": f["id"], "name": f.get("name", "")} for f in _load_catalog()]
+    return _faces
 
 
 def search_stock_faces(query, filters=None):
@@ -62,25 +72,16 @@ def search_stock_faces(query, filters=None):
 
 
 def load_face_attributes():
-    """{face_id: {attr_name: value}}, read once per process from the static
-    XML catalog (assets/data/stock_face_attributes.xml) — hand-maintained,
-    not derived from data.gob, since nothing in the game's own files
-    describes a stock face's skin tone/headgear/hair colour/beard etc.
-    Empty (not an error) when the file is missing, unparsable, or just
-    hasn't been filled in yet for any face."""
+    """{face_id: {attr_name: value}} for every face with at least one
+    attribute filled in — the catalog's fields other than id and name."""
     global _attr_cache
     if _attr_cache is None:
         _attr_cache = {}
-        try:
-            root = ET.parse(_ATTR_PATH).getroot()
-            for face_el in root.findall("face"):
-                fid = int(face_el.get("id"))
-                attrs = {a.get("name"): (a.text or "").strip()
-                        for a in face_el.findall("attr") if a.get("name") and (a.text or "").strip()}
-                if attrs:
-                    _attr_cache[fid] = attrs
-        except (OSError, ET.ParseError, ValueError, TypeError):
-            pass
+        for f in _load_catalog():
+            attrs = {k: str(v).strip() for k, v in f.items()
+                     if k not in ("id", "name") and str(v or "").strip()}
+            if attrs:
+                _attr_cache[f["id"]] = attrs
     return _attr_cache
 
 

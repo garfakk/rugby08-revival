@@ -123,6 +123,7 @@ def data_dir(tmp_path, monkeypatch):
     shutil.copytree(FIXTURE_DATA, dst)
     point_config(monkeypatch, data_dir=dst)
     monkeypatch.setattr(config, "directory_tournament_saves", str(tmp_path / "tournaments"))
+    monkeypatch.setattr(config, "directory_custom_tournaments", str(tmp_path / "custom_tournaments"))
     return dst
 
 

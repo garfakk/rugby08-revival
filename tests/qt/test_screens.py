@@ -51,6 +51,7 @@ SCREENS = [
     ("show_team_editor", "screen_team_editor"),
     ("show_player_editor", "screen_player_editor"),
     ("show_challenge_editor", "screen_challenge_editor"),
+    ("show_tournament_editor", "screen_tournament_editor"),
     ("show_challenge_mode", "screen_challenge_mode"),
     ("show_tournament_hub", "screen_tournament_hub"),
     ("show_tournament_wizard", "screen_tournament_wizard"),
@@ -466,11 +467,10 @@ def test_player_editor_star_marker(window, qapp):
         assert not tab.star_voice.isHidden()
         tab.star_voice._emit("4")
         assert editor.session.working["stats"]["2024"]["star_voice"] == "4"
-        editor.undo()
     finally:
         user_prefs.expert_mode = expert
-    editor.undo()
-    editor.undo()
+        # leave nothing unsaved: the next open would stop at "Unsaved changes"
+        editor.session.revert()
     window.show_main()
 
 
@@ -707,3 +707,42 @@ def test_coin_toss_not_offered(qapp, tmp_path, monkeypatch):
     ini.write_text("[prefs]\ncoin_toss = True\n")
     monkeypatch.setattr(up, "_PREFS_FILE", str(ini))
     assert up.UserPrefs().coin_toss is False
+
+
+@pytest.mark.parametrize("starter,fmt", [("knockout", "cup"), ("club_league", "league")])
+def test_tournament_editor_make_and_play(window, qapp, monkeypatch, tmp_path, starter, fmt):
+    """Tournament editor: start from a ready-made shape, fill it, save, PLAY IT —
+    the wizard opens on it, and the tournament it starts plays to a champion."""
+    from shared.config import config
+    from app.tournament import custom as C, engine
+    monkeypatch.setattr(config, "directory_custom_tournaments", str(tmp_path / "custom"))
+    window.show_tournament_editor()
+    ed = window.screen_tournament_editor
+    _wait(qapp, lambda: window.screens.currentWidget() is ed, 10)
+    ed._create(starter)
+    assert ed.d["format"] == fmt and ed.record_id in ed._drafts
+    size = 4
+    ed._replace("fill", C.auto_fill(ed.ds, ed.d, "internationals", size))
+    qapp.processEvents()
+    assert len(C.all_teams(ed.d)) == 4
+    if fmt == "league":
+        ed._set("playoff_teams", 2)
+    ed.refresh_all()
+    errors = [m for _k, m, sev in ed.issues if sev == "error"]
+    assert errors == [] and ed.play_btn.isEnabled()
+    created = []
+    monkeypatch.setattr(window.screen_tournament_wizard, "on_created", created.append)
+    ed._play()                                  # saves, then the wizard on it
+    tid = ed.record_id
+    assert tid in C.load_all() and tid not in ed._drafts
+    wiz = window.screen_tournament_wizard
+    _wait(qapp, lambda: window.screens.currentWidget() is wiz, 10)
+    assert wiz.current_edition().id == tid and wiz._step == 1
+    wiz._toggle_human(C.all_teams(ed.d)[0])
+    assert wiz._validate(), wiz.problems.text()
+    wiz._start()
+    assert created
+    t = created[0].t
+    engine.simulate_to_end(t)
+    assert t.finished and t.champion
+    window.show_main()

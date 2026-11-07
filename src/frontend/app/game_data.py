@@ -30,6 +30,7 @@ import os
 import re
 import shutil
 from datetime import datetime
+from shared.game_text import game_name, is_game_safe
 
 # Strongest wind offered (4 = extreme); the reR08 bands above that are unused.
 WIND_POWER_MAX = 4
@@ -264,6 +265,10 @@ def check_player_detailed(record: dict, season: str, mod_dir: str = None) -> lis
     name = (record.get("display_name") or "").strip()
     if not name:
         problems.append(("display_name", "no display name — the game shows 'Unknown'", WARN_))
+    elif not is_game_safe(name):
+        problems.append(("display_name",
+                         f"the game can't show accents or special characters: written as "
+                         f"'{game_name(name)}'", WARN_))
     elif len(name.encode("utf-8")) > 14:
         problems.append(("display_name",
                          f"{len(name.encode('utf-8'))} bytes — the game cuts names at 14", WARN_))
@@ -521,8 +526,10 @@ ASSET_SPECS = {
     "logos.right":  {"frames": 0, "size": (128, 64), "ext": (".png",), "note": ""},
     # Kits: images are the standard; the game's own files also work (a .big
     # front holding its kit.fsh, a .fsh of the 22 backs), checked by entries.
-    "frontKitFile": {"frames": 0, "size": (1024, 1024), "ext": (".png", ".webp", ".big"),
-                     "archive_entries": 1, "note": ""},
+    # game_size: the texture the game draws (kit.fsh "kit0", 512x512); a front
+    # at that size or a whole multiple of it is resized without loss of shape
+    "frontKitFile": {"frames": 0, "size": (1024, 1024), "game_size": (512, 512),
+                     "ext": (".png", ".webp", ".big"), "archive_entries": 1, "note": ""},
     "backKitFile":  {"frames": 22, "size": (1024, 1024), "ext": (".png", ".webp", ".fsh"),
                      "archive_entries": 22, "note": ""},
     "previewFile":  {"frames": 0, "size": None, "ext": (".png",),
