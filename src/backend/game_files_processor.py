@@ -1032,6 +1032,18 @@ def write_players_data_to_roster(roster_filepath, match_data):
         if isinstance(player_face, int):
             face_id = player_face
             
+        elif player_face[-4:].lower() == ".big" and not os.path.isfile(
+                os.path.join(config.mod_data_directory, player_face)):
+            # e.g. a removed head still named in a tournament save's squad
+            log.warning(f"{player.get('name')}: head {player_face} not found, default face used")
+            face_id = player_default_values['face']
+
+        elif player_face[-4:].lower() == ".big" and head_too_heavy(
+                os.path.join(config.mod_data_directory, player_face)):
+            log.warning(f"{player.get('name')}: head {player_face} has a model too heavy "
+                        f"for the game (hangs the match load), default face used")
+            face_id = player_default_values['face']
+
         elif player_face[-4:].lower() == ".big":
             face_id = face_id_for_custom_faces_by_roster_id.get(player['roster_id'])['face_id']
             custom_face_filepath = os.path.join(config.mod_data_directory, player_face)

@@ -66,6 +66,41 @@ def repair_fsh_chains(data):
   return bytes(fixed) if fixed is not None else data
 
 
+# A head .big whose model.o has more mesh primitives than this hangs the
+# match load: the game runs out of memory loading data/motion/script.big
+# and stops in its fatal-error loop (black screen, 100% CPU). Stock heads
+# have 1-6 primitives and the converted ones in data/ up to 22; the two
+# that hung (guido_petti, jalibert) had 400+ in a 5 MB model.
+MAX_HEAD_PRIMITIVES = 64
+
+
+def head_model_primitives(path):
+  """Mesh primitive count of the model.o inside head .big `path` (None when
+  the file is not a readable BIG with a model.o)."""
+  try:
+    with open(path, "rb") as f:
+      data = f.read()
+    if data[:4] != b"BIGF":
+      return None
+    count = struct.unpack_from(">I", data, 8)[0]
+    pos = 16
+    for _ in range(min(count, 256)):
+      offset, size = struct.unpack_from(">II", data, pos)
+      end = data.index(b"\0", pos + 8)
+      name = data[pos + 8:end]
+      pos = end + 1
+      if name.lower() == b"model.o":
+        return data[offset:offset + size].count(b"__geoprimdatabuf")
+  except (OSError, struct.error, ValueError):
+    pass
+  return None
+
+
+def head_too_heavy(path):
+  n = head_model_primitives(path)
+  return n is not None and n > MAX_HEAD_PRIMITIVES
+
+
 def copy_texture_file(source, destination):
   """copy_file for a face/texture .big or .fsh, repairing its chunk chains."""
   try:

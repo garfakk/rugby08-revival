@@ -771,7 +771,6 @@ class StageCard(MomentOverlay):
         if self.tie:
             a = _ease(_phase(ms, 700, 500))
             f = self.tie
-            self.text(p, QRectF(0, cy + 80, w, 24), "YOUR TIE", 12, FG_TERTIARY, track=3.0, opacity=a)
             for tid, cx in ((f.home, w / 2 - 170), (f.away, w / 2 + 170)):
                 self.crest(p, tid, cx, cy + 170, 96, opacity=a, scale=0.8 + 0.2 * a)
                 self.text(p, QRectF(cx - 160, cy + 226, 320, 28),
