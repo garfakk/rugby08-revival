@@ -118,7 +118,10 @@ def fits_shirt(player: dict, number: int) -> bool:
 def is_star(player) -> bool:
     """True for a star player: a star class in "star_attribute" of the season
     block (or flat player dict) given. Class 1 is the generic base class,
-    which the game shows no star for: not marked either."""
+    which the game shows no star for: not marked either. Neither is a player
+    whose star indicator is hidden ("hide_star"): no star in game or here."""
+    if player and str(player.get("hide_star") or "").strip().lower() in ("yes", "true", "1"):
+        return False
     return star_class(player) > 1
 
 

@@ -897,14 +897,15 @@ class SkillsTab(PlayerTab):
         self.star_attribute.edited.connect(
             lambda v: self.edit_stat("star player ability", "star_attribute", v, coalesce=False))
         g.add(self.star_attribute)
-        # The yellow star over the head is separate from the ability: hidden,
-        # the player keeps the class's abilities without the marker
-        # (roster flag hide_star, see backend/game_files_processor.py).
+        # The star indicator is separate from the ability: hidden, the player
+        # keeps the class's abilities without the yellow star over the head
+        # in game (roster flag hide_star, see backend/game_files_processor.py)
+        # and without the star marking him in the mod (ui.team_sheet.is_star).
         self.star_marker = self.register("hide_star", ChoiceField(
-            "Star above head", ["yes"], allow_blank=True, blank_label="Shown",
+            "Star indicator", ["yes"], allow_blank=True, blank_label="Shown",
             display=lambda v: "Hidden"))
         self.star_marker.edited.connect(
-            lambda v: self.edit_stat("star marker", "hide_star", v, coalesce=False))
+            lambda v: self.edit_stat("star indicator", "hide_star", v, coalesce=False))
         g.add(self.star_marker)
         # Whose star commentary the player gets ("It's a try for Brian
         # O'Driscoll", ODR_* lines, crowd): .rdf +0x51, read by
