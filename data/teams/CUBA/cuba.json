@@ -1,0 +1,75 @@
+{
+ "10186": {
+  "2026": {
+   "name": "CUBA",
+   "type": "club",
+   "category": "Argentina",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2026/home_front.webp",
+     "backKitFile": "kits_2026/home_back.webp",
+     "previewFile": "kits_2026/home_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "159322",
+    "viceCaptain": "159325",
+    "longGK": "159328",
+    "shortGK": "159328",
+    "longPunt": "159328",
+    "shortPunt": "159328",
+    "kickoff": "159328"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "159319",
+    "159320",
+    "159321",
+    "159322",
+    "159323",
+    "159324",
+    "159325",
+    "159326",
+    "159327",
+    "159328",
+    "159329",
+    "159330",
+    "159331",
+    "159332",
+    "159333",
+    "159334",
+    "159335",
+    "159336",
+    "159337",
+    "159338",
+    "159339",
+    "159340",
+    "159341",
+    "159342",
+    "159343",
+    "159344",
+    "159345",
+    "159346",
+    "159347",
+    "159348"
+   ],
+   "group": "Argentina"
+  }
+ }
+}

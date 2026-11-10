@@ -1,0 +1,81 @@
+{
+ "10202": {
+  "2026": {
+   "name": "Capibaras XV",
+   "type": "club",
+   "category": "Super Rugby Americas",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2026/home_front.webp",
+     "backKitFile": "kits_2026/home_back.webp",
+     "previewFile": "kits_2026/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2026/away_front.webp",
+     "backKitFile": "kits_2026/away_back.webp",
+     "previewFile": "kits_2026/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "159654",
+    "viceCaptain": "159657",
+    "longGK": "159657",
+    "shortGK": "159657",
+    "longPunt": "159657",
+    "shortPunt": "159657",
+    "kickoff": "159657"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "159648",
+    "159649",
+    "159650",
+    "159651",
+    "159652",
+    "159653",
+    "159654",
+    "159655",
+    "159656",
+    "159657",
+    "159658",
+    "159659",
+    "159660",
+    "159661",
+    "159662",
+    "159663",
+    "159664",
+    "159665",
+    "159666",
+    "159667",
+    "159668",
+    "159669",
+    "159670",
+    "159671",
+    "159672",
+    "159673",
+    "159674",
+    "159675",
+    "159676",
+    "159677"
+   ],
+   "group": "Super Rugby Americas"
+  }
+ }
+}

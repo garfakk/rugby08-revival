@@ -1,0 +1,81 @@
+{
+ "10189": {
+  "2026": {
+   "name": "Los Matreros",
+   "type": "club",
+   "category": "Argentina",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2026/home_front.webp",
+     "backKitFile": "kits_2026/home_back.webp",
+     "previewFile": "kits_2026/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2026/away_front.webp",
+     "backKitFile": "kits_2026/away_back.webp",
+     "previewFile": "kits_2026/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "159202",
+    "viceCaptain": "159201",
+    "longGK": "159209",
+    "shortGK": "159209",
+    "longPunt": "159209",
+    "shortPunt": "159209",
+    "kickoff": "159209"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss",
+    "left": "miss_pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "159200",
+    "159201",
+    "159202",
+    "159203",
+    "159204",
+    "159205",
+    "159206",
+    "159207",
+    "159208",
+    "159209",
+    "159210",
+    "159211",
+    "159212",
+    "159213",
+    "159214",
+    "159215",
+    "159216",
+    "159217",
+    "159218",
+    "159219",
+    "159220",
+    "159221",
+    "159222",
+    "159223",
+    "159224",
+    "159225",
+    "159226",
+    "159227",
+    "159228",
+    "159229"
+   ],
+   "group": "Argentina"
+  }
+ }
+}

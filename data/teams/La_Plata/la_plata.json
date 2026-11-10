@@ -1,0 +1,81 @@
+{
+ "10188": {
+  "2026": {
+   "name": "La Plata",
+   "type": "club",
+   "category": "Argentina",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2026/home_front.webp",
+     "backKitFile": "kits_2026/home_back.webp",
+     "previewFile": "kits_2026/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2026/away_front.webp",
+     "backKitFile": "kits_2026/away_back.webp",
+     "previewFile": "kits_2026/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "159295",
+    "viceCaptain": "159300",
+    "longGK": "159300",
+    "shortGK": "159298",
+    "longPunt": "159298",
+    "shortPunt": "159298",
+    "kickoff": "159298"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "pivot",
+    "right": "dummy_switch"
+   },
+   "players": [
+    "159289",
+    "159290",
+    "159291",
+    "159292",
+    "159293",
+    "159294",
+    "159295",
+    "159296",
+    "159297",
+    "159298",
+    "159299",
+    "159300",
+    "159301",
+    "159302",
+    "159303",
+    "159304",
+    "159305",
+    "159306",
+    "159307",
+    "159308",
+    "159309",
+    "159310",
+    "159311",
+    "159312",
+    "159313",
+    "159314",
+    "159315",
+    "159316",
+    "159317",
+    "159318"
+   ],
+   "group": "Argentina"
+  }
+ }
+}

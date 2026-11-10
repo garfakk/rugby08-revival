@@ -1,0 +1,81 @@
+{
+ "10185": {
+  "2026": {
+   "name": "Champagnat",
+   "type": "club",
+   "category": "Argentina",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2026/home_front.webp",
+     "backKitFile": "kits_2026/home_back.webp",
+     "previewFile": "kits_2026/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2026/away_front.webp",
+     "backKitFile": "kits_2026/away_back.webp",
+     "previewFile": "kits_2026/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "159173",
+    "viceCaptain": "159176",
+    "longGK": "159179",
+    "shortGK": "159179",
+    "longPunt": "159170",
+    "shortPunt": "159179",
+    "kickoff": "159179"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "pivot",
+    "left": "cross_kick",
+    "right": "pocket"
+   },
+   "players": [
+    "159170",
+    "159171",
+    "159172",
+    "159173",
+    "159174",
+    "159175",
+    "159176",
+    "159177",
+    "159178",
+    "159179",
+    "159180",
+    "159181",
+    "159182",
+    "159183",
+    "159184",
+    "159185",
+    "159186",
+    "159187",
+    "159188",
+    "159189",
+    "159190",
+    "159191",
+    "159192",
+    "159193",
+    "159194",
+    "159195",
+    "159196",
+    "159197",
+    "159198",
+    "159199"
+   ],
+   "group": "Argentina"
+  }
+ }
+}

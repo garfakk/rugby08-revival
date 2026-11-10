@@ -1,0 +1,81 @@
+{
+ "10192": {
+  "2026": {
+   "name": "Regatas de Bella Vista",
+   "type": "club",
+   "category": "Argentina",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2026/home_front.webp",
+     "backKitFile": "kits_2026/home_back.webp",
+     "previewFile": "kits_2026/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2026/away_front.webp",
+     "backKitFile": "kits_2026/away_back.webp",
+     "previewFile": "kits_2026/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "159052",
+    "viceCaptain": "159050",
+    "longGK": "159059",
+    "shortGK": "159059",
+    "longPunt": "159059",
+    "shortPunt": "159059",
+    "kickoff": "159059"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "159050",
+    "159051",
+    "159052",
+    "159053",
+    "159054",
+    "159055",
+    "159056",
+    "159057",
+    "159058",
+    "159059",
+    "159060",
+    "159061",
+    "159062",
+    "159063",
+    "159064",
+    "159065",
+    "159066",
+    "159067",
+    "159068",
+    "159069",
+    "159070",
+    "159071",
+    "159072",
+    "159073",
+    "159074",
+    "159075",
+    "159076",
+    "159077",
+    "159078",
+    "159079"
+   ],
+   "group": "Argentina"
+  }
+ }
+}

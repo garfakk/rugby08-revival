@@ -3281,5 +3281,10 @@
         "_venue_note": "Game stadium stand-ins: Estadio Mario Alberto Kempes, Córdoba → Buenos Aires (43); North Queensland Stadium, Townsville → Brisbane (2)."
       }
     }
+  },
+  "trophy": {
+    "ceremony": "TriNations",
+    "model": "assets/trophy/trophy.o",
+    "texture": "assets/trophy/trophy.fsh"
   }
 }

@@ -519,5 +519,10 @@
         "_venue_note": "Game stadium stand-ins: Melbourne → Sydney (no Melbourne ground in the game); the 2013 Test at Docklands and the 2025 one at the MCG are played in Sydney."
       }
     }
+  },
+  "trophy": {
+    "ceremony": "Bledisloe",
+    "model": "assets/trophy/trophy.o",
+    "texture": "assets/trophy/trophy.fsh"
   }
 }

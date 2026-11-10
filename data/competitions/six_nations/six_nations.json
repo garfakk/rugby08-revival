@@ -3466,5 +3466,10 @@
         "_venue_note": "Game stadium stand-ins: Stade Pierre-Mauroy, Lille → Lens (69)."
       }
     }
+  },
+  "trophy": {
+    "ceremony": "SixNations",
+    "model": "assets/trophy/trophy.o",
+    "texture": "assets/trophy/trophy.fsh"
   }
 }

@@ -1,0 +1,81 @@
+{
+ "10183": {
+  "2026": {
+   "name": "Belgrano Athletic",
+   "type": "club",
+   "category": "Argentina",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2026/home_front.webp",
+     "backKitFile": "kits_2026/home_back.webp",
+     "previewFile": "kits_2026/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2026/away_front.webp",
+     "backKitFile": "kits_2026/away_back.webp",
+     "previewFile": "kits_2026/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "159236",
+    "viceCaptain": "159241",
+    "longGK": "159239",
+    "shortGK": "159239",
+    "longPunt": "159239",
+    "shortPunt": "159239",
+    "kickoff": "159239"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "classic",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "159230",
+    "159231",
+    "159232",
+    "159233",
+    "159234",
+    "159235",
+    "159236",
+    "159237",
+    "159238",
+    "159239",
+    "159240",
+    "159241",
+    "159242",
+    "159243",
+    "159244",
+    "159245",
+    "159246",
+    "159247",
+    "159248",
+    "159249",
+    "159250",
+    "159251",
+    "159252",
+    "159253",
+    "159254",
+    "159255",
+    "159256",
+    "159257",
+    "159258",
+    "159259"
+   ],
+   "group": "Argentina"
+  }
+ }
+}

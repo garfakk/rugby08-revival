@@ -1,0 +1,80 @@
+{
+ "10196": {
+  "2026": {
+   "name": "Yacaré XV",
+   "type": "club",
+   "category": "Super Rugby Americas",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2026/home_front.webp",
+     "backKitFile": "kits_2026/home_back.webp",
+     "previewFile": "kits_2026/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2026/away_front.webp",
+     "backKitFile": "kits_2026/away_back.webp",
+     "previewFile": "kits_2026/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "159481",
+    "viceCaptain": "159478",
+    "longGK": "159478",
+    "shortGK": "159478",
+    "longPunt": "159478",
+    "shortPunt": "159478",
+    "kickoff": "159478"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "loop",
+    "left": "cross_kick",
+    "right": "pocket"
+   },
+   "players": [
+    "159469",
+    "159470",
+    "159471",
+    "159472",
+    "159473",
+    "159474",
+    "159475",
+    "159476",
+    "159477",
+    "159478",
+    "159479",
+    "159480",
+    "159481",
+    "159482",
+    "159483",
+    "159484",
+    "159485",
+    "159486",
+    "159487",
+    "159488",
+    "159489",
+    "159490",
+    "159491",
+    "159492",
+    "159493",
+    "159494",
+    "159495",
+    "159496",
+    "159497"
+   ],
+   "group": "Super Rugby Americas"
+  }
+ }
+}

@@ -1,0 +1,81 @@
+{
+ "10195": {
+  "2026": {
+   "name": "Cobras Brasil",
+   "type": "club",
+   "category": "Super Rugby Americas",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2026/home_front.webp",
+     "backKitFile": "kits_2026/home_back.webp",
+     "previewFile": "kits_2026/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2026/away_front.webp",
+     "backKitFile": "kits_2026/away_back.webp",
+     "previewFile": "kits_2026/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "159451",
+    "viceCaptain": "159444",
+    "longGK": "159448",
+    "shortGK": "159448",
+    "longPunt": "159448",
+    "shortPunt": "159448",
+    "kickoff": "159448"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "159439",
+    "159440",
+    "159441",
+    "159442",
+    "159443",
+    "159444",
+    "159445",
+    "159446",
+    "159447",
+    "159448",
+    "159449",
+    "159450",
+    "159451",
+    "159452",
+    "159453",
+    "159454",
+    "159455",
+    "159456",
+    "159457",
+    "159458",
+    "159459",
+    "159460",
+    "159461",
+    "159462",
+    "159463",
+    "159464",
+    "159465",
+    "159466",
+    "159467",
+    "159468"
+   ],
+   "group": "Super Rugby Americas"
+  }
+ }
+}

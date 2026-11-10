@@ -132,5 +132,10 @@
       }
     ],
     "branding": "5005"
+  },
+  "trophy": {
+    "ceremony": "Premiership",
+    "model": "assets/trophy/trophy.o",
+    "texture": "assets/trophy/trophy.fsh"
   }
 }

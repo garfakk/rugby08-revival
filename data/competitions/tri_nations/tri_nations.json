@@ -810,5 +810,10 @@
         "_venue_note": "Game stadium stand-ins: Nelson Mandela Bay Stadium, Port Elizabeth → Durban (58)."
       }
     }
+  },
+  "trophy": {
+    "ceremony": "TriNations",
+    "model": "assets/trophy/trophy.o",
+    "texture": "assets/trophy/trophy.fsh"
   }
 }

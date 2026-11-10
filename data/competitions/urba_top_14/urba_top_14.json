@@ -1,0 +1,1802 @@
+{
+ "id": "urba_top_14",
+ "name": "URBA Top 14",
+ "seasonal": true,
+ "seasons": {
+  "2026": {
+   "template": {
+    "id": "urba_top_14_2026",
+    "name": "URBA Top 14 2026",
+    "order": 41.0,
+    "description": "The Buenos Aires club championship: the 14 URBA clubs play each other home and away (182 games, 26 rounds, 6 February to 1 August), every game at La Catedral. The top four go to single-match semi-finals (1st v 4th, 2nd v 3rd) and a final, as the real Top 14 does. Points: 4 a win, 2 a draw, a bonus for 4 tries and for losing by 7 or less.",
+    "season": "2026",
+    "match_type": "super_14",
+    "venue": "home",
+    "venues": [
+     "43"
+    ],
+    "points": {
+     "win": 4,
+     "draw": 2,
+     "loss": 0,
+     "try_bonus": {
+      "tries": 4
+     },
+     "losing_bonus": {
+      "margin": 7
+     }
+    },
+    "tiebreakers": [
+     "wins",
+     "points_diff",
+     "points_for",
+     "head_to_head",
+     "lots"
+    ],
+    "discipline": {
+     "red_ban": [
+      1,
+      4
+     ],
+     "yellow_accumulation": 4,
+     "yellow_ban": 1,
+     "citing_chance": 0.01
+    },
+    "default_options": {
+     "difficulty": "pro",
+     "halftime_length": "5m",
+     "injuries": true,
+     "suspensions": true,
+     "fatigue": true,
+     "cards": true,
+     "sim_variance": 1.0,
+     "injury_rate": 1.0,
+     "injury_duration": 1.0
+    },
+    "stages": [
+     {
+      "id": "table",
+      "name": "League",
+      "kind": "round_robin",
+      "legs": 2,
+      "match_subtype": "none",
+      "group_names": {
+       "A": "Table"
+      },
+      "qualify": 4,
+      "fixtures": [
+       {
+        "date": "2026-02-06",
+        "time": "15:00",
+        "group": "A",
+        "home": "10192",
+        "away": "10190",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-02-07",
+        "time": "15:00",
+        "group": "A",
+        "home": "10191",
+        "away": "10193",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-02-07",
+        "time": "15:00",
+        "group": "A",
+        "home": "10186",
+        "away": "10187",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-02-07",
+        "time": "15:00",
+        "group": "A",
+        "home": "10185",
+        "away": "10182",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-02-07",
+        "time": "15:00",
+        "group": "A",
+        "home": "10184",
+        "away": "10194",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-02-07",
+        "time": "15:00",
+        "group": "A",
+        "home": "10189",
+        "away": "10181",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-02-07",
+        "time": "15:00",
+        "group": "A",
+        "home": "10188",
+        "away": "10183",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-02-13",
+        "time": "15:00",
+        "group": "A",
+        "home": "10193",
+        "away": "10192",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-02-14",
+        "time": "15:00",
+        "group": "A",
+        "home": "10190",
+        "away": "10186",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-02-14",
+        "time": "15:00",
+        "group": "A",
+        "home": "10182",
+        "away": "10191",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-02-14",
+        "time": "15:00",
+        "group": "A",
+        "home": "10187",
+        "away": "10184",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-02-14",
+        "time": "15:00",
+        "group": "A",
+        "home": "10181",
+        "away": "10185",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-02-14",
+        "time": "15:00",
+        "group": "A",
+        "home": "10194",
+        "away": "10188",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-02-14",
+        "time": "15:00",
+        "group": "A",
+        "home": "10183",
+        "away": "10189",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-02-20",
+        "time": "15:00",
+        "group": "A",
+        "home": "10192",
+        "away": "10186",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-02-21",
+        "time": "15:00",
+        "group": "A",
+        "home": "10193",
+        "away": "10182",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-02-21",
+        "time": "15:00",
+        "group": "A",
+        "home": "10184",
+        "away": "10190",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-02-21",
+        "time": "15:00",
+        "group": "A",
+        "home": "10191",
+        "away": "10181",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-02-21",
+        "time": "15:00",
+        "group": "A",
+        "home": "10188",
+        "away": "10187",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-02-21",
+        "time": "15:00",
+        "group": "A",
+        "home": "10185",
+        "away": "10183",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-02-21",
+        "time": "15:00",
+        "group": "A",
+        "home": "10189",
+        "away": "10194",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-02-27",
+        "time": "15:00",
+        "group": "A",
+        "home": "10182",
+        "away": "10192",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-02-28",
+        "time": "15:00",
+        "group": "A",
+        "home": "10186",
+        "away": "10184",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-02-28",
+        "time": "15:00",
+        "group": "A",
+        "home": "10181",
+        "away": "10193",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-02-28",
+        "time": "15:00",
+        "group": "A",
+        "home": "10190",
+        "away": "10188",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-02-28",
+        "time": "15:00",
+        "group": "A",
+        "home": "10183",
+        "away": "10191",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-02-28",
+        "time": "15:00",
+        "group": "A",
+        "home": "10187",
+        "away": "10189",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-02-28",
+        "time": "15:00",
+        "group": "A",
+        "home": "10194",
+        "away": "10185",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-03-06",
+        "time": "15:00",
+        "group": "A",
+        "home": "10192",
+        "away": "10184",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-03-07",
+        "time": "15:00",
+        "group": "A",
+        "home": "10182",
+        "away": "10181",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-03-07",
+        "time": "15:00",
+        "group": "A",
+        "home": "10188",
+        "away": "10186",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-03-07",
+        "time": "15:00",
+        "group": "A",
+        "home": "10193",
+        "away": "10183",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-03-07",
+        "time": "15:00",
+        "group": "A",
+        "home": "10189",
+        "away": "10190",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-03-07",
+        "time": "15:00",
+        "group": "A",
+        "home": "10191",
+        "away": "10194",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-03-07",
+        "time": "15:00",
+        "group": "A",
+        "home": "10185",
+        "away": "10187",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-03-13",
+        "time": "15:00",
+        "group": "A",
+        "home": "10181",
+        "away": "10192",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-03-14",
+        "time": "15:00",
+        "group": "A",
+        "home": "10184",
+        "away": "10188",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-03-14",
+        "time": "15:00",
+        "group": "A",
+        "home": "10183",
+        "away": "10182",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-03-14",
+        "time": "15:00",
+        "group": "A",
+        "home": "10186",
+        "away": "10189",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-03-14",
+        "time": "15:00",
+        "group": "A",
+        "home": "10194",
+        "away": "10193",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-03-14",
+        "time": "15:00",
+        "group": "A",
+        "home": "10190",
+        "away": "10185",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-03-14",
+        "time": "15:00",
+        "group": "A",
+        "home": "10187",
+        "away": "10191",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-03-20",
+        "time": "15:00",
+        "group": "A",
+        "home": "10192",
+        "away": "10188",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-03-21",
+        "time": "15:00",
+        "group": "A",
+        "home": "10181",
+        "away": "10183",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-03-21",
+        "time": "15:00",
+        "group": "A",
+        "home": "10189",
+        "away": "10184",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-03-21",
+        "time": "15:00",
+        "group": "A",
+        "home": "10182",
+        "away": "10194",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-03-21",
+        "time": "15:00",
+        "group": "A",
+        "home": "10185",
+        "away": "10186",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-03-21",
+        "time": "15:00",
+        "group": "A",
+        "home": "10193",
+        "away": "10187",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-03-21",
+        "time": "15:00",
+        "group": "A",
+        "home": "10191",
+        "away": "10190",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-03-27",
+        "time": "15:00",
+        "group": "A",
+        "home": "10183",
+        "away": "10192",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-03-28",
+        "time": "15:00",
+        "group": "A",
+        "home": "10188",
+        "away": "10189",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-03-28",
+        "time": "15:00",
+        "group": "A",
+        "home": "10194",
+        "away": "10181",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-03-28",
+        "time": "15:00",
+        "group": "A",
+        "home": "10184",
+        "away": "10185",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-03-28",
+        "time": "15:00",
+        "group": "A",
+        "home": "10187",
+        "away": "10182",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-03-28",
+        "time": "15:00",
+        "group": "A",
+        "home": "10186",
+        "away": "10191",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-03-28",
+        "time": "15:00",
+        "group": "A",
+        "home": "10190",
+        "away": "10193",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-04-03",
+        "time": "15:00",
+        "group": "A",
+        "home": "10192",
+        "away": "10189",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-04-04",
+        "time": "15:00",
+        "group": "A",
+        "home": "10183",
+        "away": "10194",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-04-04",
+        "time": "15:00",
+        "group": "A",
+        "home": "10185",
+        "away": "10188",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-04-04",
+        "time": "15:00",
+        "group": "A",
+        "home": "10181",
+        "away": "10187",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-04-04",
+        "time": "15:00",
+        "group": "A",
+        "home": "10191",
+        "away": "10184",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-04-04",
+        "time": "15:00",
+        "group": "A",
+        "home": "10182",
+        "away": "10190",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-04-04",
+        "time": "15:00",
+        "group": "A",
+        "home": "10193",
+        "away": "10186",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-04-10",
+        "time": "15:00",
+        "group": "A",
+        "home": "10194",
+        "away": "10192",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-04-11",
+        "time": "15:00",
+        "group": "A",
+        "home": "10189",
+        "away": "10185",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-04-11",
+        "time": "15:00",
+        "group": "A",
+        "home": "10187",
+        "away": "10183",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-04-11",
+        "time": "15:00",
+        "group": "A",
+        "home": "10188",
+        "away": "10191",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-04-11",
+        "time": "15:00",
+        "group": "A",
+        "home": "10190",
+        "away": "10181",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-04-11",
+        "time": "15:00",
+        "group": "A",
+        "home": "10184",
+        "away": "10193",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-04-11",
+        "time": "15:00",
+        "group": "A",
+        "home": "10186",
+        "away": "10182",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-04-17",
+        "time": "15:00",
+        "group": "A",
+        "home": "10192",
+        "away": "10185",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-04-18",
+        "time": "15:00",
+        "group": "A",
+        "home": "10194",
+        "away": "10187",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-04-18",
+        "time": "15:00",
+        "group": "A",
+        "home": "10191",
+        "away": "10189",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-04-18",
+        "time": "15:00",
+        "group": "A",
+        "home": "10183",
+        "away": "10190",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-04-18",
+        "time": "15:00",
+        "group": "A",
+        "home": "10193",
+        "away": "10188",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-04-18",
+        "time": "15:00",
+        "group": "A",
+        "home": "10181",
+        "away": "10186",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-04-18",
+        "time": "15:00",
+        "group": "A",
+        "home": "10182",
+        "away": "10184",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-04-24",
+        "time": "15:00",
+        "group": "A",
+        "home": "10187",
+        "away": "10192",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-04-25",
+        "time": "15:00",
+        "group": "A",
+        "home": "10185",
+        "away": "10191",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-04-25",
+        "time": "15:00",
+        "group": "A",
+        "home": "10190",
+        "away": "10194",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-04-25",
+        "time": "15:00",
+        "group": "A",
+        "home": "10189",
+        "away": "10193",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-04-25",
+        "time": "15:00",
+        "group": "A",
+        "home": "10186",
+        "away": "10183",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-04-25",
+        "time": "15:00",
+        "group": "A",
+        "home": "10188",
+        "away": "10182",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-04-25",
+        "time": "15:00",
+        "group": "A",
+        "home": "10184",
+        "away": "10181",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-01",
+        "time": "15:00",
+        "group": "A",
+        "home": "10192",
+        "away": "10191",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-02",
+        "time": "15:00",
+        "group": "A",
+        "home": "10187",
+        "away": "10190",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-02",
+        "time": "15:00",
+        "group": "A",
+        "home": "10193",
+        "away": "10185",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-02",
+        "time": "15:00",
+        "group": "A",
+        "home": "10194",
+        "away": "10186",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-02",
+        "time": "15:00",
+        "group": "A",
+        "home": "10182",
+        "away": "10189",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-02",
+        "time": "15:00",
+        "group": "A",
+        "home": "10183",
+        "away": "10184",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-02",
+        "time": "15:00",
+        "group": "A",
+        "home": "10181",
+        "away": "10188",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-08",
+        "time": "15:00",
+        "group": "A",
+        "home": "10190",
+        "away": "10192",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-09",
+        "time": "15:00",
+        "group": "A",
+        "home": "10193",
+        "away": "10191",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-09",
+        "time": "15:00",
+        "group": "A",
+        "home": "10187",
+        "away": "10186",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-09",
+        "time": "15:00",
+        "group": "A",
+        "home": "10182",
+        "away": "10185",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-09",
+        "time": "15:00",
+        "group": "A",
+        "home": "10194",
+        "away": "10184",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-09",
+        "time": "15:00",
+        "group": "A",
+        "home": "10181",
+        "away": "10189",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-09",
+        "time": "15:00",
+        "group": "A",
+        "home": "10183",
+        "away": "10188",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-15",
+        "time": "15:00",
+        "group": "A",
+        "home": "10192",
+        "away": "10193",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-16",
+        "time": "15:00",
+        "group": "A",
+        "home": "10186",
+        "away": "10190",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-16",
+        "time": "15:00",
+        "group": "A",
+        "home": "10191",
+        "away": "10182",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-16",
+        "time": "15:00",
+        "group": "A",
+        "home": "10184",
+        "away": "10187",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-16",
+        "time": "15:00",
+        "group": "A",
+        "home": "10185",
+        "away": "10181",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-16",
+        "time": "15:00",
+        "group": "A",
+        "home": "10188",
+        "away": "10194",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-16",
+        "time": "15:00",
+        "group": "A",
+        "home": "10189",
+        "away": "10183",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-22",
+        "time": "15:00",
+        "group": "A",
+        "home": "10186",
+        "away": "10192",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-23",
+        "time": "15:00",
+        "group": "A",
+        "home": "10182",
+        "away": "10193",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-23",
+        "time": "15:00",
+        "group": "A",
+        "home": "10190",
+        "away": "10184",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-23",
+        "time": "15:00",
+        "group": "A",
+        "home": "10181",
+        "away": "10191",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-23",
+        "time": "15:00",
+        "group": "A",
+        "home": "10187",
+        "away": "10188",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-23",
+        "time": "15:00",
+        "group": "A",
+        "home": "10183",
+        "away": "10185",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-23",
+        "time": "15:00",
+        "group": "A",
+        "home": "10194",
+        "away": "10189",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-29",
+        "time": "15:00",
+        "group": "A",
+        "home": "10192",
+        "away": "10182",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-30",
+        "time": "15:00",
+        "group": "A",
+        "home": "10184",
+        "away": "10186",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-30",
+        "time": "15:00",
+        "group": "A",
+        "home": "10193",
+        "away": "10181",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-30",
+        "time": "15:00",
+        "group": "A",
+        "home": "10188",
+        "away": "10190",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-30",
+        "time": "15:00",
+        "group": "A",
+        "home": "10191",
+        "away": "10183",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-30",
+        "time": "15:00",
+        "group": "A",
+        "home": "10189",
+        "away": "10187",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-05-30",
+        "time": "15:00",
+        "group": "A",
+        "home": "10185",
+        "away": "10194",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-06-05",
+        "time": "15:00",
+        "group": "A",
+        "home": "10184",
+        "away": "10192",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-06-06",
+        "time": "15:00",
+        "group": "A",
+        "home": "10181",
+        "away": "10182",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-06-06",
+        "time": "15:00",
+        "group": "A",
+        "home": "10186",
+        "away": "10188",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-06-06",
+        "time": "15:00",
+        "group": "A",
+        "home": "10183",
+        "away": "10193",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-06-06",
+        "time": "15:00",
+        "group": "A",
+        "home": "10190",
+        "away": "10189",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-06-06",
+        "time": "15:00",
+        "group": "A",
+        "home": "10194",
+        "away": "10191",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-06-06",
+        "time": "15:00",
+        "group": "A",
+        "home": "10187",
+        "away": "10185",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-06-12",
+        "time": "15:00",
+        "group": "A",
+        "home": "10192",
+        "away": "10181",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-06-13",
+        "time": "15:00",
+        "group": "A",
+        "home": "10188",
+        "away": "10184",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-06-13",
+        "time": "15:00",
+        "group": "A",
+        "home": "10182",
+        "away": "10183",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-06-13",
+        "time": "15:00",
+        "group": "A",
+        "home": "10189",
+        "away": "10186",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-06-13",
+        "time": "15:00",
+        "group": "A",
+        "home": "10193",
+        "away": "10194",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-06-13",
+        "time": "15:00",
+        "group": "A",
+        "home": "10185",
+        "away": "10190",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-06-13",
+        "time": "15:00",
+        "group": "A",
+        "home": "10191",
+        "away": "10187",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-06-19",
+        "time": "15:00",
+        "group": "A",
+        "home": "10188",
+        "away": "10192",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-06-20",
+        "time": "15:00",
+        "group": "A",
+        "home": "10183",
+        "away": "10181",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-06-20",
+        "time": "15:00",
+        "group": "A",
+        "home": "10184",
+        "away": "10189",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-06-20",
+        "time": "15:00",
+        "group": "A",
+        "home": "10194",
+        "away": "10182",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-06-20",
+        "time": "15:00",
+        "group": "A",
+        "home": "10186",
+        "away": "10185",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-06-20",
+        "time": "15:00",
+        "group": "A",
+        "home": "10187",
+        "away": "10193",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-06-20",
+        "time": "15:00",
+        "group": "A",
+        "home": "10190",
+        "away": "10191",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-06-26",
+        "time": "15:00",
+        "group": "A",
+        "home": "10192",
+        "away": "10183",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-06-27",
+        "time": "15:00",
+        "group": "A",
+        "home": "10189",
+        "away": "10188",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-06-27",
+        "time": "15:00",
+        "group": "A",
+        "home": "10181",
+        "away": "10194",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-06-27",
+        "time": "15:00",
+        "group": "A",
+        "home": "10185",
+        "away": "10184",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-06-27",
+        "time": "15:00",
+        "group": "A",
+        "home": "10182",
+        "away": "10187",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-06-27",
+        "time": "15:00",
+        "group": "A",
+        "home": "10191",
+        "away": "10186",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-06-27",
+        "time": "15:00",
+        "group": "A",
+        "home": "10193",
+        "away": "10190",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-07-03",
+        "time": "15:00",
+        "group": "A",
+        "home": "10189",
+        "away": "10192",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-07-04",
+        "time": "15:00",
+        "group": "A",
+        "home": "10194",
+        "away": "10183",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-07-04",
+        "time": "15:00",
+        "group": "A",
+        "home": "10188",
+        "away": "10185",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-07-04",
+        "time": "15:00",
+        "group": "A",
+        "home": "10187",
+        "away": "10181",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-07-04",
+        "time": "15:00",
+        "group": "A",
+        "home": "10184",
+        "away": "10191",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-07-04",
+        "time": "15:00",
+        "group": "A",
+        "home": "10190",
+        "away": "10182",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-07-04",
+        "time": "15:00",
+        "group": "A",
+        "home": "10186",
+        "away": "10193",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-07-10",
+        "time": "15:00",
+        "group": "A",
+        "home": "10192",
+        "away": "10194",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-07-11",
+        "time": "15:00",
+        "group": "A",
+        "home": "10185",
+        "away": "10189",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-07-11",
+        "time": "15:00",
+        "group": "A",
+        "home": "10183",
+        "away": "10187",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-07-11",
+        "time": "15:00",
+        "group": "A",
+        "home": "10191",
+        "away": "10188",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-07-11",
+        "time": "15:00",
+        "group": "A",
+        "home": "10181",
+        "away": "10190",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-07-11",
+        "time": "15:00",
+        "group": "A",
+        "home": "10193",
+        "away": "10184",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-07-11",
+        "time": "15:00",
+        "group": "A",
+        "home": "10182",
+        "away": "10186",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-07-17",
+        "time": "15:00",
+        "group": "A",
+        "home": "10185",
+        "away": "10192",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-07-18",
+        "time": "15:00",
+        "group": "A",
+        "home": "10187",
+        "away": "10194",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-07-18",
+        "time": "15:00",
+        "group": "A",
+        "home": "10189",
+        "away": "10191",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-07-18",
+        "time": "15:00",
+        "group": "A",
+        "home": "10190",
+        "away": "10183",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-07-18",
+        "time": "15:00",
+        "group": "A",
+        "home": "10188",
+        "away": "10193",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-07-18",
+        "time": "15:00",
+        "group": "A",
+        "home": "10186",
+        "away": "10181",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-07-18",
+        "time": "15:00",
+        "group": "A",
+        "home": "10184",
+        "away": "10182",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-07-24",
+        "time": "15:00",
+        "group": "A",
+        "home": "10192",
+        "away": "10187",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-07-25",
+        "time": "15:00",
+        "group": "A",
+        "home": "10191",
+        "away": "10185",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-07-25",
+        "time": "15:00",
+        "group": "A",
+        "home": "10194",
+        "away": "10190",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-07-25",
+        "time": "15:00",
+        "group": "A",
+        "home": "10193",
+        "away": "10189",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-07-25",
+        "time": "15:00",
+        "group": "A",
+        "home": "10183",
+        "away": "10186",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-07-25",
+        "time": "15:00",
+        "group": "A",
+        "home": "10182",
+        "away": "10188",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-07-25",
+        "time": "15:00",
+        "group": "A",
+        "home": "10181",
+        "away": "10184",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-07-31",
+        "time": "15:00",
+        "group": "A",
+        "home": "10191",
+        "away": "10192",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-08-01",
+        "time": "15:00",
+        "group": "A",
+        "home": "10190",
+        "away": "10187",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-08-01",
+        "time": "15:00",
+        "group": "A",
+        "home": "10185",
+        "away": "10193",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-08-01",
+        "time": "15:00",
+        "group": "A",
+        "home": "10186",
+        "away": "10194",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-08-01",
+        "time": "15:00",
+        "group": "A",
+        "home": "10189",
+        "away": "10182",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-08-01",
+        "time": "15:00",
+        "group": "A",
+        "home": "10184",
+        "away": "10183",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       },
+       {
+        "date": "2026-08-01",
+        "time": "15:00",
+        "group": "A",
+        "home": "10188",
+        "away": "10181",
+        "stadium": "43",
+        "venue": "La Catedral, Buenos Aires"
+       }
+      ]
+     },
+     {
+      "id": "playoffs",
+      "name": "Play-offs",
+      "kind": "knockout",
+      "venue": "neutral",
+      "rounds": [
+       {
+        "id": "sf",
+        "name": "Semi-final",
+        "match_subtype": "semi_final",
+        "ties": [
+         {
+          "id": "sf1",
+          "teams": [
+           "table:A1",
+           "table:A4"
+          ],
+          "date": "2026-08-14",
+          "time": "15:00",
+          "stadium": "43",
+          "venue": "La Catedral, Buenos Aires"
+         },
+         {
+          "id": "sf2",
+          "teams": [
+           "table:A2",
+           "table:A3"
+          ],
+          "date": "2026-08-15",
+          "time": "15:00",
+          "stadium": "43",
+          "venue": "La Catedral, Buenos Aires"
+         }
+        ]
+       },
+       {
+        "id": "final",
+        "name": "Final",
+        "match_subtype": "final",
+        "final": true,
+        "ties": [
+         {
+          "id": "final1",
+          "teams": [
+           "W:sf1",
+           "W:sf2"
+          ],
+          "date": "2026-08-22",
+          "time": "15:00",
+          "stadium": "43",
+          "venue": "La Catedral, Buenos Aires"
+         }
+        ]
+       }
+      ]
+     }
+    ],
+    "participants": {
+     "default": {
+      "table": {
+       "A": [
+        "10192",
+        "10191",
+        "10187",
+        "10185",
+        "10194",
+        "10189",
+        "10183",
+        "10188",
+        "10181",
+        "10184",
+        "10182",
+        "10186",
+        "10193",
+        "10190"
+       ]
+      }
+     }
+    },
+    "_sources": [
+     "community patch MOD URBA TOP 14: frontend/tournaments/super14_2007 (.rsg)"
+    ]
+   },
+   "logo": "assets/tournament_logo.png",
+   "pitch_logo": "assets/pitch_logos/pitch_logo_%.png",
+   "ball": "assets/ball/ball_%.png",
+   "pads": "assets/stadium_graphics.fsh",
+   "trophy": {
+    "ceremony": "SixNations",
+    "model": "assets/trophy/trophy.o",
+    "texture": "assets/trophy/trophy.fsh"
+   }
+  }
+ }
+}

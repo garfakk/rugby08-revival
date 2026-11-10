@@ -2897,5 +2897,10 @@
         "variant": "world_cup"
       }
     }
+  },
+  "trophy": {
+    "ceremony": "WorldCup",
+    "model": "assets/trophy/trophy.o",
+    "texture": "assets/trophy/trophy.fsh"
   }
 }

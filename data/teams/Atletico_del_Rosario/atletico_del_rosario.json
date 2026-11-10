@@ -1,0 +1,75 @@
+{
+ "10182": {
+  "2026": {
+   "name": "Atlético del Rosario",
+   "type": "club",
+   "category": "Argentina",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2026/home_front.webp",
+     "backKitFile": "kits_2026/home_back.webp",
+     "previewFile": "kits_2026/home_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "159382",
+    "viceCaptain": "159385",
+    "longGK": "159388",
+    "shortGK": "159388",
+    "longPunt": "159388",
+    "shortPunt": "159388",
+    "kickoff": "159388"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "159379",
+    "159380",
+    "159381",
+    "159382",
+    "159383",
+    "159384",
+    "159385",
+    "159386",
+    "159387",
+    "159388",
+    "159389",
+    "159390",
+    "159391",
+    "159392",
+    "159393",
+    "159394",
+    "159395",
+    "159396",
+    "159397",
+    "159398",
+    "159399",
+    "159400",
+    "159401",
+    "159402",
+    "159403",
+    "159404",
+    "159405",
+    "159406",
+    "159407",
+    "159408"
+   ],
+   "group": "Argentina"
+  }
+ }
+}

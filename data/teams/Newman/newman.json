@@ -1,0 +1,81 @@
+{
+ "10191": {
+  "2026": {
+   "name": "Newman",
+   "type": "club",
+   "category": "Argentina",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2026/home_front.webp",
+     "backKitFile": "kits_2026/home_back.webp",
+     "previewFile": "kits_2026/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2026/away_front.webp",
+     "backKitFile": "kits_2026/away_back.webp",
+     "previewFile": "kits_2026/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "159118",
+    "viceCaptain": "159115",
+    "longGK": "159119",
+    "shortGK": "159119",
+    "longPunt": "159119",
+    "shortPunt": "159119",
+    "kickoff": "159119"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "miss",
+    "right": "pocket"
+   },
+   "players": [
+    "159110",
+    "159111",
+    "159112",
+    "159113",
+    "159114",
+    "159115",
+    "159116",
+    "159117",
+    "159118",
+    "159119",
+    "159120",
+    "159121",
+    "159122",
+    "159123",
+    "159124",
+    "159125",
+    "159126",
+    "159127",
+    "159128",
+    "159129",
+    "159130",
+    "159131",
+    "159132",
+    "159133",
+    "159134",
+    "159135",
+    "159136",
+    "159137",
+    "159138",
+    "159139"
+   ],
+   "group": "Argentina"
+  }
+ }
+}

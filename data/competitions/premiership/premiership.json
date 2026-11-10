@@ -117,5 +117,10 @@
         ]
       }
     ]
+  },
+  "trophy": {
+    "ceremony": "Premiership",
+    "model": "assets/trophy/trophy.o",
+    "texture": "assets/trophy/trophy.fsh"
   }
 }

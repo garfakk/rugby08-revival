@@ -1,0 +1,75 @@
+{
+ "10193": {
+  "2026": {
+   "name": "San Isidro Club",
+   "type": "club",
+   "category": "Argentina",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2026/home_front.webp",
+     "backKitFile": "kits_2026/home_back.webp",
+     "previewFile": "kits_2026/home_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "159149",
+    "viceCaptain": "159149",
+    "longGK": "159149",
+    "shortGK": "159149",
+    "longPunt": "159149",
+    "shortPunt": "159149",
+    "kickoff": "159149"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "miss_pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "159140",
+    "159141",
+    "159142",
+    "159143",
+    "159144",
+    "159145",
+    "159146",
+    "159147",
+    "159148",
+    "159149",
+    "159150",
+    "159151",
+    "159152",
+    "159153",
+    "159154",
+    "159155",
+    "159156",
+    "159157",
+    "159158",
+    "159159",
+    "159160",
+    "159161",
+    "159162",
+    "159163",
+    "159164",
+    "159165",
+    "159166",
+    "159167",
+    "159168",
+    "159169"
+   ],
+   "group": "Argentina"
+  }
+ }
+}

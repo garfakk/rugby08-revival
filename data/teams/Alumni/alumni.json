@@ -1,0 +1,81 @@
+{
+ "10181": {
+  "2026": {
+   "name": "Alumni",
+   "type": "club",
+   "category": "Argentina",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2026/home_front.webp",
+     "backKitFile": "kits_2026/home_back.webp",
+     "previewFile": "kits_2026/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2026/away_front.webp",
+     "backKitFile": "kits_2026/away_back.webp",
+     "previewFile": "kits_2026/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "159029",
+    "viceCaptain": "159026",
+    "longGK": "159029",
+    "shortGK": "159029",
+    "longPunt": "159029",
+    "shortPunt": "159029",
+    "kickoff": "159029"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "pocket",
+    "right": "miss"
+   },
+   "players": [
+    "159020",
+    "159021",
+    "159022",
+    "159023",
+    "159024",
+    "159025",
+    "159026",
+    "159027",
+    "159028",
+    "159029",
+    "159030",
+    "159031",
+    "159032",
+    "159033",
+    "159034",
+    "159035",
+    "159036",
+    "159037",
+    "159038",
+    "159039",
+    "159040",
+    "159041",
+    "159042",
+    "159043",
+    "159044",
+    "159045",
+    "159046",
+    "159047",
+    "159048",
+    "159049"
+   ],
+   "group": "Argentina"
+  }
+ }
+}

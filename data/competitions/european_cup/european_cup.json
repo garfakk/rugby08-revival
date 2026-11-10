@@ -229,5 +229,10 @@
       }
     },
     "season": "2024"
+  },
+  "trophy": {
+    "ceremony": "EuroCup",
+    "model": "assets/trophy/trophy.o",
+    "texture": "assets/trophy/trophy.fsh"
   }
 }

@@ -1,0 +1,544 @@
+{
+ "id": "super_rugby_americas",
+ "name": "Super Rugby Americas",
+ "seasonal": true,
+ "seasons": {
+  "2026": {
+   "template": {
+    "id": "super_rugby_americas_2026",
+    "name": "Super Rugby Americas 2026",
+    "order": 42.0,
+    "description": "The Americas club championship: eight clubs from Argentina, Brazil, Chile, Paraguay and Uruguay in a single table, each club playing the others home and away (56 games, 14 rounds, 13 February to 16 May). The top four play single-match semi-finals (1st v 4th, 2nd v 3rd) and a final, in June. Points: 4 a win, 2 a draw, a bonus for 4 tries and for losing by 7 or less.",
+    "season": "2026",
+    "match_type": "super_14",
+    "venue": "home",
+    "venues": [
+     "43"
+    ],
+    "points": {
+     "win": 4,
+     "draw": 2,
+     "loss": 0,
+     "try_bonus": {
+      "tries": 4
+     },
+     "losing_bonus": {
+      "margin": 7
+     }
+    },
+    "tiebreakers": [
+     "wins",
+     "points_diff",
+     "points_for",
+     "head_to_head",
+     "lots"
+    ],
+    "discipline": {
+     "red_ban": [
+      1,
+      4
+     ],
+     "yellow_accumulation": 4,
+     "yellow_ban": 1,
+     "citing_chance": 0.01
+    },
+    "default_options": {
+     "difficulty": "pro",
+     "halftime_length": "5m",
+     "injuries": true,
+     "suspensions": true,
+     "fatigue": true,
+     "cards": true,
+     "sim_variance": 1.0,
+     "injury_rate": 1.0,
+     "injury_duration": 1.0
+    },
+    "stages": [
+     {
+      "id": "table",
+      "name": "League",
+      "kind": "round_robin",
+      "legs": 2,
+      "match_subtype": "none",
+      "group_names": {
+       "A": "Table"
+      },
+      "qualify": 4,
+      "fixtures": [
+       {
+        "date": "2026-02-13",
+        "time": "15:00",
+        "group": "A",
+        "home": "10196",
+        "away": "10200"
+       },
+       {
+        "date": "2026-02-14",
+        "time": "15:00",
+        "group": "A",
+        "home": "10201",
+        "away": "10199"
+       },
+       {
+        "date": "2026-02-14",
+        "time": "15:00",
+        "group": "A",
+        "home": "10195",
+        "away": "10197"
+       },
+       {
+        "date": "2026-02-14",
+        "time": "15:00",
+        "group": "A",
+        "home": "10202",
+        "away": "10198"
+       },
+       {
+        "date": "2026-02-20",
+        "time": "15:00",
+        "group": "A",
+        "home": "10199",
+        "away": "10196"
+       },
+       {
+        "date": "2026-02-21",
+        "time": "15:00",
+        "group": "A",
+        "home": "10200",
+        "away": "10195"
+       },
+       {
+        "date": "2026-02-21",
+        "time": "15:00",
+        "group": "A",
+        "home": "10198",
+        "away": "10201"
+       },
+       {
+        "date": "2026-02-21",
+        "time": "15:00",
+        "group": "A",
+        "home": "10197",
+        "away": "10202"
+       },
+       {
+        "date": "2026-02-27",
+        "time": "15:00",
+        "group": "A",
+        "home": "10196",
+        "away": "10195"
+       },
+       {
+        "date": "2026-02-28",
+        "time": "15:00",
+        "group": "A",
+        "home": "10199",
+        "away": "10198"
+       },
+       {
+        "date": "2026-02-28",
+        "time": "15:00",
+        "group": "A",
+        "home": "10202",
+        "away": "10200"
+       },
+       {
+        "date": "2026-02-28",
+        "time": "15:00",
+        "group": "A",
+        "home": "10201",
+        "away": "10197"
+       },
+       {
+        "date": "2026-03-06",
+        "time": "15:00",
+        "group": "A",
+        "home": "10198",
+        "away": "10196"
+       },
+       {
+        "date": "2026-03-07",
+        "time": "15:00",
+        "group": "A",
+        "home": "10195",
+        "away": "10202"
+       },
+       {
+        "date": "2026-03-07",
+        "time": "15:00",
+        "group": "A",
+        "home": "10197",
+        "away": "10199"
+       },
+       {
+        "date": "2026-03-07",
+        "time": "15:00",
+        "group": "A",
+        "home": "10200",
+        "away": "10201"
+       },
+       {
+        "date": "2026-03-13",
+        "time": "15:00",
+        "group": "A",
+        "home": "10196",
+        "away": "10202"
+       },
+       {
+        "date": "2026-03-14",
+        "time": "15:00",
+        "group": "A",
+        "home": "10198",
+        "away": "10197"
+       },
+       {
+        "date": "2026-03-14",
+        "time": "15:00",
+        "group": "A",
+        "home": "10201",
+        "away": "10195"
+       },
+       {
+        "date": "2026-03-14",
+        "time": "15:00",
+        "group": "A",
+        "home": "10199",
+        "away": "10200"
+       },
+       {
+        "date": "2026-03-20",
+        "time": "15:00",
+        "group": "A",
+        "home": "10197",
+        "away": "10196"
+       },
+       {
+        "date": "2026-03-21",
+        "time": "15:00",
+        "group": "A",
+        "home": "10202",
+        "away": "10201"
+       },
+       {
+        "date": "2026-03-21",
+        "time": "15:00",
+        "group": "A",
+        "home": "10200",
+        "away": "10198"
+       },
+       {
+        "date": "2026-03-21",
+        "time": "15:00",
+        "group": "A",
+        "home": "10195",
+        "away": "10199"
+       },
+       {
+        "date": "2026-03-27",
+        "time": "15:00",
+        "group": "A",
+        "home": "10196",
+        "away": "10201"
+       },
+       {
+        "date": "2026-03-28",
+        "time": "15:00",
+        "group": "A",
+        "home": "10197",
+        "away": "10200"
+       },
+       {
+        "date": "2026-03-28",
+        "time": "15:00",
+        "group": "A",
+        "home": "10199",
+        "away": "10202"
+       },
+       {
+        "date": "2026-03-28",
+        "time": "15:00",
+        "group": "A",
+        "home": "10198",
+        "away": "10195"
+       },
+       {
+        "date": "2026-04-03",
+        "time": "15:00",
+        "group": "A",
+        "home": "10200",
+        "away": "10196"
+       },
+       {
+        "date": "2026-04-04",
+        "time": "15:00",
+        "group": "A",
+        "home": "10199",
+        "away": "10201"
+       },
+       {
+        "date": "2026-04-04",
+        "time": "15:00",
+        "group": "A",
+        "home": "10197",
+        "away": "10195"
+       },
+       {
+        "date": "2026-04-04",
+        "time": "15:00",
+        "group": "A",
+        "home": "10198",
+        "away": "10202"
+       },
+       {
+        "date": "2026-04-10",
+        "time": "15:00",
+        "group": "A",
+        "home": "10196",
+        "away": "10199"
+       },
+       {
+        "date": "2026-04-11",
+        "time": "15:00",
+        "group": "A",
+        "home": "10195",
+        "away": "10200"
+       },
+       {
+        "date": "2026-04-11",
+        "time": "15:00",
+        "group": "A",
+        "home": "10201",
+        "away": "10198"
+       },
+       {
+        "date": "2026-04-11",
+        "time": "15:00",
+        "group": "A",
+        "home": "10202",
+        "away": "10197"
+       },
+       {
+        "date": "2026-04-17",
+        "time": "15:00",
+        "group": "A",
+        "home": "10195",
+        "away": "10196"
+       },
+       {
+        "date": "2026-04-18",
+        "time": "15:00",
+        "group": "A",
+        "home": "10198",
+        "away": "10199"
+       },
+       {
+        "date": "2026-04-18",
+        "time": "15:00",
+        "group": "A",
+        "home": "10200",
+        "away": "10202"
+       },
+       {
+        "date": "2026-04-18",
+        "time": "15:00",
+        "group": "A",
+        "home": "10197",
+        "away": "10201"
+       },
+       {
+        "date": "2026-04-24",
+        "time": "15:00",
+        "group": "A",
+        "home": "10196",
+        "away": "10198"
+       },
+       {
+        "date": "2026-04-25",
+        "time": "15:00",
+        "group": "A",
+        "home": "10202",
+        "away": "10195"
+       },
+       {
+        "date": "2026-04-25",
+        "time": "15:00",
+        "group": "A",
+        "home": "10199",
+        "away": "10197"
+       },
+       {
+        "date": "2026-04-25",
+        "time": "15:00",
+        "group": "A",
+        "home": "10201",
+        "away": "10200"
+       },
+       {
+        "date": "2026-05-01",
+        "time": "15:00",
+        "group": "A",
+        "home": "10202",
+        "away": "10196"
+       },
+       {
+        "date": "2026-05-02",
+        "time": "15:00",
+        "group": "A",
+        "home": "10197",
+        "away": "10198"
+       },
+       {
+        "date": "2026-05-02",
+        "time": "15:00",
+        "group": "A",
+        "home": "10195",
+        "away": "10201"
+       },
+       {
+        "date": "2026-05-02",
+        "time": "15:00",
+        "group": "A",
+        "home": "10200",
+        "away": "10199"
+       },
+       {
+        "date": "2026-05-08",
+        "time": "15:00",
+        "group": "A",
+        "home": "10196",
+        "away": "10197"
+       },
+       {
+        "date": "2026-05-09",
+        "time": "15:00",
+        "group": "A",
+        "home": "10201",
+        "away": "10202"
+       },
+       {
+        "date": "2026-05-09",
+        "time": "15:00",
+        "group": "A",
+        "home": "10198",
+        "away": "10200"
+       },
+       {
+        "date": "2026-05-09",
+        "time": "15:00",
+        "group": "A",
+        "home": "10199",
+        "away": "10195"
+       },
+       {
+        "date": "2026-05-15",
+        "time": "15:00",
+        "group": "A",
+        "home": "10201",
+        "away": "10196"
+       },
+       {
+        "date": "2026-05-16",
+        "time": "15:00",
+        "group": "A",
+        "home": "10200",
+        "away": "10197"
+       },
+       {
+        "date": "2026-05-16",
+        "time": "15:00",
+        "group": "A",
+        "home": "10202",
+        "away": "10199"
+       },
+       {
+        "date": "2026-05-16",
+        "time": "15:00",
+        "group": "A",
+        "home": "10195",
+        "away": "10198"
+       }
+      ]
+     },
+     {
+      "id": "playoffs",
+      "name": "Play-offs",
+      "kind": "knockout",
+      "rounds": [
+       {
+        "id": "sf",
+        "name": "Semi-final",
+        "match_subtype": "semi_final",
+        "ties": [
+         {
+          "id": "sf1",
+          "teams": [
+           "table:A1",
+           "table:A4"
+          ],
+          "date": "2026-06-05",
+          "time": "15:00"
+         },
+         {
+          "id": "sf2",
+          "teams": [
+           "table:A2",
+           "table:A3"
+          ],
+          "date": "2026-06-05",
+          "time": "15:00"
+         }
+        ]
+       },
+       {
+        "id": "final",
+        "name": "Final",
+        "match_subtype": "final",
+        "final": true,
+        "ties": [
+         {
+          "id": "final1",
+          "teams": [
+           "W:sf1",
+           "W:sf2"
+          ],
+          "date": "2026-06-12",
+          "time": "15:00"
+         }
+        ]
+       }
+      ]
+     }
+    ],
+    "participants": {
+     "default": {
+      "table": {
+       "A": [
+        "10196",
+        "10201",
+        "10197",
+        "10202",
+        "10198",
+        "10195",
+        "10199",
+        "10200"
+       ]
+      }
+     }
+    },
+    "_sources": [
+     "community patch MOD URBA TOP 14: frontend/tournaments (.rsg 'Liga 8 equipos', pools 0 and 1)"
+    ]
+   },
+   "logo": "assets/tournament_logo.png",
+   "logo_frontend": "assets/tournament_logo_frontend.png",
+   "pitch_logo": "assets/pitch_logos/pitch_logo_%.png",
+   "ball": "assets/ball/ball_%.png",
+   "pads": "assets/stadium_graphics.fsh",
+   "trophy": {
+    "ceremony": "SixNations",
+    "model": "assets/trophy/trophy.o",
+    "texture": "assets/trophy/trophy.fsh"
+   }
+  }
+ }
+}

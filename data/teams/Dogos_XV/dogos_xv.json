@@ -1,0 +1,81 @@
+{
+ "10200": {
+  "2026": {
+   "name": "Dogos XV",
+   "type": "club",
+   "category": "Super Rugby Americas",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2026/home_front.webp",
+     "backKitFile": "kits_2026/home_back.webp",
+     "previewFile": "kits_2026/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2026/away_front.webp",
+     "backKitFile": "kits_2026/away_back.webp",
+     "previewFile": "kits_2026/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "159597",
+    "viceCaptain": "159597",
+    "longGK": "159588",
+    "shortGK": "159588",
+    "longPunt": "159588",
+    "shortPunt": "159588",
+    "kickoff": "159588"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "159588",
+    "159589",
+    "159590",
+    "159591",
+    "159592",
+    "159593",
+    "159594",
+    "159595",
+    "159596",
+    "159597",
+    "159598",
+    "159599",
+    "159600",
+    "159601",
+    "159602",
+    "159603",
+    "159604",
+    "159605",
+    "159606",
+    "159607",
+    "159608",
+    "159609",
+    "159610",
+    "159611",
+    "159612",
+    "159613",
+    "159614",
+    "159615",
+    "159616",
+    "159617"
+   ],
+   "group": "Super Rugby Americas"
+  }
+ }
+}

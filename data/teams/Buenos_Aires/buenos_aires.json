@@ -1,0 +1,75 @@
+{
+ "10194": {
+  "2026": {
+   "name": "Buenos Aires",
+   "type": "club",
+   "category": "Argentina",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2026/home_front.webp",
+     "backKitFile": "kits_2026/home_back.webp",
+     "previewFile": "kits_2026/home_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "159267",
+    "viceCaptain": "159269",
+    "longGK": "159269",
+    "shortGK": "159270",
+    "longPunt": "159270",
+    "shortPunt": "159270",
+    "kickoff": "159270"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "miss"
+   },
+   "players": [
+    "159260",
+    "159261",
+    "159262",
+    "159263",
+    "159264",
+    "159265",
+    "159266",
+    "159267",
+    "159268",
+    "159269",
+    "159270",
+    "159271",
+    "159272",
+    "159273",
+    "159274",
+    "159275",
+    "159276",
+    "159277",
+    "159278",
+    "159279",
+    "159280",
+    "159281",
+    "159282",
+    "159283",
+    "159284",
+    "159285",
+    "159286",
+    "159250",
+    "159287",
+    "159288"
+   ],
+   "group": "Argentina"
+  }
+ }
+}

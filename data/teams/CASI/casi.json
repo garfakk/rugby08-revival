@@ -1,0 +1,81 @@
+{
+ "10184": {
+  "2026": {
+   "name": "CASI",
+   "type": "club",
+   "category": "Argentina",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2026/home_front.webp",
+     "backKitFile": "kits_2026/home_back.webp",
+     "previewFile": "kits_2026/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2026/away_front.webp",
+     "backKitFile": "kits_2026/away_back.webp",
+     "previewFile": "kits_2026/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "159358",
+    "viceCaptain": "159352",
+    "longGK": "159358",
+    "shortGK": "159358",
+    "longPunt": "159358",
+    "shortPunt": "159358",
+    "kickoff": "159358"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "miss",
+    "right": "pocket"
+   },
+   "players": [
+    "159349",
+    "159350",
+    "159351",
+    "159352",
+    "159353",
+    "159354",
+    "159355",
+    "159356",
+    "159357",
+    "159358",
+    "159359",
+    "159360",
+    "159361",
+    "159362",
+    "159363",
+    "159364",
+    "159365",
+    "159366",
+    "159367",
+    "159368",
+    "159369",
+    "159370",
+    "159371",
+    "159372",
+    "159373",
+    "159374",
+    "159375",
+    "159376",
+    "159377",
+    "159378"
+   ],
+   "group": "Argentina"
+  }
+ }
+}

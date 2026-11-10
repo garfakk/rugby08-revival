@@ -9,8 +9,8 @@
   "pitch_logo": "assets/pitch_logos/pitch_logo_%.png",
   "trophy": {
     "ceremony": "TenNations",
-    "model": "assets/trophy/bouclier_de_brennus.o",
-    "texture": "assets/trophy/bouclier_de_brennus.fsh"
+    "model": "assets/trophy/trophy.o",
+    "texture": "assets/trophy/trophy.fsh"
   },
   "template": {
     "id": "top_14",

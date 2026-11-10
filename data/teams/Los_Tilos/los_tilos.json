@@ -1,0 +1,75 @@
+{
+ "10190": {
+  "2026": {
+   "name": "Los Tilos",
+   "type": "club",
+   "category": "Argentina",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2026/home_front.webp",
+     "backKitFile": "kits_2026/home_back.webp",
+     "previewFile": "kits_2026/home_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "159409",
+    "viceCaptain": "159418",
+    "longGK": "159418",
+    "shortGK": "159418",
+    "longPunt": "159423",
+    "shortPunt": "159418",
+    "kickoff": "159418"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "159409",
+    "159410",
+    "159411",
+    "159412",
+    "159413",
+    "159414",
+    "159415",
+    "159416",
+    "159417",
+    "159418",
+    "159419",
+    "159420",
+    "159421",
+    "159422",
+    "159423",
+    "159424",
+    "159425",
+    "159426",
+    "159427",
+    "159428",
+    "159429",
+    "159430",
+    "159431",
+    "159432",
+    "159433",
+    "159434",
+    "159435",
+    "159436",
+    "159437",
+    "159438"
+   ],
+   "group": "Argentina"
+  }
+ }
+}

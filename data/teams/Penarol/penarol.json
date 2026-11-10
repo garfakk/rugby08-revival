@@ -1,0 +1,81 @@
+{
+ "10197": {
+  "2026": {
+   "name": "Peñarol",
+   "type": "club",
+   "category": "Super Rugby Americas",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2026/home_front.webp",
+     "backKitFile": "kits_2026/home_back.webp",
+     "previewFile": "kits_2026/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2026/away_front.webp",
+     "backKitFile": "kits_2026/away_back.webp",
+     "previewFile": "kits_2026/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "159502",
+    "viceCaptain": "159503",
+    "longGK": "159507",
+    "shortGK": "159507",
+    "longPunt": "159507",
+    "shortPunt": "159507",
+    "kickoff": "159507"
+   },
+   "setPlays": {
+    "up": "classic",
+    "down": "miss",
+    "left": "miss_pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "159498",
+    "159499",
+    "159500",
+    "159501",
+    "159502",
+    "159503",
+    "159504",
+    "159505",
+    "159506",
+    "159507",
+    "159508",
+    "159509",
+    "159510",
+    "159511",
+    "159512",
+    "159513",
+    "159514",
+    "159515",
+    "159516",
+    "159517",
+    "159518",
+    "159519",
+    "159520",
+    "159521",
+    "159522",
+    "159523",
+    "159524",
+    "159525",
+    "159526",
+    "159527"
+   ],
+   "group": "Super Rugby Americas"
+  }
+ }
+}

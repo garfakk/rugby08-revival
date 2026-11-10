@@ -7,24 +7,22 @@ A huge thanks to them!
 Credits:  
 - Core app: Garfakk
 - Game assets used (kits, logos, balls, banners):
+    - 2026 Super Rugby Americas and URBA Top 14: [RugbyMedia.ar](https://www.therugbyforum.com/members/rugbymedia-ar.88221/)
     - 2021-2025: [jim546](https://github.com/jimw546/jimw546-s-Rugby-08-stuff) ([2021 Kit Updates](https://www.therugbyforum.com/threads/2021-kit-updates.47969), [2022-23 Kit Updates](https://www.therugbyforum.com/threads/2022-23-kit-updates.48571))
     - 2023-2024: [TRF24 Mod](https://www.therugbyforum.com/threads/trf24-mod.49612) by ama1
     - 2017-2019: [TRF Patch 2017-18](https://www.therugbyforum.com/threads/trf-patch-2017-18.40357) and [Rugby 08 Patch 2018/19](https://www.therugbyforum.com/threads/rugby-08-patch-2018-19.42340) (Pro14, Super Rugby, Top 14) by peter83
-    - 2013-2014: Mod roster 2014 (author to confirm)
-    - 2009-2010: [TRF Patch 10](https://www.therugbyforum.com/threads/trf-rugby-10-patch.18881) by Intercept King JDV, with fixed kits by Bogdam
-    - 2007-2009: [MUP Patch 2009](https://www.therugbyforum.com/threads/mup-v-1-2-season-2008-09.15872), [MegaUpdatePatch](https://www.therugbyforum.com/threads/megaupdatepatch-mup09.8241) by Fa'atau82, v1.2 release by uli85
+    - 2009-2010: [TRF Patch 10](https://www.therugbyforum.com/threads/trf-rugby-10-patch.18881) by Intercept King JDV and Bogdam
+    - 2007-2009: [MUP Patch 2009](https://www.therugbyforum.com/threads/mup-v-1-2-season-2008-09.15872), [MegaUpdatePatch](https://www.therugbyforum.com/threads/megaupdatepatch-mup09.8241) by Fa'atau82 and uli85
 - Heads:
     - [Rugby 08 Original Update Workshop](https://www.therugbyforum.com/threads/rugby-08-original-update-workshop.49742): Carel du preez and the workshop's contributors
     - [jim546](https://github.com/jimw546/jimw546-s-Rugby-08-stuff), [JPilky](https://www.therugbyforum.com/threads/trf-custom-face-design-tracker.47791), EN9ne, Pieter1989 and TommyDelpe
-- Trophies: the Bouclier de Brennus (Top 14) is textured from [Musée du Vieux Toulouse – Bouclier de Brennus](https://commons.wikimedia.org/wiki/File:Mus%C3%A9e_du_Vieux_Toulouse_-_Bouclier_de_Brennus.jpg) by Frédéric Neupont, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) (the texture, adapted, is under the same licence); converted to the game's format with [otools](https://bitbucket.org/fifam/otools) by Dmitri
+- Trophies: Bouclier de Brennus (Top 14) [photo](https://commons.wikimedia.org/wiki/File:Mus%C3%A9e_du_Vieux_Toulouse_-_Bouclier_de_Brennus.jpg) by Frédéric Neupont, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) (the texture, adapted, is under the same licence); converted to the game's format with [otools](https://bitbucket.org/fifam/otools) by Dmitri
 - Rosters: the 2008-09 base roster comes from the [MUP Patch 2009](https://www.therugbyforum.com/threads/mup-v-1-2-season-2008-09.15872) by Fa'atau82 and uli85
 - Code and tools:
     - Commentary decoder: a port of utkdec.c from [vgmstream](https://github.com/vgmstream/vgmstream), based on Andrew D'Addesio's [utkencode](https://github.com/daddesio/utkencode) (public domain)
-    - Stock team names for roster import: the teams.csv of Rugeditor
 - Fonts (all [SIL Open Font License 1.1](https://openfontlicense.org)):
     - Interface: [Barlow and Barlow Condensed](https://github.com/jpt/barlow) by Jeremy Tribby
     - Shirt names: Barlow Condensed, [Oswald](https://github.com/googlefonts/OswaldFont) (Vernon Adams), [Anton](https://github.com/googlefonts/AntonFont) (Vernon Adams), Bebas Neue (Dharma Type), Saira Condensed (Omnibus-Type), [Teko](https://github.com/googlefonts/teko) (Indian Type Foundry), [Graduate](https://github.com/etunni/graduate) (Eduardo Tunni), Alfa Slab One (José María Solé), Russo One (Jovanny Lemonad), Black Ops One (James Grieshaber, Eben Sorkin)
-- Built with Python, PyQt5, NumPy, Pillow, PyOpenGL and Wine (on Linux)
 - Music:
     - Title: [Midnight Ride](https://archive.org/details/GSP-AP_Collection_V1-4), Artist: GeoSuPhat (George P. Peterson), License: CC BY 3.0  
     - Title: [Rompo Todo](https://archive.org/details/OrquestaDePerros-RolesYOficios) , Artist: Orquesta de Perros, License: CC BY 3.0  

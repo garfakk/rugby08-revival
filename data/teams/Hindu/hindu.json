@@ -1,0 +1,81 @@
+{
+ "10187": {
+  "2026": {
+   "name": "Hindú",
+   "type": "club",
+   "category": "Argentina",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2026/home_front.webp",
+     "backKitFile": "kits_2026/home_back.webp",
+     "previewFile": "kits_2026/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2026/away_front.webp",
+     "backKitFile": "kits_2026/away_back.webp",
+     "previewFile": "kits_2026/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "159088",
+    "viceCaptain": "159088",
+    "longGK": "159091",
+    "shortGK": "159091",
+    "longPunt": "159091",
+    "shortPunt": "159091",
+    "kickoff": "159091"
+   },
+   "setPlays": {
+    "up": "miss",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "159080",
+    "159081",
+    "159082",
+    "159083",
+    "159084",
+    "159085",
+    "159086",
+    "159087",
+    "159088",
+    "159089",
+    "159090",
+    "159091",
+    "159092",
+    "159093",
+    "159094",
+    "159095",
+    "159096",
+    "159097",
+    "159098",
+    "159099",
+    "159100",
+    "159101",
+    "159102",
+    "159103",
+    "159104",
+    "159105",
+    "159106",
+    "159107",
+    "159108",
+    "159109"
+   ],
+   "group": "Argentina"
+  }
+ }
+}

@@ -138,5 +138,10 @@
     ],
     "branding": "5006",
     "to_season": "2019"
+  },
+  "trophy": {
+    "ceremony": "SixNations",
+    "model": "assets/trophy/trophy.o",
+    "texture": "assets/trophy/trophy.fsh"
   }
 }

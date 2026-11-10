@@ -1,0 +1,81 @@
+{
+ "10198": {
+  "2026": {
+   "name": "Selknam",
+   "type": "club",
+   "category": "Super Rugby Americas",
+   "ball": "ball_1/ball_%.png",
+   "banners": "banners_1/banner_%.png",
+   "pads": "",
+   "logos": {
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
+   },
+   "kits": {
+    "home": {
+     "frontKitFile": "kits_2026/home_front.webp",
+     "backKitFile": "kits_2026/home_back.webp",
+     "previewFile": "kits_2026/home_preview.png",
+     "color": ""
+    },
+    "away": {
+     "frontKitFile": "kits_2026/away_front.webp",
+     "backKitFile": "kits_2026/away_back.webp",
+     "previewFile": "kits_2026/away_preview.png",
+     "color": ""
+    }
+   },
+   "roles": {
+    "captain": "159533",
+    "viceCaptain": "159540",
+    "longGK": "159537",
+    "shortGK": "159537",
+    "longPunt": "159537",
+    "shortPunt": "159537",
+    "kickoff": "159537"
+   },
+   "setPlays": {
+    "up": "loop",
+    "down": "dummy_switch",
+    "left": "pivot",
+    "right": "pocket"
+   },
+   "players": [
+    "159528",
+    "159529",
+    "159530",
+    "159531",
+    "159532",
+    "159533",
+    "159534",
+    "159535",
+    "159536",
+    "159537",
+    "159538",
+    "159539",
+    "159540",
+    "159541",
+    "159542",
+    "159543",
+    "159544",
+    "159545",
+    "159546",
+    "159547",
+    "159548",
+    "159549",
+    "159550",
+    "159551",
+    "159552",
+    "159553",
+    "159554",
+    "159555",
+    "159556",
+    "159557"
+   ],
+   "group": "Super Rugby Americas"
+  }
+ }
+}
