@@ -175,6 +175,8 @@ def start_match(match_data, copy_static_files = True, create_mission_file = True
         if config.use_rugby08patches:
             mod_utils.configure_controller_lock(config.game_launcher_directory,
                                                 bool(match_data.get("lock_controllers")))
+            mod_utils.configure_match_laws(config.game_launcher_directory,
+                                           match_data.get("laws") or {})
     else:
         log.debug("No windowing helper used (d3d8 proxy off)")
             

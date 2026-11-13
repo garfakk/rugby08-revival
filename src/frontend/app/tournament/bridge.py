@@ -141,6 +141,11 @@ def to_match_config(ds, t, fixture) -> MatchConfig:
     cfg.difficulty = opts.get("difficulty", "pro")
     cfg.halftime_length = opts.get("halftime_length", "5m")
     tpl = t.template
+    # the laws of the edition's time (template default_options), unless set
+    # in the wizard; a tournament saved before they existed gets its template's
+    laws = tpl.get("default_options") or {}
+    cfg.law_5022 = bool(opts.get("law_5022", laws.get("law_5022", True)))
+    cfg.law_22m = bool(opts.get("law_22m", laws.get("law_22m", True)))
     cfg.match_type = game_match_type(tpl, fixture)
     cfg.match_subtype = _game_stage(t, fixture, cfg.match_type)
     if tpl.get("trophy_lift", True):

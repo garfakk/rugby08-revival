@@ -18,6 +18,10 @@
  "intro": "anthem",
  "kick_assist": false,
  "kick_off": "home",
+ "laws": {
+  "rule_22m": true,
+  "rule_5022": true
+ },
  "lock_controllers": false,
  "matchSubType": 0,
  "matchType": 0,

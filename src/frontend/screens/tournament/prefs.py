@@ -1,12 +1,12 @@
 """
 screens/tournament/prefs.py — A tournament's preferences as Settings rows:
-MATCH (difficulty, half length) and SQUAD (injuries, fatigue, suspensions),
-side by side.
+MATCH (difficulty, half length), SQUAD (injuries, fatigue, suspensions) and
+RULES (50/22, 22m), side by side.
 
 Used by the wizard (before the tournament starts) and the dashboard's
 SETTINGS tab (MATCH only, changed during it: every option is read again at
-each match, so a change applies from the next one; SQUAD is fixed once the
-tournament has started).
+each match, so a change applies from the next one; SQUAD and RULES are fixed
+once the tournament has started).
 """
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
@@ -26,15 +26,19 @@ PREFS = {
     "injuries": ("Injuries", "toggle"),
     "fatigue": ("Fatigue", "toggle"),
     "suspensions": ("Suspensions", "toggle"),
+    "law_5022": ("50/22", "toggle"),
+    "law_22m": ("22m", "toggle"),
 }
 GROUPS = [("match", ["difficulty", "halftime_length"]),
-          ("squad", ["injuries", "fatigue", "suspensions"])]
+          ("squad", ["injuries", "fatigue", "suspensions"]),
+          ("rules", ["law_5022", "law_22m"])]
 VALUES = {
     "difficulty": [(level, level.capitalize()) for level in difficulty.LEVELS],
     "halftime_length": [(v, f"{v[:-1]} min" if v.endswith("m") else v) for v in HALF_LENGTHS],
 }
 DEFAULTS = {"difficulty": "elite", "halftime_length": "5m",
-            "injuries": True, "fatigue": True, "suspensions": True}
+            "injuries": True, "fatigue": True, "suspensions": True,
+            "law_5022": True, "law_22m": True}
 
 
 class PrefsPanel(QWidget):

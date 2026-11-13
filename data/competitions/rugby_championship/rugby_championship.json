@@ -53,7 +53,9 @@
           "cards": true,
           "sim_variance": 1.0,
           "injury_rate": 1.0,
-          "injury_duration": 1.0
+          "injury_duration": 1.0,
+          "law_5022": false,
+          "law_22m": true
         },
         "stages": [
           {
@@ -311,7 +313,9 @@
           "cards": true,
           "sim_variance": 1.0,
           "injury_rate": 1.0,
-          "injury_duration": 1.0
+          "injury_duration": 1.0,
+          "law_5022": false,
+          "law_22m": true
         },
         "stages": [
           {
@@ -569,7 +573,9 @@
           "cards": true,
           "sim_variance": 1.0,
           "injury_rate": 1.0,
-          "injury_duration": 1.0
+          "injury_duration": 1.0,
+          "law_5022": false,
+          "law_22m": true
         },
         "stages": [
           {
@@ -827,7 +833,9 @@
           "cards": true,
           "sim_variance": 1.0,
           "injury_rate": 1.0,
-          "injury_duration": 1.0
+          "injury_duration": 1.0,
+          "law_5022": false,
+          "law_22m": true
         },
         "stages": [
           {
@@ -1001,7 +1009,9 @@
           "cards": true,
           "sim_variance": 1.0,
           "injury_rate": 1.0,
-          "injury_duration": 1.0
+          "injury_duration": 1.0,
+          "law_5022": false,
+          "law_22m": true
         },
         "stages": [
           {
@@ -1259,7 +1269,9 @@
           "cards": true,
           "sim_variance": 1.0,
           "injury_rate": 1.0,
-          "injury_duration": 1.0
+          "injury_duration": 1.0,
+          "law_5022": false,
+          "law_22m": true
         },
         "stages": [
           {
@@ -1517,7 +1529,9 @@
           "cards": true,
           "sim_variance": 1.0,
           "injury_rate": 1.0,
-          "injury_duration": 1.0
+          "injury_duration": 1.0,
+          "law_5022": false,
+          "law_22m": true
         },
         "stages": [
           {
@@ -1775,7 +1789,9 @@
           "cards": true,
           "sim_variance": 1.0,
           "injury_rate": 1.0,
-          "injury_duration": 1.0
+          "injury_duration": 1.0,
+          "law_5022": false,
+          "law_22m": true
         },
         "stages": [
           {
@@ -1949,7 +1965,9 @@
           "cards": true,
           "sim_variance": 1.0,
           "injury_rate": 1.0,
-          "injury_duration": 1.0
+          "injury_duration": 1.0,
+          "law_5022": false,
+          "law_22m": true
         },
         "stages": [
           {
@@ -2121,7 +2139,9 @@
           "cards": true,
           "sim_variance": 1.0,
           "injury_rate": 1.0,
-          "injury_duration": 1.0
+          "injury_duration": 1.0,
+          "law_5022": true,
+          "law_22m": true
         },
         "stages": [
           {
@@ -2379,7 +2399,9 @@
           "cards": true,
           "sim_variance": 1.0,
           "injury_rate": 1.0,
-          "injury_duration": 1.0
+          "injury_duration": 1.0,
+          "law_5022": true,
+          "law_22m": true
         },
         "stages": [
           {
@@ -2637,7 +2659,9 @@
           "cards": true,
           "sim_variance": 1.0,
           "injury_rate": 1.0,
-          "injury_duration": 1.0
+          "injury_duration": 1.0,
+          "law_5022": true,
+          "law_22m": true
         },
         "stages": [
           {
@@ -2811,7 +2835,9 @@
           "cards": true,
           "sim_variance": 1.0,
           "injury_rate": 1.0,
-          "injury_duration": 1.0
+          "injury_duration": 1.0,
+          "law_5022": true,
+          "law_22m": true
         },
         "stages": [
           {
@@ -3069,7 +3095,9 @@
           "cards": true,
           "sim_variance": 1.0,
           "injury_rate": 1.0,
-          "injury_duration": 1.0
+          "injury_duration": 1.0,
+          "law_5022": true,
+          "law_22m": true
         },
         "stages": [
           {

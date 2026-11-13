@@ -240,6 +240,10 @@ class SettingsScreen(QWidget):
             user_prefs.difficulty = label.lower()
             user_prefs.save()
 
+        def _set_lineout_jump(on):
+            user_prefs.lineout_jump = bool(on)
+            user_prefs.save()
+
         # Wind: Standard = the game's own random wind; Advanced = the reR08
         # wind patch, strength set in match setup (direction random).
         # Coin toss before each quick/tournament match: decides kick-off and
@@ -250,6 +254,8 @@ class SettingsScreen(QWidget):
         rows = [
             CycleRow("Preferred Difficulty", levels, difficulty.preferred().capitalize(), _set_difficulty),
             CycleRow("Wind", ["Standard", "Advanced"], user_prefs.wind_mode.capitalize(), _set_wind_mode),
+            # rugby08patches.dll lineout_jump (backend.mod_utils.configure_match_laws)
+            ToggleRow("Lineout Maul Or Pass", user_prefs.lineout_jump, _set_lineout_jump),
         ]
         if COIN_TOSS_OFFERED:      # not offered for now (shared/user_prefs.py)
             rows.insert(2, ToggleRow("Coin Toss", user_prefs.coin_toss, _set_coin_toss))
@@ -326,6 +332,7 @@ class SettingsScreen(QWidget):
                 user_prefs.wind_mode = "standard"
                 user_prefs.coin_toss = False
                 user_prefs.difficulty = "elite"
+                user_prefs.lineout_jump = False
                 user_prefs.save()
             game_profile.reset([s.key for s in dict(SECTIONS)[GAME_SECTION[tab]]])
             if tab == "Audio" and self._music is not None:

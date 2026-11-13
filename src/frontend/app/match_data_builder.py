@@ -476,6 +476,7 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
             for slot_id, c in cfg.controllers.items()
         },
         "lock_controllers": cfg.lock_controllers,
+        "laws": {"rule_5022": cfg.law_5022, "rule_22m": cfg.law_22m},
         "stadium": stadium_id,
         "stadium_graphics": stadium_graphics,
         "adboards": _relative_to_mod_data(adboards) if adboards else "",

@@ -54,3 +54,24 @@ def test_branding_assets_exist(path, known_issue):
         if not any(os.path.isfile(os.path.join(root, f)) for f in frames):
             missing.append(rel)
     known_issue([f"{rel} not found" for rel in missing])
+
+
+# 50/22 from August 2021; the 22m pass-back law (no gain when the kicking team
+# took the ball back into its 22) from the 2008-09 ELVs
+LAWS = {"rwc_2007": (False, False), "six_nations_2008": (False, False),
+        "heineken_cup_2008": (False, False), "six_nations_2009": (False, True),
+        "tri_nations_2008": (False, True), "six_nations_2021": (False, True),
+        "rugby_championship_2021": (True, True),
+        "six_nations_2022": (True, True), "rwc_2023": (True, True)}
+
+
+def test_templates_set_the_laws_of_their_time():
+    if not HAS_DATA:
+        pytest.skip("no data pack")
+    templates = formats.load_templates(TEMPLATE_DIRS)
+    for tid, tpl in templates.items():
+        opts = tpl.get("default_options") or {}
+        assert isinstance(opts.get("law_5022"), bool) and isinstance(opts.get("law_22m"), bool), tid
+    for tid, laws in LAWS.items():
+        opts = templates[tid]["default_options"]
+        assert (opts["law_5022"], opts["law_22m"]) == laws, tid

@@ -65,7 +65,10 @@ def test_quick_match_writes_every_game_file(ds, run_match, golden):
     assert must <= generated
     assert "user_profile.pro" in generated
     assert md["lock_controllers"] is False                # quick match: the game's own controller screen
-    assert "controller_lock = 0" in open(files["rugby08patches.ini"]).read()
+    ini = open(files["rugby08patches.ini"]).read()
+    assert "controller_lock = 0" in ini
+    assert "rule_5022 = 1" in ini and "rule_22m = 1" in ini      # quick match: current laws
+    assert "lineout_jump = 0" in ini                               # Settings default: stock lineout
     # golden for the files generated from the match (not the static files
     # copied as they are, which change whenever a DLL is updated)
     from backend.game_files_processor import generated_game_filenames

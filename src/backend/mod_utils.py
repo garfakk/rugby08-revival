@@ -1429,6 +1429,23 @@ def configure_controller_lock(game_dir, locked):
   log.info(f"Controller lock: {'on' if locked else 'off'}")
 
 
+def configure_match_laws(game_dir, laws):
+  """rugby08patches.dll laws for this match: rule_5022 / rule_22m from `laws`
+  (missing = off, the stock game), lineout_jump (maul or pass from the front
+  and middle jumpers) from Settings."""
+  ini = os.path.join(game_dir, "rugby08patches.ini")
+  values = {"rule_5022": bool(laws.get("rule_5022")),
+            "rule_22m": bool(laws.get("rule_22m")),
+            "lineout_jump": bool(user_prefs.lineout_jump)}
+  try:
+    for key, on in values.items():
+      _set_ini_value(ini, "patches", key, "1" if on else "0")
+  except OSError as e:
+    log.warning(f"cannot update {ini}: {e}")
+    return
+  log.info("Laws: " + ", ".join(f"{k} {'on' if v else 'off'}" for k, v in values.items()))
+
+
 def configure_d3d8_proxy():
   """Deploy the d3d8.dll proxy (windowed mode + embeddable window) next to the
   game exe, optionally the rugby08patches.dll gameplay patches, and generate the

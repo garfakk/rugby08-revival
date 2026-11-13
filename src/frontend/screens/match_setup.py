@@ -1184,6 +1184,18 @@ class MatchSetupScreen(KickoffTransition, Screen):
         v.addWidget(self.ball_row)
         self._refresh_ball_options()
 
+        # Laws (rugby08patches.dll rule_5022 / rule_22m)
+        v.addSpacing(6)
+        v.addWidget(eyebrow_label("RULES", color=ACCENT, size=13))
+        self.law_rows = {}
+        for attr, label in (("law_5022", "50/22"), ("law_22m", "22m")):
+            row = SelectorRow(label)
+            row.set_values(["on", "off"], index=0 if getattr(self.cfg, attr) else 1)
+            row.changed.connect(lambda a=attr, r=row: setattr(self.cfg, a, r.current() == "on"))
+            self.focus.register(row)
+            v.addWidget(row)
+            self.law_rows[attr] = row
+
         v.addSpacing(6)
         # "wind" moves out of this coming-soon strip once advanced_user
         # unlocks the real control below; "referee"/"stadium graphics" are

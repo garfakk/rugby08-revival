@@ -53,3 +53,21 @@ def test_a_tournament_match_wears_the_patched_kit(ds, data_dir):
     assert slot.variant == "world_cup" and slot.kit_variant == "rwc_2023"
     kit = ds.teams["10001"]["2024"]["kits"][slot.kit_key(ds)]
     assert slot.kit(ds)["frontKitFile"] == kit["variants"]["rwc_2023"]["frontKitFile"]
+
+
+def test_a_tournament_match_plays_the_laws_of_its_time(ds, data_dir):
+    """50/22 / 22m: the template's default_options, the wizard's choice over
+    them, current law when neither says."""
+    old = dict(copy.deepcopy(RWC), default_options={"law_5022": False, "law_22m": True})
+    session = TournamentSession.new(ds, old, "2024", humans=["10001"], seed=3)
+    f = next(f for f in session.t.fixtures if "10001" in (f.home, f.away))
+    cfg = bridge.to_match_config(ds, session.t, f)
+    assert (cfg.law_5022, cfg.law_22m) == (False, True)
+    session.t.options["law_22m"] = False                      # the wizard's choice
+    cfg = bridge.to_match_config(ds, session.t, f)
+    assert (cfg.law_5022, cfg.law_22m) == (False, False)
+    for key in ("law_5022", "law_22m"):                       # saved before the laws existed
+        session.t.options.pop(key)
+    session.t.template.pop("default_options")
+    cfg = bridge.to_match_config(ds, session.t, f)
+    assert (cfg.law_5022, cfg.law_22m) == (True, True)

@@ -453,6 +453,11 @@ class MatchConfig:
     # the opponent). Tournament (one managed side) and challenge matches; quick
     # match and tournament matches between two managed teams leave it off.
     lock_controllers: bool = False
+    # Laws (rugby08patches.dll rule_5022 / rule_22m): the 50/22, and the 22m
+    # gain in ground lost when the ball was taken back into the 22. Both are
+    # current law; a tournament sets them by its era.
+    law_5022: bool = True
+    law_22m: bool = True
 
     # ── Advanced/.mis fields (config.advanced_user) ─────────────────────
     # Only reachable from the ADVANCED pane's extra sections, which only

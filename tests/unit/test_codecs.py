@@ -248,6 +248,17 @@ def test_configure_controller_lock(tmp_path):
     assert ini.read_text() == "[patches]\nwind = 1\ncontroller_lock = 0\n"
 
 
+def test_configure_match_laws(tmp_path, monkeypatch):
+    ini = tmp_path / "rugby08patches.ini"
+    ini.write_text("[patches]\nwind = 1\n")
+    monkeypatch.setattr(M.user_prefs, "lineout_jump", False)
+    M.configure_match_laws(str(tmp_path), {"rule_5022": False, "rule_22m": True})
+    assert ini.read_text() == "[patches]\nwind = 1\nrule_5022 = 0\nrule_22m = 1\nlineout_jump = 0\n"
+    monkeypatch.setattr(M.user_prefs, "lineout_jump", True)
+    M.configure_match_laws(str(tmp_path), {})              # no laws given: the stock game
+    assert ini.read_text() == "[patches]\nwind = 1\nrule_5022 = 0\nrule_22m = 0\nlineout_jump = 1\n"
+
+
 def test_resolve_player_skin_layers(tmp_path):
     (tmp_path / "players" / "skins").mkdir(parents=True)
     (tmp_path / "players" / "skins" / "s.png").write_bytes(b"")

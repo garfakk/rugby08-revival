@@ -119,6 +119,11 @@ class UserPrefs:
         # "advanced" = the reR08 wind patch, set per match (match setup,
         # challenge file, tournament fixture). Settings > Wind.
         self.wind_mode = "advanced"
+        # rugby08patches.dll lineout_jump: the front and middle jumpers can
+        # each set up a maul or pass to the scrum-half (human: jumper key +
+        # Space = maul, key alone = pass). Off = the stock lineout.
+        # Settings > Lineout Maul Or Pass.
+        self.lineout_jump = False
         # The user's team/player edits (user_data/edits) laid over the data
         # pack. Off: the pack alone is used, the edits are kept. Tools › My edits.
         self.use_edits = True
@@ -171,6 +176,7 @@ class UserPrefs:
             mode = "standard" if mode == "default" else mode      # older name
             if mode in ("standard", "advanced"):
                 self.wind_mode = mode
+            self.lineout_jump = cp.getboolean(_SECTION, "lineout_jump", fallback=self.lineout_jump)
 
     def screen_ratio_label(self):
         """The Settings > Screen Ratio choice: "Auto" or a SCREEN_RATIOS label."""
@@ -216,7 +222,8 @@ class UserPrefs:
                         "check_updates": str(self.check_updates),
                         "match_picker": self.match_picker,
                         "difficulty": self.difficulty,
-                        "wind_mode": self.wind_mode}
+                        "wind_mode": self.wind_mode,
+                        "lineout_jump": str(self.lineout_jump)}
         if not self.screen_ratio_set:
             # left out until chosen, so the first launch still detects it
             del cp[_SECTION]["widescreen"], cp[_SECTION]["widescreen_aspect"]
