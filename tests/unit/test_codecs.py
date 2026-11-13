@@ -281,3 +281,22 @@ def test_cm_to_feet_and_inches(cm, expected):
 def test_is_custom_asset():
     assert M.is_custom_asset("players/boots/b.png")
     assert not any(M.is_custom_asset(v) for v in ("", "True", "False", True, 3, None))
+
+
+def test_real_d3d8_keeps_dgvoodoo(tmp_path):
+    proxy = os.path.join(SRC, "assets", "static_files", "d3d8.dll")
+    game = tmp_path
+    (game / "D3D8.dll").write_bytes(b"dgVoodoo D3D8")              # dgVoodoo installed
+    assert M.prepare_real_d3d8(str(game), "") == ""                # not set: Windows' D3D8
+    assert M.prepare_real_d3d8(str(game), "d3d8.dll") == ""        # the proxy's own name: refused
+    assert M.prepare_real_d3d8(str(game), "dgv/d3d8.dll") == ""    # a path: refused
+    assert M.prepare_real_d3d8(str(game), "d3d8_dgvoodoo.dll") == "d3d8_dgvoodoo.dll"
+    assert (game / "d3d8_dgvoodoo.dll").read_bytes() == b"dgVoodoo D3D8"
+    assert not (game / "D3D8.dll").exists()
+    # next match: the proxy is d3d8.dll now, never renamed
+    shutil.copy(proxy, game / "d3d8.dll")
+    assert M.prepare_real_d3d8(str(game), "d3d8_dgvoodoo.dll") == "d3d8_dgvoodoo.dll"
+    assert (game / "d3d8.dll").exists()
+    # a wrapper name with no file: Windows' D3D8
+    assert M.prepare_real_d3d8(str(game), "missing.dll") == ""
+    assert (game / "d3d8.dll").exists()

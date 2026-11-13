@@ -1446,6 +1446,59 @@ def configure_match_laws(game_dir, laws):
   log.info("Laws: " + ", ".join(f"{k} {'on' if v else 'off'}" for k, v in values.items()))
 
 
+def _find_in_dir(directory, name):
+  """The path of `name` in `directory`, any letter case (dgVoodoo ships
+  D3D8.dll); None when absent."""
+  try:
+    entries = os.listdir(directory)
+  except OSError:
+    return None
+  match = next((e for e in entries if e.lower() == name.lower()), None)
+  return os.path.join(directory, match) if match else None
+
+
+def _is_mod_proxy(path):
+  """True for the mod's d3d8.dll proxy, any build (its "[windowed]" log tag)."""
+  try:
+    with open(path, "rb") as f:
+      return b"[windowed]" in f.read()
+  except OSError:
+    return False
+
+
+def prepare_real_d3d8(game_dir, name):
+  """config.d3d8_real_dll -> the proxy's RealD3D8Dll ("" = system32's d3d8).
+  The first time, a d3d8.dll next to the exe that is not the mod's proxy (a
+  dgVoodoo2 install) is renamed to `name`, so the proxy no longer overwrites
+  it. A name that is d3d8.dll itself, a path, or a file not there is ignored
+  (warning): the game would not start."""
+  name = str(name or "").strip()
+  if not name:
+    current = _find_in_dir(game_dir, "d3d8.dll")
+    if current and not _is_mod_proxy(current):
+      log.warning(f"{os.path.basename(current)} next to the game is not the mod's (dgVoodoo2?): "
+                  f"it is replaced by the mod's. To keep using it, set d3d8_real_dll in config.ini")
+    return ""
+  if os.path.basename(name) != name or name.lower() == "d3d8.dll":
+    log.warning(f"d3d8_real_dll = {name}: give a file name other than d3d8.dll, ignored")
+    return ""
+  target = _find_in_dir(game_dir, name)
+  if not target:
+    current = _find_in_dir(game_dir, "d3d8.dll")
+    if current and not _is_mod_proxy(current):
+      try:
+        os.replace(current, os.path.join(game_dir, name))
+        target = os.path.join(game_dir, name)
+        log.info(f"{os.path.basename(current)} (not the mod's) kept as {name} for d3d8_real_dll")
+      except OSError as e:
+        log.warning(f"cannot rename {current} to {name}: {e}")
+  if not target:
+    log.warning(f"d3d8_real_dll = {name}: no such file next to the game, Windows' D3D8 used")
+    return ""
+  log.info(f"Direct3D 8 through {os.path.basename(target)}")
+  return os.path.basename(target)
+
+
 def configure_d3d8_proxy():
   """Deploy the d3d8.dll proxy (windowed mode + embeddable window) next to the
   game exe, optionally the rugby08patches.dll gameplay patches, and generate the
@@ -1456,6 +1509,10 @@ def configure_d3d8_proxy():
   ensure_wine_d3d8_native_override()
   # No virtual desktop needed: the proxy keeps the game windowed
   disable_wine_virtual_desktop()
+
+  # A D3D8 wrapper (dgVoodoo2...) the proxy hands the game's Direct3D to:
+  # set aside before the proxy takes the d3d8.dll name
+  real_d3d8 = prepare_real_d3d8(game_dir, config.d3d8_real_dll)
 
   # Copy the proxy d3d8.dll next to the exe
   if not copy_file(config.d3d8proxy_dll_filepath, os.path.join(game_dir, "d3d8.dll")):
@@ -1546,6 +1603,7 @@ def configure_d3d8_proxy():
     f"Log={onezero(config.d3d8_log or game_log)}",
     f"LoadPatchesDll={onezero(config.use_rugby08patches)}",
     "PatchesDll=rugby08patches.dll",
+    f"RealD3D8Dll={real_d3d8}",
   ]
 
   ini_filepath = os.path.join(game_dir, "rugby08_windowed.ini")

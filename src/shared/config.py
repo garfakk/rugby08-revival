@@ -315,6 +315,11 @@ class Config:
     self.d3d8_frontend_width = 1280   # frontend size; the loading->frontend jump reveals the embed
     self.d3d8_frontend_height = 720   # (reveal_mode "fullscreen" uses the target monitor size instead)
     self.d3d8_log = False
+    # Another D3D8 DLL the proxy passes the game's Direct3D to instead of
+    # system32's: a wrapper like dgVoodoo2 (its D3D8.dll renamed, next to the
+    # exe). Bare file name, never "d3d8.dll" (the proxy's own name). Empty =
+    # system32. See mod_utils.prepare_real_d3d8.
+    self.d3d8_real_dll = ""
     # Boot the game window off-screen (PosX/PosY=-10000) when embedding, so it
     # never flashes on the desktop before being reparented into the container.
     # If embedding fails, the frontend moves it back on-screen.
