@@ -28,6 +28,7 @@ class MainMenuScreen(Screen):
         body.setStyleSheet(f"background: {BG_BASE};")
         bl = QHBoxLayout(body)
         bl.setContentsMargins(120, 0, 120, 0)
+        self._body_layout = bl
 
         hero = QVBoxLayout()
         hero.addStretch(1)
@@ -37,7 +38,9 @@ class MainMenuScreen(Screen):
         hero.addStretch(2)
         hero_w = QWidget()
         hero_w.setLayout(hero)
-        hero_w.setFixedWidth(420)
+        # 420 / 560 wide, narrower (and smaller margins) in a small window
+        hero_w.setMinimumWidth(340)
+        hero_w.setMaximumWidth(420)
         bl.addWidget(hero_w)
 
         bl.addStretch(1)
@@ -64,7 +67,8 @@ class MainMenuScreen(Screen):
         menu_col.addStretch(1)
         menu_w = QWidget()
         menu_w.setLayout(menu_col)
-        menu_w.setFixedWidth(560)
+        menu_w.setMinimumWidth(440)
+        menu_w.setMaximumWidth(560)
         bl.addWidget(menu_w)
 
         root.addWidget(body, stretch=1)
@@ -72,6 +76,11 @@ class MainMenuScreen(Screen):
         self.hintbar = HintBar()
         self.hintbar.set_hints([("A", "select"), ("B", "exit")])
         root.addWidget(self.hintbar)
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        side = max(32, min(120, (self.width() - 980) // 2))
+        self._body_layout.setContentsMargins(side, 0, side, 0)
 
     # ── entrance ─────────────────────────────────────────────────────────
     ENTRANCE_MS = 520      # per-tile slide+fade

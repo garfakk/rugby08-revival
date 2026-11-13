@@ -9,9 +9,9 @@ HintBar. Custom-painted so the built
 app matches the approved mockups (scratchpad/mockup/gen_mockups.py) exactly,
 not just approximately.
 """
-from PyQt5.QtWidgets import QWidget, QLabel, QFrame, QSizePolicy, QHBoxLayout, QVBoxLayout
+from PyQt5.QtWidgets import QWidget, QLabel, QFrame, QSizePolicy, QHBoxLayout, QVBoxLayout, QScrollArea
 from PyQt5.QtGui import QPainter, QColor, QFont, QFontMetrics, QPen
-from PyQt5.QtCore import Qt, pyqtSignal, pyqtProperty, QRectF
+from PyQt5.QtCore import Qt, pyqtSignal, pyqtProperty, QRectF, QSize
 
 from ui.theme import (
     BG_BASE, BG_PANEL, BG_CARD, BG_RAISED, BG_HIGHLIGHT, DROPDOWN_BG, DROPDOWN_BORDER,
@@ -46,19 +46,43 @@ def label_css(size, weight=QFont.Bold, color=FG_PRIMARY, family=FONT_DISPLAY):
             f" font-weight: {_CSS_WEIGHT.get(weight, 400)};")
 
 
+class _DisplayLabel(QLabel):
+    # Never shorter than its own text plus its contents margins: the layout
+    # is sized in pixels while the font is in points, so a row that fits at
+    # one scaling factor or font can clip the bottom of the glyphs at another.
+    # (A fixed setMinimumHeight(text height) left out the margins callers add
+    # to headings, and a tight window squeezed them into the text.)
+    def minimumSizeHint(self):
+        hint = super().minimumSizeHint()
+        m = self.contentsMargins()
+        return QSize(hint.width(), max(hint.height(),
+                                       QFontMetrics(self.font()).height() + m.top() + m.bottom()))
+
+
 def display_label(text, size, weight=QFont.Bold, track=1.0, color=FG_PRIMARY,
                   family=FONT_DISPLAY, upper=True):
     """QLabel that actually renders at the size asked for, with letter
     spacing (which QSS can't express) coming from the QFont."""
-    lbl = QLabel(text.upper() if upper else text)
+    lbl = _DisplayLabel(text.upper() if upper else text)
     font = tracked_font(family, size, weight, track)
     lbl.setFont(font)
     lbl.setStyleSheet(label_css(size, weight, color, family))
-    # Never let a label end up shorter than its own text: the layout is sized
-    # in pixels while the font is in points, so a row that fits at one scaling
-    # factor or font can clip the bottom of the glyphs at another.
-    lbl.setMinimumHeight(QFontMetrics(font).height())
     return lbl
+
+
+def scroll_wrap(widget, horizontal=True):
+    """`widget` in a frameless, transparent scroll area that scrolls only
+    when the window is too small for it (both ways unless `horizontal` is
+    False). Focus moved by keys or a pad is scrolled into view (app.input.reveal)."""
+    area = QScrollArea()
+    area.setWidgetResizable(True)
+    area.setFrameShape(QFrame.NoFrame)
+    area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded if horizontal else Qt.ScrollBarAlwaysOff)
+    area.setStyleSheet("QScrollArea { background: transparent; border: none; }")
+    area.viewport().setAutoFillBackground(False)
+    area.viewport().setStyleSheet("background: transparent;")
+    area.setWidget(widget)
+    return area
 
 
 def page_header(title: str, right: str = None, on_back=None,

@@ -46,7 +46,7 @@ from ui.kickoff_transition import KickoffTransition, WALKOFF_MS
 from ui.side_panel import SidePanelSlide
 from ui.broadcast import (
     Card, SelectorRow, TeamNamePicker, GroupPicker, HintBar,
-    page_header, eyebrow_label, display_label,
+    page_header, eyebrow_label, display_label, scroll_wrap,
 )
 from ui.theme import (
     BG_PANEL, BORDER,
@@ -908,10 +908,14 @@ class MatchSetupScreen(KickoffTransition, Screen):
         bl.addWidget(self.home_col, stretch=5)
         bl.addWidget(self.mid_col, stretch=2)
         bl.addWidget(self.away_col, stretch=5)
-        root.addWidget(body, stretch=1)
+        self._body_layout = bl
+        # a small window scrolls the cards instead of squashing them
+        self.body_scroll = scroll_wrap(body)
+        root.addWidget(self.body_scroll, stretch=1)
 
         bottom = QHBoxLayout()
         bottom.setContentsMargins(80, 0, 80, 20)
+        self._bottom_layout = bottom
         bottom.addStretch(1)
         self.play_btn = StyledButton("KICK OFF", "primary")
         self.play_btn.setMinimumHeight(BTN_HEIGHT + 12)
@@ -1345,6 +1349,12 @@ class MatchSetupScreen(KickoffTransition, Screen):
         if hasattr(self, "_backdrop"):
             self._backdrop.setGeometry(self.rect())
             self._backdrop.lower()
+        if hasattr(self, "_body_layout"):
+            # 80 px sides on a big screen, down to 16 on a small one
+            side = max(16, min(80, (self.width() - 1200) // 4))
+            self._body_layout.setContentsMargins(side, 24, side, 20)
+            self._body_layout.setSpacing(24 if self.width() >= 1400 else 12)
+            self._bottom_layout.setContentsMargins(side, 0, side, 20)
         if hasattr(self, "_advanced_slide"):
             self._advanced_slide.sync_geometry()
 

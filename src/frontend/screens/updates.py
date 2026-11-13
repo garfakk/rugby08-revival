@@ -34,7 +34,7 @@ from app.updater import data as data_update
 from app.updater import program, schedule
 from app.updates import UpdateError, default_updates
 from ui.background import Job
-from ui.broadcast import HintBar, display_label, page_header
+from ui.broadcast import HintBar, display_label, page_header, scroll_wrap
 from ui.editor_kit import ConfirmDialog, Note, SectionCard, compact_button
 from ui.theme import (ACCENT, BG_BASE, DANGER_LITE, FG_PRIMARY, FG_SECONDARY, FG_TERTIARY, FONT_BODY,
                       GREEN, T_LABEL, WARN)
@@ -206,7 +206,7 @@ class UpdatesScreen(Screen):
         scroll.setWidget(self.rows)
         self.card.add(scroll, stretch=1)
         h.addWidget(self.card, stretch=1)
-        root.addWidget(body, stretch=1)
+        root.addWidget(scroll_wrap(body), stretch=1)
 
         self.status = Note("", color=FG_SECONDARY, size=T_LABEL)
         self.status.setContentsMargins(28, 0, 28, 4)

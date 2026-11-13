@@ -27,7 +27,7 @@ from PyQt5.QtGui import (
 from PyQt5.QtCore import Qt, QRectF, QRect, QSize, QTimer, QPoint, QPointF, pyqtSignal, QEvent
 
 from shared import kit_files
-from ui.broadcast import Card, HintBar, draw_frame, tracked_font, display_label, eyebrow_label
+from ui.broadcast import Card, HintBar, draw_frame, tracked_font, display_label, eyebrow_label, scroll_wrap
 from ui.dropdown import PopupList
 from ui.widgets import SettingRow, StyledButton
 from ui.theme import (
@@ -2268,7 +2268,8 @@ class TabPage(QScrollArea):
         super().__init__(parent)
         self.setWidgetResizable(True)
         self.setFrameShape(QScrollArea.NoFrame)
-        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        # sideways too, rather than cutting a form off in a narrow window
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.setStyleSheet(f"QScrollArea {{ background: transparent; border: none; }}")
         self.body = QWidget()
         self.body.setObjectName("tabBody")
@@ -2509,7 +2510,10 @@ class EditorFooter(QWidget):
         h.addWidget(self.status, stretch=2)
         self.target = display_label("", T_SMALL, QFont.DemiBold, track=0.4,
                                     color=FG_TERTIARY, upper=False)
-        h.addWidget(self.target)
+        h.addWidget(self.target, stretch=1)
+        # a long message never widens the window: it is cut instead
+        for lbl in (self.status, self.target):
+            lbl.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Preferred)
         self.revert_btn = compact_button("REVERT")
         self.revert_btn.setMinimumWidth(96)
         self.revert_btn.clicked.connect(self.revert_clicked.emit)
@@ -2666,7 +2670,9 @@ class EditorShell(QWidget):
 
         right_col.addLayout(bl, stretch=1)
         bh.addLayout(right_col, stretch=1)
-        root.addWidget(body, stretch=1)
+        # a window narrower than the panes (list + season + tabs + preview)
+        # scrolls sideways instead of pushing the preview off the edge
+        root.addWidget(scroll_wrap(body), stretch=1)
 
         self.footer = EditorFooter()
         root.addWidget(self.footer)

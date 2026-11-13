@@ -592,8 +592,26 @@ class TournamentWizardScreen(Screen):
             tile.tid = tid
             tile.activated.connect(lambda tid=tid: self._toggle_human(tid))
             self.focus.register(tile)
-            self.tiles_grid.addWidget(tile, i // 6, i % 6)
             self._team_tiles.append(tile)
+        self._tiles_per_row = 0
+        self._arrange_tiles()
+
+    def _arrange_tiles(self):
+        """Up to 6 team tiles a row, fewer in a narrow window (no cut-off tile)."""
+        width = self.stack.width() - 30 if self.stack.width() > 0 else 6 * 160
+        per_row = max(2, min(6, (width + 10) // 160))
+        if per_row == getattr(self, "_tiles_per_row", 0):
+            return
+        self._tiles_per_row = per_row
+        for tile in self._team_tiles:
+            self.tiles_grid.removeWidget(tile)
+        for i, tile in enumerate(self._team_tiles):
+            self.tiles_grid.addWidget(tile, i // per_row, i % per_row)
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        if self._team_tiles:
+            self._arrange_tiles()
 
     def _toggle_human(self, tid):
         """Take a team, or leave it; with both taken, a third replaces P2."""

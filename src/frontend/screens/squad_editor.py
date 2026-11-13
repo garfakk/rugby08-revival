@@ -18,7 +18,7 @@ from app.input import Action, KEYMAP
 from ui import StyledButton
 from ui.broadcast import (
     Card, SelectorRow, HintBar, SegmentedToggle, page_header, eyebrow_label,
-    display_label, tracked_font,
+    display_label, tracked_font, scroll_wrap,
 )
 from ui.dropdown import PopupList
 from ui.side_panel import SidePanelSlide
@@ -154,10 +154,12 @@ class SquadEditorScreen(Screen):
         bl = QHBoxLayout(body)
         bl.setContentsMargins(60, 20, 60, 16)
         bl.setSpacing(24)
+        self._body_layout = bl
 
         bl.addWidget(self._build_sheet(), stretch=1)
         bl.addWidget(self._build_side_panel())
-        root.addWidget(body, stretch=1)
+        # a small window: compact shirts (resizeEvent), then scrolling
+        root.addWidget(scroll_wrap(body), stretch=1)
 
         self.hintbar = HintBar()
         root.addWidget(self.hintbar)
@@ -375,8 +377,20 @@ class SquadEditorScreen(Screen):
     def _roles_rect(self):
         return QRect(self.width() - ROLES_PANEL_W, 0, ROLES_PANEL_W, self.height())
 
+    # Below this the sheet uses compact shirts, narrower replacement chips
+    # and smaller margins, so it fits a 1280x720 window
+    COMPACT_BELOW = (1600, 940)
+
     def resizeEvent(self, event):
         super().resizeEvent(event)
+        if hasattr(self, "_body_layout"):
+            small = self.width() < self.COMPACT_BELOW[0] or self.height() < self.COMPACT_BELOW[1]
+            for avatar in self.avatars.values():
+                avatar.set_compact(small)
+            for chip in self.sub_chips.values():
+                chip.setMinimumWidth(100 if small else 150)
+            side = 16 if small else 60
+            self._body_layout.setContentsMargins(side, 12 if small else 20, side, 12 if small else 16)
         if hasattr(self, "_roles_slide"):
             self._roles_slide.sync_geometry()
         if hasattr(self, "picker") and self.picker.isVisible():

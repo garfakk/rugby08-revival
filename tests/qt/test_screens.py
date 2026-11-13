@@ -746,3 +746,19 @@ def test_tournament_editor_make_and_play(window, qapp, monkeypatch, tmp_path, st
     engine.simulate_to_end(t)
     assert t.finished and t.champion
     window.show_main()
+
+
+@pytest.mark.parametrize("show,attr", SCREENS, ids=[s for s, _ in SCREENS])
+def test_screen_fits_the_smallest_window(window, qapp, show, attr):
+    """Every screen fits the window's own minimum size (1000x640): what
+    doesn't fit scrolls instead of being squashed or cut off."""
+    smallest = window.minimumSize()
+    window.resize(smallest)
+    getattr(window, show)()
+    _wait(qapp, lambda: window.screens.currentWidget() is getattr(window, attr), 10)
+    for _ in range(20):
+        qapp.processEvents()
+    need = getattr(window, attr).minimumSizeHint()
+    assert need.width() <= smallest.width() and need.height() <= smallest.height(), need
+    window.show_main()
+    window.resize(1280, 720)
