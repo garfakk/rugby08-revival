@@ -170,7 +170,9 @@ def create_tournament(ds, template, season, participants=None, humans=(), option
     calendar.assign_dates(t)
 
     for tid in t.teams:
-        t.teams[tid].selection = selection.auto_select(t, tid)
+        entry = t.teams[tid]
+        entry.selection = (selection.auto_select(t, tid) if entry.human
+                           else selection.ai_select(t, tid))
     if t.options.get("reality"):
         # who really met in every fixture, and how it went (reality.py)
         t.components["reality"] = reality.real_schedule(t)

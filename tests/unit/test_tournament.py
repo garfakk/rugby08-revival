@@ -518,3 +518,25 @@ def test_pinned_calendar_rounds_are_full(spec):
             assert len(games) == len(teams) // 2, (gid, r)
             playing = [t for f in games for t in (f["home"], f["away"])]
             assert len(playing) == len(set(playing)), (gid, r)
+
+
+def test_cpu_squads_default_or_best(ds):
+    """Teams the user doesn't manage: their own 22 in the data's slot order
+    ("default", the wizard's default) or the best available ("best", also a
+    tournament saved before the option)."""
+    from app.tournament.model import Condition
+    t = engine.create_tournament(ds, copy.deepcopy(TEMPLATE), "2024", humans=["10002"], seed=1,
+                                 options={"cpu_squads": "default"})
+    fra = t.teams["10001"]
+    own = [p for p in fra.squad if p in t.players][:22]
+    assert fra.selection["players"] == own
+    assert t.teams["10002"].selection == selection.auto_select(t, "10002")   # the user's: unchanged
+    hurt = t.players[own[3]]
+    hurt.conditions.append(Condition(kind="injury", matches_left=2))
+    sel = selection.ai_select(t, "10001")
+    assert own[3] not in sel["players"] and sel["players"][:3] == own[:3]   # only the injured man changes
+    assert len(sel["players"]) == 22 and selection.validate(t, "10001", sel)[0] == []
+    t.options["cpu_squads"] = "best"
+    assert selection.ai_select(t, "10001") == selection.auto_select(t, "10001")
+    t.options.pop("cpu_squads")
+    assert selection.ai_select(t, "10001") == selection.auto_select(t, "10001")

@@ -1,7 +1,8 @@
 """
 tournament/selection.py — Picking a matchday 22 and its roles.
 
-AI teams get auto_select() before each match. A human team keeps its own
+AI teams get their own matchday 22 (team_default) or the best available
+(auto_select) before each match, by the tournament's "cpu_squads" option. A human team keeps its own
 selection ("manual"); repair() swaps out anyone who has become unavailable
 since, so a selection never sends an injured or banned player out.
 
@@ -197,6 +198,29 @@ def repair(t, team_id, fixture=None) -> list:
     return changes
 
 
+def team_default(t, team_id, fixture=None) -> dict:
+    """The team's own matchday 22: the first 22 of its squad, in the data's
+    slot order, with its own roles; anyone unavailable is covered by the best
+    available player for the slot. A squad short of 22: auto_select."""
+    entry = t.teams[team_id]
+    pids = [pid for pid in entry.squad if pid in t.players][:22]
+    if len(pids) < 22:
+        return auto_select(t, team_id, fixture)
+    sel = {"players": pids, "positions": list(SLOT_POSITIONS), "set_plays": dict(entry.set_plays),
+           "manual": False}
+    sel["players"], _changes = cover(t, team_id, sel, fixture)
+    sel["roles"] = pick_roles(t, team_id, sel["players"])
+    return sel
+
+
+def ai_select(t, team_id, fixture=None) -> dict:
+    """A team the user doesn't manage: its own 22 ("default") or the best
+    available ("best", also a tournament saved before the option)."""
+    if t.options.get("cpu_squads", "best") == "default":
+        return team_default(t, team_id, fixture)
+    return auto_select(t, team_id, fixture)
+
+
 def prepare(t, team_id, fixture=None) -> list:
     """Make the team's selection ready for `fixture`: AI teams re-pick,
     human teams start again from their default lineup (tournament/lineups.py),
@@ -208,5 +232,5 @@ def prepare(t, team_id, fixture=None) -> list:
         entry.selection = dict(copy.deepcopy(lineups.default(entry)), manual=True)
         entry.selection.setdefault("set_plays", dict(entry.set_plays))
         return repair(t, team_id, fixture)
-    entry.selection = auto_select(t, team_id, fixture)
+    entry.selection = auto_select(t, team_id, fixture) if entry.human else ai_select(t, team_id, fixture)
     return []

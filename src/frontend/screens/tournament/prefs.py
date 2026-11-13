@@ -1,6 +1,6 @@
 """
 screens/tournament/prefs.py — A tournament's preferences as Settings rows:
-MATCH (difficulty, half length), SQUAD (injuries, fatigue, suspensions) and
+MATCH (difficulty, half length), SQUAD (injuries, fatigue, suspensions, the CPU teams' squads) and
 RULES (50/22, 22m), side by side.
 
 Used by the wizard (before the tournament starts) and the dashboard's
@@ -26,18 +26,21 @@ PREFS = {
     "injuries": ("Injuries", "toggle"),
     "fatigue": ("Fatigue", "toggle"),
     "suspensions": ("Suspensions", "toggle"),
+    "cpu_squads": ("CPU Squads", "cycle"),
     "law_5022": ("50/22", "toggle"),
     "law_22m": ("22m", "toggle"),
 }
 GROUPS = [("match", ["difficulty", "halftime_length"]),
-          ("squad", ["injuries", "fatigue", "suspensions"]),
+          ("squad", ["injuries", "fatigue", "suspensions", "cpu_squads"]),
           ("rules", ["law_5022", "law_22m"])]
 VALUES = {
     "difficulty": [(level, level.capitalize()) for level in difficulty.LEVELS],
     "halftime_length": [(v, f"{v[:-1]} min" if v.endswith("m") else v) for v in HALF_LENGTHS],
+    # the teams the user doesn't manage: their own 22, or the best available
+    "cpu_squads": [("default", "Default"), ("best", "Best")],
 }
 DEFAULTS = {"difficulty": "elite", "halftime_length": "5m",
-            "injuries": True, "fatigue": True, "suspensions": True,
+            "injuries": True, "fatigue": True, "suspensions": True, "cpu_squads": "default",
             "law_5022": True, "law_22m": True}
 
 
