@@ -40,8 +40,10 @@
  "score_events": [],
  "snow_intensity": null,
  "stadium": 1,
+ "stadium_files": {},
  "stadium_flags": null,
  "stadium_graphics": "",
+ "stadium_name": null,
  "team_A": {
   "banners": "teams/England/banners/banner_%.png",
   "kit_back": "teams/England/kits_2024/home_back/home_back_%.png",

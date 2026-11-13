@@ -451,3 +451,77 @@ fsh_image_sizes = {
   'banners': (512, 128),
   'crowd': (512, 128),
   }
+
+
+# Game string ids: the mod's two team-name strings (teams_string_id) and the
+# first of the stadium-only name strings (2145..2196; below them, club grounds
+# use their team's name string)
+TEAM_NAME_STRING_IDS = {int.from_bytes(v, "little") for v in teams_string_id.values()}
+STADIUM_NAME_STRINGS_FROM = 2140
+
+# Stock stadium slots (xml/config/stadiuminfo + the data.gob file list), by
+# game id: "file" = the FileName the scene packs are named after, "string_id"
+# = the stadium name in the game strings, "scenes" = environment -> game path
+# of the scene pack (a loose md5(path).big next to the exe replaces it; the
+# Millennium roof-closed pack is milleniumcovered.cold). A custom stadium
+# (stadium_data_loader) replaces these files for one match.
+STADIUM_SLOTS = {
+  1: {"file": "stadiumaustralia", "string_id": 2175, "scenes": {"night": "stadiums/stadiumaustralia.night"}},
+  2: {"file": "brisbane", "string_id": 2182, "scenes": {"day": "stadiums/brisbane.day"}},
+  3: {"file": "sydney", "string_id": 2183, "scenes": {"night": "stadiums/sydney.night"}},
+  4: {"file": "canberra", "string_id": 2173, "scenes": {"night": "stadiums/canberra.night"}},
+  6: {"file": "bristol", "string_id": 2146, "scenes": {"overcast": "stadiums/bristol.overcast"}},
+  7: {"file": "madejski", "string_id": 2150, "scenes": {"night": "stadiums/madejski.night"}},
+  8: {"file": "welfordroad", "string_id": 2156, "scenes": {"overcast": "stadiums/welfordroad.overcast"}},
+  9: {"file": "bath", "string_id": 2145, "scenes": {"day": "stadiums/bath.day"}},
+  10: {"file": "northampton", "string_id": 2152, "scenes": {"night": "stadiums/northampton.night"}},
+  11: {"file": "newcastle", "string_id": 2151, "scenes": {"cold": "stadiums/newcastle.cold", "night": "stadiums/newcastle.night"}},
+  12: {"file": "gloucester", "string_id": 2148, "scenes": {"overcast": "stadiums/gloucester.overcast"}},
+  14: {"file": "twickenham", "string_id": 2154, "scenes": {"day": "stadiums/twickenham.day", "night": "stadiums/twickenham.night", "overcast": "stadiums/twickenham.overcast"}},
+  17: {"file": "leinster", "string_id": 1082, "scenes": {"cold": "stadiums/leinster.cold", "overcast": "stadiums/leinster.overcast"}},
+  18: {"file": "ulster", "string_id": 1084, "scenes": {"overcast": "stadiums/ulster.overcast"}},
+  20: {"file": "leparc", "string_id": 2177, "scenes": {"day": "stadiums/leparc.day", "night": "stadiums/leparc.night"}},
+  22: {"file": "bourgoin", "string_id": 1077, "scenes": {"day": "stadiums/bourgoin.day"}},
+  23: {"file": "castres", "string_id": 1078, "scenes": {"night": "stadiums/castres.night"}},
+  24: {"file": "irishpark", "string_id": 2159, "scenes": {"overcast": "stadiums/irishpark.overcast"}},
+  25: {"file": "lansdownroad", "string_id": 2158, "scenes": {"overcast": "stadiums/lansdownroad.overcast"}},
+  26: {"file": "clermont", "string_id": 2174, "scenes": {"night": "stadiums/clermont.night"}},
+  27: {"file": "paris", "string_id": 1079, "scenes": {"overcast": "stadiums/paris.overcast"}},
+  28: {"file": "northernpark", "string_id": 2163, "scenes": {"cold": "stadiums/northernpark.cold", "night": "stadiums/northernpark.night"}},
+  29: {"file": "murrayfield", "string_id": 2162, "scenes": {"day": "stadiums/murrayfield.day", "night": "stadiums/murrayfield.night", "overcast": "stadiums/murrayfield.overcast"}},
+  30: {"file": "perpignan", "string_id": 1080, "scenes": {"night": "stadiums/perpignan.night", "overcast": "stadiums/perpignan.overcast"}},
+  31: {"file": "perth", "string_id": 2176, "scenes": {"night": "stadiums/perth.night"}},
+  32: {"file": "millenium", "string_id": 2160, "scenes": {"day": "stadiums/millenium.day", "night": "stadiums/millenium.night", "overcast": "stadiums/millenium.overcast", "cold": "stadiums/milleniumcovered.cold"}},
+  33: {"file": "neath", "string_id": 2161, "scenes": {"cold": "stadiums/neath.cold", "overcast": "stadiums/neath.overcast"}},
+  34: {"file": "llanelli", "string_id": 1088, "scenes": {"day": "stadiums/llanelli.day"}},
+  35: {"file": "newport", "string_id": 2164, "scenes": {"cold": "stadiums/newport.cold", "night": "stadiums/newport.night"}},
+  36: {"file": "cardiff", "string_id": 1087, "scenes": {"overcast": "stadiums/cardiff.overcast"}},
+  37: {"file": "bloemfontain", "string_id": 2189, "scenes": {"day": "stadiums/bloemfontain.day"}},
+  38: {"file": "tibilisi", "string_id": 2196, "scenes": {"overcast": "stadiums/tibilisi.overcast"}},
+  39: {"file": "rome", "string_id": 2178, "scenes": {"day": "stadiums/rome.day"}},
+  40: {"file": "arenacivica", "string_id": 2179, "scenes": {"day": "stadiums/arenacivica.day"}},
+  43: {"file": "buenosaires", "string_id": 2180, "scenes": {"overcast": "stadiums/buenosaires.overcast"}},
+  44: {"file": "vancouver", "string_id": 2172, "scenes": {"day": "stadiums/vancouver.day"}},
+  45: {"file": "sanfrancisco", "string_id": 2181, "scenes": {"day": "stadiums/sanfrancisco.day"}},
+  48: {"file": "christchurch", "string_id": 2185, "scenes": {"day": "stadiums/christchurch.day", "night": "stadiums/christchurch.night"}},
+  49: {"file": "auckland", "string_id": 2184, "scenes": {"day": "stadiums/auckland.day", "night": "stadiums/auckland.night"}},
+  50: {"file": "wellington", "string_id": 2188, "scenes": {"night": "stadiums/wellington.night"}},
+  51: {"file": "dunedin", "string_id": 2186, "scenes": {"night": "stadiums/dunedin.night", "overcast": "stadiums/dunedin.overcast"}},
+  52: {"file": "hamilton", "string_id": 2187, "scenes": {"overcast": "stadiums/hamilton.overcast"}},
+  55: {"file": "pretoria", "string_id": 2193, "scenes": {"night": "stadiums/pretoria.night"}},
+  56: {"file": "capetown", "string_id": 2190, "scenes": {"day": "stadiums/capetown.day"}},
+  57: {"file": "johannesburg", "string_id": 2192, "scenes": {"day": "stadiums/johannesburg.day", "night": "stadiums/johannesburg.night"}},
+  58: {"file": "durban", "string_id": 2191, "scenes": {"day": "stadiums/durban.day"}},
+  62: {"file": "southpacific", "string_id": 2194, "scenes": {"day": "stadiums/southpacific.day"}},
+  63: {"file": "training", "string_id": 2195, "scenes": {"night": "stadiums/training.night"}},
+  65: {"file": "stadedelabeaujoire", "string_id": 2169, "scenes": {"overcast": "stadiums/stadedelabeaujoire.overcast"}},
+  68: {"file": "stadevelodrome", "string_id": 2171, "scenes": {"day": "stadiums/stadevelodrome.day", "night": "stadiums/stadevelodrome.night", "overcast": "stadiums/stadevelodrome.overcast"}},
+  69: {"file": "felixbollaert", "string_id": 2165, "scenes": {"night": "stadiums/felixbollaert.night", "overcast": "stadiums/felixbollaert.overcast"}},
+  70: {"file": "stadedefrance", "string_id": 2167, "scenes": {"night": "stadiums/stadedefrance.night", "overcast": "stadiums/stadedefrance.overcast"}},
+  72: {"file": "stadedegerland", "string_id": 2168, "scenes": {"night": "stadiums/stadedegerland.night", "overcast": "stadiums/stadedegerland.overcast"}},
+  73: {"file": "stademunicipal", "string_id": 2170, "scenes": {"night": "stadiums/stademunicipal.night", "overcast": "stadiums/stademunicipal.overcast"}},
+  75: {"file": "edgeleypark", "string_id": 2147, "scenes": {"cold": "stadiums/edgeleypark.cold", "night": "stadiums/edgeleypark.night"}},
+  76: {"file": "worcester", "string_id": 2157, "scenes": {"day": "stadiums/worcester.day"}},
+  78: {"file": "thestoop", "string_id": 2153, "scenes": {"cold": "stadiums/thestoop.cold", "overcast": "stadiums/thestoop.overcast"}},
+  79: {"file": "vicaragerd", "string_id": 2155, "scenes": {"overcast": "stadiums/vicaragerd.overcast"}},
+}

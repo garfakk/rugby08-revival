@@ -153,3 +153,24 @@ To add files or replace the pack's, use only `user_data/mod_data/`. It has the l
 - a file the pack does not have is **added** (a new head, a new team folder with its json, kits and logos…).
 
 The pack is never modified, so a new release never erases them. Restart the program after changing files.
+
+## Custom stadiums
+
+A custom stadium takes the place of a stock one in the game (its slot). Put a folder in `user_data/mod_data/stadiums/` with a json named after the folder (lower case, spaces as `_`) and the stadium's scene packs (`.big`, one per environment):
+
+```
+stadiums/Eden Park/eden_park.json
+stadiums/Eden Park/eden_park.day.big
+stadiums/Eden Park/eden_park.night.big
+```
+```json
+{"eden_park": {"name": "Eden Park", "country": "New Zealand", "game_id": 49,
+               "scenes": {"day": "eden_park.day.big", "night": "eden_park.night.big"}}}
+```
+
+- `game_id`: the stock stadium it overwrites (the ids of `stadiums/stadiums.json`, Auckland = 49).
+- `scenes`: environment (`day`, `night`, `overcast`, `cold`) -> scene pack. The stadium is offered in these environments only.
+- `files` (optional): any other game file of that stadium, game path -> file, e.g. `{"frontend/textures/stadiums/auckland.d.fsh": "preview.fsh"}`.
+- The key (`eden_park`) adds a stadium to the lists; the key of a stock stadium (`"49"`) replaces it everywhere instead (tournament fixtures at that ground included).
+
+The files are put over the slot's only for a match at that stadium, and the name replaces the slot's in the game (not for club grounds whose name is also their team's: Leinster, Ulster, Bourgoin, Castres, Clermont, Paris, Perpignan, Llanelli, Cardiff).

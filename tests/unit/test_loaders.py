@@ -180,3 +180,36 @@ def test_competition_menu_logo_alone_is_branding(tmp_path):
     _write(str(tmp_path / "cup" / "cup.json"), {"id": "cup", "name": "Cup", "logo_frontend": "m.png"})
     (tmp_path / "cup" / "m.png").write_bytes(b"x")
     assert TournamentDataLoader(str(tmp_path)).load_tournaments()["cup"][""]["logo_frontend"] == "m.png"
+
+
+def _custom_stadium(tmp_path, info, files=("s.day.big",)):
+    folder = tmp_path / "stadiums" / "Eden Park"
+    folder.mkdir(parents=True)
+    (tmp_path / "stadiums" / "stadiums.json").write_text(
+        json.dumps({"49": {"name": "Auckland", "game_id": 49, "is_custom": False,
+                           "environments": ["day", "night"]}}))
+    for name in files:
+        (folder / name).write_bytes(b"BIGF")
+    (folder / "eden_park.json").write_text(json.dumps(info))
+    return StadiumDataLoader(str(tmp_path / "stadiums")).load_stadiums()
+
+
+def test_custom_stadium_folder_adds_a_stadium_on_a_stock_slot(tmp_path):
+    stadiums = _custom_stadium(tmp_path, {"eden_park": {
+        "name": "Eden Park", "game_id": 49,
+        "scenes": {"day": "s.day.big", "night": "missing.big", "rainy": "s.day.big"},
+        "files": {"frontend/textures/stadiums/auckland.d.fsh": "s.day.big"}}})
+    assert stadiums["49"]["name"] == "Auckland"              # stadiums.json still loaded
+    eden = stadiums["eden_park"]
+    assert eden["is_custom"] and eden["game_id"] == 49
+    assert eden["scenes"] == {"day": "stadiums/Eden Park/s.day.big"}   # missing file, bad env dropped
+    assert eden["environments"] == ["day"]
+    assert eden["files"] == {"frontend/textures/stadiums/auckland.d.fsh": "stadiums/Eden Park/s.day.big"}
+
+
+def test_custom_stadium_needs_a_stock_slot_and_can_replace_one(tmp_path):
+    stadiums = _custom_stadium(tmp_path, {
+        "bad": {"name": "Nowhere", "game_id": 999, "scenes": {"day": "s.day.big"}},
+        "49": {"name": "Eden Park", "game_id": 49, "scenes": {"day": "s.day.big"}}})
+    assert "bad" not in stadiums
+    assert stadiums["49"]["name"] == "Eden Park" and stadiums["49"]["is_custom"]

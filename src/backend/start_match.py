@@ -151,6 +151,7 @@ def start_match(match_data, copy_static_files = True, create_mission_file = True
     report('graphics', "Building graphics files")
     if edit_graphics_files :
         game_files_processor.edit_graphics_files(match_data)
+        game_files_processor.deploy_stadium_files(match_data)
     else:
         log.debug("Graphics files not created")
     

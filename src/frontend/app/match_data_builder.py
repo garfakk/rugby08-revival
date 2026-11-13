@@ -314,6 +314,28 @@ def _trophy_files(cfg) -> dict:
     return {names["model"]: trophy["model"], names["texture"]: trophy["texture"]}
 
 
+def _custom_stadium(cfg):
+    """A custom stadium's game files for this match ({game path: file in mod
+    data}: the scene pack of the match's environment + its other files) and
+    {"string_id", "name"}; ({}, None) for a stock stadium."""
+    info = (cfg.stadium or {}).get("data") or {}
+    slot = gsv.STADIUM_SLOTS.get(info.get("game_id"))
+    if not info.get("is_custom") or not slot:
+        return {}, None
+    files = dict(info.get("files") or {})
+    env = cfg.environment
+    scene = (info.get("scenes") or {}).get(env)
+    if scene:
+        files[slot["scenes"].get(env) or f"stadiums/{slot['file']}.{env}"] = scene
+    sid = slot["string_id"]
+    # club grounds (Bourgoin, Castres, Clermont...) share their name string
+    # with a team's (Clermont's 2174 is the away team's name slot): renamed,
+    # it would rename that team too, so those keep the stock name
+    own_string = sid >= gsv.STADIUM_NAME_STRINGS_FROM and sid not in gsv.TEAM_NAME_STRING_IDS
+    name = {"string_id": sid, "name": info["name"]} if info.get("name") and own_string else None
+    return files, name
+
+
 def _stadium_flags(cfg):
     """Any World Cup match left on "stock" (quick match, tournament,
     challenge) gets the World Cup stadium dressing; an explicit off is kept."""
@@ -384,6 +406,7 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
     stadium_id = 70  # default (Stade de France)
     if cfg.stadium and cfg.stadium.get("stadium_id"):
         stadium_id = int(cfg.stadium["stadium_id"])
+    stadium_files, stadium_name = _custom_stadium(cfg)
 
     home_count, away_count = cfg.controller_counts()
     user_controlled = 1 if home_count > 0 else 2
@@ -478,6 +501,10 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
         "lock_controllers": cfg.lock_controllers,
         "laws": {"rule_5022": cfg.law_5022, "rule_22m": cfg.law_22m},
         "stadium": stadium_id,
+        # a custom stadium: game path -> file (mod data) put over its slot's,
+        # and the name it shows in the game ({} / None: the stock stadium)
+        "stadium_files": stadium_files,
+        "stadium_name": stadium_name,
         "stadium_graphics": stadium_graphics,
         "adboards": _relative_to_mod_data(adboards) if adboards else "",
         "kick_off": kick_off,

@@ -11,6 +11,7 @@ Alternatively you can run this script directly, in this case the match data will
 
 
 """
+import hashlib
 import struct
 import os
 import time
@@ -624,8 +625,65 @@ def edit_teams_name(game_data):
                 file.write(teams_string_id[team])
                 file.write(game_data[team]['name'].encode('utf-8'))
                 file.write(b'\x00')
+            # a custom stadium's name over its slot's
+            stadium = game_data.get('stadium_name')
+            if stadium:
+                file.write(struct.pack('<H', stadium['string_id']))
+                file.write(stadium['name'].encode('utf-8'))
+                file.write(b'\x00')
     except Exception as e:
         log.error(f"Error while editing teams names in {game_strings_filepath}: {e}")
+
+# The custom stadium files put next to the exe by the last match (removed at
+# the next one: the loose files would otherwise replace the stock stadium for
+# good). Files the user dropped there by hand are never touched.
+STADIUM_MANIFEST = "r08mod_stadium_files.txt"
+
+
+def stadium_game_filename(game_path):
+  """The loose file name next to the exe that replaces `game_path` in
+  data.gob ("stadiums/auckland.day.big" or "stadiums/auckland.day" -> the
+  md5 of the path without its extension + the extension; .big by default)."""
+  base, ext = os.path.splitext(game_path)
+  if ext.lower() not in (".big", ".fsh", ".o", ".xml", ".csv"):
+    base, ext = game_path, ".big"
+  return hashlib.md5(base.lower().encode()).hexdigest() + ext.lower()
+
+
+def deploy_stadium_files(match_data):
+  """Remove the last match's custom stadium files, then put this match's
+  (match_data["stadium_files"]: game path -> file in mod data) over the
+  stadium slot's."""
+  game_dir = config.game_launcher_directory
+  manifest = os.path.join(game_dir, STADIUM_MANIFEST)
+  try:
+    with open(manifest, encoding="utf-8") as fh:
+      previous = [line.strip() for line in fh if line.strip()]
+  except OSError:
+    previous = []
+  for name in previous:
+    if os.path.basename(name) == name:          # a bare file name, never a path
+      try:
+        os.remove(os.path.join(game_dir, name))
+      except FileNotFoundError:
+        pass
+      except OSError as e:
+        log.warning(f"cannot remove the last custom stadium file {name}: {e}")
+  deployed = []
+  for game_path, source in (match_data.get("stadium_files") or {}).items():
+    name = stadium_game_filename(game_path)
+    if copy_file(os.path.join(config.mod_data_directory, source), os.path.join(game_dir, name)):
+      deployed.append(name)
+      log.info(f"Custom stadium: {source} -> {game_path} ({name})")
+  try:
+    if deployed:
+      with open(manifest, "w", encoding="utf-8") as fh:
+        fh.write("\n".join(deployed) + "\n")
+    elif os.path.exists(manifest):
+      os.remove(manifest)
+  except OSError as e:
+    log.warning(f"cannot update {manifest}: {e}")
+
 
 # This function copies all the "static files" necessary for the mod
 def copy_static_files():
