@@ -1,0 +1,13 @@
+{
+  "ashton_gate": {
+    "name": "Ashton Gate",
+    "country": "England",
+    "game_id": 6,
+    "scenes": {
+      "overcast": "ashton_gate.overcast.big"
+    },
+    "files": {
+      "frontend/textures/stadiums/bristol.o.fsh": "ashton_gate.o.fsh"
+    }
+  }
+}

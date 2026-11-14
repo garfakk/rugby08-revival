@@ -1,0 +1,10 @@
+{
+  "parc_y_scarlets": {
+    "name": "Parc y Scarlets",
+    "country": "Wales",
+    "game_id": 34,
+    "scenes": {
+      "day": "parc_y_scarlets.day.big"
+    }
+  }
+}

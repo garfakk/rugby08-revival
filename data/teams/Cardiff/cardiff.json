@@ -93,7 +93,7 @@
     "153219"
    ],
    "enabled": true,
-   "primaryStadium": "36"
+   "primaryStadium": "cardiff_arms_park"
   },
   "2010": {
    "name": "Cardiff",
@@ -189,7 +189,7 @@
     "158305"
    ],
    "enabled": true,
-   "primaryStadium": "36"
+   "primaryStadium": "cardiff_arms_park"
   },
   "2017": {
    "name": "Cardiff",
@@ -287,7 +287,7 @@
     "157195"
    ],
    "enabled": true,
-   "primaryStadium": "36"
+   "primaryStadium": "cardiff_arms_park"
   },
   "2018": {
    "name": "Cardiff",
@@ -388,7 +388,7 @@
     "156419"
    ],
    "enabled": true,
-   "primaryStadium": "36"
+   "primaryStadium": "cardiff_arms_park"
   },
   "2019": {
    "name": "Cardiff",
@@ -489,7 +489,7 @@
     "157800"
    ],
    "enabled": true,
-   "primaryStadium": "36"
+   "primaryStadium": "cardiff_arms_park"
   },
   "2022": {
    "name": "Cardiff",
@@ -584,7 +584,7 @@
     "146704"
    ],
    "enabled": true,
-   "primaryStadium": "36"
+   "primaryStadium": "cardiff_arms_park"
   },
   "2023": {
    "name": "Cardiff",
@@ -682,7 +682,7 @@
     "157575"
    ],
    "enabled": true,
-   "primaryStadium": "36"
+   "primaryStadium": "cardiff_arms_park"
   },
   "2024": {
    "name": "Cardiff",
@@ -778,7 +778,7 @@
     "146704"
    ],
    "enabled": true,
-   "primaryStadium": "36"
+   "primaryStadium": "cardiff_arms_park"
   },
   "2008": {
    "name": "Cardiff",
@@ -867,7 +867,7 @@
     "153219"
    ],
    "enabled": false,
-   "primaryStadium": "36"
+   "primaryStadium": "cardiff_arms_park"
   },
   "2020": {
    "name": "Cardiff",
@@ -960,7 +960,7 @@
     "157898"
    ],
    "enabled": false,
-   "primaryStadium": "36"
+   "primaryStadium": "cardiff_arms_park"
   },
   "2021": {
    "name": "Cardiff",
@@ -1059,7 +1059,7 @@
     "157836"
    ],
    "enabled": false,
-   "primaryStadium": "36"
+   "primaryStadium": "cardiff_arms_park"
   },
   "2016": {
    "name": "Cardiff",
@@ -1154,7 +1154,7 @@
     "157195"
    ],
    "enabled": false,
-   "primaryStadium": "36"
+   "primaryStadium": "cardiff_arms_park"
   }
  }
 }

@@ -1,0 +1,15 @@
+{
+  "51": {
+    "name": "Dunedin",
+    "country": "New Zealand",
+    "game_id": 51,
+    "scenes": {
+      "night": "dunedin.night.big",
+      "overcast": "dunedin.overcast.big"
+    },
+    "files": {
+      "frontend/textures/stadiums/dunedin.n.fsh": "dunedin.n.fsh",
+      "frontend/textures/stadiums/dunedin.o.fsh": "dunedin.o.fsh"
+    }
+  }
+}

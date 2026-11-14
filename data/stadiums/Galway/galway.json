@@ -1,0 +1,13 @@
+{
+  "galway": {
+    "name": "Galway",
+    "country": "Ireland",
+    "game_id": 9,
+    "scenes": {
+      "day": "galway.day.big"
+    },
+    "files": {
+      "frontend/textures/stadiums/bath.d.fsh": "galway.d.fsh"
+    }
+  }
+}

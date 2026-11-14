@@ -1,0 +1,13 @@
+{
+  "la_defense_arena": {
+    "name": "La Defense Arena",
+    "country": "France",
+    "game_id": 70,
+    "scenes": {
+      "night": "la_defense_arena.night.big"
+    },
+    "files": {
+      "frontend/textures/stadiums/stadedefrance.n.fsh": "la_defense_arena.n.fsh"
+    }
+  }
+}

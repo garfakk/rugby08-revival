@@ -1,0 +1,15 @@
+{
+  "stade_velodrome": {
+    "name": "Stade Velodrome",
+    "country": "France",
+    "game_id": 68,
+    "scenes": {
+      "day": "stade_velodrome.day.big",
+      "night": "stade_velodrome.night.big"
+    },
+    "files": {
+      "frontend/textures/stadiums/stadevelodrome.d.fsh": "stade_velodrome.d.fsh",
+      "frontend/textures/stadiums/stadevelodrome.n.fsh": "stade_velodrome.n.fsh"
+    }
+  }
+}

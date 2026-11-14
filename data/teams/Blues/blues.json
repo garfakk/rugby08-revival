@@ -82,7 +82,7 @@
     "156162"
    ],
    "enabled": false,
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   },
   "2010": {
    "name": "Blues",
@@ -169,7 +169,7 @@
     "156122"
    ],
    "enabled": true,
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   },
   "2022": {
    "name": "Blues",
@@ -260,7 +260,7 @@
     "155950"
    ],
    "enabled": false,
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   },
   "2023": {
    "name": "Blues",
@@ -346,7 +346,7 @@
     "155976"
    ],
    "enabled": true,
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   },
   "2024": {
    "name": "Blues",
@@ -430,7 +430,7 @@
     "155899"
    ],
    "enabled": true,
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   },
   "2008": {
    "name": "Blues",
@@ -514,7 +514,7 @@
     "156162"
    ],
    "enabled": false,
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   },
   "2018": {
    "name": "Blues",
@@ -612,7 +612,7 @@
     "155847"
    ],
    "enabled": true,
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   },
   "2019": {
    "name": "Blues",
@@ -709,7 +709,7 @@
     "155847"
    ],
    "enabled": true,
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   },
   "2020": {
    "name": "Blues",
@@ -790,7 +790,7 @@
     "154668"
    ],
    "enabled": false,
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   },
   "2021": {
    "name": "Blues",
@@ -871,7 +871,7 @@
     "154668"
    ],
    "enabled": false,
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   },
   "2016": {
    "name": "Blues",
@@ -968,7 +968,7 @@
     "155648"
    ],
    "enabled": false,
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   }
  }
 }

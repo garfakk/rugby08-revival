@@ -1,0 +1,11 @@
+{
+  "48": {
+    "name": "Christchurch",
+    "country": "New Zealand",
+    "game_id": 48,
+    "scenes": {
+      "day": "christchurch.day.big",
+      "night": "christchurch.night.big"
+    }
+  }
+}

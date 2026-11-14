@@ -1,0 +1,10 @@
+{
+  "8": {
+    "name": "Welford Road",
+    "country": "England",
+    "game_id": 8,
+    "scenes": {
+      "overcast": "welford_road.overcast.big"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "edinburgh": {
+    "name": "Edinburgh",
+    "country": "Scotland",
+    "game_id": 29,
+    "scenes": {
+      "overcast": "edinburgh.overcast.big"
+    },
+    "files": {
+      "frontend/textures/stadiums/murrayfield.o.fsh": "edinburgh.o.fsh"
+    }
+  }
+}

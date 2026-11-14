@@ -355,7 +355,7 @@
      }
     }
    },
-   "primaryStadium": "39",
+   "primaryStadium": "stadio_olimpico",
    "shirtNames": {
     "enabled": true
    }
@@ -528,7 +528,7 @@
     "152879",
     "152830"
    ],
-   "primaryStadium": "39"
+   "primaryStadium": "stadio_olimpico"
   },
   "2018": {
    "enabled": true,
@@ -620,7 +620,7 @@
     "152821",
     "153352"
    ],
-   "primaryStadium": "39"
+   "primaryStadium": "stadio_olimpico"
   },
   "2019": {
    "enabled": true,
@@ -712,7 +712,7 @@
     "152752",
     "152883"
    ],
-   "primaryStadium": "39"
+   "primaryStadium": "stadio_olimpico"
   },
   "2020": {
    "enabled": true,
@@ -811,7 +811,7 @@
     "153399",
     "153353"
    ],
-   "primaryStadium": "39"
+   "primaryStadium": "stadio_olimpico"
   },
   "2022": {
    "name": "Italy",
@@ -904,7 +904,7 @@
     "152596",
     "152828"
    ],
-   "primaryStadium": "39"
+   "primaryStadium": "stadio_olimpico"
   },
   "2023": {
    "name": "Italy",
@@ -1014,7 +1014,7 @@
     "152594",
     "152596"
    ],
-   "primaryStadium": "39",
+   "primaryStadium": "stadio_olimpico",
    "shirtNames": {
     "enabled": true
    }
@@ -1123,7 +1123,7 @@
     "145229",
     "146502"
    ],
-   "primaryStadium": "39",
+   "primaryStadium": "stadio_olimpico",
    "shirtNames": {
     "enabled": true
    }
@@ -1232,7 +1232,7 @@
     "enabled": true,
     "size": 32
    },
-   "primaryStadium": "39"
+   "primaryStadium": "stadio_olimpico"
   },
   "2007": {
    "enabled": false,
@@ -1500,7 +1500,7 @@
     "145056",
     "142914"
    ],
-   "primaryStadium": "39"
+   "primaryStadium": "stadio_olimpico"
   },
   "2013": {
    "enabled": false,
@@ -1589,7 +1589,7 @@
     "146988",
     "146989"
    ],
-   "primaryStadium": "39"
+   "primaryStadium": "stadio_olimpico"
   },
   "2014": {
    "enabled": false,
@@ -1681,7 +1681,7 @@
     "142834",
     "145056"
    ],
-   "primaryStadium": "39"
+   "primaryStadium": "stadio_olimpico"
   },
   "2015": {
    "enabled": false,
@@ -1766,7 +1766,7 @@
     "146995",
     "142757"
    ],
-   "primaryStadium": "39"
+   "primaryStadium": "stadio_olimpico"
   },
   "2017": {
    "enabled": false,
@@ -1860,7 +1860,7 @@
     "146982",
     "142757"
    ],
-   "primaryStadium": "39"
+   "primaryStadium": "stadio_olimpico"
   },
   "2021": {
    "enabled": false,
@@ -1957,7 +1957,7 @@
     "146461",
     "152833"
    ],
-   "primaryStadium": "39"
+   "primaryStadium": "stadio_olimpico"
   }
  }
 }

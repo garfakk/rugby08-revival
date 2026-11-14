@@ -1,0 +1,10 @@
+{
+  "thomond_park": {
+    "name": "Thomond Park",
+    "country": "Ireland",
+    "game_id": 24,
+    "scenes": {
+      "overcast": "thomond_park.overcast.big"
+    }
+  }
+}

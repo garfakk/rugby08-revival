@@ -98,7 +98,7 @@
     "158320"
    ],
    "enabled": true,
-   "primaryStadium": "24"
+   "primaryStadium": "thomond_park"
   },
   "2010": {
    "name": "Munster",
@@ -201,7 +201,7 @@
     "10292"
    ],
    "enabled": true,
-   "primaryStadium": "24"
+   "primaryStadium": "thomond_park"
   },
   "2017": {
    "name": "Munster",
@@ -305,7 +305,7 @@
     "157690"
    ],
    "enabled": true,
-   "primaryStadium": "24"
+   "primaryStadium": "thomond_park"
   },
   "2018": {
    "name": "Munster",
@@ -408,7 +408,7 @@
     "152797"
    ],
    "enabled": true,
-   "primaryStadium": "24"
+   "primaryStadium": "thomond_park"
   },
   "2019": {
    "name": "Munster",
@@ -513,7 +513,7 @@
     "157585"
    ],
    "enabled": true,
-   "primaryStadium": "24"
+   "primaryStadium": "thomond_park"
   },
   "2022": {
    "name": "Munster",
@@ -616,7 +616,7 @@
     "158129"
    ],
    "enabled": true,
-   "primaryStadium": "24"
+   "primaryStadium": "thomond_park"
   },
   "2023": {
    "name": "Munster",
@@ -707,7 +707,7 @@
     "157131"
    ],
    "enabled": true,
-   "primaryStadium": "24"
+   "primaryStadium": "thomond_park"
   },
   "2024": {
    "name": "Munster",
@@ -806,7 +806,7 @@
     "158023"
    ],
    "enabled": true,
-   "primaryStadium": "24"
+   "primaryStadium": "thomond_park"
   },
   "2008": {
    "name": "Munster",
@@ -898,7 +898,7 @@
     "158320"
    ],
    "enabled": false,
-   "primaryStadium": "24"
+   "primaryStadium": "thomond_park"
   },
   "2020": {
    "name": "Munster",
@@ -996,7 +996,7 @@
     "157986"
    ],
    "enabled": false,
-   "primaryStadium": "24"
+   "primaryStadium": "thomond_park"
   },
   "2021": {
    "name": "Munster",
@@ -1095,7 +1095,7 @@
     "145133"
    ],
    "enabled": false,
-   "primaryStadium": "24"
+   "primaryStadium": "thomond_park"
   },
   "2016": {
    "name": "Munster",
@@ -1191,7 +1191,7 @@
     "157690"
    ],
    "enabled": false,
-   "primaryStadium": "24"
+   "primaryStadium": "thomond_park"
   },
   "2013": {
    "name": "Munster",
@@ -1295,7 +1295,7 @@
     "10292"
    ],
    "enabled": true,
-   "primaryStadium": "24"
+   "primaryStadium": "thomond_park"
   }
  }
 }

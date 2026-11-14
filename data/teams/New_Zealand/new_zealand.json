@@ -87,7 +87,7 @@
     "147896",
     "142800"
    ],
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   },
   "2009": {
    "name": "New Zealand",
@@ -180,7 +180,7 @@
     "142738",
     "142457"
    ],
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   },
   "2024": {
    "name": "New Zealand",
@@ -341,7 +341,7 @@
      }
     }
    },
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   },
   "2010": {
    "name": "New Zealand",
@@ -443,7 +443,7 @@
     "153995",
     "153669"
    ],
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   },
   "2022": {
    "name": "New Zealand",
@@ -534,7 +534,7 @@
     "153674",
     "153962"
    ],
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   },
   "2023": {
    "name": "New Zealand",
@@ -621,7 +621,7 @@
     "153312",
     "153305"
    ],
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   },
   "2016": {
    "enabled": true,
@@ -716,7 +716,7 @@
     "145419",
     "146308"
    ],
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   },
   "2018": {
    "enabled": true,
@@ -818,7 +818,7 @@
     "153663",
     "143160"
    ],
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   },
   "2019": {
    "enabled": true,
@@ -919,7 +919,7 @@
     "153953",
     "153954"
    ],
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   },
   "2007": {
    "enabled": false,
@@ -1010,7 +1010,7 @@
     "10820",
     "144034"
    ],
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   },
   "2011": {
    "enabled": false,
@@ -1098,7 +1098,7 @@
     "143245",
     "153597"
    ],
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   },
   "2012": {
    "enabled": false,
@@ -1193,7 +1193,7 @@
     "145054",
     "143325"
    ],
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   },
   "2013": {
    "enabled": false,
@@ -1281,7 +1281,7 @@
     "147909",
     "144391"
    ],
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   },
   "2014": {
    "enabled": false,
@@ -1373,7 +1373,7 @@
     "147912",
     "145017"
    ],
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   },
   "2015": {
    "enabled": false,
@@ -1462,7 +1462,7 @@
     "147914",
     "145001"
    ],
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   },
   "2017": {
    "enabled": false,
@@ -1555,7 +1555,7 @@
     "145632",
     "145312"
    ],
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   },
   "2020": {
    "name": "New Zealand",
@@ -1643,7 +1643,7 @@
     "155722",
     "153961"
    ],
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   },
   "2021": {
    "enabled": false,
@@ -1728,7 +1728,7 @@
     "153665",
     "153961"
    ],
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   },
   "2025": {
    "enabled": false,
@@ -1819,7 +1819,7 @@
     "146435",
     "146040"
    ],
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   },
   "2026": {
    "enabled": false,
@@ -1913,7 +1913,7 @@
     "147927",
     "144468"
    ],
-   "primaryStadium": "49"
+   "primaryStadium": "eden_park"
   }
  }
 }

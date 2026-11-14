@@ -90,7 +90,7 @@
     "143796",
     "153272"
    ],
-   "primaryStadium": "43"
+   "primaryStadium": "estadio_jose_amalfitani"
   },
   "2009": {
    "name": "Argentina",
@@ -180,7 +180,7 @@
     "147144",
     "153188"
    ],
-   "primaryStadium": "43"
+   "primaryStadium": "estadio_jose_amalfitani"
   },
   "2018": {
    "name": "Argentina",
@@ -272,7 +272,7 @@
     "153128",
     "153134"
    ],
-   "primaryStadium": "43"
+   "primaryStadium": "estadio_jose_amalfitani"
   },
   "2019": {
    "name": "Argentina",
@@ -364,7 +364,7 @@
     "153132",
     "153717"
    ],
-   "primaryStadium": "43"
+   "primaryStadium": "estadio_jose_amalfitani"
   },
   "2022": {
    "name": "Argentina",
@@ -456,7 +456,7 @@
     "153966",
     "153119"
    ],
-   "primaryStadium": "43"
+   "primaryStadium": "estadio_jose_amalfitani"
   },
   "2023": {
    "name": "Argentina",
@@ -543,7 +543,7 @@
     "146818",
     "142332"
    ],
-   "primaryStadium": "43"
+   "primaryStadium": "estadio_jose_amalfitani"
   },
   "2024": {
    "name": "Argentina",
@@ -699,7 +699,7 @@
      }
     }
    },
-   "primaryStadium": "43"
+   "primaryStadium": "estadio_jose_amalfitani"
   },
   "2010": {
    "name": "Argentina",
@@ -779,7 +779,7 @@
     "153277",
     "153280"
    ],
-   "primaryStadium": "43"
+   "primaryStadium": "estadio_jose_amalfitani"
   },
   "2016": {
    "enabled": true,
@@ -857,7 +857,7 @@
     "153109",
     "153112"
    ],
-   "primaryStadium": "43"
+   "primaryStadium": "estadio_jose_amalfitani"
   },
   "2025": {
    "enabled": true,
@@ -938,7 +938,7 @@
     "153114",
     "153709"
    ],
-   "primaryStadium": "43"
+   "primaryStadium": "estadio_jose_amalfitani"
   },
   "2013": {
    "enabled": true,
@@ -1031,7 +1031,7 @@
     "147165",
     "147174"
    ],
-   "primaryStadium": "43"
+   "primaryStadium": "estadio_jose_amalfitani"
   },
   "2020": {
    "name": "Argentina",
@@ -1118,7 +1118,7 @@
     "145103",
     "153115"
    ],
-   "primaryStadium": "43"
+   "primaryStadium": "estadio_jose_amalfitani"
   },
   "2012": {
    "enabled": false,
@@ -1217,7 +1217,7 @@
     "145186",
     "142753"
    ],
-   "primaryStadium": "43"
+   "primaryStadium": "estadio_jose_amalfitani"
   },
   "2014": {
    "enabled": false,
@@ -1316,7 +1316,7 @@
     "147178",
     "145103"
    ],
-   "primaryStadium": "43"
+   "primaryStadium": "estadio_jose_amalfitani"
   },
   "2015": {
    "enabled": false,
@@ -1400,7 +1400,7 @@
     "147185",
     "145103"
    ],
-   "primaryStadium": "43"
+   "primaryStadium": "estadio_jose_amalfitani"
   },
   "2017": {
    "enabled": false,
@@ -1487,7 +1487,7 @@
     "147161",
     "147193"
    ],
-   "primaryStadium": "43"
+   "primaryStadium": "estadio_jose_amalfitani"
   },
   "2021": {
    "enabled": false,
@@ -1580,7 +1580,7 @@
     "153117",
     "146092"
    ],
-   "primaryStadium": "43"
+   "primaryStadium": "estadio_jose_amalfitani"
   },
   "2026": {
    "enabled": false,
@@ -1678,7 +1678,7 @@
     "147222",
     "147223"
    ],
-   "primaryStadium": "43"
+   "primaryStadium": "estadio_jose_amalfitani"
   }
  }
 }

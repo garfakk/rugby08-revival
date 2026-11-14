@@ -1,0 +1,16 @@
+{
+  "salford_city_stadium": {
+    "name": "Salford City Stadium",
+    "country": "England",
+    "game_id": 75,
+    "scenes": {
+      "overcast": "salford_city_stadium.overcast.big",
+      "night": "salford_city_stadium.night.big"
+    },
+    "files": {
+      "frontend/textures/stadiums/edgeleypark.o.fsh": "salford_city_stadium.o.fsh",
+      "frontend/textures/stadiums/edgeleypark.n.fsh": "salford_city_stadium.n.fsh",
+      "xml/config/stadiuminfo.xml": "stadiuminfo.xml"
+    }
+  }
+}

@@ -317,7 +317,7 @@
     "142273"
    ],
    "enabled": true,
-   "primaryStadium": "78",
+   "primaryStadium": "barnet_copthall",
    "shirtNames": {
     "enabled": true
    }
@@ -430,7 +430,7 @@
     "157204"
    ],
    "enabled": true,
-   "primaryStadium": "78",
+   "primaryStadium": "barnet_copthall",
    "shirtNames": {
     "enabled": true
    }
@@ -548,7 +548,7 @@
     "157773"
    ],
    "enabled": true,
-   "primaryStadium": "78",
+   "primaryStadium": "barnet_copthall",
    "shirtNames": {
     "enabled": true
    }
@@ -662,7 +662,7 @@
     "145943"
    ],
    "enabled": true,
-   "primaryStadium": "78",
+   "primaryStadium": "barnet_copthall",
    "shirtNames": {
     "enabled": true
    }
@@ -777,7 +777,7 @@
     "157607"
    ],
    "enabled": true,
-   "primaryStadium": "78",
+   "primaryStadium": "barnet_copthall",
    "shirtNames": {
     "enabled": true
    }
@@ -888,7 +888,7 @@
     "157999"
    ],
    "enabled": true,
-   "primaryStadium": "78",
+   "primaryStadium": "barnet_copthall",
    "shirtNames": {
     "enabled": true
    }
@@ -1075,7 +1075,7 @@
     "158327"
    ],
    "enabled": false,
-   "primaryStadium": "78"
+   "primaryStadium": "barnet_copthall"
   },
   "2021": {
    "name": "Saracens",
@@ -1169,7 +1169,7 @@
     "158002"
    ],
    "enabled": false,
-   "primaryStadium": "78"
+   "primaryStadium": "barnet_copthall"
   },
   "2016": {
    "name": "Saracens",
@@ -1262,7 +1262,7 @@
     "142273"
    ],
    "enabled": false,
-   "primaryStadium": "78"
+   "primaryStadium": "barnet_copthall"
   }
  }
 }

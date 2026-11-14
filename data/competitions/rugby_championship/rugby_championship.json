@@ -116,7 +116,7 @@
                 "group": "A",
                 "home": "1010",
                 "away": "1002",
-                "stadium": "49",
+                "stadium": "eden_park",
                 "venue": "Eden Park, Auckland",
                 "real_score": "22–0",
                 "real_tries": [
@@ -432,7 +432,7 @@
                 "group": "A",
                 "home": "1010",
                 "away": "1015",
-                "stadium": "49",
+                "stadium": "eden_park",
                 "venue": "Eden Park, Auckland",
                 "real_score": "29–15",
                 "real_tries": [
@@ -636,7 +636,7 @@
                 "group": "A",
                 "home": "1010",
                 "away": "1002",
-                "stadium": "49",
+                "stadium": "eden_park",
                 "venue": "Eden Park, Auckland",
                 "real_score": "51–20",
                 "real_tries": [
@@ -1156,7 +1156,7 @@
                 "group": "A",
                 "home": "1001",
                 "away": "1010",
-                "stadium": "43",
+                "stadium": "estadio_jose_amalfitani",
                 "venue": "José Amalfitani Stadium, Buenos Aires",
                 "real_score": "17–36",
                 "real_tries": [
@@ -1416,7 +1416,7 @@
                 "group": "A",
                 "home": "1001",
                 "away": "1010",
-                "stadium": "43",
+                "stadium": "estadio_jose_amalfitani",
                 "venue": "José Amalfitani Stadium, Buenos Aires",
                 "real_score": "10–36",
                 "real_tries": [
@@ -1592,7 +1592,7 @@
                 "group": "A",
                 "home": "1010",
                 "away": "1002",
-                "stadium": "49",
+                "stadium": "eden_park",
                 "venue": "Eden Park, Auckland",
                 "real_score": "40–12",
                 "real_tries": [
@@ -1676,7 +1676,7 @@
                 "group": "A",
                 "home": "1001",
                 "away": "1010",
-                "stadium": "43",
+                "stadium": "estadio_jose_amalfitani",
                 "venue": "José Amalfitani Stadium, Buenos Aires",
                 "real_score": "17–35",
                 "real_tries": [
@@ -1810,7 +1810,7 @@
                 "group": "A",
                 "home": "1001",
                 "away": "1010",
-                "stadium": "43",
+                "stadium": "estadio_jose_amalfitani",
                 "venue": "José Amalfitani Stadium, Buenos Aires",
                 "real_score": "16–20",
                 "real_tries": [
@@ -2174,7 +2174,7 @@
                 "group": "A",
                 "home": "1010",
                 "away": "1002",
-                "stadium": "49",
+                "stadium": "eden_park",
                 "venue": "Eden Park, Auckland",
                 "real_score": "57–22",
                 "real_tries": [
@@ -2532,7 +2532,7 @@
                 "group": "A",
                 "home": "1002",
                 "away": "1010",
-                "stadium": "1",
+                "stadium": "melbourne",
                 "venue": "Docklands Stadium, Melbourne",
                 "real_score": "37–39",
                 "real_tries": [
@@ -2574,7 +2574,7 @@
                 "group": "A",
                 "home": "1010",
                 "away": "1002",
-                "stadium": "49",
+                "stadium": "eden_park",
                 "venue": "Eden Park, Auckland",
                 "real_score": "40–14",
                 "real_tries": [
@@ -2610,7 +2610,7 @@
         "_sources": [
           "https://en.wikipedia.org/wiki/2022_Rugby_Championship"
         ],
-        "_venue_note": "Game stadium stand-ins: Adelaide Oval, Adelaide → Australia Stadium (1); Docklands Stadium, Melbourne → Australia Stadium (1); Estadio Malvinas Argentinas, Mendoza → Buenos Aires (43); Estadio San Juan del Bicentenario, San Juan → Buenos Aires (43); Mbombela Stadium, Mbombela → Pretoria (55)."
+        "_venue_note": "Game stadium stand-ins: Adelaide Oval, Adelaide → Australia Stadium (1); Estadio Malvinas Argentinas, Mendoza → Buenos Aires (43); Estadio San Juan del Bicentenario, San Juan → Buenos Aires (43); Mbombela Stadium, Mbombela → Pretoria (55)."
       }
     },
     "2023": {
@@ -2750,7 +2750,7 @@
                 "group": "A",
                 "home": "1002",
                 "away": "1010",
-                "stadium": "1",
+                "stadium": "melbourne",
                 "venue": "Melbourne Cricket Ground, Melbourne",
                 "real_score": "7–38",
                 "real_tries": [
@@ -2786,7 +2786,7 @@
         "_sources": [
           "https://en.wikipedia.org/wiki/2023_Rugby_Championship"
         ],
-        "_venue_note": "Game stadium stand-ins: Estadio Malvinas Argentinas, Mendoza → Buenos Aires (43); Melbourne Cricket Ground, Melbourne → Australia Stadium (1)."
+        "_venue_note": "Game stadium stand-ins: Estadio Malvinas Argentinas, Mendoza → Buenos Aires (43)"
       }
     },
     "2024": {
@@ -2884,7 +2884,7 @@
                 "group": "A",
                 "home": "1010",
                 "away": "1001",
-                "stadium": "49",
+                "stadium": "eden_park",
                 "venue": "Eden Park, Auckland",
                 "real_score": "42–10",
                 "real_tries": [
@@ -3158,7 +3158,7 @@
                 "group": "A",
                 "home": "1001",
                 "away": "1010",
-                "stadium": "43",
+                "stadium": "estadio_jose_amalfitani",
                 "venue": "José Amalfitani Stadium, Buenos Aires",
                 "real_score": "29–23",
                 "real_tries": [
@@ -3186,7 +3186,7 @@
                 "group": "A",
                 "home": "1010",
                 "away": "1015",
-                "stadium": "49",
+                "stadium": "eden_park",
                 "venue": "Eden Park, Auckland",
                 "real_score": "24–17",
                 "real_tries": [
@@ -3228,7 +3228,7 @@
                 "group": "A",
                 "home": "1010",
                 "away": "1002",
-                "stadium": "49",
+                "stadium": "eden_park",
                 "venue": "Eden Park, Auckland",
                 "real_score": "33–24",
                 "real_tries": [

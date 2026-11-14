@@ -1,0 +1,13 @@
+{
+  "coventry_arena": {
+    "name": "Coventry Arena",
+    "country": "England",
+    "game_id": 9,
+    "scenes": {
+      "day": "coventry_arena.day.big"
+    },
+    "files": {
+      "frontend/textures/stadiums/bath.d.fsh": "coventry_arena.d.fsh"
+    }
+  }
+}

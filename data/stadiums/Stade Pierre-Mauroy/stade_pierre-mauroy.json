@@ -1,0 +1,13 @@
+{
+  "stade_pierre-mauroy": {
+    "name": "Stade Pierre-Mauroy",
+    "country": "France",
+    "game_id": 69,
+    "scenes": {
+      "night": "stade_pierre-mauroy.night.big"
+    },
+    "files": {
+      "frontend/textures/stadiums/felixbollaert.n.fsh": "stade_pierre-mauroy.n.fsh"
+    }
+  }
+}

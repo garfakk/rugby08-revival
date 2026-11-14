@@ -112,7 +112,7 @@
     "155240",
     "155339"
    ],
-   "primaryStadium": "79",
+   "primaryStadium": "ashton_gate",
    "shirtNames": {
     "enabled": true,
     "size": 36
@@ -228,7 +228,7 @@
     "155317",
     "155370"
    ],
-   "primaryStadium": "79",
+   "primaryStadium": "ashton_gate",
    "shirtNames": {
     "enabled": true
    }
@@ -348,7 +348,7 @@
     "155356",
     "155364"
    ],
-   "primaryStadium": "79",
+   "primaryStadium": "ashton_gate",
    "shirtNames": {
     "enabled": true
    }
@@ -464,7 +464,7 @@
     "155367",
     "155383"
    ],
-   "primaryStadium": "79",
+   "primaryStadium": "ashton_gate",
    "shirtNames": {
     "enabled": true
    }
@@ -580,7 +580,7 @@
     "158178",
     "155359"
    ],
-   "primaryStadium": "79",
+   "primaryStadium": "ashton_gate",
    "shirtNames": {
     "enabled": true
    }
@@ -889,7 +889,7 @@
     "144391",
     "155343"
    ],
-   "primaryStadium": "79"
+   "primaryStadium": "ashton_gate"
   },
   "2020": {
    "enabled": false,
@@ -977,7 +977,7 @@
     "155343",
     "155330"
    ],
-   "primaryStadium": "79"
+   "primaryStadium": "ashton_gate"
   },
   "2021": {
    "enabled": false,
@@ -1075,7 +1075,7 @@
     "155269",
     "155266"
    ],
-   "primaryStadium": "79"
+   "primaryStadium": "ashton_gate"
   },
   "2010": {
    "name": "Bristol",
@@ -1270,7 +1270,7 @@
     "155240",
     "155339"
    ],
-   "primaryStadium": "79"
+   "primaryStadium": "ashton_gate"
   }
  }
 }

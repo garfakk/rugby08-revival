@@ -1,0 +1,16 @@
+{
+  "melbourne": {
+    "name": "Melbourne",
+    "country": "Australia",
+    "game_id": 31,
+    "scenes": {
+      "night": "melbourne.night.big",
+      "overcast": "melbourne.overcast.big"
+    },
+    "files": {
+      "frontend/textures/stadiums/perthsubiaco.n.fsh": "melbourne.n.fsh",
+      "frontend/textures/stadiums/perthsubiaco.o.fsh": "melbourne.o.fsh",
+      "xml/config/stadiuminfo.xml": "stadiuminfo.xml"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "stade_marcel_michelin": {
+    "name": "Stade Marcel Michelin",
+    "country": "France",
+    "game_id": 26,
+    "scenes": {
+      "day": "stade_marcel_michelin.day.big",
+      "night": "stade_marcel_michelin.night.big"
+    },
+    "files": {
+      "frontend/textures/stadiums/clermont.d.fsh": "stade_marcel_michelin.d.fsh",
+      "xml/config/stadiuminfo.xml": "stadiuminfo.xml"
+    }
+  }
+}

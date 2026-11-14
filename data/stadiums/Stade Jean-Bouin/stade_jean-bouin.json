@@ -1,0 +1,13 @@
+{
+  "stade_jean-bouin": {
+    "name": "Stade Jean-Bouin",
+    "country": "France",
+    "game_id": 27,
+    "scenes": {
+      "overcast": "stade_jean-bouin.overcast.big"
+    },
+    "files": {
+      "frontend/textures/stadiums/paris.o.fsh": "stade_jean-bouin.o.fsh"
+    }
+  }
+}

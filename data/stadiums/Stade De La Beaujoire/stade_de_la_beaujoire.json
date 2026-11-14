@@ -1,0 +1,13 @@
+{
+  "stade_de_la_beaujoire": {
+    "name": "Stade De La Beaujoire",
+    "country": "France",
+    "game_id": 65,
+    "scenes": {
+      "overcast": "stade_de_la_beaujoire.overcast.big"
+    },
+    "files": {
+      "frontend/textures/stadiums/stadedelabeaujoire.o.fsh": "stade_de_la_beaujoire.o.fsh"
+    }
+  }
+}

@@ -82,7 +82,7 @@
     "158294"
    ],
    "enabled": false,
-   "primaryStadium": "18"
+   "primaryStadium": "ravenhill_stadium"
   },
   "2009": {
    "name": "Ulster",
@@ -174,7 +174,7 @@
     "158294"
    ],
    "enabled": true,
-   "primaryStadium": "18"
+   "primaryStadium": "ravenhill_stadium"
   },
   "2010": {
    "name": "Ulster",
@@ -265,7 +265,7 @@
     "156945"
    ],
    "enabled": true,
-   "primaryStadium": "18"
+   "primaryStadium": "ravenhill_stadium"
   },
   "2017": {
    "name": "Ulster",
@@ -355,7 +355,7 @@
     "157123"
    ],
    "enabled": true,
-   "primaryStadium": "18"
+   "primaryStadium": "ravenhill_stadium"
   },
   "2018": {
    "name": "Ulster",
@@ -449,7 +449,7 @@
     "155434",
     "157813"
    ],
-   "primaryStadium": "18"
+   "primaryStadium": "ravenhill_stadium"
   },
   "2019": {
    "name": "Ulster",
@@ -546,7 +546,7 @@
     "158287"
    ],
    "enabled": true,
-   "primaryStadium": "18"
+   "primaryStadium": "ravenhill_stadium"
   },
   "2020": {
    "name": "Ulster",
@@ -637,7 +637,7 @@
     "157973"
    ],
    "enabled": false,
-   "primaryStadium": "18"
+   "primaryStadium": "ravenhill_stadium"
   },
   "2021": {
    "name": "Ulster",
@@ -734,7 +734,7 @@
     "152532"
    ],
    "enabled": false,
-   "primaryStadium": "18"
+   "primaryStadium": "ravenhill_stadium"
   },
   "2022": {
    "name": "Ulster",
@@ -828,7 +828,7 @@
     "152527"
    ],
    "enabled": true,
-   "primaryStadium": "18"
+   "primaryStadium": "ravenhill_stadium"
   },
   "2023": {
    "name": "Ulster",
@@ -913,7 +913,7 @@
     "158179"
    ],
    "enabled": true,
-   "primaryStadium": "18"
+   "primaryStadium": "ravenhill_stadium"
   },
   "2024": {
    "name": "Ulster",
@@ -1005,7 +1005,7 @@
     "157812"
    ],
    "enabled": true,
-   "primaryStadium": "18"
+   "primaryStadium": "ravenhill_stadium"
   },
   "2016": {
    "name": "Ulster",
@@ -1095,7 +1095,7 @@
     "157123"
    ],
    "enabled": false,
-   "primaryStadium": "18"
+   "primaryStadium": "ravenhill_stadium"
   },
   "2013": {
    "name": "Ulster",
@@ -1186,7 +1186,7 @@
     "156945"
    ],
    "enabled": true,
-   "primaryStadium": "18"
+   "primaryStadium": "ravenhill_stadium"
   }
  }
 }

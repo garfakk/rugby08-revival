@@ -1,0 +1,10 @@
+{
+  "stade_chaban-delmas": {
+    "name": "Stade Chaban-Delmas",
+    "country": "France",
+    "game_id": 22,
+    "scenes": {
+      "day": "stade_chaban-delmas.day.big"
+    }
+  }
+}

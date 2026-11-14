@@ -1,0 +1,13 @@
+{
+  "stade_de_nice": {
+    "name": "Stade de Nice",
+    "country": "France",
+    "game_id": 68,
+    "scenes": {
+      "day": "stade_de_nice.day.big"
+    },
+    "files": {
+      "frontend/textures/stadiums/stadevelodrome.d.fsh": "stade_de_nice.d.fsh"
+    }
+  }
+}

@@ -334,7 +334,7 @@
     "145806"
    ],
    "enabled": true,
-   "primaryStadium": "76",
+   "primaryStadium": "salford_city_stadium",
    "shirtNames": {
     "enabled": true
    }
@@ -434,7 +434,7 @@
     "156416"
    ],
    "enabled": true,
-   "primaryStadium": "76",
+   "primaryStadium": "salford_city_stadium",
    "shirtNames": {
     "enabled": true
    }
@@ -550,7 +550,7 @@
     "146088"
    ],
    "enabled": true,
-   "primaryStadium": "76",
+   "primaryStadium": "salford_city_stadium",
    "shirtNames": {
     "enabled": true
    }
@@ -664,7 +664,7 @@
     "157087"
    ],
    "enabled": true,
-   "primaryStadium": "76",
+   "primaryStadium": "salford_city_stadium",
    "shirtNames": {
     "enabled": true
    }
@@ -777,7 +777,7 @@
     "158101"
    ],
    "enabled": true,
-   "primaryStadium": "76",
+   "primaryStadium": "salford_city_stadium",
    "shirtNames": {
     "enabled": true
    }
@@ -889,7 +889,7 @@
     "11625"
    ],
    "enabled": true,
-   "primaryStadium": "76",
+   "primaryStadium": "salford_city_stadium",
    "shirtNames": {
     "enabled": true
    }
@@ -1073,7 +1073,7 @@
     "145993"
    ],
    "enabled": false,
-   "primaryStadium": "76"
+   "primaryStadium": "salford_city_stadium"
   },
   "2021": {
    "name": "Sale",
@@ -1166,7 +1166,7 @@
     "157492"
    ],
    "enabled": false,
-   "primaryStadium": "76"
+   "primaryStadium": "salford_city_stadium"
   },
   "2016": {
    "name": "Sale",
@@ -1253,7 +1253,7 @@
     "145806"
    ],
    "enabled": false,
-   "primaryStadium": "76"
+   "primaryStadium": "salford_city_stadium"
   }
  }
 }

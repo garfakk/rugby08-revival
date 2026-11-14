@@ -117,7 +117,7 @@
     "156190"
    ],
    "enabled": true,
-   "primaryStadium": "12",
+   "primaryStadium": "kingsholm",
    "shirtNames": {
     "enabled": true
    }
@@ -238,7 +238,7 @@
     "155328"
    ],
    "enabled": true,
-   "primaryStadium": "12",
+   "primaryStadium": "kingsholm",
    "shirtNames": {
     "enabled": true
    }
@@ -357,7 +357,7 @@
     "157105"
    ],
    "enabled": true,
-   "primaryStadium": "12",
+   "primaryStadium": "kingsholm",
    "shirtNames": {
     "enabled": true
    }
@@ -472,7 +472,7 @@
     "157736"
    ],
    "enabled": true,
-   "primaryStadium": "12",
+   "primaryStadium": "kingsholm",
    "shirtNames": {
     "enabled": true
    }
@@ -590,7 +590,7 @@
     "154237"
    ],
    "enabled": true,
-   "primaryStadium": "12",
+   "primaryStadium": "kingsholm",
    "shirtNames": {
     "enabled": true
    }
@@ -697,7 +697,7 @@
     "158090"
    ],
    "enabled": true,
-   "primaryStadium": "12",
+   "primaryStadium": "kingsholm",
    "shirtNames": {
     "enabled": true
    }
@@ -812,7 +812,7 @@
     "157856"
    ],
    "enabled": true,
-   "primaryStadium": "12",
+   "primaryStadium": "kingsholm",
    "shirtNames": {
     "enabled": true
    }
@@ -924,7 +924,7 @@
     "152430"
    ],
    "enabled": true,
-   "primaryStadium": "12",
+   "primaryStadium": "kingsholm",
    "shirtNames": {
     "enabled": true
    }
@@ -1015,7 +1015,7 @@
     "157391"
    ],
    "enabled": false,
-   "primaryStadium": "12"
+   "primaryStadium": "kingsholm"
   },
   "2020": {
    "name": "Gloucester",
@@ -1103,7 +1103,7 @@
     "145480"
    ],
    "enabled": false,
-   "primaryStadium": "12"
+   "primaryStadium": "kingsholm"
   },
   "2021": {
    "name": "Gloucester",
@@ -1202,7 +1202,7 @@
     "155914"
    ],
    "enabled": false,
-   "primaryStadium": "12"
+   "primaryStadium": "kingsholm"
   },
   "2016": {
    "name": "Gloucester",
@@ -1295,7 +1295,7 @@
     "157105"
    ],
    "enabled": false,
-   "primaryStadium": "12"
+   "primaryStadium": "kingsholm"
   }
  }
 }

@@ -380,7 +380,7 @@
     "157573"
    ],
    "enabled": true,
-   "primaryStadium": "28"
+   "primaryStadium": "edinburgh"
   },
   "2019": {
    "name": "Edinburgh",
@@ -483,7 +483,7 @@
     "157878"
    ],
    "enabled": true,
-   "primaryStadium": "28"
+   "primaryStadium": "edinburgh"
   },
   "2022": {
    "name": "Edinburgh",
@@ -575,7 +575,7 @@
     "155387"
    ],
    "enabled": true,
-   "primaryStadium": "29"
+   "primaryStadium": "edinburgh"
   },
   "2023": {
    "name": "Edinburgh",
@@ -663,7 +663,7 @@
     "158166"
    ],
    "enabled": true,
-   "primaryStadium": "28"
+   "primaryStadium": "edinburgh"
   },
   "2024": {
    "name": "Edinburgh",
@@ -754,7 +754,7 @@
     "153787"
    ],
    "enabled": true,
-   "primaryStadium": "28"
+   "primaryStadium": "edinburgh"
   },
   "2008": {
    "name": "Edinburgh",
@@ -931,7 +931,7 @@
     "153792"
    ],
    "enabled": false,
-   "primaryStadium": "29"
+   "primaryStadium": "edinburgh"
   },
   "2021": {
    "name": "Edinburgh",
@@ -1028,7 +1028,7 @@
     "156440"
    ],
    "enabled": false,
-   "primaryStadium": "29"
+   "primaryStadium": "edinburgh"
   },
   "2016": {
    "name": "Edinburgh",

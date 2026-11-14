@@ -88,7 +88,7 @@
     "154554",
     "143378"
    ],
-   "primaryStadium": "44"
+   "primaryStadium": "japan_national_stadium"
   },
   "2009": {
    "name": "Japan",
@@ -183,7 +183,7 @@
     "147656",
     "154554"
    ],
-   "primaryStadium": "44"
+   "primaryStadium": "japan_national_stadium"
   },
   "2024": {
    "name": "Japan",
@@ -336,7 +336,7 @@
      }
     }
    },
-   "primaryStadium": "44"
+   "primaryStadium": "japan_national_stadium"
   },
   "2022": {
    "name": "Japan",
@@ -434,7 +434,7 @@
     "146046",
     "146500"
    ],
-   "primaryStadium": "44"
+   "primaryStadium": "japan_national_stadium"
   },
   "2023": {
    "name": "Japan",
@@ -525,7 +525,7 @@
     "154561",
     "146144"
    ],
-   "primaryStadium": "44"
+   "primaryStadium": "japan_national_stadium"
   },
   "2010": {
    "enabled": false,
@@ -598,7 +598,7 @@
     "154252",
     "154254"
    ],
-   "primaryStadium": "44"
+   "primaryStadium": "japan_national_stadium"
   },
   "2012": {
    "enabled": false,
@@ -681,7 +681,7 @@
     "147696",
     "147697"
    ],
-   "primaryStadium": "44"
+   "primaryStadium": "japan_national_stadium"
   },
   "2013": {
    "enabled": false,
@@ -765,7 +765,7 @@
     "147717",
     "147697"
    ],
-   "primaryStadium": "44"
+   "primaryStadium": "japan_national_stadium"
   },
   "2014": {
    "enabled": false,
@@ -850,7 +850,7 @@
     "147720",
     "145317"
    ],
-   "primaryStadium": "44"
+   "primaryStadium": "japan_national_stadium"
   },
   "2015": {
    "enabled": false,
@@ -928,7 +928,7 @@
     "145348",
     "147703"
    ],
-   "primaryStadium": "44"
+   "primaryStadium": "japan_national_stadium"
   },
   "2016": {
    "enabled": true,
@@ -1016,7 +1016,7 @@
     "154574",
     "154565"
    ],
-   "primaryStadium": "44"
+   "primaryStadium": "japan_national_stadium"
   },
   "2017": {
    "enabled": false,
@@ -1113,7 +1113,7 @@
     "147672",
     "147723"
    ],
-   "primaryStadium": "44"
+   "primaryStadium": "japan_national_stadium"
   },
   "2018": {
    "enabled": true,
@@ -1208,7 +1208,7 @@
     "145348",
     "154575"
    ],
-   "primaryStadium": "44"
+   "primaryStadium": "japan_national_stadium"
   },
   "2020": {
    "enabled": true,
@@ -1299,7 +1299,7 @@
     "154583",
     "154577"
    ],
-   "primaryStadium": "44"
+   "primaryStadium": "japan_national_stadium"
   },
   "2021": {
    "enabled": false,
@@ -1384,7 +1384,7 @@
     "154595",
     "145348"
    ],
-   "primaryStadium": "44"
+   "primaryStadium": "japan_national_stadium"
   },
   "2025": {
    "enabled": false,
@@ -1479,7 +1479,7 @@
     "147809",
     "146811"
    ],
-   "primaryStadium": "44"
+   "primaryStadium": "japan_national_stadium"
   },
   "2026": {
    "enabled": false,
@@ -1578,7 +1578,7 @@
     "147835",
     "147836"
    ],
-   "primaryStadium": "44"
+   "primaryStadium": "japan_national_stadium"
   },
   "2019": {
    "name": "Japan",
@@ -1663,7 +1663,7 @@
     "144927",
     "154574"
    ],
-   "primaryStadium": "44"
+   "primaryStadium": "japan_national_stadium"
   }
  }
 }

@@ -1,0 +1,13 @@
+{
+  "stadio_olimpico": {
+    "name": "Stadio Olimpico",
+    "country": "Italy",
+    "game_id": 39,
+    "scenes": {
+      "day": "stadio_olimpico.day.big"
+    },
+    "files": {
+      "frontend/textures/stadiums/rome.d.fsh": "stadio_olimpico.d.fsh"
+    }
+  }
+}

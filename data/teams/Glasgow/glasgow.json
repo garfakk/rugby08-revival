@@ -83,7 +83,7 @@
     "158299"
    ],
    "enabled": false,
-   "primaryStadium": "28"
+   "primaryStadium": "firhill_arena"
   },
   "2009": {
    "name": "Glasgow",
@@ -174,7 +174,7 @@
     "153025"
    ],
    "enabled": true,
-   "primaryStadium": "28"
+   "primaryStadium": "firhill_arena"
   },
   "2010": {
    "name": "Glasgow",
@@ -267,7 +267,7 @@
     "153030"
    ],
    "enabled": true,
-   "primaryStadium": "28"
+   "primaryStadium": "firhill_arena"
   },
   "2017": {
    "name": "Glasgow",
@@ -366,7 +366,7 @@
     "158298"
    ],
    "enabled": true,
-   "primaryStadium": "28"
+   "primaryStadium": "firhill_arena"
   },
   "2018": {
    "name": "Glasgow",
@@ -465,7 +465,7 @@
     "155729"
    ],
    "enabled": true,
-   "primaryStadium": "28"
+   "primaryStadium": "firhill_arena"
   },
   "2019": {
    "name": "Glasgow",
@@ -563,7 +563,7 @@
     "157748"
    ],
    "enabled": true,
-   "primaryStadium": "28"
+   "primaryStadium": "firhill_arena"
   },
   "2020": {
    "name": "Glasgow",
@@ -657,7 +657,7 @@
     "157877"
    ],
    "enabled": false,
-   "primaryStadium": "28"
+   "primaryStadium": "firhill_arena"
   },
   "2021": {
    "name": "Glasgow",
@@ -756,7 +756,7 @@
     "155861"
    ],
    "enabled": false,
-   "primaryStadium": "28"
+   "primaryStadium": "firhill_arena"
   },
   "2022": {
    "name": "Glasgow",
@@ -849,7 +849,7 @@
     "153014"
    ],
    "enabled": true,
-   "primaryStadium": "28"
+   "primaryStadium": "firhill_arena"
   },
   "2023": {
    "name": "Glasgow",
@@ -941,7 +941,7 @@
     "153030"
    ],
    "enabled": true,
-   "primaryStadium": "28"
+   "primaryStadium": "firhill_arena"
   },
   "2024": {
    "name": "Glasgow",
@@ -1034,7 +1034,7 @@
     "153119"
    ],
    "enabled": true,
-   "primaryStadium": "28"
+   "primaryStadium": "firhill_arena"
   },
   "2016": {
    "name": "Glasgow",
@@ -1133,7 +1133,7 @@
     "158298"
    ],
    "enabled": false,
-   "primaryStadium": "28"
+   "primaryStadium": "firhill_arena"
   }
  }
 }

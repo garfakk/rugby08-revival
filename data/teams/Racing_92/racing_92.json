@@ -543,7 +543,7 @@
     "144916",
     "101588"
    ],
-   "primaryStadium": "70"
+   "primaryStadium": "la_defense_arena"
   },
   "2018": {
    "enabled": true,
@@ -643,7 +643,7 @@
     "144203",
     "146382"
    ],
-   "primaryStadium": "70"
+   "primaryStadium": "la_defense_arena"
   },
   "2019": {
    "enabled": true,
@@ -734,7 +734,7 @@
     "153767",
     "144592"
    ],
-   "primaryStadium": "70"
+   "primaryStadium": "la_defense_arena"
   },
   "2020": {
    "enabled": false,
@@ -823,7 +823,7 @@
     "153656",
     "144957"
    ],
-   "primaryStadium": "70"
+   "primaryStadium": "la_defense_arena"
   },
   "2021": {
    "enabled": false,
@@ -911,7 +911,7 @@
     "153656",
     "146092"
    ],
-   "primaryStadium": "70"
+   "primaryStadium": "la_defense_arena"
   },
   "2022": {
    "name": "Racing 92",
@@ -1004,7 +1004,7 @@
     "153777",
     "144592"
    ],
-   "primaryStadium": "70"
+   "primaryStadium": "la_defense_arena"
   },
   "2023": {
    "enabled": true,
@@ -1098,7 +1098,7 @@
     "156357",
     "144592"
    ],
-   "primaryStadium": "70"
+   "primaryStadium": "la_defense_arena"
   },
   "2024": {
    "name": "Racing 92",
@@ -1189,7 +1189,7 @@
     "156341",
     "144592"
    ],
-   "primaryStadium": "70"
+   "primaryStadium": "la_defense_arena"
   },
   "2025": {
    "enabled": false,
@@ -1286,7 +1286,7 @@
     "151856",
     "151858"
    ],
-   "primaryStadium": "70"
+   "primaryStadium": "la_defense_arena"
   },
   "2026": {
    "enabled": false,
@@ -1385,7 +1385,7 @@
     "151849",
     "144545"
    ],
-   "primaryStadium": "70"
+   "primaryStadium": "la_defense_arena"
   },
   "2009": {
    "enabled": false,

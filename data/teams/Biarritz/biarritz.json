@@ -9,7 +9,7 @@
    "banners": "banners_1/banner_%.png",
    "pads": "",
    "stadium": "",
-   "primaryStadium": "22",
+   "primaryStadium": "20",
    "logos": {
     "main": "logos_1/logo.png",
     "small": "logos_1/logo_small.png",
@@ -106,7 +106,7 @@
    "banners": "banners_1/banner_%.png",
    "pads": "",
    "stadium": "",
-   "primaryStadium": "22",
+   "primaryStadium": "20",
    "logos": {
     "main": "logos_1/logo.png",
     "small": "logos_1/logo_small.png",
@@ -285,7 +285,7 @@
     "155075"
    ],
    "enabled": true,
-   "primaryStadium": "22"
+   "primaryStadium": "20"
   },
   "2023": {
    "name": "Biarritz",
@@ -296,7 +296,7 @@
    "banners": "banners_2/banner_%.png",
    "pads": "",
    "stadium": "",
-   "primaryStadium": "22",
+   "primaryStadium": "20",
    "logos": {
     "main": "logos_2/logo.png",
     "small": "logos_2/logo_small.png",
@@ -387,7 +387,7 @@
    "banners": "banners_2/banner_%.png",
    "pads": "",
    "stadium": "",
-   "primaryStadium": "22",
+   "primaryStadium": "20",
    "logos": {
     "main": "logos_2/logo.png",
     "small": "logos_2/logo_small.png",
@@ -563,7 +563,7 @@
     "153178"
    ],
    "enabled": false,
-   "primaryStadium": "22"
+   "primaryStadium": "20"
   },
   "2016": {
    "name": "Biarritz",
@@ -574,7 +574,7 @@
    "banners": "banners_1/banner_%.png",
    "pads": "",
    "stadium": "",
-   "primaryStadium": "22",
+   "primaryStadium": "20",
    "logos": {
     "main": "logos_1/logo.png",
     "small": "logos_1/logo_small.png",
@@ -755,7 +755,7 @@
     "155075"
    ],
    "enabled": false,
-   "primaryStadium": "22"
+   "primaryStadium": "20"
   },
   "2019": {
    "name": "Biarritz",
@@ -854,7 +854,7 @@
     "155075"
    ],
    "enabled": false,
-   "primaryStadium": "22"
+   "primaryStadium": "20"
   },
   "2020": {
    "name": "Biarritz",
@@ -953,7 +953,7 @@
     "155075"
    ],
    "enabled": false,
-   "primaryStadium": "22"
+   "primaryStadium": "20"
   }
  }
 }

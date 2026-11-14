@@ -90,7 +90,7 @@
     "152909",
     "152901"
    ],
-   "primaryStadium": "69"
+   "primaryStadium": "stade_de_bordeaux"
   },
   "2022": {
    "name": "Bordeaux",
@@ -183,7 +183,7 @@
     "142356",
     "156347"
    ],
-   "primaryStadium": "69"
+   "primaryStadium": "stade_de_bordeaux"
   },
   "2024": {
    "name": "Bordeaux",
@@ -276,7 +276,7 @@
     "144781",
     "154183"
    ],
-   "primaryStadium": "69"
+   "primaryStadium": "stade_de_bordeaux"
   },
   "2018": {
    "enabled": true,
@@ -370,7 +370,7 @@
     "146381",
     "156278"
    ],
-   "primaryStadium": "69"
+   "primaryStadium": "stade_de_bordeaux"
   },
   "2023": {
    "enabled": true,
@@ -464,7 +464,7 @@
     "154180",
     "153640"
    ],
-   "primaryStadium": "69"
+   "primaryStadium": "stade_de_bordeaux"
   },
   "2017": {
    "name": "Bordeaux",
@@ -550,7 +550,7 @@
     "152908",
     "152909"
    ],
-   "primaryStadium": "69"
+   "primaryStadium": "stade_de_bordeaux"
   },
   "2012": {
    "enabled": false,
@@ -643,7 +643,7 @@
     "148793",
     "148926"
    ],
-   "primaryStadium": "69"
+   "primaryStadium": "stade_chaban-delmas"
   },
   "2015": {
    "enabled": false,
@@ -736,7 +736,7 @@
     "148932",
     "148933"
    ],
-   "primaryStadium": "69"
+   "primaryStadium": "stade_chaban-delmas"
   },
   "2016": {
    "enabled": false,
@@ -829,7 +829,7 @@
     "146141",
     "148936"
    ],
-   "primaryStadium": "69"
+   "primaryStadium": "stade_de_bordeaux"
   },
   "2020": {
    "enabled": false,
@@ -922,7 +922,7 @@
     "146495",
     "152908"
    ],
-   "primaryStadium": "69"
+   "primaryStadium": "stade_de_bordeaux"
   },
   "2021": {
    "enabled": false,
@@ -1018,7 +1018,7 @@
     "146495",
     "153647"
    ],
-   "primaryStadium": "69"
+   "primaryStadium": "stade_de_bordeaux"
   },
   "2025": {
    "enabled": false,
@@ -1114,7 +1114,7 @@
     "148983",
     "145747"
    ],
-   "primaryStadium": "69"
+   "primaryStadium": "stade_de_bordeaux"
   },
   "2026": {
    "enabled": false,
@@ -1212,7 +1212,7 @@
     "148991",
     "148993"
    ],
-   "primaryStadium": "69"
+   "primaryStadium": "stade_de_bordeaux"
   },
   "2008": {
    "enabled": false,
@@ -1286,7 +1286,7 @@
     "154421",
     "154427"
    ],
-   "primaryStadium": "22"
+   "primaryStadium": "stade_chaban-delmas"
   },
   "2009": {
    "enabled": false,
@@ -1378,7 +1378,7 @@
     "154420",
     "154413"
    ],
-   "primaryStadium": "22"
+   "primaryStadium": "stade_chaban-delmas"
   },
   "2010": {
    "enabled": false,
@@ -1466,7 +1466,7 @@
     "154420",
     "154413"
    ],
-   "primaryStadium": "22"
+   "primaryStadium": "stade_chaban-delmas"
   }
  }
 }

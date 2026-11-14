@@ -108,7 +108,7 @@
     "158246"
    ],
    "enabled": true,
-   "primaryStadium": "78",
+   "primaryStadium": "twickenham_stoop",
    "shirtNames": {
     "enabled": true,
     "size": 43
@@ -231,7 +231,7 @@
     "156586"
    ],
    "enabled": true,
-   "primaryStadium": "78",
+   "primaryStadium": "twickenham_stoop",
    "shirtNames": {
     "enabled": true
    }
@@ -340,7 +340,7 @@
     "157550"
    ],
    "enabled": true,
-   "primaryStadium": "78",
+   "primaryStadium": "twickenham_stoop",
    "shirtNames": {
     "size": 30,
     "enabled": true
@@ -457,7 +457,7 @@
     "156779"
    ],
    "enabled": true,
-   "primaryStadium": "78",
+   "primaryStadium": "twickenham_stoop",
    "shirtNames": {
     "enabled": true,
     "size": 43
@@ -573,7 +573,7 @@
     "154646"
    ],
    "enabled": true,
-   "primaryStadium": "78",
+   "primaryStadium": "twickenham_stoop",
    "shirtNames": {
     "enabled": true,
     "size": 40
@@ -683,7 +683,7 @@
     "157839"
    ],
    "enabled": true,
-   "primaryStadium": "78",
+   "primaryStadium": "twickenham_stoop",
    "shirtNames": {
     "enabled": true,
     "size": 37
@@ -795,7 +795,7 @@
     "158077"
    ],
    "enabled": true,
-   "primaryStadium": "78",
+   "primaryStadium": "twickenham_stoop",
    "shirtNames": {
     "enabled": true,
     "size": 32
@@ -905,7 +905,7 @@
     "152492"
    ],
    "enabled": true,
-   "primaryStadium": "78",
+   "primaryStadium": "twickenham_stoop",
    "shirtNames": {
     "enabled": true,
     "size": 40
@@ -994,7 +994,7 @@
     "157358"
    ],
    "enabled": false,
-   "primaryStadium": "78"
+   "primaryStadium": "twickenham_stoop"
   },
   "2020": {
    "name": "Harlequins",
@@ -1087,7 +1087,7 @@
     "157868"
    ],
    "enabled": false,
-   "primaryStadium": "78"
+   "primaryStadium": "twickenham_stoop"
   },
   "2021": {
    "name": "Harlequins",
@@ -1186,7 +1186,7 @@
     "157839"
    ],
    "enabled": false,
-   "primaryStadium": "78"
+   "primaryStadium": "twickenham_stoop"
   },
   "2016": {
    "name": "Harlequins",
@@ -1276,7 +1276,7 @@
     "157550"
    ],
    "enabled": false,
-   "primaryStadium": "78"
+   "primaryStadium": "twickenham_stoop"
   }
  }
 }

@@ -1,0 +1,13 @@
+{
+  "barnet_copthall": {
+    "name": "Barnet Copthall",
+    "country": "England",
+    "game_id": 79,
+    "scenes": {
+      "overcast": "barnet_copthall.overcast.big"
+    },
+    "files": {
+      "frontend/textures/stadiums/vicarageroad.o.fsh": "barnet_copthall.o.fsh"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "twickenham_stoop": {
+    "name": "Twickenham Stoop",
+    "country": "England",
+    "game_id": 78,
+    "scenes": {
+      "overcast": "twickenham_stoop.overcast.big",
+      "cold": "twickenham_stoop.cold.big"
+    }
+  }
+}

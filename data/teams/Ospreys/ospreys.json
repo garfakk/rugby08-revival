@@ -92,7 +92,7 @@
     "152932"
    ],
    "enabled": true,
-   "primaryStadium": "33"
+   "primaryStadium": "swansea"
   },
   "2010": {
    "name": "Ospreys",
@@ -186,7 +186,7 @@
     "152932"
    ],
    "enabled": true,
-   "primaryStadium": "33"
+   "primaryStadium": "swansea"
   },
   "2017": {
    "name": "Ospreys",
@@ -282,7 +282,7 @@
     "157652"
    ],
    "enabled": true,
-   "primaryStadium": "33"
+   "primaryStadium": "swansea"
   },
   "2018": {
    "name": "Ospreys",
@@ -381,7 +381,7 @@
     "154261"
    ],
    "enabled": true,
-   "primaryStadium": "33"
+   "primaryStadium": "swansea"
   },
   "2019": {
    "name": "Ospreys",
@@ -478,7 +478,7 @@
     "157775"
    ],
    "enabled": true,
-   "primaryStadium": "33"
+   "primaryStadium": "swansea"
   },
   "2022": {
    "name": "Ospreys",
@@ -571,7 +571,7 @@
     "158132"
    ],
    "enabled": true,
-   "primaryStadium": "33"
+   "primaryStadium": "swansea"
   },
   "2023": {
    "name": "Ospreys",
@@ -654,7 +654,7 @@
     "157870"
    ],
    "enabled": true,
-   "primaryStadium": "33"
+   "primaryStadium": "swansea"
   },
   "2024": {
    "name": "Ospreys",
@@ -747,7 +747,7 @@
     "155350"
    ],
    "enabled": true,
-   "primaryStadium": "33"
+   "primaryStadium": "swansea"
   },
   "2008": {
    "name": "Ospreys",
@@ -837,7 +837,7 @@
     "152932"
    ],
    "enabled": false,
-   "primaryStadium": "33"
+   "primaryStadium": "swansea"
   },
   "2020": {
    "name": "Ospreys",
@@ -932,7 +932,7 @@
     "157643"
    ],
    "enabled": false,
-   "primaryStadium": "33"
+   "primaryStadium": "swansea"
   },
   "2021": {
    "name": "Ospreys",
@@ -1027,7 +1027,7 @@
     "157652"
    ],
    "enabled": false,
-   "primaryStadium": "33"
+   "primaryStadium": "swansea"
   },
   "2016": {
    "name": "Ospreys",
@@ -1123,7 +1123,7 @@
     "157652"
    ],
    "enabled": false,
-   "primaryStadium": "33"
+   "primaryStadium": "swansea"
   }
  }
 }

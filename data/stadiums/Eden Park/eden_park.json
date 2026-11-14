@@ -1,0 +1,11 @@
+{
+  "eden_park": {
+    "name": "Eden Park",
+    "country": "New Zealand",
+    "game_id": 49,
+    "scenes": {
+      "day": "eden_park.day.big",
+      "night": "eden_park.night.big"
+    }
+  }
+}

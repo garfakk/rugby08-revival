@@ -77,7 +77,7 @@
     "157436"
    ],
    "enabled": false,
-   "primaryStadium": "24"
+   "primaryStadium": "galway"
   },
   "2009": {
    "name": "Connacht",
@@ -164,7 +164,7 @@
     "153992"
    ],
    "enabled": true,
-   "primaryStadium": "24"
+   "primaryStadium": "galway"
   },
   "2010": {
    "name": "Connacht",
@@ -242,7 +242,7 @@
     "156531",
     "156534"
    ],
-   "primaryStadium": "24"
+   "primaryStadium": "galway"
   },
   "2017": {
    "name": "Connacht",
@@ -336,7 +336,7 @@
     "157586"
    ],
    "enabled": true,
-   "primaryStadium": "24"
+   "primaryStadium": "galway"
   },
   "2018": {
    "name": "Connacht",
@@ -428,7 +428,7 @@
     "157435",
     "157238"
    ],
-   "primaryStadium": "24"
+   "primaryStadium": "galway"
   },
   "2019": {
    "name": "Connacht",
@@ -524,7 +524,7 @@
     "157130"
    ],
    "enabled": true,
-   "primaryStadium": "24"
+   "primaryStadium": "galway"
   },
   "2020": {
    "name": "Connacht",
@@ -615,7 +615,7 @@
     "157958"
    ],
    "enabled": false,
-   "primaryStadium": "24"
+   "primaryStadium": "galway"
   },
   "2021": {
    "name": "Connacht",
@@ -709,7 +709,7 @@
     "158063"
    ],
    "enabled": false,
-   "primaryStadium": "24"
+   "primaryStadium": "galway"
   },
   "2022": {
    "name": "Connacht",
@@ -803,7 +803,7 @@
     "158134"
    ],
    "enabled": true,
-   "primaryStadium": "24"
+   "primaryStadium": "galway"
   },
   "2023": {
    "name": "Connacht",
@@ -887,7 +887,7 @@
     "157988"
    ],
    "enabled": true,
-   "primaryStadium": "24"
+   "primaryStadium": "galway"
   },
   "2024": {
    "name": "Connacht",
@@ -979,7 +979,7 @@
     "153124",
     "158059"
    ],
-   "primaryStadium": "24"
+   "primaryStadium": "galway"
   },
   "2016": {
    "name": "Connacht",
@@ -1073,7 +1073,7 @@
     "157586"
    ],
    "enabled": false,
-   "primaryStadium": "24"
+   "primaryStadium": "galway"
   }
  }
 }

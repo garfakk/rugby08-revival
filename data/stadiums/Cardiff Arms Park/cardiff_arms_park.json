@@ -1,0 +1,14 @@
+{
+  "cardiff_arms_park": {
+    "name": "Cardiff Arms Park",
+    "country": "Wales",
+    "game_id": 36,
+    "scenes": {
+      "day": "cardiff_arms_park.day.big",
+      "overcast": "cardiff_arms_park.overcast.big"
+    },
+    "files": {
+      "xml/config/stadiuminfo.xml": "stadiuminfo.xml"
+    }
+  }
+}

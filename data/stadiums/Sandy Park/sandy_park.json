@@ -1,0 +1,16 @@
+{
+  "sandy_park": {
+    "name": "Sandy Park",
+    "country": "England",
+    "game_id": 76,
+    "scenes": {
+      "day": "sandy_park.day.big",
+      "night": "sandy_park.night.big"
+    },
+    "files": {
+      "frontend/textures/stadiums/sixways.d.fsh": "sandy_park.d.fsh",
+      "frontend/textures/stadiums/sixways.n.fsh": "sandy_park.n.fsh",
+      "xml/config/stadiuminfo.xml": "stadiuminfo.xml"
+    }
+  }
+}

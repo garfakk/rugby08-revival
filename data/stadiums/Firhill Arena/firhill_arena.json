@@ -1,0 +1,11 @@
+{
+  "firhill_arena": {
+    "name": "Firhill Arena",
+    "country": "Scotland",
+    "game_id": 28,
+    "scenes": {
+      "night": "firhill_arena.night.big",
+      "cold": "firhill_arena.cold.big"
+    }
+  }
+}

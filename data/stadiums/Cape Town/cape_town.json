@@ -1,0 +1,10 @@
+{
+  "56": {
+    "name": "Cape Town",
+    "country": "South Africa",
+    "game_id": 56,
+    "scenes": {
+      "day": "cape_town.day.big"
+    }
+  }
+}

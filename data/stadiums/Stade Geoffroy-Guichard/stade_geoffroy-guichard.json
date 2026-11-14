@@ -1,0 +1,13 @@
+{
+  "stade_geoffroy-guichard": {
+    "name": "Stade Geoffroy-Guichard",
+    "country": "France",
+    "game_id": 73,
+    "scenes": {
+      "overcast": "stade_geoffroy-guichard.overcast.big"
+    },
+    "files": {
+      "frontend/textures/stadiums/stademunicipal.o.fsh": "stade_geoffroy-guichard.o.fsh"
+    }
+  }
+}

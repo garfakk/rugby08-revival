@@ -1,0 +1,11 @@
+{
+  "70": {
+    "name": "Stade de France",
+    "country": "France",
+    "game_id": 70,
+    "scenes": {
+      "night": "stade_de_france.night.big",
+      "overcast": "stade_de_france.overcast.big"
+    }
+  }
+}

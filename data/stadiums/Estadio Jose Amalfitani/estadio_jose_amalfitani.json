@@ -1,0 +1,10 @@
+{
+  "estadio_jose_amalfitani": {
+    "name": "Estadio Jose Amalfitani",
+    "country": "Americas",
+    "game_id": 43,
+    "scenes": {
+      "overcast": "estadio_jose_amalfitani.overcast.big"
+    }
+  }
+}

@@ -475,7 +475,7 @@
     "152507"
    ],
    "enabled": true,
-   "primaryStadium": "7",
+   "primaryStadium": "brentford_community_stadium",
    "shirtNames": {
     "enabled": true
    }
@@ -587,7 +587,7 @@
     "157200"
    ],
    "enabled": true,
-   "primaryStadium": "7",
+   "primaryStadium": "brentford_community_stadium",
    "shirtNames": {
     "enabled": true
    }
@@ -871,7 +871,7 @@
     "157731"
    ],
    "enabled": false,
-   "primaryStadium": "7"
+   "primaryStadium": "brentford_community_stadium"
   },
   "2021": {
    "name": "London Irish",
@@ -965,7 +965,7 @@
     "156585"
    ],
    "enabled": false,
-   "primaryStadium": "7"
+   "primaryStadium": "brentford_community_stadium"
   },
   "2016": {
    "name": "London Irish",

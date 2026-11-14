@@ -1,0 +1,10 @@
+{
+  "kingsholm": {
+    "name": "Kingsholm",
+    "country": "England",
+    "game_id": 12,
+    "scenes": {
+      "overcast": "kingsholm.overcast.big"
+    }
+  }
+}

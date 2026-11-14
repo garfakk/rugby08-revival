@@ -1,0 +1,12 @@
+{
+  "14": {
+    "name": "Twickenham",
+    "country": "England",
+    "game_id": 14,
+    "scenes": {
+      "day": "twickenham.day.big",
+      "night": "twickenham.night.big",
+      "overcast": "twickenham.overcast.big"
+    }
+  }
+}

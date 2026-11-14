@@ -1,0 +1,13 @@
+{
+  "ol_stadium": {
+    "name": "OL Stadium",
+    "country": "France",
+    "game_id": 72,
+    "scenes": {
+      "overcast": "ol_stadium.overcast.big"
+    },
+    "files": {
+      "frontend/textures/stadiums/stadedegerland.o.fsh": "ol_stadium.o.fsh"
+    }
+  }
+}

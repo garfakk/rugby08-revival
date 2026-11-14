@@ -13,6 +13,7 @@ Credits:
     - 2017-2019: [TRF Patch 2017-18](https://www.therugbyforum.com/threads/trf-patch-2017-18.40357) and [Rugby 08 Patch 2018/19](https://www.therugbyforum.com/threads/rugby-08-patch-2018-19.42340) (Pro14, Super Rugby, Top 14) by peter83
     - 2009-2010: [TRF Patch 10](https://www.therugbyforum.com/threads/trf-rugby-10-patch.18881) by Intercept King JDV and Bogdam
     - 2007-2009: [MUP Patch 2009](https://www.therugbyforum.com/threads/mup-v-1-2-season-2008-09.15872), [MegaUpdatePatch](https://www.therugbyforum.com/threads/megaupdatepatch-mup09.8241) by Fa'atau82 and uli85
+- Stadiums: the custom stadiums (Aviva Stadium, Eden Park, Stade Velodrome, Thomond Park...) are by [jim546](https://github.com/jimw546/jimw546-s-Rugby-08-stuff)
 - Heads:
     - [Rugby 08 Original Update Workshop](https://www.therugbyforum.com/threads/rugby-08-original-update-workshop.49742): Carel du preez and the workshop's contributors
     - [jim546](https://github.com/jimw546/jimw546-s-Rugby-08-stuff), [JPilky](https://www.therugbyforum.com/threads/trf-custom-face-design-tracker.47791), EN9ne, Pieter1989 and TommyDelpe

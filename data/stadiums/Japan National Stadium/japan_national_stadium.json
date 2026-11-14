@@ -1,0 +1,13 @@
+{
+  "japan_national_stadium": {
+    "name": "Japan National Stadium",
+    "country": "Asia Pacific",
+    "game_id": 62,
+    "scenes": {
+      "day": "japan_national_stadium.day.big"
+    },
+    "files": {
+      "frontend/textures/stadiums/southpacific.d.fsh": "japan_national_stadium.d.fsh"
+    }
+  }
+}

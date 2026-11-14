@@ -1,0 +1,11 @@
+{
+  "rds_arena": {
+    "name": "RDS Arena",
+    "country": "Ireland",
+    "game_id": 17,
+    "scenes": {
+      "overcast": "rds_arena.overcast.big",
+      "cold": "rds_arena.cold.big"
+    }
+  }
+}

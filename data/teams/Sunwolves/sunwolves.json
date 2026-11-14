@@ -99,7 +99,7 @@
     "154582"
    ],
    "enabled": true,
-   "primaryStadium": "44"
+   "primaryStadium": "japan_national_stadium"
   },
   "2019": {
    "name": "Sunwolves",
@@ -198,7 +198,7 @@
     "158686"
    ],
    "enabled": true,
-   "primaryStadium": "44"
+   "primaryStadium": "japan_national_stadium"
   },
   "2024": {
    "name": "Sunwolves",
@@ -284,7 +284,7 @@
     "146533"
    ],
    "enabled": false,
-   "primaryStadium": "44"
+   "primaryStadium": "japan_national_stadium"
   },
   "2020": {
    "name": "Sunwolves",
@@ -364,7 +364,7 @@
     "155649"
    ],
    "enabled": false,
-   "primaryStadium": "44"
+   "primaryStadium": "japan_national_stadium"
   }
  }
 }

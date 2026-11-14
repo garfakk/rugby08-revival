@@ -1,0 +1,13 @@
+{
+  "swansea": {
+    "name": "Swansea",
+    "country": "Wales",
+    "game_id": 33,
+    "scenes": {
+      "overcast": "swansea.overcast.big"
+    },
+    "files": {
+      "frontend/textures/stadiums/neath.o.fsh": "swansea.o.fsh"
+    }
+  }
+}

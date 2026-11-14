@@ -102,7 +102,7 @@
     "145686"
    ],
    "enabled": true,
-   "primaryStadium": "6",
+   "primaryStadium": "sandy_park",
    "shirtNames": {
     "enabled": true
    }
@@ -217,7 +217,7 @@
     "157100"
    ],
    "enabled": true,
-   "primaryStadium": "6",
+   "primaryStadium": "sandy_park",
    "shirtNames": {
     "enabled": true
    }
@@ -336,7 +336,7 @@
     "157881"
    ],
    "enabled": true,
-   "primaryStadium": "6",
+   "primaryStadium": "sandy_park",
    "shirtNames": {
     "enabled": true
    }
@@ -454,7 +454,7 @@
     "152515"
    ],
    "enabled": true,
-   "primaryStadium": "6",
+   "primaryStadium": "sandy_park",
    "shirtNames": {
     "enabled": true
    }
@@ -565,7 +565,7 @@
     "158162"
    ],
    "enabled": true,
-   "primaryStadium": "6",
+   "primaryStadium": "sandy_park",
    "shirtNames": {
     "enabled": true
    }
@@ -650,7 +650,7 @@
     "159018",
     "159019"
    ],
-   "primaryStadium": "6"
+   "primaryStadium": "sandy_park"
   },
   "2018": {
    "name": "Exeter",
@@ -760,7 +760,7 @@
     "157683",
     "155689"
    ],
-   "primaryStadium": "6",
+   "primaryStadium": "sandy_park",
    "shirtNames": {
     "enabled": true
    }
@@ -854,7 +854,7 @@
     "152462"
    ],
    "enabled": false,
-   "primaryStadium": "6"
+   "primaryStadium": "sandy_park"
   },
   "2021": {
    "name": "Exeter",
@@ -953,7 +953,7 @@
     "157943"
    ],
    "enabled": false,
-   "primaryStadium": "6"
+   "primaryStadium": "sandy_park"
   },
   "2016": {
    "name": "Exeter",
@@ -1045,7 +1045,7 @@
     "145686"
    ],
    "enabled": false,
-   "primaryStadium": "6"
+   "primaryStadium": "sandy_park"
   }
  }
 }

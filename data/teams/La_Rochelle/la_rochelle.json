@@ -95,7 +95,7 @@
     "155103",
     "155093"
    ],
-   "primaryStadium": "65"
+   "primaryStadium": "stade_marcel_deflandre"
   },
   "2015": {
    "enabled": false,
@@ -194,7 +194,7 @@
     "150468",
     "150469"
    ],
-   "primaryStadium": "65"
+   "primaryStadium": "stade_marcel_deflandre"
   },
   "2016": {
    "enabled": false,
@@ -299,7 +299,7 @@
     "145979",
     "150477"
    ],
-   "primaryStadium": "65"
+   "primaryStadium": "stade_marcel_deflandre"
   },
   "2017": {
    "enabled": true,
@@ -401,7 +401,7 @@
     "156283",
     "153796"
    ],
-   "primaryStadium": "65"
+   "primaryStadium": "stade_marcel_deflandre"
   },
   "2018": {
    "enabled": true,
@@ -500,7 +500,7 @@
     "154854",
     "156283"
    ],
-   "primaryStadium": "65"
+   "primaryStadium": "stade_marcel_deflandre"
   },
   "2019": {
    "enabled": true,
@@ -600,7 +600,7 @@
     "156283",
     "152969"
    ],
-   "primaryStadium": "65"
+   "primaryStadium": "stade_marcel_deflandre"
   },
   "2020": {
    "enabled": false,
@@ -694,7 +694,7 @@
     "101588",
     "152975"
    ],
-   "primaryStadium": "65"
+   "primaryStadium": "stade_marcel_deflandre"
   },
   "2021": {
    "enabled": false,
@@ -791,7 +791,7 @@
     "142362",
     "155150"
    ],
-   "primaryStadium": "65"
+   "primaryStadium": "stade_marcel_deflandre"
   },
   "2022": {
    "name": "La Rochelle",
@@ -880,7 +880,7 @@
     "153606",
     "156334"
    ],
-   "primaryStadium": "65"
+   "primaryStadium": "stade_marcel_deflandre"
   },
   "2023": {
    "name": "La Rochelle",
@@ -973,7 +973,7 @@
     "156336",
     "156362"
    ],
-   "primaryStadium": "65"
+   "primaryStadium": "stade_marcel_deflandre"
   },
   "2024": {
    "name": "La Rochelle",
@@ -1065,7 +1065,7 @@
     "144769",
     "155867"
    ],
-   "primaryStadium": "65"
+   "primaryStadium": "stade_marcel_deflandre"
   },
   "2025": {
    "enabled": false,
@@ -1169,7 +1169,7 @@
     "150516",
     "150518"
    ],
-   "primaryStadium": "65"
+   "primaryStadium": "stade_marcel_deflandre"
   },
   "2026": {
    "enabled": false,
@@ -1274,7 +1274,7 @@
     "142283",
     "150516"
    ],
-   "primaryStadium": "65"
+   "primaryStadium": "stade_marcel_deflandre"
   },
   "2009": {
    "enabled": false,
@@ -1369,7 +1369,7 @@
     "155112",
     "155113"
    ],
-   "primaryStadium": "65"
+   "primaryStadium": "stade_marcel_deflandre"
   },
   "2010": {
    "name": "La Rochelle",
@@ -1458,7 +1458,7 @@
     "155112",
     "155113"
    ],
-   "primaryStadium": "65"
+   "primaryStadium": "stade_marcel_deflandre"
   }
  }
 }

@@ -20,13 +20,15 @@
         "venues": [
           "70",
           "20",
-          "68",
+          "stade_velodrome",
           "72",
           "73",
-          "65",
+          "stade_de_la_beaujoire",
           "69",
           "32",
-          "29"
+          "29",
+          "stade_chaban-delmas",
+          "stade_geoffroy-guichard"
         ],
         "points": {
           "win": 4,
@@ -117,7 +119,7 @@
                 "group": "C",
                 "home": "1010",
                 "away": "1007",
-                "stadium": "68",
+                "stadium": "stade_velodrome",
                 "venue": "Stade Vélodrome, Marseille",
                 "real_score": "76–14"
               },
@@ -135,7 +137,7 @@
                 "group": "B",
                 "home": "1022",
                 "away": "1003",
-                "stadium": "65",
+                "stadium": "stade_de_la_beaujoire",
                 "venue": "Stade de la Beaujoire, Nantes",
                 "real_score": "42–17"
               },
@@ -144,8 +146,8 @@
                 "group": "C",
                 "home": "1014",
                 "away": "1011",
-                "stadium": "72",
-                "venue": "Stade Geoffroy-Guichard, Saint-Étienne (Lyon stand-in)",
+                "stadium": "stade_geoffroy-guichard",
+                "venue": "Stade Geoffroy-Guichard, Saint-Étienne",
                 "real_score": "56–10"
               },
               {
@@ -153,8 +155,8 @@
                 "group": "D",
                 "home": "10003",
                 "away": "1009",
-                "stadium": "73",
-                "venue": "Stade Chaban-Delmas, Bordeaux (Toulouse stand-in)",
+                "stadium": "stade_chaban-delmas",
+                "venue": "Stade Chaban-Delmas, Bordeaux",
                 "real_score": "32–17"
               },
               {
@@ -189,7 +191,7 @@
                 "group": "C",
                 "home": "1007",
                 "away": "1012",
-                "stadium": "68",
+                "stadium": "stade_velodrome",
                 "venue": "Stade Vélodrome, Marseille",
                 "real_score": "24–18"
               },
@@ -225,8 +227,8 @@
                 "group": "D",
                 "home": "10003",
                 "away": "1006",
-                "stadium": "73",
-                "venue": "Stade Chaban-Delmas, Bordeaux (Toulouse stand-in)",
+                "stadium": "stade_chaban-delmas",
+                "venue": "Stade Chaban-Delmas, Bordeaux",
                 "real_score": "14–10"
               },
               {
@@ -306,7 +308,7 @@
                 "group": "A",
                 "home": "10002",
                 "away": "1017",
-                "stadium": "65",
+                "stadium": "stade_de_la_beaujoire",
                 "venue": "Stade de la Beaujoire, Nantes",
                 "real_score": "44–22"
               },
@@ -315,7 +317,7 @@
                 "group": "D",
                 "home": "1001",
                 "away": "1009",
-                "stadium": "68",
+                "stadium": "stade_velodrome",
                 "venue": "Stade Vélodrome, Marseille",
                 "real_score": "63–3"
               },
@@ -342,8 +344,8 @@
                 "group": "B",
                 "home": "1003",
                 "away": "1008",
-                "stadium": "73",
-                "venue": "Stade Chaban-Delmas, Bordeaux (Toulouse stand-in)",
+                "stadium": "stade_chaban-delmas",
+                "venue": "Stade Chaban-Delmas, Bordeaux",
                 "real_score": "12–12"
               },
               {
@@ -360,8 +362,8 @@
                 "group": "A",
                 "home": "1017",
                 "away": "1021",
-                "stadium": "72",
-                "venue": "Stade Geoffroy-Guichard, Saint-Étienne (Lyon stand-in)",
+                "stadium": "stade_geoffroy-guichard",
+                "venue": "Stade Geoffroy-Guichard, Saint-Étienne",
                 "real_score": "25–21"
               },
               {
@@ -387,8 +389,8 @@
                 "group": "B",
                 "home": "1002",
                 "away": "1003",
-                "stadium": "73",
-                "venue": "Stade Chaban-Delmas, Bordeaux (Toulouse stand-in)",
+                "stadium": "stade_chaban-delmas",
+                "venue": "Stade Chaban-Delmas, Bordeaux",
                 "real_score": "37–6"
               },
               {
@@ -396,7 +398,7 @@
                 "group": "B",
                 "home": "1022",
                 "away": "1005",
-                "stadium": "65",
+                "stadium": "stade_de_la_beaujoire",
                 "venue": "Stade de la Beaujoire, Nantes",
                 "real_score": "34–38"
               },
@@ -405,8 +407,8 @@
                 "group": "C",
                 "home": "1007",
                 "away": "1014",
-                "stadium": "72",
-                "venue": "Stade Geoffroy-Guichard, Saint-Étienne (Lyon stand-in)",
+                "stadium": "stade_geoffroy-guichard",
+                "venue": "Stade Geoffroy-Guichard, Saint-Étienne",
                 "real_score": "16–18"
               },
               {
@@ -432,7 +434,7 @@
                 "group": "D",
                 "home": "10001",
                 "away": "1006",
-                "stadium": "68",
+                "stadium": "stade_velodrome",
                 "venue": "Stade Vélodrome, Marseille",
                 "real_score": "64–7"
               },
@@ -464,7 +466,7 @@
                       "pools:A2"
                     ],
                     "date": "2007-10-06",
-                    "stadium": "68",
+                    "stadium": "stade_velodrome",
                     "venue": "Stade Vélodrome, Marseille",
                     "real_score": "10–12"
                   },
@@ -486,7 +488,7 @@
                       "pools:B2"
                     ],
                     "date": "2007-10-07",
-                    "stadium": "68",
+                    "stadium": "stade_velodrome",
                     "venue": "Stade Vélodrome, Marseille",
                     "real_score": "37–20"
                   },
@@ -657,7 +659,7 @@
             "D": "10001"
           }
         },
-        "_venue_note": "Game stadium stand-ins: Parc des Princes → Le Parc (20), Bordeaux → Toulouse (73), Saint-Étienne → Lyon (72), Montpellier → Marseille (68).",
+        "_venue_note": "Game stadium stand-ins: Parc des Princes → Le Parc (20), Montpellier → Marseille (68).",
         "_sources": [
           "https://en.wikipedia.org/wiki/2007_Rugby_World_Cup",
           "https://en.wikipedia.org/wiki/2007_Rugby_World_Cup_knockout_stage"
@@ -927,7 +929,7 @@
                 "group": "B",
                 "home": "1014",
                 "away": "1008",
-                "stadium": "12",
+                "stadium": "kingsholm",
                 "venue": "Kingsholm, Gloucester",
                 "real_score": "45–10"
               },
@@ -1010,7 +1012,7 @@
                 "group": "B",
                 "home": "1021",
                 "away": "1008",
-                "stadium": "12",
+                "stadium": "kingsholm",
                 "venue": "Kingsholm, Gloucester",
                 "real_score": "18–28"
               },
@@ -1020,7 +1022,7 @@
                 "group": "C",
                 "home": "1018",
                 "away": "1006",
-                "stadium": "12",
+                "stadium": "kingsholm",
                 "venue": "Kingsholm, Gloucester",
                 "real_score": "10–17"
               },
@@ -1050,7 +1052,7 @@
                 "group": "C",
                 "home": "1001",
                 "away": "1006",
-                "stadium": "12",
+                "stadium": "kingsholm",
                 "venue": "Kingsholm, Gloucester",
                 "real_score": "54–9"
               },
@@ -1060,7 +1062,7 @@
                 "group": "C",
                 "home": "1018",
                 "away": "1009",
-                "stadium": "6",
+                "stadium": "sandy_park",
                 "venue": "Sandy Park, Exeter",
                 "real_score": "35–21"
               },
@@ -1090,7 +1092,7 @@
                 "group": "C",
                 "home": "1009",
                 "away": "1006",
-                "stadium": "6",
+                "stadium": "sandy_park",
                 "venue": "Sandy Park, Exeter",
                 "real_score": "16–17"
               },
@@ -1213,7 +1215,7 @@
                 "group": "D",
                 "home": "1007",
                 "away": "1012",
-                "stadium": "6",
+                "stadium": "sandy_park",
                 "venue": "Sandy Park, Exeter",
                 "real_score": "32–22"
               },
@@ -1475,7 +1477,7 @@
             "D": "10001"
           }
         },
-        "_venue_note": "Game stadium stand-ins: Brighton → Madejski Stadium (7); City of Manchester Stadium → Edgeley Park (75); Elland Road, Leeds → Edgeley Park (75); Leicester City Stadium → Welford Road (8); Olympic Stadium, London → Australia Stadium (1); Sandy Park, Exeter → Memorial Stadium (6); St James' Park, Newcastle → Kingston Park (11); Stadium MK, Milton Keynes → Franklin's Gardens (10); Villa Park, Birmingham → Sixways (76); Wembley → Twickenham (14).",
+        "_venue_note": "Game stadium stand-ins: Brighton → Madejski Stadium (7); City of Manchester Stadium → Edgeley Park (75); Elland Road, Leeds → Edgeley Park (75); Leicester City Stadium → Welford Road (8); Olympic Stadium, London → Australia Stadium (1); St James' Park, Newcastle → Kingston Park (11); Stadium MK, Milton Keynes → Franklin's Gardens (10); Villa Park, Birmingham → Sixways (76); Wembley → Twickenham (14).",
         "_sources": [
           "https://en.wikipedia.org/wiki/2015_Rugby_World_Cup",
           "https://en.wikipedia.org/wiki/2015_Rugby_World_Cup_knockout_stage"
@@ -1574,7 +1576,7 @@
                 "group": "A",
                 "home": "1008",
                 "away": "1013",
-                "stadium": "49",
+                "stadium": "japan_national_stadium",
                 "venue": "Tokyo Stadium, Chōfu",
                 "real_score": "30–10"
               },
@@ -1734,7 +1736,7 @@
                 "group": "B",
                 "home": "1010",
                 "away": "1009",
-                "stadium": "49",
+                "stadium": "japan_national_stadium",
                 "venue": "Tokyo Stadium, Chōfu",
                 "real_score": "71–9"
               },
@@ -1774,7 +1776,7 @@
                 "group": "C",
                 "home": "10001",
                 "away": "1001",
-                "stadium": "49",
+                "stadium": "japan_national_stadium",
                 "venue": "Tokyo Stadium, Chōfu",
                 "real_score": "23–21"
               },
@@ -1824,7 +1826,7 @@
                 "group": "C",
                 "home": "10002",
                 "away": "1001",
-                "stadium": "49",
+                "stadium": "japan_national_stadium",
                 "venue": "Tokyo Stadium, Chōfu",
                 "real_score": "39–10"
               },
@@ -1914,7 +1916,7 @@
                 "group": "D",
                 "home": "1002",
                 "away": "1022",
-                "stadium": "49",
+                "stadium": "japan_national_stadium",
                 "venue": "Tokyo Stadium, Chōfu",
                 "real_score": "25–29"
               },
@@ -1999,7 +2001,7 @@
                     ],
                     "date": "2019-10-19",
                     "time": "19:15",
-                    "stadium": "49",
+                    "stadium": "japan_national_stadium",
                     "venue": "Tokyo Stadium, Chōfu",
                     "real_score": "46–14"
                   },
@@ -2023,7 +2025,7 @@
                     ],
                     "date": "2019-10-20",
                     "time": "19:15",
-                    "stadium": "49",
+                    "stadium": "japan_national_stadium",
                     "venue": "Tokyo Stadium, Chōfu",
                     "real_score": "3–26"
                   }
@@ -2073,7 +2075,7 @@
                     ],
                     "date": "2019-11-01",
                     "time": "18:00",
-                    "stadium": "49",
+                    "stadium": "japan_national_stadium",
                     "venue": "Tokyo Stadium, Chōfu",
                     "real_score": "40–17"
                   }
@@ -2188,7 +2190,7 @@
             "D": "1002"
           }
         },
-        "_venue_note": "Game stadium stand-ins: Fukuoka → Hamilton (52); Hanazono, Higashiōsaka → Christchurch (48); Kamaishi → Suva (62); Kobe Misaki (roofed) → Dunedin (51); Kumagaya → Canberra (4); Kumamoto → Perth (31); Sapporo Dome → Dunedin (51); Shizuoka Ecopa → Sydney (3); Tokyo Stadium → Auckland (49); Toyota → Brisbane (2); Yokohama → Australia Stadium (1); Ōita → Wellington (50).",
+        "_venue_note": "Game stadium stand-ins: Fukuoka → Hamilton (52); Hanazono, Higashiōsaka → Christchurch (48); Kamaishi → Suva (62); Kobe Misaki (roofed) → Dunedin (51); Kumagaya → Canberra (4); Kumamoto → Perth (31); Sapporo Dome → Dunedin (51); Shizuoka Ecopa → Sydney (3); Tokyo Stadium → Japan National Stadium; Toyota → Brisbane (2); Yokohama → Australia Stadium (1); Ōita → Wellington (50).",
         "_sources": [
           "https://en.wikipedia.org/wiki/2019_Rugby_World_Cup",
           "https://en.wikipedia.org/wiki/2019_Rugby_World_Cup_knockout_stage"
@@ -2214,11 +2216,14 @@
         "venue": "neutral",
         "venues": [
           "70",
-          "68",
-          "72",
-          "65",
+          "stade_velodrome",
+          "ol_stadium",
+          "stade_de_la_beaujoire",
           "73",
-          "69"
+          "stade_pierre-mauroy",
+          "stade_de_bordeaux",
+          "stade_de_nice",
+          "stade_geoffroy-guichard"
         ],
         "points": {
           "win": 4,
@@ -2293,8 +2298,8 @@
                 "group": "A",
                 "home": "1007",
                 "away": "1009",
-                "stadium": "72",
-                "venue": "Stade Geoffroy-Guichard, Saint-Étienne (Lyon stand-in)",
+                "stadium": "stade_geoffroy-guichard",
+                "venue": "Stade Geoffroy-Guichard, Saint-Étienne",
                 "real_score": "52–8"
               },
               {
@@ -2303,8 +2308,8 @@
                 "group": "A",
                 "home": "10001",
                 "away": "1020",
-                "stadium": "69",
-                "venue": "Stade Pierre-Mauroy, Lille (Lens stand-in)",
+                "stadium": "stade_pierre-mauroy",
+                "venue": "Stade Pierre-Mauroy, Lille",
                 "real_score": "27–12"
               },
               {
@@ -2323,8 +2328,8 @@
                 "group": "A",
                 "home": "1007",
                 "away": "1020",
-                "stadium": "68",
-                "venue": "Allianz Riviera, Nice (Marseille stand-in)",
+                "stadium": "stade_de_nice",
+                "venue": "Allianz Riviera, Nice",
                 "real_score": "38–17"
               },
               {
@@ -2333,7 +2338,7 @@
                 "group": "A",
                 "home": "10001",
                 "away": "1009",
-                "stadium": "68",
+                "stadium": "stade_velodrome",
                 "venue": "Stade Vélodrome, Marseille",
                 "real_score": "96–0"
               },
@@ -2343,7 +2348,7 @@
                 "group": "A",
                 "home": "1020",
                 "away": "1009",
-                "stadium": "72",
+                "stadium": "ol_stadium",
                 "venue": "OL Stadium, Lyon",
                 "real_score": "36–26"
               },
@@ -2353,7 +2358,7 @@
                 "group": "A",
                 "home": "1010",
                 "away": "1007",
-                "stadium": "72",
+                "stadium": "ol_stadium",
                 "venue": "OL Stadium, Lyon",
                 "real_score": "96–17"
               },
@@ -2363,7 +2368,7 @@
                 "group": "A",
                 "home": "1010",
                 "away": "1020",
-                "stadium": "72",
+                "stadium": "ol_stadium",
                 "venue": "OL Stadium, Lyon",
                 "real_score": "73–0"
               },
@@ -2373,7 +2378,7 @@
                 "group": "A",
                 "home": "10001",
                 "away": "1007",
-                "stadium": "72",
+                "stadium": "ol_stadium",
                 "venue": "OL Stadium, Lyon",
                 "real_score": "60–7"
               },
@@ -2383,8 +2388,8 @@
                 "group": "B",
                 "home": "10003",
                 "away": "1012",
-                "stadium": "73",
-                "venue": "Matmut Atlantique, Bordeaux (Toulouse stand-in)",
+                "stadium": "stade_de_bordeaux",
+                "venue": "Matmut Atlantique, Bordeaux",
                 "real_score": "82–8"
               },
               {
@@ -2393,7 +2398,7 @@
                 "group": "B",
                 "home": "1015",
                 "away": "1014",
-                "stadium": "68",
+                "stadium": "stade_velodrome",
                 "venue": "Stade Vélodrome, Marseille",
                 "real_score": "18–3"
               },
@@ -2403,7 +2408,7 @@
                 "group": "B",
                 "home": "10003",
                 "away": "1018",
-                "stadium": "65",
+                "stadium": "stade_de_la_beaujoire",
                 "venue": "Stade de la Beaujoire, Nantes",
                 "real_score": "59–16"
               },
@@ -2413,8 +2418,8 @@
                 "group": "B",
                 "home": "1015",
                 "away": "1012",
-                "stadium": "73",
-                "venue": "Matmut Atlantique, Bordeaux (Toulouse stand-in)",
+                "stadium": "stade_de_bordeaux",
+                "venue": "Matmut Atlantique, Bordeaux",
                 "real_score": "76–0"
               },
               {
@@ -2433,8 +2438,8 @@
                 "group": "B",
                 "home": "1014",
                 "away": "1018",
-                "stadium": "68",
-                "venue": "Allianz Riviera, Nice (Marseille stand-in)",
+                "stadium": "stade_de_nice",
+                "venue": "Allianz Riviera, Nice",
                 "real_score": "45–17"
               },
               {
@@ -2443,8 +2448,8 @@
                 "group": "B",
                 "home": "1014",
                 "away": "1012",
-                "stadium": "69",
-                "venue": "Stade Pierre-Mauroy, Lille (Lens stand-in)",
+                "stadium": "stade_pierre-mauroy",
+                "venue": "Stade Pierre-Mauroy, Lille",
                 "real_score": "84–0"
               },
               {
@@ -2453,7 +2458,7 @@
                 "group": "B",
                 "home": "1015",
                 "away": "1018",
-                "stadium": "68",
+                "stadium": "stade_velodrome",
                 "venue": "Stade Vélodrome, Marseille",
                 "real_score": "49–18"
               },
@@ -2473,8 +2478,8 @@
                 "group": "B",
                 "home": "1018",
                 "away": "1012",
-                "stadium": "69",
-                "venue": "Stade Pierre-Mauroy, Lille (Lens stand-in)",
+                "stadium": "stade_pierre-mauroy",
+                "venue": "Stade Pierre-Mauroy, Lille",
                 "real_score": "45–24"
               },
               {
@@ -2493,8 +2498,8 @@
                 "group": "C",
                 "home": "1022",
                 "away": "1005",
-                "stadium": "73",
-                "venue": "Matmut Atlantique, Bordeaux (Toulouse stand-in)",
+                "stadium": "stade_de_bordeaux",
+                "venue": "Matmut Atlantique, Bordeaux",
                 "real_score": "32–26"
               },
               {
@@ -2503,8 +2508,8 @@
                 "group": "C",
                 "home": "1022",
                 "away": "1011",
-                "stadium": "68",
-                "venue": "Allianz Riviera, Nice (Marseille stand-in)",
+                "stadium": "stade_de_nice",
+                "venue": "Allianz Riviera, Nice",
                 "real_score": "28–8"
               },
               {
@@ -2513,8 +2518,8 @@
                 "group": "C",
                 "home": "1002",
                 "away": "1005",
-                "stadium": "72",
-                "venue": "Stade Geoffroy-Guichard, Saint-Étienne (Lyon stand-in)",
+                "stadium": "stade_geoffroy-guichard",
+                "venue": "Stade Geoffroy-Guichard, Saint-Étienne",
                 "real_score": "15–22"
               },
               {
@@ -2533,7 +2538,7 @@
                 "group": "C",
                 "home": "1022",
                 "away": "1002",
-                "stadium": "72",
+                "stadium": "ol_stadium",
                 "venue": "OL Stadium, Lyon",
                 "real_score": "40–6"
               },
@@ -2543,8 +2548,8 @@
                 "group": "C",
                 "home": "1005",
                 "away": "1006",
-                "stadium": "73",
-                "venue": "Matmut Atlantique, Bordeaux (Toulouse stand-in)",
+                "stadium": "stade_de_bordeaux",
+                "venue": "Matmut Atlantique, Bordeaux",
                 "real_score": "17–12"
               },
               {
@@ -2553,8 +2558,8 @@
                 "group": "C",
                 "home": "1002",
                 "away": "1011",
-                "stadium": "72",
-                "venue": "Stade Geoffroy-Guichard, Saint-Étienne (Lyon stand-in)",
+                "stadium": "stade_geoffroy-guichard",
+                "venue": "Stade Geoffroy-Guichard, Saint-Étienne",
                 "real_score": "34–14"
               },
               {
@@ -2563,7 +2568,7 @@
                 "group": "C",
                 "home": "1022",
                 "away": "1006",
-                "stadium": "65",
+                "stadium": "stade_de_la_beaujoire",
                 "venue": "Stade de la Beaujoire, Nantes",
                 "real_score": "43–19"
               },
@@ -2583,7 +2588,7 @@
                 "group": "D",
                 "home": "10002",
                 "away": "1001",
-                "stadium": "68",
+                "stadium": "stade_velodrome",
                 "venue": "Stade Vélodrome, Marseille",
                 "real_score": "27–10"
               },
@@ -2603,8 +2608,8 @@
                 "group": "D",
                 "home": "1017",
                 "away": "1004",
-                "stadium": "73",
-                "venue": "Matmut Atlantique, Bordeaux (Toulouse stand-in)",
+                "stadium": "stade_de_bordeaux",
+                "venue": "Matmut Atlantique, Bordeaux",
                 "real_score": "43–10"
               },
               {
@@ -2613,8 +2618,8 @@
                 "group": "D",
                 "home": "10002",
                 "away": "1008",
-                "stadium": "68",
-                "venue": "Allianz Riviera, Nice (Marseille stand-in)",
+                "stadium": "stade_de_nice",
+                "venue": "Allianz Riviera, Nice",
                 "real_score": "34–12"
               },
               {
@@ -2623,8 +2628,8 @@
                 "group": "D",
                 "home": "1001",
                 "away": "1017",
-                "stadium": "72",
-                "venue": "Stade Geoffroy-Guichard, Saint-Étienne (Lyon stand-in)",
+                "stadium": "stade_geoffroy-guichard",
+                "venue": "Stade Geoffroy-Guichard, Saint-Étienne",
                 "real_score": "19–10"
               },
               {
@@ -2633,8 +2638,8 @@
                 "group": "D",
                 "home": "10002",
                 "away": "1004",
-                "stadium": "69",
-                "venue": "Stade Pierre-Mauroy, Lille (Lens stand-in)",
+                "stadium": "stade_pierre-mauroy",
+                "venue": "Stade Pierre-Mauroy, Lille",
                 "real_score": "71–0"
               },
               {
@@ -2653,7 +2658,7 @@
                 "group": "D",
                 "home": "1001",
                 "away": "1004",
-                "stadium": "65",
+                "stadium": "stade_de_la_beaujoire",
                 "venue": "Stade de la Beaujoire, Nantes",
                 "real_score": "59–5"
               },
@@ -2663,8 +2668,8 @@
                 "group": "D",
                 "home": "10002",
                 "away": "1017",
-                "stadium": "69",
-                "venue": "Stade Pierre-Mauroy, Lille (Lens stand-in)",
+                "stadium": "stade_pierre-mauroy",
+                "venue": "Stade Pierre-Mauroy, Lille",
                 "real_score": "18–17"
               },
               {
@@ -2673,7 +2678,7 @@
                 "group": "D",
                 "home": "1008",
                 "away": "1001",
-                "stadium": "65",
+                "stadium": "stade_de_la_beaujoire",
                 "venue": "Stade de la Beaujoire, Nantes",
                 "real_score": "27–39"
               }
@@ -2697,7 +2702,7 @@
                     ],
                     "date": "2023-10-14",
                     "time": "17:00 CEST",
-                    "stadium": "68",
+                    "stadium": "stade_velodrome",
                     "venue": "Stade Vélodrome, Marseille",
                     "real_score": "17–29"
                   },
@@ -2721,7 +2726,7 @@
                     ],
                     "date": "2023-10-15",
                     "time": "17:00 CEST",
-                    "stadium": "68",
+                    "stadium": "stade_velodrome",
                     "venue": "Stade Vélodrome, Marseille",
                     "real_score": "30–24"
                   },
@@ -2901,7 +2906,6 @@
           "https://en.wikipedia.org/wiki/2023_Rugby_World_Cup_Pool_A",
           "https://en.wikipedia.org/wiki/2023_Rugby_World_Cup_knockout_stage"
         ],
-        "_venue_note": "Game stadium stand-ins: Lille → Lens (69), Bordeaux → Toulouse (73), Saint-Étienne → Lyon (72), Nice → Marseille (68).",
         "variant": "world_cup"
       }
     }

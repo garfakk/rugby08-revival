@@ -1,0 +1,14 @@
+{
+  "brentford_community_stadium": {
+    "name": "Brentford Community Stadium",
+    "country": "England",
+    "game_id": 7,
+    "scenes": {
+      "night": "brentford_community_stadium.night.big",
+      "overcast": "brentford_community_stadium.overcast.big"
+    },
+    "files": {
+      "xml/config/stadiuminfo.xml": "stadiuminfo.xml"
+    }
+  }
+}

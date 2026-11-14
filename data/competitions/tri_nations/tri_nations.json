@@ -130,7 +130,7 @@
                 "group": "A",
                 "home": "1010",
                 "away": "1002",
-                "stadium": "49",
+                "stadium": "eden_park",
                 "venue": "Eden Park, Auckland",
                 "real_score": "39–10",
                 "real_tries": [
@@ -289,7 +289,7 @@
                 "group": "A",
                 "home": "1010",
                 "away": "1002",
-                "stadium": "49",
+                "stadium": "eden_park",
                 "venue": "Eden Park, Auckland",
                 "real_score": "22–16",
                 "real_tries": [
@@ -503,7 +503,7 @@
                 "group": "A",
                 "home": "1010",
                 "away": "1015",
-                "stadium": "49",
+                "stadium": "eden_park",
                 "venue": "Eden Park, Auckland",
                 "real_score": "32–12",
                 "real_tries": [
@@ -542,7 +542,7 @@
                 "group": "A",
                 "home": "1002",
                 "away": "1010",
-                "stadium": "1",
+                "stadium": "melbourne",
                 "venue": "Etihad Stadium, Melbourne",
                 "real_score": "28–49",
                 "real_tries": [
@@ -640,8 +640,7 @@
         },
         "_sources": [
           "https://en.wikipedia.org/wiki/2010_Tri_Nations_Series"
-        ],
-        "_venue_note": "Game stadium stand-ins: Etihad Stadium, Melbourne → Australia Stadium (1)."
+        ]
       }
     },
     "2011": {
@@ -739,7 +738,7 @@
                 "group": "A",
                 "home": "1010",
                 "away": "1002",
-                "stadium": "49",
+                "stadium": "eden_park",
                 "venue": "Eden Park, Auckland",
                 "real_score": "30–14",
                 "real_tries": [

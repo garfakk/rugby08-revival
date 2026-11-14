@@ -87,7 +87,7 @@
     "153396"
    ],
    "enabled": false,
-   "primaryStadium": "17"
+   "primaryStadium": "rds_arena"
   },
   "2009": {
    "name": "Leinster",
@@ -183,7 +183,7 @@
     "156563"
    ],
    "enabled": true,
-   "primaryStadium": "17"
+   "primaryStadium": "rds_arena"
   },
   "2010": {
    "name": "Leinster",
@@ -280,7 +280,7 @@
     "156585"
    ],
    "enabled": true,
-   "primaryStadium": "17"
+   "primaryStadium": "rds_arena"
   },
   "2017": {
    "name": "Leinster",
@@ -379,7 +379,7 @@
     "10607"
    ],
    "enabled": true,
-   "primaryStadium": "17"
+   "primaryStadium": "rds_arena"
   },
   "2018": {
    "name": "Leinster",
@@ -484,7 +484,7 @@
     "157129"
    ],
    "enabled": true,
-   "primaryStadium": "17"
+   "primaryStadium": "rds_arena"
   },
   "2019": {
    "name": "Leinster",
@@ -589,7 +589,7 @@
     "157907"
    ],
    "enabled": true,
-   "primaryStadium": "17"
+   "primaryStadium": "rds_arena"
   },
   "2020": {
    "name": "Leinster",
@@ -688,7 +688,7 @@
     "11409"
    ],
    "enabled": false,
-   "primaryStadium": "17"
+   "primaryStadium": "rds_arena"
   },
   "2021": {
    "name": "Leinster",
@@ -787,7 +787,7 @@
     "158036"
    ],
    "enabled": false,
-   "primaryStadium": "17"
+   "primaryStadium": "rds_arena"
   },
   "2022": {
    "name": "Leinster",
@@ -886,7 +886,7 @@
     "158042"
    ],
    "enabled": true,
-   "primaryStadium": "17"
+   "primaryStadium": "rds_arena"
   },
   "2023": {
    "name": "Leinster",
@@ -967,7 +967,7 @@
     "157905"
    ],
    "enabled": true,
-   "primaryStadium": "17"
+   "primaryStadium": "rds_arena"
   },
   "2024": {
    "name": "Leinster",
@@ -1066,7 +1066,7 @@
     "152518"
    ],
    "enabled": true,
-   "primaryStadium": "17"
+   "primaryStadium": "rds_arena"
   },
   "2016": {
    "name": "Leinster",
@@ -1165,7 +1165,7 @@
     "10607"
    ],
    "enabled": false,
-   "primaryStadium": "17"
+   "primaryStadium": "rds_arena"
   }
  }
 }

@@ -84,7 +84,7 @@
     "155875"
    ],
    "enabled": true,
-   "primaryStadium": "2"
+   "primaryStadium": "melbourne"
   },
   "2023": {
    "name": "Rebels",
@@ -169,7 +169,7 @@
     "156000"
    ],
    "enabled": true,
-   "primaryStadium": "2"
+   "primaryStadium": "melbourne"
   },
   "2024": {
    "name": "Rebels",
@@ -251,7 +251,7 @@
     "155822"
    ],
    "enabled": true,
-   "primaryStadium": "2"
+   "primaryStadium": "melbourne"
   },
   "2018": {
    "name": "Rebels",
@@ -342,7 +342,7 @@
     "158677"
    ],
    "enabled": true,
-   "primaryStadium": "2"
+   "primaryStadium": "melbourne"
   },
   "2019": {
    "name": "Rebels",
@@ -434,7 +434,7 @@
     "157480"
    ],
    "enabled": true,
-   "primaryStadium": "2"
+   "primaryStadium": "melbourne"
   },
   "2020": {
    "name": "Rebels",
@@ -512,7 +512,7 @@
     "152891"
    ],
    "enabled": false,
-   "primaryStadium": "2"
+   "primaryStadium": "melbourne"
   },
   "2021": {
    "name": "Rebels",
@@ -590,7 +590,7 @@
     "152891"
    ],
    "enabled": false,
-   "primaryStadium": "2"
+   "primaryStadium": "melbourne"
   },
   "2014": {
    "name": "Rebels",
@@ -681,7 +681,7 @@
     "158677"
    ],
    "enabled": false,
-   "primaryStadium": "2"
+   "primaryStadium": "melbourne"
   }
  }
 }

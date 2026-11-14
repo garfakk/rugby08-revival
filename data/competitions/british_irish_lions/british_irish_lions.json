@@ -105,8 +105,7 @@
         },
         "_sources": [
           "https://en.wikipedia.org/wiki/2009_British_%26_Irish_Lions_tour_to_South_Africa"
-        ],
-        "_venue_note": "Game stadium stand-ins: Melbourne → Sydney (no Melbourne ground in the game); the 2013 Test at Docklands and the 2025 one at the MCG are played in Sydney."
+        ]
       }
     },
     "2013": {
@@ -176,7 +175,7 @@
                 "group": "A",
                 "home": "10177",
                 "away": "1002",
-                "stadium": "3",
+                "stadium": "melbourne",
                 "venue": "Docklands Stadium, Melbourne",
                 "real_score": "16–15"
               },
@@ -210,8 +209,7 @@
         },
         "_sources": [
           "https://en.wikipedia.org/wiki/2013_British_%26_Irish_Lions_tour_to_Australia"
-        ],
-        "_venue_note": "Game stadium stand-ins: Melbourne → Sydney (no Melbourne ground in the game); the 2013 Test at Docklands and the 2025 one at the MCG are played in Sydney."
+        ]
       }
     },
     "2017": {
@@ -271,7 +269,7 @@
                 "group": "A",
                 "home": "1010",
                 "away": "10177",
-                "stadium": "49",
+                "stadium": "eden_park",
                 "venue": "Eden Park, Auckland",
                 "real_score": "30–15"
               },
@@ -291,7 +289,7 @@
                 "group": "A",
                 "home": "1010",
                 "away": "10177",
-                "stadium": "49",
+                "stadium": "eden_park",
                 "venue": "Eden Park, Auckland",
                 "real_score": "15–15"
               }
@@ -315,8 +313,7 @@
         },
         "_sources": [
           "https://en.wikipedia.org/wiki/2017_British_%26_Irish_Lions_tour_to_New_Zealand"
-        ],
-        "_venue_note": "Game stadium stand-ins: Melbourne → Sydney (no Melbourne ground in the game); the 2013 Test at Docklands and the 2025 one at the MCG are played in Sydney."
+        ]
       }
     },
     "2021": {
@@ -420,8 +417,7 @@
         },
         "_sources": [
           "https://en.wikipedia.org/wiki/2021_British_%26_Irish_Lions_tour_to_South_Africa"
-        ],
-        "_venue_note": "Game stadium stand-ins: Melbourne → Sydney (no Melbourne ground in the game); the 2013 Test at Docklands and the 2025 one at the MCG are played in Sydney."
+        ]
       }
     },
     "2025": {
@@ -491,8 +487,8 @@
                 "group": "A",
                 "home": "1002",
                 "away": "10177",
-                "stadium": "3",
-                "venue": "Melbourne Cricket Ground (played at Sydney)",
+                "stadium": "melbourne",
+                "venue": "Melbourne Cricket Ground",
                 "real_score": "26–29"
               },
               {
@@ -525,8 +521,7 @@
         },
         "_sources": [
           "https://en.wikipedia.org/wiki/2025_British_%26_Irish_Lions_tour_to_Australia"
-        ],
-        "_venue_note": "Game stadium stand-ins: Melbourne → Sydney (no Melbourne ground in the game); the 2013 Test at Docklands and the 2025 one at the MCG are played in Sydney."
+        ]
       }
     }
   },

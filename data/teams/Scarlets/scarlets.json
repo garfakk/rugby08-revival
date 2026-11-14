@@ -182,7 +182,7 @@
     "158322"
    ],
    "enabled": true,
-   "primaryStadium": "34"
+   "primaryStadium": "parc_y_scarlets"
   },
   "2010": {
    "name": "Scarlets",
@@ -267,7 +267,7 @@
     "152924"
    ],
    "enabled": true,
-   "primaryStadium": "34"
+   "primaryStadium": "parc_y_scarlets"
   },
   "2017": {
    "name": "Scarlets",
@@ -359,7 +359,7 @@
     "157579"
    ],
    "enabled": true,
-   "primaryStadium": "34"
+   "primaryStadium": "parc_y_scarlets"
   },
   "2018": {
    "name": "Scarlets",
@@ -458,7 +458,7 @@
     "157574"
    ],
    "enabled": true,
-   "primaryStadium": "34"
+   "primaryStadium": "parc_y_scarlets"
   },
   "2019": {
    "name": "Scarlets",
@@ -553,7 +553,7 @@
     "157616"
    ],
    "enabled": true,
-   "primaryStadium": "34"
+   "primaryStadium": "parc_y_scarlets"
   },
   "2020": {
    "name": "Scarlets",
@@ -649,7 +649,7 @@
     "157857"
    ],
    "enabled": false,
-   "primaryStadium": "34"
+   "primaryStadium": "parc_y_scarlets"
   },
   "2021": {
    "name": "Scarlets",
@@ -748,7 +748,7 @@
     "157254"
    ],
    "enabled": false,
-   "primaryStadium": "34"
+   "primaryStadium": "parc_y_scarlets"
   },
   "2022": {
    "name": "Scarlets",
@@ -847,7 +847,7 @@
     "158110"
    ],
    "enabled": true,
-   "primaryStadium": "34"
+   "primaryStadium": "parc_y_scarlets"
   },
   "2023": {
    "name": "Scarlets",
@@ -942,7 +942,7 @@
     "156454"
    ],
    "enabled": true,
-   "primaryStadium": "34"
+   "primaryStadium": "parc_y_scarlets"
   },
   "2024": {
    "name": "Scarlets",
@@ -1029,7 +1029,7 @@
     "152919"
    ],
    "enabled": true,
-   "primaryStadium": "34"
+   "primaryStadium": "parc_y_scarlets"
   },
   "2016": {
    "name": "Scarlets",
@@ -1121,7 +1121,7 @@
     "157579"
    ],
    "enabled": false,
-   "primaryStadium": "34"
+   "primaryStadium": "parc_y_scarlets"
   }
  }
 }

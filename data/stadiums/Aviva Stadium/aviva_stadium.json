@@ -1,0 +1,18 @@
+{
+  "aviva_stadium": {
+    "name": "Aviva Stadium",
+    "country": "Ireland",
+    "game_id": 25,
+    "scenes": {
+      "day": "aviva_stadium.day.big",
+      "night": "aviva_stadium.night.big",
+      "overcast": "aviva_stadium.overcast.big"
+    },
+    "files": {
+      "frontend/textures/stadiums/dublin.d.fsh": "aviva_stadium.d.fsh",
+      "frontend/textures/stadiums/dublin.n.fsh": "aviva_stadium.n.fsh",
+      "frontend/textures/stadiums/dublin.o.fsh": "aviva_stadium.o.fsh",
+      "xml/config/stadiuminfo.xml": "stadiuminfo.xml"
+    }
+  }
+}

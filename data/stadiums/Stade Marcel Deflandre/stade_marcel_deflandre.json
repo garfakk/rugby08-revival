@@ -1,0 +1,13 @@
+{
+  "stade_marcel_deflandre": {
+    "name": "Stade Marcel Deflandre",
+    "country": "France",
+    "game_id": 20,
+    "scenes": {
+      "day": "stade_marcel_deflandre.day.big"
+    },
+    "files": {
+      "frontend/textures/stadiums/leparc.d.fsh": "stade_marcel_deflandre.d.fsh"
+    }
+  }
+}

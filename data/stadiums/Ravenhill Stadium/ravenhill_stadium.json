@@ -1,0 +1,10 @@
+{
+  "ravenhill_stadium": {
+    "name": "Ravenhill Stadium",
+    "country": "Ireland",
+    "game_id": 18,
+    "scenes": {
+      "overcast": "ravenhill_stadium.overcast.big"
+    }
+  }
+}

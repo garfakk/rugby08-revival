@@ -1,0 +1,13 @@
+{
+  "stade_de_bordeaux": {
+    "name": "Stade de Bordeaux",
+    "country": "France",
+    "game_id": 72,
+    "scenes": {
+      "overcast": "stade_de_bordeaux.overcast.big"
+    },
+    "files": {
+      "frontend/textures/stadiums/stadedegerland.o.fsh": "stade_de_bordeaux.o.fsh"
+    }
+  }
+}

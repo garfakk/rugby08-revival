@@ -10,7 +10,7 @@
    "banners": "banners_1/banner_%.png",
    "pads": "",
    "stadium": "",
-   "primaryStadium": "26",
+   "primaryStadium": "stade_marcel_michelin",
    "logos": {
     "main": "logos_1/logo.png",
     "frontend": "logos_1/logo_frontend.png",
@@ -105,7 +105,7 @@
    "banners": "banners_1/banner_%.png",
    "pads": "",
    "stadium": "",
-   "primaryStadium": "26",
+   "primaryStadium": "stade_marcel_michelin",
    "logos": {
     "main": "logos_1/logo.png",
     "frontend": "logos_1/logo_frontend.png",
@@ -198,7 +198,7 @@
    "banners": "banners_1/banner_%.png",
    "pads": "",
    "stadium": "",
-   "primaryStadium": "26",
+   "primaryStadium": "stade_marcel_michelin",
    "logos": {
     "main": "logos_1/logo.png",
     "frontend": "logos_1/logo_frontend.png",
@@ -295,7 +295,7 @@
    "banners": "banners_1/banner_%.png",
    "pads": "",
    "stadium": "",
-   "primaryStadium": "26",
+   "primaryStadium": "stade_marcel_michelin",
    "logos": {
     "main": "logos_1/logo.png",
     "frontend": "logos_1/logo_frontend.png",
@@ -395,7 +395,7 @@
    "banners": "banners_1/banner_%.png",
    "pads": "",
    "stadium": "",
-   "primaryStadium": "26",
+   "primaryStadium": "stade_marcel_michelin",
    "logos": {
     "main": "logos_1/logo.png",
     "frontend": "logos_1/logo_frontend.png",
@@ -484,7 +484,7 @@
    "banners": "banners_1/banner_%.png",
    "pads": "",
    "stadium": "",
-   "primaryStadium": "26",
+   "primaryStadium": "stade_marcel_michelin",
    "logos": {
     "main": "logos_1/logo.png",
     "frontend": "logos_1/logo_frontend.png",
@@ -584,7 +584,7 @@
    "banners": "banners_1/banner_%.png",
    "pads": "",
    "stadium": "",
-   "primaryStadium": "26",
+   "primaryStadium": "stade_marcel_michelin",
    "logos": {
     "main": "logos_1/logo.png",
     "frontend": "logos_1/logo_frontend.png",
@@ -690,7 +690,7 @@
    "banners": "banners_1/banner_%.png",
    "pads": "",
    "stadium": "",
-   "primaryStadium": "26",
+   "primaryStadium": "stade_marcel_michelin",
    "logos": {
     "main": "logos_1/logo.png",
     "frontend": "logos_1/logo_frontend.png",
@@ -784,7 +784,7 @@
    "banners": "banners_1/banner_%.png",
    "pads": "",
    "stadium": "",
-   "primaryStadium": "26",
+   "primaryStadium": "stade_marcel_michelin",
    "logos": {
     "main": "logos_1/logo.png",
     "frontend": "logos_1/logo_frontend.png",
@@ -885,7 +885,7 @@
    "banners": "banners_1/banner_%.png",
    "pads": "",
    "stadium": "",
-   "primaryStadium": "26",
+   "primaryStadium": "stade_marcel_michelin",
    "logos": {
     "main": "logos_1/logo.png",
     "frontend": "logos_1/logo_frontend.png",
@@ -986,7 +986,7 @@
    "banners": "banners_2/banner_%.png",
    "pads": "",
    "stadium": "",
-   "primaryStadium": "26",
+   "primaryStadium": "stade_marcel_michelin",
    "logos": {
     "main": "logos_2/logo.png",
     "frontend": "logos_2/logo_frontend.png",
@@ -1074,7 +1074,7 @@
    "banners": "banners_2/banner_%.png",
    "pads": "",
    "stadium": "",
-   "primaryStadium": "26",
+   "primaryStadium": "stade_marcel_michelin",
    "logos": {
     "main": "logos_2/logo.png",
     "frontend": "logos_2/logo_frontend.png",
@@ -1165,7 +1165,7 @@
    "banners": "banners_2/banner_%.png",
    "pads": "",
    "stadium": "",
-   "primaryStadium": "26",
+   "primaryStadium": "stade_marcel_michelin",
    "logos": {
     "main": "logos_2/logo.png",
     "frontend": "logos_2/logo_frontend.png",
@@ -1267,7 +1267,7 @@
    "banners": "banners_2/banner_%.png",
    "pads": "",
    "stadium": "",
-   "primaryStadium": "26",
+   "primaryStadium": "stade_marcel_michelin",
    "logos": {
     "main": "logos_2/logo.png",
     "frontend": "logos_2/logo_frontend.png",
@@ -1361,7 +1361,7 @@
    "banners": "banners_2/banner_%.png",
    "pads": "",
    "stadium": "",
-   "primaryStadium": "26",
+   "primaryStadium": "stade_marcel_michelin",
    "logos": {
     "main": "logos_2/logo.png",
     "frontend": "logos_2/logo_frontend.png",
@@ -1454,7 +1454,7 @@
    "banners": "banners_2/banner_%.png",
    "pads": "",
    "stadium": "",
-   "primaryStadium": "26",
+   "primaryStadium": "stade_marcel_michelin",
    "logos": {
     "main": "logos_2/logo.png",
     "frontend": "logos_2/logo_frontend.png",
@@ -1546,7 +1546,7 @@
    "banners": "banners_2/banner_%.png",
    "pads": "",
    "stadium": "",
-   "primaryStadium": "26",
+   "primaryStadium": "stade_marcel_michelin",
    "logos": {
     "main": "logos_2/logo.png",
     "frontend": "logos_2/logo_frontend.png",
@@ -1646,7 +1646,7 @@
    "banners": "banners_2/banner_%.png",
    "pads": "",
    "stadium": "",
-   "primaryStadium": "26",
+   "primaryStadium": "stade_marcel_michelin",
    "logos": {
     "main": "logos_2/logo.png",
     "frontend": "logos_2/logo_frontend.png",

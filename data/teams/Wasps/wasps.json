@@ -314,7 +314,7 @@
     "157014"
    ],
    "enabled": true,
-   "primaryStadium": "7",
+   "primaryStadium": "coventry_arena",
    "shirtNames": {
     "enabled": true
    }
@@ -430,7 +430,7 @@
     "152433"
    ],
    "enabled": true,
-   "primaryStadium": "7",
+   "primaryStadium": "coventry_arena",
    "shirtNames": {
     "enabled": true
    }
@@ -551,7 +551,7 @@
     "152471"
    ],
    "enabled": true,
-   "primaryStadium": "7",
+   "primaryStadium": "coventry_arena",
    "shirtNames": {
     "enabled": true
    }
@@ -669,7 +669,7 @@
     "156440"
    ],
    "enabled": true,
-   "primaryStadium": "7",
+   "primaryStadium": "coventry_arena",
    "shirtNames": {
     "enabled": true
    }
@@ -769,7 +769,7 @@
     "158022"
    ],
    "enabled": true,
-   "primaryStadium": "7",
+   "primaryStadium": "coventry_arena",
    "shirtNames": {
     "enabled": true
    }
@@ -949,7 +949,7 @@
     "152433"
    ],
    "enabled": false,
-   "primaryStadium": "7"
+   "primaryStadium": "coventry_arena"
   },
   "2021": {
    "name": "Wasps",
@@ -1043,7 +1043,7 @@
     "157891"
    ],
    "enabled": false,
-   "primaryStadium": "7"
+   "primaryStadium": "coventry_arena"
   },
   "2024": {
    "name": "Wasps",
@@ -1123,7 +1123,7 @@
     "156726"
    ],
    "enabled": false,
-   "primaryStadium": "7"
+   "primaryStadium": "coventry_arena"
   },
   "2016": {
    "name": "Wasps",
@@ -1212,7 +1212,7 @@
     "157014"
    ],
    "enabled": false,
-   "primaryStadium": "7"
+   "primaryStadium": "coventry_arena"
   }
  }
 }
