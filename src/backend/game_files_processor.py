@@ -32,6 +32,8 @@ sys.path.append(str(Path(__file__).parent.parent))
 import backend.process_handler
 from backend.game_specific_variables import *
 from backend.mod_utils import *
+from backend import adboards
+from shared.app_paths import assets_directory
 from shared.config import *
 
 from shared.log import get_logger
@@ -329,33 +331,36 @@ def wears_stock_gloves(player):
     return is_custom_asset(gloves) and not custom_asset_exists(gloves, config.mod_data_directory)
 
 
-def _copy_optional_adboards(match_data):
-    adboards = (match_data or {}).get("adboards")
-    if not adboards:
-        return
-    if os.path.splitext(adboards)[1].lower() != ".fsh":
-        log.warning(f"Ignoring adboards asset with unsupported extension: {adboards}")
-        return
+def _adboard_templates():
+    """(World Cup layout FSH, Standard layout FSH): the stock files whose
+    headers every built set keeps (backend/adboards.py)."""
+    with open(os.path.join(config.static_files_directory, game_filenames["adboards"]), "rb") as f:
+        wc = f.read()
+    with open(os.path.join(assets_directory(), "stock_game", "adboards_standard.fsh"), "rb") as f:
+        std = f.read()
+    return wc, std
 
-    source = os.path.join(config.mod_data_directory, adboards)
-    if not os.path.isfile(source):
-        log.warning(f"Ignoring missing adboards asset: {source}")
-        return
-    destination = os.path.join(config.game_launcher_directory, game_filenames["adboards"])
-    # A seven-board set leaves the nine-board grounds with missing textures
-    # (complete_adboards, backend.mod_utils): the missing boards are added.
-    try:
-        with open(source, "rb") as f:
-            data = f.read()
-        full = complete_adboards(data)
-        if full is not data:
-            with open(destination, "wb") as f:
-                f.write(full)
-            log.info(f"Adboards {adboards}: ads7/ads8 added for the nine-board grounds")
-            return
-    except (OSError, ValueError, struct.error) as e:
-        log.warning(f"Adboards {adboards} not checked: {e}")
-    copy_file(source, destination)
+
+def deploy_adboards(match_data):
+    """Put the match's ad set (match_data["adboards"]: a .fsh, an image or a
+    folder in the mod data; none = the mod's own World Cup set) over the two
+    ad files the stadium XML names, one per board layout: a stadium of the
+    other layout would map the textures wrongly (backend/adboards.py)."""
+    wc, std = _adboard_templates()
+    chosen = (match_data or {}).get("adboards")
+    ad_set = None
+    if chosen:
+        source = os.path.join(config.mod_data_directory, chosen)
+        try:
+            ad_set = adboards.load_set(source)
+        except (OSError, ValueError, struct.error) as e:
+            log.warning(f"Ignoring adboards {chosen}: {e}")
+    if ad_set is None:
+        ad_set = adboards.from_fsh(wc)
+    for name, data in adboards.build_all(ad_set, wc, std).items():
+        with open(os.path.join(config.game_launcher_directory, name), "wb") as f:
+            f.write(data)
+    log.info(f"Adboards: {chosen or 'default'}")
 
 
 def _add_roof_flag(banners_filepath):
@@ -413,8 +418,11 @@ def edit_graphics_files(match_data):
   # Copy stadium graphics files
   stadium_graphics_filepath = os.path.join(config.game_launcher_directory, game_filenames['stadium_graphics'])
   copy_file(os.path.join(config.mod_data_directory, match_data['stadium_graphics']), stadium_graphics_filepath)
-  # Leave default adboards untouched unless an optional FSH is selected.
-  _copy_optional_adboards(match_data)
+  # Ad boards, one file per stadium layout.
+  try:
+    deploy_adboards(match_data)
+  except (OSError, ValueError, struct.error) as e:
+    log.warning(f"Adboards not written: {e}")
 
   # Copy pitch logo file template and edit it
   pitch_logo_filepath = os.path.join(config.game_launcher_directory, game_filenames['pitch_logo'])

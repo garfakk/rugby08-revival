@@ -1190,7 +1190,6 @@ class MatchSetupScreen(KickoffTransition, Screen):
 
         # Laws (rugby08patches.dll rule_5022 / rule_22m)
         v.addSpacing(6)
-        v.addWidget(eyebrow_label("RULES", color=ACCENT, size=13))
         self.law_rows = {}
         for attr, label in (("law_5022", "50/22"), ("law_22m", "22m")):
             row = SelectorRow(label)
@@ -1209,6 +1208,17 @@ class MatchSetupScreen(KickoffTransition, Screen):
         # Hidden unless Settings > Expert Mode is on (see _apply_expert_mode).
         self._coming_soon_rows = []
         for label in ("referee",):
+        # Ad boards: the mod's default set, one the player loaded (a FSH or
+        # pictures) or a competition's; built for each stadium layout.
+        from ui.ads_picker import AdsRow
+        from app import ad_sets
+        self.ads_row = AdsRow("stadium ads", lambda cur: ad_sets.choices(self.ds, cur))
+        self.ads_row.refresh(self.cfg.adboards or "")
+        self.ads_row.changed.connect(
+            lambda: setattr(self.cfg, "adboards", (self.ads_row.current() or {}).get("path") or None))
+        self.focus.register(self.ads_row)
+        v.addWidget(self.ads_row)
+
             row = SelectorRow(label)
             row.set_free_text("—")
             row.set_disabled_visual(True)

@@ -173,4 +173,14 @@ stadiums/Eden Park/eden_park.night.big
 - `files` (optional): any other game file of that stadium, game path -> file, e.g. `{"frontend/textures/stadiums/auckland.d.fsh": "preview.fsh"}`.
 - The key (`eden_park`) adds a stadium to the lists; the key of a stock stadium (`"49"`) replaces it everywhere instead (tournament fixtures at that ground included).
 
+
+## Stadium ads
+
+Quick match, advanced settings, `stadium ads`: the ad boards around the pitch. `default` is the World Cup set; `Load from disk…` / `Load folder from disk…` add your own (kept in `user_data/mod_data/adboards/`). A set is:
+
+- a `.fsh` (the World Cup layout, or a stock Standard one);
+- a picture, or a folder of pictures: each picture is one ad (about 3:1 works best, others are fitted), repeated over every board;
+- a folder with a `.fsh` and pictures named after its boards (`ads0.png`, `ads1.png`…): those boards are replaced.
+
+The game's stadiums use two board layouts (World Cup and Standard) that are not interchangeable, so the chosen set is converted for both at each match. The boards' frame is never an ad.
 The files are put over the slot's only for a match at that stadium, and the name replaces the slot's in the game (not for club grounds whose name is also their team's: Leinster, Ulster, Bourgoin, Castres, Clermont, Paris, Perpignan, Llanelli, Cardiff).
