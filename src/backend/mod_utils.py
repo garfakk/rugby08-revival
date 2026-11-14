@@ -101,6 +101,76 @@ def head_too_heavy(path):
   return n is not None and n > MAX_HEAD_PRIMITIVES
 
 
+# Rugby08.exe is a 32-bit program that is not "large address aware", so it gets
+# 2 GB of address space. Loading a match maps data/motion/script.big (127 MB) in
+# one piece, and that 2 GB is so full that the only gap big enough is a 128 MB
+# one: any other allocation landing in it (a 64 MB graphics-driver buffer, a
+# heavy head model, a few more textures) and the map fails, the engine reports
+# "BigFile: Opening data/motion/script.big" and spins in its fatal-error loop
+# (black screen, 100% CPU, no match). Which allocations land where varies from
+# run to run, so a match hangs now and then with the same files, and always
+# with a head that is too heavy. Setting the exe's large-address-aware flag
+# gives the process the 4 GB (Wine) / up to 4 GB (64-bit Windows) and the
+# mapping no longer depends on that one gap.
+IMAGE_FILE_LARGE_ADDRESS_AWARE = 0x0020
+_IMAGE_FILE_MACHINE_I386 = 0x014C
+LAA_BACKUP_SUFFIX = ".no_laa"
+
+
+def large_address_aware(path):
+  """True/False: the large-address-aware flag of the 32-bit PE at `path`;
+  None when it is not a readable 32-bit PE."""
+  try:
+    with open(path, "rb") as f:
+      head = f.read(0x40)
+      if head[:2] != b"MZ" or len(head) < 0x40:
+        return None
+      pe = struct.unpack_from("<I", head, 0x3C)[0]
+      f.seek(pe)
+      hdr = f.read(24)
+  except OSError:
+    return None
+  if len(hdr) < 24 or hdr[:4] != b"PE\0\0":
+    return None
+  machine, = struct.unpack_from("<H", hdr, 4)
+  if machine != _IMAGE_FILE_MACHINE_I386:
+    return None
+  characteristics, = struct.unpack_from("<H", hdr, 22)
+  return bool(characteristics & IMAGE_FILE_LARGE_ADDRESS_AWARE)
+
+
+def ensure_large_address_aware(path):
+  """Set the large-address-aware flag of the game exe at `path` (see above),
+  keeping the original as `<exe>.no_laa` the first time. Only the two flag
+  bytes of the PE header change. Returns "patched", "already" or "skipped"
+  (not a 32-bit PE, file missing or not writable: the game then runs as it did
+  before, nothing is raised)."""
+  state = large_address_aware(path)
+  if state is None:
+    log.warning(f"{os.path.basename(path)}: not a 32-bit PE file, address space left as it is")
+    return "skipped"
+  if state:
+    return "already"
+  backup = path + LAA_BACKUP_SUFFIX
+  try:
+    if not os.path.exists(backup):
+      shutil.copy2(path, backup)
+    with open(path, "r+b") as f:
+      f.seek(0x3C)
+      pe = struct.unpack("<I", f.read(4))[0]
+      f.seek(pe + 22)
+      characteristics = struct.unpack("<H", f.read(2))[0]
+      f.seek(pe + 22)
+      f.write(struct.pack("<H", characteristics | IMAGE_FILE_LARGE_ADDRESS_AWARE))
+  except OSError as e:
+    log.warning(f"Could not set the large-address-aware flag on {os.path.basename(path)} "
+                f"(a match may fail to load now and then): {e}")
+    return "skipped"
+  log.info(f"{os.path.basename(path)}: large-address-aware flag set (original kept as "
+           f"{os.path.basename(backup)})")
+  return "patched"
+
+
 def copy_texture_file(source, destination):
   """copy_file for a face/texture .big or .fsh, repairing its chunk chains."""
   try:

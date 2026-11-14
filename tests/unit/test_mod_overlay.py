@@ -81,3 +81,47 @@ def test_new_pack_content_reaches_the_mirror(tmp_path):
     _write(os.path.join(pack, "players", "skins", "b.png"), "pack-b")      # an update adds a file
     eff = M.effective_directory(pack, user)
     assert _read(os.path.join(eff, "players", "skins", "b.png")) == "pack-b"
+
+
+def test_place_file_keeps_it_in_the_overlay_and_live_when_it_can(tmp_path):
+    pack, user = _setup(tmp_path)
+    src = str(tmp_path / "dl" / "new.png")
+    _write(src, "mine")
+    # no overlay yet: the program reads the pack itself; a new file is usable now
+    assert M.place_file(user, "players/skins/new.png", src, pack, pack)
+    assert _read(os.path.join(user, "mod_data", "players", "skins", "new.png")) == "mine"
+    assert _read(os.path.join(pack, "players", "skins", "new.png")) == "mine"
+    # replacing a pack file read straight from the pack: never written, restart applies it
+    _write(src, "mine-a")
+    assert not M.place_file(user, "players/skins/a.png", src, pack, pack)
+    assert _read(os.path.join(pack, "players", "skins", "a.png")) == "pack-a"
+    assert _read(os.path.join(user, "mod_data", "players", "skins", "a.png")) == "mine-a"
+    # read from the mirror: replaced there at once, never through the hard link
+    mirror = M.effective_directory(pack, user)
+    assert mirror != pack
+    _write(src, "mine-a2")
+    assert M.place_file(user, "players/skins/a.png", src, mirror, pack)
+    assert _read(os.path.join(mirror, "players", "skins", "a.png")) == "mine-a2"
+    assert _read(os.path.join(pack, "players", "skins", "a.png")) == "pack-a"
+
+
+def test_place_file_refuses_paths_out_of_the_overlay(tmp_path):
+    pack, user = _setup(tmp_path)
+    src = str(tmp_path / "x.png")
+    _write(src, "x")
+    import pytest
+    for bad in ("../x.png", "/etc/x", "C:/x", "a//b.png", ""):
+        with pytest.raises(ValueError):
+            M.place_file(user, bad, src, pack, pack)
+
+
+def test_readmes_say_which_folder_is_which(tmp_path):
+    _pack, user = _setup(tmp_path)
+    M.ensure_structure(user)
+    readme = os.path.join(user, "mod_data", M.README_NAME)
+    _write(readme, "an older README")
+    M.ensure_structure(user)
+    assert "Load from disk" in _read(readme)              # refreshed
+    edits = os.path.join(user, "edits")
+    M.ensure_edits_readme(edits)
+    assert "Don't add files here" in _read(os.path.join(edits, M.README_NAME))

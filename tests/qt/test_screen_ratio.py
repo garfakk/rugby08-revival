@@ -28,6 +28,11 @@ def test_fit_rect():
     assert fit_rect(0, 0, 1920, 1200, 16 / 9) == (0, 60, 1920, 1080)          # letterbox
     assert fit_rect(100, 50, 2520, 1080, 21 / 9) == (100, 50, 2520, 1080)     # already that ratio
     assert fit_rect(1920, 0, 1920, 1080, 4 / 3) == (2160, 0, 1440, 1080)      # second monitor
+    # within 1% of the ratio: filled, no 1-px bar (a fullscreen game window
+    # short of the monitor kept the Windows taskbar over the match)
+    assert fit_rect(0, 0, 1366, 768, 16 / 9) == (0, 0, 1366, 768)
+    assert fit_rect(0, 0, 1360, 768, 16 / 9) == (0, 0, 1360, 768)
+    assert fit_rect(0, 0, 2560, 1080, 21 / 9) == (20, 0, 2520, 1080)          # 64:27 still barred
 
 
 @pytest.mark.parametrize("size,expected", [

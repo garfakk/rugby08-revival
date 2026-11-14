@@ -263,3 +263,50 @@ def test_import_refuses_paths_outside_the_pack(tmp_path, pack, bad):
     out = store.import_bundle(str(bundle))
     assert out["records"] == [("players", "1")] and out["files"] == 0
     assert not (tmp_path / "evil.png").exists() and not (pack.parent.parent / "evil.png").exists()
+
+
+def test_import_bundle_places_files_with_the_users_place(tmp_path, pack):
+    """A user's import puts the export's images where they are kept (their
+    mod_data overlay), never under the pack root."""
+    store, records = start(tmp_path, pack)
+    (pack / "players" / "heads").mkdir()
+    (pack / "players" / "heads" / "new.big").write_bytes(b"head")
+    record = edited(records["1"], height="185")
+    record["stats"]["2024"]["face"] = "players/heads/new.big"
+    store.save("players", "1", record, str(pack / "players" / "players.json"))
+    export = tmp_path / "share"
+    store.export(str(export))
+    other = tmp_path / "other"
+    (other / "players").mkdir(parents=True)
+    (other / "players" / "players.json").write_text((pack / "players" / "players.json").read_text())
+    placed = {}
+
+    def place(rel, src):
+        with open(src, "rb") as fh:
+            placed[rel] = fh.read()
+        return False
+    out = EditStore(str(tmp_path / "o_edits"), str(other), "").load().import_bundle(str(export), place=place)
+    assert out["files"] == 1 and placed == {"players/heads/new.big": b"head"}
+    assert not (other / "players" / "heads").exists()
+
+
+def test_export_takes_only_the_users_own_files(tmp_path, pack):
+    """Files of the release the edit merely points at stay out; the user's
+    (in their mod_data) go in, every frame of a numbered series included."""
+    user = tmp_path / "mine"
+    store = EditStore(str(tmp_path / "edits"), str(pack), "", user_files=str(user),
+                      release_root=str(pack)).load()
+    records = json.loads((pack / "players" / "players.json").read_text())
+    (pack / "players" / "skins").mkdir()
+    (pack / "players" / "skins" / "stock.png").write_bytes(b"pack")
+    for i in (1, 2):
+        f = user / "players" / "straps" / f"tape_{i}.png"
+        f.parent.mkdir(parents=True, exist_ok=True)
+        f.write_bytes(b"t%d" % i)
+    record = edited(records["1"], height="185")
+    record["stats"]["2024"]["skin"] = "players/skins/stock.png"
+    record["stats"]["2024"]["skin_overlay"] = ["players/straps/tape_%.png"]
+    store.save("players", "1", record, str(pack / "players" / "players.json"))
+    export = tmp_path / "out"
+    assert store.export(str(export)) == (1, 2)
+    assert sorted(p.name for p in (export / "files").rglob("*.png")) == ["tape_1.png", "tape_2.png"]

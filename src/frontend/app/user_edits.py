@@ -35,6 +35,7 @@ import json
 import os
 import random
 import shutil
+import tempfile
 import zipfile
 from datetime import datetime
 
@@ -243,9 +244,13 @@ class EditStore:
     """Every edit of this user, one envelope per record (see the module doc).
     Pure data, no Qt: DataStore applies it to what the loader read."""
 
-    def __init__(self, root, pack_root, data_version=""):
+    def __init__(self, root, pack_root, data_version="", user_files="", release_root=""):
         self.root = root
         self.pack = PackFiles(pack_root)
+        #: the user's own files (user_data/mod_data) and the pack as released:
+        #: an export takes only the files the user added or changed
+        self.user_files = user_files
+        self.release_root = release_root or pack_root
         self.data_version = data_version
         self.ids = IdBlocks(root)
         self.envelopes = {k: {} for k in KINDS}
@@ -475,7 +480,7 @@ class EditStore:
         for rel in sorted(assets):
             dest = os.path.join(folder, "files", *rel.split("/"))
             os.makedirs(os.path.dirname(dest), exist_ok=True)
-            shutil.copy2(self.pack.abspath(rel), dest)
+            shutil.copy2(self._asset_source(rel), dest)
         _write_json(os.path.join(folder, "manifest.json"), {
             "format": FORMAT, "data_version": self.data_version,
             "program_version": program_version,
@@ -483,9 +488,28 @@ class EditStore:
             "records": written, "files": len(assets)})
         return written, len(assets)
 
+    def _asset_source(self, rel):
+        if self.user_files:
+            mine = os.path.join(self.user_files, *rel.split("/"))
+            if os.path.isfile(mine):
+                return mine
+        return self.pack.abspath(rel)
+
+    def _useful(self, rel):
+        """Whether the file `rel` belongs in an export: the user's own (in
+        their files, not the release's same file), or with no user files
+        known, any file found that the release lacks."""
+        released = os.path.join(self.release_root, *rel.split("/"))
+        if self.user_files:
+            mine = os.path.join(self.user_files, *rel.split("/"))
+            return os.path.isfile(mine) and not _same_file(mine, released)
+        return os.path.isfile(self.pack.abspath(rel)) and \
+            (self.release_root == self.pack.root or not _same_file(self.pack.abspath(rel), released))
+
     def _new_assets(self, env):
         """Pack-relative paths of the files `mine` references and `base`
-        doesn't, that exist under the pack root."""
+        doesn't, that are the user's own (_useful). A numbered series
+        ("ball_%.png") is each of its frames."""
         team_dir = os.path.dirname(env["home"]) if env["kind"] == "teams" else ""
         old = set(_strings(env["base"]))
         out = set()
@@ -494,16 +518,21 @@ class EditStore:
                 continue
             for rel in ([f"{team_dir}/{s}"] if team_dir else []) + [s]:
                 rel = rel.replace("\\", "/")
-                if os.path.isfile(self.pack.abspath(rel)):
-                    out.add(rel)
+                frames = [rel.replace("%", str(i), 1) for i in range(1, 65)] if "%" in rel else [rel]
+                found = [f for f in frames if os.path.isfile(self._asset_source(f))]
+                if found:
+                    out.update(f for f in found if self._useful(f))
                     break
         return out
 
-    def import_bundle(self, path):
+    def import_bundle(self, path, place=None):
         """Take an edits export's edits in as this user's own (the pack merge
         then runs as for a release). `path`: the export folder, its
         manifest.json, or a zip of it. Records this user already edits are
-        left out, files already present with other content too.
+        left out, files already present with other content too. `place`
+        (rel, source path) puts a new file where it is kept (the user's
+        mod_data overlay); without it the file is written under the pack
+        root (the maintainer, who ships it).
         Returns {"records": [(kind, id)], "skipped": [(kind, id)], "files": n,
         "file_clashes": [rel]}."""
         out = {"records": [], "skipped": [], "files": 0, "file_clashes": []}
@@ -545,9 +574,19 @@ class EditStore:
                         if fh.read() != data:
                             out["file_clashes"].append(rel)
                     continue
-                os.makedirs(os.path.dirname(dest), exist_ok=True)
-                with open(dest, "wb") as fh:
-                    fh.write(data)
+                if place is not None:
+                    fd, tmp = tempfile.mkstemp(suffix=os.path.splitext(rel)[1])
+                    with os.fdopen(fd, "wb") as fh:
+                        fh.write(data)
+                    try:
+                        place(rel, tmp)
+                    finally:
+                        if os.path.exists(tmp):
+                            os.remove(tmp)
+                else:
+                    os.makedirs(os.path.dirname(dest), exist_ok=True)
+                    with open(dest, "wb") as fh:
+                        fh.write(data)
                 out["files"] += 1
         return out
 
@@ -590,6 +629,16 @@ def open_bundle(path):
     if not os.path.isdir(path):
         raise ValueError(f"{path}: not a folder or a zip file")
     return _FolderBundle(path)
+
+
+def _same_file(a, b):
+    try:
+        if os.path.getsize(a) != os.path.getsize(b):
+            return False
+        with open(a, "rb") as fa, open(b, "rb") as fb:
+            return fa.read() == fb.read()
+    except OSError:
+        return False
 
 
 def _strings(value):

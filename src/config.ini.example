@@ -39,6 +39,12 @@ R08_filename = Rugby08.exe
 # the mod's game settings for the next matches.
 #import_ingame_settings = True
 
+# Give Rugby08.exe 4 GB of address space instead of 2 (sets its large-address-aware
+# flag at match start; the original exe is kept as Rugby08.exe.no_laa). Without it
+# a match now and then hangs on a black screen while loading, because a 127 MB
+# game file cannot be mapped in the crowded 2 GB. Set False to leave the exe alone.
+#large_address_aware = True
+
 ########## d3d8.dll proxy (windowing plugin) ##########
 # The proxy d3d8.dll is copied next to Rugby08.exe and forces the game windowed
 # (blocking the monitor resolution switch), which is what makes the game window
@@ -133,3 +139,50 @@ R08_filename = Rugby08.exe
 # files, memory dumps...). Defaults to <system temp>/R08-mod. Never written to
 # the game directory.
 #temp_directory = C:\Temp\R08-mod
+
+########## Legend / immortal CPU edge (rugby08patches.dll cpu_edge) ##########
+# Fine-tune the CPU's advantages at the higher levels. Key = <level>_<setting>,
+# where the level is legend or immortal; a setting left out keeps the mod's value (shown
+# below). Read at every match start; a value not understood is ignored (warning
+# in the log). Percent values are 0..100. Only for a human vs CPU match.
+[Difficulty]
+# --- Rucks the human team attacks ---
+# "grace,base,step,cap": the first <grace> rucks of an attack are never
+# contested, then the CPU contests base% + step% per further ruck, up to cap%.
+#legend_cpu_ruck_contest = 3,4,2,20
+#immortal_cpu_ruck_contest = 2,6,3,28
+# "ref,scale,lo,hi": that chance is multiplied by M = 2^((cpu - human - ref) / scale),
+# kept between lo% and hi% of 1x. cpu/human = each side's ruck power from the
+# players at the ruck: ruck ratings and stamina of the tackled carrier (human)
+# / the tackler (CPU) 45%, the bound players 35% (+6 per bound player), the
+# forwards on the pitch 20%. Rating per player = rucking + strength/5 +
+# (aggression + bravery)/20 - (100 - energy)/2, +30 with the ball-winner skill.
+#   ref   = power gap that counts as even (raise it: fewer turnovers everywhere)
+#   scale = gap that doubles/halves the chance (lower it: ratings/stamina matter more)
+#   lo/hi = limits of M in % (hi 250 = a beaten ruck at most 2.5x the chance)
+# A dominant ruck (M < 0.6) also gets one more protected ruck, a beaten one
+# (M > 1.8) one less. The per-ruck chance never goes above 60%. Protected
+# (grace) rucks are never turned over. After them, a ruck where the human side
+# has nobody bound (no ruck-button commit) and that lasts 4 s can also be
+# pushed over: its own roll, same chance x the M of that empty ruck.
+#legend_cpu_ruck_power = 26,10,40,250
+#immortal_cpu_ruck_power = 46,10,40,250
+# Human jackal on a CPU ruck refused this often (x M of that ruck, max 95%)
+#legend_cpu_ruck_secure = 45
+#immortal_cpu_ruck_secure = 75
+# Extra chance the CPU defence goes for the ball at the other rucks
+#legend_cpu_jackal = 10
+#immortal_cpu_jackal = 25
+# --- Lineouts ---
+# Contested CPU throws the CPU keeps at least / human throws it steals at least
+#legend_cpu_lineout_keep = 85
+#immortal_cpu_lineout_keep = 97
+#legend_cpu_lineout_steal = 12
+#immortal_cpu_lineout_steal = 25
+# --- CPU fly-half ---
+# Kick share % by zone "deep own end,own half,opp half,opp 22"
+#legend_cpu_fh_kick = 60,35,15,5
+#immortal_cpu_fh_kick = 65,40,15,5
+# Human players slower (%) while a CPU set play runs
+#legend_cpu_setplay_slow = 10
+#immortal_cpu_setplay_slow = 20

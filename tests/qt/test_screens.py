@@ -672,6 +672,62 @@ def test_dialog_ok_is_one_click_while_typing(qapp):
     screen.close()
 
 
+def test_asset_popup_loads_from_disk(qapp, tmp_path, monkeypatch):
+    """"Load from disk…" in an asset popup copies the file next to the current
+    one and picks it; a numbered series is picked as its %-pattern."""
+    from PyQt5.QtWidgets import QFileDialog, QWidget
+    from ui import editor_kit as K
+    screen = QWidget()
+    screen.resize(900, 600)
+    anchor = QWidget(screen)
+    screen.show()
+    root = tmp_path / "Team"
+    (root / "logos_1").mkdir(parents=True)
+    (root / "logos_1" / "logo.png").write_bytes(b"old")
+    disk = tmp_path / "disk"
+    disk.mkdir()
+    for name in ("crest.png", "ball_1.png", "ball_2.png"):
+        (disk / name).write_bytes(name.encode())
+    picks, got = [[str(disk / "crest.png")], [str(disk / "ball_1.png"), str(disk / "ball_2.png")]], []
+    monkeypatch.setattr(QFileDialog, "getOpenFileNames", lambda *a, **k: (picks.pop(0), ""))
+    for spec, current in (({"ext": (".png",)}, "logos_1/logo.png"), ({"ext": (".png",), "frames": 2}, "")):
+        popup = K.browse_assets(screen, anchor, str(root), spec, current, got.append)
+        qapp.processEvents()
+        assert [r.data for r in popup._rows][1:3] == [K.LOAD_FILES, K.LOAD_FOLDER]
+        popup.picked.emit(K.LOAD_FILES)
+        for _ in range(5):
+            qapp.processEvents()
+    assert got == ["logos_1/crest.png", "ball_%.png"]
+    assert (root / "logos_1" / "crest.png").read_bytes() == b"crest.png"
+    screen.close()
+
+
+def test_head_picker_loads_from_disk(window, qapp, tmp_path, monkeypatch):
+    from PyQt5.QtWidgets import QFileDialog
+    from shared.app_paths import user_data_directory
+    from shared.config import config as cfg
+    from ui.face_picker import FacePicker
+    (tmp_path / "head_777.big").write_bytes(b"head")
+    monkeypatch.setattr(QFileDialog, "getOpenFileNames",
+                        lambda *a, **k: ([str(tmp_path / "head_777.big")], ""))
+    window.show_player_editor()
+    qapp.processEvents()
+    picker = FacePicker(window.screen_player_editor)
+    try:
+        picker._load(False)
+        assert os.path.isfile(os.path.join(cfg.mod_data_directory, "players", "heads", "head_777.big"))
+        assert picker._mode == "custom" and picker._current == "players/heads/head_777.big"
+        assert "players/heads/head_777.big" in picker._cells
+    finally:
+        picker._close()
+        for d in (cfg.mod_data_directory, cfg.pack_directory,
+                  os.path.join(user_data_directory(), "mod_data")):
+            p = os.path.join(d, "players", "heads", "head_777.big")
+            if os.path.isfile(p):
+                os.remove(p)
+        window.show_main()
+
+
 def test_team_editor_shirt_names_tab(window, qapp):
     """The Shirt names tab: switching names on, dragging the name area and
     picking a kit colour edit the season through the undo stack, and save."""

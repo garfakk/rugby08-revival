@@ -240,3 +240,81 @@ def test_ruck_contest_lets_attacks_build():
         rules[name] = (grace, base, step, cap)
     leg, imm = rules["legend"], rules["immortal"]
     assert imm[0] <= leg[0] and imm[1] > leg[1] and imm[3] > leg[3]
+
+
+def _median_attack(grace, base, step, cap, m=1.0):
+    """Rucks until the governor has contested one with even odds (DLL Governor)."""
+    if m < 0.6:
+        grace += 1
+    elif m > 1.8 and grace > 1:
+        grace -= 1
+    keep = 1.0
+    for phase in range(1, 200):
+        if phase > grace:
+            keep *= 1 - min(60, round(min(cap, base + step * (phase - grace - 1)) * m)) / 100
+        if keep < 0.5:
+            return phase
+    return 200
+
+
+def test_ruck_power_makes_the_breakdown_matter():
+    """cpu_ruck_power scales the governor by the players at the ruck: an even
+    breakdown gives the human side long attacks, a dominant pack longer ones,
+    a beaten/tired one short ones -- immortal harder than legend throughout."""
+    med = {}
+    for name in ("legend", "immortal"):
+        edge = D.PROFILES[name]["cpu_edge"]
+        ref, scale, lo, hi = (int(v) for v in edge["cpu_ruck_power"].split(","))
+        assert scale > 0 and 0 < lo < 100 < hi
+        curve = [int(v) for v in edge["cpu_ruck_contest"].split(",")]
+        med[name] = {m: _median_attack(*curve, m) for m in (lo / 100, 1.0, hi / 100)}
+        assert med[name][lo / 100] >= med[name][1.0] + 3 >= med[name][hi / 100] + 5
+    assert med["legend"][1.0] >= 9 and med["immortal"][1.0] >= 7
+    assert all(med["immortal"][m] < med["legend"][m] for m in med["legend"])
+    assert int(D.PROFILES["immortal"]["cpu_edge"]["cpu_ruck_power"].split(",")[0]) > \
+        int(D.PROFILES["legend"]["cpu_edge"]["cpu_ruck_power"].split(",")[0])
+
+
+def test_config_ini_retunes_cpu_edge(tmp_path):
+    """user_data/config.ini [Difficulty] <level>_<key> overrides a cpu_edge
+    value for that level only; bad values and unknown keys are ignored."""
+    ini = tmp_path / "config.ini"
+    ini.write_text("[Difficulty]\n"
+                   "legend_cpu_ruck_power = 15, 12, 50, 200   # comment\n"
+                   "legend_cpu_ruck_secure = 30\n"
+                   "legend_cpu_ruck_contest = 3,4,2\n"          # wrong count -> default
+                   "legend_cpu_jackal = 150\n"                  # out of range -> default
+                   "legend_cpu_unknown = 5\n"
+                   "immortal_cpu_lineout_keep = 90\n", encoding="utf-8")
+    edge = D.cpu_edge("legend", str(ini))
+    default = D.PROFILES["legend"]["cpu_edge"]
+    assert edge["cpu_ruck_power"] == "15,12,50,200"
+    assert edge["cpu_ruck_secure"] == 30
+    assert edge["cpu_ruck_contest"] == default["cpu_ruck_contest"]
+    assert edge["cpu_jackal"] == default["cpu_jackal"]
+    assert "cpu_unknown" not in edge
+    assert edge["cpu_lineout_keep"] == default["cpu_lineout_keep"]
+    assert D.cpu_edge("immortal", str(ini))["cpu_lineout_keep"] == 90
+    assert D.PROFILES["legend"]["cpu_edge"] is default and default["cpu_ruck_secure"] == 45
+
+    md = {"team_A": _team(), "team_B": _team()}
+    D.apply(md, "legend", 1, 0, config_ini=str(ini))
+    assert md["cpu_edge"]["cpu_ruck_power"] == "15,12,50,200"
+
+
+def test_cpu_edge_without_config_is_the_profile(tmp_path):
+    assert D.cpu_edge("legend", str(tmp_path / "missing.ini")) == D.PROFILES["legend"]["cpu_edge"]
+    bad_power = tmp_path / "c.ini"
+    bad_power.write_text("[Difficulty]\nlegend_cpu_ruck_power = 11,0,40,250\n", encoding="utf-8")
+    assert D.cpu_edge("legend", str(bad_power)) == D.PROFILES["legend"]["cpu_edge"]
+
+
+def test_config_example_documents_every_cpu_edge_value():
+    """src/config.ini.example lists each <level>_<key> with the mod's value."""
+    import re
+    from pathlib import Path
+    text = (Path(__file__).resolve().parents[2] / "src" / "config.ini.example").read_text(encoding="utf-8")
+    for level in ("legend", "immortal"):
+        for key, value in D.PROFILES[level]["cpu_edge"].items():
+            m = re.search(rf"^#{level}_{key} = (.+)$", text, re.M)
+            assert m and m.group(1).strip() == str(value), (level, key)

@@ -13,7 +13,7 @@ from datetime import datetime
 
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QSizePolicy
 from PyQt5.QtGui import QPainter, QColor, QPen, QFont
-from PyQt5.QtCore import Qt, QRectF, pyqtSignal
+from PyQt5.QtCore import Qt, QRectF, QTimer, pyqtSignal
 
 from backend import game_specific_variables as gsv
 from backend.mod_utils import stock_portrait_path
@@ -33,11 +33,15 @@ from ui.broadcast import tracked_font, display_label, eyebrow_label
 from ui.editor_kit import (
     FieldGrid, SectionCard, TextField, NumberField, RatingField, ChoiceField, SegmentField,
     Note, Thumb, compact_button, browse_assets, load_pixmap, Badge, ToggleGrid,
-    LayerStackField, ScopeCheck,
+    LayerStackField, ScopeCheck, LOAD_FILES, LOAD_FOLDER, LOAD_ROWS, load_from_disk,
 )
 from ui.dropdown import PopupList
 from ui.face_picker import FacePicker
 from ui.team_sheet import SHEET_ROWS, POSITION_NAMES, POSITION_SHORT
+
+LOAD_LABELS = dict(LOAD_ROWS)
+#: the dropdown entries that aren't a value
+SPECIAL = {"__file__": "Browse file…", **LOAD_LABELS}
 from ui.face_thumbs import face_thumbnail
 from ui.theme import (
     BG_BASE, BG_RAISED, BORDER, ACCENT, WARN, GREEN, INFO, DANGER_LITE, HOME_TINT,
@@ -484,7 +488,8 @@ class AppearanceTab(PlayerTab):
         self.skin.popup_title = "skin"
         self.skin.display = self._skin_display
         self.skin.off_list_badge = False
-        self.skin.subtitle_for = lambda v: ("browse for a file" if v == "__file__" else
+        self.skin.subtitle_for = lambda v: ("" if v in LOAD_LABELS else
+                                            "browse for a file" if v == "__file__" else
                                             "stock skin tone" if v in SKIN_TONES else
                                             "custom texture · 512×256")
         self.skin.edited.connect(self._on_skin)
@@ -543,13 +548,14 @@ class AppearanceTab(PlayerTab):
         self.boots.popup_title = "boots"
         self.boots.display = self._boot_display
         self.boots.off_list_badge = False
-        self.boots.subtitle_for = lambda v: ("browse for a file" if v == "__file__" else
+        self.boots.subtitle_for = lambda v: ("" if v in LOAD_LABELS else
+                                             "browse for a file" if v == "__file__" else
                                              "stock boots in the game" if str(v).isdigit() else
                                              "custom texture · 256×256")
         self.boots.edited.connect(self._on_boots)
         # Browsing the list tries each style on the 3D preview; closing it
         # goes back to the stored one (or the one just picked).
-        self.boots.on_hover = lambda v: (self.screen.preview_boots(v) if v != "__file__"
+        self.boots.on_hover = lambda v: (self.screen.preview_boots(v) if v not in SPECIAL
                                          else self.screen.refresh_stage())
         self.boots.on_popup_closed = self.screen.refresh_stage
         g2.add(self.boots)
@@ -598,18 +604,18 @@ class AppearanceTab(PlayerTab):
         return config.mod_data_directory
 
     def _image_display(self, v):
-        return "Browse file…" if v == "__file__" else A.label_of(v)
+        return SPECIAL.get(v) or A.label_of(v)
 
     def _skin_display(self, v):
-        if v == "__file__":
-            return "Browse file…"
+        if v in SPECIAL:
+            return SPECIAL[v]
         if v in SKIN_TONES:
             return {"l_medium": "light-med", "d_medium": "dark-med"}.get(v, v)
         return A.label_of(v)
 
     def _boot_display(self, v):
-        if v == "__file__":
-            return "Browse file…"
+        if v in SPECIAL:
+            return SPECIAL[v]
         return f"Style {v}" if str(v).isdigit() else A.label_of(v)
 
     def _browse(self, anchor, kind, on_pick, title):
@@ -618,8 +624,27 @@ class AppearanceTab(PlayerTab):
             "layer" if kind in A.LAYER_KINDS else ("boots" if kind == "boots" else kind)]["size"]},
             "", lambda picked: on_pick(f"{rel}/{picked}" if picked else ""), title=title)
 
+    def _load(self, anchor, kind, folder, on_pick, title):
+        """Load from disk into the kind's folder; one file is picked at
+        once, several are offered in the browser. Runs once the popup that
+        asked for it has closed."""
+        def run():
+            rel_dir, _root = A.asset_dir(self.mod_dir, kind)
+            rels = load_from_disk(self.screen, self.mod_dir, rel_dir, A.IMAGE_EXTS, folder=folder)
+            if len(rels) == 1:
+                on_pick(rels[0])
+            elif rels:
+                self._browse(anchor, kind, on_pick, title)
+        QTimer.singleShot(0, run)
+
     # ── skin base ────────────────────────────────────────────────────────
     def _on_skin(self, value):
+        if value in LOAD_LABELS:
+            self.refresh()
+            self._load(self.skin, "skins", value == LOAD_FOLDER,
+                       lambda rel: self.edit_stat("skin image", "skin", rel, coalesce=False),
+                       "custom skin texture")
+            return
         if value == "__file__":
             self._browse(self.skin, "skins",
                          lambda rel: self.edit_stat("skin image", "skin", rel, coalesce=False),
@@ -683,13 +708,20 @@ class AppearanceTab(PlayerTab):
             popup.add_row(A.label_of(rel), rel, icon=load_pixmap(
                 A.abs_path(self.mod_dir, rel), 64), subtitle=os.path.dirname(rel))
         popup.add_row("Browse file…", "__file__")
-        popup.size_to(min(14, len(options) + 1))
+        for value, label in LOAD_ROWS:
+            popup.add_row(label, value)
+        popup.size_to(min(14, len(options) + 1 + len(LOAD_ROWS)))
         popup.picked.connect(lambda v: self._zone_layer_picked(zone, v))
         popup.closed.connect(lambda: stack.setFocus())
         popup.open_at(stack, self.screen)
 
     def _zone_layer_picked(self, zone, value):
         if value is None:
+            return
+        if value in LOAD_LABELS:
+            _, kind = self._zone_info(zone)
+            self._load(self.layer_stacks[zone], kind, value == LOAD_FOLDER,
+                       lambda rel: self._append_zone_layer(zone, rel), f"{kind} texture")
             return
         if value == "__file__":
             _, kind = self._zone_info(zone)
@@ -724,14 +756,27 @@ class AppearanceTab(PlayerTab):
             popup.add_row(A.label_of(rel), rel, selected=(rel == values[index]),
                           icon=load_pixmap(A.abs_path(self.mod_dir, rel), 64),
                           subtitle=os.path.dirname(rel))
-        popup.size_to(min(14, len(options)))
-        popup.picked.connect(lambda v: pick(v) if v else None)
+        for value, label in LOAD_ROWS:
+            popup.add_row(label, value)
+        popup.size_to(min(14, len(options) + len(LOAD_ROWS)))
+
+        def picked(v):
+            if v in LOAD_LABELS:
+                self._load(stack, kind, v == LOAD_FOLDER, pick, f"{kind} texture")
+            elif v:
+                pick(v)
+        popup.picked.connect(picked)
         popup.closed.connect(lambda: stack.setFocus())
         popup.open_at(stack, self.screen)
 
     # ── boots / face ─────────────────────────────────────────────────────
 
     def _on_boots(self, value):
+        pick = lambda rel: self.edit_stat("boots", "boot_style", rel or "0", coalesce=False)
+        if value in LOAD_LABELS:
+            self.refresh()
+            self._load(self.boots, "boots", value == LOAD_FOLDER, pick, "custom boot image")
+            return
         if value == "__file__":
             self._browse(self.boots, "boots",
                          lambda rel: self.edit_stat("boots", "boot_style", rel or "0",
@@ -769,7 +814,7 @@ class AppearanceTab(PlayerTab):
         skin = str(stats.get("skin") or "")
         custom = bool(skin) and A.normalize_tone(skin) is None
         skin_opts = A.asset_options(mod, "skins")
-        self.skin.set_options(list(SKIN_TONES) + skin_opts + ["__file__"])
+        self.skin.set_options(list(SKIN_TONES) + skin_opts + ["__file__", *LOAD_LABELS])
         self.skin.set_value(skin if custom else (A.normalize_tone(stats.get("skin_tone")) or "light"))
 
         # layer stacks: strap, bottom baselayer, top baselayer, gloves
@@ -779,7 +824,8 @@ class AppearanceTab(PlayerTab):
                 [self._layer_row(mod, rel, spec) for rel in self._zone_layers(zone)])
 
         boot = str(stats.get("boot_style") or "")
-        self.boots.set_options(list(BOOT_STYLES) + A.asset_options(mod, "boots") + ["__file__"])
+        self.boots.set_options(list(BOOT_STYLES) + A.asset_options(mod, "boots")
+                               + ["__file__", *LOAD_LABELS])
         self.boots.set_value(boot)
         self.boots.set_hint("style 0" if not boot else "")
         self.goal_kick_style.set_value(stats.get("goal_kicking_style") or "default")

@@ -4,10 +4,11 @@ screens/user_edits.py — My edits
 Every team and player the user changed (app/user_edits.py), what changed,
 and the conflicts a new data release left: for each, keep the user's value
 or take the release's. A record's edit can be dropped (back to the release),
-and a set of edits exported as a folder for the mod's maintainer — who, in
-the maintainer's mode, imports edits and writes them into the data pack.
+and a set of edits exported as a folder to share; anyone can import an
+export, and the maintainer (save_edits_to = mod) writes them into the pack.
 """
 import os
+import shutil
 import zipfile
 from datetime import datetime
 
@@ -113,11 +114,12 @@ class UserEditsScreen(Screen):
         self.export_btn = compact_button("EXPORT MY EDITS…")
         self.export_btn.clicked.connect(self._export)
         actions.addWidget(self.export_btn)
-        self.import_btn = self.promote_btn = None
+        # anyone can take a friend's export in; the maintainer then writes it into the pack
+        self.import_btn = compact_button("IMPORT EDITS…")
+        self.import_btn.clicked.connect(self._import)
+        actions.addWidget(self.import_btn)
+        self.promote_btn = None
         if self._maintainer():
-            self.import_btn = compact_button("IMPORT EDITS…")
-            self.import_btn.clicked.connect(self._import)
-            actions.addWidget(self.import_btn)
             self.promote_btn = compact_button("WRITE ALL INTO THE DATA PACK…", "primary")
             self.promote_btn.clicked.connect(self._promote_all)
             actions.addWidget(self.promote_btn)
@@ -379,7 +381,12 @@ class UserEditsScreen(Screen):
         except OSError as e:
             self._say(f"Export failed: {e}", DANGER_LITE)
             return
-        self._say(f"Exported {records} record(s) and {files} image file(s) into {folder}", GREEN)
+        try:
+            archive = shutil.make_archive(folder, "zip", folder)
+        except OSError:
+            archive = ""
+        self._say(f"Exported {records} record(s) and {files} image file(s) into {folder}"
+                  + (f" (+ {os.path.basename(archive)})" if archive else ""), GREEN)
 
     def _import(self):
         """An edits export: its manifest.json (the folder), or a zip of it."""
@@ -388,16 +395,13 @@ class UserEditsScreen(Screen):
                                               "Edits export (manifest.json *.zip)")
         if not path:
             return
+        # the user's files go to their mod_data overlay; the maintainer's into the pack
+        place = None if config.save_edits_to == "mod" else self.ds.place_user_file
         try:
-            out = self.edits.import_bundle(path)
+            out = self.ds.import_edits(path, place=place)
         except (OSError, ValueError, zipfile.BadZipFile) as e:
             self._say(f"Import failed: {e}", DANGER_LITE)
             return
-        for kind, rid in out["records"]:
-            # the merge with the pack as installed here, as at start-up
-            self.edits.conflicts.pop((kind, rid), None)
-            self.edits._recheck(kind, rid)
-            self.ds.refresh_record(kind, rid)
         text = f"Imported {len(out['records'])} record(s), {out['files']} file(s)"
         if out["skipped"]:
             text += (f"; {len(out['skipped'])} skipped (already in your edits)")

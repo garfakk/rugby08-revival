@@ -13,7 +13,10 @@ reR08 ENABLE_CPU_EDGE percentages: contested CPU lineout throws kept, human
 throws stolen, extra CPU jackals at the ruck and human jackals refused on a
 CPU ruck (the ratings alone can't do it: the stock lineout contest is a
 stat-weighted coin flip, and a human thrower with the better stat never
-loses it). The CPU fly-half kicks or attacks by pitch zone and alternates
+loses it). How often the CPU contests a human ruck depends on who is in it
+(cpu_ruck_power): ruck ratings and stamina of the tackled carrier, the
+players bound on each side and the forwards, so team selection, quick
+support and fresh legs off the bench keep the ball longer. The CPU fly-half kicks or attacks by pitch zone and alternates
 (cpu_fh_kick) and the human side runs slower while a CPU set play is on
 (cpu_setplay_slow), so the play gets executed before the tackle comes.
 
@@ -31,7 +34,9 @@ team-wide), the half-back, midfield and back-three unit combinations
 Only applies to a CPU side against a human side; with humans on both sides
 (or none) nothing is changed, the match is plain elite.
 """
+import configparser
 import copy
+import os
 
 from app import star_classes as SC
 
@@ -156,9 +161,21 @@ PROFILES = {
             # Possession governor at the human team's rucks (replaces stock +
             # cpu_jackal there): "grace,base,step,cap" - the first rucks of an
             # attack are never contested, then base% + step% a phase up to cap%.
-            # Median attack ~8 rucks (was ~5); long attacks still get turned over.
-            "cpu_ruck_contest": "2,6,3,25",
-            "cpu_ruck_secure": 50,     # human jackals refused on a CPU ruck
+            # Median attack ~10 rucks at even strength (was a flat ~8).
+            "cpu_ruck_contest": "3,4,2,20",
+            # Who is at the ruck scales that chance (and cpu_ruck_secure):
+            # "ref,scale,lo,hi" -> M = 2^((cpu - human - ref) / scale), lo..hi %.
+            # Power per side from the stock ruck intensity (rucking, strength/5,
+            # aggression and bravery /20, minus (100 - energy) / 2, +30 with the
+            # ball-winner skill): the tackled carrier / the tackler weigh most,
+            # then the bound players (+6 each) and the forwards' mean.  ref =
+            # the median fresh gap of two equal rosters after the boost (skills
+            # included), so a strong fresh pack that supports quickly attacks
+            # for ~15 rucks, a tired one or an isolated back ~7.  Grace rucks
+            # are never turned over; past them a ruck the human side leaves
+            # empty (no ruck-button commit) can be pushed over 4 s in.
+            "cpu_ruck_power": "26,10,40,250",
+            "cpu_ruck_secure": 45,     # human jackals refused on a CPU ruck (x M)
             # fly-half kick share by zone: deep own end, own half, opp half,
             # opp 22 (alternates: two kicks in a row halve the next chance)
             "cpu_fh_kick": "60,35,15,5",
@@ -187,8 +204,9 @@ PROFILES = {
             "cpu_lineout_keep": 97,
             "cpu_lineout_steal": 25,
             "cpu_jackal": 25,
-            "cpu_ruck_contest": "1,10,4,35",   # median attack ~6 rucks (was ~3)
-            "cpu_ruck_secure": 85,
+            "cpu_ruck_contest": "2,6,3,28",    # median ~8 rucks at even strength (was ~5)
+            "cpu_ruck_power": "46,10,40,250",  # bigger boost -> bigger fresh gap
+            "cpu_ruck_secure": 75,
             "cpu_fh_kick": "65,40,15,5",
             "cpu_setplay_slow": 20,
         },
@@ -347,12 +365,76 @@ def tire_team(team: dict, level: str) -> dict:
     return team
 
 
-def apply(match_data: dict, level: str, home_humans: int, away_humans: int) -> dict:
+# cpu_edge values a user can retune in user_data/config.ini [Difficulty]
+# (<level>_<key> = value, e.g. legend_cpu_ruck_power = 11,10,40,250):
+# plain percents, or "a,b,c,d" lists of that many integers.
+CPU_EDGE_LISTS = {"cpu_ruck_contest": 4, "cpu_ruck_power": 4, "cpu_fh_kick": 4}
+CONFIG_SECTION = "Difficulty"
+
+
+def _cpu_edge_value(key: str, raw: str):
+    """A config.ini value checked like the DLL parses it; None = rejected."""
+    raw = raw.strip()
+    try:
+        if key in CPU_EDGE_LISTS:
+            parts = [int(v) for v in raw.split(",")]
+            if len(parts) != CPU_EDGE_LISTS[key]:
+                return None
+            if key == "cpu_ruck_contest" and parts[0] < 0:
+                return None
+            if key == "cpu_ruck_power":
+                _ref, scale, lo, hi = parts
+                if scale <= 0 or not 0 < lo <= 100 or hi < 100:
+                    return None
+            return ",".join(str(v) for v in parts)
+        value = int(raw)
+    except ValueError:
+        return None
+    return value if 0 <= value <= 100 else None
+
+
+def config_overrides(level: str, config_ini: str = None) -> dict:
+    """cpu_edge values for `level` set in user_data/config.ini [Difficulty]."""
+    if config_ini is None:
+        from shared.app_paths import user_data_directory
+        config_ini = os.path.join(user_data_directory(), "config.ini")
+    cp = configparser.ConfigParser(strict=False, inline_comment_prefixes=("#", ";"))
+    try:
+        cp.read(config_ini, encoding="utf-8")
+    except (OSError, configparser.Error):
+        return {}
+    if not cp.has_section(CONFIG_SECTION):
+        return {}
+    known = PROFILES.get(level, {}).get("cpu_edge", {})
+    out = {}
+    for name, raw in cp.items(CONFIG_SECTION):
+        lvl, _, key = name.partition("_")
+        if lvl != level or key not in known or not raw.strip():
+            continue
+        value = _cpu_edge_value(key, raw)
+        if value is None:
+            from shared.log import get_logger
+            get_logger("difficulty").warning(
+                "config.ini [%s] %s = %r not understood, keeping %r", CONFIG_SECTION, name, raw, known[key])
+            continue
+        out[key] = value
+    return out
+
+
+def cpu_edge(level: str, config_ini: str = None) -> dict:
+    """The level's reR08 cpu_edge .mis values with the user's config.ini tuning."""
+    edge = dict(PROFILES[level]["cpu_edge"])
+    edge.update(config_overrides(level, config_ini))
+    return edge
+
+
+def apply(match_data: dict, level: str, home_humans: int, away_humans: int,
+          config_ini: str = None) -> dict:
     if level not in PROFILES:
         return match_data
     for key in cpu_teams(home_humans, away_humans):
         human = "team_A" if key == "team_B" else "team_B"
         match_data[key] = boost_team(match_data[key], level)
         match_data[human] = tire_team(match_data[human], level)
-        match_data["cpu_edge"] = dict(PROFILES[level]["cpu_edge"])
+        match_data["cpu_edge"] = cpu_edge(level, config_ini)
     return match_data

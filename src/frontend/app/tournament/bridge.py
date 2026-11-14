@@ -192,7 +192,8 @@ def _apply_weather(ds, t, fixture, cfg):
     if fc["precip"] == "snow":
         cfg.snow_intensity = 18.0 if fc["heavy"] else 8.0
     cfg.breath = fc["breath"]
-    if fc["roof_closed"]:
+    stadium = (cfg.stadium or {}).get("data")
+    if fc["roof_closed"] or weather.roof_environment(stadium) == cfg.environment:
         cfg.wind_power = 0           # calm under the roof, whatever Settings > Wind says
 
 

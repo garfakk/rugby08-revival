@@ -53,7 +53,7 @@ from app import player_ops as P
 from app.stock_faces import search_stock_faces, available_attributes
 from backend.mod_utils import stock_portrait_path
 from ui.broadcast import Card, display_label, eyebrow_label
-from ui.editor_kit import Thumb, Note, ChoiceField, SegmentField, compact_button
+from ui.editor_kit import Thumb, Note, ChoiceField, SegmentField, compact_button, load_from_disk
 from ui.face_thumbs import face_png_bytes
 from ui.theme import (
     BG_HIGHLIGHT, BORDER, ACCENT, FG_PRIMARY, FG_SECONDARY, FG_TERTIARY,
@@ -264,8 +264,14 @@ class FacePicker(QWidget):
         self.scroll.verticalScrollBar().valueChanged.connect(self._load_visible)
         v.addWidget(self.scroll, stretch=1)
 
+        foot = QHBoxLayout()
         self.count_note = Note("", color=FG_TERTIARY, size=T_SMALL)
-        v.addWidget(self.count_note)
+        foot.addWidget(self.count_note, stretch=1)
+        for label, folder in (("LOAD FILE…", False), ("LOAD FOLDER…", True)):
+            b = compact_button(label)
+            b.clicked.connect(lambda _c=False, f=folder: self._load(f))
+            foot.addWidget(b)
+        v.addLayout(foot)
 
         # Borrow the screen's 3D stage for the duration, if it has one to
         # lend — shown undimmed in its own holder beside the grid. See
@@ -369,6 +375,19 @@ class FacePicker(QWidget):
                 continue
             out.append({"id": rel, "name": label})
         return out
+
+    def _load(self, folder):
+        """Heads from disk into players/heads/, then shown in CUSTOM."""
+        rels = load_from_disk(self, config.mod_data_directory, "players/heads", (".big",),
+                              folder=folder, flatten=True)
+        if not rels:
+            return
+        self.mode_seg.set_value("custom")
+        self._mode = "custom"
+        self.search.clear()
+        self._update_mode_chrome()
+        self._apply_search()
+        self._arm(rels[0])
 
     def _apply_search(self):
         self._rebuild(self._entries())

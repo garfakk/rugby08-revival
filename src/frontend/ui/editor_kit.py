@@ -1940,10 +1940,53 @@ class FrameStrip(QWidget):
         p.drawText(lr, Qt.AlignRight | Qt.AlignVCenter, f"{present}/{self.count}\npresent")
 
 
+LOAD_FILES, LOAD_FOLDER = "__disk_files__", "__disk_folder__"
+LOAD_ROWS = ((LOAD_FILES, "Load from disk…"), (LOAD_FOLDER, "Load folder from disk…"))
+
+
+def load_from_disk(screen, root, subdir="", exts=(), folder=False, flatten=False):
+    """Ask for files (or a folder) anywhere on disk and copy them under
+    root/subdir (app/disk_import.py). Returns their paths relative to root."""
+    from PyQt5.QtWidgets import QFileDialog
+    from app import disk_import
+    start = getattr(load_from_disk, "last_dir", "") or os.path.expanduser("~")
+    if folder:
+        picked = QFileDialog.getExistingDirectory(screen, "Load folder", start)
+        sources = [picked] if picked else []
+    else:
+        pattern = " ".join(f"*{e}" for e in exts) or "*"
+        sources, _ = QFileDialog.getOpenFileNames(screen, "Load from disk", start,
+                                                  f"Files ({pattern})")
+    if not sources:
+        return []
+    load_from_disk.last_dir = os.path.dirname(os.path.normpath(sources[0]))
+    try:
+        rels = disk_import.import_files(sources, root, subdir, exts, flatten)
+    except OSError as e:
+        ConfirmDialog(screen, "Could not load the files", str(e), [("OK", "primary", "ok")],
+                      lambda _r: None, cancel_role="ok")
+        return []
+    if not rels:
+        ConfirmDialog(screen, "Nothing loaded", f"No {', '.join(exts) or ''} file found.",
+                      [("OK", "primary", "ok")], lambda _r: None, cancel_role="ok")
+    return rels
+
+
+def series_value(rels, frames):
+    """What picking the loaded `rels` means: the %-pattern of a numbered
+    series when `frames`, else the file when there is one ("" otherwise)."""
+    if frames:
+        m = re.search(r"_(\d+)(\.\w+)$", rels[0])
+        if m:
+            return rels[0][:m.start(1)] + "%" + m.group(2)
+    return rels[0] if len(rels) == 1 else ""
+
+
 def browse_assets(screen, anchor, root, spec, current, on_pick, title="choose file"):
     """Popup over the files under `root` that fit `spec`. Numbered series
     (ball_1.png, ball_2.png…) collapse to their %-pattern when the spec
-    expects frames, so picking one picks the whole series."""
+    expects frames, so picking one picks the whole series. The load rows
+    copy files from anywhere on disk next to the current one first."""
     exts = tuple(spec.get("ext", (".png",))) if spec else (".png",)
     frames = spec.get("frames", 0) if spec else 0
     entries = []
@@ -2015,6 +2058,8 @@ def browse_assets(screen, anchor, root, spec, current, on_pick, title="choose fi
         top = bar.value()
         popup.clear_rows()
         popup.add_row("— none (clear)", "", selected=(current == ""))
+        for value, label in LOAD_ROWS:
+            popup.add_row(label, value)
         add_level(tree, "", 0)
         if not entries:
             popup.add_row("no matching files in this folder", None, disabled=True)
@@ -2025,16 +2070,29 @@ def browse_assets(screen, anchor, root, spec, current, on_pick, title="choose fi
                 popup.set_highlight(idx, scroll=False)
         bar.setValue(top)
 
+    def load(folder):
+        subdir = os.path.dirname(current.replace("%", "1")) if current else ""
+        rels = load_from_disk(screen, root, subdir, exts, folder=folder)
+        if not rels:
+            return
+        value = series_value(rels, frames)
+        if value:
+            on_pick(value)
+        else:           # several files: pick one of them
+            browse_assets(screen, anchor, root, spec, rels[0], on_pick, title)
+
     def on_picked(v):
         if isinstance(v, tuple):
             open_dirs.symmetric_difference_update({v[1]})
             rebuild(highlight=v)
+        elif v in (LOAD_FILES, LOAD_FOLDER):
+            QTimer.singleShot(0, lambda: load(v == LOAD_FOLDER))
         elif v is not None:
             on_pick(v)
 
     rebuild()
     # fixed height for the fully expanded list, so the box never resizes
-    popup.size_to(1 + len(entries) + len({os.path.dirname(smp) for _, smp in entries} - {""}))
+    popup.size_to(1 + len(LOAD_ROWS) + len(entries) + len({os.path.dirname(smp) for _, smp in entries} - {""}))
     popup.keep_open = lambda v: isinstance(v, tuple)
     popup.picked.connect(on_picked)
     popup.closed.connect(lambda: anchor.setFocus() if anchor is not None else None)

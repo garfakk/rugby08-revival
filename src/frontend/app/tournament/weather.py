@@ -67,6 +67,7 @@ _BY_NAME = {
     "buenos": "argentina", "vancouver": "pacific_northwest", "san francisco": "california",
     "suva": "tropical", "perpignan": "france_south", "marseille": "france_south",
     "toulouse": "france_south", "castres": "france_south", "murrayfield": "scotland",
+    "japan": "japan", "melbourne": "australia", "velodrome": "france_south", "stade de nice": "france_south",
 }
 _BY_COUNTRY = {
     "england": "uk", "wales": "celtic", "ireland": "celtic", "scotland": "scotland",

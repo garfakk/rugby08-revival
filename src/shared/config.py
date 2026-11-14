@@ -182,6 +182,7 @@ class Config:
     # The user's own edits of teams and players, laid over the data pack
     # (frontend/app/user_edits.py): a new data pack never overwrites them.
     self.directory_user_edits = os.path.join(user_data_directory(), "edits")
+    mod_overlay.ensure_edits_readme(self.directory_user_edits)
     self.data_version, self.data_schema = self._read_data_version()
     self._check_data_installed()
     self.static_files_directory = os.path.join(self.mod_src_directory, "assets", "static_files")
@@ -286,6 +287,11 @@ class Config:
     # written, a new release can't overwrite the edits); "mod" writes the
     # data pack files themselves (the maintainer preparing a release).
     self.save_edits_to = "user"
+
+    # Set Rugby08.exe's large-address-aware flag (original kept as
+    # Rugby08.exe.no_laa) so loading a match never fails to map
+    # data/motion/script.big: see mod_utils.ensure_large_address_aware.
+    self.large_address_aware = True
 
     # d3d8.dll proxy: forces the game windowed and blocks the monitor resolution
     # switch, which is what makes the game window embeddable.

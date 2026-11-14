@@ -21,6 +21,7 @@ import os
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import QTimer
 
+from app import disk_import
 from app import team_ops as T
 from app import variants as V
 from app.game_data import (
@@ -658,7 +659,8 @@ class TeamEditorScreen(EditorScreen):
             if group:
                 seasons[str(year)]["group"] = group
             source_folder = None
-        json_path, missing = T.create_team(teams_dir, folder, tid, seasons, source_folder)
+        json_path, missing = T.create_team(teams_dir, folder, tid, seasons, source_folder,
+                                           copy_file=disk_import.copy_into_data)
         self.ds.register_team(tid, seasons, os.path.join(teams_dir, folder), json_path)
         self.reload_list()
 

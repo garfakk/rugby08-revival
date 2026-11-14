@@ -49,6 +49,11 @@ def fit_rect(left, top, width, height, ratio):
         w, h = max(1, round(height * ratio)), height
     else:
         w, h = width, max(1, round(width / ratio))
+    # A screen within 1% of the ratio (1366x768 at 16:9 -> 1365 wide) is
+    # filled: bars of a pixel or two help nobody, and a fullscreen game
+    # window short of the monitor leaves the Windows taskbar over it.
+    if w >= width * 0.99 and h >= height * 0.99:
+        return left, top, width, height
     return left + (width - w) // 2, top + (height - h) // 2, w, h
 
 

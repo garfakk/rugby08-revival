@@ -1,7 +1,7 @@
 ## Editing players and teams
 This is a short guide to create or edit players and teams with the built-in editors, add your own images (skin layers, heads, kits...) and send your work so it can be added to the mod.
 
-Everything starts from **Tools** in the main menu. The editors work on the data pack (`data/` when you run from source, `mod_data/` in the installed version). What you change is not written in the data pack, it is kept apart in `user_data/edits/`, so a new release never erases your work.
+Everything starts from **Tools** in the main menu. The editors work on the data pack (`data/` when you run from source, `mod_data/` in the installed version). What you change is not written in the data pack, it is kept apart in `user_data/edits/` (records, written by the program) and `user_data/mod_data/` (your files), so a new release never erases your work.
 
 *Tools menu:*  
 ![tools](img/tools.png)
@@ -63,7 +63,7 @@ This is where the images go.
 ![heads](img/head_picker.png)
 
 ### Add your own assets
-The editor only lists what is in the folders of the data pack, so **copy your file in the right folder first**, then it shows up in the lists (no restart needed):
+Every asset picker (skin, layers, boots, head, kits, logos, ball, banners, pads) has `Load from disk…` and `Load folder from disk…`: pick a file or a folder anywhere, it is copied into `user_data/mod_data/` at the right place and selected. Copying by hand into `user_data/mod_data/` works too (restart after):
 
 | What | Folder | Image |
 |---|---|---|
@@ -81,7 +81,7 @@ Then in `Appearance`, `ADD LAYER` (or the skin / boots list) shows your new file
 *Add a layer:*  
 ![add layer](img/add_layer.png)
 
-Heads are not made in the editor, they are `.big` files made with the community tools (see the heads credits in `src/CREDITS.MD`). Once the file is in `players/heads/` it is in the `custom` tab of the head browser.
+Heads are not made in the editor, they are `.big` files made with the community tools (see the heads credits in `src/CREDITS.MD`). `LOAD FILE…` / `LOAD FOLDER…` in the head browser adds them to its `custom` tab.
 
 ### Save
 `SAVE` (bottom right, `→ my edits`) keeps the player in your edits. `REVERT` goes back to the last save. The list on the left shows an issue count for broken players, the badge at the top right tells if the selected one is fine.
@@ -132,15 +132,14 @@ When you are happy with your edits, open `Tools > My edits`. It lists everything
 *My edits:*  
 ![my edits](img/my_edits.png)
 
-Click `EXPORT MY EDITS…`, pick a folder (`user_data/exported_edits/` is proposed) and the editor creates a folder `my_edits_<date>` with:
+Click `EXPORT MY EDITS…`, pick a folder (`user_data/exported_edits/` is proposed) and the editor creates a folder `my_edits_<date>` (and the same as a `.zip`) with:
 - `manifest.json`
 - `edits/players/<id>.json` and `edits/teams/<id>.json`: one small file per record
-- `files/...`: the new images you used (heads, skins, layers, kits, logos...) with the same paths as in the data pack
+- `files/...`: only your own files the edits use (loaded from disk, not the pack's), with the same paths as in the data pack
 
-Zip it and send it to me (GitHub issue or the forum thread). I import it with the same tool, merge it into the data pack and it can go in a next release.
+Send the zip to me (GitHub issue or the forum thread). I import it with the same tool, merge it into the data pack and it can go in a next release.
 
 Please check before you export:
-- The new assets are really in the data pack folders (otherwise they are not in `files/`)
 - No `MISSING` or `NO ALPHA` tag, and `NO ISSUES` at the top right of the editors
 - Only export what you want to share, `My edits` lets you drop a record you don't want (`DELETE…`)
 - You own the rights of the images, or they come from a patch with a credit I can add in `CREDITS.MD`
@@ -173,6 +172,7 @@ stadiums/Eden Park/eden_park.night.big
 - `files` (optional): any other game file of that stadium, game path -> file, e.g. `{"frontend/textures/stadiums/auckland.d.fsh": "preview.fsh"}`.
 - The key (`eden_park`) adds a stadium to the lists; the key of a stock stadium (`"49"`) replaces it everywhere instead (tournament fixtures at that ground included).
 
+The files are put over the slot's only for a match at that stadium, and the name replaces the slot's in the game (not for club grounds whose name is also their team's: Leinster, Ulster, Bourgoin, Castres, Clermont, Paris, Perpignan, Llanelli, Cardiff).
 
 ## Stadium ads
 
@@ -183,4 +183,3 @@ Quick match, advanced settings, `stadium ads`: the ad boards around the pitch. `
 - a folder with a `.fsh` and pictures named after its boards (`ads0.png`, `ads1.png`…): those boards are replaced.
 
 The game's stadiums use two board layouts (World Cup and Standard) that are not interchangeable, so the chosen set is converted for both at each match. The boards' frame is never an ad.
-The files are put over the slot's only for a match at that stadium, and the name replaces the slot's in the game (not for club grounds whose name is also their team's: Leinster, Ulster, Bourgoin, Castres, Clermont, Paris, Perpignan, Llanelli, Cardiff).

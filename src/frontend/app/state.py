@@ -22,6 +22,8 @@ from stadium_data_loader import StadiumDataLoader
 from tournament_data_loader import TournamentDataLoader
 from shared.config import config
 from shared import kit_files
+from shared import mod_overlay
+from shared.app_paths import user_data_directory
 
 # Order of the category list in match setup. Internal, not exposed to the
 # user. Categories not listed here follow, alphabetically.
@@ -107,7 +109,9 @@ class DataStore:
         teams = loader.load_teams()
         players = loader.load_players()
         edits = EditStore(config.directory_user_edits, config.mod_data_directory,
-                          config.data_version).load()
+                          config.data_version,
+                          user_files=mod_overlay.overlay_directory(user_data_directory()),
+                          release_root=config.pack_directory).load()
         edits.enabled = user_prefs.use_edits
         if edits.enabled:
             _apply_edits(loader, teams, players, edits)
@@ -126,7 +130,26 @@ class DataStore:
                 loader.players_file_path, loader.players_sources, loader.team_json_ids,
                 stadiums, tournaments, tournament_loader.tournaments_folder_path, edits)
 
+    # ── the user's files (shared/mod_overlay.py, user_data/mod_data) ──────
+    @staticmethod
+    def place_user_file(rel, source):
+        """Keep the file `source` as the user's `rel` ("players/heads/x.big")
+        in user_data/mod_data, where no release erases it. True when it is
+        usable before a restart (see mod_overlay.place_file)."""
+        return mod_overlay.place_file(user_data_directory(), rel, source,
+                                      config.mod_data_directory, config.pack_directory)
+
     # ── the user's edits (app/user_edits.py) ──────────────────────────────
+    def import_edits(self, path, place=None):
+        """Take an edits export in (EditStore.import_bundle) and merge each
+        record with the pack as installed here, as at start-up."""
+        out = self.edits.import_bundle(path, place=place)
+        for kind, rid in out["records"]:
+            self.edits.conflicts.pop((kind, rid), None)
+            self.edits._recheck(kind, rid)
+            self.refresh_record(kind, rid)
+        return out
+
     def promote_edits(self, keys):
         """Write the edits `keys` [(kind, id)] into the data pack files (the
         maintainer integrating them); each then leaves the user's edits.

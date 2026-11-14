@@ -51,8 +51,9 @@ README = """\
 YOUR OWN MOD DATA
 =================
 
-Put your own files here. This folder has the same layout as the data pack
-(the "mod_data" folder of the install, "data" in a source checkout):
+Put your own files here. The editors' "Load from disk" puts them here
+for you. This folder has the same layout as the data pack (the "mod_data" folder of
+the install, "data" in a source checkout):
 
   a file that exists in both  ->  yours replaces the pack's
   a file only you have        ->  it is added
@@ -80,13 +81,53 @@ stadiums/       stadiums.json, or one folder per stadium
 competitions/   one folder per competition (<name>/<name>.json and assets/)
 challenges/     challenge .json files
 
-Anything you create with the editors is kept in the "edits" folder next to
-this one. Keep the file names of the pack when you want to replace a file.
+Keep the file names of the pack when you want to replace a file.
+
+THIS FOLDER OR "edits"?
+  mod_data/  your FILES: images, heads, whole team folders, player files.
+  edits/     what you change in the Team and Player editors, written by the
+             program. Don't put files there. Share them with
+             Tools > My edits > Export / Import.
+"""
+
+EDITS_README = """\
+YOUR EDITS (written by the program)
+===================================
+
+The Team and Player editors keep what you change here, one small file per
+edited team (teams/) or player (players/). They are laid over the data pack
+at start-up, and a new release merges with them instead of erasing them.
+
+Don't add files here by hand: they would be renamed to .broken.
+  - your own files (heads, skins, kits...): the "mod_data" folder next to
+    this one, or "Load from disk" in the editors
+  - share edits: Tools > My edits > Export / Import
 """
 
 
 def overlay_directory(user_data):
     return os.path.join(user_data, OVERLAY_NAME)
+
+
+def _write_readme(path, text):
+    """The README is the program's: rewritten when an older one is there."""
+    try:
+        with open(path, encoding="utf-8") as f:
+            if f.read().replace("\r\n", "\n") == text:
+                return
+    except OSError:
+        pass
+    with open(path, "w", encoding="utf-8", newline="\r\n" if os.name == "nt" else "\n") as f:
+        f.write(text)
+
+
+def ensure_edits_readme(edits_dir):
+    """The README of user_data/edits/ (never fails the start-up)."""
+    try:
+        os.makedirs(edits_dir, exist_ok=True)
+        _write_readme(os.path.join(edits_dir, README_NAME), EDITS_README)
+    except OSError as e:
+        log.warning("cannot write the README of %s: %s", edits_dir, e)
 
 
 def ensure_structure(user_data):
@@ -96,10 +137,7 @@ def ensure_structure(user_data):
     try:
         for rel in STRUCTURE:
             os.makedirs(os.path.join(root, *rel.split("/")), exist_ok=True)
-        readme = os.path.join(root, README_NAME)
-        if not os.path.isfile(readme):
-            with open(readme, "w", encoding="utf-8", newline="\r\n" if os.name == "nt" else "\n") as f:
-                f.write(README)
+        _write_readme(os.path.join(root, README_NAME), README)
     except OSError as e:
         log.warning("cannot create %s: %s", root, e)
     return root
@@ -188,3 +226,36 @@ def effective_directory(pack, user_data):
     except OSError as e:
         log.error("cannot apply the user's mod data (%s): using the pack alone", e)
         return pack
+
+
+
+def place_file(user_data, rel, source, effective=None, pack=None):
+    """Put the file `source` (a path) into the overlay at `rel` ("a/b.png"),
+    where it is kept across releases. Returns True when it is also usable
+    right away: copied into the folder the program reads (`effective`)
+    when that is the mirror, or when no file is there yet. False: it
+    replaces a pack file read straight from the pack; a restart applies it
+    (a pack file is never overwritten)."""
+    parts = rel.replace("\\", "/").split("/")
+    if not rel or rel.startswith("/") or ":" in rel or any(p in ("", ".", "..") for p in parts):
+        raise ValueError(f"not a data pack path: {rel!r}")
+    dst = os.path.join(overlay_directory(user_data), *parts)
+    os.makedirs(os.path.dirname(dst), exist_ok=True)
+    if os.path.abspath(source) != os.path.abspath(dst):
+        tmp = dst + ".tmp"
+        shutil.copyfile(source, tmp)
+        os.replace(tmp, dst)
+    if not effective:
+        return False
+    live = os.path.join(effective, *parts)
+    if os.path.abspath(live) == os.path.abspath(dst):
+        return True
+    mirror = pack is not None and os.path.abspath(effective) != os.path.abspath(pack)
+    if not mirror and os.path.lexists(live):
+        return False
+    os.makedirs(os.path.dirname(live), exist_ok=True)
+    if os.path.lexists(live):
+        os.remove(live)             # a hard link into the pack: never write through it
+    shutil.copy2(dst, live)
+    return True
+

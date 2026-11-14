@@ -148,7 +148,8 @@ def test_every_documented_option_exists():
     with open(os.path.join(SRC, "config.ini.example"), encoding="utf-8") as f:
         text = f.read()
     # documented options may be commented out: "# key = value"
-    keys = set(re.findall(r"^[#;]? ?([A-Za-z_][A-Za-z0-9_]*) *=", text.split("[Options]", 1)[1], re.M))
+    options = re.split(r"^\[", text.split("\n[Options]\n", 1)[1], maxsplit=1, flags=re.M)[0]  # up to the next section
+    keys = set(re.findall(r"^[#;]? ?([A-Za-z_][A-Za-z0-9_]*) *=", options, re.M))
     missing = sorted(k for k in keys if not hasattr(config, k))
     assert not missing, missing
 

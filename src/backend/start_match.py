@@ -181,6 +181,11 @@ def start_match(match_data, copy_static_files = True, create_mission_file = True
     else:
         log.debug("No windowing helper used (d3d8 proxy off)")
             
+    # 4 GB of address space for the game: without it a match hangs now and then
+    # while loading (see mod_utils.ensure_large_address_aware)
+    if config.large_address_aware:
+        mod_utils.ensure_large_address_aware(os.path.join(config.game_launcher_directory, "Rugby08.exe"))
+
     if progress_callback:
         try:
             progress_callback(1.0, 1.0, "Starting Rugby 08")

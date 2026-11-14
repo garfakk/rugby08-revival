@@ -105,6 +105,9 @@ def test_remove_from_inheriting_variant_creates_no_roles():
 #   e0c4a86a  data parsed off the GUI thread           pipeline/test_match_pipeline.py::test_read_files_works_on_a_thread_without_qt
 #   e0c4a86a  splash / early close                     qt/test_startup.py
 #   e42a7b64  music download (.part, rename)           unit/test_music.py
+#   black screen loading a match (script.big map)     unit/test_large_address_aware.py,
+#                                                      pipeline/test_large_address_aware_pipeline.py,
+#                                                      unit/test_head_weight.py
 #   R08_handler score was a 1-tuple                    unit/test_match_result.py::test_read_match_result
 #   int("") on an empty squad slot                     pipeline/test_match_pipeline.py::test_empty_player_slots_skipped
 #   save_team dropped disabled seasons                 files/test_json_and_import.py::test_save_team_keeps_disabled_seasons

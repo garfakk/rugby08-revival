@@ -542,10 +542,12 @@ def _expand(rel, spec):
     return [rel]
 
 
-def create_team(teams_dir, folder_name, team_id, seasons, copy_from_folder=None):
+def create_team(teams_dir, folder_name, team_id, seasons, copy_from_folder=None, copy_file=None):
     """Create <teams_dir>/<folder>/<folder>.json. With `copy_from_folder`,
     every asset the seasons reference is copied across to the same relative
-    path. Rolls back the folder if anything fails. Returns (json_path, missing)."""
+    path — by `copy_file(src, dst)` when given (the user's files go to their
+    mod_data overlay, see shared/mod_overlay.place_file). Rolls back the
+    folder if anything fails. Returns (json_path, missing)."""
     folder = os.path.join(teams_dir, folder_name)
     os.makedirs(folder, exist_ok=False)
     missing = []
@@ -556,7 +558,7 @@ def create_team(teams_dir, folder_name, team_id, seasons, copy_from_folder=None)
                 if os.path.isfile(src):
                     dst = os.path.join(folder, rel)
                     os.makedirs(os.path.dirname(dst), exist_ok=True)
-                    shutil.copy2(src, dst)
+                    (copy_file or shutil.copy2)(src, dst)
                 else:
                     missing.append(rel)
         json_path = os.path.join(folder, folder_name.lower().replace(" ", "_") + ".json")

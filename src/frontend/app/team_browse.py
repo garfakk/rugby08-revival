@@ -30,6 +30,9 @@ GROUP_LABELS = {
     "france": "France",
     "other_european": "Other European",
     "southern_hemisphere": "Southern Hemisphere",
+    # ids as the 0.4 picker shows them: it has no label for these two
+    "Argentina": "Argentina",
+    "Super Rugby Americas": "Super Rugby Americas",
     "representatives": "Representatives",
 }
 GROUPS = list(GROUP_LABELS)
@@ -44,6 +47,7 @@ CATEGORY_GROUPS = {
     "Celtic League": "other_european", "Pro12": "other_european", "Pro14": "other_european",
     "URC": "other_european", "Italy": "other_european",
     "Super 14": "southern_hemisphere", "Super Rugby": "southern_hemisphere",
+    "Argentina": "Argentina", "Super Rugby Americas": "Super Rugby Americas",
 }
 OTHER_GROUP = "other_european"
 

@@ -157,3 +157,37 @@ def test_setting_is_saved_and_an_old_style_falls_back(tmp_path, monkeypatch):
     p.save()
     assert up.UserPrefs().match_picker == "groups"
 
+
+
+def _ground(s, game_id):
+    s.stadium_row.set_index(next(i for i, (_sid, info) in enumerate(s._stadium_list)
+                                 if info["game_id"] == game_id))
+    s._on_stadium_changed()
+
+
+def _environment(s, name):
+    s.environment_row.set_index(s.environment_row.index_of(name))
+    s.environment_row.changed.emit()
+
+
+@pytest.mark.parametrize("mode", ["advanced", "standard"])
+def test_closed_roof_means_no_wind(setup, monkeypatch, mode):
+    """The Millennium Stadium's cold scene is the roof closed: the wind
+    row goes to none and the match gets no wind, whatever Settings > Wind
+    says; any other ground or light gets its wind back."""
+    monkeypatch.setattr(user_prefs, "wind_mode", mode)
+    setup.wind_power_row.set_index(setup.wind_power_row.index_of(3))
+    _ground(setup, 32)
+    _environment(setup, "day")
+    assert setup.cfg.wind_power == (3 if mode == "advanced" else None)
+    _environment(setup, "cold")
+    assert setup.cfg.wind_power == 0
+    setup._roll_wind()
+    assert setup.cfg.wind_power == 0
+    _environment(setup, "night")
+    setup._roll_wind()
+    assert setup.cfg.wind_power == (3 if mode == "advanced" else None)
+    _environment(setup, "cold")
+    _ground(setup, 14)                       # an open ground
+    setup._roll_wind()
+    assert setup.cfg.wind_power == (3 if mode == "advanced" else None)

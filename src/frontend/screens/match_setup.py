@@ -816,6 +816,8 @@ class MatchSetupScreen(KickoffTransition, Screen):
         # Standard = no row, the game's own wind.
         self.wind_power_row.setVisible(user_prefs.wind_mode == "advanced")
         self.wind_power_row.set_index(self.wind_power_row.index_of(random_wind(random)[0]))
+        self._roof_calm = False
+        self._sync_roof_wind()
         self._on_wind_changed()
         # Re-roll which two mannequins wear the kits each time the screen is
         # opened — except the first, which uses the ones already picked (and
@@ -850,19 +852,50 @@ class MatchSetupScreen(KickoffTransition, Screen):
             row.set_free_text("coin toss" if locked else None)
             row.set_disabled_visual(locked)
 
+    _roof_calm = False          # the wind row was set to none by a closed roof
+    _wind_before_roof = 0       # ...and the strength it had before
+
     def _on_wind_changed(self):
         """Strength None = the game's stock random wind (Standard mode,
         rolled by the backend), else the row's strength, 0 = none. The
         direction (relative to home, see app.game_data) is rolled at
         kick-off (_roll_wind)."""
-        power = self.wind_power_row.current() if user_prefs.wind_mode == "advanced" else None
-        self.cfg.wind_power = power
+        if user_prefs.wind_mode == "advanced":
+            self.cfg.wind_power = self.wind_power_row.current()
+        else:
+            self.cfg.wind_power = 0 if self._roof_closed() else None
+
+    def _roof_closed(self):
+        """The selected stadium has a roof and the environment is the one
+        it is closed in (the Millennium Stadium's cold scene)."""
+        from app.tournament import weather
+        info = (self.cfg.stadium or {}).get("data")
+        return weather.roof_environment(info) == self.cfg.environment
+
+    def _sync_roof_wind(self):
+        """Under a closed roof the wind defaults to none (the row can still
+        be changed); leaving it puts the strength back."""
+        if not hasattr(self, "wind_power_row"):
+            return
+        closed = self._roof_closed()
+        if closed and not self._roof_calm:
+            self._wind_before_roof = self.wind_power_row.current()
+            self.wind_power_row.set_index(self.wind_power_row.index_of(0))
+        elif not closed and self._roof_calm:
+            self.wind_power_row.set_index(self.wind_power_row.index_of(self._wind_before_roof))
+        self._roof_calm = closed
+        self._on_wind_changed()
+
+    def _on_environment_changed(self):
+        self.cfg.environment = self.environment_row.current()
+        self._sync_roof_wind()
 
     def _roll_wind(self):
-        """Settle the wind for this match: the strength is the row's, the
-        direction always random, any of WIND_BEARINGS."""
+        """Settle the wind for this match: the strength is the row's (none
+        under a closed roof, in either wind mode), the direction always
+        random, any of WIND_BEARINGS."""
         if user_prefs.wind_mode != "advanced":
-            self.cfg.wind_power = None
+            self.cfg.wind_power = 0 if self._roof_closed() else None
             return
         self.cfg.wind_power = self.wind_power_row.current()
         self.cfg.wind_dir_deg = random_wind(random)[1]
@@ -992,8 +1025,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
         # "environments"); see _sync_environment_choices, called both below
         # and from _on_stadium_changed.
         self.environment_row = SelectorRow("environment")
-        self.environment_row.changed.connect(
-            lambda: setattr(self.cfg, "environment", self.environment_row.current()))
+        self.environment_row.changed.connect(self._on_environment_changed)
         self.focus.register(self.environment_row)
         v.addWidget(self.environment_row)
 
@@ -1177,6 +1209,17 @@ class MatchSetupScreen(KickoffTransition, Screen):
             v.addWidget(self.stadium_graphics_row)
             self.cfg.stadium_graphics_choice = self._stadium_graphics_choices[pads_index][0]
 
+        # Ad boards: the mod's default set, one the player loaded (a FSH or
+        # pictures) or a competition's; built for each stadium layout.
+        from ui.ads_picker import AdsRow
+        from app import ad_sets
+        self.ads_row = AdsRow("stadium ads", lambda cur: ad_sets.choices(self.ds, cur))
+        self.ads_row.refresh(self.cfg.adboards or "")
+        self.ads_row.changed.connect(
+            lambda: setattr(self.cfg, "adboards", (self.ads_row.current() or {}).get("path") or None))
+        self.focus.register(self.ads_row)
+        v.addWidget(self.ads_row)
+
         # Which ball the match uses: the home team's (default), the away
         # team's or a tournament's. The open list previews the ball in 3D.
         from ui.ball_picker import BallRow
@@ -1208,17 +1251,6 @@ class MatchSetupScreen(KickoffTransition, Screen):
         # Hidden unless Settings > Expert Mode is on (see _apply_expert_mode).
         self._coming_soon_rows = []
         for label in ("referee",):
-        # Ad boards: the mod's default set, one the player loaded (a FSH or
-        # pictures) or a competition's; built for each stadium layout.
-        from ui.ads_picker import AdsRow
-        from app import ad_sets
-        self.ads_row = AdsRow("stadium ads", lambda cur: ad_sets.choices(self.ds, cur))
-        self.ads_row.refresh(self.cfg.adboards or "")
-        self.ads_row.changed.connect(
-            lambda: setattr(self.cfg, "adboards", (self.ads_row.current() or {}).get("path") or None))
-        self.focus.register(self.ads_row)
-        v.addWidget(self.ads_row)
-
             row = SelectorRow(label)
             row.set_free_text("—")
             row.set_disabled_visual(True)
@@ -1466,6 +1498,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
         current = self.cfg.environment if self.cfg.environment in envs else envs[0]
         self.environment_row.set_values(envs, index=envs.index(current))
         self.cfg.environment = current
+        self._sync_roof_wind()
 
     def _on_match_type_changed(self):
         self.cfg.match_type = self.match_type_row.current()
