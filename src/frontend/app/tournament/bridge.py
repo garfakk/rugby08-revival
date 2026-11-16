@@ -162,7 +162,7 @@ def to_match_config(ds, t, fixture) -> MatchConfig:
         # The template's own season's textures (e.g. the RWC 2023 template
         # gets "world_cup:2023"); a season without textures of its own gets
         # none rather than another edition's. Each texture only when its
-        # file is on disk (ball, logo, stadium graphics, pitch logo, adboards).
+        # file is on disk (ball, logo, pitch logo, pads / posts / ads sets).
         season = str(tpl.get("branding_season") or "")
         if not season:
             competition_branding.apply(ds, cfg, branding)

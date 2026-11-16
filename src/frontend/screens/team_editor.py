@@ -34,7 +34,6 @@ from screens.editor_base import EditorScreen
 from screens.team_tabs import (
     OverviewTab, KitsTab, ShirtNamesTab, SquadTab, AssetsTab, TAB_OVERVIEW, TAB_KITS, TAB_NAMES,
     TAB_SQUAD, TAB_ASSETS,
-    PADS_ENABLED,
 )
 from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QWidget
 from ui.broadcast import Card, eyebrow_label
@@ -256,7 +255,7 @@ class TeamEditorScreen(EditorScreen):
             elif state == "partial":
                 issues.append((key, f"{key}: {detail}", "info"))
 
-        for key in ("ball", "banners") + (("pads",) if PADS_ENABLED else ()):
+        for key in ("ball", "banners"):
             check(key, info.get(key, ""), key)
         for slot, rel in (info.get("logos") or {}).items():
             check(f"logos.{slot}", rel, f"logos.{slot}")
@@ -292,7 +291,7 @@ class TeamEditorScreen(EditorScreen):
             return TAB_KITS
         if key.startswith(("players", "roles", "setPlays")):
             return TAB_SQUAD
-        if key in ("ball", "banners", "pads") or key.startswith(("logos.small", "logos.left",
+        if key in ("ball", "banners") or key.startswith(("logos.small", "logos.left",
                                                                  "logos.right")):
             return TAB_ASSETS
         return TAB_OVERVIEW

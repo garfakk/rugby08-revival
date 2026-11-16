@@ -32,7 +32,7 @@ sys.path.append(str(Path(__file__).parent.parent))
 import backend.process_handler
 from backend.game_specific_variables import *
 from backend.mod_utils import *
-from backend import adboards, stadium_screen
+from backend import adboards, stadium_dressing, stadium_screen
 from shared.app_paths import assets_directory
 from shared.config import *
 
@@ -341,6 +341,22 @@ def _adboard_templates():
     return wc, std
 
 
+def deploy_pads(match_data):
+    """The game's pads-and-flags file (the stadium XML names one for every
+    stadium) from the match's pads set and posts set (match_data["pads"] /
+    ["posts"]: folders in the mod data or "stock:" references; none = the
+    stock World Cup textures), backend/stadium_dressing.py."""
+    pads_ref, posts_ref = match_data.get("pads") or "", match_data.get("posts") or ""
+    stock = [stadium_dressing.stock_game_path(r) for r in (pads_ref, posts_ref)
+             if stadium_dressing.is_stock(r)]
+    stadium_dressing.prefetch_stock(stock)
+    pads = stadium_dressing.load(pads_ref, "pads")
+    posts = stadium_dressing.load(posts_ref, "posts")
+    with open(os.path.join(config.game_launcher_directory, game_filenames["stadium_graphics"]), "wb") as f:
+        f.write(stadium_dressing.build(pads, posts))
+    log.info(f"Pads: {pads_ref or 'default'}, posts: {posts_ref or 'default'}")
+
+
 def deploy_adboards(match_data):
     """Put the match's ad set (match_data["adboards"]: a .fsh, an image or a
     folder in the mod data; none = the mod's own World Cup set) over the two
@@ -350,9 +366,8 @@ def deploy_adboards(match_data):
     chosen = (match_data or {}).get("adboards")
     ad_set = None
     if chosen:
-        source = os.path.join(config.mod_data_directory, chosen)
         try:
-            ad_set = adboards.load_set(source)
+            ad_set = adboards.load_ref(chosen)
         except (OSError, ValueError, struct.error) as e:
             log.warning(f"Ignoring adboards {chosen}: {e}")
     if ad_set is None:
@@ -415,9 +430,11 @@ def edit_graphics_files(match_data):
         else:
             log.error("Error while copying ball template file")
 
-  # Copy stadium graphics files
-  stadium_graphics_filepath = os.path.join(config.game_launcher_directory, game_filenames['stadium_graphics'])
-  copy_file(os.path.join(config.mod_data_directory, match_data['stadium_graphics']), stadium_graphics_filepath)
+  # Post pads, corner flags and posts: one file built from the two sets.
+  try:
+    deploy_pads(match_data)
+  except (OSError, ValueError, struct.error) as e:
+    log.warning(f"Pads not written: {e}")
   # Ad boards, one file per stadium layout.
   try:
     deploy_adboards(match_data)

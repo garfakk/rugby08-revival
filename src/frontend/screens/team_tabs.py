@@ -285,7 +285,7 @@ class OverviewTab(TeamTab):
         kits = info.get("kits") or {}
         self._set_summary("kits", ", ".join(kits) if kits else "none", FG_PRIMARY if kits else DANGER_LITE)
         missing = sum(1 for key, _, _ in self.screen.issues if key.startswith(("kits.", "logos.", "ball",
-                                                                              "banners", "pads")))
+                                                                              "banners")))
         self._set_summary("assets", "all found" if not missing else f"{missing} problem(s)",
                           GREEN if not missing else WARN)
         self.file_note.setText(self.screen.file_label())
@@ -1725,10 +1725,6 @@ class SquadTab(TeamTab):
 # ═════════════════════════════════════════════════════════════════════════
 # Match-day assets
 # ═════════════════════════════════════════════════════════════════════════
-# Stadium pads are switched off for now: no field in the editor, no issue
-# raised for them (the team editor checks the same flag).
-PADS_ENABLED = False
-
 
 class AssetsTab(TeamTab):
     def __init__(self, screen, index):
@@ -1756,17 +1752,6 @@ class AssetsTab(TeamTab):
         banners.add(self.banner_strip)
         grid.addWidget(banners, 0, 1)
 
-        self.pads = None
-        if PADS_ENABLED:
-            pads = SectionCard("stadium pads")
-            g = FieldGrid(columns=1)
-            self.pads = self.register("pads", AssetField("Pads archive", ASSET_SPECS["pads"]))
-            self._wire(self.pads, "pads")
-            g.add(self.pads)
-            pads.add(g)
-            pads.v.addStretch(1)
-            grid.addWidget(pads, 1, 1)
-
         logos = SectionCard("secondary logos")
         g = FieldGrid(columns=1)
         self.logos = {}
@@ -1789,9 +1774,7 @@ class AssetsTab(TeamTab):
     def refresh(self):
         info = self.info()
         root = self.screen.team_folder()
-        for f, key in ((self.ball, "ball"), (self.banners, "banners"), (self.pads, "pads")):
-            if f is None:
-                continue
+        for f, key in ((self.ball, "ball"), (self.banners, "banners")):
             f.set_root(root)
             f.set_value(info.get(key, ""))
         for slot, f in self.logos.items():

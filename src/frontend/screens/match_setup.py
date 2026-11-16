@@ -1110,6 +1110,13 @@ class MatchSetupScreen(KickoffTransition, Screen):
         scroll.setWidget(body)
         outer.addWidget(scroll, stretch=1)
 
+        def section(title, first=False):
+            if not first:
+                v.addSpacing(8)
+            v.addWidget(eyebrow_label(title, color=ACCENT, size=13))
+
+        # ── Match ──
+        section("MATCH", first=True)
         self.side_row = SelectorRow("home team side")
         self.side_row.set_values(["random", "left", "right"], index=0)
         self.side_row.changed.connect(
@@ -1126,13 +1133,44 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self.focus.register(self.kickoff_row)
         v.addWidget(self.kickoff_row)
 
-        self.rain_row = SelectorRow("rain")
-        self.rain_row.set_values(["no", "yes"], index=0)
-        self.rain_row.changed.connect(
-            lambda: setattr(self.cfg, "rain", self.rain_row.current() == "yes"))
-        self.focus.register(self.rain_row)
-        v.addWidget(self.rain_row)
+        self.match_type_row = SelectorRow("match type")
+        self.match_type_row.set_values(list(gsv.match_type.keys()), index=0)
+        self.match_type_row.changed.connect(self._on_match_type_changed)
+        self.focus.register(self.match_type_row)
+        v.addWidget(self.match_type_row)
 
+        self.match_subtype_row = SelectorRow("match subtype")
+        self.match_subtype_row.changed.connect(
+            lambda: setattr(self.cfg, "match_subtype", self.match_subtype_row.current()))
+        self.focus.register(self.match_subtype_row)
+        v.addWidget(self.match_subtype_row)
+        self._sync_match_subtype()
+
+        # Laws (rugby08patches.dll rule_5022 / rule_22m)
+        self.law_rows = {}
+        for attr, label in (("law_5022", "50/22"), ("law_22m", "22m")):
+            row = SelectorRow(label)
+            row.set_values(["on", "off"], index=0 if getattr(self.cfg, attr) else 1)
+            row.changed.connect(lambda a=attr, r=row: setattr(self.cfg, a, r.current() == "on"))
+            self.focus.register(row)
+            v.addWidget(row)
+            self.law_rows[attr] = row
+
+        # Referee: hidden unless Settings > Expert Mode is on (_apply_expert_mode);
+        # referee_openplay is still EXPERIMENTAL in reR08.
+        self._coming_soon_rows = []
+        for label in ("referee",):
+            row = SelectorRow(label)
+            row.set_free_text("—")
+            row.set_disabled_visual(True)
+            row.set_status("EXPERT · COMING SOON", EXPERT)
+            self.focus.register(row)
+            v.addWidget(row)
+            self._coming_soon_rows.append(row)
+        self._apply_expert_mode()
+
+        # ── Pitch & weather ──
+        section("PITCH & WEATHER")
         # reR08 ENABLE_PITCH's whitelist (gsv.pitch_textures: the game's own
         # names, which the DLL matches exactly), labelled "<condition> —
         # Region N (variant)". RegN is the texture pack; the variant is the
@@ -1160,9 +1198,54 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self.focus.register(self.pitch_row)
         v.addWidget(self.pitch_row)
 
+        self.rain_row = SelectorRow("rain")
+        self.rain_row.set_values(["no", "yes"], index=0)
+        self.rain_row.changed.connect(
+            lambda: setattr(self.cfg, "rain", self.rain_row.current() == "yes"))
+        self.focus.register(self.rain_row)
+        v.addWidget(self.rain_row)
+
+        if config.advanced_user:
+            self._build_advanced_weather_rows(v)
+
+        # ── Stadium ──
+        # Pads (+ corner flags), posts and ads: each the stadium's own unless
+        # picked (app/dressing.py); the open lists preview them.
+        section("STADIUM")
+        from app import competition_branding, dressing
+        from ui.dressing_picker import DressingRow, ads_strip
+        from backend import stadium_dressing
+
+        def stadium_info():
+            return (self.cfg.stadium or {}).get("data") or {}
+
+        def goal_preview(kind):
+            def preview(option):
+                rows = {"pads": self.pads_row, "posts": self.posts_row}
+                refs = {k: r.effective_ref() for k, r in rows.items() if r is not None}
+                refs[kind] = rows[kind].effective_ref(option)
+                return stadium_dressing.preview_images(refs.get("pads", ""), refs.get("posts", ""))
+            return preview
+
+        self.pads_row = self.posts_row = None
+        self.dressing_rows = {}
+        for kind, label in (("pads", "post pads & flags"), ("posts", "posts"), ("ads", "stadium ads")):
+            preview = (lambda option, k=kind: ads_strip(self.dressing_rows[k].effective_ref(option))) \
+                if kind == "ads" else goal_preview(kind)
+            row = DressingRow(label, kind,
+                              lambda cur, k=kind: dressing.choices(self.ds, k, cur, stadium_info()),
+                              preview)
+            row.refresh(getattr(self.cfg, dressing.CFG_ATTR[kind]) or "")
+            row.changed.connect(lambda k=kind, r=row: setattr(
+                self.cfg, dressing.CFG_ATTR[k], r.current_ref() or None))
+            self.focus.register(row)
+            v.addWidget(row)
+            self.dressing_rows[kind] = row
+        self.pads_row, self.posts_row = self.dressing_rows["pads"], self.dressing_rows["posts"]
+        self.ads_row = self.dressing_rows["ads"]
+
         # Pitch logo: "none" (the default: a quick match has no competition)
         # or a competition's pack (data/competitions/*/assets/pitch_logos).
-        from app import competition_branding
         self._pitch_logo_choices = [("none", "none")] + competition_branding.choices(self.ds, "pitch_logo")
         default_index = 0
         self.pitch_logo_row = SelectorRow("pitch logo")
@@ -1175,50 +1258,21 @@ class MatchSetupScreen(KickoffTransition, Screen):
         v.addWidget(self.pitch_logo_row)
         self.cfg.pitch_logo_choice = self._pitch_logo_choices[default_index][0]
 
-        # Tournament logo (scoreboard / in-game graphics): "none" (the default,
-        # a blank logo) or a competition's. Stadium graphics ("pads"): the
-        # competitions' own files, one entry per season that has the file on
-        # disk, defaulting to the "Default" competition.
-        def tournament_choices(key):
-            return competition_branding.choices(self.ds, key)
-
-        self._tournament_logo_choices = [("none", "none")] + tournament_choices("logo")
-        if self._tournament_logo_choices:
-            logo_index = 0
-            self.tournament_logo_row = SelectorRow("tournament logo")
-            self.tournament_logo_row.set_values(self._tournament_logo_choices, index=logo_index)
-            self.tournament_logo_row._display = lambda t: t[1]
-            self.tournament_logo_row.changed.connect(
-                lambda: setattr(self.cfg, "tournament_logo_choice",
-                                (self.tournament_logo_row.current() or ("", ""))[0]))
-            self.focus.register(self.tournament_logo_row)
-            v.addWidget(self.tournament_logo_row)
-            self.cfg.tournament_logo_choice = self._tournament_logo_choices[logo_index][0]
-
-        self._stadium_graphics_choices = tournament_choices("pads")
-        if self._stadium_graphics_choices:
-            pads_index = next((i for i, (_, label) in enumerate(self._stadium_graphics_choices)
-                               if label == "Default"), 0)
-            self.stadium_graphics_row = SelectorRow("stadium graphics")
-            self.stadium_graphics_row.set_values(self._stadium_graphics_choices, index=pads_index)
-            self.stadium_graphics_row._display = lambda t: t[1]
-            self.stadium_graphics_row.changed.connect(
-                lambda: setattr(self.cfg, "stadium_graphics_choice",
-                                (self.stadium_graphics_row.current() or ("", ""))[0]))
-            self.focus.register(self.stadium_graphics_row)
-            v.addWidget(self.stadium_graphics_row)
-            self.cfg.stadium_graphics_choice = self._stadium_graphics_choices[pads_index][0]
-
-        # Ad boards: the mod's default set, one the player loaded (a FSH or
-        # pictures) or a competition's; built for each stadium layout.
-        from ui.ads_picker import AdsRow
-        from app import ad_sets
-        self.ads_row = AdsRow("stadium ads", lambda cur: ad_sets.choices(self.ds, cur))
-        self.ads_row.refresh(self.cfg.adboards or "")
-        self.ads_row.changed.connect(
-            lambda: setattr(self.cfg, "adboards", (self.ads_row.current() or {}).get("path") or None))
-        self.focus.register(self.ads_row)
-        v.addWidget(self.ads_row)
+        # ── Presentation ──
+        section("PRESENTATION")
+        # Tournament logo (scoreboard / in-game graphics): "none" (the
+        # default, a blank logo) or a competition's.
+        self._tournament_logo_choices = [("none", "none")] + competition_branding.choices(self.ds, "logo")
+        logo_index = 0
+        self.tournament_logo_row = SelectorRow("tournament logo")
+        self.tournament_logo_row.set_values(self._tournament_logo_choices, index=logo_index)
+        self.tournament_logo_row._display = lambda t: t[1]
+        self.tournament_logo_row.changed.connect(
+            lambda: setattr(self.cfg, "tournament_logo_choice",
+                            (self.tournament_logo_row.current() or ("", ""))[0]))
+        self.focus.register(self.tournament_logo_row)
+        v.addWidget(self.tournament_logo_row)
+        self.cfg.tournament_logo_choice = self._tournament_logo_choices[logo_index][0]
 
         # Which ball the match uses: the home team's (default), the away
         # team's or a tournament's. The open list previews the ball in 3D.
@@ -1230,51 +1284,6 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self.focus.register(self.ball_row)
         v.addWidget(self.ball_row)
         self._refresh_ball_options()
-
-        # Laws (rugby08patches.dll rule_5022 / rule_22m)
-        v.addSpacing(6)
-        self.law_rows = {}
-        for attr, label in (("law_5022", "50/22"), ("law_22m", "22m")):
-            row = SelectorRow(label)
-            row.set_values(["on", "off"], index=0 if getattr(self.cfg, attr) else 1)
-            row.changed.connect(lambda a=attr, r=row: setattr(self.cfg, a, r.current() == "on"))
-            self.focus.register(row)
-            v.addWidget(row)
-            self.law_rows[attr] = row
-
-        v.addSpacing(6)
-        # "wind" moves out of this coming-soon strip once advanced_user
-        # unlocks the real control below; "referee"/"stadium graphics" are
-        # still genuinely unimplemented (referee_openplay is EXPERIMENTAL
-        # and off by default even in reR08; "stadium graphics" isn't the
-        # same thing as the RWC stadium_flags toggle below it).
-        # Hidden unless Settings > Expert Mode is on (see _apply_expert_mode).
-        self._coming_soon_rows = []
-        for label in ("referee",):
-            row = SelectorRow(label)
-            row.set_free_text("—")
-            row.set_disabled_visual(True)
-            row.set_status("EXPERT · COMING SOON", EXPERT)
-            self.focus.register(row)
-            v.addWidget(row)
-            self._coming_soon_rows.append(row)
-        self._apply_expert_mode()
-
-        if config.advanced_user:
-            self._build_advanced_weather_rows(v)
-
-        self.match_type_row = SelectorRow("match type")
-        self.match_type_row.set_values(list(gsv.match_type.keys()), index=0)
-        self.match_type_row.changed.connect(self._on_match_type_changed)
-        self.focus.register(self.match_type_row)
-        v.addWidget(self.match_type_row)
-
-        self.match_subtype_row = SelectorRow("match subtype")
-        self.match_subtype_row.changed.connect(
-            lambda: setattr(self.cfg, "match_subtype", self.match_subtype_row.current()))
-        self.focus.register(self.match_subtype_row)
-        v.addWidget(self.match_subtype_row)
-        self._sync_match_subtype()
 
         if config.advanced_user:
             self._build_advanced_presentation_rows(v)
@@ -1290,7 +1299,6 @@ class MatchSetupScreen(KickoffTransition, Screen):
         above (wind lives on the match card — see _build_mid_column). Every row here is additive/optional at the MatchConfig
         level (see its own comment) — leaving all of them at their default
         produces the exact same .mis this screen has always produced."""
-        v.addWidget(eyebrow_label("WEATHER", color=ACCENT, size=13))
 
         # Overrides the plain rain toggle above when set to anything but
         # "stock" — it's the only path to real falling snow (precipitation
@@ -1327,8 +1335,6 @@ class MatchSetupScreen(KickoffTransition, Screen):
         """.mis presentation attrs (anthem/haka/trophy/stadium dressing) and
         the kick-assist gameplay toggle — each a real reR08 patch, default
         on; see game_specific_variables.py."""
-        v.addSpacing(6)
-        v.addWidget(eyebrow_label("PRESENTATION", color=ACCENT, size=13))
 
         self.anthem_row = SelectorRow("anthem")
         self.anthem_row.set_values(gsv.anthem_choices, index=0)
@@ -1485,6 +1491,9 @@ class MatchSetupScreen(KickoffTransition, Screen):
         sid, info = entry
         self.cfg.stadium = {"stadium_id": int(info.get("game_id", sid)), "data": info}
         self._sync_environment_choices()
+        # "Stadium default" now names this stadium's own sets
+        for row in getattr(self, "dressing_rows", {}).values():
+            row.refresh()
 
     # ── advanced panel ───────────────────────────────────────────────────
     def _sync_environment_choices(self):

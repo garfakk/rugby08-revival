@@ -444,7 +444,11 @@ class MatchConfig:
 
     stadium: Optional[dict] = None
     ball_choice: Optional[dict] = None
-    adboards: Optional[str] = None  # optional FSH path relative to mod data
+    # Stadium dressing (app/dressing.py): set references, None = the
+    # stadium's own. A competition applied to the match sets them too.
+    pads: Optional[str] = None      # post pads + corner flags
+    posts: Optional[str] = None     # post + crossbar colours
+    adboards: Optional[str] = None  # ad boards
 
     difficulty: str = "elite"  # club, pro, elite (stock levels), legend, immortal — see app/difficulty.py
     halftime_length: str = "5m"  # 2m, 5m, 10m, 20m, 40m — matches backend gsv.halftime_length / stock game's 5 levels
@@ -464,9 +468,6 @@ class MatchConfig:
     # Tournament id whose logo fills the tournament logo slot (scoreboard,
     # menus); "" = none chosen, the home team's crest is used
     tournament_logo_choice: str = ""
-    # Tournament id whose pads fill the stadium graphics slot; "" = none chosen,
-    # the home team's pads are used
-    stadium_graphics_choice: str = ""
 
     # slot_id -> {"kind": "kbd"|"pad", "label": str, "zone": "home"|"away"|"none"}
     # (slot ids: CONTROLLER_SLOTS)

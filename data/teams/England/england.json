@@ -8,7 +8,6 @@
    "group": "international",
    "ball": "ball/ball_%.png",
    "banners": "banners/banner_%.png",
-   "pads": "",
    "stadium": "",
    "primaryStadium": "14",
    "logos": {
@@ -95,7 +94,6 @@
    "group": "international",
    "ball": "ball/ball_%.png",
    "banners": "banners/banner_%.png",
-   "pads": "",
    "stadium": "",
    "primaryStadium": "14",
    "logos": {
@@ -184,7 +182,6 @@
    "group": "international",
    "ball": "ball/ball_%.png",
    "banners": "banners/banner_%.png",
-   "pads": "",
    "stadium": "",
    "primaryStadium": "14",
    "logos": {
@@ -361,7 +358,6 @@
    "group": "international",
    "ball": "ball/ball_%.png",
    "banners": "banners/banner_%.png",
-   "pads": "",
    "stadium": "",
    "primaryStadium": "14",
    "logos": {
@@ -450,7 +446,6 @@
    "group": "international",
    "ball": "ball/ball_%.png",
    "banners": "banners/banner_%.png",
-   "pads": "",
    "stadium": "",
    "primaryStadium": "14",
    "logos": {
@@ -544,7 +539,6 @@
    "group": "international",
    "ball": "ball/ball_%.png",
    "banners": "banners/banner_%.png",
-   "pads": "",
    "stadium": "",
    "primaryStadium": "14",
    "logos": {
@@ -643,7 +637,6 @@
    "group": "international",
    "ball": "ball/ball_%.png",
    "banners": "banners/banner_%.png",
-   "pads": "",
    "stadium": "",
    "primaryStadium": "14",
    "logos": {
@@ -733,7 +726,6 @@
    "group": "international",
    "ball": "ball/ball_%.png",
    "banners": "banners/banner_%.png",
-   "pads": "",
    "stadium": "",
    "primaryStadium": "14",
    "logos": {
@@ -823,7 +815,6 @@
    "group": "international",
    "ball": "ball/ball_%.png",
    "banners": "banners/banner_%.png",
-   "pads": "",
    "stadium": "",
    "primaryStadium": "14",
    "logos": {
@@ -922,7 +913,6 @@
    "group": "international",
    "ball": "ball/ball_%.png",
    "banners": "banners/banner_%.png",
-   "pads": "",
    "stadium": "",
    "primaryStadium": "14",
    "logos": {
@@ -1038,7 +1028,6 @@
    "group": "international",
    "ball": "ball/ball_%.png",
    "banners": "banners/banner_%.png",
-   "pads": "",
    "stadium": "",
    "primaryStadium": "14",
    "logos": {
@@ -1154,7 +1143,6 @@
    "group": "international",
    "ball": "ball/ball_%.png",
    "banners": "banners/banner_%.png",
-   "pads": "",
    "stadium": "",
    "primaryStadium": "14",
    "logos": {
@@ -1268,7 +1256,6 @@
    "group": "international",
    "ball": "ball/ball_%.png",
    "banners": "banners/banner_%.png",
-   "pads": "",
    "stadium": "",
    "primaryStadium": "14",
    "logos": {
@@ -1350,7 +1337,6 @@
    "group": "international",
    "ball": "ball/ball_%.png",
    "banners": "banners/banner_%.png",
-   "pads": "",
    "stadium": "",
    "primaryStadium": "14",
    "logos": {
@@ -1456,7 +1442,6 @@
    "group": "international",
    "ball": "ball/ball_%.png",
    "banners": "banners/banner_%.png",
-   "pads": "",
    "stadium": "",
    "primaryStadium": "14",
    "logos": {
@@ -1556,7 +1541,6 @@
    "group": "international",
    "ball": "ball/ball_%.png",
    "banners": "banners/banner_%.png",
-   "pads": "",
    "stadium": "",
    "primaryStadium": "14",
    "logos": {
@@ -1655,7 +1639,6 @@
    "group": "international",
    "ball": "ball/ball_%.png",
    "banners": "banners/banner_%.png",
-   "pads": "",
    "stadium": "",
    "primaryStadium": "14",
    "logos": {
@@ -1749,7 +1732,6 @@
    "group": "international",
    "ball": "ball/ball_%.png",
    "banners": "banners/banner_%.png",
-   "pads": "",
    "stadium": "",
    "primaryStadium": "14",
    "logos": {
@@ -1838,7 +1820,6 @@
    "group": "international",
    "ball": "ball/ball_%.png",
    "banners": "banners/banner_%.png",
-   "pads": "",
    "stadium": "",
    "primaryStadium": "14",
    "logos": {
@@ -1936,7 +1917,6 @@
    "group": "international",
    "ball": "ball/ball_%.png",
    "banners": "banners/banner_%.png",
-   "pads": "",
    "stadium": "",
    "primaryStadium": "14",
    "logos": {

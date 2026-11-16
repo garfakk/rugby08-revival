@@ -13,7 +13,7 @@ import random
 from backend import game_specific_variables as gsv
 from shared.config import config
 from shared import shirt_names
-from app import appearance, competition_branding, difficulty
+from app import appearance, competition_branding, difficulty, dressing
 from app.game_data import WIND_POWER_MAX, frontend_logo, normalise_position, wind_world_xz
 from app.state import DataStore, MatchConfig, TeamSlot
 
@@ -438,13 +438,11 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
     if tournament:
         tid = tournament.get("tournament_id")
         tournament_logo = _tournament_asset_path(ds, tid, tournament.get("logo", ""))
-        stadium_graphics = _tournament_asset_path(ds, tid, tournament.get("pads", ""))
     else:
         tournament_logo = _team_asset_path(ds, cfg.home.team_id, home_info.get("logos", {}).get("main", ""))
-        stadium_graphics = _team_asset_path(ds, cfg.home.team_id, home_info.get("pads", ""))
 
-    # The advanced panel's "tournament logo" and "stadium graphics" pickers: a
-    # tournament's own files instead of the home team's.
+    # The advanced panel's "tournament logo" picker: a tournament's own logo
+    # instead of the home team's.
     logo_choice = getattr(cfg, "tournament_logo_choice", "")
     logo_tid, t_info = competition_branding.resolve(ds, logo_choice)
     if logo_choice == "none":
@@ -452,15 +450,9 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
     elif logo_tid:
         tournament_logo = _tournament_asset_path(ds, logo_tid, t_info.get("logo", "")) or tournament_logo
     competition_logo = tournament_logo if (tournament or logo_tid) and logo_choice != "none" else ""
-    pads_tid, t_info = competition_branding.resolve(ds, getattr(cfg, "stadium_graphics_choice", ""))
-    if pads_tid:
-        stadium_graphics = _tournament_asset_path(ds, pads_tid, t_info.get("pads", "")) or stadium_graphics
-    adboards = cfg.adboards or ""
-    if not adboards and pads_tid:
-        adboard_path = (t_info.get("adboards") or "").strip()
-        folder = ds.tournaments_folder_path.get(pads_tid, "")
-        if os.path.isfile(os.path.join(folder, adboard_path)):
-            adboards = _tournament_asset_path(ds, pads_tid, adboard_path)
+    # Pads, posts and ads: the match's picks, else the stadium's own
+    # (app/dressing.py).
+    dressing_refs = {kind: dressing.resolve(cfg, kind) for kind in dressing.KINDS}
 
     # cfg.pitch_logo_choice (the advanced panel's own picker) overrides
     # whatever the tournament/team fallback above would have given — that
@@ -522,8 +514,9 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
         "stadium_files": stadium_files,
         "stadium_name": stadium_name,
         "stadium_screen": _stadium_screen(cfg, stadium_files, competition_logo),
-        "stadium_graphics": stadium_graphics,
-        "adboards": _relative_to_mod_data(adboards) if adboards else "",
+        "pads": dressing_refs["pads"],
+        "posts": dressing_refs["posts"],
+        "adboards": dressing_refs["ads"],
         "kick_off": kick_off,
         # Was set on cfg by the advanced panel's side row but never actually
         # read into this dict — create_mission_file's side= always fell back

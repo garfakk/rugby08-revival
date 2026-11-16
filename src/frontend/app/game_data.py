@@ -492,7 +492,7 @@ def new_team_season(name="", team_type="club", category="") -> dict:
     season is indistinguishable in shape from a shipped one."""
     return {
         "name": name, "type": team_type, "category": category,
-        "ball": "", "banners": "", "pads": "",
+        "ball": "", "banners": "",
         "logos": {"main": "", "frontend": "", "small": "", "left": "", "right": ""},
         "kits": {"home": blank_kit(), "away": blank_kit()},
         "roles": {k: "" for k in ROLE_KEYS},
@@ -514,8 +514,6 @@ ASSET_SPECS = {
     "ball":         {"frames": 2, "size": (256, 128), "ext": (".png", ".fsh"),
                      "note": ""},
     "banners":      {"frames": 4, "size": (512, 128), "ext": (".png", ".fsh"),
-                     "note": ""},
-    "pads":         {"frames": 0, "size": None, "ext": (".fsh",),
                      "note": ""},
     "logos.main":   {"frames": 0, "size": (256, 256), "ext": (".png",),
                      "note": ""},

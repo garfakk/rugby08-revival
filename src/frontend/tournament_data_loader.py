@@ -1,6 +1,6 @@
 """
-tournament_data_loader.py — Loads competition branding packs (ball, logo, pads, pitch logos,
-menu logo) from disk.
+tournament_data_loader.py — Loads competition branding packs (ball, logo, pitch logos,
+menu logo, stadium dressing sets) from disk.
 """
 import os
 import re
@@ -24,7 +24,7 @@ def _read(path: str):
 
 
 # Branding fields holding a path (relative to the competition folder).
-_ASSET_KEYS = ("ball", "pads", "logo", "logo_frontend", "pitch_logo", "adboards")
+_ASSET_KEYS = ("ball", "pads", "posts", "logo", "logo_frontend", "pitch_logo", "adboards")
 
 
 def _on_disk(folder, relative) -> bool:
@@ -34,7 +34,7 @@ def _on_disk(folder, relative) -> bool:
     path = os.path.join(folder, relative)
     if "%" in path:
         return any(os.path.isfile(path.replace("%", str(i))) for i in (1, 2))
-    return os.path.isfile(path)
+    return os.path.exists(path)          # a file, or a set folder (pads / posts / adboards)
 
 
 class TournamentDataLoader:
@@ -49,8 +49,10 @@ class TournamentDataLoader:
         <competitions>/<competition>/<competition>.json:
 
           {"id": "5002", "name": "Top 14", "seasonal": false,
-           "ball": "...", "pads": "...", "logo": "...", "pitch_logo": "...",
-           "adboards": "...",                    # optional FSH, relative to competition folder
+           "ball": "...", "logo": "...", "pitch_logo": "...",
+           "pads": "assets/dressing/pads/x",     # optional dressing sets (app/dressing.py):
+           "posts": "assets/dressing/posts/x",   # folders of images, relative to the
+           "adboards": "assets/dressing/ads/x",  # competition folder
            "logo_frontend": "...",               # optional PNG for the menus only (the
                                                  # in-game "logo" when absent), as teams'
                                                  # logos.frontend

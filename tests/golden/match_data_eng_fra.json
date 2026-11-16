@@ -1,5 +1,5 @@
 {
- "adboards": "",
+ "adboards": "stock:scrolling/australia_scrolling",
  "anthem": 5,
  "ball": "teams/England/ball/ball_%.png",
  "banners": "teams/England/banners/banner_%.png",
@@ -28,8 +28,10 @@
  "mission_nis": [],
  "mission_state": {},
  "objectives": [],
+ "pads": "stock:standard/stadium_australia",
  "pitch_logos": "",
  "pitch_texture": "default",
+ "posts": "stock:standard/stadium_australia",
  "precip_mode": "stock",
  "rain": false,
  "referee": {
@@ -42,7 +44,6 @@
  "stadium": 1,
  "stadium_files": {},
  "stadium_flags": null,
- "stadium_graphics": "",
  "stadium_name": null,
  "stadium_screen": null,
  "team_A": {

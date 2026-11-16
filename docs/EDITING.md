@@ -170,17 +170,28 @@ stadiums/Eden Park/eden_park.night.big
 - `game_id`: the stock stadium it overwrites (the ids of `stadiums/stadiums.json`, Auckland = 49).
 - `scenes`: environment (`day`, `night`, `overcast`, `cold`) -> scene pack. The stadium is offered in these environments only.
 - `files` (optional): any other game file of that stadium, game path -> file, e.g. `{"frontend/textures/stadiums/auckland.d.fsh": "preview.fsh"}`.
+- `dressing` (optional): the stadium's own pads, posts and ads (see Stadium dressing below).
 - `screen` (optional): the texture of the scene pack's `Textures.fsh` that is a giant screen (La Defense Arena: `"scre"`). Each match paints it with both crests, the team names and the competition logo (or VS). It is set when the match loads: no live score.
 - The key (`eden_park`) adds a stadium to the lists; the key of a stock stadium (`"49"`) replaces it everywhere instead (tournament fixtures at that ground included).
 
 The files are put over the slot's only for a match at that stadium, and the name replaces the slot's in the game (not for club grounds whose name is also their team's: Leinster, Ulster, Bourgoin, Castres, Clermont, Paris, Perpignan, Llanelli, Cardiff).
 
-## Stadium ads
+## Stadium dressing
 
-Quick match, advanced settings, `stadium ads`: the ad boards around the pitch. `default` is the World Cup set; `Load from disk…` / `Load folder from disk…` add your own (kept in `user_data/mod_data/adboards/`). A set is:
+What surrounds the pitch is three independent sets, picked in quick match (advanced settings, `STADIUM`), where the open list previews them (pads and posts on a 3D goal, ads as a strip):
 
-- a `.fsh` (the World Cup layout, or a stock Standard one);
-- a picture, or a folder of pictures: each picture is one ad (about 3:1 works best, others are fitted), repeated over every board;
-- a folder with a `.fsh` and pictures named after its boards (`ads0.png`, `ads1.png`…): those boards are replaced.
+- **pads**: post pads and corner flags, a folder with `pad_wrap.png`, `pad_top.png`, `flag.png`, `flag_pole.png`
+- **posts**: post and crossbar colours, a folder with `post.png`, `crossbar.png`
+- **ads**: the ad boards, a `.fsh` (World Cup or Standard layout), a picture or a folder of pictures (each picture one ad, about 3:1 works best), or a folder with a `.fsh` and pictures named after its boards (`ads0.png`…) that replace those boards
 
-The game's stadiums use two board layouts (World Cup and Standard) that are not interchangeable, so the chosen set is converted for both at each match. The boards' frame is never an ad.
+A missing picture keeps the stock one. Pictures are resized to powers of two (512 max).
+
+Where sets live:
+
+- `stadiums/dressing/pads/<set>/`, `stadiums/dressing/posts/<set>/`, `stadiums/dressing/ads/<set>/`: sets for any match (`Load from disk…` in the ads list copies yours there)
+- `competitions/<competition>/assets/dressing/...`: a competition's, named in its json (`"pads"`, `"posts"`, `"adboards"`, at the root or per season; seasons can share a set)
+- the game itself: every stock stadium's own sets, listed as `Stock · …`
+
+Which set a match wears, first that has one: the quick match pick, else the competition of a tournament or challenge, else the stadium's own: its json `"dressing"` (`{"pads": "stadiums/dressing/pads/x", "posts": "...", "ads": "..."}`, or `"stock:standard/twickenham"` for a stock set), else the stock set of its slot (Twickenham's for Twickenham, the host slot's for a custom stadium).
+
+The game's stadiums use two board layouts (World Cup and Standard) that are not interchangeable, so the chosen ads are converted for both at each match. The boards' frame is never an ad.

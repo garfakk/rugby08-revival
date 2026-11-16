@@ -1793,7 +1793,8 @@
    "logo": "assets/tournament_logo.png",
    "pitch_logo": "assets/pitch_logos/pitch_logo_%.png",
    "ball": "assets/ball/ball_%.png",
-   "pads": "assets/stadium_graphics.fsh",
+   "pads": "assets/dressing/pads/urba_top_14",
+   "posts": "assets/dressing/posts/urba_top_14",
    "trophy": {
     "ceremony": "SixNations",
     "model": "assets/trophy/trophy.o",

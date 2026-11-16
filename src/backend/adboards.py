@@ -196,6 +196,22 @@ def load_set(path):
   raise ValueError(f"no .fsh or image in {path}")
 
 
+def load_ref(ref, base=None):
+  """An AdSet from a set reference: "stock:<name>" (the game's own
+  stadiums/adboards/<name>, from data.gob) or a path (relative to `base`,
+  the mod data by default). ValueError when nothing usable is there."""
+  from backend import stadium_dressing as sd
+  if sd.is_stock(ref):
+    data = sd.stock_bytes(sd.stock_game_path(ref, "ads"))
+    if not data:
+      raise ValueError(f"stock ads not found: {ref}")
+    return from_fsh(data)
+  if base is None:
+    from shared.config import config
+    base = config.mod_data_directory
+  return load_set(ref if os.path.isabs(ref) else os.path.join(base, ref))
+
+
 def _pick(items, i):
   """items[i], and past the end the twin of the board two before (ads7 is
   ads4's size and stand-in, as the stock nine-board sets do it)."""

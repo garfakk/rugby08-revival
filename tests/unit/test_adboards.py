@@ -151,7 +151,7 @@ def test_deploy_writes_both_layout_files(tmp_path, monkeypatch):
 
 
 def test_loaded_sets_are_listed_and_new_ones_copied_in(tmp_path, monkeypatch):
-    from app import ad_sets
+    from app import dressing
     data = tmp_path / "data"
     data.mkdir()
     point_config(monkeypatch, data_dir=str(data), game_dir=str(tmp_path))
@@ -160,10 +160,10 @@ def test_loaded_sets_are_listed_and_new_ones_copied_in(tmp_path, monkeypatch):
     src.mkdir()
     for i in range(2):
         Image.new("RGB", (60, 20), (i * 90, 0, 0)).save(src / f"ad{i}.png")
-    assert ad_sets.load([str(src)]) == "adboards/pics"
+    assert dressing.load_ads([str(src)]) == "stadiums/dressing/ads/pics"
     one = tmp_path / "solo.fsh"
     one.write_bytes(open(STATIC_WC, "rb").read())
-    assert ad_sets.load([str(one)]) == "adboards/solo.fsh"
-    labels = [o["label"] for o in ad_sets.loaded_sets()]
-    assert labels == ["pics", "solo"]
-    assert AB.load_set(str(data / "adboards" / "pics")).layout == "wc"
+    assert dressing.load_ads([str(one)]) == "stadiums/dressing/ads/solo.fsh"
+    labels = [o["label"] for o in dressing.library_sets("ads")]
+    assert labels == ["Pics", "Solo"]
+    assert AB.load_ref("stadiums/dressing/ads/pics").layout == "wc"

@@ -419,13 +419,12 @@ def to_match_config(ds, data: dict) -> MatchConfig:
     cfg.objectives = copy.deepcopy(data["objectives"])
     cfg.controllers = {1: {"kind": "kbd", "label": "KEYBOARD", "zone": data["user_side"]}}
     cfg.lock_controllers = True
-    # Quick match's pickers default to the "default" competition (pitch logo,
-    # tournament logo, stadium graphics = the advertising boards); a bare
-    # MatchConfig leaves them unset ("none" pitch logo, the home team's own
-    # pads), so a challenge without branding showed neither. Lay the default
-    # down first, then the chosen competition over it: a season lacking a
-    # texture (WC 2007 has no pitch logo) keeps the default's.
-    competition_branding.apply(ds, cfg, "default")
+    # A bare MatchConfig has no pitch logo or tournament logo, so a
+    # challenge without branding showed neither: lay the "default"
+    # competition's down first (not its dressing: the stadium's own is the
+    # default there), then the chosen competition over it: a season lacking
+    # a texture (WC 2007 has no pitch logo) keeps the default's.
+    competition_branding.apply(ds, cfg, "default", dressing=False)
     if data.get("branding"):
         competition_branding.apply(ds, cfg, data["branding"])
     # A World Cup challenge left on "stock" gets the World Cup stadium

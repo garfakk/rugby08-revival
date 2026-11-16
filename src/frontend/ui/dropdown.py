@@ -866,7 +866,9 @@ class DropdownRow(QWidget):
         groups = {}
         for v in self._values:
             groups.setdefault(str(self.group(v) or "Other"), []).append(v)
-        names = sorted(groups, key=str.lower)
+        order = getattr(self, "group_order", None)
+        names = sorted(groups, key=lambda n: (order.index(n) if order and n in order else len(order or ()),
+                                              n.lower()))
         opened = {str(self.group(current) or "Other")} if current is not None else set()
 
         def rebuild(highlight=None):

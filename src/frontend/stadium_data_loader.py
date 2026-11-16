@@ -15,7 +15,9 @@ game_id = the stock stadium the custom one overwrites in the game (its
 slot): for that match its scene packs ("scenes", one per environment, the
 stadium's own .big) and any other game file ("files", game path -> file) are
 put over the slot's (backend game_files_processor.deploy_stadium_files), and
-its name replaces the slot's. "environments" defaults to the scenes'. A key
+its name replaces the slot's. "environments" defaults to the scenes'.
+"dressing" (optional, any stadium): its own pads / posts / ads sets
+({"pads": ref, ...}, app/dressing.py; the slot's stock sets otherwise). A key
 that is also in stadiums.json replaces that stadium in the lists; a new key
 adds one.
 """

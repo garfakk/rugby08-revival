@@ -521,7 +521,7 @@ def referenced_assets(seasons):
     blocks = [V.resolve(info, vid) for season_info in seasons.values()
               for vid in [V.DEFAULT] + V.variant_ids(season_info) for info in [season_info]]
     for info in blocks:
-        for key in ("ball", "banners", "pads"):
+        for key in ("ball", "banners"):
             paths.update(_expand(info.get(key, ""), ASSET_SPECS.get(key)))
         for slot, rel in (info.get("logos") or {}).items():
             paths.update(_expand(rel, ASSET_SPECS.get(f"logos.{slot}")))

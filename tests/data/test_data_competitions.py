@@ -56,6 +56,32 @@ def test_branding_assets_exist(path, known_issue):
     known_issue([f"{rel} not found" for rel in missing])
 
 
+@pytest.mark.parametrize("path", _branding_files())
+def test_dressing_sets_are_complete(path):
+    """Each "pads" / "posts" / "adboards" set a competition names is a folder
+    with every picture of its kind (app/dressing.py)."""
+    from backend.stadium_dressing import PADS_FILES, POSTS_FILES
+    root = os.path.dirname(path)
+    data = formats._read(path)
+    entries = [data] + list((data.get("seasons") or {}).values())
+    problems = []
+    for entry in entries:
+        for key, names in (("pads", PADS_FILES), ("posts", POSTS_FILES), ("adboards", None)):
+            rel = entry.get(key)
+            if not rel:
+                continue
+            folder = os.path.join(root, rel)
+            if not os.path.isdir(folder):
+                problems.append(f"{key}: {rel} is not a set folder")
+                continue
+            have = {os.path.splitext(n)[0] for n in os.listdir(folder)}
+            if names and set(names) - have:
+                problems.append(f"{key}: {rel} lacks {sorted(set(names) - have)}")
+            if not names and not have:
+                problems.append(f"{key}: {rel} is empty")
+    assert not problems, problems
+
+
 # 50/22 from August 2021; the 22m pass-back law (no gain when the kicking team
 # took the ball back into its 22) from the 2008-09 ELVs
 LAWS = {"rwc_2007": (False, False), "six_nations_2008": (False, False),

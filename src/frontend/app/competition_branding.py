@@ -1,6 +1,7 @@
 """
 app/competition_branding.py — the competition textures the match-setup
-"pitch logo", "tournament logo" and "stadium graphics" pickers offer
+"pitch logo" and "tournament logo" pickers offer, and a competition's whole
+dressing applied to a match
 =====================================================================
 No Qt. A choice key is "<competition id>" for a seasonless competition and
 "<competition id>:<season>" for one season of a seasonal competition (e.g.
@@ -35,7 +36,7 @@ def _on_disk(folder: str, relative: str) -> bool:
     path = os.path.join(folder, relative)
     if "%" in path:
         return any(os.path.isfile(path.replace("%", str(i))) for i in (1, 2))
-    return os.path.isfile(path)
+    return os.path.exists(path)          # a file, or a set folder (pads / posts / ads)
 
 
 def label(ds, choice: str) -> str:
@@ -54,25 +55,25 @@ def all_choices(ds) -> list:
     return [choice_key(tid, season) for tid, seasons in ds.tournaments.items() for season in seasons]
 
 
-def apply(ds, cfg, choice: str) -> bool:
+def apply(ds, cfg, choice: str, dressing: bool = True) -> bool:
     """Dress match `cfg` in a competition season's textures: tournament
-    logo, stadium graphics ("pads"), pitch logo, adboards and ball — each only when
-    that season has the file on disk, otherwise left as it was. False when
-    `choice` names nothing loaded."""
+    logo, pitch logo, ball and (`dressing`) its pads, posts and ads sets —
+    each only when that season has it on disk, otherwise left as it was.
+    False when `choice` names nothing loaded."""
     tid, info = resolve(ds, choice)
     if not tid:
         return False
     folder = ds.tournaments_folder_path.get(tid, "")
     if _on_disk(folder, (info.get("logo") or "").strip()):
         cfg.tournament_logo_choice = choice
-    if _on_disk(folder, (info.get("pads") or "").strip()):
-        cfg.stadium_graphics_choice = choice
     if _on_disk(folder, (info.get("pitch_logo") or "").strip()):
         cfg.pitch_logo_choice = choice
-    adboards = (info.get("adboards") or "").strip()
-    if _on_disk(folder, adboards):
-        cfg.adboards = os.path.relpath(os.path.join(folder, adboards),
-                                       config.mod_data_directory).replace("\\", "/")
+    if dressing:
+        for key, attr in (("pads", "pads"), ("posts", "posts"), ("adboards", "adboards")):
+            rel = (info.get(key) or "").strip()
+            if _on_disk(folder, rel):
+                setattr(cfg, attr, os.path.relpath(os.path.join(folder, rel),
+                                                   config.mod_data_directory).replace("\\", "/"))
     trophy = info.get("trophy") or {}
     if (isinstance(trophy, dict) and trophy.get("ceremony")
             and all(_on_disk(folder, (trophy.get(k) or "").strip()) for k in ("model", "texture"))):
@@ -89,7 +90,7 @@ def apply(ds, cfg, choice: str) -> bool:
 
 def choices(ds, key: str) -> list:
     """[(choice key, label)] of every competition season whose `key` texture
-    ("logo", "pads", "pitch_logo") exists on disk, e.g.
+    ("logo", "pitch_logo") exists on disk, e.g.
     ("world_cup:2023", "World Cup 2023")."""
     out = []
     for tid, seasons in ds.tournaments.items():

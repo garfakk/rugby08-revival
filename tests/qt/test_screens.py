@@ -91,26 +91,34 @@ def test_match_setup_builds_match_data(window, qapp):
     assert len(md["team_A"]["players"]) == 22 and len(md["team_B"]["players"]) == 22
 
 
-def test_match_setup_ads_choice(window, qapp, monkeypatch):
-    """The stadium ads row: default means no set; a loaded set goes to the match data."""
-    from app import ad_sets
+def test_match_setup_dressing_choice(window, qapp, monkeypatch):
+    """The pads / posts / ads rows: "Stadium default" gives the stadium's own
+    set, a picked one goes to the match data."""
+    from app import dressing
     from app.match_data_builder import build_match_data
-    monkeypatch.setattr(ad_sets, "loaded_sets", lambda: [{"label": "mine", "path": "adboards/mine"}])
+    real = dressing.library_sets
+    monkeypatch.setattr(dressing, "library_sets",
+                        lambda kind: [{"label": "mine", "ref": f"stadiums/dressing/{kind}/mine"}])
     window.show_match_setup()
     qapp.processEvents()
     setup = window.screen_match_setup.setup_screen
     if not setup.cfg.controllers:
         setup.cfg.controllers = {1: {"kind": "kbd", "label": "KEYBOARD", "zone": "home"}}
-    row = setup.ads_row
-    row.refresh()
-    assert [o["label"] for o in row._values][:2] == ["default", "mine"]
-    assert setup.cfg.adboards is None
-    row.set_index(1)
-    row.changed.emit()
-    assert build_match_data(window.data, setup.cfg)["adboards"] == "adboards/mine"
-    row.set_index(0)
-    row.changed.emit()
-    assert not build_match_data(window.data, setup.cfg)["adboards"]
+    for kind, key in (("pads", "pads"), ("posts", "posts"), ("ads", "adboards")):
+        row = setup.dressing_rows[kind]
+        row.refresh()
+        assert [o["label"] for o in row._values][:2] == ["Stadium default", "mine"]
+        assert getattr(setup.cfg, dressing.CFG_ATTR[kind]) is None
+        own = dressing.stadium_default(setup.cfg.stadium["data"], kind)
+        assert own.startswith("stock:") or own
+        assert build_match_data(window.data, setup.cfg)[key] == own
+        row.set_index(1)
+        row.changed.emit()
+        assert build_match_data(window.data, setup.cfg)[key] == f"stadiums/dressing/{kind}/mine"
+        row.set_index(0)
+        row.changed.emit()
+        assert build_match_data(window.data, setup.cfg)[key] == own
+    monkeypatch.setattr(dressing, "library_sets", real)
 
 
 def test_match_setup_controllers(window, qapp):

@@ -8,7 +8,6 @@
    "group": "international",
    "ball": "ball_1/ball_%.png",
    "banners": "banners_1/banner_%.png",
-   "pads": "",
    "stadium": "",
    "primaryStadium": "70",
    "logos": {
@@ -93,7 +92,6 @@
    "group": "international",
    "ball": "ball_1/ball_%.png",
    "banners": "banners_1/banner_%.png",
-   "pads": "",
    "stadium": "",
    "primaryStadium": "70",
    "logos": {
@@ -187,7 +185,6 @@
    "group": "international",
    "ball": "ball_2/ball_%.png",
    "banners": "banners_2/banner_%.png",
-   "pads": "",
    "primaryStadium": "70",
    "logos": {
     "main": "logos_2/logo.png",
@@ -370,7 +367,6 @@
    "group": "international",
    "ball": "ball_1/ball_%.png",
    "banners": "banners_1/banner_%.png",
-   "pads": "",
    "stadium": "",
    "primaryStadium": "70",
    "logos": {
@@ -467,7 +463,6 @@
    "group": "international",
    "ball": "ball_2/ball_%.png",
    "banners": "banners_2/banner_%.png",
-   "pads": "",
    "primaryStadium": "70",
    "logos": {
     "main": "logos_2/logo.png",
@@ -560,7 +555,6 @@
    "group": "international",
    "ball": "ball_2/ball_%.png",
    "banners": "banners_2/banner_%.png",
-   "pads": "",
    "primaryStadium": "70",
    "logos": {
     "main": "logos_2/logo.png",
@@ -656,7 +650,6 @@
    "group": "international",
    "ball": "ball_2/ball_%.png",
    "banners": "banners_2/banner_%.png",
-   "pads": "",
    "primaryStadium": "70",
    "logos": {
     "main": "logos_2/logo.png",
@@ -784,7 +777,6 @@
    "group": "international",
    "ball": "ball_1/ball_%.png",
    "banners": "banners_1/banner_%.png",
-   "pads": "",
    "primaryStadium": "70",
    "logos": {
     "main": "logos_1/logo.png",
@@ -882,7 +874,6 @@
    "group": "international",
    "ball": "ball_1/ball_%.png",
    "banners": "banners_1/banner_%.png",
-   "pads": "",
    "primaryStadium": "70",
    "logos": {
     "main": "logos_1/logo.png",
@@ -981,7 +972,6 @@
    "group": "international",
    "ball": "ball_2/ball_%.png",
    "banners": "banners_2/banner_%.png",
-   "pads": "",
    "primaryStadium": "70",
    "logos": {
     "main": "logos_2/logo.png",
@@ -1082,7 +1072,6 @@
    "group": "international",
    "ball": "ball_2/ball_%.png",
    "banners": "banners_2/banner_%.png",
-   "pads": "",
    "primaryStadium": "70",
    "logos": {
     "main": "logos_2/logo.png",
@@ -1198,7 +1187,6 @@
    "group": "international",
    "ball": "ball_1/ball_%.png",
    "banners": "banners_1/banner_%.png",
-   "pads": "",
    "primaryStadium": "70",
    "logos": {
     "main": "logos_1/logo.png",
@@ -1295,7 +1283,6 @@
    "group": "international",
    "ball": "ball_1/ball_%.png",
    "banners": "banners_1/banner_%.png",
-   "pads": "",
    "primaryStadium": "70",
    "logos": {
     "main": "logos_1/logo.png",
@@ -1389,7 +1376,6 @@
    "group": "international",
    "ball": "ball_1/ball_%.png",
    "banners": "banners_1/banner_%.png",
-   "pads": "",
    "stadium": "",
    "primaryStadium": "70",
    "logos": {
@@ -1487,7 +1473,6 @@
    "group": "international",
    "ball": "ball_1/ball_%.png",
    "banners": "banners_1/banner_%.png",
-   "pads": "",
    "stadium": "",
    "primaryStadium": "70",
    "logos": {
@@ -1575,7 +1560,6 @@
    "group": "international",
    "ball": "ball_1/ball_%.png",
    "banners": "banners_1/banner_%.png",
-   "pads": "",
    "stadium": "",
    "primaryStadium": "70",
    "logos": {
@@ -1675,7 +1659,6 @@
    "group": "international",
    "ball": "ball_1/ball_%.png",
    "banners": "banners_1/banner_%.png",
-   "pads": "",
    "stadium": "",
    "primaryStadium": "70",
    "logos": {
@@ -1768,7 +1751,6 @@
    "group": "international",
    "ball": "ball_1/ball_%.png",
    "banners": "banners_1/banner_%.png",
-   "pads": "",
    "stadium": "",
    "primaryStadium": "70",
    "logos": {
@@ -1864,7 +1846,6 @@
    "group": "international",
    "ball": "ball_1/ball_%.png",
    "banners": "banners_1/banner_%.png",
-   "pads": "",
    "stadium": "",
    "primaryStadium": "70",
    "logos": {
@@ -1954,7 +1935,6 @@
    "group": "international",
    "ball": "ball_2/ball_%.png",
    "banners": "banners_2/banner_%.png",
-   "pads": "",
    "primaryStadium": "70",
    "logos": {
     "main": "logos_2/logo.png",

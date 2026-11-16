@@ -1,4 +1,4 @@
-"""Every asset a team season points at exists: ball, banners, logos, pads and
+"""Every asset a team season points at exists: ball, banners, logos and
 each kit (front, back numbers, preview), kit variants included. Checked with
 the team editor's own asset_status / ASSET_SPECS. Kit textures ship packed
 (shared/kit_files.py, packaging/pack_kit_textures.py)."""
@@ -19,7 +19,7 @@ BAD = {"missing", "partial", "outside"}
 
 def _assets(info):
     """(label, spec key, relative path) for every asset of a season block."""
-    for key in ("ball", "banners", "pads"):
+    for key in ("ball", "banners"):
         yield key, key, info.get(key, "")
     for key, rel in (info.get("logos") or {}).items():
         yield f"logos.{key}", f"logos.{key}", rel

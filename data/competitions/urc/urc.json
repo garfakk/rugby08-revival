@@ -138,7 +138,8 @@
   "logo": "assets/tournament_logo.png",
   "logo_frontend": "assets/logo_frontend.png",
   "pitch_logo": "assets/pitch_logos/pitch_logo_%.png",
-  "pads": "assets/stadium_graphics.fsh",
+  "pads": "assets/dressing/pads/urc",
+  "posts": "assets/dressing/posts/urc",
   "ball": "assets/ball/ball_%.png",
   "trophy": {
     "ceremony": "EuroCup",

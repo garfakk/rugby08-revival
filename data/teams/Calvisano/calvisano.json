@@ -7,7 +7,6 @@
    "group": "other_european",
    "ball": "ball_1/ball_%.png",
    "banners": "banners_1/banner_%.png",
-   "pads": "",
    "logos": {
     "main": "logos_1/logo.png",
     "frontend": "logos_1/logo_frontend.png",
@@ -55,7 +54,6 @@
    "group": "other_european",
    "ball": "ball_1/ball_%.png",
    "banners": "banners_1/banner_%.png",
-   "pads": "",
    "logos": {
     "main": "logos_1/logo.png",
     "frontend": "logos_1/logo_frontend.png",
