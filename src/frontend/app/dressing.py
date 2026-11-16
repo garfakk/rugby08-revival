@@ -213,15 +213,130 @@ def suggested_refs(ds, kind, teams=(), stadium=None, home_ground=None):
     return ordered
 
 
+# ── one entry per look ─────────────────────────────────────────────────────
+# Many sets look the same (14 English grounds share their pads, nearly all
+# posts are white with a coloured band on the crossbar): the pickers list
+# each look once. Posts are named after their colours.
+_LOOKS = {}
+COLOURS = {
+    "white": (235, 235, 235), "grey": (130, 130, 130), "black": (30, 30, 30),
+    "navy": (20, 35, 95), "blue": (55, 75, 190), "light blue": (120, 180, 210),
+    "red": (175, 30, 40), "maroon": (110, 20, 25), "green": (25, 95, 50),
+    "purple": (90, 60, 140), "orange": (210, 140, 50), "yellow": (230, 200, 40),
+    "pink": (220, 0, 200),
+}
+
+
+def _colour_names(pixels):
+    """The COLOURS name nearest each (N, 3) pixel."""
+    import numpy as np
+    names = list(COLOURS)
+    ref = np.array([COLOURS[n] for n in names], dtype=np.float32)
+    d = ((np.asarray(pixels, dtype=np.float32)[:, None, :] - ref[None]) ** 2).sum(-1)
+    return [names[i] for i in d.argmin(1)]
+
+
+def _colour_name(rgb):
+    return _colour_names([rgb])[0]
+
+
+def posts_name(images):
+    """"White", "White · navy", "White · orange & black": the post's colour,
+    then the crossbar's band colours by area."""
+    import numpy as np
+    post, bar = images.get("post"), images.get("xbar")
+    if post is None:
+        return ""
+    base = _colour_name(np.asarray(post.convert("RGB").resize((8, 8))).reshape(-1, 3).mean(0))
+    name = base.capitalize()
+    if bar is None:
+        return name
+    px = np.asarray(bar.convert("RGB").resize((16, 16))).reshape(-1, 3)
+    names = _colour_names(px)
+    counts = {}
+    for n in names:
+        if n != base:
+            counts[n] = counts.get(n, 0) + 1
+    bands = [n for n, c in sorted(counts.items(), key=lambda kv: -kv[1]) if c >= len(px) // 16][:2]
+    return f"{name} · {' & '.join(bands)}" if bands else name
+
+
+def _placeholder(images):
+    """The game's magenta "missing texture" stand-in (stock England Day)."""
+    import numpy as np
+    for image in images.values():
+        r, g, b = np.asarray(image.convert("RGB").resize((8, 8))).reshape(-1, 3).mean(0)
+        if r > 170 and b > 150 and g < 80:
+            return True
+    return False
+
+
+def look(ref, kind):
+    """A key equal for sets that look the same (pictures shrunk and
+    rounded); for posts its colour name. None when the set can't be read."""
+    if not ref:
+        return None
+    path = ref if ref.startswith(STOCK) else os.path.join(config.mod_data_directory, ref)
+    try:
+        stamp = 0 if ref.startswith(STOCK) else os.path.getmtime(path)
+    except OSError:
+        return None
+    cached = _LOOKS.get((ref, kind))
+    if cached and cached[0] == stamp:
+        return cached[1]
+    from backend import stadium_dressing
+    import hashlib
+    import numpy as np
+    images = stadium_dressing.load(ref, kind)
+    if not images or _placeholder(images):
+        key = None
+    elif kind == "posts":
+        key = posts_name(images)
+    else:
+        h = hashlib.md5()
+        for tag in sorted(images):
+            small = np.asarray(images[tag].convert("RGB").resize((8, 8))) // 24
+            h.update(tag.encode() + small.tobytes())
+        key = h.hexdigest()
+    _LOOKS[(ref, kind)] = (stamp, key)
+    return key
+
+
+def _one_per_look(kind, options, default_look):
+    """`options` with sets looking like an earlier one (or like the default)
+    folded into it: each kept option lists the refs it stands for."""
+    if kind not in ("pads", "posts"):
+        return options
+    from backend import stadium_dressing
+    stadium_dressing.prefetch_stock([stadium_dressing.stock_game_path(o["ref"])
+                                     for o in options if o["ref"].startswith(STOCK)])
+    out, by_look = [], {}
+    for o in options:
+        key = look(o["ref"], kind)
+        if key is None:
+            continue                   # unreadable, or the magenta stand-in
+        if key == default_look:
+            continue
+        if key is not None and key in by_look:
+            by_look[key]["refs"].append(o["ref"])
+            continue
+        o = dict(o, refs=[o["ref"]])
+        if kind == "posts" and key:
+            o["label"] = key
+        if key is not None:
+            by_look[key] = o
+        out.append(o)
+    return out
+
+
 def choices(ds, kind, current=None, stadium=None, suggested=()):
-    """The picker's options: "Stadium default" (ref "", named after what
-    that is for `stadium`), then every set of the library, the competitions
-    and the game; the refs in `suggested` are flagged "suggested" and come
-    first. `current` is added when none of them."""
-    default = {"label": "Stadium default", "ref": "", "suggested": True}
+    """The picker's options: "Default" (ref "": the stadium's own), the
+    suggested sets, then every other set of the library, the competitions
+    and the game, each look once (pads, posts); `current` is added when
+    none of them stands for it."""
+    default = {"label": "Default", "ref": "", "suggested": True, "refs": [""]}
     own = stadium_default(stadium, kind) if stadium else ""
     if own:
-        default["detail"] = label_of(ds, kind, own)
         default["default_ref"] = own
     rest = library_sets(kind) + competition_sets(ds, kind) + stock_sets(kind)
     if current and not any(o["ref"] == current for o in rest):
@@ -230,7 +345,12 @@ def choices(ds, kind, current=None, stadium=None, suggested=()):
     by_ref = {o["ref"]: o for o in rest}
     first = [dict(by_ref[r], suggested=True) for r in picked if r in by_ref]
     others = [o for o in rest if o["ref"] not in set(picked)]
-    return [default] + first + others
+    folded = _one_per_look(kind, first + others, look(own, kind) if own else None)
+    if current and current != own and not any(current in o["refs"] for o in folded):
+        # the pick looks like the default: keep it listed so it stays picked
+        folded.append(dict(by_ref.get(current) or {"label": _label(current), "ref": current},
+                           refs=[current]))
+    return [default] + folded
 
 
 def resolve(cfg, kind):

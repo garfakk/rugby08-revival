@@ -136,8 +136,9 @@ def test_suggestions_are_the_stadium_and_the_teams_competitions(tmp_path, monkey
     from app import dressing
     point_config(monkeypatch, data_dir=str(tmp_path))
     comp = tmp_path / "competitions" / "t14"
-    (comp / "sets" / "a").mkdir(parents=True)
-    (comp / "sets" / "b").mkdir(parents=True)
+    for name, colour in (("a", "red"), ("b", "blue")):
+        SD.save_set({"pada": Image.new("RGBA", (64, 256), colour)}, str(comp / "sets" / name), "pads")
+    monkeypatch.setattr(dressing, "look", lambda ref, kind: ref or None)
     monkeypatch.setattr(dressing, "_TEMPLATES", [
         ("t14", "", {"1"}, set()),               # lists team 1
         ("pro", "2020", set(), {"pro d2"}),      # takes Pro D2 clubs
@@ -153,8 +154,32 @@ def test_suggestions_are_the_stadium_and_the_teams_competitions(tmp_path, monkey
     assert refs == ["stock:standard/twickenham", "competitions/t14/sets/b",
                     "competitions/t14/sets/a", "stock:standard/stade_de_france"]
     options = dressing.choices(DS, "pads", None, {"game_id": 14}, refs)
-    assert options[0]["ref"] == "" and options[0]["detail"] == "Stock · Twickenham"
+    assert options[0]["ref"] == "" and options[0]["label"] == "Default"
+    assert options[0]["default_ref"] == "stock:standard/twickenham"
     flagged = [o["ref"] for o in options if o.get("suggested")]
     assert flagged == ["", "competitions/t14/sets/b", "competitions/t14/sets/a",
                        "stock:standard/stade_de_france"]
     assert len({o["ref"] for o in options}) == len(options)     # no set listed twice
+
+
+def test_sets_that_look_alike_are_listed_once(tmp_path, monkeypatch):
+    from app import dressing
+    point_config(monkeypatch, data_dir=str(tmp_path))
+    lib = tmp_path / "stadiums" / "dressing" / "posts"
+    bar = Image.new("RGBA", (16, 16), (240, 240, 240, 255))
+    bar.paste((20, 35, 95, 255), (8, 0, 16, 16))
+    for name in ("a", "b"):           # the same white post and navy band
+        SD.save_set({"post": Image.new("RGBA", (32, 32), "white"), "xbar": bar}, str(lib / name), "posts")
+    SD.save_set({"post": Image.new("RGBA", (32, 32), "white"),
+                 "xbar": Image.new("RGBA", (16, 16), "white")}, str(lib / "plain"), "posts")
+    monkeypatch.setattr(dressing, "stock_sets", lambda kind: [])
+
+    class DS:
+        tournaments, tournaments_folder_path = {}, {}
+
+    options = dressing.choices(DS, "posts")
+    assert [o["label"] for o in options] == ["Default", "White · navy", "White"]
+    assert options[1]["refs"] == ["stadiums/dressing/posts/a", "stadiums/dressing/posts/b"]
+    # a pick folded into another entry still selects that entry
+    assert any("stadiums/dressing/posts/b" in o["refs"] for o in dressing.choices(
+        DS, "posts", current="stadiums/dressing/posts/b"))

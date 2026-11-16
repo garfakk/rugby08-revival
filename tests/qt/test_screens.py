@@ -99,6 +99,7 @@ def test_match_setup_dressing_choice(window, qapp, monkeypatch):
     real = dressing.library_sets
     monkeypatch.setattr(dressing, "library_sets",
                         lambda kind: [{"label": "mine", "ref": f"stadiums/dressing/{kind}/mine"}])
+    monkeypatch.setattr(dressing, "look", lambda ref, kind: ref or None)     # every set its own look
     window.show_match_setup()
     qapp.processEvents()
     setup = window.screen_match_setup.setup_screen
@@ -107,8 +108,8 @@ def test_match_setup_dressing_choice(window, qapp, monkeypatch):
     for kind, key in (("pads", "pads"), ("posts", "posts"), ("ads", "adboards")):
         row = setup.dressing_rows[kind]
         row.refresh()
-        assert row._values[0]["label"] == "Stadium default" and row._values[0]["suggested"]
-        mine = next(i for i, o in enumerate(row._values) if o["label"] == "mine")
+        assert row._values[0]["label"] == "Default" and row._values[0]["suggested"]
+        mine = next(i for i, o in enumerate(row._values) if o["ref"] == f"stadiums/dressing/{kind}/mine")
         assert not row._values[mine].get("suggested")
         assert all(o.get("suggested") for o in row._values[:mine])
         assert getattr(setup.cfg, dressing.CFG_ATTR[kind]) is None

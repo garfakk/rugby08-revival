@@ -46,14 +46,13 @@ class DressingRow(DropdownRow):
 
     @staticmethod
     def _label_of(option):
-        detail = option.get("detail")
-        return f"{option['label']} · {detail}" if detail else option["label"]
+        return option["label"]
 
     def refresh(self, ref=None):
         """Reread the options and select `ref` (the current one when None)."""
         keep = (self.current() or {}).get("ref", "") if ref is None else ref
         values = self._get_choices(keep)
-        index = next((i for i, v in enumerate(values) if v["ref"] == keep), 0)
+        index = next((i for i, v in enumerate(values) if keep in v.get("refs", [v["ref"]])), 0)
         self.set_values(values, index=index)
 
     def current_ref(self):

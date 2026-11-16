@@ -10,13 +10,13 @@ from pathlib import Path
 
 import numpy as np
 from OpenGL import GL
-from PyQt5.QtCore import QTimer, Qt
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QWidget
 
 from shared.app_paths import assets_directory
 from shared.log import get_logger
-from ui.player_view import PlayerRenderer, _GLSurface, _perspective, _look_at, _rot_y, FRAME_MS
+from ui.player_view import PlayerRenderer, _GLSurface, _perspective, _look_at, _rot_y
 
 log = get_logger(__name__)
 
@@ -114,65 +114,43 @@ class PostsRenderer:
 
 
 class PostsView(QWidget):
-    """The goal, swaying slowly; drag to turn it."""
+    """The goal, seen from a fixed three-quarter angle (it does not move);
+    drawn again only when the textures or the size change."""
+
+    YAW = 22.0
 
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setAttribute(Qt.WA_TranslucentBackground, True)
         self.renderer = PostsRenderer()
+        self.renderer.yaw = self.YAW
         self._surface = _GLSurface(self.renderer, True)
         self._image = None
-        self._drag_x = None
-        self._phase = 0.0
-        self._timer = QTimer(self)
-        self._timer.setTimerType(Qt.PreciseTimer)
-        self._timer.timeout.connect(self._frame)
 
     def show_images(self, images):
         """Preview {tag: PIL image} (backend stadium_dressing.preview_images)."""
         self.renderer.set_textures(images)
-        if self.isVisible():
-            self._frame()
+        self._render()
 
     def _target_size(self):
         ratio = self.devicePixelRatioF()
         return max(1, int(self.width() * ratio)), max(1, int(self.height() * ratio))
 
-    def _frame(self):
-        if self._drag_x is None:
-            self._phase += 0.02
-            self.renderer.yaw = 32.0 * np.sin(self._phase)
-        self._image = self._surface.render_image(*self._target_size())
-        self.update()
+    def _render(self):
+        if self.isVisible():
+            self._image = self._surface.render_image(*self._target_size())
+            self.update()
 
     def showEvent(self, event):
         super().showEvent(event)
-        if not self._timer.isActive():
-            self._timer.start(FRAME_MS)
-
-    def hideEvent(self, event):
-        self._timer.stop()
-        super().hideEvent(event)
+        self._render()
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
-        if self._timer.isActive():
-            self._frame()
+        self._render()
 
     def paintEvent(self, event):
-        if self._image is not None and (self._image.width(), self._image.height()) != self._target_size():
+        if self._image is None or (self._image.width(), self._image.height()) != self._target_size():
             self._image = self._surface.render_image(*self._target_size())
         if self._image is not None:
             QPainter(self).drawImage(self.rect(), self._image)
-
-    def mousePressEvent(self, event):
-        self._drag_x = event.x()
-
-    def mouseMoveEvent(self, event):
-        if self._drag_x is not None:
-            self.renderer.yaw += (event.x() - self._drag_x) * 0.6
-            self._drag_x = event.x()
-            self._frame()
-
-    def mouseReleaseEvent(self, event):
-        self._drag_x = None
