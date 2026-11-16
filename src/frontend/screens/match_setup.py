@@ -838,6 +838,30 @@ class MatchSetupScreen(KickoffTransition, Screen):
         rows are skipped by keyboard/pad navigation (FocusManager.alive)."""
         for row in getattr(self, "_coming_soon_rows", []):
             row.setVisible(user_prefs.expert_mode)
+        for row in self._late_start_rows():
+            row.setVisible(user_prefs.expert_mode)
+
+    def _late_start_rows(self):
+        if not hasattr(self, "start_minute_row"):
+            return []
+        return [self.start_minute_row] + list(self.start_score_rows.values())
+
+    def _sync_late_start_rows(self):
+        """The score rows only mean something once a minute is picked."""
+        kick_off = self.start_minute_row.current() == "kick-off"
+        for row in self.start_score_rows.values():
+            row.set_disabled_visual(kick_off)
+
+    def late_start(self):
+        """(minute, home points, away points) of expert mode's start minute,
+        None for an ordinary kick-off (or with expert mode off)."""
+        if not user_prefs.expert_mode or not hasattr(self, "start_minute_row"):
+            return None
+        minute = self.start_minute_row.current()
+        if not minute or minute == "kick-off":
+            return None
+        return (int(minute[:-1]), int(self.start_score_rows["home"].current() or 0),
+                int(self.start_score_rows["away"].current() or 0))
 
     def _apply_coin_toss_lock(self):
         """With the coin toss on, the toss decides who kicks off and which
@@ -1155,6 +1179,26 @@ class MatchSetupScreen(KickoffTransition, Screen):
             self.focus.register(row)
             v.addWidget(row)
             self.law_rows[attr] = row
+
+        # Expert mode: kick off from a given minute and score (the stock
+        # mid-match restart, as the tournament's "Play from a given minute").
+        from app.challenges import possible_scores
+        self._late_applied = False
+        self.start_minute_row = SelectorRow("start minute")
+        self.start_minute_row.set_values(["kick-off"] + [f"{m}'" for m in range(1, 80)], index=0)
+        self.start_minute_row.set_status("EXPERT", EXPERT)
+        self.start_minute_row.changed.connect(self._sync_late_start_rows)
+        self.focus.register(self.start_minute_row)
+        v.addWidget(self.start_minute_row)
+        self.start_score_rows = {}
+        for side in ("home", "away"):
+            row = SelectorRow(f"{side} score")
+            row.set_values(possible_scores(), index=0)
+            row.set_status("EXPERT", EXPERT)
+            self.focus.register(row)
+            v.addWidget(row)
+            self.start_score_rows[side] = row
+        self._sync_late_start_rows()
 
         # Referee: hidden unless Settings > Expert Mode is on (_apply_expert_mode);
         # referee_openplay is still EXPERIMENTAL in reR08.
@@ -1605,6 +1649,15 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self.play_btn.setFocus()
 
     def _launch(self, cfg):
+        # after the coin toss: the restart's kick-off follows its winner
+        from app.challenges import kick_off_start, mid_match_start
+        late = self.late_start()
+        if late:
+            mid_match_start(cfg, *late)
+            self._late_applied = True
+        elif self._late_applied:
+            kick_off_start(cfg)
+            self._late_applied = False
         match_data = build_match_data(self.ds, cfg)
         if match_data is None:
             return

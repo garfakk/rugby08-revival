@@ -67,6 +67,35 @@ def test_begin_and_finish_game(session, monkeypatch):
     assert all(f.played for f in session.t.fixtures_on(fixture.day))   # rest of the day simulated
 
 
+def test_undo_last_match_survives_later_rounds(session, ds):
+    """Expert mode: back to just before your last match was decided, even
+    after the next rounds were simulated (one level)."""
+    assert not session.can_undo_match()
+    session.advance_to_human()
+    fixture = session.human_fixture()
+    session.begin_game(fixture)
+    before = copy.deepcopy(session.t.to_dict())
+    session.finish_game(fixture, _game_result(3, 0))
+    session.advance_to_human()                     # replaces the ordinary undo point
+    assert session.can_undo_match()
+    assert [f.id for f in session.last_match_undone()][-1] == fixture.id
+    assert session.undo_match()
+    assert session.t.to_dict() == before
+    again = session.human_fixture()
+    assert again.id == fixture.id and not again.played
+    assert TournamentSession.load(session.t.id, ds).t.to_dict() == before
+    assert not session.can_undo_match() and session.undo_match() is False
+
+
+def test_simulating_your_match_can_be_undone(session):
+    session.advance_to_human()
+    fixture = session.human_fixture()
+    session.simulate(fixture)
+    assert session.last_match_undone()[0].id == fixture.id
+    session.undo_match()
+    assert session.human_fixture().id == fixture.id
+
+
 def test_standard_wind_leaves_game_wind(session, monkeypatch):
     monkeypatch.setattr(user_prefs, "wind_mode", "standard", raising=False)
     session.advance_to_human()

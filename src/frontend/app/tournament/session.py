@@ -44,6 +44,46 @@ class TournamentSession:
     def can_undo(self) -> bool:
         return persistence.has_snapshot(self.t.id, "undo")
 
+    # ── undo your last match (expert mode) ──
+    # The tournament as it was just before one of your matches was decided
+    # (played, simulated, entered, forfeited, or simulated with the rest):
+    # one level, replaced at each new decision.
+    def _mark_last_match(self, only_if_alive=False):
+        humans = [tid for tid, e in self.t.teams.items() if e.human]
+        if only_if_alive:       # a bulk simulation: only when it decides one of yours
+            humans = [h for h in humans if not engine.is_eliminated(self.t, h)]
+        if humans and not self.t.finished:
+            persistence.snapshot(self.t, "last_match")
+
+    def can_undo_match(self) -> bool:
+        return persistence.has_snapshot(self.t.id, "last_match")
+
+    def last_match_undone(self):
+        """The fixtures of your teams that undoing would put back unplayed
+        (most recent first); [] when there is nothing to undo."""
+        if not self.can_undo_match():
+            return []
+        try:
+            before = persistence.restore_snapshot(self.t.id, "last_match")
+        except (OSError, ValueError, KeyError):
+            return []
+        was_played = {f.id for f in before.fixtures if f.played}
+        humans = {tid for tid, e in self.t.teams.items() if e.human}
+        out = [f for f in self.t.fixtures if f.played and f.id not in was_played
+               and (f.home in humans or f.away in humans)]
+        return sorted(out, key=lambda f: f.day, reverse=True)
+
+    def undo_match(self) -> bool:
+        """Put the tournament back as it was before your last match was
+        decided (that match due again, the rounds after it unplayed)."""
+        if not self.can_undo_match():
+            return False
+        self.t = persistence.restore_snapshot(self.t.id, "last_match")
+        for kind in ("last_match", "undo", "prematch"):
+            persistence.drop_snapshot(self.t.id, kind)
+        self.save()
+        return True
+
     def undo(self) -> bool:
         if not self.can_undo():
             return False
@@ -74,6 +114,7 @@ class TournamentSession:
     def simulate(self, fixture) -> list:
         """Simulate a (user) fixture, then the rest of its matchday."""
         self._checkpoint()
+        self._mark_last_match()
         engine.simulate_fixture(self.t, fixture)
         done = [fixture] + engine.simulate_day(self.t)
         self.save()
@@ -83,6 +124,7 @@ class TournamentSession:
         """Expert mode: everything up to a user's final or title decider
         (engine.simulate_to_title_match); returns the fixtures simulated."""
         self._checkpoint()
+        self._mark_last_match(only_if_alive=True)
         done = engine.simulate_to_title_match(self.t, for_title)
         self.save()
         return done
@@ -98,6 +140,7 @@ class TournamentSession:
 
     def simulate_to_end(self):
         self._checkpoint()
+        self._mark_last_match(only_if_alive=True)
         engine.simulate_to_end(self.t)
         self.save()
 
@@ -126,6 +169,7 @@ class TournamentSession:
     def finish_game(self, fixture, game_result: dict) -> list:
         """Record the game's result, then simulate the rest of the day."""
         self._checkpoint()
+        self._mark_last_match()
         result = bridge.from_game_result(self.t, fixture, game_result,
                                          engine.fixture_rng(self.t, fixture, "game"))
         engine.record_result(self.t, fixture, result)
@@ -145,6 +189,7 @@ class TournamentSession:
         if forfeit or not finished:
             return self.forfeit(fixture, loser)
         self._checkpoint()
+        self._mark_last_match()
         result = bridge.from_game_result(self.t, fixture, game_result,
                                          engine.fixture_rng(self.t, fixture, "game"))
         force_winner(result, winner)
@@ -165,6 +210,7 @@ class TournamentSession:
     def enter_result(self, fixture, result) -> list:
         """Record a result typed in by hand, then simulate the rest of the day."""
         self._checkpoint()
+        self._mark_last_match()
         engine.record_result(self.t, fixture, result)
         done = [fixture] + engine.simulate_day(self.t)
         self.save()
@@ -177,6 +223,7 @@ class TournamentSession:
         """`losing_team` None = double forfeit: both teams lose (a knockout
         tie still needs a team through, drawn at random; the other forfeits)."""
         self._checkpoint()
+        self._mark_last_match()
         if losing_team is None and fixture.knockout:
             losing_team = engine.fixture_rng(self.t, fixture, "forfeit").choice(
                 [fixture.home, fixture.away])

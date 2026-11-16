@@ -124,6 +124,38 @@ def test_match_setup_dressing_choice(window, qapp, monkeypatch):
     monkeypatch.setattr(dressing, "library_sets", real)
 
 
+def test_match_setup_expert_start_minute(window, qapp, monkeypatch):
+    """Expert mode: quick match kicks off from a given minute and score, as
+    the tournament's "play from a given minute"; back to a kick-off after."""
+    from shared.user_prefs import user_prefs
+    window.show_match_setup()
+    qapp.processEvents()
+    setup = window.screen_match_setup.setup_screen
+    monkeypatch.setattr(user_prefs, "expert_mode", False, raising=False)
+    setup._apply_expert_mode()
+    assert setup.start_minute_row.isHidden() and setup.late_start() is None
+    monkeypatch.setattr(user_prefs, "expert_mode", True, raising=False)
+    setup._apply_expert_mode()
+    assert not setup.start_minute_row.isHidden()
+    assert setup.late_start() is None                       # "kick-off"
+    setup.start_minute_row.set_index(70)                    # 70'
+    setup.start_minute_row.changed.emit()
+    scores = setup.start_score_rows["home"]._values
+    setup.start_score_rows["home"].set_index(scores.index(10))
+    assert setup.late_start() == (70, 10, 0)
+    launched = []
+    monkeypatch.setattr(setup, "start_kickoff_sequence", lambda md: launched.append(md))
+    if not setup.cfg.controllers:
+        setup.cfg.controllers = {1: {"kind": "kbd", "label": "KEYBOARD", "zone": "home"}}
+    setup._launch(setup.cfg)
+    assert setup.cfg.mission_mode_time == 70 * 60 and setup.cfg.mission_mode_period == 1
+    assert len(setup.cfg.score_events) >= 2                 # 10 points: at least two scores
+    setup.start_minute_row.set_index(0)
+    setup._launch(setup.cfg)
+    assert setup.cfg.mission_mode_time is None and setup.cfg.score_events == []
+    assert len(launched) == 2
+
+
 def test_match_setup_controllers(window, qapp):
     """Each device's icon on the board (keyboard, then the pads connected in
     order) becomes the .mis controller slots."""

@@ -59,7 +59,7 @@ TABLE, FIXTURES, BRACKET = range(len(VIEWS))
 ROUND_SHOWN = 6           # the round's other matches on Home
 HEADLINES_SHOWN = 3       # news items on Home
 # MORE menu actions only offered in expert mode (tagged EXPERT there)
-_EXPERT_ACTIONS = {"simulate", "late_start", "forced", "sim_title", "sim_end"}
+_EXPERT_ACTIONS = {"simulate", "late_start", "forced", "sim_title", "sim_end", "undo_match"}
 
 
 def _without_round(f) -> str:
@@ -617,6 +617,9 @@ class TournamentDashboardScreen(Screen):
                             "every match before your final or title decider, yours included"))
             if not t.finished and self._alive_humans():
                 out.append(("Simulate to the end", "sim_end", "every match left, yours included"))
+            if self.session.can_undo_match():
+                out.append(("Undo your last match", "undo_match",
+                            "back to before it, to play it again"))
         return out
 
     def _refresh_home(self, animate=False):
@@ -1196,6 +1199,27 @@ class TournamentDashboardScreen(Screen):
                       [("CANCEL", "neutral", "cancel"), ("PLAY", "primary", "ok")], go,
                       content=content, width=640)
 
+    def _undo_match(self):
+        """Expert mode: the tournament back to just before your last match
+        was decided; that match is due again, the rounds after it unplayed."""
+        undone = self.session.last_match_undone()
+        if not undone:
+            return
+        t = self.t
+        lines = [f"{report.fixture_caption(t, f)}  {f.result.score_text()}" for f in undone[:4]]
+        if len(undone) > 4:
+            lines.append(f"and {len(undone) - 4} more")
+
+        def go(role):
+            if role == "ok" and self.session.undo_match():
+                self._message = "Last match undone."
+                self.tabs.set_index(HOME)
+                self.refresh(animate=True)
+        ConfirmDialog(self, "Expert · undo your last match?",
+                      "Back to before it: " + "  ·  ".join(lines)
+                      + ". Everything played since is undone too.",
+                      [("CANCEL", "neutral", "cancel"), ("UNDO", "danger", "ok")], go, width=640)
+
     def _forced(self):
         """Expert mode: play your match as usual, but the result recorded is
         the one picked here whatever happens in the game: a win, a loss
@@ -1297,7 +1321,8 @@ class TournamentDashboardScreen(Screen):
                           tag_color=EXPERT if expert else None)
         popup.size_to(len(items))
         actions = {"simulate": self._simulate, "late_start": self._late_start, "forced": self._forced,
-                   "sim_title": self._sim_to_title, "sim_end": self._sim_to_end}
+                   "sim_title": self._sim_to_title, "sim_end": self._sim_to_end,
+                   "undo_match": self._undo_match}
         # after the popup has closed: a dialog opened from inside the pick
         # would lose its focus to the popup's own teardown
         popup.picked.connect(lambda data: QTimer.singleShot(0, actions[data]))

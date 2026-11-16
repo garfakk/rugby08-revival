@@ -86,7 +86,7 @@ def load(tid: str) -> Tournament:
 
 
 def delete(tid: str) -> None:
-    for suffix in ("", ".undo", ".prematch"):
+    for suffix in ("", ".undo", ".prematch", ".last_match"):
         try:
             os.remove(_path(tid, suffix))
         except FileNotFoundError:
