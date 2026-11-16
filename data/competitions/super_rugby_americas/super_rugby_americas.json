@@ -535,8 +535,8 @@
    "logo_frontend": "assets/tournament_logo_frontend.png",
    "pitch_logo": "assets/pitch_logos/pitch_logo_%.png",
    "ball": "assets/ball/ball_%.png",
-   "pads": "assets/dressing/pads/super_rugby_americas",
-   "posts": "assets/dressing/posts/super_rugby_americas",
+   "pads": "assets/pads",
+   "posts": "assets/posts",
    "trophy": {
     "ceremony": "SixNations",
     "model": "assets/trophy/trophy.o",

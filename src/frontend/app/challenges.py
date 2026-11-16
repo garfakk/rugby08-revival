@@ -470,7 +470,7 @@ def mid_match_start(cfg, minute, home_points, away_points):
     seconds = int(minute) * 60
     cfg.mission_mode_name = ""
     cfg.mission_mode_time = seconds
-    cfg.mission_mode_period = 0 if minute < 40 else 1
+    cfg.mission_mode_period = 0 if seconds <= 2400 else 1   # the game's period end (2400), see mission_mode_clock
     cfg.mission_nis = [_nis("kick_off", team=cfg.kick_off if cfg.kick_off in ("home", "away") else "home")]
     events = []
     for team, points in (("home", home_points), ("away", away_points)):

@@ -70,16 +70,16 @@ def test_stock_reference_read_from_the_cache(tmp_path, monkeypatch):
     (tmp_path / name).write_bytes(TEMPLATE)
     assert sorted(SD.load("stock:standard/twickenham", "posts")) == ["post", "xbar"]
     assert SD.stock_game_path("stock:world_cup/world_cup", "ads") == "stadiums/adboards/world_cup/world_cup"
-    assert SD.stock_game_path("stadiums/dressing/pads/x") is None
+    assert SD.stock_game_path("dressing/pads/x") is None
 
 
 def test_deploy_pads_writes_the_game_file(tmp_path, monkeypatch):
     data, game = tmp_path / "data", tmp_path / "game"
     game.mkdir()
     SD.save_set({"post": Image.new("RGBA", (32, 32), (0, 0, 255, 255))},
-                str(data / "stadiums" / "dressing" / "posts" / "blue"), "posts")
+                str(data / "dressing" / "posts" / "blue"), "posts")
     point_config(monkeypatch, data_dir=str(data), game_dir=str(game))
-    GFP.deploy_pads({"pads": "", "posts": "stadiums/dressing/posts/blue"})
+    GFP.deploy_pads({"pads": "", "posts": "dressing/posts/blue"})
     out = (game / gsv.game_filenames["stadium_graphics"]).read_bytes()
     assert mu.fsh_entry_image(dict(mu.fsh_entries(out))["post"]).getpixel((4, 4))[2] > 200
 
@@ -105,11 +105,11 @@ def test_resolve_pick_then_stadium_json_then_stock():
     assert dressing.resolve(_Cfg(twickenham), "pads") == "stock:standard/twickenham"
     assert dressing.resolve(_Cfg(twickenham), "posts") == "stock:standard/twickenham"
     assert dressing.resolve(_Cfg(twickenham), "ads") == "stock:scrolling/england_scrolling"
-    own = {"game_id": 70, "dressing": {"pads": "stadiums/dressing/pads/racing"}}
-    assert dressing.resolve(_Cfg(own), "pads") == "stadiums/dressing/pads/racing"
+    own = {"game_id": 70, "dressing": {"pads": "dressing/pads/racing"}}
+    assert dressing.resolve(_Cfg(own), "pads") == "dressing/pads/racing"
     assert dressing.resolve(_Cfg(own), "ads") == "stock:world_cup/france_nonwc"
-    picked = _Cfg(own, pads="competitions/top_14/assets/dressing/pads/top_14")
-    assert dressing.resolve(picked, "pads") == "competitions/top_14/assets/dressing/pads/top_14"
+    picked = _Cfg(own, pads="competitions/top_14/assets/pads")
+    assert dressing.resolve(picked, "pads") == "competitions/top_14/assets/pads"
     assert dressing.resolve(_Cfg({}), "pads") == ""
 
 
@@ -165,7 +165,7 @@ def test_suggestions_are_the_stadium_and_the_teams_competitions(tmp_path, monkey
 def test_sets_that_look_alike_are_listed_once(tmp_path, monkeypatch):
     from app import dressing
     point_config(monkeypatch, data_dir=str(tmp_path))
-    lib = tmp_path / "stadiums" / "dressing" / "posts"
+    lib = tmp_path / "dressing" / "posts"
     bar = Image.new("RGBA", (16, 16), (240, 240, 240, 255))
     bar.paste((20, 35, 95, 255), (8, 0, 16, 16))
     for name in ("a", "b"):           # the same white post and navy band
@@ -179,7 +179,7 @@ def test_sets_that_look_alike_are_listed_once(tmp_path, monkeypatch):
 
     options = dressing.choices(DS, "posts")
     assert [o["label"] for o in options] == ["Default", "White · navy", "White"]
-    assert options[1]["refs"] == ["stadiums/dressing/posts/a", "stadiums/dressing/posts/b"]
+    assert options[1]["refs"] == ["dressing/posts/a", "dressing/posts/b"]
     # a pick folded into another entry still selects that entry
-    assert any("stadiums/dressing/posts/b" in o["refs"] for o in dressing.choices(
-        DS, "posts", current="stadiums/dressing/posts/b"))
+    assert any("dressing/posts/b" in o["refs"] for o in dressing.choices(
+        DS, "posts", current="dressing/posts/b"))

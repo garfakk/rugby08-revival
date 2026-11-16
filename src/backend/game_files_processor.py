@@ -71,6 +71,27 @@ def shirt_name_printer(team_data, kit_back_pattern):
 
 
 # This function creates a mission file into the game directory with the match configuration (teams, stadium, environment, etc.)
+# End of each period in the game's table (1st/2nd half, extra time 1/2, sudden death).
+PERIOD_END = (2400, 4800, 5400, 6000, 6600)
+
+
+def mission_mode_clock(time_, period):
+    """<MODE time period> as strings, made consistent. The game takes the end
+    of a period from the period number, not from the clock: a start at 79:30
+    with the period blank (= 1st half) snaps back to 40:00, and a clock held
+    at or past its period's end never equals it, so the next period (extra
+    time) freezes at 80:00. So a blank or too early period becomes the one the
+    time falls in (exactly 2400 / 4800 = the end of the half it closes), a
+    later explicit period (extra time) is kept, and a time past the end of
+    its period is capped to that end."""
+    if time_ is None:
+        return "", ("" if period is None else str(period))
+    t = max(0, int(time_))
+    natural = next((i for i, end in enumerate(PERIOD_END) if t <= end), len(PERIOD_END) - 1)
+    p = min(max(natural if period is None else int(period), natural), len(PERIOD_END) - 1)
+    return str(min(t, PERIOD_END[p])), str(p)
+
+
 def create_mission_file(match_data):
 
     missionFilePath = os.path.join(config.game_launcher_directory, game_filenames['missionFile'])
@@ -233,11 +254,13 @@ def create_mission_file(match_data):
         # otherwise-ordinary exhibition match (no matching NIS/history) is
         # not in-game confirmed.
         mission_state = match_data.get("mission_state") or {}
+        mode_time, mode_period = mission_mode_clock(
+            mission_state.get("mode_time"), mission_state.get("mode_period"))
         mode = ET.SubElement(state, "MODE", {
             'name': mission_state.get("mode_name", ""),
             'offensiveteam': kickoff,
-            'time': str(mission_state["mode_time"]) if mission_state.get("mode_time") is not None else "",
-            'period': str(mission_state["mode_period"]) if mission_state.get("mode_period") is not None else "",
+            'time': mode_time,
+            'period': mode_period,
         })
 
         # ── advanced: restart position(s) that go with the start mode

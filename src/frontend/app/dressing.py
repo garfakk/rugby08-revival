@@ -11,11 +11,11 @@ A reference is a path relative to the mod data (a set folder, or for ads also
 a .fsh / picture) or "stock:<name>" (the game's own file, read from
 data.gob). Sets live in:
 
-  stadiums/dressing/<kind>/<set>/                  the library (mod data)
-  competitions/<c>/assets/dressing/<kind>/<set>/   a competition's, named by
-                                                   its JSON ("pads", "posts",
-                                                   "adboards"), per season
-  the game                                         every stock stadium's own
+  dressing/<kind>/<set>/              the library (mod data)
+  competitions/<c>/<where>/<kind>/    a competition's, named by its JSON
+                                      ("pads", "posts", "adboards"), per
+                                      season; <where> is assets, a year...
+  the game                            every stock stadium's own
 
 Who decides, first that has one: the match's pick (quick match pickers, or
 the competition a tournament / challenge applies, which sets the same
@@ -31,7 +31,7 @@ from shared.config import config
 KINDS = ("pads", "posts", "ads")
 JSON_KEY = {"pads": "pads", "posts": "posts", "ads": "adboards"}
 CFG_ATTR = {"pads": "pads", "posts": "posts", "ads": "adboards"}
-LIBRARY = "stadiums/dressing"
+LIBRARY = "dressing"
 STOCK = "stock:"
 
 

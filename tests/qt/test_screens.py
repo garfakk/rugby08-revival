@@ -98,7 +98,7 @@ def test_match_setup_dressing_choice(window, qapp, monkeypatch):
     from app.match_data_builder import build_match_data
     real = dressing.library_sets
     monkeypatch.setattr(dressing, "library_sets",
-                        lambda kind: [{"label": "mine", "ref": f"stadiums/dressing/{kind}/mine"}])
+                        lambda kind: [{"label": "mine", "ref": f"dressing/{kind}/mine"}])
     monkeypatch.setattr(dressing, "look", lambda ref, kind: ref or None)     # every set its own look
     window.show_match_setup()
     qapp.processEvents()
@@ -109,7 +109,7 @@ def test_match_setup_dressing_choice(window, qapp, monkeypatch):
         row = setup.dressing_rows[kind]
         row.refresh()
         assert row._values[0]["label"] == "Default" and row._values[0]["suggested"]
-        mine = next(i for i, o in enumerate(row._values) if o["ref"] == f"stadiums/dressing/{kind}/mine")
+        mine = next(i for i, o in enumerate(row._values) if o["ref"] == f"dressing/{kind}/mine")
         assert not row._values[mine].get("suggested")
         assert all(o.get("suggested") for o in row._values[:mine])
         assert getattr(setup.cfg, dressing.CFG_ATTR[kind]) is None
@@ -118,7 +118,7 @@ def test_match_setup_dressing_choice(window, qapp, monkeypatch):
         assert build_match_data(window.data, setup.cfg)[key] == own
         row.set_index(mine)
         row.changed.emit()
-        assert build_match_data(window.data, setup.cfg)[key] == f"stadiums/dressing/{kind}/mine"
+        assert build_match_data(window.data, setup.cfg)[key] == f"dressing/{kind}/mine"
         row.set_index(0)
         row.changed.emit()
         assert build_match_data(window.data, setup.cfg)[key] == own
