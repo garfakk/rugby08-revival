@@ -4,15 +4,15 @@
    "name": "Pacific Islanders",
    "type": "special",
    "category": "Representatives",
-   "ball": "",
-   "banners": "",
+   "ball": "logos_1/ball_%.png",
+   "banners": "logos_1/banner_%.png",
    "pads": "",
    "logos": {
-    "main": "",
-    "frontend": "",
-    "small": "",
-    "left": "",
-    "right": ""
+    "main": "logos_1/logo.png",
+    "frontend": "logos_1/logo_frontend.png",
+    "small": "logos_1/logo_small.png",
+    "left": "logos_1/logo_left.png",
+    "right": "logos_1/logo_right.png"
    },
    "kits": {
     "home": {
