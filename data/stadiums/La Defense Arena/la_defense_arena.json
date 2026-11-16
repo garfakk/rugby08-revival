@@ -8,6 +8,7 @@
     },
     "files": {
       "frontend/textures/stadiums/stadedefrance.n.fsh": "la_defense_arena.n.fsh"
-    }
+    },
+    "screen": "scre"
   }
 }

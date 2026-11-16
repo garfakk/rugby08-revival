@@ -336,6 +336,21 @@ def _custom_stadium(cfg):
     return files, name
 
 
+def _stadium_screen(cfg, stadium_files, centre_logo):
+    """The custom stadium's giant screen for this match (backend
+    stadium_screen): {"scene": game path of the scene pack, "tag": its
+    texture, "centre_logo": competition logo or ""}; None when it has none."""
+    info = (cfg.stadium or {}).get("data") or {}
+    tag = (info.get("screen") or "").strip()
+    scene = (info.get("scenes") or {}).get(cfg.environment)
+    if not tag or not scene:
+        return None
+    game_path = next((g for g, f in stadium_files.items() if f == scene), None)
+    if not game_path:
+        return None
+    return {"scene": game_path, "tag": tag, "centre_logo": centre_logo or ""}
+
+
 def _stadium_flags(cfg):
     """Any World Cup match left on "stock" (quick match, tournament,
     challenge) gets the World Cup stadium dressing; an explicit off is kept."""
@@ -436,6 +451,7 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
         tournament_logo = ""        # no logo at all (game_files_processor writes a blank one)
     elif logo_tid:
         tournament_logo = _tournament_asset_path(ds, logo_tid, t_info.get("logo", "")) or tournament_logo
+    competition_logo = tournament_logo if (tournament or logo_tid) and logo_choice != "none" else ""
     pads_tid, t_info = competition_branding.resolve(ds, getattr(cfg, "stadium_graphics_choice", ""))
     if pads_tid:
         stadium_graphics = _tournament_asset_path(ds, pads_tid, t_info.get("pads", "")) or stadium_graphics
@@ -505,6 +521,7 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
         # and the name it shows in the game ({} / None: the stock stadium)
         "stadium_files": stadium_files,
         "stadium_name": stadium_name,
+        "stadium_screen": _stadium_screen(cfg, stadium_files, competition_logo),
         "stadium_graphics": stadium_graphics,
         "adboards": _relative_to_mod_data(adboards) if adboards else "",
         "kick_off": kick_off,

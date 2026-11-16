@@ -32,7 +32,7 @@ sys.path.append(str(Path(__file__).parent.parent))
 import backend.process_handler
 from backend.game_specific_variables import *
 from backend.mod_utils import *
-from backend import adboards
+from backend import adboards, stadium_screen
 from shared.app_paths import assets_directory
 from shared.config import *
 
@@ -658,6 +658,23 @@ def stadium_game_filename(game_path):
   return hashlib.md5(base.lower().encode()).hexdigest() + ext.lower()
 
 
+def _dress_stadium_screen(big_path, screen, match_data):
+  """The custom stadium's giant screen (texture screen["tag"] of the scene
+  pack copied to `big_path`) showing this match's teams (backend/stadium_screen.py)."""
+  def asset(rel):
+    return stadium_screen.load_image(os.path.join(config.mod_data_directory, rel)) if rel else None
+
+  teams = [{"name": match_data[t].get("name", ""),
+            "logo": asset(match_data[t].get("logo_frontend") or match_data[t].get("logo"))}
+           for t in ("team_A", "team_B")]
+  try:
+    if stadium_screen.dress_scene(big_path, screen["tag"], teams[0], teams[1],
+                                  asset(screen.get("centre_logo"))):
+      log.info(f"Stadium screen: {teams[0]['name']} v {teams[1]['name']}")
+  except (OSError, ValueError, KeyError, struct.error) as e:
+    log.warning(f"Stadium screen not dressed: {e}")
+
+
 def deploy_stadium_files(match_data):
   """Remove the last match's custom stadium files, then put this match's
   (match_data["stadium_files"]: game path -> file in mod data) over the
@@ -683,6 +700,9 @@ def deploy_stadium_files(match_data):
     if copy_file(os.path.join(config.mod_data_directory, source), os.path.join(game_dir, name)):
       deployed.append(name)
       log.info(f"Custom stadium: {source} -> {game_path} ({name})")
+      screen = match_data.get("stadium_screen") or {}
+      if screen.get("scene") == game_path:
+        _dress_stadium_screen(os.path.join(game_dir, name), screen, match_data)
   try:
     if deployed:
       with open(manifest, "w", encoding="utf-8") as fh:

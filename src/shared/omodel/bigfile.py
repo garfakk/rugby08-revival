@@ -40,3 +40,20 @@ class BigArchive:
             if name.lower().endswith(suffix.lower()):
                 return name
         return None
+
+
+def pack_big(entries, align=16):
+    """BIGF archive bytes from [(name, data)], in order, each file `align`-
+    byte aligned (the layout of the game's own stadium packs)."""
+    head = 16 + sum(8 + len(name.encode('latin-1')) + 1 for name, _ in entries)
+    pos = (head + align - 1) // align * align
+    directory, body, offsets = b'', b'', []
+    for name, data in entries:
+        offsets.append(pos + len(body))
+        body += data + b'\0' * ((-len(data)) % align)
+    for (name, data), off in zip(entries, offsets):
+        directory += struct.pack('>II', off, len(data)) + name.encode('latin-1') + b'\0'
+    blob = b'\0' * (pos - head)
+    total = pos + len(body)
+    return b'BIGF' + struct.pack('<I', total) + struct.pack('>II', len(entries), (head + 3) // 4 * 4) \
+        + directory + blob + body

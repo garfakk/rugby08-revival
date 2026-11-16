@@ -170,6 +170,7 @@ stadiums/Eden Park/eden_park.night.big
 - `game_id`: the stock stadium it overwrites (the ids of `stadiums/stadiums.json`, Auckland = 49).
 - `scenes`: environment (`day`, `night`, `overcast`, `cold`) -> scene pack. The stadium is offered in these environments only.
 - `files` (optional): any other game file of that stadium, game path -> file, e.g. `{"frontend/textures/stadiums/auckland.d.fsh": "preview.fsh"}`.
+- `screen` (optional): the texture of the scene pack's `Textures.fsh` that is a giant screen (La Defense Arena: `"scre"`). Each match paints it with both crests, the team names and the competition logo (or VS). It is set when the match loads: no live score.
 - The key (`eden_park`) adds a stadium to the lists; the key of a stock stadium (`"49"`) replaces it everywhere instead (tournament fixtures at that ground included).
 
 The files are put over the slot's only for a match at that stadium, and the name replaces the slot's in the game (not for club grounds whose name is also their team's: Leinster, Ulster, Bourgoin, Castres, Clermont, Paris, Perpignan, Llanelli, Cardiff).
