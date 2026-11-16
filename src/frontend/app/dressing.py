@@ -131,19 +131,106 @@ def label_of(ds, kind, ref):
     return _label(os.path.basename(ref.rstrip("/")))
 
 
-def choices(ds, kind, current=None, stadium=None):
-    """The picker's options: "Stadium default" (ref "", labelled with what
-    that is for `stadium`), then the library, the competitions and the stock
-    sets; `current` is added when none of them."""
-    default = {"label": "Stadium default", "ref": ""}
-    ref = stadium_default(stadium, kind) if stadium else ""
-    if ref:
-        default["detail"] = label_of(ds, kind, ref)
-        default["default_ref"] = ref
-    out = [default] + library_sets(kind) + competition_sets(ds, kind) + stock_sets(kind)
-    if current and not any(o["ref"] == current for o in out):
-        out.append({"label": _label(os.path.basename(current.rstrip("/"))), "ref": current})
+def _participant_ids(node, out):
+    if isinstance(node, dict):
+        for v in node.values():
+            _participant_ids(v, out)
+    elif isinstance(node, list):
+        for v in node:
+            _participant_ids(v, out)
+    elif isinstance(node, (str, int)):
+        out.add(str(node))
     return out
+
+
+_TEMPLATES = None
+
+
+def _templates():
+    """[(competition id, season, team ids, categories)] of every competition
+    template, read once."""
+    global _TEMPLATES
+    if _TEMPLATES is None:
+        from app.tournament import formats
+        _TEMPLATES = []
+        try:
+            templates = formats.load_templates()
+        except Exception:          # a broken template must not break match setup
+            templates = {}
+        for tid, tpl in templates.items():
+            cats = tpl.get("category") or []
+            cats = [cats] if isinstance(cats, str) else list(cats)
+            _TEMPLATES.append((str(tpl.get("branding") or tid), str(tpl.get("branding_season") or ""),
+                               _participant_ids(tpl.get("participants") or {}, set()),
+                               {c.lower() for c in cats}))
+    return _TEMPLATES
+
+
+# team categories under an older name of a competition's
+CATEGORY_ALIASES = {"super 14": "super rugby", "pro12": "pro14", "celtic league": "pro14",
+                    "pro14": "urc"}
+
+
+def _categories(category):
+    out, cat = set(), str(category or "").strip().lower()
+    while cat and cat not in out:
+        out.add(cat)
+        cat = CATEGORY_ALIASES.get(cat, "")
+    return out
+
+
+def team_competitions(teams):
+    """{(competition id, season)} the teams play in: a template lists them,
+    or takes their category (Top 14 clubs -> Top 14). `teams` is
+    [(team id, team info)]."""
+    ids = {str(t) for t, _ in teams if t}
+    cats = set().union(*[_categories((info or {}).get("category")) for _, info in teams])
+    return {(comp, season) for comp, season, members, tcats in _templates()
+            if members & ids or tcats & cats}
+
+
+def suggested_refs(ds, kind, teams=(), stadium=None, home_ground=None):
+    """The set references worth offering first for a match: the stadium's
+    own, its teams' competitions', the home team's ground's."""
+    out = []
+    if stadium:
+        out.append(stadium_default(stadium, kind))
+    key = JSON_KEY[kind]
+    for comp, season in sorted(team_competitions(teams)):
+        seasons = ds.tournaments.get(comp) or {}
+        info = seasons.get(season) or (seasons.get("") if not season else None)
+        folder = ds.tournaments_folder_path.get(comp, "")
+        rel = ((info or {}).get(key) or "").strip()
+        if folder and rel and os.path.exists(os.path.join(folder, rel)):
+            out.append(_relative(os.path.join(folder, rel)))
+    if home_ground:
+        out.append(stadium_default(home_ground, kind))
+    seen, ordered = set(), []
+    for ref in out:
+        if ref and ref not in seen:
+            seen.add(ref)
+            ordered.append(ref)
+    return ordered
+
+
+def choices(ds, kind, current=None, stadium=None, suggested=()):
+    """The picker's options: "Stadium default" (ref "", named after what
+    that is for `stadium`), then every set of the library, the competitions
+    and the game; the refs in `suggested` are flagged "suggested" and come
+    first. `current` is added when none of them."""
+    default = {"label": "Stadium default", "ref": "", "suggested": True}
+    own = stadium_default(stadium, kind) if stadium else ""
+    if own:
+        default["detail"] = label_of(ds, kind, own)
+        default["default_ref"] = own
+    rest = library_sets(kind) + competition_sets(ds, kind) + stock_sets(kind)
+    if current and not any(o["ref"] == current for o in rest):
+        rest.append({"label": _label(os.path.basename(current.rstrip("/"))), "ref": current})
+    picked = [r for r in suggested if r != own]
+    by_ref = {o["ref"]: o for o in rest}
+    first = [dict(by_ref[r], suggested=True) for r in picked if r in by_ref]
+    others = [o for o in rest if o["ref"] not in set(picked)]
+    return [default] + first + others
 
 
 def resolve(cfg, kind):
@@ -152,24 +239,3 @@ def resolve(cfg, kind):
     if picked:
         return picked
     return stadium_default((cfg.stadium or {}).get("data") or {}, kind)
-
-
-def load_ads(sources):
-    """Copy the picked ad files / folder into the library and return its
-    reference ("" when nothing usable was picked). Several files become one
-    set (a folder named after the first)."""
-    from app import disk_import
-    exts = (".fsh",) + IMAGE_EXTS
-    sub = f"{LIBRARY}/ads"
-    sources = [s for s in sources if s]
-    if not sources:
-        return ""
-    if len(sources) == 1 and os.path.isdir(sources[0]):
-        rels = disk_import.import_files(sources, config.mod_data_directory, sub, exts)
-        return os.path.dirname(rels[0]) if rels else ""
-    if len(sources) == 1:
-        rels = disk_import.import_files(sources, config.mod_data_directory, sub, exts)
-        return rels[0] if rels else ""
-    stem = os.path.splitext(os.path.basename(sources[0]))[0]
-    rels = disk_import.import_files(sources, config.mod_data_directory, f"{sub}/{stem}", exts)
-    return os.path.dirname(rels[0]) if rels else ""

@@ -1,37 +1,27 @@
 """ui/dressing_picker.py — the match-setup stadium dressing choosers (pads,
-posts, ads; app/dressing.py). Options sit under collapsible headers (stadium,
-library, competitions, stock); the open list previews the option under the
-cursor: pads and posts on a 3D goal, ads as a strip of boards."""
-import os
-
+posts, ads; app/dressing.py). Two collapsible sections: the sets suggested
+for this match (the stadium's own, its teams' competitions') and all the
+others; the open list previews the option under the cursor: pads and posts
+on a 3D goal, ads as a strip of boards."""
 from PIL import Image
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QImage, QPixmap
-from PyQt5.QtWidgets import QFileDialog, QLabel, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget
 
 from shared.log import get_logger
-from ui.dropdown import DropdownRow, PopupList, _GROUP
+from ui.dropdown import DropdownRow, PopupList
 from ui.theme import DROPDOWN_BORDER
 
 log = get_logger(__name__)
 
 PREVIEW_H = 190
 STRIP_H = 96
-LOAD_FILES, LOAD_FOLDER = "__ads_files__", "__ads_folder__"
-GROUPS = ("Stadium", "Library", "Competitions", "Stock")
+SUGGESTED, OTHERS = "Suggested", "All others"
+GROUPS = (SUGGESTED, OTHERS)
 
 
 def _group(option):
-    if option.get("action"):
-        return "Library"
-    ref = option.get("ref") or ""
-    if not ref:
-        return "Stadium"
-    if ref.startswith("stock:"):
-        return "Stock"
-    if ref.startswith("stadiums/"):
-        return "Library"
-    return "Competitions"
+    return SUGGESTED if option.get("suggested") else OTHERS
 
 
 def _pixmap(image):
@@ -52,6 +42,7 @@ class DressingRow(DropdownRow):
         self._preview = preview
         self.group = _group
         self.group_order = GROUPS
+        self.group_open = (SUGGESTED,)
 
     @staticmethod
     def _label_of(option):
@@ -62,10 +53,7 @@ class DressingRow(DropdownRow):
         """Reread the options and select `ref` (the current one when None)."""
         keep = (self.current() or {}).get("ref", "") if ref is None else ref
         values = self._get_choices(keep)
-        if self.kind == "ads":
-            values += [{"label": "Load from disk…", "ref": "", "action": LOAD_FILES},
-                       {"label": "Load folder from disk…", "ref": "", "action": LOAD_FOLDER}]
-        index = next((i for i, v in enumerate(values) if v["ref"] == keep and not v.get("action")), 0)
+        index = next((i for i, v in enumerate(values) if v["ref"] == keep), 0)
         self.set_values(values, index=index)
 
     def current_ref(self):
@@ -119,8 +107,7 @@ class DressingRow(DropdownRow):
         popup.set_toolbar_widget(holder)
         current = self.current()
         self._fill_grouped(popup, current)
-        popup.hovered.connect(lambda option: show(option)
-                              if isinstance(option, dict) and not option.get("action") else None)
+        popup.hovered.connect(lambda option: show(option) if isinstance(option, dict) else None)
         popup.picked.connect(self._on_picked)
         popup.closed.connect(self._on_popup_closed)
         popup.open_at(self, screen, gap=0, own_toggle=True)
@@ -132,37 +119,6 @@ class DressingRow(DropdownRow):
         self._popup = popup
         self._popup_open = True
         self.update()
-
-    def _on_picked(self, value):
-        if isinstance(value, tuple) and value and value[0] == _GROUP:
-            return
-        if isinstance(value, dict) and value.get("action"):
-            self._load(folder=value["action"] == LOAD_FOLDER)
-            return
-        super()._on_picked(value)
-
-    def _load(self, folder):
-        from app import dressing
-        start = getattr(DressingRow, "last_dir", "") or os.path.expanduser("~")
-        if folder:
-            picked = QFileDialog.getExistingDirectory(self.window(), "Load ads folder", start)
-            sources = [picked] if picked else []
-        else:
-            from backend.adboards import IMAGE_EXTS
-            pattern = " ".join(f"*{e}" for e in (".fsh",) + IMAGE_EXTS)
-            sources, _ = QFileDialog.getOpenFileNames(self.window(), "Load ads", start,
-                                                      f"Ads ({pattern})")
-        if not sources:
-            return
-        DressingRow.last_dir = os.path.dirname(os.path.normpath(sources[0]))
-        try:
-            ref = dressing.load_ads(sources)
-        except OSError:
-            ref = ""
-        if ref:
-            self.refresh(ref)
-            self.changed.emit()
-
 
 def ads_strip(ref, height=STRIP_H, boards=4):
     """A preview strip (PIL) of the first `boards` ad sheets of set `ref`."""

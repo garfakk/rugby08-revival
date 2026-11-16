@@ -870,6 +870,7 @@ class DropdownRow(QWidget):
         names = sorted(groups, key=lambda n: (order.index(n) if order and n in order else len(order or ()),
                                               n.lower()))
         opened = {str(self.group(current) or "Other")} if current is not None else set()
+        opened |= set(getattr(self, "group_open", ()))      # sections always opened first
 
         def rebuild(highlight=None):
             bar = popup.scroll.verticalScrollBar()

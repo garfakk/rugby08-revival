@@ -1219,6 +1219,17 @@ class MatchSetupScreen(KickoffTransition, Screen):
         def stadium_info():
             return (self.cfg.stadium or {}).get("data") or {}
 
+        def dressing_choices(kind, current):
+            # suggested first: the stadium's own sets, the teams'
+            # competitions', the home team's ground's
+            teams = [(s.team_id, s.info(self.ds) if s.team_id and s.season else {})
+                     for s in (self.cfg.home, self.cfg.away)]
+            ground_id = str(teams[0][1].get("primaryStadium") or "")
+            ground = next((info for sid, info in getattr(self, "_stadium_list", []) if str(sid) == ground_id), None) \
+                if ground_id else None
+            suggested = dressing.suggested_refs(self.ds, kind, teams, stadium_info(), ground)
+            return dressing.choices(self.ds, kind, current, stadium_info(), suggested)
+
         def goal_preview(kind):
             def preview(option):
                 rows = {"pads": self.pads_row, "posts": self.posts_row}
@@ -1232,9 +1243,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
         for kind, label in (("pads", "post pads & flags"), ("posts", "posts"), ("ads", "stadium ads")):
             preview = (lambda option, k=kind: ads_strip(self.dressing_rows[k].effective_ref(option))) \
                 if kind == "ads" else goal_preview(kind)
-            row = DressingRow(label, kind,
-                              lambda cur, k=kind: dressing.choices(self.ds, k, cur, stadium_info()),
-                              preview)
+            row = DressingRow(label, kind, lambda cur, k=kind: dressing_choices(k, cur), preview)
             row.refresh(getattr(self.cfg, dressing.CFG_ATTR[kind]) or "")
             row.changed.connect(lambda k=kind, r=row: setattr(
                 self.cfg, dressing.CFG_ATTR[k], r.current_ref() or None))
@@ -1437,6 +1446,9 @@ class MatchSetupScreen(KickoffTransition, Screen):
         if side == "home":
             self.cfg.shared_tournament = None
             self._auto_select_home_stadium()
+        else:
+            for row in getattr(self, "dressing_rows", {}).values():
+                row.refresh()          # the suggestions follow the teams
         self._refresh_ball_options()
         self._refresh_controller_teams()
 

@@ -107,12 +107,15 @@ def test_match_setup_dressing_choice(window, qapp, monkeypatch):
     for kind, key in (("pads", "pads"), ("posts", "posts"), ("ads", "adboards")):
         row = setup.dressing_rows[kind]
         row.refresh()
-        assert [o["label"] for o in row._values][:2] == ["Stadium default", "mine"]
+        assert row._values[0]["label"] == "Stadium default" and row._values[0]["suggested"]
+        mine = next(i for i, o in enumerate(row._values) if o["label"] == "mine")
+        assert not row._values[mine].get("suggested")
+        assert all(o.get("suggested") for o in row._values[:mine])
         assert getattr(setup.cfg, dressing.CFG_ATTR[kind]) is None
         own = dressing.stadium_default(setup.cfg.stadium["data"], kind)
         assert own.startswith("stock:") or own
         assert build_match_data(window.data, setup.cfg)[key] == own
-        row.set_index(1)
+        row.set_index(mine)
         row.changed.emit()
         assert build_match_data(window.data, setup.cfg)[key] == f"stadiums/dressing/{kind}/mine"
         row.set_index(0)

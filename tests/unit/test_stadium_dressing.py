@@ -130,3 +130,31 @@ def test_competition_seasons_sharing_a_set_share_an_entry(tmp_path, monkeypatch)
     sets = dressing.competition_sets(DS, "pads")
     assert sorted((o["label"], o["ref"]) for o in sets) == [
         ("Six 2018", "competitions/six/p/2018"), ("Six 2019–2020", "competitions/six/p/modern")]
+
+
+def test_suggestions_are_the_stadium_and_the_teams_competitions(tmp_path, monkeypatch):
+    from app import dressing
+    point_config(monkeypatch, data_dir=str(tmp_path))
+    comp = tmp_path / "competitions" / "t14"
+    (comp / "sets" / "a").mkdir(parents=True)
+    (comp / "sets" / "b").mkdir(parents=True)
+    monkeypatch.setattr(dressing, "_TEMPLATES", [
+        ("t14", "", {"1"}, set()),               # lists team 1
+        ("pro", "2020", set(), {"pro d2"}),      # takes Pro D2 clubs
+        ("other", "", {"9"}, set())])
+
+    class DS:
+        tournaments = {"t14": {"": {"pads": "sets/a"}}, "pro": {"2020": {"pads": "sets/b"}},
+                       "other": {"": {"pads": "sets/a"}}}
+        tournaments_folder_path = {"t14": str(comp), "pro": str(comp), "other": str(comp)}
+
+    teams = [("1", {"category": "Top 14"}), ("2", {"category": "Pro D2"})]
+    refs = dressing.suggested_refs(DS, "pads", teams, {"game_id": 14}, {"game_id": 70})
+    assert refs == ["stock:standard/twickenham", "competitions/t14/sets/b",
+                    "competitions/t14/sets/a", "stock:standard/stade_de_france"]
+    options = dressing.choices(DS, "pads", None, {"game_id": 14}, refs)
+    assert options[0]["ref"] == "" and options[0]["detail"] == "Stock · Twickenham"
+    flagged = [o["ref"] for o in options if o.get("suggested")]
+    assert flagged == ["", "competitions/t14/sets/b", "competitions/t14/sets/a",
+                       "stock:standard/stade_de_france"]
+    assert len({o["ref"] for o in options}) == len(options)     # no set listed twice
