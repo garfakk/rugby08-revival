@@ -820,24 +820,30 @@ class PlayerEditorScreen(EditorScreen):
     def _player_dialog(self, duplicate):
         files = [f for f in self.ds.players_files()]
         name = TextField("In-game name", max_bytes=14)
-        target = ChoiceField("Save into", files, allow_blank=False,
-                             display=lambda p: os.path.basename(p))
+        first = TextField("First name")
+        last = TextField("Last name")
+        # No choice of file: the player goes where the one being edited lives,
+        # else into the file holding the most players
         current_path = self.ds.players_file_path.get(self.record_id) if self.record_id else None
         if current_path in files:
-            target.set_value(current_path)
+            target = current_path
         elif files:
             counts = {}
             for path in self.ds.players_file_path.values():
                 counts[path] = counts.get(path, 0) + 1
-            target.set_value(max(files, key=lambda f: counts.get(f, 0)))
-        year = NumberField("First season", lo=1900, hi=2100, allow_blank=False)
+            target = max(files, key=lambda f: counts.get(f, 0))
+        else:
+            target = ""
+        year = NumberField("First season", lo=1900, hi=2100, allow_blank=False, formatter=season_label)
         year.set_value(self.season or (self.ds.seasons() or ["2026"])[-1])
         position = ChoiceField("Primary position", POSITIONS, allow_blank=False, display=position_name)
         position.set_value("centre")
-        fields = {"name": name, "target": target}
         if duplicate:
+            fields = {"name": name}
             name.set_value(P.duplicate_record(self.session.working)["display_name"])
         else:
+            # The in-game name is made from these ("J. Smith"); editable after
+            fields = {"first": first, "last": last}
             fields["year"] = year
             fields["position"] = position
 
@@ -846,29 +852,35 @@ class PlayerEditorScreen(EditorScreen):
             if role != "ok":
                 return
             try:
-                self._create_player(name.value().strip(), target.value(), year.value(),
-                                    position.value(), duplicate)
+                self._create_player(name.value().strip(), target, year.value(),
+                                    position.value(), duplicate,
+                                    first.value().strip(), last.value().strip())
             except (ValueError, SaveError, OSError) as e:
                 self.shell.footer.set_status(f"Could not create player: {e}", DANGER_LITE)
 
         self.show_dialog(FormDialog(
             self, "Duplicate player" if duplicate else "New player",
             ("Copies every season under a new id. Squads are unchanged."
-             if duplicate else "Saved to your edits right away, in the chosen file."
-             if saves_to_user_edits() else "Written to the chosen file right away."),
+             if duplicate else "Saved to your edits right away."
+             if saves_to_user_edits() else "Written to the players file right away."),
             fields, [("CANCEL", "neutral", "cancel"), ("CREATE", "primary", "ok")], done))
 
-    def _create_player(self, name, path, year, position, duplicate):
+    def _create_player(self, name, path, year, position, duplicate, first="", last=""):
+        if not duplicate:
+            if not (first or last):
+                raise ValueError("the player needs a first or last name")
+            name = _display_name_default({"first_name": first, "last_name": last})
         if not name:
             raise ValueError("the player needs an in-game name")
         if not path:
-            raise ValueError("choose a players file")
+            raise ValueError("there is no players file to save into")
         pid = P.allocate_player_id(self.ds.players_files(), self.ds.players)
         if duplicate:
             record = copy.deepcopy(self.session.working)
             record["display_name"] = P.truncate_bytes(name)
         else:
             record = P.blank_player(P.truncate_bytes(name), year, position)
+            record["first_name"], record["last_name"] = first, last
         from app.game_data import add_player
         add_player(path, pid, record)
         self.ds.register_player(pid, record, path)
