@@ -32,9 +32,10 @@ log = get_logger(__name__)
 
 STOCK_PREFIX = "stock:"
 # The mod data folder of the sets any match can wear: <LIBRARY>/<kind>/<set>.
-# It was "dressing/" before: references saved then still work (library_ref).
-LIBRARY = "ingame_graphics"
-_OLD_LIBRARY = "dressing/"
+# It was "dressing/", then "ingame_graphics/": references saved then still
+# work (library_ref).
+LIBRARY = "stadium_graphics"
+_OLD_LIBRARIES = ("dressing/", "ingame_graphics/")
 PADS_DIR = "stadiums/pads_and_flags"
 ADS_DIR = "stadiums/adboards"
 
@@ -103,10 +104,12 @@ def stock_bytes(game_path):
 
 # ── sets ────────────────────────────────────────────────────────────────────
 def library_ref(ref):
-  """`ref` with a reference into the old "dressing/" library moved to the
-  current one; any other reference unchanged."""
-  if ref and ref.replace("\\", "/").startswith(_OLD_LIBRARY):
-    return LIBRARY + "/" + ref.replace("\\", "/")[len(_OLD_LIBRARY):]
+  """`ref` with a reference into an old library folder moved to the current
+  one; any other reference unchanged."""
+  path = (ref or "").replace("\\", "/")
+  for old in _OLD_LIBRARIES:
+    if path.startswith(old):
+      return LIBRARY + "/" + path[len(old):]
   return ref
 
 

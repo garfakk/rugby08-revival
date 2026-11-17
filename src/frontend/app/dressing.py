@@ -11,7 +11,7 @@ A reference is a path relative to the mod data (a set folder, or for ads also
 a .fsh / picture) or "stock:<name>" (the game's own file, read from
 data.gob). Sets live in:
 
-  ingame_graphics/<kind>/<set>/       the library (mod data)
+  stadium_graphics/<kind>/<set>/      the library (mod data)
   competitions/<c>/<where>/<kind>/    a competition's, named by its JSON
                                       ("pads", "posts", "adboards"), per
                                       season; <where> is assets, a year...
