@@ -89,6 +89,11 @@ class DataStore:
          self.edits, self.team_drafts) = raw or self.read_files()
         # saves go to the user's edits (or, maintainer, to the pack files)
         G.set_edit_store(self.edits, into_pack=config.save_edits_to == "mod")
+        # every stadium (the stadium editor) and the ones played: a stadium
+        # switched off there is left out of quick match, tournaments, challenges
+        self.all_stadiums = self.stadiums
+        self.stadiums = {}
+        self.sync_stadiums()
         self.events = DataEvents()
 
     @staticmethod
@@ -113,8 +118,7 @@ class DataStore:
                     V.migrate_season(info)
                     kit_files.migrate_kit_files(info, loader.teams_folder_path.get(tid, ""))
         stadiums = StadiumDataLoader(config.directory_stadiums).load_stadiums()
-        if edits.enabled:
-            user_stadiums.apply(stadiums)           # the stadium editor's edits (user_data)
+        user_stadiums.apply(stadiums, edits.enabled)   # the stadium editor's edits (user_data)
         tournament_loader = TournamentDataLoader(config.directory_competitions)
         tournaments = tournament_loader.load_tournaments()
         # Where each record came from, so the editors can write it back to
@@ -123,6 +127,14 @@ class DataStore:
                 loader.players_file_path, loader.players_sources, loader.team_json_ids,
                 stadiums, tournaments, tournament_loader.tournaments_folder_path, edits,
                 loader.team_drafts)
+
+    def sync_stadiums(self):
+        """ds.stadiums again from all_stadiums: the ones switched on (same
+        dict, changed in place, so holders of it see the change)."""
+        playing = {sid: info for sid, info in self.all_stadiums.items()
+                   if not isinstance(info, dict) or user_stadiums.enabled(info)}
+        self.stadiums.clear()
+        self.stadiums.update(playing)
 
     # ── the user's files (shared/mod_overlay.py, user_data/mod_data) ──────
     @staticmethod

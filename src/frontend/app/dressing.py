@@ -150,55 +150,78 @@ def stadium_json_path(sid):
     return None
 
 
-def save_stadium(ds, sid, refs, pitches=(), logos=None, stripes=None, environments=None) -> str:
-    """Write the stadium's "dressing" ({kind: ref}, empty refs removed; none
-    = the slot's stock sets) and "pitches" (the pitch textures a match there
-    may use; none = any), "pitch_logos" (backend/pitch_logos layout; None =
-    the game's own) and "stripes" ({environment: {"opacity", "brightness"}},
-    backend/pitch_stripes; none = the scene packs' own) and "environments"
-    (the ones a match there may use; None = those it has scenes for) in its
-    JSON (the maintainer's mode, config save_edits_to = mod) or, as every
-    edit, in user_data/edits/stadiums (app/user_stadiums.py), and into the
-    loaded data. The file's path."""
+def stadium_pack_file(sid):
+    """The data pack file that defines stadium `sid`: its folder's JSON, else
+    stadiums/stadiums.json (the stock stadiums); None when neither has it."""
+    import json
+    path = stadium_json_path(sid)
+    if path:
+        return path
+    path = os.path.join(config.pack_directory, "stadiums", "stadiums.json")
+    try:
+        with open(path, "r", encoding="utf-8") as fh:
+            data = json.load(fh)
+    except (OSError, ValueError):
+        return None
+    return path if isinstance(data, dict) and str(sid) in data else None
+
+
+def save_stadium(ds, sid, refs, pitches=(), logos=None, stripes=None, environments=None,
+                 enabled=True, pitch="") -> str:
+    """Save what the stadium editor sets on stadium `sid`: "dressing" ({kind:
+    ref}, empty refs removed; none = the slot's stock sets), "pitches" (the
+    pitch textures a match there may use; none = any), "pitch" (the pitch of a
+    match there left on "default"; "" = the stadium's own), "pitch_logos"
+    (backend/pitch_logos layout; None = the game's own), "stripes"
+    ({environment: {"opacity", "brightness"}}, backend/pitch_stripes; none =
+    the scene packs' own), "environments" (the ones a match there may use;
+    None = the pack's) and "enabled" (False: not played). Kept, as every
+    edit, in user_data/edits/stadiums (app/user_stadiums.py) or, in the
+    maintainer's mode (config save_edits_to = mod), written in the stadium's
+    pack file; and put into the loaded data. The file's path."""
     import json
     from app import game_data as G
     from app import user_stadiums
-    path = stadium_json_path(sid)
+    path = stadium_pack_file(sid)
     if path is None:
-        raise OSError(f"no stadium folder defines {sid}")
+        raise OSError(f"no stadium file defines {sid}")
     with open(path, "r", encoding="utf-8") as fh:
         data = json.load(fh)
     refs = {k: v for k, v in (refs or {}).items() if k in KINDS and v}
-    pitches = list(pitches or [])
     stripes = {env: v for env, v in ((e, pitch_stripes.clean(v)) for e, v in (stripes or {}).items()) if v}
+    values = {"dressing": refs, "pitches": list(pitches or []), "pitch": pitch or "",
+              "pitch_logos": logos, "stripes": stripes, "environments": list(environments or []),
+              "enabled": bool(enabled)}
     entry = data[str(sid)]
-    environments = list(environments or [])
-    values = (("dressing", refs), ("pitches", pitches), ("pitch_logos", logos), ("stripes", stripes),
-              ("environments", environments))
     if G.saves_to_user_edits():
         # the edit is the user's: kept in user_data, the pack's file untouched
         if not ds.edits.enabled:
             raise G.SaveError("your edits are turned off: turn them on in Tools › My edits to save")
-        path = user_stadiums.save(sid, dict(values), {k: entry.get(k) for k in user_stadiums.EDIT_KEYS})
+        path = user_stadiums.save(sid, values, {k: entry.get(k) for k in user_stadiums.EDIT_KEYS})
     else:
-        for key, value in values:
-            if value or (key == "pitch_logos" and value is not None):
-                entry[key] = value
-            else:
+        for key, value in values.items():
+            if key == "environments" and not value and not entry.get("scenes"):
+                continue        # a stock stadium's list is its only one
+            if user_stadiums._empty(key, value):
                 entry.pop(key, None)
+            else:
+                entry[key] = value
         with open(path + ".tmp", "w", encoding="utf-8") as fh:
-            json.dump(data, fh, indent=2, ensure_ascii=False)
+            json.dump(data, fh, indent=2 if os.path.basename(path) != "stadiums.json" else 4,
+                      ensure_ascii=False)
             fh.write("\n")
         os.replace(path + ".tmp", path)
-    info = ds.stadiums.get(str(sid))
+        import copy
+        own = {k: copy.deepcopy(entry[k]) for k in user_stadiums.EDIT_KEYS if k in entry}
+        if not own.get("environments"):
+            own["environments"] = list(entry.get("scenes") or [])
+        user_stadiums.pack_values[str(sid)] = own
+    stadiums = getattr(ds, "all_stadiums", ds.stadiums)
+    info = stadiums.get(str(sid))
     if isinstance(info, dict):
-        for key, value in values:
-            if value or (key == "pitch_logos" and value is not None):
-                info[key] = value
-            else:
-                info.pop(key, None)
-        if not environments:        # the loader's default: the scenes it has
-            info["environments"] = list(info.get("scenes") or [])
+        user_stadiums.apply_one(info, values, user_stadiums.pack_of(sid, entry))
+    if hasattr(ds, "sync_stadiums"):
+        ds.sync_stadiums()
     return path
 
 

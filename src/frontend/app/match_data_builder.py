@@ -363,13 +363,22 @@ def _stadium_stripes(cfg, stadium_files):
     return {"scene": game_path, "values": values} if values and game_path else None
 
 
+def pitch_name(cfg):
+    """The pitch texture of the match: the pick, or on "default" the
+    stadium's default pitch (the stadium editor's); "default" = the scene's own."""
+    name = cfg.pitch_texture or "default"
+    if name == "default":
+        name = ((cfg.stadium or {}).get("data") or {}).get("pitch") or "default"
+    return name
+
+
 def _own_pitch(cfg, stadium_files):
     """The mod's own pitch of this match (backend pitches): {"name", "pack"
     (file in mod data), "scene" (game path of the scene pack of the
     environment), "stadium" (the slot's FileName), "environment"}; None on
     one of the game's."""
     from backend import pitches
-    name = cfg.pitch_texture
+    name = pitch_name(cfg)
     info = (cfg.stadium or {}).get("data") or {}
     slot = gsv.STADIUM_SLOTS.get(info.get("game_id"))
     if not pitches.is_own(name) or not slot:
@@ -576,7 +585,7 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
         # to its own "left" default regardless of the picker.
         "home_team_side": home_team_side,
         "environment": cfg.environment,
-        "pitch_texture": "default" if own_pitch else cfg.pitch_texture,   # the game takes only its own names
+        "pitch_texture": "default" if own_pitch else pitch_name(cfg),   # the game takes only its own names
         "own_pitch": own_pitch,
         "crowd": _crowd(cfg),
         "rain": cfg.rain,

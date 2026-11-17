@@ -9,6 +9,15 @@
     "files": {
       "frontend/textures/stadiums/stadedefrance.n.fsh": "la_defense_arena.n.fsh"
     },
-    "screen": "scre"
+    "screen": "scre",
+    "pitches": [
+      "Mod_08_hybrid_d"
+    ],
+    "stripes": {
+      "night": {
+        "opacity": 0,
+        "brightness": 116
+      }
+    }
   }
 }

@@ -855,6 +855,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
         # sense again.
         self.reset_kickoff_visuals()
         self._apply_data_changes()     # teams / players edited meanwhile
+        self._sync_stadium_list()      # stadiums switched on / off in the stadium editor
         self._sync_environment_choices()   # the stadium editor's environments / pitches
         self._sync_pitch_choices()
         self._apply_expert_mode()      # picks up a Settings toggle flipped meanwhile
@@ -1092,9 +1093,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
         v.addLayout(settings_row)
 
         self.stadium_row = DropdownRow("stadium")
-        stadiums = sorted(self.ds.stadiums.items(),
-                           key=lambda x: int(x[1].get("game_id", x[0])) if isinstance(x[1], dict) else 0)
-        self._stadium_list = [(sid, info) for sid, info in stadiums if isinstance(info, dict)]
+        self._stadium_list = self._stadium_entries()
         self.stadium_row.set_values(self._stadium_list)
         self.stadium_row._display = lambda t: t[1].get("name", str(t[0]))
         self.stadium_row.group = lambda t: t[1].get("country")
@@ -1605,6 +1604,27 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self.stadium_row.set_index(idx)
         self._on_stadium_changed()
 
+    def _stadium_entries(self):
+        stadiums = sorted(self.ds.stadiums.items(),
+                          key=lambda x: int(x[1].get("game_id", x[0])) if isinstance(x[1], dict) else 0)
+        return [(sid, info) for sid, info in stadiums if isinstance(info, dict)]
+
+    def _sync_stadium_list(self):
+        """The stadium list as ds.stadiums is now; the pick stays if it is
+        still played, else the home team's ground (or another) is picked."""
+        entries = self._stadium_entries()
+        if [sid for sid, _i in entries] == [sid for sid, _i in self._stadium_list]:
+            return
+        current = (self.stadium_row.current() or (None,))[0]
+        self._stadium_list = entries
+        self.stadium_row.set_values(entries)
+        ids = [sid for sid, _i in entries]
+        if current in ids:
+            self.stadium_row.set_index(ids.index(current))
+            self._on_stadium_changed()
+        else:
+            self._auto_select_home_stadium()
+
     def _on_stadium_changed(self):
         entry = self.stadium_row.current()
         if not entry:
@@ -1628,8 +1648,10 @@ class MatchSetupScreen(KickoffTransition, Screen):
         names = pitches.allowed(info) or list(pitches.NAMES)
         names = sorted(names, key=pitches.condition_order)      # driest first, the game's order within
         labels = pitches.simple_labels(names)
-        values = [("default", "Default")] + [(n, labels[n]) for n in names]
-        keep = next((i for i, (n, _l) in enumerate(values) if n == self.cfg.pitch_texture), 0)
+        own = info.get("pitch") or ""             # the stadium's default pitch (stadium editor)
+        default = f"Default · {pitches.condition_label(own)}" if own else "Default"
+        values = [("default", default, own)] + [(n, labels[n]) for n in names]
+        keep = next((i for i, (n, *_rest) in enumerate(values) if n == self.cfg.pitch_texture), 0)
         row.set_values(values, index=keep)
         self.cfg.pitch_texture = values[keep][0]
 

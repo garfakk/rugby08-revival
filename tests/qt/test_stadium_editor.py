@@ -75,11 +75,12 @@ def test_pick_save_and_reset(window, qapp):
     _wait(qapp, lambda: window.screens.currentWidget() is ed)
     _settle(qapp)
     sid = "test_ground"
-    assert [r["id"] for r in ed.list_rows()] == [sid]          # the mod's own stadiums only
+    assert sid in [r["id"] for r in ed.list_rows()]            # the mod's own and the stock ones
     ed.request_open(sid)
     _settle(qapp, 40)
     assert ed.record_id == sid and ed.d == {"pads": "", "posts": "", "ads": "", "pitches": [], "logos": None,
-                                                   "stripes": {}, "environments": ["day"]}
+                                                   "stripes": {}, "environments": ["day"],
+                                                   "pitch": "", "enabled": True}
     assert ed.view._message                              # no game here: said, not crashed
     choices = ed._choices("pads", "")
     other = next(o["ref"] for o in choices if o["ref"])
@@ -278,3 +279,55 @@ def test_stadium_edits_live_in_user_data_not_in_the_pack(window, qapp):
     assert _mine("test_ground")["pitches"] == ["Reg2_08_snow_n"]
     assert DataStore.read_files()[7]["test_ground"]["pitches"] == ["Reg2_08_snow_n"]
     user_stadiums.revert("test_ground")
+
+
+def test_stock_stadiums_are_listed_and_can_be_switched_off(window, qapp):
+    """Stock stadiums are in the list too; one switched off leaves the
+    stadiums played (quick match, tournaments) and comes back when on."""
+    from app import user_stadiums
+    ed = window.screen_stadium_editor
+    window.show_stadium_editor()
+    _settle(qapp)
+    rows = {r["id"]: r for r in ed.list_rows()}
+    stock = next(sid for sid, info in window.data.all_stadiums.items() if not info.get("is_custom"))
+    assert stock in rows and "test_ground" in rows
+    ed.request_open(stock)
+    _settle(qapp)
+    envs = list(window.data.all_stadiums[stock]["environments"])
+    ed._set_enabled("off")
+    assert ed.save()
+    assert stock not in window.data.stadiums and stock in window.data.all_stadiums
+    assert {r["id"]: r for r in ed.list_rows()}[stock]["tag"] == "OFF"
+    assert _mine(stock)["enabled"] is False
+    setup = window.screen_match_setup.setup_screen
+    setup._sync_stadium_list()
+    assert stock not in [sid for sid, _i in setup._stadium_list]
+    ed._set_enabled("on")
+    assert ed.save()
+    assert stock in window.data.stadiums and not user_stadiums.is_edited(stock)
+    assert window.data.all_stadiums[stock]["environments"] == envs        # the stock list kept
+
+
+def test_default_pitch_is_used_when_the_match_leaves_it_on_default(window, qapp):
+    from app.match_data_builder import pitch_name
+    from app.state import MatchConfig
+    ed = window.screen_stadium_editor
+    window.show_stadium_editor()
+    _settle(qapp)
+    ed.request_open("test_ground")
+    _settle(qapp)
+    ed._set_default_pitch("Reg2_08_muddy_n")
+    assert ed.save()
+    assert _mine("test_ground")["pitch"] == "Reg2_08_muddy_n"
+    cfg = MatchConfig()
+    cfg.stadium = {"stadium_id": 14, "data": window.data.stadiums["test_ground"]}
+    assert pitch_name(cfg) == "Reg2_08_muddy_n"            # "default": the stadium's
+    cfg.pitch_texture = "Reg2_08_snow_n"
+    assert pitch_name(cfg) == "Reg2_08_snow_n"             # a pick wins
+    setup = window.screen_match_setup.setup_screen
+    setup.cfg.stadium = cfg.stadium
+    setup._sync_pitch_choices()
+    assert setup.pitch_row._values[0][0] == "default" and setup.pitch_row._values[0][2] == "Reg2_08_muddy_n"
+    ed._set_default_pitch("")
+    assert ed.save()
+    assert not _mine("test_ground").get("pitch")

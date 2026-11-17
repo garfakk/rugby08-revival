@@ -24,7 +24,7 @@ import os
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtWidgets import QHBoxLayout, QSizePolicy, QVBoxLayout, QWidget
 
-from app import dressing
+from app import dressing, user_stadiums
 from app.game_data import save_target
 from backend import pitch_logos, pitch_stripes, pitches
 from shared.log import get_logger
@@ -166,6 +166,15 @@ class StadiumEditorScreen(EditorScreen):
 
     def _build_dressing(self):
         page = self.shell.page(0).layout_
+        card = SectionCard("Stadium")
+        grid = FieldGrid(columns=1)
+        self.f_enabled = SegmentField("played", ["on", "off"],
+                                      display={"on": "in matches", "off": "not played"}.get)
+        self.f_enabled.edited.connect(self._set_enabled)
+        grid.add(self.f_enabled)
+        self.register_field("enabled", self.f_enabled, 0)
+        card.add(grid)
+        page.addWidget(card)
         card = SectionCard("Dressing")
         self.rows = {}
         for kind in dressing.KINDS:
@@ -226,6 +235,21 @@ class StadiumEditorScreen(EditorScreen):
         self.focus.register(self.stripe_stock)
         row.addStretch(1)
         card.add_layout(row)
+        page.addWidget(card)
+        card = SectionCard("Default pitch")
+        grid = FieldGrid(columns=1)
+        labels = pitches.simple_labels(sorted(pitches.NAMES, key=pitches.condition_order))
+        self.f_default_pitch = ChoiceField("pitch", sorted(pitches.NAMES, key=pitches.condition_order),
+                                           allow_blank=True, blank_label="stadium's own",
+                                           display=lambda n: f"{labels.get(n, n)} · {pitches.full_label(n)}"
+                                           if n else "stadium's own")
+        self.f_default_pitch.popup_title = "the pitch of a match left on default"
+        self.f_default_pitch.on_hover = lambda n: self._show_pitch(n or "")
+        self.f_default_pitch.on_popup_closed = lambda: self._show_pitch(self.d.get("pitch", ""))
+        self.f_default_pitch.edited.connect(self._set_default_pitch)
+        grid.add(self.f_default_pitch)
+        self.register_field("pitch", self.f_default_pitch, 1)
+        card.add(grid)
         page.addWidget(card)
         card = SectionCard("Pitches")
         row = QHBoxLayout()
@@ -334,7 +358,7 @@ class StadiumEditorScreen(EditorScreen):
 
     # ── data ─────────────────────────────────────────────────────────────
     def _info(self, sid=None):
-        return dict(self.ds.stadiums.get(str(self.record_id if sid is None else sid)) or {})
+        return dict(self.ds.all_stadiums.get(str(self.record_id if sid is None else sid)) or {})
 
     def _own_info(self):
         """The stadium without its "dressing": "Default" in the lists is its
@@ -357,35 +381,37 @@ class StadiumEditorScreen(EditorScreen):
 
     def list_rows(self):
         rows = []
-        for sid, info in self.ds.stadiums.items():
-            if not isinstance(info, dict) or not info.get("is_custom") or not info.get("scenes"):
+        for sid, info in self.ds.all_stadiums.items():
+            if not isinstance(info, dict):
                 continue
             name = info.get("name") or sid
             country = str(info.get("country") or "").title()
-            rows.append({"id": str(sid), "text": name, "tag": "EDITED" if info.get("dressing") or info.get("pitches") or info.get("stripes")
-                         or info.get("pitch_logos") is not None
-                         or set(info.get("environments") or []) != set(info.get("scenes") or []) else "",
-                         "color": ACCENT, "search": f"{name} {country}", "group": country,
-                         "errors": 0, "issues": 0})
+            tag = "OFF" if not user_stadiums.enabled(info) else "EDITED" if user_stadiums.is_edited(sid) else ""
+            rows.append({"id": str(sid), "text": name, "tag": tag,
+                         "color": FG_TERTIARY if tag == "OFF" else ACCENT,
+                         "search": f"{name} {country} {'custom' if info.get('is_custom') else 'stock'}",
+                         "group": country, "errors": 0, "issues": 0})
         return rows
 
     def load_record(self, record_id):
-        if str(record_id) not in self.ds.stadiums:
+        if str(record_id) not in self.ds.all_stadiums:
             return None
-        info = self.ds.stadiums[str(record_id)]
+        info = self.ds.all_stadiums[str(record_id)]
         own = info.get("dressing") or {}
         logos = pitch_logos.clean(info["pitch_logos"]) if info.get("pitch_logos") is not None else None
         stripes = {e: pitch_stripes.clean(v) for e, v in (info.get("stripes") or {}).items()}
         envs = [e for e in ENV_ORDER if e in (info.get("environments") or [])]
         return dict({k: own.get(k, "") for k in dressing.KINDS}, pitches=pitches.allowed(info),
                     logos=logos, stripes={e: v for e, v in stripes.items() if v},
-                    environments=envs or self._default_envs_of(info))
+                    environments=envs or self._default_envs_of(info, record_id),
+                    pitch=str(info.get("pitch") or ""), enabled=user_stadiums.enabled(info))
 
     def write_record(self):
         w = self.session.working
         envs = None if set(w["environments"]) == set(self._default_envs()) else w["environments"]
         path = dressing.save_stadium(self.ds, self.record_id, {k: w[k] for k in dressing.KINDS},
-                                     w["pitches"], w["logos"], w["stripes"], envs)
+                                     w["pitches"], w["logos"], w["stripes"], envs,
+                                     enabled=w["enabled"], pitch=w["pitch"])
         return f"Saved in {save_target(path)}"
 
     # ── edits ────────────────────────────────────────────────────────────
@@ -420,7 +446,28 @@ class StadiumEditorScreen(EditorScreen):
             w["logos"] = None
             w["stripes"] = {}
             w["environments"] = self._default_envs()
+            w["pitch"] = ""
+            w["enabled"] = True
         self.edit("stock dressing", mutate)
+
+    def _set_enabled(self, value):
+        on = value != "off"
+        if self.session is None or self.d["enabled"] == on:
+            return
+
+        def mutate(w):
+            w["enabled"] = on
+        self.edit("played" if on else "not played", mutate)
+
+    def _set_default_pitch(self, name):
+        name = name or ""
+        if self.session is None or self.d["pitch"] == name:
+            return
+
+        def mutate(w):
+            w["pitch"] = name
+        self.edit("default pitch", mutate)
+        self._show_pitch(name)
 
     def _toggle_pitch(self, name, on):
         have = set(self.d["pitches"])
@@ -441,12 +488,15 @@ class StadiumEditorScreen(EditorScreen):
         return weather.env_label(self._info(), env)
 
     @staticmethod
-    def _default_envs_of(info):
-        """The environments of the stadium's own scenes: what it offers until told otherwise."""
-        return [e for e in ENV_ORDER if e in (info.get("scenes") or {})]
+    def _default_envs_of(info, sid=None):
+        """What the stadium offers until told otherwise: the environments the
+        data pack lists for it, else (a custom stadium) its own scenes'."""
+        own = (user_stadiums.pack_of(sid, info) if sid is not None else {}).get("environments") \
+            or list(info.get("scenes") or {})
+        return [e for e in ENV_ORDER if e in own]
 
     def _default_envs(self):
-        return self._default_envs_of(self._info())
+        return self._default_envs_of(self._info(), self.record_id)
 
     def _toggle_env(self, env, on):
         if self.session is None:
@@ -748,7 +798,7 @@ class StadiumEditorScreen(EditorScreen):
 
     # ── refresh ──────────────────────────────────────────────────────────
     def on_record_opened(self):
-        self._pitch_key = ""
+        self._pitch_key = self.d.get("pitch", "") if self.session else ""
         self.f_pitches.cursor = ""
         envs = self._envs()
         self.f_envs.set_items([(e, self._env_label(e)) for e in envs])
@@ -782,8 +832,11 @@ class StadiumEditorScreen(EditorScreen):
         n = len(self.d["pitches"])
         self.pitch_count.setText(f"{n} of {len(pitches.NAMES)} allowed" if n else "any pitch allowed")
         self.f_envs.set_values(self.d["environments"])
+        self.f_enabled.set_value("on" if self.d["enabled"] else "off")
+        self.f_default_pitch.set_value(self.d["pitch"])
         own = all(not self.d.get(k) for k in dressing.KINDS) and not n and self.d.get("logos") is None \
-            and not self.d["stripes"] and set(self.d["environments"]) == set(self._default_envs())
+            and not self.d["stripes"] and set(self.d["environments"]) == set(self._default_envs()) \
+            and not self.d["pitch"] and self.d["enabled"]
         self._refresh_logo_fields()
         self._refresh_stripe_fields()
         self._show_logos()

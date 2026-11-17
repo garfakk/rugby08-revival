@@ -2,19 +2,19 @@
 app/user_stadiums.py — the user's own edits to stadiums
 =========================================================
 What the stadium editor sets on a stadium (its pads / posts / ads, the pitches
-a match there may use, the pitch logos, the mowing stripes and the
-environments) is kept apart from the data pack, in user_data/edits/stadiums/,
+a match there may use, its default pitch, the pitch logos, the mowing stripes,
+the environments and whether it is played at all) is kept apart from the data pack, in user_data/edits/stadiums/,
 one small file per edited stadium:
 
     {"format": 1, "kind": "stadiums", "id": "twickenham_stoop",
-     "mine": {"dressing": {...}, "pitches": [...], "pitch_logos": null,
-              "stripes": {...}, "environments": []},
+     "mine": {"dressing": {...}, "pitches": [...], "pitch": "", "pitch_logos": null,
+              "stripes": {...}, "environments": [], "enabled": true},
      "saved": "2026-11-17T09:00:00"}
 
 At load those keys replace the pack's, key by key: a new data pack changes
 everything else about the stadium and never erases the edit. `mine` always
-holds all five keys (an empty one is the user's "none"). An edit that equals
-the pack's values is not kept.
+holds every key; an empty one (no pitches, no default pitch, enabled...) gives
+the pack's value back. An edit that equals the pack's values is not kept.
 """
 import copy
 import json
@@ -27,7 +27,14 @@ from shared.log import get_logger
 log = get_logger(__name__)
 
 FORMAT = 1
-EDIT_KEYS = ("dressing", "pitches", "pitch_logos", "stripes", "environments")
+EDIT_KEYS = ("dressing", "pitches", "pitch", "pitch_logos", "stripes", "environments", "enabled")
+_EMPTY = {"pitches": [], "environments": [], "dressing": {}, "stripes": {}, "pitch": "",
+          "pitch_logos": None, "enabled": True}
+
+#: {stadium id: {key: value}} of the editable keys as the data pack has them
+#: (after the loader's defaults), taken by apply() before the edits: what an
+#: empty value of an edit gives back
+pack_values = {}
 
 
 def directory():
@@ -40,30 +47,48 @@ def _file(sid):
 
 
 def _empty(key, value):
-    """Whether `value` of `key` means "none" (the key is then left out)."""
-    return value is None if key == "pitch_logos" else not value
+    """Whether `value` of `key` means "the pack's own"."""
+    if key == "pitch_logos":
+        return value is None
+    if key == "enabled":
+        return value is None or value is True
+    return not value
 
 
 def normalise(values):
-    """The five keys of `values`, each in its stored form."""
-    return {k: copy.deepcopy(values.get(k)) if not _empty(k, values.get(k))
-            else ([] if k in ("pitches", "environments") else {} if k in ("dressing", "stripes") else None)
+    """Every key of `values`, each in its stored form."""
+    return {k: copy.deepcopy(values.get(k)) if not _empty(k, values.get(k)) else copy.deepcopy(_EMPTY[k])
             for k in EDIT_KEYS}
 
 
-def apply_one(info, mine):
-    """Lay the edit `mine` over the stadium `info` (a dict, changed in place)."""
+def pack_of(sid, info=None):
+    """The pack's own values of stadium `sid` (`info` stands in when apply()
+    hasn't seen it)."""
+    if str(sid) in pack_values:
+        return pack_values[str(sid)]
+    return {k: copy.deepcopy(info[k]) for k in EDIT_KEYS if info and k in info}
+
+
+def apply_one(info, mine, pack=None):
+    """Lay the edit `mine` over the stadium `info` (a dict, changed in place);
+    an empty value gives back `pack`'s (the pack's own values)."""
+    pack = pack or {}
     for key in EDIT_KEYS:
         if key not in mine:
             continue
-        value = mine[key]
-        if _empty(key, value):
+        value = mine[key] if not _empty(key, mine[key]) else pack.get(key)
+        if value is None or (key == "enabled" and value is True):
             info.pop(key, None)
         else:
             info[key] = copy.deepcopy(value)
     if not info.get("environments"):        # the loader's default: the scenes it has
         info["environments"] = list(info.get("scenes") or [])
     return info
+
+
+def enabled(info) -> bool:
+    """False for a stadium switched off: not played (quick match, tournaments...)."""
+    return info.get("enabled", True) is not False
 
 
 def load():
@@ -93,12 +118,19 @@ def load():
     return out
 
 
-def apply(stadiums):
-    """Lay every edit over `stadiums` ({id: info}); the ids edited."""
+def apply(stadiums, use=True):
+    """Remember the pack's values of `stadiums` ({id: info}) and, with `use`
+    (the user's edits turned on), lay every edit over them; the ids edited."""
+    pack_values.clear()
+    for sid, info in stadiums.items():
+        if isinstance(info, dict):
+            pack_values[str(sid)] = {k: copy.deepcopy(info[k]) for k in EDIT_KEYS if k in info}
+    if not use:
+        return []
     done = []
     for sid, mine in load().items():
         if sid in stadiums and isinstance(stadiums[sid], dict):
-            apply_one(stadiums[sid], mine)
+            apply_one(stadiums[sid], mine, pack_values.get(sid))
             done.append(sid)
     return done
 
@@ -112,7 +144,10 @@ def save(sid, values, pack_values):
     are the pack's own. Equal: the edit file is removed. Returns the path."""
     path = _file(sid)
     mine, theirs = normalise(values), normalise(pack_values)
-    if mine == theirs:
+    for key in EDIT_KEYS:
+        if mine[key] == theirs[key]:          # the pack's own: kept as "the pack's"
+            mine[key] = copy.deepcopy(_EMPTY[key])
+    if mine == normalise({}):
         revert(sid)
         return path
     env = {"format": FORMAT, "kind": "stadiums", "id": str(sid), "mine": mine,

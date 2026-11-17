@@ -53,6 +53,8 @@ class PitchRow(DropdownRow):
         def show(option):
             from backend import pitches
             name = option[0] if option else "default"
+            if name == "default" and len(option) > 2 and option[2]:
+                name = option[2]                      # the stadium's default pitch
             try:
                 scene = pitches.scene(name) if name != "default" else None
                 view.set_message("" if scene is not None else
