@@ -160,7 +160,7 @@ except AttributeError:      # Qt < 5.14
 from ui import APP_STYLESHEET, motion
 from ui.theme import register_fonts
 from app.shell import ScreenManager
-from app.state import DataStore
+from app.state import DataStore, clear_data_caches
 from screens.main_menu import MainMenuScreen
 from screens.match_setup import MatchSetupContainer
 from screens.settings import SettingsScreen
@@ -202,6 +202,14 @@ from ui.music import MenuMusic, TrackMedal
 # past this width instead; below it, unaffected (no screen's content
 # actually reaches it in normal windowed use).
 MAX_CONTENT_WIDTH = 1920
+
+
+# The screens built on the DataStore: rebuilt from fresh data after a data
+# update (MainWindow.reload_data). The others hold no mod data.
+DATA_SCREENS = ("match_setup", "presentation", "tools", "user_edits", "team_editor",
+                "player_editor", "challenge_editor", "tournament_editor",
+                "challenge_mode", "roster_import", "tournament_hub", "tournament_wizard",
+                "tournament_intro", "tournament")
 
 
 class MainWindow(QMainWindow):
@@ -449,9 +457,10 @@ class MainWindow(QMainWindow):
         # MatchSetupScreen.prewarm) — after the splash, before anyone gets there.
         # Both wait for the menu's entrance (and any other motion) to end:
         # each blocks the GUI thread for a while.
-        motion.when_idle(self.screen_match_setup.prewarm, delay=1200)
+        # Looked up when they run: a data update may have rebuilt the screens.
+        motion.when_idle(lambda: self.screen_match_setup.prewarm(), delay=1200)
         # Same for the player editor's list (thousands of players).
-        motion.when_idle(self.screen_player_editor.prewarm, delay=1500)
+        motion.when_idle(lambda: self.screen_player_editor.prewarm(), delay=1500)
         self._menus_ready = True
         self._start_gamepads()
         self.screen_main.play_entrance()
@@ -695,17 +704,12 @@ class MainWindow(QMainWindow):
     def _build_screens(self):
         """Generator, like _boot_steps: yields between the heavier screens."""
         self.screen_main = MainMenuScreen(self)
-        self.screen_match_setup = MatchSetupContainer(
-            self.data, self.show_main, self.begin_match_launch, self.reveal_match)
-        yield
         self.screen_settings = SettingsScreen(self.show_main, on_windowed_mode_changed=self.apply_windowed_mode,
                                               music=self.music)
         yield
         self.screen_about = AboutScreen(self.show_main)
         self.screen_game_modes = GameModesScreen(self.show_main, self.show_challenge_mode,
                                                  self.show_tournament_hub)
-        self.screen_presentation = MatchPresentationScreen(self.data, self.begin_match_launch, self.reveal_match)
-        yield
         self.screen_ingame = GameWidget(self.show_main, self.show_match_setup,
                                          result_callback=self.show_post_match,
                                          on_loading_end=self.music.stop_loading)
@@ -714,18 +718,59 @@ class MainWindow(QMainWindow):
             on_retry=self.rematch,
             on_challenges=self.show_challenge_mode_from_result,
         )
+        # on_quit: the program update's installer takes over (it reopens the mod)
+        self.screen_updates = UpdatesScreen(self._editor_back, on_quit=self.close,
+                                            on_data_changed=self.reload_data)
         yield
+        yield from self._build_data_screens()
+
+        for screen in (
+            self.screen_main,
+            self.screen_match_setup,
+            self.screen_settings,
+            self.screen_about,
+            self.screen_game_modes,
+            self.screen_presentation,
+            self.screen_ingame,
+            self.screen_post_match,
+            self.screen_challenge_result,
+            self.screen_tools,
+            self.screen_user_edits,
+            self.screen_updates,
+            self.screen_team_editor,
+            self.screen_player_editor,
+            self.screen_roster_import,
+            self.screen_challenge_editor,
+            self.screen_tournament_editor,
+            self.screen_challenge_mode,
+            self.screen_tournament_hub,
+            self.screen_tournament_wizard,
+            self.screen_tournament,
+            self.screen_tournament_intro,
+        ):
+            self.screens.addWidget(screen)
+            yield
+
+    def _editor_back(self):
+        self.screens.go_back(default=self.screen_tools)
+
+    def _build_data_screens(self):
+        """The screens built on the DataStore (DATA_SCREENS): at start-up, and
+        again from the fresh data after a data update (reload_data)."""
+        editor_back = self._editor_back
+        self.screen_match_setup = MatchSetupContainer(
+            self.data, self.show_main, self.begin_match_launch, self.reveal_match)
+        yield
+        self.screen_presentation = MatchPresentationScreen(self.data, self.begin_match_launch, self.reveal_match)
         self.screen_tools = ToolsScreen(
             self.data, self.show_main, self.show_team_editor, self.show_player_editor,
             on_import=self.show_roster_import, on_challenge_editor=self.show_challenge_editor,
             on_edits=self.show_user_edits, on_updates=self.show_updates,
             on_tournament_editor=self.show_tournament_editor if TOURNAMENT_EDITOR_ENABLED else None)
-        editor_back = lambda: self.screens.go_back(default=self.screen_tools)
         self.screen_user_edits = UserEditsScreen(self.data, editor_back,
                                                  open_team=self.open_team,
                                                  open_player=self.open_player)
-        # on_quit: the program update's installer takes over (it reopens the mod)
-        self.screen_updates = UpdatesScreen(editor_back, on_quit=self.close)
+        yield
         self.screen_team_editor = TeamEditorScreen(self.data, editor_back,
                                                    open_player=self.open_player)
         self.screen_player_editor = PlayerEditorScreen(self.data, editor_back,
@@ -757,32 +802,69 @@ class MainWindow(QMainWindow):
         self.screen_tournament = TournamentDashboardScreen(
             self.data, self.leave_tournament, on_play=self.play_tournament_match)
 
-        for screen in (
-            self.screen_main,
-            self.screen_match_setup,
-            self.screen_settings,
-            self.screen_about,
-            self.screen_game_modes,
-            self.screen_presentation,
-            self.screen_ingame,
-            self.screen_post_match,
-            self.screen_challenge_result,
-            self.screen_tools,
-            self.screen_user_edits,
-            self.screen_updates,
-            self.screen_team_editor,
-            self.screen_player_editor,
-            self.screen_roster_import,
-            self.screen_challenge_editor,
-            self.screen_tournament_editor,
-            self.screen_challenge_mode,
-            self.screen_tournament_hub,
-            self.screen_tournament_wizard,
-            self.screen_tournament,
-            self.screen_tournament_intro,
-        ):
-            self.screens.addWidget(screen)
-            yield
+    # ── data update installed: reload without a restart ────────────────────
+    def reload_data(self, on_done=None):
+        """Read the mod data again and rebuild every screen built on it, in
+        place — after a data update was installed (or undone), so it is used
+        right away instead of after a restart. The reading (and the rebuild of
+        the user's-files mirror, see config.refresh_mod_data) runs on a worker
+        thread; the screens are rebuilt on the GUI thread, a few per event
+        loop turn. `on_done(error)` gets None on success, else the message."""
+        from ui.background import Job
+        if getattr(self, "_reload_job", None) is not None:
+            return
+
+        def work(_report, _cancelled):
+            config.refresh_mod_data()
+            return DataStore.read_files()
+
+        def done(raw):
+            self._reload_job = None
+            try:
+                old = {name: getattr(self, "screen_" + name) for name in DATA_SCREENS}
+                gc.unfreeze()           # what the old screens and data held can go
+                self.data = DataStore(raw)
+                clear_data_caches()
+                steps = self._build_data_screens()
+            except Exception as e:
+                log.exception("reloading the mod data failed")
+                on_done and on_done(str(e) or type(e).__name__)
+                return
+
+            def step():
+                try:
+                    next(steps)
+                    QTimer.singleShot(0, step)
+                    return
+                except StopIteration:
+                    pass
+                except Exception as e:
+                    log.exception("rebuilding the screens failed")
+                    on_done and on_done(str(e) or type(e).__name__)
+                    return
+                for name, before in old.items():
+                    self.screens.replace_screen(before, getattr(self, "screen_" + name))
+                    before.deleteLater()
+                motion.when_idle(lambda: self.screen_match_setup.prewarm(), delay=1200)
+                motion.when_idle(lambda: self.screen_player_editor.prewarm(), delay=1500)
+                log.info(f"mod data reloaded (data {config.data_version})")
+
+                def settle():
+                    gc.collect()
+                    gc.freeze()
+                QTimer.singleShot(2000, settle)
+                on_done and on_done(None)
+            step()
+
+        def failed(err):
+            self._reload_job = None
+            log.warning(f"reloading the mod data failed: {err}")
+            on_done and on_done(str(err) or "cancelled")
+
+        self._reload_job = Job(work, self, "data-reload")
+        self._reload_job.done.connect(done)
+        self._reload_job.failed.connect(failed)
+        self._reload_job.start()
 
     # ── Navigation ─────────────────────────────────────────────────────────
     def show_main(self):

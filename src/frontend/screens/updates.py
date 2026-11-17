@@ -126,10 +126,14 @@ class _ChannelCard(SectionCard):
 
 
 class UpdatesScreen(Screen):
-    def __init__(self, on_back, updates=None, on_quit=None):
+    def __init__(self, on_back, updates=None, on_quit=None, on_data_changed=None):
         super().__init__(on_back=on_back)
         self.updates = updates or default_updates()
         self.on_quit = on_quit or (lambda: QApplication.instance().quit())
+        # on_data_changed(on_done): reload the mod data and the screens built on
+        # it (MainWindow.reload_data); None (tests): a restart applies it
+        self.on_data_changed = on_data_changed
+        self._reloading = False
         self._dialog = None
         self._job = None
         self.result = None                    # schedule.Result of the last check
@@ -242,6 +246,30 @@ class UpdatesScreen(Screen):
             self.rows_v.addWidget(Note(text, color=FG_SECONDARY, size=T_LABEL))
         self.rows_v.addStretch(1)
 
+    def _apply(self, text, colour, card_note=None):
+        """After an install or undo: load the new data into the running mod
+        (no restart), saying so while it happens and once it is done."""
+        card_note = card_note or (lambda _note: None)
+        if self.on_data_changed is None:
+            card_note(RESTART)
+            self._say(f"{text} {RESTART}", colour)
+            return
+        card_note("Loading…")
+        self._say(f"{text} Loading the new data…", colour)
+        self._reloading = True
+        self.undo_btn.setEnabled(False)
+
+        def done(error):
+            self._reloading = False
+            self.undo_btn.setEnabled(bool(self.updates.installed()) and not self._busy())
+            if error:
+                card_note(RESTART)
+                self._say(f"{text} Could not load it now ({error}). {RESTART}", WARN)
+            else:
+                card_note("In use.")
+                self._say(f"{text} Now in use.", colour)
+        self.on_data_changed(done)
+
     def _say(self, text, colour=FG_SECONDARY):
         self.status.setStyleSheet(f"color: {colour}; background: transparent;"
                                   f" font-family: '{FONT_BODY}'; font-size: {T_LABEL}pt;")
@@ -249,7 +277,7 @@ class UpdatesScreen(Screen):
 
     # ── online: checking ────────────────────────────────────────────────
     def _busy(self):
-        return self._job is not None and self._job.running
+        return self._reloading or (self._job is not None and self._job.running)
 
     def _run(self, fn, done, failed, progress=None, name="updates"):
         self._job = Job(fn, self, name)
@@ -404,9 +432,9 @@ class UpdatesScreen(Screen):
             self._idle()
             self._data_plan = None
             v = the_plan.manifest.get("data_version", "")
-            card.show_state(f"Version {v}", f"Installed. {RESTART}", GREEN)
-            self._say(f"Data {v} installed ({entry['summary']}). {RESTART}", GREEN)
             self.reload()
+            self._apply(f"Data {v} installed ({entry['summary']}).", GREEN,
+                        lambda note: card.show_state(f"Version {v}", f"Installed. {note}".strip(), GREEN))
 
         def failed(err):
             self._idle()
@@ -504,8 +532,8 @@ class UpdatesScreen(Screen):
         except UpdateError as e:
             self._say(f"Update failed: {e}", DANGER_LITE)
             return
-        self._say(f"Installed {entry['name']} ({entry['summary']}). {RESTART}", GREEN)
         self.reload()
+        self._apply(f"Installed {entry['name']} ({entry['summary']}).", GREEN)
 
     # ── undo ────────────────────────────────────────────────────────────
     def _undo(self):
@@ -523,10 +551,10 @@ class UpdatesScreen(Screen):
             except UpdateError as e:
                 self._say(str(e), DANGER_LITE)
                 return
-            self._say(f"Uninstalled {entry['name']}. {RESTART}", WARN)
             self._data_plan = None
             self.reload()
             self._show_result()
+            self._apply(f"Uninstalled {entry['name']}.", WARN)
         self._dialog = ConfirmDialog(
             self, f"Undo {last['name']} {last.get('version', '')}?".replace("  ", " "),
             "Revert the changes made by the last update",

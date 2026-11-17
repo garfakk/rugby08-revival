@@ -430,9 +430,12 @@ def test_updates_screen_installs_and_undoes(window, qapp, tmp_path):
         assert screen._dialog is not None
         screen._dialog._on_choice("ok")
         assert (mod / "kits" / "a.png").read_bytes() == b"new"
-        assert "Installed Kits" in screen.status.text() and screen.undo_btn.isEnabled()
+        _wait(qapp, lambda: not screen._busy())          # the new data loaded, no restart
+        assert "Installed Kits" in screen.status.text() and "in use" in screen.status.text()
+        assert screen.undo_btn.isEnabled()
         screen._undo()
         screen._dialog._on_choice("ok")
+        _wait(qapp, lambda: not screen._busy())
         assert (mod / "kits" / "a.png").read_bytes() == b"old" and not screen.undo_btn.isEnabled()
     finally:
         screen._dialog = None

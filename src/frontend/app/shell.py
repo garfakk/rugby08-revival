@@ -55,6 +55,19 @@ class ScreenManager(QStackedWidget):
         elif default is not None:
             self.show_screen(default, push_history=False)
 
+    def replace_screen(self, old, new):
+        """Put `new` where `old` is (its place in the stack and in the back
+        history); `old` is taken out and left to the caller to delete."""
+        index = self.indexOf(old)
+        if index < 0:
+            self.addWidget(new)
+        else:
+            self.insertWidget(index, new)
+        self._history = [new if s is old else s for s in self._history]
+        if self.currentWidget() is old:
+            self._present(new)
+        self.removeWidget(old)
+
     def _present(self, screen):
         present(self, screen)
 

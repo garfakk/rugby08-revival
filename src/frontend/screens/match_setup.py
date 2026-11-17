@@ -572,6 +572,42 @@ class TeamColumn(QWidget):
         self._refresh_kit_preview()
         self.screen.on_team_changed(self.side)
 
+    def refresh_from_data(self, team_changed, players_changed):
+        """The data under this card changed (see MatchSetupScreen.
+        _apply_data_changes). Its team edited: reload it, on the same kit
+        when it still has it; deleted (or no longer playable): the next one
+        in its list. Players edited: the squad's records read again."""
+        ds, slot = self.screen.ds, self._slot()
+        if not slot.team_id:
+            return
+        if slot.team_id not in ds.teams or slot.season not in ds.teams[slot.team_id]:
+            if self.style == "classic":
+                self._reload_teams(self._season(), pick_random=False)
+            else:
+                self._on_group_changed()
+            return
+        if team_changed:
+            kit, variant = self.kit_row.current(), slot.variant
+            if self.style == "classic":
+                self._sync_classic()
+            else:
+                groups = self.index.groups()
+                group = self.index.group(slot.team_id)
+                self.group_picker.set_values(groups, index=groups.index(group))
+                teams = self.index.in_group(group)
+                self.name_picker.set_values(teams, index=teams.index(slot.team_id))
+            if variant not in [""] + ds.variants_of(slot.team_id, slot.season):
+                variant = ""
+            slot.variant = variant
+            self._load_team()
+            idx = self.kit_row.index_of(kit)
+            if idx is not None and kit != self.kit_row.current():
+                self.kit_row.set_index(idx)
+                self._on_kit_changed()
+            self.name_picker.update()
+        elif players_changed:
+            slot.players = ds.get_players(slot.lineup.get("players_id", []), slot.season)
+
     def set_mannequin(self, face_id, skin_entry):
         """Which stock head/skin the 3D preview's player wears — picked by
         MatchSetupScreen.on_show from MANNEQUIN_POOL, not stored per-column,
@@ -689,7 +725,11 @@ class MatchSetupScreen(KickoffTransition, Screen):
 
         # A kit edited in the team editor must not keep showing the cached
         # picture from before the save.
+        self._stale_teams, self._stale_players = set(), False
         ds.events.team_changed.connect(self._on_team_data_changed)
+        ds.events.team_removed.connect(self._on_team_data_changed)
+        ds.events.player_changed.connect(self._on_player_data_changed)
+        ds.events.player_removed.connect(self._on_player_data_changed)
 
         self._defer_3d = False
         self._pick_mannequins()
@@ -791,10 +831,25 @@ class MatchSetupScreen(KickoffTransition, Screen):
             self.on_team_changed("home")   # the stadium follows the home team
 
     def _on_team_data_changed(self, tid):
+        """A team saved, created or deleted in the editors: the cards showing
+        it reload (name, crest, kits, squad) — now if the screen is up, else
+        when it next opens — so the edit shows without a restart."""
         for col in (self.home_col, self.away_col):
             col._kit_cache.clear()
-            if col._slot().team_id == tid and self.isVisible():
-                col._refresh_kit_preview()
+        self._stale_teams.add(str(tid))
+        if self.isVisible():
+            self._apply_data_changes()
+
+    def _on_player_data_changed(self, pid):
+        self._stale_players = True
+        if self.isVisible():
+            self._apply_data_changes()
+
+    def _apply_data_changes(self):
+        teams, self._stale_teams = self._stale_teams, set()
+        players, self._stale_players = self._stale_players, False
+        for col in (self.home_col, self.away_col):
+            col.refresh_from_data(col._slot().team_id in teams, players)
 
     def on_show(self):
         super().on_show()
@@ -803,6 +858,8 @@ class MatchSetupScreen(KickoffTransition, Screen):
         # players and chrome back before anything else on this screen makes
         # sense again.
         self.reset_kickoff_visuals()
+        self._apply_data_changes()     # teams / players edited meanwhile
+        self._sync_environment_choices()   # the stadium editor's environments
         self._apply_expert_mode()      # picks up a Settings toggle flipped meanwhile
         self._apply_picker_style()     # same, for Settings > Quick Match Picker
         self._maybe_reroll()

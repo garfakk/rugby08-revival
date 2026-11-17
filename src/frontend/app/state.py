@@ -51,6 +51,17 @@ def _category_key(category):
         return (1, 0, category)
 
 
+def clear_data_caches():
+    """Forget what was worked out from the mod data and kept for the whole
+    run without checking the files again (crests, the competitions' team
+    lists, stadium dressing looks): after a data update, read it afresh."""
+    from app import dressing
+    from screens.tournament import common
+    common._CREST_CACHE.clear()
+    dressing._TEMPLATES = None
+    dressing._LOOKS.clear()
+
+
 class DataEvents(QObject):
     """Broadcast when a record is saved, created or deleted, so every screen
     showing it (the other editor, match setup) can refresh instead of
@@ -244,7 +255,15 @@ class DataStore:
             return []
         return [os.path.join(d, f) for f in sorted(os.listdir(d)) if f.endswith(".json")]
 
+    @staticmethod
+    def _forget_crests(tid):
+        """The tournament screens keep crests per team: an edited logo shows."""
+        from screens.tournament import common
+        for key in [k for k in common._CREST_CACHE if k[0] == tid]:
+            del common._CREST_CACHE[key]
+
     def register_team(self, tid, seasons, folder, json_path):
+        self._forget_crests(tid)
         self.teams[tid] = seasons
         self.teams_folder_path[tid] = folder
         self.teams_file_path[tid] = json_path
@@ -254,6 +273,7 @@ class DataStore:
         self.events.team_changed.emit(tid)
 
     def unregister_team(self, tid):
+        self._forget_crests(tid)
         path = self.teams_file_path.pop(tid, None)
         self.teams.pop(tid, None)
         self.teams_folder_path.pop(tid, None)

@@ -163,17 +163,10 @@ class Config:
     # shared/mod_overlay.py) laid over it; the same folder when there are none.
     self.pack_directory = self.data_directory or mod_data_directory()
     mod_overlay.ensure_structure(user_data_directory())
-    self.mod_data_directory = mod_overlay.effective_directory(self.pack_directory, user_data_directory())
+    self.refresh_mod_data()
 
     # Warning bug here. If mod_src_directory or mod_data_directory are overridden in config.ini,
-    # then the following paths will be incorrect.
-
-    # Mod assets
-    self.directory_teams = os.path.join(self.mod_data_directory, "teams")
-    self.directory_players = os.path.join(self.mod_data_directory, "players")
-    self.directory_stadiums = os.path.join(self.mod_data_directory, "stadiums")
-    self.directory_competitions = os.path.join(self.mod_data_directory, "competitions")
-    self.directory_challenges = os.path.join(self.mod_data_directory, "challenges")
+    # then the paths set by refresh_mod_data() will be incorrect.
     # Tournament saves are the user's progress, not data: user_data/.
     self.directory_tournament_saves = os.path.join(user_data_directory(), "tournaments")
     # Tournaments the user designed (Tools > Tournament editor): their own
@@ -183,7 +176,6 @@ class Config:
     # (frontend/app/user_edits.py): a new data pack never overwrites them.
     self.directory_user_edits = os.path.join(user_data_directory(), "edits")
     mod_overlay.ensure_edits_readme(self.directory_user_edits)
-    self.data_version, self.data_schema = self._read_data_version()
     self._check_data_installed()
     self.static_files_directory = os.path.join(self.mod_src_directory, "assets", "static_files")
     self.templates_directory = os.path.join(self.mod_src_directory, "assets", "templates")
@@ -419,6 +411,19 @@ class Config:
     """assets/static_files/<name> shipped with the mod (override the path in
     config.ini [Options] to use another build)."""
     return os.path.join(self.static_files_directory, name)
+
+  def refresh_mod_data(self):
+    """Where the program reads its mod data, and that data's version. Run at
+    start and again after a data update is installed: the user's own files
+    are laid over the pack in a mirror (shared/mod_overlay.py), which must be
+    rebuilt from the updated pack before anything reads it."""
+    self.mod_data_directory = mod_overlay.effective_directory(self.pack_directory, user_data_directory())
+    self.directory_teams = os.path.join(self.mod_data_directory, "teams")
+    self.directory_players = os.path.join(self.mod_data_directory, "players")
+    self.directory_stadiums = os.path.join(self.mod_data_directory, "stadiums")
+    self.directory_competitions = os.path.join(self.mod_data_directory, "competitions")
+    self.directory_challenges = os.path.join(self.mod_data_directory, "challenges")
+    self.data_version, self.data_schema = self._read_data_version()
 
   def _read_data_version(self):
     """data/VERSION (written by the data pack): key=value lines data_version, schema."""
