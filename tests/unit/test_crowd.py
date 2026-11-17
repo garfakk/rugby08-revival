@@ -85,13 +85,16 @@ def test_a_quiet_crowd_reacts_less_and_calms_sooner():
     assert b'value="7.0"' in out and b'value="-0.1"' in out
 
 
-def test_the_match_data_names_the_scene_only_when_the_crowd_changes():
+def test_the_match_data_names_the_scene_only_when_the_crowd_changes(monkeypatch):
+    monkeypatch.setattr(crowd, "OPTIONS_ENABLED", True)
     cfg = MatchConfig()
     cfg.stadium = {"stadium_id": 49, "data": {"game_id": 49}}
     cfg.environment = "night"
     assert _crowd(cfg) is None
     cfg.crowd_size, cfg.crowd_colours = "half", True
     assert _crowd(cfg) == {"scene": "stadiums/auckland.night", "size": "half", "colours": True, "mood": "normal"}
+    monkeypatch.setattr(crowd, "OPTIONS_ENABLED", False)           # switched off: the game's own crowd
+    assert _crowd(cfg) is None
 
 
 def test_a_quiet_crowd_is_deployed_as_loose_sound_files(tmp_path, monkeypatch):

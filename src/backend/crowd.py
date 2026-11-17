@@ -26,6 +26,11 @@ from shared.omodel.bigfile import BigArchive, pack_big
 
 log = get_logger(__name__)
 
+#: The crowd choices (quick match, tournament options) are switched off for
+#: now: the game's own crowd in every match. The code stays; set True to bring
+#: the rows back.
+OPTIONS_ENABLED = False
+
 SIZES = {"full": 100, "busy": 75, "half": 50, "sparse": 25}   # % of the panels kept
 MOODS = ("normal", "quiet")
 CROWD_TAGS = ("rwh", "rwa", "rwn")

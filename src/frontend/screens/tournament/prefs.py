@@ -12,6 +12,7 @@ from PyQt5.QtCore import QSize, pyqtSignal
 from PyQt5.QtWidgets import QGridLayout, QLayout, QVBoxLayout, QWidget
 
 from app import difficulty
+from backend import crowd
 from app.challenges import HALF_LENGTHS
 from ui import CycleRow, ToggleRow
 from ui.broadcast import eyebrow_label
@@ -36,8 +37,9 @@ PREFS = {
 }
 GROUPS = [("match", ["difficulty", "halftime_length"]),
           ("squad", ["injuries", "fatigue", "suspensions", "cpu_squads"]),
-          ("rules", ["law_5022", "law_22m", "law_penalty_touch"]),
-          ("crowd", ["crowd_size", "crowd_colours", "crowd_mood"])]
+          ("rules", ["law_5022", "law_22m", "law_penalty_touch"])]
+if crowd.OPTIONS_ENABLED:
+    GROUPS.append(("crowd", ["crowd_size", "crowd_colours", "crowd_mood"]))
 VALUES = {
     "difficulty": [(level, level.capitalize()) for level in difficulty.LEVELS],
     "halftime_length": [(v, f"{v[:-1]} min" if v.endswith("m") else v) for v in HALF_LENGTHS],

@@ -1065,6 +1065,18 @@ def test_boots_picker_folds_sections_and_player_teams_lists_every_season(window,
 def test_match_setup_crowd_rows(window, qapp):
     """crowd / supporters / atmosphere: the game's own by default, a choice
     goes to the match data."""
+    from backend import crowd
+    if not crowd.OPTIONS_ENABLED:
+        # switched off for now: no rows, and a stored choice changes nothing
+        setup = window.screen_match_setup.setup_screen
+        assert setup.crowd_rows == {}
+        setup.cfg.crowd_size = "half"
+        from app.match_data_builder import build_match_data
+        if not setup.cfg.controllers:
+            setup.cfg.controllers = {1: {"kind": "kbd", "label": "KEYBOARD", "zone": "home"}}
+        assert build_match_data(window.data, setup.cfg)["crowd"] is None
+        setup.cfg.crowd_size = "full"
+        return
     from app.match_data_builder import build_match_data
     window.show_match_setup()
     qapp.processEvents()

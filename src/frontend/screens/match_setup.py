@@ -1126,10 +1126,12 @@ class MatchSetupScreen(KickoffTransition, Screen):
 
         # The crowd (backend crowd): how full the stands are, fans in the
         # teams' colours, a quieter crowd
+        from backend import crowd
         self.crowd_rows = {}
         for attr, label, values in (("crowd_size", "crowd", ["full", "busy", "half", "sparse"]),
                                     ("crowd_colours", "supporters", ["neutral", "colours"]),
-                                    ("crowd_mood", "atmosphere", ["normal", "quiet"])):
+                                    ("crowd_mood", "atmosphere", ["normal", "quiet"])) \
+                if crowd.OPTIONS_ENABLED else ():
             row = SelectorRow(label)
             current = getattr(self.cfg, attr)
             if attr == "crowd_colours":

@@ -383,7 +383,10 @@ def _own_pitch(cfg, stadium_files):
 def _crowd(cfg):
     """The crowd of this match (backend crowd): {"scene" (game path of the
     scene pack of the environment), "size", "colours" (bool), "mood"}; None
-    when it is the game's own."""
+    when it is the game's own (always, while crowd.OPTIONS_ENABLED is off)."""
+    from backend import crowd
+    if not crowd.OPTIONS_ENABLED:
+        return None
     if cfg.crowd_size == "full" and not cfg.crowd_colours and cfg.crowd_mood == "normal":
         return None
     info = (cfg.stadium or {}).get("data") or {}
