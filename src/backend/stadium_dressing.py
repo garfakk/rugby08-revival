@@ -31,6 +31,10 @@ from shared.log import get_logger
 log = get_logger(__name__)
 
 STOCK_PREFIX = "stock:"
+# The mod data folder of the sets any match can wear: <LIBRARY>/<kind>/<set>.
+# It was "dressing/" before: references saved then still work (library_ref).
+LIBRARY = "ingame_graphics"
+_OLD_LIBRARY = "dressing/"
 PADS_DIR = "stadiums/pads_and_flags"
 ADS_DIR = "stadiums/adboards"
 
@@ -98,9 +102,18 @@ def stock_bytes(game_path):
 
 
 # ── sets ────────────────────────────────────────────────────────────────────
+def library_ref(ref):
+  """`ref` with a reference into the old "dressing/" library moved to the
+  current one; any other reference unchanged."""
+  if ref and ref.replace("\\", "/").startswith(_OLD_LIBRARY):
+    return LIBRARY + "/" + ref.replace("\\", "/")[len(_OLD_LIBRARY):]
+  return ref
+
+
 def _resolve_folder(ref, base=None):
   if os.path.isabs(ref):
     return ref
+  ref = library_ref(ref)
   if base is None:
     from shared.config import config
     base = config.mod_data_directory

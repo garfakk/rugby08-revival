@@ -188,10 +188,10 @@ A missing picture keeps the stock one. Pictures are resized to powers of two (51
 
 Where sets live:
 
-- `dressing/pads/<set>/`, `dressing/posts/<set>/`, `dressing/ads/<set>/`: sets for any match (`Load from disk…` in the ads list copies yours there)
+- `ingame_graphics/pads/<set>/`, `ingame_graphics/posts/<set>/`, `ingame_graphics/ads/<set>/`: sets for any match (`Load from disk…` in the ads list copies yours there)
 - `competitions/<competition>/assets/pads`, `.../posts`, `.../ads` (or `<season>/pads`… when seasons differ): a competition's, named in its json (`"pads"`, `"posts"`, `"adboards"`, at the root or per season; seasons can share a set)
 - the game itself: every stock stadium's own sets, listed as `Stock · …`
 
-Which set a match wears, first that has one: the quick match pick, else the competition of a tournament or challenge, else the stadium's own: its json `"dressing"` (`{"pads": "dressing/pads/x", "posts": "...", "ads": "..."}`, or `"stock:standard/twickenham"` for a stock set), else the stock set of its slot (Twickenham's for Twickenham, the host slot's for a custom stadium).
+Which set a match wears, first that has one: the quick match pick, else the competition of a tournament or challenge, else the stadium's own: its json `"dressing"` (`{"pads": "ingame_graphics/pads/x", "posts": "...", "ads": "..."}`, or `"stock:standard/twickenham"` for a stock set), else the stock set of its slot (Twickenham's for Twickenham, the host slot's for a custom stadium).
 
 The game's stadiums use two board layouts (World Cup and Standard) that are not interchangeable, so the chosen ads are converted for both at each match. The boards' frame is never an ad.

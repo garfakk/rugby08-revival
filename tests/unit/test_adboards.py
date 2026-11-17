@@ -152,7 +152,7 @@ def test_deploy_writes_both_layout_files(tmp_path, monkeypatch):
 
 def test_library_ad_sets_are_listed(tmp_path, monkeypatch):
     from app import dressing
-    lib = tmp_path / "data" / "dressing" / "ads"
+    lib = tmp_path / "data" / "ingame_graphics" / "ads"
     (lib / "pics").mkdir(parents=True)
     point_config(monkeypatch, data_dir=str(tmp_path / "data"), game_dir=str(tmp_path))
     for i in range(2):
@@ -160,4 +160,5 @@ def test_library_ad_sets_are_listed(tmp_path, monkeypatch):
     (lib / "solo.fsh").write_bytes(open(STATIC_WC, "rb").read())
     labels = [o["label"] for o in dressing.library_sets("ads")]
     assert labels == ["Pics", "Solo"]
-    assert AB.load_ref("dressing/ads/pics").layout == "wc"
+    assert AB.load_ref("ingame_graphics/ads/pics").layout == "wc"
+    assert AB.load_ref("dressing/ads/pics").layout == "wc"     # a reference saved before the move

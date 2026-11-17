@@ -209,7 +209,7 @@ def load_ref(ref, base=None):
   if base is None:
     from shared.config import config
     base = config.mod_data_directory
-  return load_set(ref if os.path.isabs(ref) else os.path.join(base, ref))
+  return load_set(ref if os.path.isabs(ref) else os.path.join(base, sd.library_ref(ref)))
 
 
 def _pick(items, i):

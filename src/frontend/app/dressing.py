@@ -11,7 +11,7 @@ A reference is a path relative to the mod data (a set folder, or for ads also
 a .fsh / picture) or "stock:<name>" (the game's own file, read from
 data.gob). Sets live in:
 
-  dressing/<kind>/<set>/              the library (mod data)
+  ingame_graphics/<kind>/<set>/       the library (mod data)
   competitions/<c>/<where>/<kind>/    a competition's, named by its JSON
                                       ("pads", "posts", "adboards"), per
                                       season; <where> is assets, a year...
@@ -25,13 +25,14 @@ its game slot, gsv.STOCK_DRESSING).
 import os
 
 from backend import game_specific_variables as gsv
+from backend import stadium_dressing
 from backend.adboards import IMAGE_EXTS
 from shared.config import config
 
 KINDS = ("pads", "posts", "ads")
 JSON_KEY = {"pads": "pads", "posts": "posts", "ads": "adboards"}
 CFG_ATTR = {"pads": "pads", "posts": "posts", "ads": "adboards"}
-LIBRARY = "dressing"
+LIBRARY = stadium_dressing.LIBRARY
 STOCK = "stock:"
 
 
@@ -111,7 +112,7 @@ def stadium_default(stadium, kind):
     info = stadium or {}
     own = (info.get("dressing") or {}).get(kind)
     if own:
-        return own
+        return stadium_dressing.library_ref(own)
     try:
         stock = gsv.STOCK_DRESSING.get(int(info.get("game_id")))
     except (TypeError, ValueError):
@@ -276,6 +277,7 @@ def look(ref, kind):
     rounded); for posts its colour name. None when the set can't be read."""
     if not ref:
         return None
+    ref = stadium_dressing.library_ref(ref)
     path = ref if ref.startswith(STOCK) else os.path.join(config.mod_data_directory, ref)
     try:
         stamp = 0 if ref.startswith(STOCK) else os.path.getmtime(path)
@@ -284,7 +286,6 @@ def look(ref, kind):
     cached = _LOOKS.get((ref, kind))
     if cached and cached[0] == stamp:
         return cached[1]
-    from backend import stadium_dressing
     import hashlib
     import numpy as np
     images = stadium_dressing.load(ref, kind)
@@ -307,7 +308,6 @@ def _one_per_look(kind, options, default_look):
     folded into it: each kept option lists the refs it stands for."""
     if kind not in ("pads", "posts"):
         return options
-    from backend import stadium_dressing
     stadium_dressing.prefetch_stock([stadium_dressing.stock_game_path(o["ref"])
                                      for o in options if o["ref"].startswith(STOCK)])
     out, by_look = [], {}
