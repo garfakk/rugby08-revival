@@ -292,11 +292,18 @@ class KitStage(QWidget):
         from ui.player_view import PlayerView
         from ui.player_anim import IdleAnimation
 
-        # Recreated rather than reusing the GL context across models: the
-        # renderer uploads its buffers once in initializeGL, and deleting
-        # the widget is the simplest correct way to release them (Qt tears
-        # down the widget's own GL context with it) rather than tracking
-        # every glDelete* by hand.
+        # Same view, new model: rebuilding the widget blanked the stage until
+        # its new GL context rendered, and restarted the idle loop at another
+        # random phase, so the player jumped to a different pose. Swapping
+        # in place keeps the pose and angle; only the kit changes.
+        view = self._player_view
+        if view is not None and not view._surface.failed:
+            view.set_model(model)
+            if self._stack.currentWidget() is self._frozen:
+                self._frozen.set_image(None)
+                self._stack.setCurrentWidget(view)
+            return
+
         if self._player_view is not None:
             # A team/kit change shouldn't spin the model back to face-on —
             # only carry the orientation forward if the viewer actually

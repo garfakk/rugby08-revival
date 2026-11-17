@@ -131,6 +131,22 @@ def _body_matrix(s, k, t, feet_y):
     return m
 
 
+def _rebind_anim(anim, rig):
+    """The same animation, driving another model's rig. Animations derive
+    joint positions from the rig when built, so a plain one is rebuilt; a
+    blend keeps its timing and rebinds both ends."""
+    from ui.player_anim import BlendAnimation
+    if isinstance(anim, BlendAnimation):
+        anim.from_anim = _rebind_anim(anim.from_anim, rig)
+        anim.to_anim = _rebind_anim(anim.to_anim, rig)
+        return anim
+    try:
+        return type(anim)(rig)
+    except TypeError:
+        anim.rig = rig
+        return anim
+
+
 class _PartGL:
     __slots__ = ('vao', 'vbo', 'ebo', 'count', 'tex', 'part', 'weights')
 
@@ -154,6 +170,7 @@ class PlayerRenderer:
         self.yaw_target = None           # set by turn_to(); eased in step_turn()
         self._turn_rate = 0.16
         self._t0 = time.time()
+        self._textures = []
 
     # ── Orientation ───────────────────────────────────────────────────────────
 
@@ -184,9 +201,37 @@ class PlayerRenderer:
 
     def initialize(self):
         self.program = self._build_program()
+        self.white = self._upload_texture(1, 1, bytes([255, 255, 255, 255]))
+        self._upload_model()
+        GL.glEnable(GL.GL_DEPTH_TEST)
+        GL.glDisable(GL.GL_CULL_FACE)      # the model's winding is not uniform
+
+    def set_model(self, model, gl_ready=False):
+        """Swap in another model (a new kit, head, boots...) on the same
+        renderer: same clock, orientation, zoom and body scale, so the idle
+        pose carries on where it was and only the look changes. With
+        `gl_ready` the GL context is current and the old buffers are replaced
+        now; otherwise initialize() uploads the new model when it first runs."""
+        if gl_ready:
+            self._release_model()
+        self.model = model
+        self.rig = PlayerRig(model.parts)
+        self.anim = _rebind_anim(self.anim, self.rig)
+        if gl_ready:
+            self._upload_model()
+
+    def _release_model(self):
+        for g in self.parts:
+            GL.glDeleteVertexArrays(1, [g.vao])
+            GL.glDeleteBuffers(2, [g.vbo, g.ebo])
+        if self._textures:
+            GL.glDeleteTextures(len(self._textures), list(self._textures))
+        self.parts, self._textures = [], []
+
+    def _upload_model(self):
         textures = {name: self._upload_texture(*tex)
                     for name, tex in self.model.textures.items()}
-        self.white = self._upload_texture(1, 1, bytes([255, 255, 255, 255]))
+        self._textures = list(textures.values())
 
         for part, weights in zip(self.model.parts, self.rig.weights):
             g = _PartGL()
@@ -211,9 +256,6 @@ class PlayerRenderer:
                             part.indices.astype(np.uint32).tobytes(), GL.GL_STATIC_DRAW)
             GL.glBindVertexArray(0)
             self.parts.append(g)
-
-        GL.glEnable(GL.GL_DEPTH_TEST)
-        GL.glDisable(GL.GL_CULL_FACE)      # the model's winding is not uniform
 
     @staticmethod
     def _interleave(pos, nrm, uv):
@@ -486,6 +528,28 @@ class PlayerView(QWidget):
         # it, so starting the timer here left two 3D players being posed and
         # rendered 30x a second behind the menus: ~50% CPU while idle, and the
         # menu animations dropping a third of their frames.
+
+    def set_model(self, model):
+        """Show another model in this same view, without a blank frame: the
+        old image stays up until the new model's first frame replaces it,
+        and the pose, angle and zoom carry on (see PlayerRenderer.set_model)."""
+        surf = self._surface
+        if surf.failed or surf._ctx is None:
+            self.renderer.set_model(model)
+        else:
+            if not surf._ctx.makeCurrent(surf._surface):
+                surf._fail("makeCurrent failed")
+                self.renderer.set_model(model)
+                return
+            try:
+                self.renderer.set_model(model, gl_ready=True)
+            except Exception as e:
+                surf._fail(f"model swap failed: {type(e).__name__}: {e}")
+            finally:
+                surf._ctx.doneCurrent()
+        if self._image is not None or self.isVisible():
+            self._render()
+            self.update()
 
     def pause(self):
         """Stop redrawing — call when the widget isn't visible. A hidden
