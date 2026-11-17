@@ -12,7 +12,7 @@ can be matched to a player who plays like it.
 """
 
 NAMES = {
-    0: "— none", 1: "Star player (generic)",
+    0: "None", 1: "Star player (generic)",
     2: "Carter", 3: "Wilkinson", 4: "O'Driscoll", 5: "McCaw", 6: "S. Williams",
     7: "Umaga", 8: "Gregan", 9: "Giteau", 10: "Habana", 11: "Henson",
     12: "Robinson", 13: "G. Smith", 14: "Larkham", 15: "Montgomery", 16: "Pichot",

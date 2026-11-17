@@ -327,6 +327,17 @@ class Thumb(QWidget):
 # ═════════════════════════════════════════════════════════════════════════
 # Fields
 # ═════════════════════════════════════════════════════════════════════════
+#: what an empty field says (a dash told nothing about what the game does)
+NOT_SET = "not set"
+
+
+def paint_clear_button(p, rect, hot=False):
+    """The × that empties a field."""
+    p.setFont(tracked_font(FONT_DISPLAY, T_VALUE, QFont.Bold, 0))
+    p.setPen(QColor(ACCENT if hot else FG_TERTIARY))
+    p.drawText(rect, Qt.AlignCenter, "×")
+
+
 class FieldBase(QWidget):
     """Label on the left, value box on the right, one row height. Subclasses
     paint the value into `value_rect()`."""
@@ -431,10 +442,11 @@ class FieldBase(QWidget):
     def paint_value(self, p, rect, focused):
         pass
 
-    def draw_blank(self, p, rect, blank="—"):
+    def draw_blank(self, p, rect, blank=NOT_SET):
         p.setFont(self._value_font)
         p.setPen(QColor(FG_TERTIARY))
-        text = f"{blank}   {self._hint}" if self._hint else blank
+        # the hint is what the game uses (or what is derived) for an empty field
+        text = self._hint or blank
         text = p.fontMetrics().elidedText(text, Qt.ElideRight, int(rect.width()))
         p.drawText(rect, Qt.AlignLeft | Qt.AlignVCenter, text)
 
@@ -554,7 +566,7 @@ class TextField(FieldBase):
         if self.is_editing():
             return
         if not self._value:
-            self.draw_blank(p, rect, "—" if not self.placeholder else f"— {self.placeholder}")
+            self.draw_blank(p, rect, self.placeholder or NOT_SET)
             return
         p.setFont(self._value_font)
         p.setPen(QColor(FG_PRIMARY))
@@ -638,10 +650,13 @@ class NumberField(FieldBase):
     commits after a pause, on Enter, or when enough digits are in);
     Left/Right step ±1, Shift ±5, PgUp/PgDn ±10; Delete clears to blank."""
 
-    def __init__(self, label, lo=0, hi=99, allow_blank=True, parent=None):
+    def __init__(self, label, lo=0, hi=99, allow_blank=True, default=None, formatter=None,
+                 parent=None):
         super().__init__(label, parent)
         self.lo, self.hi = lo, hi
         self.allow_blank = allow_blank
+        self.default = default          # what blank means: shown dimmed, where ± starts
+        self.formatter = formatter      # optional fn(value) -> text shown for a set value
         self._value = ""           # the stored string, possibly off-range/non-numeric
         self._buffer = ""
         self._buffer_timer = QTimer(self)
@@ -717,6 +732,18 @@ class NumberField(FieldBase):
         except (TypeError, ValueError):
             return None
 
+    def paint_blank(self, p, rect):
+        """Empty: the value the game then uses, dimmed, else "not set"."""
+        if self.default is None:
+            self.draw_blank(p, rect)
+            return
+        p.setFont(self._value_font)
+        p.setPen(QColor(FG_TERTIARY))
+        p.drawText(rect, Qt.AlignLeft | Qt.AlignVCenter, str(self.default))
+        if self.hasFocus():
+            p.setFont(tracked_font(FONT_DISPLAY, T_SMALL, QFont.DemiBold, 0.4))
+            p.drawText(rect, Qt.AlignRight | Qt.AlignVCenter, "default · type or ←→")
+
     def is_editing(self):
         return bool(self._buffer)
 
@@ -728,6 +755,8 @@ class NumberField(FieldBase):
 
     def step(self, delta):
         current = self.as_int()
+        if current is None and self.default is not None:
+            current = int(self.default)           # blank shows the default: ± starts from it
         if current is None:
             current = max(self.lo, min(self.hi, 50 if self.hi >= 50 >= self.lo else self.lo))
             new = current
@@ -822,12 +851,13 @@ class NumberField(FieldBase):
             p.drawText(rect, Qt.AlignLeft | Qt.AlignVCenter, self._buffer + "▏")
             return
         if not self._value:
-            self.draw_blank(p, rect)
+            self.paint_blank(p, rect)
             return
         n = self.as_int()
         bad = n is None or not (self.lo <= n <= self.hi)
         p.setPen(QColor(WARN if bad else FG_PRIMARY))
-        p.drawText(rect, Qt.AlignLeft | Qt.AlignVCenter, self._value)
+        shown = self.formatter(self._value) if self.formatter and not bad else self._value
+        p.drawText(rect, Qt.AlignLeft | Qt.AlignVCenter, shown)
         if focused:
             p.setFont(tracked_font(FONT_DISPLAY, T_SMALL, QFont.DemiBold, 0.4))
             p.setPen(QColor(FG_TERTIARY))
@@ -839,7 +869,8 @@ class RatingField(NumberField):
     wheel), and the change against a reference (the previous season) as a delta."""
 
     def __init__(self, label, parent=None):
-        super().__init__(label, lo=0, hi=99, allow_blank=False, parent=parent)
+        # blank is 0: what the game uses for a rating the file lacks
+        super().__init__(label, lo=0, hi=99, allow_blank=False, default=0, parent=parent)
         self.setFixedHeight(34)
         self.reference = None
 
@@ -864,8 +895,9 @@ class RatingField(NumberField):
             col = WARN
         if self._issue:
             col = SEVERITY_COLOR[self._issue[0]]
-        p.setPen(QColor(col))
-        p.drawText(QRectF(rect.x(), rect.y(), 34, rect.height()), Qt.AlignLeft | Qt.AlignVCenter, self._value or "—")
+        p.setPen(QColor(col if self._value else FG_TERTIARY))
+        p.drawText(QRectF(rect.x(), rect.y(), 34, rect.height()), Qt.AlignLeft | Qt.AlignVCenter,
+                   self._value or str(self.default))
         if self.reference is not None and n is not None and n != self.reference:
             d = n - self.reference
             p.setFont(tracked_font(FONT_DISPLAY, T_SMALL, QFont.Bold, 0))
@@ -880,12 +912,15 @@ class ChoiceField(FieldBase):
     list shows in warning colour with NOT IN LIST and stays until changed."""
 
     def __init__(self, label, options=(), display=None, allow_blank=True,
-                 blank_label="—", parent=None):
+                 blank_label=NOT_SET, clearable=False, parent=None):
         super().__init__(label, parent)
         self.options = list(options)
         self.display = display or (lambda v: str(v).replace("_", " "))
         self.allow_blank = allow_blank
         self.blank_label = blank_label
+        # clearable: a × button empties the field, instead of a "none" row at
+        # the top of the list (blank_label is then only what an empty field says)
+        self.clearable = clearable and allow_blank
         self.tag_for = None          # optional fn(value) -> (tag, color) for popup rows
         self.subtitle_for = None     # optional fn(value) -> str for popup rows
         self.popup_title = label
@@ -893,6 +928,11 @@ class ChoiceField(FieldBase):
         self.on_hover = None           # optional fn(value): the popup's cursor moved onto a row
         self.on_popup_closed = None    # optional fn(): the popup closed (picked or not)
         self.default_highlight = None  # optional fn() -> option the popup starts on when blank
+        self.section_for = None        # optional fn(value) -> section title: a header row where it changes
+        self.collapsible = False       # section headers fold: only the one holding the value starts open
+        self.icon_for = None           # optional fn(value) -> QPixmap shown at the left of popup rows
+        self.actions = ()              # values that run something when picked: listed, never stepped onto
+        self._open_sections = set()
         self.searchable = False        # a search box above the list filters it
         self.on_play = None            # optional fn(value): rows get a play icon + ASSIGN button
         self._value = ""
@@ -909,8 +949,24 @@ class ChoiceField(FieldBase):
         self._value = "" if value is None else value
         self.update()
 
+    def _blank_row(self):
+        """Whether the popup lists the blank value as a row."""
+        return self.allow_blank and not self.clearable
+
     def _cycle(self):
-        return ([""] if self.allow_blank else []) + list(self.options)
+        return ([""] if self._blank_row() else []) + [o for o in self.options if o not in self.actions]
+
+    def _clear_rect(self):
+        r = self.value_rect()
+        return QRectF(r.right() - 48, r.y(), 22, r.height())
+
+    def _section_count(self):
+        if self.section_for is None:
+            return 0
+        return len({self.section_for(o) for o in self.options})
+
+    def _has_clear(self):
+        return self.clearable and self._value != "" and self.isEnabled()
 
     def _emit(self, value):
         if value != self._value:
@@ -926,7 +982,7 @@ class ChoiceField(FieldBase):
             i = (cycle.index(self._value) + delta) % len(cycle)
         else:
             # blank-but-not-allowed or off-list: land on the first real choice
-            i = 0 if not self.allow_blank else (1 if len(cycle) > 1 else 0)
+            i = 0 if not self._blank_row() else (1 if len(cycle) > 1 else 0)
         self._emit(cycle[i])
 
     def toggle_popup(self):
@@ -954,36 +1010,71 @@ class ChoiceField(FieldBase):
         if self.searchable:
             box = popup.add_search_box()
             box.textChanged.connect(lambda text: self._refilter(popup, text))
-        popup.size_to(len(self.options) + (1 if self.allow_blank else 0))
+        popup.size_to(len(self.options) + (1 if self._blank_row() else 0) + self._section_count())
+        if self.collapsible and self.section_for is not None and self._value in self.options:
+            self._open_sections = {self.section_for(self._value)}
+        else:
+            self._open_sections = set()
         self._fill_popup(popup, "")
-        popup.picked.connect(self._emit)
+        popup.picked.connect(lambda v: self._on_popup_pick(popup, v))
+        if self.collapsible:
+            popup.keep_open = lambda v: isinstance(v, tuple)
         if self.on_play is not None:
             popup.played.connect(self.on_play)
         if self.on_hover is not None:
-            popup.hovered.connect(self.on_hover)
+            popup.hovered.connect(lambda v: None if isinstance(v, tuple) else self.on_hover(v))
         popup.closed.connect(self._on_popup_closed)
         anchor = self
         popup.open_at(anchor, screen, own_toggle=True)
-        cycle = self._cycle()
         start = self._value
         if not start and self.default_highlight is not None:
             start = self.default_highlight() or start
-        if start in cycle:
-            QTimer.singleShot(0, lambda: popup.set_highlight(cycle.index(start)))
+        row = next((i for i, r in enumerate(popup._rows) if r.data == start and not r.disabled), None)
+        if row is not None:
+            QTimer.singleShot(0, lambda: popup.set_highlight(row))
         self._popup = popup
 
     def _fill_popup(self, popup, query):
         query = query.strip().casefold()
-        if self.allow_blank and not query:
+        if self._blank_row() and not query:
             popup.add_row(self.blank_label, "", selected=(self._value == ""))
+        section = None
+        fold = self.collapsible and self.section_for is not None and not query
         for opt in self.options:
             text = self.display(opt)
             if query and query not in text.casefold():
                 continue
+            if self.section_for is not None and not query:
+                title = self.section_for(opt)
+                if title and title != section:
+                    section = title
+                    if fold:
+                        mark = "▾" if title in self._open_sections else "▸"
+                        popup.add_row(f"{mark}  {str(title).upper()}", ("__section__", title))
+                    else:
+                        popup.add_row(str(title).upper(), None, disabled=True)
+                if fold and title and title not in self._open_sections:
+                    continue
             tag, tag_col = self.tag_for(opt) if self.tag_for else ("", None)
             popup.add_row(text, opt, tag=tag, tag_color=tag_col,
                           selected=(opt == self._value),
+                          icon=self.icon_for(opt) if self.icon_for else None,
                           subtitle=self.subtitle_for(opt) if self.subtitle_for else "")
+
+    def _on_popup_pick(self, popup, value):
+        if not isinstance(value, tuple):
+            self._emit(value)
+            return
+        self._open_sections.symmetric_difference_update({value[1]})
+        bar = popup.scroll.verticalScrollBar()
+        top = bar.value()
+        popup.clear_rows()
+        self._fill_popup(popup, "")
+        popup._sync_rows()
+        idx = next((i for i, r in enumerate(popup._rows) if r.data == value), None)
+        if idx is not None:
+            popup.set_highlight(idx, scroll=False)
+        bar.setValue(top)
 
     def _refilter(self, popup, text):
         popup.clear_rows()
@@ -999,6 +1090,9 @@ class ChoiceField(FieldBase):
 
     def mousePressEvent(self, event):
         self.setFocus()
+        if self._has_clear() and self._clear_rect().contains(QPointF(event.pos())):
+            self._emit("")
+            return
         if self.value_rect().contains(event.pos()):
             self.toggle_popup()
 
@@ -1021,6 +1115,9 @@ class ChoiceField(FieldBase):
         p.setPen(QColor(ACCENT if focused else FG_TERTIARY))
         p.drawText(rect, Qt.AlignRight | Qt.AlignVCenter, "▾")
         rect = rect.adjusted(0, 0, -16, 0)
+        if self._has_clear():
+            paint_clear_button(p, self._clear_rect())
+            rect = rect.adjusted(0, 0, -26, 0)
         if self._value == "" or self._value is None:
             self.draw_blank(p, rect, self.blank_label)
             return
@@ -1039,7 +1136,7 @@ class SegmentField(FieldBase):
     """A handful of mutually exclusive values shown side by side — every
     option visible at once, one click or one Left/Right to change."""
 
-    def __init__(self, label, options, display=None, allow_blank=False, blank_label="—",
+    def __init__(self, label, options, display=None, allow_blank=False, blank_label="none",
                  swatches=None, parent=None):
         super().__init__(label, parent)
         self.options = list(options)
@@ -1338,6 +1435,10 @@ class AssetField(FieldBase):
     def value_rect(self):
         return QRectF(self.label_width, 3, self.width() - self.label_width, self.height() - 6)
 
+    def _clear_rect(self):
+        box = self.value_rect()
+        return QRectF(box.right() - 100, box.y() + 7, 22, box.height() - 14)
+
     def value(self):
         return self._value
 
@@ -1406,7 +1507,9 @@ class AssetField(FieldBase):
         self.setFocus()
         box = self.value_rect()
         browse = QRectF(box.right() - 70, box.y(), 70, box.height())
-        if browse.contains(event.pos()) or QRectF(box.x(), box.y(), 56, box.height()).contains(event.pos()):
+        if self._value and self._clear_rect().contains(QPointF(event.pos())):
+            self.set_picked("")
+        elif browse.contains(event.pos()) or QRectF(box.x(), box.y(), 56, box.height()).contains(event.pos()):
             self.browse_requested.emit()
         elif box.contains(event.pos()):
             self.begin_text_edit()
@@ -1437,8 +1540,8 @@ class AssetField(FieldBase):
 
         state, detail, _ = self._status
         colour, word = STATUS_STYLE.get(state, (FG_TERTIARY, state.upper()))
-        text_rect = QRectF(tr.right() + 10, box.y(), box.width() - (tr.right() - box.x()) - 90,
-                           box.height())
+        text_rect = QRectF(tr.right() + 10, box.y(), box.width() - (tr.right() - box.x()) - 90
+                           - (26 if self._value else 0), box.height())
         if not self.is_editing():
             p.setFont(self._value_font)
             if self._value:
@@ -1452,7 +1555,9 @@ class AssetField(FieldBase):
                 p.drawText(text_rect.adjusted(0, box.height() / 2, 0, -3),
                            Qt.AlignLeft | Qt.AlignTop, f"{word} · {detail}" if state != "ok" else detail)
             else:
-                self.draw_blank(p, text_rect, "— not set")
+                self.draw_blank(p, text_rect, NOT_SET)
+        if self._value:
+            paint_clear_button(p, self._clear_rect())
         # browse button
         br = QRectF(box.right() - 76, box.y() + 7, 66, box.height() - 14)
         p.setPen(QPen(QColor(ACCENT if focused else BORDER_EM), 1))
@@ -1480,6 +1585,15 @@ class ToggleGrid(QWidget):
         self.rows = (len(self.items) + columns - 1) // columns
         self.setFixedHeight(self.rows * 38)
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+
+    def set_items(self, items):
+        """Other chips: [(key, label)]."""
+        self.items = list(items)
+        self.on &= {k for k, _l in self.items}
+        self.cursor = min(self.cursor, max(0, len(self.items) - 1))
+        self.rows = (len(self.items) + self.columns - 1) // self.columns
+        self.setFixedHeight(max(1, self.rows) * 38)
+        self.update()
 
     def set_values(self, on_keys):
         self.on = set(on_keys)
@@ -1982,13 +2096,17 @@ def series_value(rels, frames):
     return rels[0] if len(rels) == 1 else ""
 
 
-def browse_assets(screen, anchor, root, spec, current, on_pick, title="choose file"):
+def browse_assets(screen, anchor, root, spec, current, on_pick, title="choose file",
+                  default_dir=""):
     """Popup over the files under `root` that fit `spec`. Numbered series
     (ball_1.png, ball_2.png…) collapse to their %-pattern when the spec
     expects frames, so picking one picks the whole series. The load rows
-    copy files from anywhere on disk next to the current one first."""
+    copy files from anywhere on disk next to the current one first (a field
+    still empty: into `default_dir`, e.g. kits_2024); only a series offers
+    to load a whole folder, a single file is loaded from a file."""
     exts = tuple(spec.get("ext", (".png",))) if spec else (".png",)
     frames = spec.get("frames", 0) if spec else 0
+    load_rows = LOAD_ROWS if frames else LOAD_ROWS[:1]
     entries = []
     seen_patterns = set()
     if root and os.path.isdir(root):
@@ -2057,8 +2175,7 @@ def browse_assets(screen, anchor, root, spec, current, on_pick, title="choose fi
         bar = popup.scroll.verticalScrollBar()
         top = bar.value()
         popup.clear_rows()
-        popup.add_row("— none (clear)", "", selected=(current == ""))
-        for value, label in LOAD_ROWS:
+        for value, label in load_rows:
             popup.add_row(label, value)
         add_level(tree, "", 0)
         if not entries:
@@ -2071,7 +2188,7 @@ def browse_assets(screen, anchor, root, spec, current, on_pick, title="choose fi
         bar.setValue(top)
 
     def load(folder):
-        subdir = os.path.dirname(current.replace("%", "1")) if current else ""
+        subdir = os.path.dirname(current.replace("%", "1")) if current else default_dir
         rels = load_from_disk(screen, root, subdir, exts, folder=folder)
         if not rels:
             return
@@ -2079,7 +2196,7 @@ def browse_assets(screen, anchor, root, spec, current, on_pick, title="choose fi
         if value:
             on_pick(value)
         else:           # several files: pick one of them
-            browse_assets(screen, anchor, root, spec, rels[0], on_pick, title)
+            browse_assets(screen, anchor, root, spec, rels[0], on_pick, title, default_dir)
 
     def on_picked(v):
         if isinstance(v, tuple):
@@ -2092,7 +2209,7 @@ def browse_assets(screen, anchor, root, spec, current, on_pick, title="choose fi
 
     rebuild()
     # fixed height for the fully expanded list, so the box never resizes
-    popup.size_to(1 + len(LOAD_ROWS) + len(entries) + len({os.path.dirname(smp) for _, smp in entries} - {""}))
+    popup.size_to(len(load_rows) + len(entries) + len({os.path.dirname(smp) for _, smp in entries} - {""}))
     popup.keep_open = lambda v: isinstance(v, tuple)
     popup.picked.connect(on_picked)
     popup.closed.connect(lambda: anchor.setFocus() if anchor is not None else None)
@@ -2223,10 +2340,17 @@ class TabStrip(QWidget):
         self.counts = [None] * len(self.titles)   # (n, severity)
         self.hidden = set()                       # tabs not offered (see set_hidden)
         self._index = 0
+        self.pad = 44                             # width added around a title
         self._font = tracked_font(FONT_DISPLAY, font_size, QFont.Bold, track=1.4)
 
     def index(self):
         return self._index
+
+    def set_metrics(self, font_size, pad):
+        """Smaller titles and tighter tabs for a narrow window."""
+        self._font = tracked_font(FONT_DISPLAY, font_size, QFont.Bold, track=1.4)
+        self.pad = pad
+        self.update()
 
     def set_hidden(self, hidden):
         """Hide the tabs at these indexes: not drawn, not reachable."""
@@ -2267,7 +2391,7 @@ class TabStrip(QWidget):
             # letter spacing: take the widest measure, and add the spacing back,
             # so a title is never wider than its tab.
             w = (max(fm.horizontalAdvance(text), fm.boundingRect(text).width())
-                 + round(len(text) * self._font.letterSpacing()) + 44)
+                 + round(len(text) * self._font.letterSpacing()) + self.pad)
             if self.counts[i]:
                 w += 26
             out.append(QRectF(x, 0, w, self.height()))
@@ -2298,7 +2422,7 @@ class TabStrip(QWidget):
             on = i == self._index
             p.setFont(self._font)
             p.setPen(QColor(FG_PRIMARY if on else FG_TERTIARY))
-            tr = r.adjusted(22, 0, -22 - (26 if self.counts[i] else 0), 0)
+            tr = r.adjusted(self.pad // 2, 0, -self.pad // 2 - (26 if self.counts[i] else 0), 0)
             p.drawText(tr, Qt.AlignLeft | Qt.AlignVCenter | Qt.TextDontClip, self.titles[i].upper())
             if on:
                 p.fillRect(QRectF(r.x() + 12, self.height() - 3, r.width() - 24, 3),
@@ -2710,8 +2834,9 @@ class EditorShell(QWidget):
         # preview, which isn't a property of any one tab.
         self.preview_pane = None
         self.preview_layout = None
+        self.preview_sep = None
         if preview_pane:
-            sep2 = QFrame()
+            sep2 = self.preview_sep = QFrame()
             sep2.setFrameShape(QFrame.VLine)
             sep2.setFixedWidth(1)
             sep2.setStyleSheet(f"background: {BORDER}; border: none;")

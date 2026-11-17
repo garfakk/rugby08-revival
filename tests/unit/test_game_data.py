@@ -215,3 +215,12 @@ def test_new_team_season_shape():
     t = G.new_team_season("X", "club")
     assert t["name"] == "X" and t["type"] == "club"
     assert copy.deepcopy(t) == t
+
+
+def test_new_player_season_carries_the_game_defaults():
+    from backend import game_specific_variables as gsv
+    season = G.new_player_season()
+    assert (G.DEFAULT_HEIGHT, G.DEFAULT_WEIGHT) == (gsv.player_default_values["height"],
+                                                    gsv.player_default_values["weight"])
+    assert season["height"] == str(G.DEFAULT_HEIGHT) and season["weight"] == str(G.DEFAULT_WEIGHT)
+    assert {season[k] for k in ("wrist_tape", "tight_tape", "finger_tape")} == {"none"}

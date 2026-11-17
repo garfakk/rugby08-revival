@@ -26,6 +26,7 @@ import os
 
 from backend import game_specific_variables as gsv
 from backend import stadium_dressing
+from backend import pitch_stripes
 from backend.adboards import IMAGE_EXTS
 from shared.config import config
 
@@ -91,6 +92,28 @@ def competition_sets(ds, kind):
     return sorted(out, key=lambda o: o["label"].lower())
 
 
+def competition_looks(ds):
+    """[{"label", "refs": {kind: ref}}]: each competition's own pads, posts
+    and ads, one entry per different look ("Six Nations 2019–2026")."""
+    by_refs = {}
+    for tid, seasons in ds.tournaments.items():
+        folder = ds.tournaments_folder_path.get(tid, "")
+        for season, info in seasons.items():
+            refs = {}
+            for kind in KINDS:
+                rel = (info.get(JSON_KEY[kind]) or "").strip()
+                if folder and rel and os.path.exists(os.path.join(folder, rel)):
+                    refs[kind] = _relative(os.path.join(folder, rel))
+            if not refs:
+                continue
+            key = tuple(sorted(refs.items()))
+            entry = by_refs.setdefault(key, {"name": info.get("name") or tid, "seasons": [], "refs": refs})
+            entry["seasons"].append(season)
+    out = [{"label": _season_label(e["name"], sorted(e["seasons"])), "refs": e["refs"]}
+           for e in by_refs.values()]
+    return sorted(out, key=lambda o: o["label"].lower())
+
+
 def stock_label(name):
     """"standard/twickenham" -> "Twickenham", "tournaments/super14" ->
     "Super14 (tournament)"."""
@@ -105,10 +128,83 @@ def stock_sets(kind):
                   key=lambda o: o["label"].lower())
 
 
+# ── a mod stadium's own dressing (Tools > Stadium editor) ──────────────────
+def stadium_json_path(sid):
+    """The JSON of the mod stadium `sid` in the data pack (data/stadiums/
+    <Folder>/<folder>.json), None when no stadium folder defines it."""
+    import json
+    root = os.path.join(config.pack_directory, "stadiums")
+    if not os.path.isdir(root):
+        return None
+    for folder in sorted(os.listdir(root)):
+        path = os.path.join(root, folder, f"{folder.lower().replace(' ', '_')}.json")
+        if not os.path.isfile(path):
+            continue
+        try:
+            with open(path, "r", encoding="utf-8") as fh:
+                data = json.load(fh)
+        except (OSError, ValueError):
+            continue
+        if isinstance(data, dict) and str(sid) in data:
+            return path
+    return None
+
+
+def save_stadium(ds, sid, refs, pitches=(), logos=None, stripes=None, environments=None) -> str:
+    """Write the stadium's "dressing" ({kind: ref}, empty refs removed; none
+    = the slot's stock sets) and "pitches" (the pitch textures a match there
+    may use; none = any), "pitch_logos" (backend/pitch_logos layout; None =
+    the game's own) and "stripes" ({environment: {"opacity", "brightness"}},
+    backend/pitch_stripes; none = the scene packs' own) and "environments"
+    (the ones a match there may use; None = those it has scenes for) in its
+    JSON, and into the loaded data. The file's path."""
+    import json
+    path = stadium_json_path(sid)
+    if path is None:
+        raise OSError(f"no stadium folder defines {sid}")
+    with open(path, "r", encoding="utf-8") as fh:
+        data = json.load(fh)
+    refs = {k: v for k, v in (refs or {}).items() if k in KINDS and v}
+    pitches = list(pitches or [])
+    stripes = {env: v for env, v in ((e, pitch_stripes.clean(v)) for e, v in (stripes or {}).items()) if v}
+    entry = data[str(sid)]
+    environments = list(environments or [])
+    values = (("dressing", refs), ("pitches", pitches), ("pitch_logos", logos), ("stripes", stripes),
+              ("environments", environments))
+    for key, value in values:
+        if value or (key == "pitch_logos" and value is not None):
+            entry[key] = value
+        else:
+            entry.pop(key, None)
+    with open(path + ".tmp", "w", encoding="utf-8") as fh:
+        json.dump(data, fh, indent=2, ensure_ascii=False)
+        fh.write("\n")
+    os.replace(path + ".tmp", path)
+    info = ds.stadiums.get(str(sid))
+    if isinstance(info, dict):
+        for key, value in values:
+            if value or (key == "pitch_logos" and value is not None):
+                info[key] = value
+            else:
+                info.pop(key, None)
+        if not environments:        # the loader's default: the scenes it has
+            info["environments"] = list(info.get("scenes") or [])
+    return path
+
+
+def own_default(stadium, kind):
+    """What the stadium wears without its own "dressing": the stock set of
+    its game slot."""
+    info = dict(stadium or {})
+    info.pop("dressing", None)
+    return stadium_default(info, kind)
+
+
 def stadium_default(stadium, kind):
     """The set reference a stadium wears for `kind` when nothing else is
-    picked: its JSON "dressing", else its game slot's stock set. `stadium`
-    is the stadium's data dict (stadiums.json entry or custom JSON)."""
+    picked: its JSON "dressing" (the stadium editor writes it), else its
+    game slot's stock set. `stadium` is the stadium's data dict
+    (stadiums.json entry or custom JSON)."""
     info = stadium or {}
     own = (info.get("dressing") or {}).get(kind)
     if own:
@@ -307,7 +403,7 @@ def _one_per_look(kind, options, default_look):
     """`options` with sets looking like an earlier one (or like the default)
     folded into it: each kept option lists the refs it stands for."""
     if kind not in ("pads", "posts"):
-        return options
+        return [dict(o, refs=[o["ref"]]) for o in options]
     stadium_dressing.prefetch_stock([stadium_dressing.stock_game_path(o["ref"])
                                      for o in options if o["ref"].startswith(STOCK)])
     out, by_look = [], {}

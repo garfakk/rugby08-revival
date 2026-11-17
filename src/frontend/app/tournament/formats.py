@@ -105,14 +105,19 @@ def _templates_in(d):
             log.error("competition template %s: %s", name, e)
 
 
-def load_templates(dirs=None) -> dict:
-    """{id: template}, later directories overriding earlier ones."""
+def load_templates(dirs=None, edits=None) -> dict:
+    """{id: template}, later directories overriding earlier ones. The user's
+    edits of the data's competitions (custom.apply_edits) are laid over them
+    when reading the usual directories (`edits` None), or when asked."""
     out = {}
     for d in dirs or _dirs():
         if not os.path.isdir(d):
             continue
         for _, tpl in _templates_in(d):
             out[tpl["id"]] = tpl
+    if edits if edits is not None else dirs is None:
+        from . import custom
+        out = custom.apply_edits(out)
     return dict(sorted(out.items(), key=lambda kv: (kv[1].get("order", 100), kv[1].get("name", kv[0]))))
 
 

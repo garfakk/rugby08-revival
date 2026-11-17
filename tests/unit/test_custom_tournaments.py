@@ -132,9 +132,52 @@ def test_saved_tournament_is_its_own_competition(ds, data_dir):
 
 
 def test_starters_compile(ds):
-    for key, _title, _sub in C.STARTERS:
+    for key, _title, _fmt, _sub in C.STARTERS:
         d = C.starter(ds, key, "2024")
         tpl = C.compile_template(d, "s")
         assert tpl["stages"]
     six = C.starter(ds, "six_nations", "2024")
     assert set(C.all_teams(six)) == {"10002", "10001"}      # the two the fixture pack has
+
+
+def test_data_competition_edit_round_trip(ds, data_dir):
+    """A data competition opened in the editor and saved untouched leaves no
+    edit; a change is kept apart and laid over the template when read."""
+    raw = formats.load_templates(edits=False)
+    tid = next(t for t, tpl in raw.items() if not tpl.get("custom") and tpl.get("participants"))
+    tpl = raw[tid]
+    d = C.design_of_template(tid, tpl)
+    assert C.edit_from_design(tid, tpl, d) == {}
+    teams = C.all_teams(d)
+    outsider = next((t for t in ds.teams if t not in teams), "99999")
+    d = C.swap_team(d, teams[0], outsider)
+    d["name"] = "Renamed"
+    d["points"] = dict(C.POINTS_PRESETS["classic"], preset="classic")
+    d["points"].pop("label")
+    d["discipline"] = "strict"
+    edit = C.edit_from_design(tid, tpl, d)
+    assert edit["team_swaps"] == {teams[0]: outsider} and edit["name"] == "Renamed"
+    C.save_edit(tid, edit)
+    t = formats.load_templates()[tid]
+    assert t["edited"] and t["name"] == "Renamed" and t["points"] == {"win": 2, "draw": 1, "loss": 0}
+    assert t["discipline"] == C.DISCIPLINE_PRESETS["strict"]["rules"]
+    parts = engine.default_participants(t, t.get("season", ""))
+    flat = [x for groups in parts.values() for ts in groups.values() for x in ts]
+    assert outsider in flat and teams[0] not in flat
+    for stage in t["stages"]:
+        for f in stage.get("fixtures") or []:
+            assert teams[0] not in (f.get("home"), f.get("away"))
+    # swapping back undoes the swap
+    d = C.swap_team(d, outsider, teams[0])
+    assert "team_swaps" not in C.edit_from_design(tid, tpl, d)
+    C.delete_edit(tid)
+    assert not formats.load_templates()[tid].get("edited")
+
+
+def test_every_data_competition_reads_as_a_design(ds):
+    for tid, tpl in formats.load_templates(edits=False).items():
+        if tpl.get("custom"):
+            continue
+        d = C.design_of_template(tid, tpl)
+        assert C.edit_from_design(tid, tpl, d) == {}, tid
+        assert C.template_structure(tpl), tid

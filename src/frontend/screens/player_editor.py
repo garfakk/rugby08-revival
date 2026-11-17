@@ -290,7 +290,7 @@ class PlayerEditorScreen(EditorScreen):
                 "Commentary",
                 sorted((str(i) for i in self._commentary_names),
                        key=lambda v: (self._commentary_names[int(v)].lower(), int(v))),
-                display=self._commentary_label, blank_label="none"), TAB_PROFILE)
+                display=self._commentary_label, blank_label="none", clearable=True), TAB_PROFILE)
         self.commentary.label_width = 98
         self.commentary.popup_title = "commentary name"
         self.commentary.off_list_badge = bool(self._commentary_names)
@@ -570,7 +570,7 @@ class PlayerEditorScreen(EditorScreen):
 
     def _refresh_seasons(self, stats):
         self.season_pill.set_text(
-            f"SEASON {season_label(self.season)}" if self.season else "SEASON —")
+            f"SEASON {season_label(self.season)}" if self.season else "NO SEASON")
         items = []
         for s in sorted(stats):
             block = stats[s]
@@ -750,7 +750,7 @@ class PlayerEditorScreen(EditorScreen):
             return
         stats = self.session.working.get("stats") or {}
         if action in ("add", "duplicate"):
-            year = NumberField("Year", lo=1900, hi=2100, allow_blank=False)
+            year = NumberField("Season", lo=1900, hi=2100, allow_blank=False, formatter=season_label)
             team_seasons = sorted({s for m in self.ds.memberships(self.record_id) for s in [m[2]]}
                                   - set(stats))
             all_seasons = sorted(set(self.ds.seasons()) - set(stats))
@@ -761,7 +761,8 @@ class PlayerEditorScreen(EditorScreen):
                                  blank_label="Blank season (all ratings 50)",
                                  display=lambda s: f"Copy of {season_label(s)}")
             source.set_value(self.season if action == "duplicate" else (sorted(stats)[-1] if stats else ""))
-            hint = ("Squads using a season this player lacks fall back to the nearest one.")
+            hint = ("Type the year the season ends in (2026 is 2025-2026). "
+                    "Squads using a season this player lacks fall back to the nearest one.")
             if team_seasons:
                 hint += (f" Squad seasons without ratings: "
                         f"{', '.join(season_label(s) for s in team_seasons)}.")

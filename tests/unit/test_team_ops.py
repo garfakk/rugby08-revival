@@ -296,3 +296,71 @@ def test_create_team_copies_assets_and_rolls_back(tmp_path):
     assert missing == ["k/p.png"]
     with pytest.raises(FileExistsError):
         T.create_team(str(teams), "New Team", "2002", seasons)
+
+
+# ── squads filled in any order (empty slots are "") ─────────────────────────
+def test_place_in_an_empty_squad_keeps_the_shirt():
+    info = {"players": []}
+    T.place(info, 9, "fly")
+    assert info["players"] == [""] * 9 + ["fly"]
+    T.place(info, 0, "prop")
+    assert info["players"][0] == "prop" and info["players"][9] == "fly"
+    assert len(info["players"]) == 10                     # nothing appended for an empty slot
+
+
+def test_place_a_player_already_in_moves_him_to_the_empty_shirt():
+    info = {"players": ["a", "b"]}
+    T.place(info, 5, "a")
+    assert info["players"] == ["", "b", "", "", "", "a"]
+    T.place(info, 0, "a")                                  # back: the tail empties again
+    assert info["players"] == ["a", "b"]
+
+
+def test_send_to_past_the_end_and_trim():
+    info = {"players": ["a", "b", "c"]}
+    T.send_to(info, 0, 4)
+    assert info["players"] == ["", "b", "c", "", "a"]
+    T.clear_slot(info, 4)
+    assert info["players"] == ["", "b", "c"]               # no empty slot at the end
+
+
+def test_clear_slot_clears_roles_and_keeps_numbers():
+    info = {"players": ["a", "b", "c"], "roles": {"captain": "b", "kickoff": "c"}}
+    assert T.clear_slot(info, 1) == "b"
+    assert info["players"] == ["a", "", "c"]
+    assert info["roles"] == {"captain": "", "kickoff": "c"}
+
+
+def test_reverse_and_auto_sort_drop_the_empty_slots():
+    info = {"players": ["a", "", "b"]}
+    T.reverse(info)
+    assert info["players"] == ["b", "a"]
+
+
+def test_a_squad_with_a_hole_is_an_error():
+    from app import game_data as G
+    info = {"name": "X", "kits": {"home": G.blank_kit()}, "players": ["1", "", "3"]}
+    players = {"1": {}, "3": {}}
+    errors = G.season_errors(info, players, "2024")
+    assert any("nobody picked" in m for _, m in errors)
+    assert not any("already" in m for _, m in errors)      # two holes are not duplicates
+
+
+def test_mark_drafts_flags_a_season_with_errors_only_when_changed():
+    from app import game_data as G
+    players = {str(i): _player("centre") for i in range(1, 23)}
+    good = {"name": "X", "type": "club", "kits": {"home": G.blank_kit()},
+            "roles": {}, "setPlays": {}, "players": [str(i) for i in range(1, 23)]}
+    broken = dict(copy.deepcopy(good), players=[str(i) for i in range(1, 21)])
+    seasons = {"2023": copy.deepcopy(good), "2024": copy.deepcopy(broken)}
+    drafts = T.mark_drafts(seasons, {}, players)
+    assert list(drafts) == ["2024"] and seasons["2024"]["draft"] is True
+    assert "draft" not in seasons["2023"]
+    # fixed: the flag goes
+    seasons["2024"]["players"] = good["players"]
+    assert T.mark_drafts(seasons, {"2024": broken, "2023": good}, players) == {}
+    assert "draft" not in seasons["2024"]
+    # an old season left as it is on disk keeps being used, even with a problem
+    legacy = {"2024": copy.deepcopy(broken)}
+    assert T.mark_drafts(legacy, {"2024": copy.deepcopy(broken)}, players) == {}
+    assert "draft" not in legacy["2024"]

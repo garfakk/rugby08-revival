@@ -356,7 +356,10 @@ class EditorScreen(Screen):
         self.after_save()
         self.reload_list()
         self.refresh_all()
-        self.shell.footer.set_status(message or "Saved", GREEN)
+        color = GREEN
+        if isinstance(message, tuple):          # (text, colour): a save with a caveat
+            message, color = message
+        self.shell.footer.set_status(message or "Saved", color)
         return True
 
     def after_save(self):

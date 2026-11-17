@@ -20,6 +20,8 @@ its name replaces the slot's. "environments" defaults to the scenes'.
 ({"pads": ref, ...}, app/dressing.py; the slot's stock sets otherwise). A key
 that is also in stadiums.json replaces that stadium in the lists; a new key
 adds one.
+"pitches" (optional): the pitch textures a match there may use (names of
+gsv.pitch_textures, backend/pitches.py); none = any.
 """
 import os
 import json

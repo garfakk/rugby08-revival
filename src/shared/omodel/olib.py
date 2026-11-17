@@ -1,6 +1,8 @@
 """Vendored from reR08/tools/omodel (see that repo for the format notes).
 Local change: per-vertex bone indices are kept (Mesh.bones) so the player
-preview can animate limbs without a skeleton evaluator.
+preview can animate limbs without a skeleton evaluator. Also Mesh.colors:
+the vertex colour dword (0xAARRGGBB, baked lighting) of the stride 16 / 24
+layouts stadium scenes use (+0x0c), empty for the others.
 """
 #!/usr/bin/env python3
 """Rugby 08 (EAGL) .o model parser.
@@ -51,6 +53,7 @@ class Mesh:
         self.triangles = []   # (a,b,c)
         self.bones = []       # per-vertex bone index (0 when the layout has none)
         self.stride = 0       # source vertex stride, for diagnostics
+        self.colors = []      # per-vertex 0xAARRGGBB where the layout has one (see module doc)
 
 
 def _tristrip_to_tris(idx):
@@ -188,6 +191,7 @@ def parse_o(blob):
     """Parse .o bytes -> list[Mesh].  Raises on non-model .o (no __Model)."""
     f = ELFFile(io.BytesIO(blob))
     data = f.get_section_by_name('.data').data()
+    data_offset = f.get_section_by_name('.data')['sh_offset']
     syms = list(f.get_section_by_name('.symtab').iter_symbols())
     relsec = f.get_section_by_name('.rel.data')
     rel = {}          # off -> .data target (section-relative relocs)
@@ -286,6 +290,7 @@ def parse_o(blob):
         # uv1 @0x28) -- the base texture uses the FIRST one, so taking
         # `stride - 8` picks the overlay's uvs and smears the mapping.
         m.stride = stride
+        m.vertex_offset = data_offset + vptr    # file offset of the vertex buffer
         norm_off = _find_normal(data, vptr, stride, vcount)
         has_norm = norm_off is not None
         uv_off = _find_uv(data, vptr, stride, vcount,
@@ -295,16 +300,20 @@ def parse_o(blob):
         # right before the normal.  Kept so callers can move body parts around
         # without a skeleton of their own.
         bone_off = 0x0c if (has_norm and norm_off >= 0x10 and stride >= 0x28) else None
+        color_off = 0x0c if (not has_norm and stride in (16, 24)) else None
         for i in range(vcount):
             o = vptr + i * stride
             if bone_off is not None:
                 m.bones.append(struct.unpack_from('<I', data, o + bone_off)[0])
             else:
                 m.bones.append(0)
+            if color_off is not None:
+                m.colors.append(struct.unpack_from('<I', data, o + color_off)[0])
             m.positions.append(struct.unpack_from('<3f', data, o))
             m.normals.append(struct.unpack_from('<3f', data, o + norm_off) if has_norm else (0, 0, 1))
             m.uvs.append(struct.unpack_from('<2f', data, o + uv_off) if m.has_uv else (0.0, 0.0))
         idx = struct.unpack_from(f'<{icount}H', data, iptr)
+        m.indices = idx                         # raw, for callers that judge the primitive type
         m.triangles = _triangles(idx, vcount)   # also guards multi-batch descriptors
         meshes.append(m)
     return meshes

@@ -138,15 +138,13 @@ class OverviewTab(TeamTab):
         self.type = self.register("type", SegmentField("Type", TEAM_TYPES))
         self.type.edited.connect(lambda v: self.edit("team type", lambda i: i.__setitem__("type", v), "type"))
         grid.add(self.type)
-        self.country = self.register("country", ChoiceField("Country", allow_blank=True, display=country_label))
+        self.country = self.register("country", ChoiceField("Country", allow_blank=True, clearable=True,
+                                                                display=country_label))
         self.country.edited.connect(lambda v: self.edit("country", lambda i: _set_optional(i, "country", v), "country"))
         grid.add(self.country)
-        self.category = self.register("category", ChoiceField("Category", allow_blank=True))
-        self.category.edited.connect(self._on_category)
-        grid.add(self.category)
-        # The team's group in Quick Match's groups picker (app/team_browse.py):
-        # one for the whole team, so it is set on every season at once.
-        self.group = self.register("group", ChoiceField("Group (every season)", allow_blank=True))
+        # The team's group in Quick Match (app/team_browse.py): one for the
+        # whole team, so it is set on every season at once.
+        self.group = self.register("group", ChoiceField("Group", allow_blank=True, clearable=True))
         self.group.edited.connect(self._on_group)
         grid.add(self.group)
         ident.add(grid)
@@ -207,18 +205,9 @@ class OverviewTab(TeamTab):
     def _wire_asset(self, field, key):
         field.browse_requested.connect(lambda: browse_assets(
             self.screen, field, self.screen.team_folder(), field.spec, field.value(),
-            field.set_picked, title=field.label))
+            field.set_picked, title=field.label,
+            default_dir=V.asset_folder(self.screen.season, "", "logos")))
         field.edited.connect(lambda v: self.edit(field.label, lambda i: T_set_path(i, key, v), key))
-
-    def _on_category(self, value):
-        if value == "__other__":
-            self.screen.ask_text("New category", "Category", self.info().get("category", ""),
-                                 lambda v: self.edit("category",
-                                                     lambda i: i.__setitem__("category", v),
-                                                     "category"))
-            self.refresh()
-            return
-        self.edit("category", lambda i: i.__setitem__("category", value), "category")
 
     def _on_group(self, value):
         if value == "__other__":
@@ -247,13 +236,6 @@ class OverviewTab(TeamTab):
         cur_country = info.get("country", "")
         self.country.set_options(COUNTRIES + ([cur_country] if cur_country and cur_country not in COUNTRIES else []))
         self.country.set_value(cur_country)
-        cats = list(self.screen.ds.all_categories())
-        cur = info.get("category", "")
-        if cur and cur not in cats:
-            cats.append(cur)
-        self.category.set_options(sorted(cats) + ["__other__"])
-        self.category.display = lambda v: "Other…" if v == "__other__" else v
-        self.category.set_value(cur)
         groups = list(GROUPS) + sorted({i.get("group") for t in self.screen.ds.teams.values()
                                         for i in t.values() if i.get("group")} - set(GROUPS))
         cur = info.get("group", "")
@@ -671,10 +653,21 @@ class KitsTab(TeamTab):
             screen.confirm(f"Delete {V.kit_variant_label(kit, vid)} from the {name} kit?",
                            "Competitions using it will get the plain kit.", "DELETE VARIANT", go)
 
+    def _kit_dir(self):
+        """Where a file added to an empty kit field goes: next to the kit's
+        other files, else kits_<season> (kits_<season>_<variant>)."""
+        for f in (self.front, self.back, self.preview):
+            folder = os.path.dirname(f.value().replace("%", "1"))
+            if folder:
+                return folder
+        return V.asset_folder(self.screen.season, self.current_variant(), "kits")
+
     def _wire_asset(self, field, key):
+        # a file added to an empty field goes to kits_<season> (kits_<season>_<variant>)
         field.browse_requested.connect(lambda: browse_assets(
             self.screen, field, self.screen.team_folder(), field.spec, field.value(),
-            field.set_picked, title=f"{self.current_kit_name() or ''} kit · {field.label}"))
+            field.set_picked, title=f"{self.current_kit_name() or ''} kit · {field.label}",
+            default_dir=self._kit_dir()))
         field.edited.connect(lambda v: self._edit_kit(field.label.lower(),
                                                       lambda k: k.__setitem__(key, v)))
 
@@ -1007,7 +1000,7 @@ class ShirtNamesTab(TeamTab):
             return str(value)
         style = self._style()
         text = SN.shirt_text(self._player(n), style["text"], style["case"])
-        return f"{n} · {text}" if text else f"{n} · —"
+        return f"{n} · {text}" if text else f"{n} · empty"
 
     def _font_label(self, value):
         if SN.is_font_file(value):
@@ -1168,7 +1161,7 @@ class ShirtNamesTab(TeamTab):
         if not pattern or "%" not in pattern:
             self.canvas.set_image(None)
             self.canvas.set_placeholder(
-                "SHIRT NAMES NEED BACK NUMBERS AS IMAGES, NOT AN .FSH"
+                "INVALID BACK KIT FILE"
                 if pattern else "THIS KIT HAS NO BACK NUMBERS")
             self.left_note.setText("")
             return
@@ -1369,7 +1362,8 @@ class SquadTab(TeamTab):
         self.role_fields = {}
         for key in ROLE_KEYS:
             f = self.register(f"roles.{key}", ChoiceField(ROLE_LABELS[key], allow_blank=True,
-                                                          blank_label="— unset"))
+                                                          blank_label="default · player 10",
+                                                          clearable=True))
             f.popup_title = ROLE_LABELS[key]
             f.off_list_badge = False
             f.setFixedHeight(34)
@@ -1387,7 +1381,8 @@ class SquadTab(TeamTab):
         self.play_fields = {}
         for key, arrow in (("up", "▲ Up"), ("left", "◀ Left"), ("right", "▶ Right"), ("down", "▼ Down")):
             f = self.register(f"setPlays.{key}", ChoiceField(arrow, SET_PLAYS, allow_blank=True,
-                                                             blank_label=f"default · {SET_PLAY_DEFAULTS[key].replace('_', ' ')}"))
+                                                             blank_label=f"default · {SET_PLAY_DEFAULTS[key].replace('_', ' ')}",
+                                                             clearable=True))
             f.popup_title = f"set play · {key}"
             f.setFixedHeight(34)
             f.edited.connect(lambda v, k=key: self.edit(
@@ -1492,7 +1487,8 @@ class SquadTab(TeamTab):
 
     def toggle_carry(self, number):
         if self.carrying is None:
-            if number <= len(self.roster()):
+            roster = self.roster()
+            if number <= len(roster) and roster[number - 1]:
                 self.set_carrying(number)
         else:
             src = self.carrying
@@ -1505,42 +1501,48 @@ class SquadTab(TeamTab):
 
     def _swap(self, a, b):
         roster = self.roster()
-        if a - 1 >= len(roster):
+        if a - 1 >= len(roster) or not roster[a - 1]:
             return
-        self.edit(f"swap players {a} and {b}", lambda i: T.swap(i, a - 1, b - 1), f"players.{b - 1}")
-        self.selected_shirt = min(b, len(roster))
+        # a player dropped on an empty shirt goes to that very shirt
+        self.edit(f"swap players {a} and {b}", lambda i: T.send_to(i, a - 1, b - 1), f"players.{b - 1}")
+        self.selected_shirt = b
 
     def open_picker(self, number):
         roster = self.roster()
+        # Any shirt up to 22 can be filled in any order; extra players
+        # (past the 22) are added at the end of the list.
+        if number > SQUAD_SIZE:
+            number = max(SQUAD_SIZE + 1, min(number, len(roster) + 1))
         index = number - 1
-        if index > len(roster):
-            index = len(roster)
-            number = index + 1
         anchor = self.slots.get(number) or self.extra_add_btn
         players = self.screen.ds.players
         season = self.screen.season
-        current = roster[index] if index < len(roster) else None
-        in_squad = {pid: i + 1 for i, pid in enumerate(roster)}
+        current = (roster[index] or None) if index < len(roster) else None
+        in_squad = {pid: i + 1 for i, pid in enumerate(roster) if pid}
 
         def fits(pid):
             return number > STARTING_XV or T.fits(players.get(pid), season, number)
 
         def rank(pid):
             if pid == current:
-                return (0, "")
+                return (0, 0, "")
             return (1 if pid in in_squad else 2, 0 if fits(pid) else 1, last_name(players.get(pid)))
 
         # SUGGESTED / ALL: this team's squad; SEARCH: every player in the data.
-        pool = [p for p in dict.fromkeys(roster) if p in players or p == current]
+        pool = [p for p in dict.fromkeys(roster) if p and (p in players or p == current)]
+        if current is None and index < SQUAD_SIZE:
+            # an empty shirt: the team's other seasons' players come first
+            pool += [p for p in self._other_seasons_players() if p not in pool and p in players
+                     and p not in in_squad]
         pool.sort(key=rank)
-        everyone = sorted((p for p in players if p not in in_squad),
-                          key=lambda p: last_name(players.get(p)))
+        everyone = sorted((p for p in players if p not in in_squad and p not in pool),
+                          key=lambda p: (0 if fits(p) else 1, last_name(players.get(p))))
 
         def entry(pid):
             return (pid, (players.get(pid) or {}).get("display_name") or pid, fits(pid))
         if current is None and index >= SQUAD_SIZE:
             # a new extra player: only the search, only players not in the squad
-            entries, search = [], [entry(pid) for pid in everyone]
+            entries, search = [], [entry(pid) for pid in everyone + [p for p in pool if p not in in_squad]]
         else:
             entries = [entry(pid) for pid in pool]
             search = [entry(pid) for pid in pool + everyone]
@@ -1560,15 +1562,29 @@ class SquadTab(TeamTab):
             title += " · " + POSITION_NAMES.get(SHIRT_POSITIONS[number], "").upper()
         elif number <= SQUAD_SIZE:
             title += " · REPLACEMENT"
-        elif index < len(roster):
+        elif current is not None:
             title = "EXTRA PLAYER"
         else:
             title = "ADD TO SQUAD"
         self._picker_shirt = number
+        suggested = any(fit for _, _, fit in entries)
         self.picker.open_for(title, entries, current, taken, anchor, self.screen, tags=tags,
                              subtitles=subtitles, search=search,
                              stars=lambda pid: is_star(self.stats(pid)),
-                             mode=SEARCH if current is None else FITS)
+                             mode=FITS if (current is not None or suggested) else SEARCH)
+
+    def _other_seasons_players(self):
+        """The players this team named in its other seasons, nearest first."""
+        working = self.screen.session.working if self.screen.session else {}
+        try:
+            here = int(self.screen.season)
+        except (TypeError, ValueError):
+            here = 0
+        out = []
+        for season in sorted((s for s in working if s != self.screen.season),
+                             key=lambda s: abs(int(s) - here) if str(s).isdigit() else 9999):
+            out.extend(str(p) for p in working[season].get("players", []) if p)
+        return list(dict.fromkeys(out))
 
     def _on_pick(self, pid):
         number = self._picker_shirt
@@ -1580,13 +1596,14 @@ class SquadTab(TeamTab):
         name = (self.player(pid) or {}).get("display_name", pid)
         self.edit(f"put {name} as player {number}", lambda i: T.place(i, number - 1, pid),
                   f"players.{number - 1}")
-        self.selected_shirt = min(number, len(self.roster()) + 1)
+        # on to the next shirt (an extra player: the + ADD button)
+        self.selected_shirt = number + 1 if number < SQUAD_SIZE else number
         QTimer.singleShot(0, lambda: self.slots.get(self.selected_shirt, self.extra_add_btn).setFocus())
 
     def _remove(self, number=None):
         roster = self.roster()
         n = number or self.selected_shirt
-        if n - 1 >= len(roster):
+        if n - 1 >= len(roster) or not roster[n - 1]:
             return
         name = (self.player(roster[n - 1]) or {}).get("display_name", roster[n - 1])
         self.edit(f"remove {name}", lambda i: T.remove(i, n - 1), f"players.{n - 1}")
@@ -1608,7 +1625,7 @@ class SquadTab(TeamTab):
     def _edit_player(self, number=None):
         number = number or self.selected_shirt
         roster = self.roster()
-        if number - 1 < len(roster):
+        if number - 1 < len(roster) and roster[number - 1]:
             self.screen.open_player(roster[number - 1])
 
     # ── refresh ──────────────────────────────────────────────────────────
@@ -1631,7 +1648,7 @@ class SquadTab(TeamTab):
         self._show_extras(max(0, len(roster) - SQUAD_SIZE), len(roster) >= SQUAD_SIZE)
         seen = set()
         for n, slot in self.slots.items():
-            pid = roster[n - 1] if n - 1 < len(roster) else None
+            pid = (roster[n - 1] or None) if n - 1 < len(roster) else None
             player = players.get(pid) if pid else None
             flat = dict(player or {})
             flat.update(T.season_stats(player, season))
@@ -1640,24 +1657,30 @@ class SquadTab(TeamTab):
             if pid and player is None:
                 slot.set_player({"display_name": f"? {pid}", "last_name": f"? {pid}"})
             slot.set_badges(badges.get(pid, []) if pid else [])
-            sev = issue_by_index.get(n - 1)
+            sev = issue_by_index.get(n - 1) if pid else None      # an empty shirt is not painted
             if sev:
                 slot.set_issue(SEVERITY_COLOR[sev])
             elif pid and n <= STARTING_XV and not T.fits(player, season, n):
                 slot.set_issue(WARN)
             else:
                 slot.set_issue(None)
-            if isinstance(slot, SlotAvatar):
-                slot.empty_label = "+" if n - 1 == len(roster) else ""
+            slot.empty_label = "+"
             seen.add(pid)
-        self.extras.setText(f"{len(roster)} / 22 players" if len(roster) < SQUAD_SIZE else "")
-        self.extras.setVisible(len(roster) < SQUAD_SIZE)
+        filled = sum(1 for p in roster if p)
+        self.extras.setText(f"{filled} / 22 players" if filled < SQUAD_SIZE or len(roster) > filled
+                            else "")
+        self.extras.setVisible(filled < SQUAD_SIZE or len(roster) > filled)
 
-        starters = roster[:STARTING_XV]
+        starters = [p for p in roster[:STARTING_XV] if p]
         for key, f in self.role_fields.items():
             rating = T.ROLE_RATING.get(key)
             f.set_options(sorted(starters, key=lambda pid: -self._rating(pid, rating)) if rating else starters)
             f.display = self._role_display(roster)
+            # unset: the game uses player 10; the popup opens on the best man for the role
+            ten = (self.player(roster[9]) or {}).get("display_name") if len(roster) > 9 and roster[9] else ""
+            f.blank_label = f"default · {ten}" if ten else "default · player 10"
+            f.default_highlight = (lambda k=key: T.best_for_role(
+                {"players": [p for p in roster[:STARTING_XV] if p]}, self.screen.ds.players, season, k) or None)
             f.tag_for = (lambda pid, r=rating: (str(self._rating(pid, r)), FG_TERTIARY)) if rating \
                 else (lambda pid: (POSITION_SHORT.get(self.stats(pid).get("position1", ""), ""), FG_TERTIARY))
             f.set_value(str(roles.get(key, "") or ""))
@@ -1676,7 +1699,7 @@ class SquadTab(TeamTab):
 
         def display(pid):
             if not pid:
-                return "— unset"
+                return "default · player 10"
             p = players.get(pid)
             name = (p or {}).get("display_name") or f"? {pid}"
             if pid in roster:
@@ -1691,11 +1714,11 @@ class SquadTab(TeamTab):
     def _refresh_selection(self):
         roster = self.roster()
         selected = self.selected_shirt
-        self.edit_player_btn.setEnabled(selected - 1 < len(roster))
+        self.edit_player_btn.setEnabled(selected - 1 < len(roster) and bool(roster[selected - 1]))
         # the card shows the player under the mouse, else the selected one;
         # the buttons always act on the selected one
         n = self._hovered if self._hovered is not None else selected
-        pid = roster[n - 1] if n - 1 < len(roster) else None
+        pid = (roster[n - 1] or None) if n - 1 < len(roster) else None
         from app.game_data import SHIRT_POSITIONS
         pos_name = POSITION_NAMES.get(SHIRT_POSITIONS.get(n, ""), "")
         where = pos_name.lower() if n <= STARTING_XV else ("replacement" if n <= SQUAD_SIZE
@@ -1703,8 +1726,7 @@ class SquadTab(TeamTab):
         self.sel_title.setText((f"PLAYER {n} · {where}" if n <= SQUAD_SIZE else "EXTRA PLAYER").upper())
         if pid is None:
             self.sel_name.setText("Empty")
-            self.sel_meta.setText("Pick or drag a player here."
-                                  if n - 1 <= len(roster) else "Fill the slots before this one first.")
+            self.sel_meta.setText("Click to pick a player for this shirt, or drag one here.")
             return
         player = self.player(pid)
         self.sel_name.setText((player or {}).get("display_name") or f"Unknown player {pid}")
@@ -1766,9 +1788,11 @@ class AssetsTab(TeamTab):
         self.body.addStretch(1)
 
     def _wire(self, field, key):
+        kind = key.split(".")[0]            # ball / banners / logos
         field.browse_requested.connect(lambda: browse_assets(
             self.screen, field, self.screen.team_folder(), field.spec, field.value(),
-            field.set_picked, title=field.label))
+            field.set_picked, title=field.label,
+            default_dir=V.asset_folder(self.screen.season, "", kind)))
         field.edited.connect(lambda v: self.edit(field.label.lower(), lambda i: T_set_path(i, key, v), key))
 
     def refresh(self):

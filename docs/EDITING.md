@@ -13,8 +13,7 @@ Some keys that work in both editors: `Ctrl+S` save, `Ctrl+Z` undo, `Ctrl+Y` redo
 ### Find or create a player
 The list on the left can be filtered by name, id, position or team (`FILTERS` for more). `+ NEW PLAYER` asks for:
 - In-game name (14 characters max, it is what the game shows)
-- File to save into (`players.json`)
-- First season and primary position
+- First season and primary position (it goes in the players file of the player being edited, or the biggest one)
 
 `DUPLICATE` copies the selected player, which is the fastest way to start from a similar one. Your new players get an id far above the ones of the data pack (10,000,000 and more, a different block per install), so two persons creating players never clash.
 
@@ -24,12 +23,12 @@ The list on the left can be filtered by name, id, position or team (`FILTERS` fo
 At the top you find the identity, the same for all seasons: first name, last name, birthdate (`YYYY/MM/DD`), in-game name and commentary name — the surname the commentators say, picked from the clips recorded in the game (the list opens on the closest match to the last name; ▶ plays the clip, and resting on a name in the list plays it too).
 
 ### Seasons
-A player has one set of ratings and looks **per season** (the same man is not rated the same in 2009 and 2024). The `SEASON` column lists them, `+ ADD` creates a new one (copied from another season) and `⋯` has the other actions.
+A player has one set of ratings and looks **per season** (the same man is not rated the same in 2009 and 2024). Seasons are shown as the two years they cover (`2023-2024`) and added by the year they end in. The `SEASON` column lists them, `+ ADD` creates a new one (copied from another season) and `⋯` has the other actions.
 
 Every card has an `ALL SEASONS` box. Ticked, what you change is applied to all the seasons of the player. Unticked, only to the selected one. Check it before you edit, it is the most common surprise.
 
 ### Profile
-*Height, weight, stronger foot, nationality, up to 3 positions (the pitch shows which shirts the player fits), the squads where he is named (click one to jump to the team).*  
+*Height, weight (greyed when empty: the 180 cm / 70 kg the game then uses), stronger foot, nationality, up to 3 positions (the pitch shows which shirts the player fits).* The `Teams` tab lists the squads where he is named, season by season (click one to jump to the team).  
 ![profile](img/player_profile.png)
 
 If a player doesn't fit his shirt in a team, the team editor will flag it, so choose the positions with care.
@@ -53,17 +52,17 @@ This is where the images go.
 ![appearance](img/player_appearance.png)
 
 - **Head**: `CHOOSE HEAD…` opens the head browser. `stock` are the ~550 faces of the original game, `custom` are the `.big` files of `data/players/heads/`. Click one to try it on the 3D preview, then `USE THIS HEAD`.
-- **Boots**: stock style 0-9, or your own image.
+- **Boots**: the list has sections. `Stock` is the game's 10 styles, then the brands listed in `players/boots/boots.json` (`{"Nike": ["players/boots/boots_6.png", ...]}`, a title and the boots it holds; edit it to sort the boots your own way), and `Custom` for the images that file does not place: the boots you add. Sections fold: only the one holding the current boots is open.
 - **Goal-kick style**: the kicking animation of the player, any of the 20 stock ones.
-- **Socks and tapes**: wrist, thigh, finger.
-- **Skin**: one of the 4 stock tones, or a custom texture.
+- **Socks and tapes**: wrist, thigh, finger (`none` unless you pick one).
+- **Skin**: the list has a `Default` section (the 4 stock tones) and a `Custom` one (your textures).
 - **Layers**: strap, bottom baselayer, top baselayer, gloves. They are painted over the skin in this order, and each one can have several layers (`▲▼` to reorder, `✕` to remove).
 
 *Head browser:*  
 ![heads](img/head_picker.png)
 
 ### Add your own assets
-Every asset picker (skin, layers, boots, head, kits, logos, ball, banners, pads) has `Load from disk…` and `Load folder from disk…`: pick a file or a folder anywhere, it is copied into `user_data/mod_data/` at the right place and selected. Copying by hand into `user_data/mod_data/` works too (restart after):
+Every asset picker (skin, layers, boots, head, kits, logos, ball, banners, pads) has `Load from disk…` (the boots list: `Load from file…`, one image) and, for the series, `Load folder from disk…`: pick a file or a folder anywhere, it is copied into `user_data/mod_data/` at the right place and selected. Copying by hand into `user_data/mod_data/` works too (restart after):
 
 | What | Folder | Image |
 |---|---|---|
@@ -90,15 +89,15 @@ Heads are not made in the editor, they are `.big` files made with the community 
 `Tools > Team editor`. Same logic as the players: list on the left, then the seasons of the team, then the tabs.
 
 ### Create a team
-`+ NEW TEAM` asks a name, type (club, international or special), category (Top 14, International...) and first season. It creates a folder in `teams/` with one blank season. All the images of the team live in this folder (`teams/France/kits_2024/...`), and the editor only browses inside it, so copy your files there first, like for the players.
+`+ NEW TEAM` asks a name, type (club, international or special), group (France, England, International...) and first season. It creates a folder in `teams/` with one blank season. All the images of the team live in this folder (`teams/France/kits_2024/...`), and the editor only browses inside it, so copy your files there first, like for the players.
 
 *New team:*  
 ![new team](img/new_team.png)
 
-A team has one block per season (name, kits, squad, roles...). `+ ADD`, `DUPLICATE` and `DELETE` in the seasons column work on a season. Duplicating the previous season is usually the quickest way to start a new one.
+A team has one block per season (name, kits, squad, roles...). `+ ADD`, `DUPLICATE` and `DELETE` in the seasons column work on a season. Duplicating the previous season is usually the quickest way to start a new one. Seasons read `2023-2024`; give the year it ends in when you add one.
 
 ### Overview
-Name, type, country, category and the two logos: the main crest (256×256, shown in game) and the frontend logo (menus only, the main crest is used if blank). The summary on the right tells at a glance if something is wrong: squad size, starting XV in position, roles set, kits, missing files.
+Name, type, country, group and the two logos: the main crest (256×256, shown in game) and the frontend logo (menus only, the main crest is used if blank). A `×` on a field empties it. `BROWSE` lists the files of the team folder, and `Load from disk…` copies a file next to the current one, or into `kits_<season>`, `logos_<season>`, `ball_<season>`, `banners_<season>` when the field is still empty (a kit variant: `kits_<season>_<variant>`); only a numbered series (ball, banners, back numbers) can load a whole folder. The summary on the right tells at a glance if something is wrong: squad size, starting XV in position, roles set, kits, missing files.
 
 *Overview:*  
 ![overview](img/team_overview.png)
@@ -115,7 +114,9 @@ The list on the left is the kits in game order: home, away, and as many as you w
 ![kits](img/team_kits.png)
 
 ### Squad & roles
-The starting XV (shirts 1-15), the 7 replacements (16-22) and the extra players, which are a pool of players beyond the 22. Click a player to pick another one (the list suggests the ones who fit the position), `X` moves him, drag and drop swaps two. This is where you put your new players in a team. On the right: captain, vice-captain, goal kicks, punts, kick-offs, and the set plays.
+The starting XV (shirts 1-15), the 7 replacements (16-22) and the extra players, which are a pool of players beyond the 22. Click a player to pick another one (the list suggests the ones who fit the position), `X` moves him, drag and drop swaps two. This is where you put your new players in a team. An empty squad can be filled in any order: click the shirt you want (the list opens on the position, starting with the players of the team's other seasons) and the others stay empty until you fill them. On the right: captain, vice-captain, goal kicks, punts, kick-offs, and the set plays (greyed when empty: the game then uses player 10, and the default set plays).
+
+**A team can be saved with errors** (a squad under 22 or with empty shirts, a player the files lack, no kit…). A season with errors is marked `DRAFT` and the mod does not use it, nor offer it anywhere (quick match, tournaments…), until it has no error and is saved again. The editor still lists it.
 
 *Squad and roles:*  
 ![squad](img/team_squad.png)
@@ -125,6 +126,22 @@ Ball (2 images, 256×128), banners (4 images, 512×128) and the 3 small logos (1
 
 *Other:*  
 ![other](img/team_other.png)
+
+## Tournaments
+
+`Tools > Tournament editor` (or `CREATE YOUR OWN` in Tournament) builds a competition of your own; `New tournament` then lists it like the others, and `PLAY` in the editor opens it there. Each one is a file in `user_data/custom_tournaments/`.
+
+The list also has the game's own competitions (Six Nations 2024, Top 14...): open one to change its name, rules, look or teams (`⇄` swaps a team, it takes the other's games; a team the data lacks can be swapped in). Its format and calendar stay the real ones. `RESET` gives the original back. These edits are kept in `user_data/custom_tournaments/edits/`.
+
+`+ NEW` offers ready-made shapes (a Six Nations, a World Cup, a club league, a European cup, a knockout cup) already filled with the best teams of the data, or a blank one. Five tabs, and the right side always shows the shape, the numbers and what stops it being played:
+
+- `SETUP`: name, season (the squads that play), and the format: a league (optional play-offs, or every club of a data category, one edition per season), pools then knockouts, or a straight knockout cup, with how the knockouts go (who goes through, pairing, bronze final, a drawn game)
+- `TEAMS`: `+ ADD TEAMS` ticks several at once (type a name or a category, `ALL` ticks what the search shows). `AUTO-FILL…` takes the best or random teams of a source, `SHUFFLE` deals them again, `⇄` moves a team to another pool, `▲ ▼` order a cup's draw (seed 1 first), `✎` renames a pool
+- `RULES`: table points (presets or your own), tie-breakers in order, discipline, half length and injuries / fatigue / suspensions
+- `SCHEDULE`: home grounds or neutral stadiums, the final's stadium, when the first round is and the days between rounds
+- `LOOK`: description, the game's presentation, the look of a competition (ball, logos, pitch logo, boards), competition squads and kits, the trophy lift
+
+A running tournament has a `Rules` tab listing what it is played under: the laws (50/22, 22m, 80' penalty touch: the edition's, or the wizard's), points and bonuses, how a drawn knockout is decided, bans and the tie-breakers (how teams on the same points are split), with a line on what each law means.
 
 ## Send your work to be added to the mod
 When you are happy with your edits, open `Tools > My edits`. It lists everything you changed (`NEW` for what you created, `EDITED`, `DELETED`, and `CONFLICT` if a new release changed the same thing as you).
@@ -192,6 +209,19 @@ Where sets live:
 - `competitions/<competition>/assets/pads`, `.../posts`, `.../ads` (or `<season>/pads`… when seasons differ): a competition's, named in its json (`"pads"`, `"posts"`, `"adboards"`, at the root or per season; seasons can share a set)
 - the game itself: every stock stadium's own sets, listed as `Stock · …`
 
+`Tools > Stadium editor` shows the mod's own stadiums (the folders of `stadiums/` with scene packs) in 3D (drag to turn, right drag to slide, wheel or `+ −` to zoom, five camera views, day / overcast / night / cold when the stadium has them). The view draws what the game does: the baked lighting and shadows, the sky, the roof glass, the line markings and the pitch detail (team flags and banners as plain stand-ins). Hovering a set in the pads, posts or ads list puts it on the stadium; `A competition's look` tries a competition's three at once. `SAVE` writes the picks as the stadium's `"dressing"` in its json, `RESET` goes back to the stock sets of its slot and any pitch. The `Pitch` tab ticks the `environments` a match there may use (day, overcast, night, cold; saved as `"environments"`, at least one stays; unticked ones are not offered in quick match and not drawn by tournament weather). It also sets the mowing `stripes` (opacity and grass brightness, for the environment shown under the 3D view; `STOCK` goes back to the scene pack's own) and lays the game's pitch textures on the grass (hover or arrow over a tile), ticking the ones a match at that stadium may use: saved as `"pitches"` (names such as `"Reg2_08_muddy_n"`; none ticked = any). The mod adds three pitches of its own, `Mod_08_synthetic_d`, `Mod_08_synthetic_n` (artificial turf: an even bright green with a fine fibre weave) and `Mod_08_hybrid_d` (natural grass stitched with fibres): packs in `data/pitches/` built from the game's "best" pitches by `tools/make_pitches.py`. The game only takes its own pitch names, so a match on one rewrites the first line of the scene's `Config2.bin` and puts the pack at the game's pitch path, and sets the stadium's `ProbabilityDirt` in `stadiuminfo.xml` to `Very_Low` (the game's lowest, 0: no mud on the kits). Not tested in the game yet. Quick match offers only those pitches there, and a tournament draws its pitch from them (the nearest to the day's weather and light). The stripes are saved as `"stripes"` (`{"day": {"opacity": 35, "brightness": 110}}`, percent): the game takes them from floats 35 and 36 of the scene pack's `Config.bin`, which a match there rewrites in the pack it deploys; the preview mimics the look, the exact in-game scale is not measured. The `Logos` tab shows the pitch logos on the grass (`competition` picks whose logos to look at) and lays them out for that stadium: pick a logo, set its type (the competition's main logo, or its side logo, the one on the 22 m lines), place (metres from the halfway spot), size and turn, or drag it on the 3D view; `+ ADD` repeats one, `REMOVE` takes one off, `STOCK` goes back to the game's three. Saved as `"pitch_logos"` (kinds `centre`, `side_a`, `side_b`: the side logos take the two halves of `pitch_logo_2` in turn); a match there then writes the game's logo model (`misc/logos/logos`) with that layout. The pictures stay the competition's `pitch_logo_1` / `pitch_logo_2`. Team flags, banners and the team names on the grass are filled in each match and are not shown.
+
 Which set a match wears, first that has one: the quick match pick, else the competition of a tournament or challenge, else the stadium's own: its json `"dressing"` (`{"pads": "stadium_graphics/pads/x", "posts": "...", "ads": "..."}`, or `"stock:standard/twickenham"` for a stock set), else the stock set of its slot (Twickenham's for Twickenham, the host slot's for a custom stadium).
 
 The game's stadiums use two board layouts (World Cup and Standard) that are not interchangeable, so the chosen ads are converted for both at each match. The boards' frame is never an ad.
+
+## Crowd
+
+Quick match (`crowd`, `supporters`, `atmosphere`) and tournaments (the `crowd` group of the settings, also on the dashboard) set the crowd of each match. The defaults are the game's own:
+
+- **crowd**: `full`, `busy`, `half`, `sparse` keep 100, 75, 50 or 25 % of the stands' crowd. The ends and the upper tiers empty first, so the fans sit centre and low.
+- **supporters**: `colours` dresses the fans in the two teams' kit colours (each kit's main colour and the next clearly different one, about 55 % home and 30 % away; the rest keep their own clothes).
+- **atmosphere**: `quiet` halves the crowd's reactions and lets them die away sooner (loose copies of `Xml/Sound/crowd.xml` and `crowdconst.xml`).
+
+The game draws the crowd as flat panels (`rwh0`..`rwh3` in a scene pack's `Stadium.o`) with 16 animated pictures (`Crowd.fsh`). A match empties panels and repaints the pictures in the scene pack it deploys. Not tested in the game yet.
+

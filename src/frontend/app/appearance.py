@@ -22,7 +22,9 @@ or gloves set on a player are final: anything that may dress players
 automatically (weather, team rules) must leave a player who has one as is
 and only add to players with none (baselayers under their straps).
 """
+import json
 import os
+import re
 
 SKIN_TONES = ["light", "l_medium", "d_medium", "dark"]
 # skins.fsh entry names: bare arms / gloved, per tone.
@@ -141,6 +143,47 @@ def asset_options(mod_dir, kind):
                 sub = os.path.relpath(os.path.join(dirpath, f), folder).replace("\\", "/")
                 out.append(f"{rel}/{sub}")
     return out
+
+
+#: the file that sorts the boots into the picker's sections (in the mod data)
+BOOTS_JSON = "players/boots/boots.json"
+STOCK_SECTION, CUSTOM_SECTION = "Stock", "Custom"
+
+
+def _natural(text):
+    """Sort key: boots_2 before boots_10."""
+    return [int(t) if t.isdigit() else t for t in re.split(r"(\d+)", text)]
+
+
+def boot_sections(mod_dir):
+    """[(section title, [boot values])] for the boots picker. The file
+    players/boots/boots.json maps a title to the boots it holds, in order: a stock
+    style number ("0".."9") or an image path ("players/boots/boots_12.png"):
+        {"Nike": ["players/boots/boots_6.png", ...], "Adidas": [...]}
+    Stock styles it does not place make the first section ("Stock"); every
+    image in the boots folder it does not place, the last one ("Custom"):
+    the boots a user adds land there. Entries naming a missing file are
+    ignored, and without the file there are just those two sections."""
+    try:
+        with open(os.path.join(mod_dir, BOOTS_JSON), "r", encoding="utf-8") as fh:
+            data = json.load(fh)
+    except (OSError, ValueError):
+        data = {}
+    images = asset_options(mod_dir, "boots")
+    known = set(BOOT_STYLES) | set(images)
+    placed, sections = set(), []
+    for title, values in (data.items() if isinstance(data, dict) else ()):
+        if not isinstance(values, list):
+            continue
+        found = [v for v in dict.fromkeys(str(v).replace("\\", "/") for v in values)
+                 if v in known and v not in placed]
+        placed.update(found)
+        if found:
+            sections.append((str(title), found))
+    stock = [v for v in BOOT_STYLES if v not in placed]
+    custom = sorted((v for v in images if v not in placed), key=_natural)
+    return ([(STOCK_SECTION, stock)] if stock else []) + sections + \
+           ([(CUSTOM_SECTION, custom)] if custom else [])
 
 
 def kind_of_path(mod_dir, rel):

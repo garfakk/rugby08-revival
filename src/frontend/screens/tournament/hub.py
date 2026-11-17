@@ -265,8 +265,7 @@ class TournamentHubScreen(Screen):
         top.addWidget(self.new_tile, stretch=1)
         self.create_tile = None
         if self.on_create is not None:
-            self.create_tile = NewTile(title="CREATE YOUR OWN", glyph="✎", stripe=AWAY_TINT,
-                                       subtitle="your format, your teams, your rules")
+            self.create_tile = NewTile(title="CREATE YOUR OWN", glyph="✎", stripe=AWAY_TINT)
             self.create_tile.activated.connect(self.on_create)
             self.create_tile.focused.connect(lambda: self._select(None))
             self.focus.register(self.create_tile)

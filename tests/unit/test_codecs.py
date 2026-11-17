@@ -253,10 +253,12 @@ def test_configure_match_laws(tmp_path, monkeypatch):
     ini.write_text("[patches]\nwind = 1\n")
     monkeypatch.setattr(M.user_prefs, "lineout_jump", False)
     M.configure_match_laws(str(tmp_path), {"rule_5022": False, "rule_22m": True})
-    assert ini.read_text() == "[patches]\nwind = 1\nrule_5022 = 0\nrule_22m = 1\nlineout_jump = 0\n"
+    assert ini.read_text() == "[patches]\nwind = 1\nrule_5022 = 0\nrule_22m = 1\npenalty_touch_end = 0\ncpu_penalty_touch = 0\nlineout_jump = 0\n"
     monkeypatch.setattr(M.user_prefs, "lineout_jump", True)
+    M.configure_match_laws(str(tmp_path), {"penalty_touch_end": True})
+    assert "penalty_touch_end = 1\ncpu_penalty_touch = 1\n" in ini.read_text()   # the CPU knows the law
     M.configure_match_laws(str(tmp_path), {})              # no laws given: the stock game
-    assert ini.read_text() == "[patches]\nwind = 1\nrule_5022 = 0\nrule_22m = 0\nlineout_jump = 1\n"
+    assert ini.read_text() == "[patches]\nwind = 1\nrule_5022 = 0\nrule_22m = 0\npenalty_touch_end = 0\ncpu_penalty_touch = 0\nlineout_jump = 1\n"
 
 
 def test_resolve_player_skin_layers(tmp_path):

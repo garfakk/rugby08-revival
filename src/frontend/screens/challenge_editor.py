@@ -426,7 +426,7 @@ class ChallengeEditorScreen(Screen):
                         for tid, s in self.ds.teams.items()), key=lambda t: t[1].lower())
         names = dict(teams)
         team = ChoiceField(f"{side} team", [t for t, _ in teams], display=lambda t: names.get(t, t),
-                           allow_blank=True, blank_label="— choose —")
+                           allow_blank=True, blank_label="choose…")
         season = ChoiceField(f"{side} season", allow_blank=False)
 
         def variant_label(v):

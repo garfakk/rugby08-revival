@@ -387,9 +387,13 @@ class TournamentWizardScreen(Screen):
         motion.stagger_in(self._comp_cards[:12], step=40)
         want, self._preselect = self._preselect, None
         if want:
-            fam = next((e.family for e in self.by_id.values() if e.id == want), None)
+            exact = want in self.by_id
+            fam = next((e.family for e in self.by_id.values()
+                        if e.id == want or (e.template or {}).get("id") == want), None)
             if fam:
                 self._pick_family(fam)
+                if exact:
+                    self._pick_competition(want)
                 self._go(1)
 
     def open_on(self, template_id):

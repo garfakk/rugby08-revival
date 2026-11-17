@@ -133,12 +133,29 @@ def keep_stadiums(t, ds) -> None:
     t.components["stadiums"] = {
         str(sid): {"name": info.get("name", ""), "country": info.get("country", ""),
                    "game_id": info.get("game_id"),
-                   "environments": list(info.get("environments") or [])}
+                   "environments": list(info.get("environments") or []),
+                   "pitches": list(info.get("pitches") or [])}
         for sid, info in (getattr(ds, "stadiums", None) or {}).items()}
 
 
 def region_of(climate) -> str:
     return REGIONS.get(climate, DEFAULT_REGION)
+
+
+def _gid(stadium):
+    gid = (stadium or {}).get("game_id")
+    if gid is None and "millennium" in str((stadium or {}).get("name", "")).lower():
+        gid = 32
+    try:
+        return int(gid)
+    except (TypeError, ValueError):
+        return None
+
+
+def env_label(stadium, env) -> str:
+    """The name of an environment at a ground: "closed" for the one that has
+    the roof shut, else its own."""
+    return "closed" if env == COVERED.get(_gid(stadium)) else str(env)
 
 
 def roof_environment(stadium):
@@ -191,10 +208,19 @@ _FALLBACK = {"snow": ["frosty", "muddier", "norm"], "frosty": ["snow", "norm"],
 _ANY = ["norm", "best", "hard", "dry"]
 
 
-def pitch_texture(condition, environment, region="Reg2") -> str:
+def allowed_textures(stadium) -> list:
+    """The pitch textures the ground's "pitches" lets a match use (the
+    game's names; [] = any)."""
+    names = {n.lower(): n for n in textures()}
+    return [names[str(n).lower()] for n in ((stadium or {}).get("pitches") or []) if str(n).lower() in names]
+
+
+def pitch_texture(condition, environment, region="Reg2", allowed=()) -> str:
     """The texture name for a condition in a light, falling back to the
-    nearest available one; "default" when nothing matches."""
-    have = textures()
+    nearest available one; "default" when nothing matches. `allowed` limits
+    the choice to those textures (a ground's own list): none of the
+    condition's then takes the one nearest in light."""
+    have = set(allowed) if allowed else textures()
     lights = _LIGHTS[_LIGHT.get(environment, "d")]
     regions = [region] + [r for r in ("Reg2", "Reg3", "Reg1", "Reg4") if r != region]
     # the region's own pack first (another region's grass looks out of
@@ -208,6 +234,9 @@ def pitch_texture(condition, environment, region="Reg2") -> str:
                 name = f"{reg}_08_{cond}_{lt}"
                 if name in have:
                     return name
+    if allowed:
+        order = {lt: i for i, lt in enumerate(lights)}
+        return min(sorted(allowed), key=lambda n: order.get(n.rsplit("_", 1)[-1], len(order)))
     return "default"
 
 
@@ -289,7 +318,7 @@ def forecast(t, fixture, ds=None) -> dict:
     return {
         "date": d.isoformat() if d else "", "temp": round(temp, 1), "precip": precip, "heavy": heavy,
         "night": night, "environment": environment, "condition": condition, "roof_closed": roof_closed,
-        "pitch": pitch_texture(condition, environment, region_of(climate)), "breath": temp <= BREATH,
+        "pitch": pitch_texture(condition, environment, region_of(climate), allowed_textures(stadium)), "breath": temp <= BREATH,
         "baselayers": baselayers, "gloves": 0.25 if temp <= 2 else 0.0,
         "summary": " · ".join(words),
     }

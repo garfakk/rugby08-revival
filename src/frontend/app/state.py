@@ -15,6 +15,7 @@ from PyQt5.QtCore import QObject, pyqtSignal
 
 from app import variants as V
 from app import game_data as G
+from app.team_browse import GROUPS, info_group
 from app.user_edits import EditStore, KINDS
 from shared.user_prefs import user_prefs
 from team_data_loader import TeamDataLoader
@@ -25,30 +26,11 @@ from shared import kit_files
 from shared import mod_overlay
 from shared.app_paths import user_data_directory
 
-# Order of the category list in match setup. Internal, not exposed to the
-# user. Categories not listed here follow, alphabetically.
-CATEGORY_ORDER = [
-    "International",
-    "Representatives",
-    "European Cup",
-    "Top 14",
-    "Pro D2",
-    "Premiership",
-    "Championship",
-    "URC",
-    "Pro14",
-    "Pro12",
-    "Celtic League",
-    "Super Rugby",
-    "Super 14",
-]
-
-
-def _category_key(category):
+def _group_key(group):
     try:
-        return (0, CATEGORY_ORDER.index(category), "")
+        return (0, GROUPS.index(group), "")
     except ValueError:
-        return (1, 0, category)
+        return (1, 0, group)
 
 
 def clear_data_caches():
@@ -77,11 +59,7 @@ def _apply_edits(loader, teams, players, edits):
     register where the records the user created belong."""
     for tid in edits.reconcile("teams", loader.teams_raw, loader.teams_file_path):
         seasons = loader.teams_raw.get(tid)
-        live = TeamDataLoader.enabled_seasons(seasons or {})
-        if live:
-            teams[tid] = live
-        else:
-            teams.pop(tid, None)
+        loader.sync_team(teams, tid, seasons)
         if seasons is not None and tid not in loader.teams_file_path:
             path = edits.pack.abspath(edits.get("teams", tid)["home"])
             loader.teams_file_path[tid] = path
@@ -107,7 +85,7 @@ class DataStore:
         (self.teams, self.players, self.teams_folder_path, self.teams_file_path,
          self.players_file_path, self.players_sources, self.team_json_ids,
          self.stadiums, self.tournaments, self.tournaments_folder_path,
-         self.edits) = raw or self.read_files()
+         self.edits, self.team_drafts) = raw or self.read_files()
         # saves go to the user's edits (or, maintainer, to the pack files)
         G.set_edit_store(self.edits, into_pack=config.save_edits_to == "mod")
         self.events = DataEvents()
@@ -128,10 +106,11 @@ class DataStore:
             _apply_edits(loader, teams, players, edits)
         # older squad variants could carry kits: they now live in the kit;
         # edits made before the kits were packed name the old .png files
-        for tid, seasons in teams.items():
-            for info in seasons.values():
-                V.migrate_season(info)
-                kit_files.migrate_kit_files(info, loader.teams_folder_path.get(tid, ""))
+        for registry in (teams, loader.team_drafts):
+            for tid, seasons in registry.items():
+                for info in seasons.values():
+                    V.migrate_season(info)
+                    kit_files.migrate_kit_files(info, loader.teams_folder_path.get(tid, ""))
         stadiums = StadiumDataLoader(config.directory_stadiums).load_stadiums()
         tournament_loader = TournamentDataLoader(config.directory_competitions)
         tournaments = tournament_loader.load_tournaments()
@@ -139,7 +118,8 @@ class DataStore:
         # the file it was actually read from (see TeamDataLoader).
         return (teams, players, loader.teams_folder_path, loader.teams_file_path,
                 loader.players_file_path, loader.players_sources, loader.team_json_ids,
-                stadiums, tournaments, tournament_loader.tournaments_folder_path, edits)
+                stadiums, tournaments, tournament_loader.tournaments_folder_path, edits,
+                loader.team_drafts)
 
     # ── the user's files (shared/mod_overlay.py, user_data/mod_data) ──────
     @staticmethod
@@ -239,14 +219,15 @@ class DataStore:
         record = (self.edits.effective(kind, rid) if env else
                   self.edits.pack.record(self.edits.pack.relpath(path), rid))
         live = TeamDataLoader.enabled_seasons(record or {})
-        if not live:
-            if rid in self.teams:
+        drafts = TeamDataLoader.draft_seasons(record or {})
+        if not live and not drafts:
+            if rid in self.teams or rid in self.team_drafts:
                 self.unregister_team(rid)
             return
-        for info in live.values():
+        for info in [*live.values(), *drafts.values()]:
             V.migrate_season(info)
             kit_files.migrate_kit_files(info, os.path.dirname(path))
-        self.register_team(rid, live, os.path.dirname(path), path)
+        self.register_team(rid, {**live, **drafts}, os.path.dirname(path), path)
 
     # ── registry updates made by the editors ──────────────────────────────
     def players_files(self) -> list:
@@ -254,6 +235,27 @@ class DataStore:
         if not os.path.isdir(d):
             return []
         return [os.path.join(d, f) for f in sorted(os.listdir(d)) if f.endswith(".json")]
+
+    def set_team_seasons(self, tid, seasons):
+        """A team's seasons as the editor holds them: the ones with no
+        errors are the mod's, the drafts (saved with errors) stay with the
+        editor only."""
+        live = TeamDataLoader.enabled_seasons(seasons)
+        drafts = TeamDataLoader.draft_seasons(seasons)
+        for registry, found in ((self.teams, live), (self.team_drafts, drafts)):
+            if found:
+                registry[tid] = found
+            else:
+                registry.pop(tid, None)
+
+    def team_seasons(self, tid) -> dict:
+        """Every season of a team the editor shows: the mod's and the drafts."""
+        merged = {**(self.teams.get(tid) or {}), **(self.team_drafts.get(tid) or {})}
+        return dict(sorted(merged.items()))
+
+    def team_ids(self) -> list:
+        """Every team the editor lists, drafts included."""
+        return list(dict.fromkeys([*self.teams, *self.team_drafts]))
 
     @staticmethod
     def _forget_crests(tid):
@@ -264,7 +266,7 @@ class DataStore:
 
     def register_team(self, tid, seasons, folder, json_path):
         self._forget_crests(tid)
-        self.teams[tid] = seasons
+        self.set_team_seasons(tid, seasons)
         self.teams_folder_path[tid] = folder
         self.teams_file_path[tid] = json_path
         self.team_json_ids.setdefault(json_path, [])
@@ -276,6 +278,7 @@ class DataStore:
         self._forget_crests(tid)
         path = self.teams_file_path.pop(tid, None)
         self.teams.pop(tid, None)
+        self.team_drafts.pop(tid, None)
         self.teams_folder_path.pop(tid, None)
         if path:
             self.team_json_ids.pop(path, None)
@@ -327,15 +330,16 @@ class DataStore:
     def seasons(self) -> list:
         return sorted({s for t in self.teams.values() for s in t})
 
-    def all_categories(self) -> list:
-        return sorted({info.get("category", "") for t in self.teams.values()
-                       for info in t.values() if info.get("category")})
+    def all_groups(self) -> list:
+        """Every group a team is in: the standard ones first, then the rest."""
+        return sorted({info_group(info) for t in self.teams.values() for info in t.values()},
+                      key=_group_key)
 
     def categories_for(self, season: str) -> list:
-        return sorted({
-            info[season]["category"]
-            for info in self.teams.values() if season in info
-        }, key=_category_key)
+        """The groups with a team in `season` (what the classic picker calls
+        its categories)."""
+        return sorted({info_group(info[season]) for info in self.teams.values() if season in info},
+                      key=_group_key)
 
     def teams_in_season(self, season: str) -> list:
         """[(team_id, name)] for every team that exists in `season`, across
@@ -352,7 +356,7 @@ class DataStore:
         return {
             tid: info[season]
             for tid, info in self.teams.items()
-            if season in info and info[season]["category"] == category
+            if season in info and info_group(info[season]) == category
         }
 
     def random_team(self, season: str) -> tuple:
@@ -502,6 +506,14 @@ class MatchConfig:
     # current law; a tournament sets them by its era.
     law_5022: bool = True
     law_22m: bool = True
+    # rugby08patches.dll penalty_touch_end (+ cpu_penalty_touch): after 80
+    # minutes a penalty kicked to touch gets its line-out (the CPU knows it)
+    law_penalty_touch: bool = True
+    # The crowd (backend crowd): how full the stands are (crowd.SIZES), fans
+    # in the teams' colours, and a quieter crowd. Defaults = the game's own.
+    crowd_size: str = "full"
+    crowd_colours: bool = False
+    crowd_mood: str = "normal"
 
     # ── Advanced/.mis fields (config.advanced_user) ─────────────────────
     # Only reachable from the ADVANCED pane's extra sections, which only

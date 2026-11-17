@@ -32,7 +32,7 @@ sys.path.append(str(Path(__file__).parent.parent))
 import backend.process_handler
 from backend.game_specific_variables import *
 from backend.mod_utils import *
-from backend import adboards, stadium_dressing, stadium_screen
+from backend import adboards, crowd, pitch_stripes, pitches, stadium_dressing, stadium_screen
 from shared.app_paths import assets_directory
 from shared.config import *
 
@@ -479,6 +479,17 @@ def edit_graphics_files(match_data):
       #   add_image_to_fsh_file(pitch_logo_filepath, os.path.join(config.mod_data_directory, pitch_logo_2), fsh_image_sizes["pitch_logo_2"], fsh_files_offsets["pitch_logo_2"])
       replace_asset_in_fsh_file(pitch_logo_filepath, os.path.join(config.mod_data_directory, pitch_logo_2), index = 1)
 
+  # The logos' places (and number): the game's own model unless the
+  # stadium lays them out (backend/pitch_logos)
+  layout = match_data.get('pitch_logo_layout')
+  if layout is not None:
+    from backend import pitch_logos
+    try:
+      with open(os.path.join(config.game_launcher_directory, pitch_logos.FILENAME), "wb") as fh:
+        fh.write(pitch_logos.build(layout))
+    except (OSError, ValueError, struct.error) as e:
+      log.warning(f"Pitch logo layout not written: {e}")
+
   for team in ['team_A', 'team_B']:
 
     # Create banners file
@@ -743,6 +754,15 @@ def deploy_stadium_files(match_data):
       screen = match_data.get("stadium_screen") or {}
       if screen.get("scene") == game_path:
         _dress_stadium_screen(os.path.join(game_dir, name), screen, match_data)
+      stripes = match_data.get("stadium_stripes") or {}
+      if stripes.get("scene") == game_path:
+        try:
+          if pitch_stripes.apply(os.path.join(game_dir, name), stripes.get("values")):
+            log.info(f"Pitch stripes: {stripes['values']}")
+        except (OSError, ValueError, struct.error) as e:
+          log.warning(f"Pitch stripes not applied: {e}")
+  deployed += _deploy_own_pitch(match_data.get("own_pitch"), game_dir)
+  deployed += _deploy_crowd(match_data.get("crowd"), match_data, game_dir, deployed)
   try:
     if deployed:
       with open(manifest, "w", encoding="utf-8") as fh:
@@ -751,6 +771,102 @@ def deploy_stadium_files(match_data):
       os.remove(manifest)
   except OSError as e:
     log.warning(f"cannot update {manifest}: {e}")
+
+
+def _loose_copy(game_path, game_dir):
+  """The loose file replacing `game_path` in game_dir: the one already there
+  (a custom stadium's), else the game's own extracted from data.gob. Returns
+  (file name, path), None when the game's can't be read."""
+  name = stadium_game_filename(game_path)
+  target = os.path.join(game_dir, name)
+  if os.path.isfile(target):
+    return name, target, False
+  import tempfile
+  with tempfile.TemporaryDirectory() as tmp:
+    got = extract_files_from_big_archive(config.R08_data_gob_filepath, [name], tmp)
+    if not got or not got.get(name) or not os.path.isfile(os.path.join(tmp, name)):
+      return None
+    if not copy_file(os.path.join(tmp, name), target):
+      return None
+  return name, target, True
+
+
+def _deploy_own_pitch(own, game_dir):
+  """A match on one of the mod's own pitches (backend pitches): its pack over
+  the game's pitch pack path, the scene's Config2.bin pointing at it and the
+  stadium's dirt probability at the lowest. Returns the file names put in
+  the game dir (for the manifest)."""
+  if not own:
+    return []
+  put = []
+  try:
+    name = stadium_game_filename("stadiums/pitches/" + own["name"].lower())
+    if not copy_file(os.path.join(config.mod_data_directory, own["pack"]), os.path.join(game_dir, name)):
+      return []
+    put.append(name)
+    scene = _loose_copy(own["scene"], game_dir)
+    if scene is None or not pitches.set_line(scene[1], own["name"]):
+      log.warning(f"Own pitch {own['name']}: the scene {own['scene']} can't be pointed at it")
+      return put
+    if scene[2]:
+      put.append(scene[0])
+    info = _loose_copy("xml/config/stadiuminfo.xml", game_dir)
+    if info is not None:
+      with open(info[1], "rb") as fh:
+        xml = pitches.set_dirt(fh.read(), own["stadium"], own["environment"])
+      if xml is not None:
+        with open(info[1], "wb") as fh:
+          fh.write(xml)
+      if info[2]:
+        put.append(info[0])
+    log.info(f"Own pitch: {own['name']} on {own['scene']}")
+  except (OSError, ValueError, struct.error) as e:
+    log.warning(f"Own pitch {own['name']} not applied: {e}")
+  return put
+
+
+def _deploy_crowd(spec, match_data, game_dir, deployed):
+  """This match's crowd (backend crowd): the scene pack's stands thinned and
+  fans in the teams' colours, the crowd sound files quietened. Returns the
+  file names it put in the game dir that aren't in `deployed` yet."""
+  if not spec:
+    return []
+  put = []
+
+  def created(loose):
+    if loose[2] and loose[0] not in deployed and loose[0] not in put:
+      put.append(loose[0])
+
+  try:
+    if spec.get("size", "full") != "full" or spec.get("colours"):
+      colours = {}
+      if spec.get("colours"):
+        for side, team in (("home", "team_A"), ("away", "team_B")):
+          kit = (match_data.get(team) or {}).get("kit_front")
+          colours[side] = crowd.kit_colours(os.path.join(config.mod_data_directory, kit)) if kit else []
+      scene = _loose_copy(spec["scene"], game_dir)
+      if scene is None:
+        log.warning(f"Crowd: the scene {spec['scene']} can't be read")
+      else:
+        created(scene)
+        if crowd.apply(scene[1], spec.get("size", "full"), colours.get("home"), colours.get("away")):
+          log.info(f"Crowd: {spec.get('size')} stands, colours {colours or 'own'} on {spec['scene']}")
+    if spec.get("mood") == "quiet":
+      for game_path, quieten in ((crowd.SOUND_EVENTS, crowd.quiet_events),
+                                 (crowd.SOUND_CONSTANTS, crowd.quiet_constants)):
+        loose = _loose_copy(game_path, game_dir)
+        if loose is None:
+          log.warning(f"Crowd: {game_path} can't be read")
+          continue
+        created(loose)
+        with open(loose[1], "rb") as fh:
+          xml = quieten(fh.read())
+        with open(loose[1], "wb") as fh:
+          fh.write(xml)
+      log.info("Crowd: quiet")
+  except (OSError, ValueError, KeyError, struct.error) as e:
+    log.warning(f"Crowd not applied: {e}")
+  return put
 
 
 # This function copies all the "static files" necessary for the mod
@@ -814,6 +930,8 @@ def generated_game_filenames():
         names.update(face['filename'] for face in faces)
     for files in trophy_files.values():          # a competition's own trophy
         names.update(files.values())
+    from backend import pitch_logos
+    names.add(pitch_logos.FILENAME)              # a stadium's own logo layout
     return names
 
 # Removes what a previous match left in the game folder, so nothing stale

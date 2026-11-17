@@ -8,6 +8,7 @@
  "controllers": {
   "1": "team_A"
  },
+ "crowd": null,
  "difficulty": 2,
  "environment": "day",
  "flags": "",
@@ -19,6 +20,7 @@
  "kick_assist": false,
  "kick_off": "home",
  "laws": {
+  "penalty_touch_end": true,
   "rule_22m": true,
   "rule_5022": true
  },
@@ -28,7 +30,9 @@
  "mission_nis": [],
  "mission_state": {},
  "objectives": [],
+ "own_pitch": null,
  "pads": "stock:standard/stadium_australia",
+ "pitch_logo_layout": null,
  "pitch_logos": "",
  "pitch_texture": "default",
  "posts": "stock:standard/stadium_australia",
@@ -46,6 +50,7 @@
  "stadium_flags": null,
  "stadium_name": null,
  "stadium_screen": null,
+ "stadium_stripes": null,
  "team_A": {
   "banners": "teams/England/banners/banner_%.png",
   "kit_back": "teams/England/kits_2024/home_back/home_back_%.png",

@@ -60,17 +60,13 @@ SCHEMA = 1
 ID_PREFIX = "my_"
 FORMATS = ["league", "groups", "cup"]
 FORMAT_LABELS = {"league": "League", "groups": "Pools + knockouts", "cup": "Knockout cup"}
-FORMAT_BLURBS = {
-    "league": "One table. Everyone plays everyone, then optional play-offs.",
-    "groups": "Pools first, the best of each go through to a knockout bracket.",
-    "cup": "Straight knockout from the first round. Lose and you're out.",
-}
+FORMAT_SHORT = {"league": "League", "groups": "Pools", "cup": "Cup"}
+FORMAT_BLURBS = {"league": "One table", "groups": "Then knockouts", "cup": "Straight knockout"}
 CUP_SIZES = [2, 4, 8, 16, 32]
 LEAGUE_PLAYOFFS = [0, 2, 4, 6, 8]
 PLAYOFF_LABELS = {0: "none", 2: "top 2: a final", 4: "top 4: semi-finals",
                   6: "top 6: top two get a bye", 8: "top 8: quarter-finals"}
-SEEDINGS = {"cross": "pool winner v other pool's runner-up", "ranked": "best record v worst",
-            "listed": "as listed in the draw"}
+SEEDINGS = {"cross": "winner v runner-up", "ranked": "best v worst", "listed": "as listed"}
 
 POINTS_PRESETS = {
     "bonus": {"label": "Bonus points (4-2-0, try and losing bonus)",
@@ -86,7 +82,7 @@ POINTS_PRESETS = {
     "no_bonus": {"label": "4-2-0, no bonus points",
                  "win": 4, "draw": 2, "loss": 0, "try_bonus": "none", "losing_bonus": 0, "grand_slam": 0},
 }
-TRY_BONUS = {"none": "no try bonus", "4tries": "4 tries or more", "3more": "3 tries more than the opponent"}
+TRY_BONUS = {"none": "none", "4tries": "4 tries", "3more": "3 tries more"}
 TIEBREAKERS = {
     "head_to_head": "Head to head", "points_diff": "Points difference", "tries_diff": "Tries difference",
     "points_for": "Points scored", "tries_for": "Tries scored", "wins": "Matches won",
@@ -103,8 +99,7 @@ DISCIPLINE_PRESETS = {
                 "rules": {"red_ban": [1, 2], "yellow_accumulation": 0, "yellow_ban": 1,
                           "citing_chance": 0.0}},
 }
-KNOCKOUT_DRAWS = {"tries_then_kicks": "most tries, then a kicking contest",
-                  "kicks": "a kicking contest"}
+KNOCKOUT_DRAWS = {"tries_then_kicks": "most tries, then kicks", "kicks": "kicks"}
 MATCH_TYPES = {"exhibition": "Standard", "world_cup": "World Cup", "six_nations": "Six Nations",
                "tri_nations": "Tri-Nations", "ten_nations": "Ten Nations", "european_cup": "European Cup",
                "super_14": "Super Rugby", "premiership": "Premiership"}
@@ -142,7 +137,7 @@ def normalize(design) -> dict:
     the default, so a hand-edited file never breaks the editor."""
     d = copy.deepcopy(DEFAULTS)
     for k, v in (design or {}).items():
-        if k in d or k == "id":
+        if k in d or k in ("id", "base", "team_swaps"):
             d[k] = copy.deepcopy(v)
     if d["format"] not in FORMATS:
         d["format"] = "league"
@@ -166,8 +161,9 @@ def normalize(design) -> dict:
         d["start"] = DEFAULTS["start"]
     d["venues"] = [str(v) for v in d["venues"] or []]
     d["final_stadium"] = str(d["final_stadium"] or "")
+    discipline = list(DISCIPLINE_PRESETS) + ([ORIGINAL] if d.get("base") else [])
     for key, allowed in (("venue", ("home", "neutral")), ("knockout_venue", ("home", "neutral")),
-                         ("discipline", DISCIPLINE_PRESETS), ("knockout_draw", KNOCKOUT_DRAWS),
+                         ("discipline", discipline), ("knockout_draw", KNOCKOUT_DRAWS),
                          ("match_type", MATCH_TYPES)):
         if d[key] not in allowed:
             d[key] = DEFAULTS[key]
@@ -342,7 +338,7 @@ def compile_template(design, tid=None, _describe=True) -> dict:
         "description": d["description"] or (describe_short(d) if _describe else ""),
         "order": 1, "match_type": d["match_type"], "venue": d["venue"],
         "venues": list(d["venues"]), "points": points, "tiebreakers": list(d["tiebreakers"]),
-        "discipline": copy.deepcopy(DISCIPLINE_PRESETS[d["discipline"]]["rules"]),
+        "discipline": copy.deepcopy(DISCIPLINE_PRESETS.get(d["discipline"], DISCIPLINE_PRESETS["standard"])["rules"]),
         "knockout_draw": d["knockout_draw"], "trophy_lift": d["trophy_lift"],
         "default_options": dict(d["options"], difficulty="pro", cards=True, sim_variance=1.0,
                                 injury_rate=1.0, injury_duration=1.0),
@@ -420,19 +416,18 @@ def structure(design) -> list:
     legs_txt = "home and away" if d["legs"] == 2 else "once"
     if fmt == "league":
         n = len(all_teams(d))
-        out.append({"kind": "table", "title": "League",
-                    "detail": f"{n} teams, everyone plays everyone {legs_txt}",
+        out.append({"kind": "table", "title": "League", "detail": f"{n} teams · {legs_txt}",
                     "matches": round_robin_matches(n, d["legs"])})
     elif fmt == "groups":
         sizes = [len(g["teams"]) for g in d["groups"]]
         same = len(set(sizes)) == 1
         size_txt = f"{len(sizes)} pools of {sizes[0]}" if same else f"{len(sizes)} pools"
-        go = f"top {d['qualify']} go through" if d["qualify"] > 1 else "the winners go through"
+        go = f"top {d['qualify']} through" if d["qualify"] > 1 else "winners through"
         if d["best_extra"]:
-            place = {1: "runners-up", 2: "thirds", 3: "fourths"}.get(d["qualify"], "next")
-            go += f" + the {d['best_extra']} best {place}"
+            place = {1: "runners-up", 2: "thirds", 3: "fourths"}.get(d["qualify"], "of the rest")
+            go += f" + {d['best_extra']} best {place}"
         out.append({"kind": "table", "title": "Pool stage",
-                    "detail": f"{size_txt}, played {legs_txt}; {go}",
+                    "detail": f"{size_txt} · {legs_txt} · {go}",
                     "matches": sum(round_robin_matches(s, d["legs"]) for s in sizes)})
     tpl = compile_template(d, "preview", _describe=False)
     for spec in tpl["stages"]:
@@ -440,13 +435,13 @@ def structure(design) -> list:
             continue
         for rnd in spec.get("rounds", []):
             ties = rnd.get("ties", [])
-            detail = (f"{len(ties)} games" if len(ties) > 1 else "1 game")
+            detail = "one game" if len(ties) == 1 else f"{len(ties)} games"
             if rnd.get("final") and d["final_stadium"]:
-                detail += " · at a set stadium"
+                detail = "one game · set stadium"
             elif rnd.get("venue") == "neutral":
-                detail += " · neutral ground"
-            elif ties:
-                detail += " · the better seed at home"
+                detail += " · neutral"
+            else:
+                detail += " · better seed hosts"
             out.append({"kind": "final" if rnd.get("final") else "round", "title": rnd["name"],
                         "detail": detail, "matches": len(ties)})
     return out
@@ -535,9 +530,6 @@ def problems(ds, design) -> list:
             out.append(("groups", f"A knockout cup needs 2, 4, 8, 16 or 32 teams "
                                   f"({len(teams)} now; {nearest} is closest)", "error"))
     out += _bracket_problems(d)
-    if d["venue"] == "neutral" and not d["venues"] and fmt != "cup":
-        out.append(("venues", "No stadium chosen for neutral games: every stadium is used in turn",
-                    "info"))
     if not out or all(sev != "error" for _k, _m, sev in out):
         tpl = compile_template(d, "check")
         from .engine import default_participants
@@ -630,7 +622,7 @@ TEAM_SOURCES = {"internationals": "International teams", "clubs": "Club teams", 
 
 def teams_from_source(ds, source, season) -> list:
     """Team ids with a full squad for `season`: internationals, clubs, every
-    team, or one data category ("cat:Top 14")."""
+    team, or data categories ("cat:Top 14", several: "cat:Top 14|Premiership")."""
     from .engine import pick_season, usable_squad
     out = []
     for tid, seasons in ds.teams.items():
@@ -643,24 +635,63 @@ def teams_from_source(ds, source, season) -> list:
             continue
         if source == "clubs" and kind == "international":
             continue
-        if source.startswith("cat:") and info.get("category") != source[4:]:
+        if source.startswith("cat:") and info.get("category") not in source[4:].split("|"):
             continue
         if len(usable_squad(ds, tid, s)) >= 22:
             out.append(tid)
     return out
 
 
-def auto_fill(ds, design, source, size, rng=None) -> dict:
+def team_strength(ds, tid, season) -> float:
+    """How good the team's squad is for `season` (mean of its best 23 players'
+    overall ratings), to pick the best teams of a source."""
+    from app.ratings import position_overall
+    from .engine import pick_season, usable_squad
+    seasons = ds.teams.get(tid) or {}
+    if not seasons:
+        return 0.0
+    season = season or "0"
+    rates = []
+    for p in usable_squad(ds, tid, pick_season(seasons, season)):
+        by_season = ds.players[p]["stats"]
+        stats = by_season.get(pick_season(by_season, season)) if isinstance(by_season, dict) else None
+        if isinstance(stats, dict):
+            rates.append(position_overall(stats) or 0)
+    rates = sorted(rates, reverse=True)[:23]
+    return sum(rates) / len(rates) if rates else 0.0
+
+
+def auto_fill(ds, design, source, size, rng=None, best=False) -> dict:
     """The design with its groups topped up to `size` teams each (a league
-    or cup: `size` in all) from `source`, at random, never a team twice."""
+    or cup: `size` in all) from `source`, never a team twice. `best`: the
+    strongest teams, dealt pot by pot like a seeded draw (a cup's order is
+    its seeding); otherwise at random."""
     d = normalize(design)
     rng = rng or random.Random()
     taken = set(all_teams(d))
     pool = [t for t in teams_from_source(ds, source, d["season"]) if t not in taken]
     rng.shuffle(pool)
-    for g in d["groups"]:
-        while len(g["teams"]) < size and pool:
-            g["teams"].append(pool.pop())
+    needs = [max(0, size - len(g["teams"])) for g in d["groups"]]
+    if best:
+        pool.sort(key=lambda t: -team_strength(ds, t, d["season"]))
+    pool = pool[:sum(needs)]
+    if not best or d["format"] == "league":
+        pots = [pool]
+    elif d["format"] == "cup":
+        pots = [[t] for t in pool]
+    else:
+        pots = [pool[i:i + len(d["groups"])] for i in range(0, len(pool), len(d["groups"]))]
+    for pot in pots:
+        if best:
+            rng.shuffle(pot)
+        for tid in pot:
+            open_groups = [i for i, g in enumerate(d["groups"]) if len(g["teams"]) < size]
+            if not open_groups:
+                break
+            if d["format"] == "groups" and best:
+                # the emptiest pool first: one team of each pot per pool
+                open_groups.sort(key=lambda i: len(d["groups"][i]["teams"]))
+            d["groups"][open_groups[0]]["teams"].append(tid)
     return d
 
 
@@ -730,12 +761,12 @@ def _by_names(ds, names, season):
 
 
 STARTERS = [
-    ("blank", "Blank", "Start from nothing"),
-    ("six_nations", "Six-team championship", "Six nations, once each, bonus points and a Grand Slam"),
-    ("world_cup", "World Cup", "20 teams in 4 pools, quarter-finals, bronze final"),
-    ("club_league", "Club league + play-offs", "12 clubs home and away, top 4 to the semi-finals"),
-    ("champions_cup", "European cup", "5 pools of 4: the winners and the 3 best runners-up"),
-    ("knockout", "Knockout cup", "8 teams, seeded, one game each round"),
+    ("blank", "Blank", "league", ""),
+    ("six_nations", "Six Nations", "league", "6 nations, bonus points"),
+    ("world_cup", "World Cup", "groups", "20 teams, 4 pools, quarter-finals"),
+    ("club_league", "Club league", "league", "12 clubs, home and away, play-offs"),
+    ("champions_cup", "European cup", "groups", "5 pools of 4, 3 best runners-up"),
+    ("knockout", "Knockout cup", "cup", "8 teams, seeded"),
 ]
 
 
@@ -769,8 +800,9 @@ def starter(ds, key, season) -> dict:
 def starter_fill_target(key) -> tuple:
     """(source, teams per group) the AUTO-FILL of a starter suggests."""
     return {"six_nations": ("internationals", 6), "world_cup": ("internationals", 5),
-            "club_league": ("clubs", 12), "champions_cup": ("clubs", 4),
-            "knockout": ("all", 8)}.get(key, ("all", 8))
+            "club_league": ("cat:Premiership", 12),
+            "champions_cup": ("cat:Top 14|Premiership|URC|Pro14", 4),
+            "knockout": ("internationals", 8)}.get(key, ("all", 8))
 
 
 # ── storage ───────────────────────────────────────────────────────────────
@@ -846,3 +878,268 @@ def template_from_file(tpl) -> dict:
     except Exception as e:      # never lose a tournament to a compile bug
         log.warning("custom tournament %s: %s", tpl.get("id"), e)
         return tpl
+
+
+# ── editing the data's own competitions ───────────────────────────────────
+# A competition of the data (Six Nations 2024, Top 14...) keeps its real
+# shape, calendar and grounds; what the user changes is kept apart, one file
+# per template in user_data/custom_tournaments/edits/<id>.json, and laid over
+# the template when formats.load_templates reads it. Removing the file gives
+# the original back. An edit holds only what differs:
+#
+#   name, description, points (template form), tiebreakers, discipline (rules),
+#   knockout_draw, default_options (subset), match_type, variant, branding,
+#   branding_season, trophy_lift, team_swaps {original id: new id}
+
+EDIT_KEYS = ("name", "description", "points", "tiebreakers", "discipline", "knockout_draw",
+             "options", "match_type", "variant", "branding", "trophy_lift", "team_swaps")
+ORIGINAL = "original"           # discipline as the competition has it
+
+
+def edits_directory() -> str:
+    return os.path.join(directory(), "edits")
+
+
+def load_edits() -> dict:
+    """{template id: edit} of every saved edit."""
+    out = {}
+    folder = edits_directory()
+    if not os.path.isdir(folder):
+        return out
+    for name in sorted(os.listdir(folder)):
+        if not name.endswith(".json"):
+            continue
+        try:
+            with open(os.path.join(folder, name), "r", encoding="utf-8") as fh:
+                data = json.load(fh)
+        except (OSError, ValueError) as e:
+            log.warning("competition edit %s: %s", name, e)
+            continue
+        if isinstance(data, dict):
+            out[name[:-5]] = data
+    return out
+
+
+def save_edit(tid, edit) -> None:
+    if not edit:
+        delete_edit(tid)
+        return
+    os.makedirs(edits_directory(), exist_ok=True)
+    path = os.path.join(edits_directory(), f"{tid}.json")
+    with open(path + ".tmp", "w", encoding="utf-8") as fh:
+        json.dump(edit, fh, indent=1, ensure_ascii=False)
+    os.replace(path + ".tmp", path)
+
+
+def delete_edit(tid) -> None:
+    try:
+        os.remove(os.path.join(edits_directory(), f"{tid}.json"))
+    except FileNotFoundError:
+        pass
+
+
+def points_to_template(p) -> dict:
+    points = {"win": p["win"], "draw": p["draw"], "loss": p["loss"]}
+    if p["try_bonus"] == "4tries":
+        points["try_bonus"] = {"tries": 4}
+    elif p["try_bonus"] == "3more":
+        points["try_bonus"] = {"margin": 3}
+    if p["losing_bonus"]:
+        points["losing_bonus"] = {"margin": p["losing_bonus"]}
+    if p["grand_slam"]:
+        points["grand_slam"] = p["grand_slam"]
+    return points
+
+
+def points_from_template(points) -> dict:
+    points = points or {}
+    tb = points.get("try_bonus") or {}
+    p = {"win": _int(points.get("win"), 4), "draw": _int(points.get("draw"), 2),
+         "loss": _int(points.get("loss"), 0),
+         "try_bonus": "4tries" if tb.get("tries") else ("3more" if tb.get("margin") else "none"),
+         "losing_bonus": _int((points.get("losing_bonus") or {}).get("margin"), 0),
+         "grand_slam": _int(points.get("grand_slam"), 0)}
+    preset = next((k for k, v in POINTS_PRESETS.items()
+                   if all(v[f] == p[f] for f in p)), "custom")
+    return dict(p, preset=preset)
+
+
+def _swap_ids(node, swaps):
+    """Team ids replaced in participants lists and fixtures (home / away,
+    a tie's plain team ids); a swapped fixture loses its real score."""
+    if isinstance(node, list):
+        return [swaps.get(x, x) if isinstance(x, str) else _swap_ids(x, swaps) for x in node]
+    if isinstance(node, dict):
+        out = {}
+        swapped = False
+        for k, v in node.items():
+            if k in ("home", "away") and isinstance(v, str) and v in swaps:
+                out[k] = swaps[v]
+                swapped = True
+            elif k in ("history", "_sources"):
+                out[k] = v
+            else:
+                out[k] = _swap_ids(v, swaps)
+        if swapped:
+            out.pop("real_score", None)
+        return out
+    return node
+
+
+def apply_edit(tpl, edit) -> dict:
+    """The template with an edit laid over it."""
+    if not edit:
+        return tpl
+    t = copy.deepcopy(tpl)
+    for k in ("name", "description", "tiebreakers", "knockout_draw", "match_type", "variant",
+              "trophy_lift"):
+        if k in edit:
+            t[k] = copy.deepcopy(edit[k])
+    if "points" in edit:
+        t["points"] = points_to_template(dict(points_from_template({}), **edit["points"]))
+    if edit.get("discipline") in DISCIPLINE_PRESETS:
+        t["discipline"] = copy.deepcopy(DISCIPLINE_PRESETS[edit["discipline"]]["rules"])
+    if isinstance(edit.get("options"), dict):
+        t["default_options"] = dict(t.get("default_options") or {}, **edit["options"])
+    if "branding" in edit:
+        brand, _, season = str(edit["branding"] or "").partition(":")
+        if brand:
+            t["branding"] = brand
+            if season:
+                t["branding_season"] = season
+            else:
+                t.pop("branding_season", None)
+        else:
+            t.pop("branding", None)
+            t.pop("branding_season", None)
+    swaps = {str(a): str(b) for a, b in (edit.get("team_swaps") or {}).items() if a and b and a != b}
+    if swaps:
+        t["participants"] = _swap_ids(t.get("participants") or {}, swaps)
+        t["stages"] = _swap_ids(t.get("stages") or [], swaps)
+    t["edited"] = True
+    return t
+
+
+def apply_edits(templates) -> dict:
+    """formats.load_templates' result with the user's edits laid over it."""
+    edits = load_edits()
+    return {tid: apply_edit(tpl, edits.get(tid)) if not tpl.get("custom") else tpl
+            for tid, tpl in templates.items()}
+
+
+def _discipline_key(rules):
+    return next((k for k, v in DISCIPLINE_PRESETS.items() if v["rules"] == rules), ORIGINAL)
+
+
+def design_of_template(tid, tpl) -> dict:
+    """A data competition shown in the editor's words (its shape is only
+    shown, never changed); `base` names the template."""
+    from .engine import default_participants
+    stages = tpl.get("stages") or []
+    rr = [s for s in stages if s.get("kind") == "round_robin"]
+    ko = [s for s in stages if s.get("kind") == "knockout"]
+    season = str(tpl.get("season") or "")
+    parts = default_participants(tpl, season)
+    groups = []
+    if stages:
+        first = stages[0]
+        names = first.get("group_names") or {}
+        for gid, teams in (parts.get(first["id"]) or {}).items():
+            groups.append({"name": names.get(gid, f"Pool {gid}"), "teams": list(teams)})
+    fmt = "cup" if not rr else ("groups" if len(groups) > 1 else "league")
+    cat = tpl.get("category")
+    opts = tpl.get("default_options") or {}
+    branding = str(tpl.get("branding") or "")
+    if branding and tpl.get("branding_season"):
+        branding += f":{tpl['branding_season']}"
+    d = {
+        "name": str(tpl.get("name") or tid), "description": str(tpl.get("description") or ""),
+        "format": fmt, "season": season, "groups": groups or [{"name": "", "teams": []}],
+        "teams_from": "category" if cat and fmt == "league" else "pick",
+        "category": ", ".join(cat) if isinstance(cat, list) else str(cat or ""),
+        "legs": (rr[0].get("legs") if rr else 1) or 1,
+        "points": points_from_template(tpl.get("points")),
+        "tiebreakers": [t for t in tpl.get("tiebreakers") or [] if t in TIEBREAKERS],
+        "discipline": _discipline_key(tpl.get("discipline")),
+        "knockout_draw": tpl.get("knockout_draw") or "tries_then_kicks",
+        "options": {k: opts[k] for k in DEFAULTS["options"] if k in opts},
+        "match_type": tpl.get("match_type") or "exhibition",
+        "variant": str(tpl.get("variant") or ""), "branding": branding,
+        "trophy_lift": bool(tpl.get("trophy_lift", True)),
+        "venue": tpl.get("venue") or "home",
+    }
+    d = normalize(d)
+    d["discipline"] = _discipline_key(tpl.get("discipline"))
+    if ko and fmt != "cup":
+        d["playoff_teams"] = 0
+    d["id"] = tid
+    d["base"] = tid
+    d["team_swaps"] = {}
+    return d
+
+
+def edit_from_design(tid, tpl, design) -> dict:
+    """What `design` (a data competition as the editor holds it) changes in
+    the original template `tpl`."""
+    orig = design_of_template(tid, tpl)
+    out = {}
+    for k in EDIT_KEYS:
+        if k == "team_swaps":
+            swaps = {a: b for a, b in (design.get("team_swaps") or {}).items() if a != b}
+            if swaps:
+                out[k] = swaps
+            continue
+        new, old = design.get(k), orig.get(k)
+        if k == "points":
+            new = {f: v for f, v in (new or {}).items() if f != "preset"}
+            old = {f: v for f, v in old.items() if f != "preset"}
+        if new != old:
+            out[k] = copy.deepcopy(new)
+    return out
+
+
+def swap_team(design, old_now, new) -> dict:
+    """`design` (a data competition) with the team `old_now` (as it plays
+    now, maybe already a swap) replaced by `new`."""
+    d = copy.deepcopy(design)
+    swaps = d.setdefault("team_swaps", {})
+    original = next((a for a, b in swaps.items() if b == old_now), old_now)
+    if new == original:
+        swaps.pop(original, None)
+    else:
+        swaps[original] = new
+    for g in d["groups"]:
+        g["teams"] = [new if t == old_now else t for t in g["teams"]]
+    return d
+
+
+def template_structure(tpl) -> list:
+    """custom.structure's blocks for any template (a data competition)."""
+    from .engine import default_participants
+    parts = default_participants(tpl, tpl.get("season") or "")
+    out = []
+    for spec in tpl.get("stages") or []:
+        if spec.get("kind") == "round_robin":
+            groups = parts.get(spec["id"]) or {}
+            sizes = [len(ts) for ts in groups.values()]
+            legs = spec.get("legs") or 1
+            if spec.get("fixtures"):
+                n_games = len(spec["fixtures"])
+            else:
+                n_games = sum(round_robin_matches(s, legs) for s in sizes)
+            if len(sizes) > 1:
+                detail = f"{len(sizes)} pools · " + ("home and away" if legs == 2 else "once")
+            elif sizes:
+                detail = f"{sizes[0]} teams · " + ("home and away" if legs == 2 else "once")
+            else:
+                detail = f"every {tpl.get('category') or 'club'} club"
+            out.append({"kind": "table", "title": spec.get("name") or "Table", "detail": detail,
+                        "matches": n_games if sizes or spec.get("fixtures") else None})
+        else:
+            for rnd in spec.get("rounds") or []:
+                ties = rnd.get("ties") or []
+                out.append({"kind": "final" if rnd.get("final") else "round",
+                            "title": rnd.get("name") or rnd.get("id", ""),
+                            "detail": "one game" if len(ties) == 1 else f"{len(ties)} games",
+                            "matches": len(ties)})
+    return out

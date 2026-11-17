@@ -11,6 +11,7 @@ import os
 import random
 
 from backend import game_specific_variables as gsv
+from backend import pitch_stripes
 from shared.config import config
 from shared import shirt_names
 from app import appearance, competition_branding, difficulty, dressing
@@ -351,6 +352,52 @@ def _stadium_screen(cfg, stadium_files, centre_logo):
     return {"scene": game_path, "tag": tag, "centre_logo": centre_logo or ""}
 
 
+def _stadium_stripes(cfg, stadium_files):
+    """The custom stadium's own pitch stripes for this match's environment
+    (backend pitch_stripes): {"scene": game path of the scene pack, "values":
+    {"opacity", "brightness"}}; None when it keeps the pack's own."""
+    info = (cfg.stadium or {}).get("data") or {}
+    values = pitch_stripes.clean(((info.get("stripes") or {}).get(cfg.environment)))
+    scene = (info.get("scenes") or {}).get(cfg.environment)
+    game_path = next((g for g, f in stadium_files.items() if f == scene), None) if scene else None
+    return {"scene": game_path, "values": values} if values and game_path else None
+
+
+def _own_pitch(cfg, stadium_files):
+    """The mod's own pitch of this match (backend pitches): {"name", "pack"
+    (file in mod data), "scene" (game path of the scene pack of the
+    environment), "stadium" (the slot's FileName), "environment"}; None on
+    one of the game's."""
+    from backend import pitches
+    name = cfg.pitch_texture
+    info = (cfg.stadium or {}).get("data") or {}
+    slot = gsv.STADIUM_SLOTS.get(info.get("game_id"))
+    if not pitches.is_own(name) or not slot:
+        return None
+    env = cfg.environment
+    scene = slot["scenes"].get(env) or f"stadiums/{slot['file']}.{env}"
+    return {"name": name, "pack": os.path.join("pitches", str(name).lower() + ".big"),
+            "scene": scene, "stadium": slot["file"], "environment": env}
+
+
+def _crowd(cfg):
+    """The crowd of this match (backend crowd): {"scene" (game path of the
+    scene pack of the environment), "size", "colours" (bool), "mood"}; None
+    when it is the game's own."""
+    if cfg.crowd_size == "full" and not cfg.crowd_colours and cfg.crowd_mood == "normal":
+        return None
+    info = (cfg.stadium or {}).get("data") or {}
+    try:
+        slot = gsv.STADIUM_SLOTS.get(int(info.get("game_id")))
+    except (TypeError, ValueError):
+        slot = None
+    if not slot:
+        return None
+    env = cfg.environment
+    return {"scene": slot["scenes"].get(env) or f"stadiums/{slot['file']}.{env}",
+            "size": cfg.crowd_size, "colours": bool(cfg.crowd_colours), "mood": cfg.crowd_mood}
+
+
 def _stadium_flags(cfg):
     """Any World Cup match left on "stock" (quick match, tournament,
     challenge) gets the World Cup stadium dressing; an explicit off is kept."""
@@ -422,6 +469,7 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
     if cfg.stadium and cfg.stadium.get("stadium_id"):
         stadium_id = int(cfg.stadium["stadium_id"])
     stadium_files, stadium_name = _custom_stadium(cfg)
+    own_pitch = _own_pitch(cfg, stadium_files)
 
     home_count, away_count = cfg.controller_counts()
     user_controlled = 1 if home_count > 0 else 2
@@ -507,13 +555,15 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
             for slot_id, c in cfg.controllers.items()
         },
         "lock_controllers": cfg.lock_controllers,
-        "laws": {"rule_5022": cfg.law_5022, "rule_22m": cfg.law_22m},
+        "laws": {"rule_5022": cfg.law_5022, "rule_22m": cfg.law_22m,
+                 "penalty_touch_end": cfg.law_penalty_touch},
         "stadium": stadium_id,
         # a custom stadium: game path -> file (mod data) put over its slot's,
         # and the name it shows in the game ({} / None: the stock stadium)
         "stadium_files": stadium_files,
         "stadium_name": stadium_name,
         "stadium_screen": _stadium_screen(cfg, stadium_files, competition_logo),
+        "stadium_stripes": _stadium_stripes(cfg, stadium_files),
         "pads": dressing_refs["pads"],
         "posts": dressing_refs["posts"],
         "adboards": dressing_refs["ads"],
@@ -523,7 +573,9 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
         # to its own "left" default regardless of the picker.
         "home_team_side": home_team_side,
         "environment": cfg.environment,
-        "pitch_texture": cfg.pitch_texture,
+        "pitch_texture": "default" if own_pitch else cfg.pitch_texture,   # the game takes only its own names
+        "own_pitch": own_pitch,
+        "crowd": _crowd(cfg),
         "rain": cfg.rain,
         "ball": selected_ball,
         "banners": selected_banners,
@@ -532,6 +584,9 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
         # match_data["pitch_logos"] (plural); the singular key here meant
         # this was silently a no-op for every match until now.
         "pitch_logos": pitch_logo,
+        # where the logos go and how many (the stadium's "pitch_logos",
+        # backend/pitch_logos): None = the game's own layout
+        "pitch_logo_layout": ((cfg.stadium or {}).get("data") or {}).get("pitch_logos"),
         "flags": _team_asset_path(ds, cfg.home.team_id, home_info.get("flags", "")),
         "referee": {"face": "", "kit_back": "", "kit_front": ""},
         # ── Advanced/.mis fields — see the comment above and MatchConfig's

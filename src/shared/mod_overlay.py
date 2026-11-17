@@ -63,7 +63,8 @@ Restart the program after adding or changing files.
 
 players/
   baselayers/   body base layers (.png)
-  boots/        boot textures (.png)
+  boots/        boot textures (.png); boots.json sorts them into the
+                picker's sections (brands), the ones it lacks are "Custom"
   gloves/       glove textures (.png)
   heads/        player heads (.big)
   skins/        player skins (.png)

@@ -1,7 +1,7 @@
 """
 screens/tournament/dashboard.py — The running tournament.
 
-The header (the competition's logo, the tournament's name) over five tabs:
+The header (the competition's logo, the tournament's name) over seven tabs:
 
   Home         the next match as a broadcast-style hero card with ONE
                primary action (PLAY MATCH / CONTINUE / SIMULATE TO END) and
@@ -11,6 +11,8 @@ The header (the competition's logo, the tournament's name) over five tabs:
   Competition  Table / Fixtures / Bracket
   Stats        leader boards, team of the tournament on a pitch
   News         every headline, by matchday
+  Rules        the laws (50/22, 22m, 80' penalty touch), points, tie-breaks, bans
+  Settings     the match options, changeable for the rest of the tournament
 
 Home stays glanceable: expert mode's actions (simulate your match,
 simulate to the end) sit in the MORE menu, only shown in expert mode.
@@ -30,7 +32,7 @@ from PyQt5.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout, QSt
 
 from app.input import KEYMAP, Action
 from app.screen_base import Screen
-from app.tournament import calendar, engine, report, standings, stats, weather
+from app.tournament import calendar, engine, report, rules, standings, stats, weather
 from shared.user_prefs import user_prefs
 from ui import motion
 from ui.broadcast import Card, HintBar, display_label, eyebrow_label, label_css, page_header
@@ -51,8 +53,8 @@ from .pitch import LineupPitch
 from .prefs import PrefsPanel
 from .squad import TournamentSquadScreen
 
-TABS = ["Home", "Squad", "Competition", "Stats", "News", "Settings"]
-HOME, TEAM, COMP, STATS, NEWS, PREFS = range(len(TABS))
+TABS = ["Home", "Squad", "Competition", "Stats", "News", "Rules", "Settings"]
+HOME, TEAM, COMP, STATS, NEWS, RULES, PREFS = range(len(TABS))
 VIEWS = ["Table", "Fixtures", "Bracket"]
 TABLE, FIXTURES, BRACKET = range(len(VIEWS))
 
@@ -181,6 +183,7 @@ class TournamentDashboardScreen(Screen):
         self._build_competition(self.pages[COMP].layout_)
         self.stats_holder = self.pages[STATS].layout_
         self.news_holder = self.pages[NEWS].layout_
+        self.rules_holder = self.pages[RULES].layout_
         self._build_prefs(self.pages[PREFS].layout_)
 
         self.hints = HintBar()
@@ -538,6 +541,8 @@ class TournamentDashboardScreen(Screen):
             self._refresh_stats()
         elif i == NEWS:
             self._refresh_news()
+        elif i == RULES:
+            self._refresh_rules()
         elif i == PREFS:
             self.prefs.set_values(self.t.options)
         self._update_hints()
@@ -1086,7 +1091,7 @@ class TournamentDashboardScreen(Screen):
         v.addWidget(Note("Changes apply from your next match.", color=FG_TERTIARY))
         # MATCH only: the squad rules (injuries, fatigue, suspensions) are
         # fixed for the whole tournament
-        self.prefs = PrefsPanel(groups=("match",))
+        self.prefs = PrefsPanel(groups=("match", "crowd"))
         self.prefs.changed.connect(self._pref_changed)
         for r in self.prefs.focus_rows():
             self.focus.register(r)
@@ -1098,6 +1103,31 @@ class TournamentDashboardScreen(Screen):
             return
         self.t.options[key] = value
         self.session.save()
+
+    def _refresh_rules(self):
+        clear_layout(self.rules_holder)
+        grid = QGridLayout()
+        grid.setHorizontalSpacing(18)
+        grid.setVerticalSpacing(18)
+        for i, (title, lines) in enumerate(rules.sections(self.t)):
+            w, v = section(title)
+            card = Card(translucent=True)
+            cv = QVBoxLayout(card)
+            cv.setContentsMargins(18, 14, 18, 14)
+            cv.setSpacing(8)
+            if title in rules.INTROS:
+                cv.addWidget(Note(rules.INTROS[title], color=FG_TERTIARY))
+            for label, value in lines:
+                row = QHBoxLayout()
+                row.addWidget(eyebrow_label(label, color=FG_SECONDARY, size=11), stretch=1)
+                row.addWidget(display_label(value, 13, QFont.Bold, track=0.5, upper=False))
+                cv.addLayout(row)
+                if title == "Laws":
+                    cv.addWidget(Note(rules.NOTES[label], color=FG_TERTIARY))
+            v.addWidget(card)
+            grid.addWidget(w, i // 2, i % 2, Qt.AlignTop)
+        self.rules_holder.addLayout(grid)
+        self.rules_holder.addStretch(1)
 
     def _refresh_news(self):
         clear_layout(self.news_holder)

@@ -68,6 +68,7 @@ def test_quick_match_writes_every_game_file(ds, run_match, golden):
     ini = open(files["rugby08patches.ini"]).read()
     assert "controller_lock = 0" in ini
     assert "rule_5022 = 1" in ini and "rule_22m = 1" in ini      # quick match: current laws
+    assert "penalty_touch_end = 1" in ini and "cpu_penalty_touch = 1" in ini
     assert "lineout_jump = 0" in ini                               # Settings default: stock lineout
     # golden for the files generated from the match (not the static files
     # copied as they are, which change whenever a DLL is updated)

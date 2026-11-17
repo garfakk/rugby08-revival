@@ -56,7 +56,8 @@
           "injury_rate": 1.0,
           "injury_duration": 1.0,
           "law_5022": false,
-          "law_22m": true
+          "law_22m": true,
+          "law_penalty_touch": false
         },
         "stages": [
           {
@@ -271,7 +272,8 @@
           "injury_rate": 1.0,
           "injury_duration": 1.0,
           "law_5022": false,
-          "law_22m": true
+          "law_22m": true,
+          "law_penalty_touch": false
         },
         "stages": [
           {
@@ -486,7 +488,8 @@
           "injury_rate": 1.0,
           "injury_duration": 1.0,
           "law_5022": false,
-          "law_22m": true
+          "law_22m": true,
+          "law_penalty_touch": false
         },
         "stages": [
           {
@@ -692,7 +695,8 @@
           "injury_rate": 1.0,
           "injury_duration": 1.0,
           "law_5022": false,
-          "law_22m": true
+          "law_22m": true,
+          "law_penalty_touch": false
         },
         "stages": [
           {

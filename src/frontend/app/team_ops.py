@@ -4,8 +4,10 @@ app/team_ops.py — operations on a team's data, with no Qt
 Pure functions over the team JSON shape so they can be tested directly and
 applied through an EditSession (`session.apply(label, lambda w: op(w, ...))`).
 
-The squad model: `players` is a plain list with no holes. Index i wears shirt
-i+1; 0-14 start, 15-21 are the bench, 22+ are extras the game does not load.
+The squad model: `players` is a list. Index i wears shirt i+1; 0-14 start,
+15-21 are the bench, 22+ are extras the game does not load. A slot nobody
+holds yet is "" (the editor lets a squad be filled in any order), never
+trailing: such a squad is incomplete and the game does not use it.
 """
 import copy
 import os
@@ -14,7 +16,7 @@ import shutil
 
 from app.game_data import (
     SHIRT_POSITIONS, ASSET_SPECS, STARTING_XV, SQUAD_SIZE,
-    blank_kit, new_team_season, create_team_file, user_record_id, SaveError,
+    blank_kit, new_team_season, create_team_file, user_record_id, SaveError, season_errors,
 )
 from app.ratings import position_overall
 from app import variants as V
@@ -83,6 +85,17 @@ def _roster(info):
     return info["players"]
 
 
+def _trim(roster):
+    """No empty slot at the end of the list."""
+    while roster and not roster[-1]:
+        roster.pop()
+
+
+def _pad(roster, size):
+    """Empty slots up to `size` entries."""
+    roster.extend([""] * (size - len(roster)))
+
+
 def swap(info, i, j):
     """Swap shirts i and j (0-based). j past the end moves i to the end."""
     roster = _roster(info)
@@ -90,8 +103,22 @@ def swap(info, i, j):
         return
     if j >= len(roster):
         roster.append(roster.pop(i))
+        _trim(roster)
         return
     roster[i], roster[j] = roster[j], roster[i]
+    _trim(roster)
+
+
+def send_to(info, i, j):
+    """Like swap, but a shirt j past the end is that very shirt (the shirts
+    between stay empty) and i is left empty."""
+    roster = _roster(info)
+    if not (0 <= i < len(roster)):
+        return
+    if j >= len(roster):
+        _pad(roster, j + 1)
+    roster[i], roster[j] = roster[j], roster[i]
+    _trim(roster)
 
 
 def move(info, i, j):
@@ -101,23 +128,47 @@ def move(info, i, j):
         return
     pid = roster.pop(i)
     roster.insert(max(0, min(j, len(roster))), pid)
+    _trim(roster)
 
 
 def place(info, i, pid):
     """Put `pid` in shirt i. Already in the squad → the two swap. From
-    outside → he takes the shirt and the man displaced goes to the end, so
-    nobody is ever silently dropped from the squad."""
+    outside → he takes the shirt; the man displaced goes to the end, so
+    nobody is ever silently dropped from the squad. A shirt past the end
+    leaves the shirts before it empty."""
     roster = _roster(info)
     pid = str(pid)
     if pid in roster:
-        swap(info, roster.index(pid), i)
+        send_to(info, roster.index(pid), i)
         return
     if i >= len(roster):
-        roster.append(pid)
-        return
+        _pad(roster, i + 1)
     displaced = roster[i]
     roster[i] = pid
-    roster.append(displaced)
+    if displaced:
+        roster.append(displaced)
+
+
+def clear_slot(info, i):
+    """Empty shirt i (the others keep their number). Returns who was there."""
+    roster = _roster(info)
+    if not (0 <= i < len(roster)):
+        return None
+    pid = roster[i]
+    roster[i] = ""
+    _trim(roster)
+    if pid and pid not in roster:
+        _drop_roles(info, pid)
+    return pid or None
+
+
+def _drop_roles(info, pid):
+    # get, not setdefault: a variant that inherits its roles must not
+    # suddenly carry an empty set of its own
+    roles = info.get("roles") or {}
+    for key, value in list(roles.items()):
+        if str(value) == pid:
+            roles[key] = ""
 
 
 def remove(info, i):
@@ -127,18 +178,15 @@ def remove(info, i):
     if not (0 <= i < len(roster)):
         return None
     pid = roster.pop(i)
-    if pid not in roster:
-        # get, not setdefault: a variant that inherits its roles must not
-        # suddenly carry an empty set of its own
-        roles = info.get("roles") or {}
-        for key, value in list(roles.items()):
-            if str(value) == pid:
-                roles[key] = ""
+    _trim(roster)
+    if pid and pid not in roster:
+        _drop_roles(info, pid)
     return pid
 
 
 def reverse(info):
     roster = _roster(info)
+    roster[:] = [p for p in roster if p]
     roster.reverse()
 
 
@@ -283,6 +331,7 @@ def auto_sort(info, players, season):
     primary position and then the higher position-weighted overall; the bench
     follows the usual 1-2-3-4-9-10-15 cover. Extras keep their order."""
     roster = _roster(info)
+    roster[:] = [p for p in roster if p]
     if not roster:
         return 0
     before = list(roster)
@@ -459,15 +508,44 @@ def sort_seasons(seasons):
     seasons.update(ordered)
 
 
-def add_season(seasons, year, source=None, name="", team_type="club", category=""):
+def add_season(seasons, year, source=None, name="", team_type="club", group=""):
     year = str(year)
     if year in seasons:
         raise ValueError(f"season {year} already exists")
     if source is not None and source in seasons:
         seasons[year] = copy.deepcopy(seasons[source])
     else:
-        seasons[year] = new_team_season(name, team_type, category)
+        seasons[year] = new_team_season(name, team_type, group)
     sort_seasons(seasons)
+
+
+def _without_draft(info):
+    return {k: v for k, v in info.items() if k != "draft"}
+
+
+def mark_drafts(seasons, saved, players):
+    """Before a save: every season with errors gets "draft": true (the mod
+    leaves it out until it is fixed and saved again), the others lose the
+    flag. `saved`: the seasons as they are on disk — a season left as it is
+    keeps what it had, so an old season with a problem is not suddenly taken
+    out of the mod by a save of something else, unless it already was a
+    draft. Returns {season: [problems]} for the seasons now drafts."""
+    drafts = {}
+    for season, info in seasons.items():
+        if not isinstance(info, dict):
+            continue
+        before = saved.get(season)
+        if (isinstance(before, dict) and not before.get("draft")
+                and _without_draft(before) == _without_draft(info)):
+            info.pop("draft", None)
+            continue
+        problems = [m for _, m in season_errors(info, players, season)]
+        if problems:
+            info["draft"] = True
+            drafts[season] = problems
+        else:
+            info.pop("draft", None)
+    return drafts
 
 
 def delete_season(seasons, year):

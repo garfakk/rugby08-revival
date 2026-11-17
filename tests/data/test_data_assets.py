@@ -60,3 +60,20 @@ def test_kit_textures_are_packed(tid, season):
     loose = [f"{label}: {rel}" for label, key, rel in _assets(raw()[0][tid][season])
              if key in ("frontKitFile", "backKitFile") and rel.lower().endswith(".png")]
     assert not loose, loose
+
+
+def test_boots_json_places_real_boots_once():
+    """players/boots/boots.json (the boots picker's sections) names only boots
+    that exist, each one once."""
+    import json
+    from app import appearance as A
+    from conftest import REAL_DATA
+    path = os.path.join(REAL_DATA, A.BOOTS_JSON)
+    if not os.path.isfile(path):
+        pytest.skip("no boots.json in the data pack")
+    data = json.load(open(path, encoding="utf-8"))
+    listed = [v for values in data.values() for v in values]
+    assert len(listed) == len(set(listed)), "a boot listed twice"
+    missing = [v for v in listed if v not in A.BOOT_STYLES
+               and not os.path.isfile(os.path.join(REAL_DATA, v))]
+    assert not missing

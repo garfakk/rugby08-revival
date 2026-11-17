@@ -36,7 +36,7 @@ from app.game_data import (
 )
 from app.season import nearest_season, season_label
 from app.shell import present
-from app.team_browse import DEFAULT_STYLE, STYLE_IDS, TeamIndex, group_label
+from app.team_browse import DEFAULT_STYLE, STYLE_IDS, TeamIndex, group_label, info_group
 from ui import StyledButton
 from ui.player_stage import KitStage, _try_load_model
 from ui.dropdown import DropdownRow
@@ -171,10 +171,10 @@ class TeamColumn(QWidget):
         screen.focus.register(self.season_row)
         top_row.addWidget(self.season_row)
 
-        # Filters this column's own team list to one category (international
-        # sides vs. Top 14 clubs, etc.) — not a tournament/branding picker;
+        # Filters this column's own team list to one group (international
+        # sides vs. French clubs, etc.) — not a tournament/branding picker;
         # see _reload_teams / _reload_teams_for_category.
-        self.category_row = SelectorRow("category", compact=True)
+        self.category_row = SelectorRow("group", display=group_label, compact=True)
         self.category_row.setMinimumWidth(150)
         self.category_row.setMaximumWidth(184)
         self.category_row.changed.connect(self._on_category_row_changed)
@@ -343,11 +343,11 @@ class TeamColumn(QWidget):
         return block if block is not None else (seasons[max(seasons)] if seasons else {})
 
     def _team_subtitle(self, tid):
-        """Under the team's name: its category (classic); nothing in the
+        """Under the team's name: its group (classic); nothing in the
         groups picker, where the group is said above."""
         if self.style == "groups":
             return ""
-        return self._info_for(tid).get("category", "")
+        return group_label(info_group(self._info_for(tid)))
 
     def set_style(self, style):
         """Switch how this card picks its team (see app/team_browse.STYLES),
@@ -377,7 +377,7 @@ class TeamColumn(QWidget):
         idx = self.season_row.index_of(slot.season)
         self.season_row.set_index(idx if idx is not None else 0)
         cats = ds.categories_for(slot.season) if slot.season else []
-        cat = self._info_for(slot.team_id).get("category", "")
+        cat = info_group(self._info_for(slot.team_id))
         self.category_row.set_values(cats, index=cats.index(cat) if cat in cats else 0)
         teams = ds.teams_for(slot.season, self.category_row.current()) if cats else {}
         ids = sorted(teams, key=lambda t: teams[t]["name"])
@@ -736,24 +736,20 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self._start_preload()
 
     def roll_opening(self):
-        """Two random, different teams of one season and one category. A
-        category can span groups (URC: European and South African sides),
-        and the groups picker shows the group as the category, so both
-        teams also share their group."""
+        """Two random, different teams of one season and one group."""
         seasons = self.ds.seasons()
-        index = self.home_col.index
         pools = {}
         for s in seasons:
             for c in self.ds.categories_for(s):
                 if not c:
                     continue
                 for tid in self.ds.teams_for(s, c):
-                    pools.setdefault((s, c, index.group(tid)), []).append(tid)
+                    pools.setdefault((s, c), []).append(tid)
         pools = {k: v for k, v in pools.items() if len(v) >= 2}
         among = None
         if pools:
-            season, category, group = random.choice(list(pools))
-            among = pools[(season, category, group)]
+            season, category = random.choice(list(pools))
+            among = pools[(season, category)]
         else:
             season = random.choice(seasons) if seasons else None
             cats = self.ds.categories_for(season) if season else []
@@ -859,7 +855,8 @@ class MatchSetupScreen(KickoffTransition, Screen):
         # sense again.
         self.reset_kickoff_visuals()
         self._apply_data_changes()     # teams / players edited meanwhile
-        self._sync_environment_choices()   # the stadium editor's environments
+        self._sync_environment_choices()   # the stadium editor's environments / pitches
+        self._sync_pitch_choices()
         self._apply_expert_mode()      # picks up a Settings toggle flipped meanwhile
         self._apply_picker_style()     # same, for Settings > Quick Match Picker
         self._maybe_reroll()
@@ -935,6 +932,11 @@ class MatchSetupScreen(KickoffTransition, Screen):
 
     _roof_calm = False          # the wind row was set to none by a closed roof
     _wind_before_roof = 0       # ...and the strength it had before
+
+    def _on_crowd_changed(self, attr, value):
+        if attr == "crowd_colours":
+            value = value == "colours"
+        setattr(self.cfg, attr, value)
 
     def _on_wind_changed(self):
         """Strength None = the game's stock random wind (Standard mode,
@@ -1106,6 +1108,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
         # "environments"); see _sync_environment_choices, called both below
         # and from _on_stadium_changed.
         self.environment_row = SelectorRow("environment")
+        self.environment_row._display = self._environment_label
         self.environment_row.changed.connect(self._on_environment_changed)
         self.focus.register(self.environment_row)
         v.addWidget(self.environment_row)
@@ -1120,6 +1123,22 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self.wind_power_row.changed.connect(self._on_wind_changed)
         self.focus.register(self.wind_power_row)
         v.addWidget(self.wind_power_row)
+
+        # The crowd (backend crowd): how full the stands are, fans in the
+        # teams' colours, a quieter crowd
+        self.crowd_rows = {}
+        for attr, label, values in (("crowd_size", "crowd", ["full", "busy", "half", "sparse"]),
+                                    ("crowd_colours", "supporters", ["neutral", "colours"]),
+                                    ("crowd_mood", "atmosphere", ["normal", "quiet"])):
+            row = SelectorRow(label)
+            current = getattr(self.cfg, attr)
+            if attr == "crowd_colours":
+                current = "colours" if current else "neutral"
+            row.set_values(values, index=values.index(current) if current in values else 0)
+            row.changed.connect(lambda a=attr, r=row: self._on_crowd_changed(a, r.current()))
+            self.focus.register(row)
+            v.addWidget(row)
+            self.crowd_rows[attr] = row
 
 
         self.advanced_btn = StyledButton("ADVANCED", "neutral")
@@ -1229,7 +1248,8 @@ class MatchSetupScreen(KickoffTransition, Screen):
 
         # Laws (rugby08patches.dll rule_5022 / rule_22m)
         self.law_rows = {}
-        for attr, label in (("law_5022", "50/22"), ("law_22m", "22m")):
+        for attr, label in (("law_5022", "50/22"), ("law_22m", "22m"),
+                            ("law_penalty_touch", "80' penalty touch")):
             row = SelectorRow(label)
             row.set_values(["on", "off"], index=0 if getattr(self.cfg, attr) else 1)
             row.changed.connect(lambda a=attr, r=row: setattr(self.cfg, a, r.current() == "on"))
@@ -1273,31 +1293,17 @@ class MatchSetupScreen(KickoffTransition, Screen):
         # ── Pitch & weather ──
         section("PITCH & WEATHER")
         # reR08 ENABLE_PITCH's whitelist (gsv.pitch_textures: the game's own
-        # names, which the DLL matches exactly), labelled "<condition> —
-        # Region N (variant)". RegN is the texture pack; the variant is the
-        # light (d / n / o = day / night / overcast, t as is). "default" (not
-        # in the whitelist) = the stadium's own pitch, unset.
-        variants = {"d": "day", "n": "night", "o": "overcast"}
-
-        def pitch_label(name):
-            region, _, rest = name.split("_", 2)     # "Reg2", "08", "muddy_n"
-            condition, _, variant = rest.rpartition("_")
-            condition_word = condition.replace("_", " ").capitalize()
-            region_word = f"Region {region[3:]}" if region.startswith("Reg") else region
-            variant_word = variants.get(variant, variant).capitalize()
-            return f"{condition_word} — {region_word} ({variant_word})"
-
-        self.pitch_row = SelectorRow("pitch texture")
-        self.pitch_row.set_values(
-            [("default", "Default")] + sorted(((n, pitch_label(n)) for n in gsv.pitch_textures),
-                                              key=lambda t: t[1]),
-            index=0)
-        self.pitch_row._display = lambda t: t[1]
+        # names, which the DLL matches exactly), or the ones the stadium's
+        # "pitches" lists. "default" (not in the whitelist) = the stadium's
+        # own pitch, unset.
+        from ui.pitch_picker import PitchRow
+        self.pitch_row = PitchRow("pitch conditions")
         self.pitch_row.changed.connect(
             lambda: setattr(self.cfg, "pitch_texture",
                             (self.pitch_row.current() or ("default", ""))[0]))
         self.focus.register(self.pitch_row)
         v.addWidget(self.pitch_row)
+        self._sync_pitch_choices()
 
         self.rain_row = SelectorRow("rain")
         self.rain_row.set_values(["no", "yes"], index=0)
@@ -1604,11 +1610,32 @@ class MatchSetupScreen(KickoffTransition, Screen):
         sid, info = entry
         self.cfg.stadium = {"stadium_id": int(info.get("game_id", sid)), "data": info}
         self._sync_environment_choices()
+        self._sync_pitch_choices()
         # "Stadium default" now names this stadium's own sets
         for row in getattr(self, "dressing_rows", {}).values():
             row.refresh()
 
+    def _sync_pitch_choices(self):
+        """The pitches the selected stadium allows (all of the game's when
+        it lists none); the pick stays if it is still one."""
+        row = getattr(self, "pitch_row", None)
+        if row is None:
+            return
+        from backend import pitches
+        info = (self.cfg.stadium or {}).get("data") or {}
+        names = pitches.allowed(info) or list(pitches.NAMES)
+        names = sorted(names, key=pitches.condition_order)      # driest first, the game's order within
+        labels = pitches.simple_labels(names)
+        values = [("default", "Default")] + [(n, labels[n]) for n in names]
+        keep = next((i for i, (n, _l) in enumerate(values) if n == self.cfg.pitch_texture), 0)
+        row.set_values(values, index=keep)
+        self.cfg.pitch_texture = values[keep][0]
+
     # ── advanced panel ───────────────────────────────────────────────────
+    def _environment_label(self, env):
+        from app.tournament import weather
+        return weather.env_label((self.cfg.stadium or {}).get("data"), env)
+
     def _sync_environment_choices(self):
         """Only offer environments the selected stadium actually has (its
         own stadiums.json "environments" list) — picking one it doesn't

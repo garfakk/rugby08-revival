@@ -23,6 +23,7 @@ from PyQt5.QtCore import Qt, QTimer, pyqtSignal
 from app.screen_base import Screen
 from app.input import Action, KEYMAP
 from app.game_data import TEAM_TYPES, SaveError
+from app.team_browse import group_label
 from app.ratings import position_overall
 from app.roster_import.reader import read_roster, RosterError, TENDENCIES
 from app.roster_import import plan as P
@@ -319,9 +320,10 @@ class RosterImportScreen(Screen):
         self.t_type = self._reg(SegmentField("Type", TEAM_TYPES))
         self.t_type.edited.connect(lambda v: self._team_set("type", v))
         g.add(self.t_type)
-        self.t_category = self._reg(ChoiceField("Category", allow_blank=True))
-        self.t_category.edited.connect(lambda v: self._team_set("category", v))
-        g.add(self.t_category)
+        self.t_group = self._reg(ChoiceField("Group", allow_blank=True, clearable=True,
+                                             display=group_label))
+        self.t_group.edited.connect(lambda v: self._team_set("group", v))
+        g.add(self.t_group)
         card.add(g)
         self.t_link_note = Note("", color=FG_SECONDARY, size=T_LABEL)
         card.add(self.t_link_note)
@@ -364,8 +366,8 @@ class RosterImportScreen(Screen):
         self.t_link.set_options(["new"] + sorted(self.ds.teams, key=self._existing_name))
         self.t_link.set_value(c.link)
         self.t_type.set_value(c.type if c.type in TEAM_TYPES else "club")
-        self.t_category.set_options(self.ds.all_categories())
-        self.t_category.set_value(c.category)
+        self.t_group.set_options(self.ds.all_groups())
+        self.t_group.set_value(c.group)
         if c.link == "new":
             self.t_link_note.setText("A new team folder with one season will be created.")
         else:

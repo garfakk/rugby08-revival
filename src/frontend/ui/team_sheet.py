@@ -369,7 +369,7 @@ class SlotAvatar(_DragSource, QWidget):
         p.setFont(num_font)
         num_txt = str(self.number)
         num_w = p.fontMetrics().horizontalAdvance(num_txt) + 6
-        name = p.fontMetrics().elidedText(last_name(self.player) if self.player else "—",
+        name = p.fontMetrics().elidedText(last_name(self.player) if self.player else "empty",
                                           Qt.ElideRight, int(self.width() - num_w - 6))
         name_w = p.fontMetrics().horizontalAdvance(name)
         x0 = (self.width() - (num_w + name_w)) / 2

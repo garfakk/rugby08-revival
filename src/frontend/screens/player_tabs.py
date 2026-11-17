@@ -24,7 +24,7 @@ from app import star_classes
 from shared.user_prefs import user_prefs
 from app.game_data import (
     POSITIONS, POSITION_ALIASES, SKIN_TONES, TAPES, FEET, SOCKS, BOOT_STYLES,
-    SHIRT_POSITIONS,
+    SHIRT_POSITIONS, DEFAULT_HEIGHT, DEFAULT_WEIGHT,
 )
 from app.ratings import GROUPS, LABELS, group_avg, position_overall, previous_season
 from app.season import season_label
@@ -198,12 +198,12 @@ class ProfileTab(PlayerTab):
 
         phys = SectionCard("physical")
         g = FieldGrid(columns=1)
-        self.height_f = self.register("height", NumberField("Height (cm)", 100, 230))
-        self.height_f.set_hint("game uses 180")
+        self.height_f = self.register("height", NumberField("Height (cm)", 100, 230,
+                                                            default=DEFAULT_HEIGHT))
         self.height_f.edited.connect(lambda v: self.edit_stat("height", "height", v))
         g.add(self.height_f)
-        self.weight_f = self.register("weight", NumberField("Weight (kg)", 40, 160))
-        self.weight_f.set_hint("game uses 80")
+        self.weight_f = self.register("weight", NumberField("Weight (kg)", 40, 160,
+                                                            default=DEFAULT_WEIGHT))
         self.weight_f.edited.connect(lambda v: self.edit_stat("weight", "weight", v))
         g.add(self.weight_f)
         self.foot = self.register("foot", SegmentField("Stronger foot", FEET,
@@ -225,7 +225,7 @@ class ProfileTab(PlayerTab):
         for key, label in (("position1", "Primary"), ("position2", "Second"), ("position3", "Third")):
             f = self.register(key, ChoiceField(label, POSITIONS, display=position_name,
                                                allow_blank=(key != "position1"),
-                                               blank_label="— none"))
+                                               blank_label="none", clearable=True))
             f.popup_title = f"{label.lower()} position"
             f.tag_for = lambda v: (POSITION_SHORT.get(v, ""), FG_TERTIARY)
             f.edited.connect(lambda v, k=key: self.edit_stat(k.replace("position", "position "),
@@ -248,21 +248,6 @@ class ProfileTab(PlayerTab):
         self.add_scope(pos, "positions", tuple(self.positions))
         right.addWidget(pos)
 
-        squads = SectionCard("squads · every season")
-        self.squads_note = Note("", color=FG_SECONDARY, size=T_LABEL)
-        squads.add(self.squads_note)
-        self.squad_buttons = QVBoxLayout()
-        self.squad_buttons.setSpacing(4)
-        squads.add_layout(self.squad_buttons)
-        self._squad_btns = []
-        for _ in range(4):
-            b = compact_button("", height=32)
-            b.setStyleSheet(b.styleSheet() + "QPushButton { text-align: left; }")
-            b.hide()
-            screen.focus.register(b)
-            self.squad_buttons.addWidget(b)
-            self._squad_btns.append(b)
-        left.addWidget(squads)
         left.addStretch(1)
 
         danger = SectionCard("player record")
@@ -321,24 +306,6 @@ class ProfileTab(PlayerTab):
         sources = self.screen.ds.players_sources.get(self.screen.record_id, [])
         self.file_note.setText("Defined in " + ", ".join(os.path.basename(x) for x in sources)
                                + ("  (the last one is used)" if len(sources) > 1 else ""))
-        memberships = self.screen.ds.memberships(self.screen.record_id, with_variants=True)
-        self.squads_note.setText(f"In {len(memberships)} squad list(s)." if memberships else
-                                 "Not in any squad.")
-        for i, b in enumerate(self._squad_btns):
-            try:
-                b.clicked.disconnect()
-            except TypeError:
-                pass
-            if i < len(memberships):
-                tid, name, s, shirt, variant = memberships[i]
-                role = "starter" if shirt <= 15 else ("bench" if shirt <= 22 else "not loaded")
-                tag = f" ({_variant_label(self.screen.ds, tid, s, variant)})" if variant else ""
-                b.setText(f"{name}  {s}{tag}  ·  #{shirt} {role}   →")
-                b.clicked.connect(lambda _=False, t=tid, ss=s, sh=shirt, v=variant:
-                                  self.screen.open_team(t, ss, sh, v))
-                b.show()
-            else:
-                b.hide()
 
     def hints(self, focused):
         if isinstance(focused, NumberField):
@@ -354,7 +321,7 @@ class RatingsTab(PlayerTab):
         super().__init__(screen, index)
         strip = QHBoxLayout()
         strip.setSpacing(14)
-        self.ovr = display_label("OVR —", T_TITLE, QFont.Bold, track=0.6, upper=False)
+        self.ovr = display_label("OVR n/a", T_TITLE, QFont.Bold, track=0.6, upper=False)
         strip.addWidget(self.ovr)
         strip.addStretch(1)
         self.copy_btn = compact_button("COPY RATINGS FROM…")
@@ -436,7 +403,7 @@ class RatingsTab(PlayerTab):
             f.set_reference(prev.get(key) if prev else None)
         for name, keys in GROUPS:
             avg = group_avg(stats, keys)
-            text = f"AVG {avg}" if avg is not None else "AVG —"
+            text = f"AVG {avg}" if avg is not None else "AVG n/a"
             if prev:
                 pavg = group_avg(prev, keys)
                 if avg is not None and pavg is not None and avg != pavg:
@@ -445,7 +412,7 @@ class RatingsTab(PlayerTab):
             self.group_labels[name].setText(text)
         pos = stats.get("position1", "")
         ovr = position_overall(stats, pos)
-        self.ovr.setText(f"OVR {ovr if ovr is not None else '—'}")
+        self.ovr.setText(f"OVR {ovr if ovr is not None else 'n/a'}")
         self.copy_btn.setEnabled(len(record.get("stats") or {}) > 1)
 
     def hints(self, focused):
@@ -492,6 +459,7 @@ class AppearanceTab(PlayerTab):
                                             "browse for a file" if v == "__file__" else
                                             "stock skin tone" if v in SKIN_TONES else
                                             "custom texture · 512×256")
+        self.skin.section_for = lambda v: "Default" if v in SKIN_TONES else "Custom"
         self.skin.edited.connect(self._on_skin)
         g.add(self.skin)
         skin_card.add(g)
@@ -548,15 +516,17 @@ class AppearanceTab(PlayerTab):
         self.boots.popup_title = "boots"
         self.boots.display = self._boot_display
         self.boots.off_list_badge = False
-        self.boots.subtitle_for = lambda v: ("" if v in LOAD_LABELS else
-                                             "browse for a file" if v == "__file__" else
-                                             "stock boots in the game" if str(v).isdigit() else
-                                             "custom texture · 256×256")
+        self.boots.section_for = lambda v: ("" if v == LOAD_FILES
+                                            else self._boot_section.get(v, A.CUSTOM_SECTION))
+        self.boots.actions = (LOAD_FILES,)
+        self.boots.collapsible = True
+        self.boots.icon_for = self._boot_icon
+        self._boot_section = {}
         self.boots.edited.connect(self._on_boots)
         # Browsing the list tries each style on the 3D preview; closing it
         # goes back to the stored one (or the one just picked).
-        self.boots.on_hover = lambda v: (self.screen.preview_boots(v) if v not in SPECIAL
-                                         else self.screen.refresh_stage())
+        self.boots.on_hover = lambda v: (self.screen.refresh_stage() if v == LOAD_FILES
+                                         else self.screen.preview_boots(v))
         self.boots.on_popup_closed = self.screen.refresh_stage
         g2.add(self.boots)
 
@@ -570,10 +540,6 @@ class AppearanceTab(PlayerTab):
             lambda v: self.edit_stat("goal-kick style", "goal_kicking_style", v, coalesce=False))
         g2.add(self.goal_kick_style)
 
-        self.headgear = self.register("headgear", TextField("Headgear"))
-        self.headgear.set_badge("UNUSED")
-        self.headgear.edited.connect(lambda v: self.edit_stat("headgear", "headgear", v))
-        g2.add(self.headgear)
         gear.add(g2)
 
         # Socks and the three tapes are all short segmented pickers — packed
@@ -586,13 +552,13 @@ class AppearanceTab(PlayerTab):
         self.tapes = {}
         for key, label in (("wrist_tape", "Wrist tape"), ("tight_tape", "Thigh tape"),
                            ("finger_tape", "Finger tape")):
-            f = self.register(key, SegmentField(label, TAPES, allow_blank=True, blank_label="—"))
+            f = self.register(key, SegmentField(label, TAPES))
             f.edited.connect(lambda v, k=key, l=label: self.edit_stat(l.lower(), k, v,
                                                                       coalesce=False))
             g3.add(f)
             self.tapes[key] = f
         gear.add(g3)
-        self.add_scope(gear, "general", ("face", "boot_style", "goal_kicking_style", "headgear",
+        self.add_scope(gear, "general", ("face", "boot_style", "goal_kicking_style",
                                          "socks", *self.tapes))
         left.insertWidget(0, gear)      # General first, above the skin
         left.addStretch(1)
@@ -613,9 +579,12 @@ class AppearanceTab(PlayerTab):
             return {"l_medium": "light-med", "d_medium": "dark-med"}.get(v, v)
         return A.label_of(v)
 
+    def _boot_icon(self, v):
+        return None if str(v).isdigit() or v == LOAD_FILES else load_pixmap(A.abs_path(self.mod_dir, v), 52)
+
     def _boot_display(self, v):
-        if v in SPECIAL:
-            return SPECIAL[v]
+        if v == LOAD_FILES:
+            return "Load from file…"
         return f"Style {v}" if str(v).isdigit() else A.label_of(v)
 
     def _browse(self, anchor, kind, on_pick, title):
@@ -772,16 +741,11 @@ class AppearanceTab(PlayerTab):
     # ── boots / face ─────────────────────────────────────────────────────
 
     def _on_boots(self, value):
-        pick = lambda rel: self.edit_stat("boots", "boot_style", rel or "0", coalesce=False)
-        if value in LOAD_LABELS:
+        if value == LOAD_FILES:
             self.refresh()
-            self._load(self.boots, "boots", value == LOAD_FOLDER, pick, "custom boot image")
-            return
-        if value == "__file__":
-            self._browse(self.boots, "boots",
-                         lambda rel: self.edit_stat("boots", "boot_style", rel or "0",
-                                                    coalesce=False), "custom boot image")
-            self.refresh()
+            self._load(self.boots, "boots", False,
+                       lambda rel: self.edit_stat("boots", "boot_style", rel or "0", coalesce=False),
+                       "custom boot image")
             return
         self.edit_stat("boots", "boot_style", value, coalesce=False)
 
@@ -824,16 +788,17 @@ class AppearanceTab(PlayerTab):
                 [self._layer_row(mod, rel, spec) for rel in self._zone_layers(zone)])
 
         boot = str(stats.get("boot_style") or "")
-        self.boots.set_options(list(BOOT_STYLES) + A.asset_options(mod, "boots")
-                               + ["__file__", *LOAD_LABELS])
+        # sections from players/boots/boots.json; the user's own boots last
+        sections = A.boot_sections(mod)
+        self._boot_section = {v: title for title, values in sections for v in values}
+        self.boots.set_options([LOAD_FILES] + [v for _, values in sections for v in values])
         self.boots.set_value(boot)
         self.boots.set_hint("style 0" if not boot else "")
         self.goal_kick_style.set_value(stats.get("goal_kicking_style") or "default")
 
         self.socks.set_value(stats.get("socks", ""))
         for key, f in self.tapes.items():
-            f.set_value(stats.get(key, ""))
-        self.headgear.set_value(stats.get("headgear", ""))
+            f.set_value(stats.get(key) or "none")
 
         self._refresh_face_thumb(stats)
 
@@ -893,7 +858,7 @@ TENDENCY_NAMES = ["default", "scrum", "lineout", "tackler", "runner", "passer", 
 # factory, see app/star_classes.py.
 STAR_PLAYER_NAMES = star_classes.NAMES
 # Offered in the picker: the 25 named classes (not 1, the generic base
-# class). "— none" is the field's blank entry, so 0 isn't listed again.
+# class). "None" is the field's blank value (its × button), so 0 isn't listed again.
 STAR_PLAYER_CHOICES = list(range(2, 27))
 SKILLS = [
     ("ss_command", "Command"), ("ss_passer", "Passer"), ("ss_play_maker", "Playmaker"),
@@ -927,7 +892,8 @@ class SkillsTab(PlayerTab):
             self.extra[key] = f
         self.tendency = self.register("special_ability", ChoiceField(
             "AI tendency", [str(i) for i in range(len(TENDENCY_NAMES))], allow_blank=True,
-            blank_label="— default", display=lambda v: TENDENCY_NAMES[int(v)] if str(v).isdigit()
+            blank_label="default", clearable=True,
+            display=lambda v: TENDENCY_NAMES[int(v)] if str(v).isdigit()
             and int(v) < len(TENDENCY_NAMES) else str(v)))
         self.tendency.edited.connect(lambda v: self.edit_stat("tendency", "special_ability", v,
                                                               coalesce=False))
@@ -938,7 +904,7 @@ class SkillsTab(PlayerTab):
         # generic base class) is not offered.
         self.star_attribute = self.register("star_attribute", ChoiceField(
             "Star player ability", [str(i) for i in STAR_PLAYER_CHOICES], allow_blank=True,
-            blank_label=STAR_PLAYER_NAMES[0],
+            blank_label=STAR_PLAYER_NAMES[0], clearable=True,
             display=lambda v: STAR_PLAYER_NAMES.get(int(v), v) if str(v).isdigit() else str(v)))
         self.star_attribute.edited.connect(
             lambda v: self.edit_stat("star player ability", "star_attribute", v, coalesce=False))
@@ -958,7 +924,7 @@ class SkillsTab(PlayerTab):
         # rugby08patches.dll instead of the star class. Expert mode only.
         self.star_voice = self.register("star_voice", ChoiceField(
             "Star commentary", [str(i) for i in STAR_PLAYER_CHOICES], allow_blank=True,
-            blank_label=STAR_PLAYER_NAMES[0],
+            blank_label=STAR_PLAYER_NAMES[0], clearable=True,
             display=lambda v: STAR_PLAYER_NAMES.get(int(v), v) if str(v).isdigit() else str(v)))
         self.star_voice.edited.connect(
             lambda v: self.edit_stat("star commentary", "star_voice", v, coalesce=False))
@@ -1013,9 +979,8 @@ class SkillsTab(PlayerTab):
 
 
 class TeamsTab(PlayerTab):
-    """Every squad this player is named in for the season currently
-    selected in the mid pane — one season can list him in more than one
-    (a club and a country, say)."""
+    """Every squad this player is named in, season by season — one season
+    can list him in more than one (a club and a country, say)."""
 
     def __init__(self, screen, index):
         super().__init__(screen, index)
@@ -1036,10 +1001,18 @@ class TeamsTab(PlayerTab):
                 w.deleteLater()
         self._row_btns = []
 
-        season = self.screen.season
-        memberships = [m for m in self.screen.ds.memberships(self.screen.record_id, with_variants=True)
-                       if m[2] == season]
+        memberships = sorted(self.screen.ds.memberships(self.screen.record_id, with_variants=True),
+                             key=lambda m: m[2], reverse=True)
+        if not memberships:
+            self.rows.addWidget(Note("Not in any squad.", color=FG_SECONDARY, size=T_LABEL))
+        shown = None
         for tid, name, s, shirt, variant in memberships:
+            if s != shown:
+                shown = s
+                head = display_label(season_label(s), T_LABEL, QFont.DemiBold, track=0.6,
+                                     color=FG_SECONDARY, upper=False)
+                head.setContentsMargins(0, 8 if self.rows.count() else 0, 0, 0)
+                self.rows.addWidget(head)
             role = "starter" if shirt <= 15 else ("bench" if shirt <= 22 else "not loaded")
             tag = f" ({_variant_label(self.screen.ds, tid, s, variant)})" if variant else ""
             b = compact_button(f"{name}{tag}   ·   #{shirt} {role}   →", height=32)

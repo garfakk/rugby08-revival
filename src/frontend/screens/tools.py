@@ -14,7 +14,7 @@ from app.screen_base import Screen
 from app.input import Action, KEYMAP
 from shared.config import config
 from ui.broadcast import (
-    Card, HintBar, MenuTile, page_header, eyebrow_label, display_label,
+    Card, HintBar, MenuTile, page_header, eyebrow_label, display_label, scroll_wrap,
 )
 from ui.theme import BG_BASE, ACCENT, FG_SECONDARY, FG_MUTED
 
@@ -22,14 +22,14 @@ from ui.theme import BG_BASE, ACCENT, FG_SECONDARY, FG_MUTED
 class ToolsScreen(Screen):
     def __init__(self, ds, on_back, on_team_editor, on_player_editor, on_import=None,
                  on_challenge_editor=None, on_edits=None, on_updates=None,
-                 on_tournament_editor=None):
+                 on_tournament_editor=None, on_stadium_editor=None):
         super().__init__(on_back=on_back)
         self.ds = ds
         self._build(on_team_editor, on_player_editor, on_import, on_challenge_editor, on_edits,
-                    on_updates, on_tournament_editor)
+                    on_updates, on_tournament_editor, on_stadium_editor)
 
     def _build(self, on_team_editor, on_player_editor, on_import=None, on_challenge_editor=None,
-               on_edits=None, on_updates=None, on_tournament_editor=None):
+               on_edits=None, on_updates=None, on_tournament_editor=None, on_stadium_editor=None):
         root = QVBoxLayout(self)
         root.setContentsMargins(0, 0, 0, 0)
         root.setSpacing(0)
@@ -53,6 +53,8 @@ class ToolsScreen(Screen):
         ]
         if on_tournament_editor is not None:
             items.insert(2, ("TOURNAMENT EDITOR", "", on_tournament_editor, False))
+        if on_stadium_editor is not None:
+            items.insert(3, ("STADIUM EDITOR", "", on_stadium_editor, False))
         if config.developper_mode:
             items.extend([
                 ("IMPORT ROSTER", "", on_import, on_import is None),
@@ -72,7 +74,7 @@ class ToolsScreen(Screen):
         menu_w.setLayout(menu)
         bl.addWidget(menu_w, stretch=3)
 
-        root.addWidget(body, stretch=1)
+        root.addWidget(scroll_wrap(body), stretch=1)
 
         self.hintbar = HintBar()
         self.hintbar.set_hints([("A", "open"), ("B", "back")])

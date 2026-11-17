@@ -1500,12 +1500,16 @@ def configure_controller_lock(game_dir, locked):
 
 
 def configure_match_laws(game_dir, laws):
-  """rugby08patches.dll laws for this match: rule_5022 / rule_22m from `laws`
+  """rugby08patches.dll laws for this match: rule_5022 / rule_22m /
+  penalty_touch_end (with cpu_penalty_touch) from `laws`
   (missing = off, the stock game), lineout_jump (maul or pass from the front
   and middle jumpers) from Settings."""
   ini = os.path.join(game_dir, "rugby08patches.ini")
   values = {"rule_5022": bool(laws.get("rule_5022")),
             "rule_22m": bool(laws.get("rule_22m")),
+            # the law and the CPU's sense of it go together
+            "penalty_touch_end": bool(laws.get("penalty_touch_end")),
+            "cpu_penalty_touch": bool(laws.get("penalty_touch_end")),
             "lineout_jump": bool(user_prefs.lineout_jump)}
   try:
     for key, on in values.items():

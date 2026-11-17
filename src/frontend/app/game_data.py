@@ -195,6 +195,11 @@ APPEARANCE_KEYS = [
 IDENTITY_KEYS = ["display_name", "first_name", "last_name", "birthdate", "commentary"]
 
 
+# What the game uses for a player whose file lacks them
+# (backend/game_specific_variables.player_default_values; tests keep them equal).
+DEFAULT_HEIGHT, DEFAULT_WEIGHT = 180, 70
+
+
 def new_player_season() -> dict:
     """A blank season block carrying every key the loader/back end expects,
     so a newly added season isn't missing fields the roster writer reads."""
@@ -206,6 +211,9 @@ def new_player_season() -> dict:
     season["socks"] = "down"
     season["boot_style"] = "0"
     season["skin_overlay"] = []
+    season["height"], season["weight"] = str(DEFAULT_HEIGHT), str(DEFAULT_WEIGHT)
+    for key in ("wrist_tape", "tight_tape", "finger_tape"):
+        season[key] = "none"
     return season
 
 
@@ -436,6 +444,9 @@ def check_team_detailed(season_info: dict, players: dict, season: str = None) ->
 
     seen = {}
     for index, pid in enumerate(roster):
+        if not pid:
+            problems.append((f"players.{index}", f"player {index + 1}: nobody picked yet", ERROR))
+            continue
         if pid in seen:
             problems.append((f"players.{index}",
                              f"player {index + 1}: {pid} is already player {seen[pid] + 1}", ERROR))
@@ -445,8 +456,9 @@ def check_team_detailed(season_info: dict, players: dict, season: str = None) ->
             problems.append((f"players.{index}",
                              f"player {index + 1}: {pid} is not in the player files", ERROR))
 
-    if len(roster) < SQUAD_SIZE:
-        problems.append(("players", f"{len(roster)} players — the game needs 22 or the"
+    filled = sum(1 for pid in roster if pid)
+    if filled < SQUAD_SIZE:
+        problems.append(("players", f"{filled} players — the game needs 22 or the"
                                     f" squad is not written", ERROR))
 
     if looks_reversed(roster, players, season):
@@ -454,7 +466,7 @@ def check_team_detailed(season_info: dict, players: dict, season: str = None) ->
                          "squad looks back-to-front — player 1 is a back and the "
                          "front row is at the end of the list", WARN_))
 
-    starters = roster[:STARTING_XV]
+    starters = [pid for pid in roster[:STARTING_XV] if pid]
     for key in ROLE_KEYS:
         value = str((season_info.get("roles") or {}).get(key, "") or "").strip()
         if not value:
@@ -478,6 +490,14 @@ def check_team_detailed(season_info: dict, players: dict, season: str = None) ->
     return problems
 
 
+def season_errors(season_info: dict, players: dict, season: str = None) -> list:
+    """[(key, message)] of everything that keeps a season out of the mod: the
+    errors of the season itself and of each of its squad variants."""
+    return [(k, m) for k, m, sev in (check_team_detailed(season_info, players, season)
+                                     + check_team_variants(season_info, players, season))
+            if sev == ERROR]
+
+
 def check_team(season_info: dict, players: dict, season: str = None) -> list:
     return [(k, m) for k, m, _ in check_team_detailed(season_info, players, season)]
 
@@ -487,11 +507,11 @@ def blank_kit() -> dict:
     return {"frontKitFile": "", "backKitFile": "", "previewFile": "", "color": ""}
 
 
-def new_team_season(name="", team_type="club", category="") -> dict:
+def new_team_season(name="", team_type="club", group="") -> dict:
     """A season block carrying every key a real team file has, so a new
     season is indistinguishable in shape from a shipped one."""
-    return {
-        "name": name, "type": team_type, "category": category,
+    info = {
+        "name": name, "type": team_type,
         "ball": "", "banners": "",
         "logos": {"main": "", "frontend": "", "small": "", "left": "", "right": ""},
         "kits": {"home": blank_kit(), "away": blank_kit()},
@@ -499,6 +519,9 @@ def new_team_season(name="", team_type="club", category="") -> dict:
         "setPlays": {k: "" for k in ("left", "up", "right", "down")},
         "players": [],
     }
+    if group:
+        info["group"] = group
+    return info
 
 
 def frontend_logo(info: dict) -> str:
@@ -724,6 +747,11 @@ def add_player(path: str, pid: str, record: dict) -> str:
     return path
 
 
+def _unlisted(info) -> bool:
+    """A season the loader leaves out of the mod's teams (see TeamDataLoader)."""
+    return isinstance(info, dict) and (info.get("enabled") is False or info.get("draft") is True)
+
+
 def save_team(path: str, team_id: str, seasons: dict) -> str:
     """Write one team's seasons back into `path`. A team file holds a single
     team, but it is written whole so any sibling key survives."""
@@ -733,13 +761,14 @@ def save_team(path: str, team_id: str, seasons: dict) -> str:
         env = _edits.get("teams", team_id)
         current = env["mine"] if env else _edits.pack.record(_edits.pack.relpath(path), team_id)
         kept = {s: info for s, info in (current or {}).items()
-                if s not in seasons and isinstance(info, dict) and info.get("enabled") is False}
+                if s not in seasons and _unlisted(info)}
         return _keep("teams", team_id, {**seasons, **kept}, path)
     data = _load_json(path)
-    # Disabled seasons ("enabled": false) are never loaded, so the caller's
-    # copy lacks them: carry them over from the file instead of dropping them.
+    # Disabled seasons ("enabled": false) and drafts ("draft": true, saved
+    # with errors) are not loaded for the mod, so a caller's copy of the
+    # loaded seasons lacks them: carry them over from the file.
     kept = {s: info for s, info in (data.get(str(team_id)) or {}).items()
-            if s not in seasons and isinstance(info, dict) and info.get("enabled") is False}
+            if s not in seasons and _unlisted(info)}
     data[str(team_id)] = {**seasons, **kept}
     _write_json(path, data)
     _pack_written("teams", team_id)

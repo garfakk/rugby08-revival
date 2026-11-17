@@ -25,10 +25,10 @@ from app import disk_import
 from app import team_ops as T
 from app import variants as V
 from app.game_data import (
-    check_team_detailed, check_team_variants, save_team, delete_team, save_target, saves_to_user_edits, SaveError,
+    check_team_detailed, check_team_variants, season_errors, save_team, delete_team, save_target, saves_to_user_edits, SaveError,
     TEAM_TYPES, ASSET_SPECS, frontend_logo,
 )
-from app.team_browse import GROUPS, group_label
+from app.team_browse import GROUPS, group_label, info_group
 from app.season import season_label
 from screens.editor_base import EditorScreen
 from screens.team_tabs import (
@@ -43,7 +43,7 @@ from ui.editor_kit import (
     SegmentField, asset_status, load_pixmap,
 )
 from ui.theme import (
-    ACCENT, GREEN, INFO, DANGER_LITE, FG_SECONDARY, FG_TERTIARY, HOME_TINT,
+    ACCENT, GREEN, INFO, WARN, DANGER_LITE, FG_SECONDARY, FG_TERTIARY, HOME_TINT,
 )
 from shared.config import config
 
@@ -106,47 +106,57 @@ class TeamEditorScreen(EditorScreen):
         ctx = QHBoxLayout(self.season_row)
         ctx.setContentsMargins(0, 0, 0, 10)
         ctx.setSpacing(8)
-        self.season_pill = Badge("SEASON —", ACCENT, filled=True)
+        self.season_pill = Badge("NO SEASON", ACCENT, filled=True)
         ctx.addWidget(self.season_pill)
+        # the mod leaves a season with errors out until it is fixed and saved
+        self.season_warn = Badge("TEAM NOT USED UNTIL ERRORS ARE FIXED:", WARN, filled=True)
+        self.season_warn.hide()
+        ctx.addWidget(self.season_warn)
         ctx.addStretch(1)
         self.shell.right_layout.insertWidget(0, self.season_row)
 
     def _refresh_seasons(self):
         working = self.session.working
         self.season_pill.set_text(
-            f"SEASON {season_label(self.season)}" if self.season else "SEASON —")
-        items = [(s, season_label(s), str(len(working[s].get('players', []))),
-                  FG_TERTIARY, False) for s in sorted(working)]
+            f"SEASON {season_label(self.season)}" if self.season else "NO SEASON")
+        self.season_warn.setVisible(bool(self.season) and bool(
+            season_errors(self.season_block(), self.ds.players, self.season)))
+        items = [(s, season_label(s),
+                  "DRAFT" if working[s].get("draft") else
+                  str(len([p for p in working[s].get('players', []) if p])),
+                  WARN if working[s].get("draft") else FG_TERTIARY, False) for s in sorted(working)]
         self.season_list.set_items(items, keep_data=self.season)
         self.season_list.set_selected(self.season)
 
     # ── record plumbing ──────────────────────────────────────────────────
-    GROUP_LABEL = "Category"
+    GROUP_LABEL = "Group"
     SORTS = [("name", "name"), ("issues", "most issues"), ("squad", "squad size")]
 
     def list_rows(self):
         rows = []
-        for tid, seasons in self.ds.teams.items():
+        for tid in self.ds.team_ids():
+            seasons = self.ds.team_seasons(tid)
             latest = sorted(seasons)[-1] if seasons else None
             info = seasons.get(latest, {}) if latest else {}
             issues = (check_team_detailed(info, self.ds.players, latest)
                       + check_team_variants(info, self.ds.players, latest)) if info else []
             errors = sum(1 for _, _, s in issues if s == "error")
-            n = len(info.get("players", []))
-            tag = f"{errors} ERR" if errors else f"{n} players"
+            drafts = sum(1 for i in seasons.values() if i.get("draft"))
+            n = len([p for p in info.get("players", []) if p])
+            tag = "DRAFT" if drafts else f"{errors} ERR" if errors else f"{n} players"
             rows.append({
                 "id": tid, "text": info.get("name") or tid, "tag": tag,
                 # the player count is not a warning: any size from 22 up is fine
-                "color": DANGER_LITE if errors else FG_TERTIARY,
-                "search": f"{tid} {info.get('category', '')} {' '.join(seasons)}",
-                "errors": errors, "issues": len(issues), "group": info.get("category", ""),
+                "color": WARN if drafts else DANGER_LITE if errors else FG_TERTIARY,
+                "search": f"{tid} {info_group(info)} {' '.join(seasons)}",
+                "errors": errors + drafts, "issues": len(issues), "group": info_group(info),
                 "sort": {"squad": n},
             })
         return rows
 
     def load_record(self, tid):
-        seasons = self.ds.teams.get(tid)
-        return copy.deepcopy(seasons) if seasons is not None else None
+        seasons = self.ds.team_seasons(tid)
+        return copy.deepcopy(seasons) if seasons else None
 
     def on_record_opened(self):
         seasons = sorted(self.session.working)
@@ -326,42 +336,15 @@ class TeamEditorScreen(EditorScreen):
                 self.refresh_all()
         super().reveal(key)
 
-    def incomplete_squads(self):
-        """[(season, first problem, count)] for every season whose squad was
-        changed here and is not a complete, valid 22: an empty slot, a player
-        who is not in the player files, a repeated player, or fewer than 22.
-        A squad left exactly as it is on disk is not held against a save of
-        something else (old data may already be incomplete)."""
-        saved = self.ds.teams.get(self.record_id) or {}
-        found = []
-        for season, block in sorted(self.session.working.items()):
-            for vid in [V.DEFAULT] + V.variant_ids(block):
-                if vid and "players" not in V.overrides(block, vid):
-                    continue                       # inherits the default squad
-                info = V.resolve(block, vid)
-                if season in saved and V.resolve(saved[season], vid).get("players") == info.get("players"):
-                    continue
-                problems = [m for k, m, sev in check_team_detailed(info, self.ds.players, season)
-                            if sev == "error" and k.startswith("players")]
-                if problems:
-                    where = season if not vid else (season, V.variant_label(block, vid))
-                    found.append((where, problems[0], len(problems)))
-        return found
-
     def write_record(self):
-        bad = self.incomplete_squads()
-        if bad:
-            def where(w):
-                return f"{season_label(w[0])} ({w[1]})" if isinstance(w, tuple) else season_label(w)
-            season, first, n = bad[0]
-            more = f" (+{n - 1} more)" if n > 1 else ""
-            other = (f"; also {', '.join(where(s) for s, _, _ in bad[1:])}"
-                    if len(bad) > 1 else "")
-            raise SaveError(f"squad {where(season)} is incomplete: {first}{more}{other}. "
-                            "Fill slots 1-22 before saving.")
+        saved = self.ds.team_seasons(self.record_id)
+        drafts = T.mark_drafts(self.session.working, saved, self.ds.players)
         path = self.ds.teams_file_path.get(self.record_id)
         save_team(path, self.record_id, self.session.working)
-        self.ds.teams[self.record_id] = copy.deepcopy(self.session.working)
+        self.ds.set_team_seasons(self.record_id, copy.deepcopy(self.session.working))
+        if drafts:
+            names = ", ".join(season_label(s) for s in drafts)
+            return (f"Saved, but not used in the mod until fixed: {names}", WARN)
         return f"Saved to {save_target(path)}"
 
     def after_save(self):
@@ -451,7 +434,7 @@ class TeamEditorScreen(EditorScreen):
             return
         seasons = self.session.working
         if action in ("add", "duplicate"):
-            year = NumberField("Year", lo=1900, hi=2100, allow_blank=False)
+            year = NumberField("Season", lo=1900, hi=2100, allow_blank=False, formatter=season_label)
             try:
                 suggestion = str(max(int(s) for s in seasons) + 1)
             except ValueError:
@@ -473,7 +456,7 @@ class TeamEditorScreen(EditorScreen):
                 info = self.info()
                 src = source.value() or None
                 self.edit(f"add season {season_label(y)}", lambda w: T.add_season(
-                    w, y, src, info.get("name", ""), info.get("type", "club"), info.get("category", "")),
+                    w, y, src, info.get("name", ""), info.get("type", "club"), info.get("group", "")),
                     view_hint={"season": y, "tab": self.shell.tabs.index()})
                 self.season = y
                 self.refresh_all()
@@ -482,7 +465,7 @@ class TeamEditorScreen(EditorScreen):
 
             self.show_dialog(FormDialog(
                 self, "Add season" if action == "add" else "Duplicate season",
-                "Each season has its own name, kits, crest, squad and roles.",
+                "Type the year the season ends in (2026 is 2025-2026). Each season has its own name, kits, crest, squad and roles.",
                 {"year": year, "source": source},
                 [("CANCEL", "neutral", "cancel"), ("ADD SEASON", "primary", "ok")], done))
         elif action == "delete":
@@ -599,18 +582,16 @@ class TeamEditorScreen(EditorScreen):
     def _team_dialog(self, duplicate):
         name = TextField("Team name")
         team_type = SegmentField("Type", TEAM_TYPES)
-        category = ChoiceField("Category", self.ds.all_categories(), allow_blank=True)
         group = ChoiceField("Group", GROUPS, allow_blank=True, display=group_label)
-        year = NumberField("First season", lo=1900, hi=2100, allow_blank=False)
+        year = NumberField("First season", lo=1900, hi=2100, allow_blank=False, formatter=season_label)
         copy_files = SegmentField("Copy image files", ["yes", "no"])
         info = self.info() if duplicate else {}
         name.set_value(f"{info.get('name', '')} copy" if duplicate else "")
         team_type.set_value(info.get("type", "club") if duplicate else "club")
-        category.set_value(info.get("category", "") if duplicate else "")
         group.set_value(info.get("group", "") if duplicate else "")
         year.set_value(self.season or "2026")
         copy_files.set_value("yes")
-        fields = {"name": name, "type": team_type, "category": category, "group": group}
+        fields = {"name": name, "type": team_type, "group": group}
         if not duplicate:
             fields["year"] = year
         else:
@@ -622,7 +603,7 @@ class TeamEditorScreen(EditorScreen):
                 return
             try:
                 self._create_team(name.value().strip(), team_type.value() or "club",
-                                  category.value(), group.value(), year.value(), duplicate,
+                                  group.value(), year.value(), duplicate,
                                   copy_files.value() == "yes")
             except (ValueError, OSError, SaveError) as e:
                 self.shell.footer.set_status(f"Could not create team: {e}", DANGER_LITE)
@@ -638,26 +619,26 @@ class TeamEditorScreen(EditorScreen):
             fields, [("CANCEL", "neutral", "cancel"),
                      ("CREATE", "primary", "ok")], done, footer=folder_hint))
 
-    def _create_team(self, name, team_type, category, group, year, duplicate, copy_files):
+    def _create_team(self, name, team_type, group, year, duplicate, copy_files):
         if not name:
             raise ValueError("the team needs a name")
         teams_dir = config.directory_teams
         folder = T.safe_folder_name(name, teams_dir)
-        tid = T.allocate_team_id(team_type, self.ds.team_json_ids, self.ds.teams)
+        tid = T.allocate_team_id(team_type, self.ds.team_json_ids, {**self.ds.teams, **self.ds.team_drafts})
         if duplicate:
             seasons = copy.deepcopy(self.session.working)
             for info in seasons.values():
                 info["name"] = name
                 info["type"] = team_type
-                info["category"] = category
                 if group:
                     info["group"] = group
+                else:
+                    info.pop("group", None)
             source_folder = self.team_folder() if copy_files else None
         else:
-            seasons = {str(year): T.new_team_season(name, team_type, category)}
-            if group:
-                seasons[str(year)]["group"] = group
+            seasons = {str(year): T.new_team_season(name, team_type, group)}
             source_folder = None
+        T.mark_drafts(seasons, {}, self.ds.players)
         json_path, missing = T.create_team(teams_dir, folder, tid, seasons, source_folder,
                                            copy_file=disk_import.copy_into_data)
         self.ds.register_team(tid, seasons, os.path.join(teams_dir, folder), json_path)

@@ -2,6 +2,8 @@
 and the groups picker (default), group > team > season, on the real screen."""
 import pytest
 
+from app.team_browse import info_group
+
 from shared.user_prefs import user_prefs
 from test_screens import window  # noqa: F401  (module fixture: the booted main window)
 
@@ -85,20 +87,14 @@ def test_team_change_falls_back_to_the_nearest_season(setup, qapp):
 
 
 @pytest.mark.parametrize("style", ["classic", "groups"])
-def test_random_opening_is_one_season_and_category(setup, qapp, monkeypatch, style):
+def test_random_opening_is_one_season_and_group(setup, qapp, style):
     use(setup, style, qapp)
     ds, ix = setup.ds, setup.home_col.index
-    # a category spanning two groups, like the URC's European and South African sides
-    season = next(s for s in ds.seasons() if len(ds.teams_for(s, ds.categories_for(s)[0])) >= 4)
-    category = ds.categories_for(season)[0]
-    tids = sorted(ds.teams_for(season, category))
-    groups = {t: ("north" if i % 2 else "south") for i, t in enumerate(tids)}
-    monkeypatch.setattr(ix, "group", lambda t: groups.get(t, "other"))
     for _ in range(30):
         setup.roll_opening()
         h, a = setup.cfg.home, setup.cfg.away
         assert h.team_id != a.team_id and h.season == a.season
-        assert ds.teams[h.team_id][h.season]["category"] == ds.teams[a.team_id][a.season]["category"]
+        assert info_group(ds.teams[h.team_id][h.season]) == info_group(ds.teams[a.team_id][a.season])
         assert ix.group(h.team_id) == ix.group(a.team_id)
 
 

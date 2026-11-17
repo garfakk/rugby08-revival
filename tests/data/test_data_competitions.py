@@ -83,12 +83,17 @@ def test_dressing_sets_are_complete(path):
 
 
 # 50/22 from August 2021; the 22m pass-back law (no gain when the kicking team
-# took the ball back into its 22) from the 2008-09 ELVs
-LAWS = {"rwc_2007": (False, False), "six_nations_2008": (False, False),
-        "heineken_cup_2008": (False, False), "six_nations_2009": (False, True),
-        "tri_nations_2008": (False, True), "six_nations_2021": (False, True),
-        "rugby_championship_2021": (True, True),
-        "six_nations_2022": (True, True), "rwc_2023": (True, True)}
+# took the ball back into its 22) from the 2008-09 ELVs; a penalty kicked to
+# touch after time keeps its lineout from the 2017 global trial (southern
+# hemisphere from January, northern from the 2017-18 season)
+LAWS = {"rwc_2007": (False, False, False), "six_nations_2008": (False, False, False),
+        "heineken_cup_2008": (False, False, False), "six_nations_2009": (False, True, False),
+        "tri_nations_2008": (False, True, False), "six_nations_2017": (False, True, False),
+        "rugby_championship_2017": (False, True, True),
+        "six_nations_2018": (False, True, True), "six_nations_2021": (False, True, True),
+        "rugby_championship_2021": (True, True, True),
+        "six_nations_2022": (True, True, True), "rwc_2023": (True, True, True)}
+KEYS = ("law_5022", "law_22m", "law_penalty_touch")
 
 
 def test_templates_set_the_laws_of_their_time():
@@ -97,7 +102,7 @@ def test_templates_set_the_laws_of_their_time():
     templates = formats.load_templates(TEMPLATE_DIRS)
     for tid, tpl in templates.items():
         opts = tpl.get("default_options") or {}
-        assert isinstance(opts.get("law_5022"), bool) and isinstance(opts.get("law_22m"), bool), tid
+        assert all(isinstance(opts.get(k), bool) for k in KEYS), tid
     for tid, laws in LAWS.items():
         opts = templates[tid]["default_options"]
-        assert (opts["law_5022"], opts["law_22m"]) == laws, tid
+        assert tuple(opts[k] for k in KEYS) == laws, tid

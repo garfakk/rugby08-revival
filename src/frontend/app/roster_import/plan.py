@@ -448,7 +448,7 @@ class TeamChoice:
         self.include = False
         self.name = team["name"]
         self.type = team["type"] or "club"
-        self.category = ""
+        self.group = ""
         self.link = link or "new"         # "new" or an existing team id
 
 
@@ -628,7 +628,7 @@ def apply_import(plan, progress=None):
         for choice in plan.selected_teams():
             squad_info = _team_season_from(choice, pid_for, plan)
             if choice.link == "new":
-                seasons = {plan.season: new_team_season(choice.name, choice.type, choice.category)}
+                seasons = {plan.season: new_team_season(choice.name, choice.type, choice.group)}
                 seasons[plan.season].update(squad_info)
                 teams_dir = _teams_dir()
                 folder = T.safe_folder_name(choice.name, teams_dir)
@@ -642,7 +642,7 @@ def apply_import(plan, progress=None):
                 seasons = copy.deepcopy(ds.teams[tid])
                 if plan.season not in seasons:
                     latest = sorted(seasons)[-1] if seasons else None
-                    T.add_season(seasons, plan.season, latest, choice.name, choice.type, choice.category)
+                    T.add_season(seasons, plan.season, latest, choice.name, choice.type, choice.group)
                 info = seasons[plan.season]
                 info.update(squad_info)
                 info["name"] = choice.name

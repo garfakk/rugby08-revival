@@ -71,3 +71,20 @@ def test_a_tournament_match_plays_the_laws_of_its_time(ds, data_dir):
     session.t.template.pop("default_options")
     cfg = bridge.to_match_config(ds, session.t, f)
     assert (cfg.law_5022, cfg.law_22m) == (True, True)
+
+
+def test_a_tournament_lists_its_rules(ds):
+    """The RULES tab: laws (edition's, or the wizard's), table, tie-breaks, bans."""
+    from app.tournament import rules
+    old = dict(copy.deepcopy(RWC), default_options={"law_5022": False, "law_22m": True},
+               discipline={"red_ban": [1, 3], "yellow_accumulation": 3, "yellow_ban": 1})
+    session = TournamentSession.new(ds, old, "2024", humans=["10001"], seed=3)
+    got = dict(rules.sections(session.t))
+    assert got["Laws"] == [("50/22", "Off"), ("22m", "On"), ("80' penalty touch", "On")]
+    session.t.options["law_5022"] = True
+    assert dict(rules.sections(session.t))["Laws"][0] == ("50/22", "On")
+    assert ("Win", "4") in got["Points"] and any(k == "Try bonus" for k, _v in got["Points"])
+    assert got["Tie-breakers"][0] == ("1", "Head to head")
+    assert ("Red card", "ban of 1 to 3 matches") in got["Discipline"]
+    assert ("3 yellow cards", "ban of 1 match") in got["Discipline"]
+    assert not any(k == "Drawn knockout" for k, _v in got["Points"])      # pools only

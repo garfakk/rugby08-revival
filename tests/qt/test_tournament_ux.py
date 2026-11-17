@@ -790,3 +790,14 @@ def test_a_round_without_your_match_shows_on_home(qapp, ds, data_dir, no_motion)
     assert d.rest_day() is None and not d.rest_section.isVisibleTo(d)
     d.close()
     d.deleteLater()
+
+
+def test_rules_tab_shows_the_laws(dash, session):
+    """RULES: the laws first, then the table's points and the bans."""
+    from PyQt5.QtWidgets import QLabel
+    from screens.tournament.dashboard import RULES
+    from ui.broadcast import Card
+    dash._go_tab(RULES)
+    texts = {w.text() for w in dash.pages[RULES].findChildren(QLabel)}
+    assert {"50/22", "22M", "80' PENALTY TOUCH"} <= texts
+    assert len(dash.pages[RULES].findChildren(Card)) >= 3

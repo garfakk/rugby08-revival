@@ -33,6 +33,9 @@ class TeamDataLoader:
         # Every team as stored in its file, disabled seasons included: what
         # the user's edits (app/user_edits.py) are compared with.
         self.teams_raw: dict[str, dict] = {}
+        # Seasons saved with errors ("draft": true): kept for the team editor,
+        # never offered to the rest of the mod until they are fixed.
+        self.team_drafts: dict[str, dict] = {}
 
     @staticmethod
     def team_json_name(folder_name: str) -> str:
@@ -40,9 +43,30 @@ class TeamDataLoader:
         return f"{folder_name.lower().replace(' ', '_')}.json"
 
     @staticmethod
+    def is_draft(info) -> bool:
+        return isinstance(info, dict) and info.get("draft") is True and info.get("enabled") is not False
+
+    @staticmethod
     def enabled_seasons(seasons: dict) -> dict:
+        """The seasons the mod uses: not disabled, not a draft."""
         return {s: info for s, info in seasons.items()
-                if not (isinstance(info, dict) and info.get("enabled") is False)}
+                if not (isinstance(info, dict) and (info.get("enabled") is False
+                                                    or info.get("draft") is True))}
+
+    @staticmethod
+    def draft_seasons(seasons: dict) -> dict:
+        """The seasons saved with errors: only the team editor lists them."""
+        return {s: info for s, info in seasons.items() if TeamDataLoader.is_draft(info)}
+
+    def sync_team(self, teams: dict, tid, seasons) -> None:
+        """Put one team's `seasons` (as stored) into `teams` and `team_drafts`."""
+        live = self.enabled_seasons(seasons or {})
+        drafts = self.draft_seasons(seasons or {})
+        for registry, found in ((teams, live), (self.team_drafts, drafts)):
+            if found:
+                registry[tid] = found
+            else:
+                registry.pop(tid, None)
 
     def load_teams(self) -> dict:
         """Return {team_id: {season: {...}}} for every team folder found."""
@@ -75,12 +99,11 @@ class TeamDataLoader:
                 self.teams_file_path[team_id] = json_path
                 # A season with "enabled": false stays in the file but is not
                 # loaded, so no screen offers it. A team with no enabled
-                # season is left out altogether.
+                # season is left out altogether. A draft is not loaded either
+                # (see team_drafts).
                 for tid, seasons in data.items():
                     self.teams_raw[tid] = seasons
-                    live = self.enabled_seasons(seasons)
-                    if live:
-                        teams[tid] = live
+                    self.sync_team(teams, tid, seasons)
             except Exception as e:
                 log.error(f"Error loading team '{folder_name}': {e}")
 

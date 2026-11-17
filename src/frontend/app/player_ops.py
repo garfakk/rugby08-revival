@@ -115,7 +115,8 @@ def delete_everywhere(ds, pid, remove_from_squads, skip_team_ids=()):
             files.append(path)
     teams, skipped = [], []
     if remove_from_squads:
-        for tid, seasons in ds.teams.items():
+        for tid in ds.team_ids():
+            seasons = ds.team_seasons(tid)
             touched = False
             # the default squad and every competition variant with its own squad
             blocks = [b for season_info in seasons.values()

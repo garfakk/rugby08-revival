@@ -183,3 +183,69 @@ def test_sets_that_look_alike_are_listed_once(tmp_path, monkeypatch):
     # a pick folded into another entry still selects that entry
     assert any("stadium_graphics/posts/b" in o["refs"] for o in dressing.choices(
         DS, "posts", current="stadium_graphics/posts/b"))
+
+
+def test_choices_ads_options_have_refs(monkeypatch):
+    """Kinds that aren't folded by look still carry refs (picker crashed on a
+    missing key when a current ads pick was not in the list)."""
+    from app import dressing
+    monkeypatch.setattr(dressing, "library_sets", lambda kind: [{"label": "A", "ref": "stadium_graphics/ads/a"}])
+    monkeypatch.setattr(dressing, "competition_sets", lambda ds, kind: [])
+    monkeypatch.setattr(dressing, "stock_sets", lambda kind: [])
+
+    class DS:
+        tournaments, tournaments_folder_path = {}, {}
+
+    options = dressing.choices(DS, "ads", current="stadium_graphics/ads/gone")
+    assert all("refs" in o for o in options)
+    assert any("stadium_graphics/ads/gone" in o["refs"] for o in options)
+
+
+
+def test_stadium_editor_writes_the_stadium_json(tmp_path, monkeypatch):
+    import json
+    from app import dressing
+    from shared.config import config
+    folder = tmp_path / "stadiums" / "Test Ground"
+    folder.mkdir(parents=True)
+    path = folder / "test_ground.json"
+    path.write_text(json.dumps({"test_ground": {"name": "Test Ground", "game_id": 14}}))
+    monkeypatch.setattr(config, "pack_directory", str(tmp_path))
+
+    class DS:
+        stadiums = {"test_ground": {"name": "Test Ground", "game_id": 14}}
+    assert dressing.stadium_json_path("test_ground") == str(path)
+    dressing.save_stadium(DS, "test_ground", {"pads": "stadium_graphics/pads/mine", "posts": ""}, ["Reg2_08_snow_n"])
+    assert json.loads(path.read_text())["test_ground"]["dressing"] == {"pads": "stadium_graphics/pads/mine"}
+    assert json.loads(path.read_text())["test_ground"]["pitches"] == ["Reg2_08_snow_n"]
+    assert DS.stadiums["test_ground"]["pitches"] == ["Reg2_08_snow_n"]
+    info = DS.stadiums["test_ground"]
+    assert dressing.stadium_default(info, "pads") == "stadium_graphics/pads/mine"
+    assert dressing.stadium_default(info, "posts") == dressing.own_default(info, "posts")
+    dressing.save_stadium(DS, "test_ground", {})
+    saved = json.loads(path.read_text())["test_ground"]
+    assert "dressing" not in saved and "pitches" not in saved
+    assert "dressing" not in info and "pitches" not in info
+
+
+def test_pitch_names_and_allowed_list():
+    from backend import pitches
+    assert pitches.label("Reg2_08_light_Mud_n") == "Light mud · night"
+    assert pitches.region_of("Reg3_08_dry_d") == "Region 3"
+    # the stadium's list: the game's names only, in the game's order, any case
+    info = {"pitches": ["reg2_08_snow_n", "nonsense", "Reg1_08_hard_d"]}
+    assert pitches.allowed(info) == ["Reg1_08_hard_d", "Reg2_08_snow_n"]
+    assert pitches.allowed({}) == []
+
+
+def test_tournament_pitch_comes_from_the_stadium_list():
+    from app.tournament import weather
+    allowed = ["Reg2_08_snow_n", "Reg2_08_best_d"]
+    # a muddy night at a ground that allows two pitches: grass, not snow
+    assert weather.pitch_texture("muddy", "night", "Reg2", allowed) == "Reg2_08_best_d"
+    assert weather.pitch_texture("snow", "night", "Reg2", allowed) == "Reg2_08_snow_n"
+    # nothing near the condition: still one of the allowed ones, never another
+    assert weather.pitch_texture("muddy", "day", "Reg2", ["Reg2_08_snow_n"]) == "Reg2_08_snow_n"
+    assert weather.pitch_texture("best", "day", "Reg2", allowed) == "Reg2_08_best_d"
+    assert weather.pitch_texture("muddy", "night", "Reg2") == "Reg2_08_muddy_n"             # no list: as before
+    assert weather.allowed_textures({"pitches": ["reg2_08_best_d", "x"]}) == ["Reg2_08_best_d"]

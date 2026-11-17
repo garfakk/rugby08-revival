@@ -51,6 +51,22 @@ def test_load_teams(teams_tree):
     assert loader.teams_folder_path["10001"].endswith("France")
 
 
+def test_drafts_are_kept_for_the_editor_only(tmp_path):
+    """A season saved with errors ("draft": true) is not one of the mod's teams;
+    the editor gets it from team_drafts. A team with only drafts is not loaded."""
+    t = tmp_path / "teams"
+    _write(str(t / "Mixed" / "mixed.json"),
+           {"5": {"2024": {"name": "Mixed"}, "2025": {"name": "Mixed", "draft": True},
+                  "2008": {"name": "Mixed", "enabled": False, "draft": True}}})
+    _write(str(t / "Only" / "only.json"), {"6": {"2024": {"name": "Only", "draft": True}}})
+    loader = TeamDataLoader(str(t), str(tmp_path / "players"))
+    teams = loader.load_teams()
+    assert list(teams["5"]) == ["2024"] and "6" not in teams
+    assert list(loader.team_drafts["5"]) == ["2025"]                # disabled wins over draft
+    assert list(loader.team_drafts["6"]) == ["2024"]
+    assert loader.teams_raw["5"]["2025"]["draft"] is True
+
+
 def test_load_players_last_duplicate_wins(teams_tree):
     loader = TeamDataLoader(str(teams_tree / "teams"), str(teams_tree / "players"))
     players = loader.load_players()

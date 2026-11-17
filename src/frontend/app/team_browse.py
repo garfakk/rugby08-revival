@@ -52,6 +52,13 @@ CATEGORY_GROUPS = {
 OTHER_GROUP = "other_european"
 
 
+def info_group(info):
+    """The group of a season block: its "group", else the one of its
+    category (a team file made before groups existed)."""
+    return (info.get("group") or CATEGORY_GROUPS.get(info.get("category", ""))
+            or OTHER_GROUP)
+
+
 def group_label(group):
     """The name the picker shows for a group id."""
     return GROUP_LABELS.get(group, group)
@@ -87,9 +94,7 @@ class TeamIndex:
     def group(self, tid):
         """The team's group: its latest season's "group", else the one of
         its category."""
-        info = self.info(tid)
-        return (info.get("group") or CATEGORY_GROUPS.get(info.get("category", ""))
-                or OTHER_GROUP)
+        return info_group(self.info(tid))
 
     # ── lists ──
     def groups(self):

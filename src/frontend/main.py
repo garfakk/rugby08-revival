@@ -175,10 +175,8 @@ from screens.updates import UpdatesScreen
 from ui.update_notice import UpdateNotice
 from screens.challenge_editor import ChallengeEditorScreen
 from screens.tournament_editor import TournamentEditorScreen
+from screens.stadium_editor import StadiumEditorScreen
 
-# The tournament editor (Tools, the hub's CREATE YOUR OWN) is built but not
-# offered yet: no entry point leads to it while this is False.
-TOURNAMENT_EDITOR_ENABLED = False
 from screens.squad_editor import SquadEditorScreen
 from screens.challenge_mode import ChallengeModeScreen
 from screens.challenge_result import ChallengeResultScreen
@@ -207,7 +205,7 @@ MAX_CONTENT_WIDTH = 1920
 # The screens built on the DataStore: rebuilt from fresh data after a data
 # update (MainWindow.reload_data). The others hold no mod data.
 DATA_SCREENS = ("match_setup", "presentation", "tools", "user_edits", "team_editor",
-                "player_editor", "challenge_editor", "tournament_editor",
+                "player_editor", "challenge_editor", "tournament_editor", "stadium_editor",
                 "challenge_mode", "roster_import", "tournament_hub", "tournament_wizard",
                 "tournament_intro", "tournament")
 
@@ -742,6 +740,7 @@ class MainWindow(QMainWindow):
             self.screen_roster_import,
             self.screen_challenge_editor,
             self.screen_tournament_editor,
+            self.screen_stadium_editor,
             self.screen_challenge_mode,
             self.screen_tournament_hub,
             self.screen_tournament_wizard,
@@ -766,7 +765,8 @@ class MainWindow(QMainWindow):
             self.data, self.show_main, self.show_team_editor, self.show_player_editor,
             on_import=self.show_roster_import, on_challenge_editor=self.show_challenge_editor,
             on_edits=self.show_user_edits, on_updates=self.show_updates,
-            on_tournament_editor=self.show_tournament_editor if TOURNAMENT_EDITOR_ENABLED else None)
+            on_tournament_editor=self.show_tournament_editor,
+            on_stadium_editor=self.show_stadium_editor)
         self.screen_user_edits = UserEditsScreen(self.data, editor_back,
                                                  open_team=self.open_team,
                                                  open_player=self.open_player)
@@ -780,6 +780,7 @@ class MainWindow(QMainWindow):
             self.data, editor_back, on_edit_squad=self.edit_challenge_squad)
         self.screen_tournament_editor = TournamentEditorScreen(
             self.data, editor_back, on_play=self.play_custom_tournament)
+        self.screen_stadium_editor = StadiumEditorScreen(self.data, editor_back)
         yield
         self.screen_challenge_mode = ChallengeModeScreen(
             self.data, lambda: self.screens.go_back(default=self.screen_game_modes),
@@ -794,7 +795,7 @@ class MainWindow(QMainWindow):
         self.screen_tournament_hub = TournamentHubScreen(
             self.data, self.show_main_game_modes, on_new=self.show_tournament_wizard,
             on_open=self.open_tournament,
-            on_create=self.show_tournament_editor if TOURNAMENT_EDITOR_ENABLED else None)
+            on_create=self.show_tournament_editor)
         self.screen_tournament_wizard = TournamentWizardScreen(
             self.data, lambda: self.screens.go_back(default=self.screen_tournament_hub),
             on_created=self.begin_tournament)
@@ -955,6 +956,9 @@ class MainWindow(QMainWindow):
 
     def show_tournament_editor(self):
         self.screens.show_screen(self.screen_tournament_editor)
+
+    def show_stadium_editor(self):
+        self.screens.show_screen(self.screen_stadium_editor)
 
     def play_custom_tournament(self, template_id):
         """The tournament editor's PLAY IT: New tournament, on that one."""

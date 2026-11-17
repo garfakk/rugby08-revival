@@ -29,19 +29,27 @@ PREFS = {
     "cpu_squads": ("CPU Squads", "cycle"),
     "law_5022": ("50/22", "toggle"),
     "law_22m": ("22m", "toggle"),
+    "law_penalty_touch": ("80' Penalty Touch", "toggle"),
+    "crowd_size": ("Crowd", "cycle"),
+    "crowd_colours": ("Team Colours", "toggle"),
+    "crowd_mood": ("Atmosphere", "cycle"),
 }
 GROUPS = [("match", ["difficulty", "halftime_length"]),
           ("squad", ["injuries", "fatigue", "suspensions", "cpu_squads"]),
-          ("rules", ["law_5022", "law_22m"])]
+          ("rules", ["law_5022", "law_22m", "law_penalty_touch"]),
+          ("crowd", ["crowd_size", "crowd_colours", "crowd_mood"])]
 VALUES = {
     "difficulty": [(level, level.capitalize()) for level in difficulty.LEVELS],
     "halftime_length": [(v, f"{v[:-1]} min" if v.endswith("m") else v) for v in HALF_LENGTHS],
     # the teams the user doesn't manage: their own 22, or the best available
     "cpu_squads": [("default", "Default"), ("best", "Best")],
+    "crowd_size": [("full", "Full"), ("busy", "Busy"), ("half", "Half"), ("sparse", "Sparse")],
+    "crowd_mood": [("normal", "Normal"), ("quiet", "Quiet")],
 }
 DEFAULTS = {"difficulty": "elite", "halftime_length": "5m",
             "injuries": True, "fatigue": True, "suspensions": True, "cpu_squads": "default",
-            "law_5022": True, "law_22m": True}
+            "law_5022": True, "law_22m": True, "law_penalty_touch": True,
+            "crowd_size": "full", "crowd_colours": False, "crowd_mood": "normal"}
 
 
 class PrefsPanel(QWidget):

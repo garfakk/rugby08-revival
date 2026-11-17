@@ -52,6 +52,7 @@ SCREENS = [
     ("show_player_editor", "screen_player_editor"),
     ("show_challenge_editor", "screen_challenge_editor"),
     ("show_tournament_editor", "screen_tournament_editor"),
+    ("show_stadium_editor", "screen_stadium_editor"),
     ("show_challenge_mode", "screen_challenge_mode"),
     ("show_tournament_hub", "screen_tournament_hub"),
     ("show_tournament_wizard", "screen_tournament_wizard"),
@@ -460,15 +461,141 @@ def test_team_editor_edit_save_reload(window, qapp):
     assert editor.session.working["2024"]["name"] == "France XV"
 
 
-def test_team_editor_refuses_incomplete_squad(window, qapp):
+def test_team_editor_saves_incomplete_squad_as_draft(window, qapp):
+    """A squad with errors is saved, but the mod does not use the season until
+    it is fixed and saved again."""
     window.open_team("1010", "2024")
     _wait(qapp, lambda: window.screen_team_editor.record_id == "1010", 10)
     editor = window.screen_team_editor
-    before = open(window.data.teams_file_path["1010"], "rb").read()
+    ds = window.data
+    path = ds.teams_file_path["1010"]
+    good = copy.deepcopy(ds.teams["1010"]["2024"])
     editor.edit("cut squad", lambda w: w["2024"].__setitem__("players", w["2024"]["players"][:20]))
-    assert editor.save() is False
-    assert open(window.data.teams_file_path["1010"], "rb").read() == before
-    editor.edit("restore", lambda w: w.__setitem__("2024", copy.deepcopy(window.data.teams["1010"]["2024"])))
+    assert editor.save()
+    assert "not used in the mod" in editor.shell.footer.status.text().lower()
+    assert "2024" not in ds.teams.get("1010", {})          # the mod no longer sees it
+    assert ds.team_seasons("1010")["2024"]["draft"] is True  # the editor still does
+    assert ds.team_seasons("1010")["2024"]["players"] == good["players"][:20]
+    assert "1010" in [r["id"] for r in editor.list_rows()]
+    # and after a restart
+    from app.state import DataStore
+    fresh = DataStore(DataStore.read_files())
+    assert "2024" not in fresh.teams.get("1010", {})
+    assert fresh.team_drafts["1010"]["2024"]["players"] == good["players"][:20]
+    editor.edit("restore", lambda w: w.__setitem__("2024", copy.deepcopy(good)))
+    assert editor.save()
+    assert "draft" not in ds.teams["1010"]["2024"]
+    assert ds.teams["1010"]["2024"]["players"] == good["players"]
+
+
+def test_team_editor_fills_any_shirt_of_an_empty_squad(window, qapp):
+    """An empty shirt is picked where it is, not at the end of the list; the
+    shirts before it stay empty (and not painted red) until they are filled."""
+    from screens.team_tabs import TAB_SQUAD
+    window.open_team("1010", "2024")
+    _wait(qapp, lambda: window.screen_team_editor.record_id == "1010", 10)
+    editor = window.screen_team_editor
+    squad = editor.tabs[TAB_SQUAD]
+    full = list(editor.session.working["2024"]["players"])
+    editor.edit("empty squad", lambda w: w["2024"].__setitem__("players", []))
+    editor.refresh_all()
+    squad.open_picker(10)
+    assert squad._picker_shirt == 10 and "FLY-HALF" in squad.picker._popup.title_lbl.text().upper()
+    squad._on_pick(full[9])
+    roster = editor.session.working["2024"]["players"]
+    assert roster == [""] * 9 + [full[9]]
+    editor.refresh_all()
+    assert squad.slots[10].player is not None and squad.slots[1].player is None
+    assert squad.slots[1].empty_label == "+"
+    squad.open_picker(1)                                   # any other shirt: its own
+    squad._on_pick(full[0])
+    assert editor.session.working["2024"]["players"][0] == full[0]
+    assert len(editor.session.working["2024"]["players"]) == 10
+    editor.refresh_all()
+    # the shirts in between are flagged: nobody picked
+    assert any(k == "players.1" for k, _, _ in editor.issues)
+    assert squad.slots[2].issue_color is None
+    # dropped on a far empty shirt: that very shirt
+    squad._swap(10, 14)
+    assert editor.session.working["2024"]["players"][13] == full[9]
+    editor.session.revert()
+    editor.refresh_all()
+
+
+def test_clear_button_replaces_the_none_rows(window, qapp):
+    """A clearable field has a × instead of a "none" row in its list; an asset
+    field has one too; an empty rating shows its default, not a dash."""
+    from PyQt5.QtCore import QPointF, QPoint, Qt
+    from PyQt5.QtTest import QTest
+    from ui.editor_kit import ChoiceField, AssetField, RatingField, NumberField
+    field = ChoiceField("Role", ["a", "b"], clearable=True, blank_label="default · player 10")
+    field.resize(500, 40)
+    got = []
+    field.edited.connect(got.append)
+    field.set_value("a")
+    assert not field._blank_row() and field._cycle() == ["a", "b"]
+    QTest.mouseClick(field, Qt.LeftButton, Qt.NoModifier, field._clear_rect().center().toPoint())
+    assert got == [""] and field.value() == ""
+    plain = ChoiceField("Kit variant", ["x"], blank_label="Default")     # a real choice stays a row
+    assert plain._blank_row()
+    asset = AssetField("Crest", {"ext": (".png",)})
+    asset.resize(600, 48)
+    asset.set_value("logos_1/logo.png")
+    got.clear()
+    asset.edited.connect(got.append)
+    QTest.mouseClick(asset, Qt.LeftButton, Qt.NoModifier, asset._clear_rect().center().toPoint())
+    assert got == [""] and asset.value() == ""
+    rating = RatingField("Crash ball")
+    rating.set_value("")
+    got.clear()
+    rating.edited.connect(got.append)
+    rating.step(1)
+    assert got == ["1"] and rating.default == 0           # blank is 0: stepping starts there
+    number = NumberField("Season", 1900, 2100, formatter=lambda v: f"{int(v) - 1}-{v}")
+    number.set_value("2026")
+    assert number.formatter(number.value()) == "2025-2026"
+
+
+def test_new_player_dialog_has_no_file_choice(window, qapp):
+    from app.season import season_label
+    from ui.editor_kit import FormDialog
+    window.show_player_editor()
+    qapp.processEvents()
+    editor = window.screen_player_editor
+    editor.new_record()
+    qapp.processEvents()
+    dialog = editor._dialog
+    assert isinstance(dialog, FormDialog)
+    assert "target" not in dialog.fields and set(dialog.fields) == {"first", "last", "year", "position"}
+    year = dialog.fields["year"]
+    assert year.formatter(year.value()) == season_label(year.value()) and "-" in year.formatter(year.value())
+    dialog.close()
+    editor._dialog = None
+
+
+def test_kit_files_added_to_an_empty_kit_go_to_the_season_folder(window, qapp):
+    """A file loaded into a kit with no files goes to kits_<season> (kits_<season>_<variant>
+    for a kit variant), not the team root; once the kit has files, next to them."""
+    from screens.team_tabs import TAB_KITS
+    window.open_team("1010", "2024")
+    _wait(qapp, lambda: window.screen_team_editor.record_id == "1010", 10)
+    editor = window.screen_team_editor
+    kits = editor.tabs[TAB_KITS]
+    kits._add("third", None)
+    kits.kit_index = kits.kit_names().index("third")
+    editor.refresh_all()
+    assert kits._kit_dir() == "kits_2024"
+    kits.kit_variant = "world_cup"
+    editor.edit("variant", lambda w: kits.stored_kit() is not None and w["2024"]["kits"]["third"].setdefault(
+        "variants", {}).setdefault("world_cup", {}))
+    editor.refresh_all()
+    assert kits._kit_dir() == "kits_2024_world_cup"
+    kits.kit_variant = ""
+    editor.edit("file", lambda w: w["2024"]["kits"]["third"].__setitem__("frontKitFile", "kits_2019/x_front.png"))
+    editor.refresh_all()
+    assert kits._kit_dir() == "kits_2019"
+    editor.session.revert()
+    editor.refresh_all()
 
 
 def test_player_editor_edit_save(window, qapp):
@@ -738,14 +865,20 @@ def test_asset_popup_loads_from_disk(qapp, tmp_path, monkeypatch):
     picks, got = [[str(disk / "crest.png")], [str(disk / "ball_1.png"), str(disk / "ball_2.png")]], []
     monkeypatch.setattr(QFileDialog, "getOpenFileNames", lambda *a, **k: (picks.pop(0), ""))
     for spec, current in (({"ext": (".png",)}, "logos_1/logo.png"), ({"ext": (".png",), "frames": 2}, "")):
-        popup = K.browse_assets(screen, anchor, str(root), spec, current, got.append)
+        popup = K.browse_assets(screen, anchor, str(root), spec, current, got.append,
+                                default_dir="ball_2025")
         qapp.processEvents()
-        assert [r.data for r in popup._rows][1:3] == [K.LOAD_FILES, K.LOAD_FOLDER]
+        rows = [r.data for r in popup._rows]
+        assert "" not in rows                       # no "none" row: the field has a × button
+        # one file is loaded from a file; only a numbered series offers a folder
+        assert rows[:2] == ([K.LOAD_FILES, K.LOAD_FOLDER] if spec.get("frames") else [K.LOAD_FILES, ("__dir__", "logos_1")])
         popup.picked.emit(K.LOAD_FILES)
         for _ in range(5):
             qapp.processEvents()
-    assert got == ["logos_1/crest.png", "ball_%.png"]
+    # a field with a file loads next to it; an empty one into the default folder
+    assert got == ["logos_1/crest.png", "ball_2025/ball_%.png"]
     assert (root / "logos_1" / "crest.png").read_bytes() == b"crest.png"
+    assert (root / "ball_2025" / "ball_2.png").read_bytes() == b"ball_2.png"
     screen.close()
 
 
@@ -846,8 +979,9 @@ def test_tournament_editor_make_and_play(window, qapp, monkeypatch, tmp_path, st
     _wait(qapp, lambda: window.screens.currentWidget() is ed, 10)
     ed._create(starter)
     assert ed.d["format"] == fmt and ed.record_id in ed._drafts
-    size = 4
-    ed._replace("fill", C.auto_fill(ed.ds, ed.d, "internationals", size))
+    four = C.all_teams(C.auto_fill(ed.ds, dict(ed.d, groups=[{"name": "", "teams": []}]),
+                                   "internationals", 4))
+    ed._replace("four teams", dict(ed.d, groups=[{"name": "", "teams": four}]))
     qapp.processEvents()
     assert len(C.all_teams(ed.d)) == 4
     if fmt == "league":
@@ -887,3 +1021,68 @@ def test_screen_fits_the_smallest_window(window, qapp, show, attr):
     assert need.width() <= smallest.width() and need.height() <= smallest.height(), need
     window.show_main()
     window.resize(1280, 720)
+
+
+def test_boots_picker_folds_sections_and_player_teams_lists_every_season(window, qapp):
+    """Boots: thumbnails, headers that fold (only the picked boots' section
+    open), no load rows. The Teams tab lists the squads of every season."""
+    from screens.player_tabs import TAB_APPEARANCE, TAB_TEAMS
+    pid = str(window.data.teams["10002"]["2024"]["players"][0])
+    window.open_player(pid, "2024")
+    _wait(qapp, lambda: window.screen_player_editor.record_id == pid, 10)
+    editor = window.screen_player_editor
+    tab = editor.tabs[TAB_APPEARANCE]
+    boots = tab.boots
+    boots.open_popup()
+    popup = boots._popup
+    qapp.processEvents()
+    heads = [r for r in popup._rows if isinstance(r.data, tuple)]
+    values = [r.data for r in popup._rows if not isinstance(r.data, tuple)]
+    assert len(heads) > 1 and all(r.text[0] in "▸▾" for r in heads)
+    assert len(values) < len(boots.options)                      # folded
+    assert values[0] == "__disk_files__" and not any(str(v).startswith("__") for v in values[1:])
+    assert popup._rows[0].text == "Load from file…"              # one load row, above the sections
+    boots.set_value("1")
+    boots.step(1)
+    assert boots.value() != "__disk_files__"                     # arrows never run it
+    assert not any(r.subtitle for r in popup._rows)
+    image = next(v for v in boots.options if not str(v).isdigit() and not v.startswith("__"))
+    assert not tab._boot_icon(image).isNull() and tab._boot_icon("3") is None
+    shut = next(r for r in heads if r.text.startswith("▸"))
+    popup._on_row_picked(shut.data)                              # unfolds in place
+    assert popup.isVisible()
+    assert len([r for r in popup._rows if not isinstance(r.data, tuple)]) > len(values)
+    popup.close_popup()
+
+    teams = editor.tabs[TAB_TEAMS]
+    teams.refresh()
+    ds = window.data
+    seasons = {m[2] for m in ds.memberships(pid, with_variants=True)}
+    assert len(teams._row_btns) == len(ds.memberships(pid, with_variants=True))
+    assert len(seasons) >= 1
+
+
+def test_match_setup_crowd_rows(window, qapp):
+    """crowd / supporters / atmosphere: the game's own by default, a choice
+    goes to the match data."""
+    from app.match_data_builder import build_match_data
+    window.show_match_setup()
+    qapp.processEvents()
+    setup = window.screen_match_setup.setup_screen
+    if not setup.cfg.controllers:
+        setup.cfg.controllers = {1: {"kind": "kbd", "label": "KEYBOARD", "zone": "home"}}
+    assert build_match_data(window.data, setup.cfg)["crowd"] is None
+    rows = setup.crowd_rows
+    rows["crowd_size"].set_values(["full", "busy", "half", "sparse"], index=2)
+    rows["crowd_size"].changed.emit()
+    rows["crowd_colours"].set_values(["neutral", "colours"], index=1)
+    rows["crowd_colours"].changed.emit()
+    shot = os.environ.get("R08_SHOT")
+    if shot:
+        window.resize(1280, 800)
+        for _ in range(20):
+            qapp.processEvents()
+        window.screen_match_setup.grab().save(shot)
+    crowd = build_match_data(window.data, setup.cfg)["crowd"]
+    assert crowd["size"] == "half" and crowd["colours"] is True and crowd["mood"] == "normal"
+    setup.cfg.crowd_size, setup.cfg.crowd_colours = "full", False
