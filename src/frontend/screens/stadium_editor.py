@@ -5,7 +5,7 @@ The mod's own stadiums (data/stadiums/<Folder>: their own scene packs) in
 3D, wearing the dressing you try on them: post pads and corner flags,
 posts, ad boards, or a competition's look at once. Hovering a set in a list
 puts it on the stadium; SAVE writes the picks as the stadium's "dressing"
-in its JSON (app/dressing.save_stadium), which every match there then wears
+in the user's edits (user_data/edits/stadiums, app/dressing.save_stadium), which every match there then wears
 unless the match or its competition picks another. The Pitch tab shows the
 game's pitch textures on the grass and ticks the ones a match there may use
 (the stadium's "pitches": quick match offers only those, a tournament draws
@@ -25,6 +25,7 @@ from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtWidgets import QHBoxLayout, QSizePolicy, QVBoxLayout, QWidget
 
 from app import dressing
+from app.game_data import save_target
 from backend import pitch_logos, pitch_stripes, pitches
 from shared.log import get_logger
 from ui.dressing_picker import DressingRow
@@ -385,7 +386,7 @@ class StadiumEditorScreen(EditorScreen):
         envs = None if set(w["environments"]) == set(self._default_envs()) else w["environments"]
         path = dressing.save_stadium(self.ds, self.record_id, {k: w[k] for k in dressing.KINDS},
                                      w["pitches"], w["logos"], w["stripes"], envs)
-        return f"Saved in {os.path.basename(path)}"
+        return f"Saved in {save_target(path)}"
 
     # ── edits ────────────────────────────────────────────────────────────
     def _pick(self, kind, ref):
@@ -788,7 +789,7 @@ class StadiumEditorScreen(EditorScreen):
         self._show_logos()
         self.reset_btn.setEnabled(not own)
         dirty = self.session is not None and self.session.is_dirty()
-        self.note.setText("SAVE writes it in the stadium's JSON." if dirty else "")
+        self.note.setText("SAVE keeps it in your edits." if dirty else "")
         self._show_record()
 
     def collect_issues(self):

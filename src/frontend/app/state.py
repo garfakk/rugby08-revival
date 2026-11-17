@@ -15,6 +15,7 @@ from PyQt5.QtCore import QObject, pyqtSignal
 
 from app import variants as V
 from app import game_data as G
+from app import user_stadiums
 from app.team_browse import GROUPS, info_group
 from app.user_edits import EditStore, KINDS
 from shared.user_prefs import user_prefs
@@ -112,6 +113,8 @@ class DataStore:
                     V.migrate_season(info)
                     kit_files.migrate_kit_files(info, loader.teams_folder_path.get(tid, ""))
         stadiums = StadiumDataLoader(config.directory_stadiums).load_stadiums()
+        if edits.enabled:
+            user_stadiums.apply(stadiums)           # the stadium editor's edits (user_data)
         tournament_loader = TournamentDataLoader(config.directory_competitions)
         tournaments = tournament_loader.load_tournaments()
         # Where each record came from, so the editors can write it back to

@@ -24,6 +24,12 @@ def _wait(qapp, predicate, timeout=30.0):
         time.sleep(0.005)
 
 
+def _mine(sid):
+    """The user's saved edit of stadium `sid` (user_data/edits/stadiums)."""
+    from app import user_stadiums
+    return user_stadiums.load().get(sid, {})
+
+
 def _settle(qapp, n=20):
     for _ in range(n):
         qapp.processEvents()
@@ -55,6 +61,13 @@ def window(qapp, tmp_path_factory):
     mp.undo()
 
 
+@pytest.fixture(autouse=True)
+def _saves_go_to_user_data(window):
+    """As in the app: edits are kept in user_data (conftest drops the store after every test)."""
+    from app import game_data as G
+    G.set_edit_store(window.data.edits)
+
+
 def test_pick_save_and_reset(window, qapp):
     from app import dressing
     window.show_stadium_editor()
@@ -78,16 +91,14 @@ def test_pick_save_and_reset(window, qapp):
     assert ed.d["pads"] == ""
     ed.redo()
     assert ed.save()
-    path = dressing.stadium_json_path(sid)
-    with open(path) as fh:
-        assert json.load(fh)[sid]["dressing"] == {"pads": other}
+    from app import user_stadiums
+    assert _mine(sid)["dressing"] == {"pads": other}                  # in user_data, not the pack
     info = window.data.stadiums[sid]
     assert dressing.stadium_default(info, "pads") == other         # a match there wears it
     assert [r for r in ed.list_rows() if r["id"] == sid][0]["tag"] == "EDITED"
     ed._reset()
     assert ed.save()
-    with open(path) as fh:
-        assert "dressing" not in json.load(fh)[sid]
+    assert not user_stadiums.is_edited(sid)                          # back to the pack's: no edit kept
     assert dressing.stadium_default(info, "pads") == dressing.own_default(info, "pads")
 
 
@@ -122,8 +133,7 @@ def test_pitches_ticked_are_saved_and_limit_quick_match(window, qapp):
     assert ed.pitch_count.text() == "2 of %d allowed" % len(pitches.NAMES)
     assert ed.save()
     from app import dressing
-    with open(dressing.stadium_json_path("test_ground")) as fh:
-        assert json.load(fh)["test_ground"]["pitches"] == ["Reg2_08_best_d", "Reg2_08_snow_n"]
+    assert _mine("test_ground")["pitches"] == ["Reg2_08_best_d", "Reg2_08_snow_n"]
     # quick match at that ground offers those pitches and "default"
     setup = window.screen_match_setup.setup_screen
     setup.cfg.stadium = {"stadium_id": 14, "data": window.data.stadiums["test_ground"]}
@@ -138,8 +148,7 @@ def test_pitches_ticked_are_saved_and_limit_quick_match(window, qapp):
     assert setup.cfg.pitch_texture == "Reg2_08_snow_n"
     ed._reset()
     assert ed.d["pitches"] == [] and ed.save()
-    with open(dressing.stadium_json_path("test_ground")) as fh:
-        assert "pitches" not in json.load(fh)["test_ground"]
+    assert not _mine("test_ground").get("pitches")
 
 
 def test_logo_layout_is_saved_and_reset(window, qapp):
@@ -156,12 +165,10 @@ def test_logo_layout_is_saved_and_reset(window, qapp):
     _settle(qapp)
     assert ed.d["logos"] and ed.d["logos"][-1]["x"] == 12.0
     assert ed.save()
-    with open(dressing.stadium_json_path("test_ground")) as fh:
-        assert json.load(fh)["test_ground"]["pitch_logos"] == ed.d["logos"]
+    assert _mine("test_ground")["pitch_logos"] == ed.d["logos"]
     ed._stock_logos()
     assert ed.d["logos"] is None and ed.save()
-    with open(dressing.stadium_json_path("test_ground")) as fh:
-        assert "pitch_logos" not in json.load(fh)["test_ground"]
+    assert not _mine("test_ground").get("pitch_logos")
 
 
 def test_logo_types_are_main_and_side(window, qapp):
@@ -205,15 +212,13 @@ def test_stripes_are_per_environment_and_saved(window, qapp, monkeypatch):
     _settle(qapp)
     assert ed.d["stripes"] == {"day": {"opacity": 60, "brightness": 110}}
     assert ed.save()
-    with open(dressing.stadium_json_path("test_ground")) as fh:
-        assert json.load(fh)["test_ground"]["stripes"] == {"day": {"opacity": 60, "brightness": 110}}
+    assert _mine("test_ground")["stripes"] == {"day": {"opacity": 60, "brightness": 110}}
     ed._env = "night"
     assert ed._stripes() == {"opacity": 35, "brightness": 110}      # another environment keeps its own
     ed._env = "day"
     ed._stock_stripes()
     assert ed.d["stripes"] == {} and ed.save()
-    with open(dressing.stadium_json_path("test_ground")) as fh:
-        assert "stripes" not in json.load(fh)["test_ground"]
+    assert not _mine("test_ground").get("stripes")
     assert pitch_stripes.clean({"opacity": 500, "brightness": "x"}) == {"opacity": 100}
 
 
@@ -231,14 +236,12 @@ def test_environments_are_chosen_and_saved(window, qapp):
     ed._toggle_env("night", True)
     _settle(qapp)
     assert ed.d["environments"] == ["day", "night"] and ed.save()
-    with open(dressing.stadium_json_path("test_ground")) as fh:
-        assert json.load(fh)["test_ground"]["environments"] == ["day", "night"]
+    assert _mine("test_ground")["environments"] == ["day", "night"]
     assert window.data.stadiums["test_ground"]["environments"] == ["day", "night"]
     assert [r for r in ed.list_rows() if r["id"] == "test_ground"][0]["tag"] == "EDITED"
     ed._reset()                                                   # back to the scenes it has
     assert ed.d["environments"] == ["day"] and ed.save()
-    with open(dressing.stadium_json_path("test_ground")) as fh:
-        assert "environments" not in json.load(fh)["test_ground"]
+    assert not _mine("test_ground").get("environments")
     assert window.data.stadiums["test_ground"]["environments"] == ["day"]
 
 
@@ -253,3 +256,25 @@ def test_a_roofed_stadiums_closed_environment_is_named_closed(window, qapp):
     ed.request_open("test_ground")
     _settle(qapp)
     assert ed._env_label("night") == "night"
+
+
+def test_stadium_edits_live_in_user_data_not_in_the_pack(window, qapp):
+    """Saving writes user_data/edits/stadiums; the pack's stadium file stays as released,
+    and the edit is laid over a fresh read of the data."""
+    from app import dressing, user_stadiums
+    from app.state import DataStore
+    ed = window.screen_stadium_editor
+    window.show_stadium_editor()
+    _settle(qapp)
+    ed.request_open("test_ground")
+    _settle(qapp)
+    pack_file = dressing.stadium_json_path("test_ground")
+    before = open(pack_file, "rb").read()
+    ed.f_pitches.toggled.emit("Reg2_08_snow_n", True)
+    _settle(qapp)
+    assert ed.save()
+    assert open(pack_file, "rb").read() == before
+    assert os.path.dirname(user_stadiums._file("test_ground")).startswith(config.directory_user_edits)
+    assert _mine("test_ground")["pitches"] == ["Reg2_08_snow_n"]
+    assert DataStore.read_files()[7]["test_ground"]["pitches"] == ["Reg2_08_snow_n"]
+    user_stadiums.revert("test_ground")

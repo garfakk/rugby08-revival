@@ -215,3 +215,33 @@ def test_is_choice():
     assert C.is_choice(data, "stadium_id")
     assert C.is_choice(data, "difficulty")             # always choosable
     assert not C.is_choice(data, "environment")
+
+
+def test_saves_and_deletes_go_to_user_data_not_the_pack(data_dir, tmp_path, monkeypatch):
+    """Every edit is the user's: kept in user_data/edits/challenges over the pack's
+    challenges, which are never written (a deleted pack challenge is hidden)."""
+    from app import game_data as G
+    from app.user_edits import EditStore
+    from shared.config import config
+    monkeypatch.setattr(config, "directory_user_edits", str(tmp_path / "edits"))
+    G.set_edit_store(EditStore(config.directory_user_edits, data_dir).load())
+    pack = C.load_all()
+    pid = next(iter(pack))
+    pack_file = os.path.join(C.challenges_directory(), pid + ".json")
+    before = open(pack_file, "rb").read()
+    mine = dict(pack[pid], name="Mine")
+    path = C.save(pid, mine)
+    assert path.startswith(str(tmp_path / "edits"))
+    assert open(pack_file, "rb").read() == before             # the pack's file as released
+    assert C.load_all()[pid]["name"] == "Mine"                 # over the pack's
+    own = C.new_challenge()
+    own.update(name="Own", order=9)
+    C.save("own", own)
+    C.delete("own")
+    assert "own" not in C.load_all()
+    C.delete(pid)                                              # a pack challenge: hidden
+    assert pid not in C.load_all() and os.path.exists(pack_file)
+    G.edit_store().enabled = False                             # edits off: the pack alone
+    assert C.load_all()[pid]["name"] == pack[pid]["name"]
+    with pytest.raises(OSError):
+        C.save(pid, mine)

@@ -150,6 +150,47 @@ def _path(cid: str) -> str:
     return os.path.join(challenges_directory(), cid + ".json")
 
 
+def user_directory() -> str:
+    """The user's own challenges and edits of the data's: user_data/edits/
+    challenges, one file per challenge id, over the data pack's. A file that
+    says {"deleted": true} hides the pack's challenge of that id."""
+    return os.path.join(config.directory_user_edits, "challenges")
+
+
+def _user_path(cid: str) -> str:
+    return os.path.join(user_directory(), cid + ".json")
+
+
+def _into_user() -> bool:
+    """Saves go to user_data (every edit does), except in the maintainer's
+    mode (config save_edits_to = mod), which writes the pack."""
+    from app import game_data as G
+    return G.saves_to_user_edits()
+
+
+def _edits_on() -> bool:
+    from app import game_data as G
+    store = G.edit_store()
+    return store is None or store.enabled
+
+
+def _read_folder(folder: str, into: dict, user: bool):
+    if not os.path.isdir(folder):
+        return
+    for fname in os.listdir(folder):
+        if not fname.endswith(".json"):
+            continue
+        try:
+            with open(os.path.join(folder, fname), encoding="utf-8") as f:
+                raw = json.load(f)
+            if user and isinstance(raw, dict) and raw.get("deleted") is True:
+                into.pop(fname[:-5], None)
+            else:
+                into[fname[:-5]] = normalise(raw)
+        except (OSError, ValueError) as e:
+            log.warning(f"challenge {fname} skipped: {e}")
+
+
 def normalise(data: dict) -> dict:
     """`data` over DEFAULTS, one level deep for the two team blocks."""
     out = new_challenge()
@@ -174,23 +215,20 @@ def load_all() -> dict:
     """{challenge_id: challenge}, ordered by `order` then name. A file that
     cannot be read is skipped with a warning rather than hiding the rest."""
     found = {}
-    folder = challenges_directory()
-    if not os.path.isdir(folder):
-        return found
-    for fname in os.listdir(folder):
-        if not fname.endswith(".json"):
-            continue
-        try:
-            with open(os.path.join(folder, fname), encoding="utf-8") as f:
-                found[fname[:-5]] = normalise(json.load(f))
-        except (OSError, ValueError) as e:
-            log.warning(f"challenge {fname} skipped: {e}")
+    _read_folder(challenges_directory(), found, user=False)
+    if _edits_on():
+        _read_folder(user_directory(), found, user=True)
     return dict(sorted(found.items(), key=lambda kv: (kv[1]["order"], kv[1]["name"].lower())))
 
 
 def save(cid: str, data: dict) -> str:
-    os.makedirs(challenges_directory(), exist_ok=True)
-    path = _path(cid)
+    if _into_user():
+        if not _edits_on():
+            raise OSError("your edits are turned off: turn them on in Tools › My edits to save")
+        path = _user_path(cid)
+    else:
+        path = _path(cid)
+    os.makedirs(os.path.dirname(path), exist_ok=True)
     tmp = path + ".tmp"
     with open(tmp, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
@@ -200,6 +238,16 @@ def save(cid: str, data: dict) -> str:
 
 
 def delete(cid: str) -> None:
+    if _into_user():
+        try:
+            os.remove(_user_path(cid))
+        except FileNotFoundError:
+            pass
+        if os.path.isfile(_path(cid)):          # the pack's own: hidden, never deleted
+            os.makedirs(user_directory(), exist_ok=True)
+            with open(_user_path(cid), "w", encoding="utf-8") as f:
+                json.dump({"deleted": True}, f)
+        return
     try:
         os.remove(_path(cid))
     except FileNotFoundError:

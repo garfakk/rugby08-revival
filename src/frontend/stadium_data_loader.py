@@ -22,6 +22,9 @@ that is also in stadiums.json replaces that stadium in the lists; a new key
 adds one.
 "pitches" (optional): the pitch textures a match there may use (names of
 gsv.pitch_textures, backend/pitches.py); none = any.
+The stadium editor's picks of these (and the pitch logos, stripes and
+environments) are the user's: kept in user_data/edits/stadiums and laid over
+what is read here (app/user_stadiums.py).
 """
 import os
 import json

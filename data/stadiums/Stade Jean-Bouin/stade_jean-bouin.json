@@ -8,9 +8,6 @@
     },
     "files": {
       "frontend/textures/stadiums/paris.o.fsh": "stade_jean-bouin.o.fsh"
-    },
-    "dressing": {
-      "posts": "stadium_graphics/posts/pink"
     }
   }
 }

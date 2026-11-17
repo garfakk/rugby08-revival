@@ -6,11 +6,6 @@
     "scenes": {
       "day": "christchurch.day.big",
       "night": "christchurch.night.big"
-    },
-    "dressing": {
-      "pads": "competitions/european_cup/assets/pads",
-      "posts": "stock:standard/training",
-      "ads": "stock:scrolling/england_scrolling_six_nations"
     }
   }
 }

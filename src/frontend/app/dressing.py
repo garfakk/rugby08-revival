@@ -157,8 +157,12 @@ def save_stadium(ds, sid, refs, pitches=(), logos=None, stripes=None, environmen
     the game's own) and "stripes" ({environment: {"opacity", "brightness"}},
     backend/pitch_stripes; none = the scene packs' own) and "environments"
     (the ones a match there may use; None = those it has scenes for) in its
-    JSON, and into the loaded data. The file's path."""
+    JSON (the maintainer's mode, config save_edits_to = mod) or, as every
+    edit, in user_data/edits/stadiums (app/user_stadiums.py), and into the
+    loaded data. The file's path."""
     import json
+    from app import game_data as G
+    from app import user_stadiums
     path = stadium_json_path(sid)
     if path is None:
         raise OSError(f"no stadium folder defines {sid}")
@@ -171,15 +175,21 @@ def save_stadium(ds, sid, refs, pitches=(), logos=None, stripes=None, environmen
     environments = list(environments or [])
     values = (("dressing", refs), ("pitches", pitches), ("pitch_logos", logos), ("stripes", stripes),
               ("environments", environments))
-    for key, value in values:
-        if value or (key == "pitch_logos" and value is not None):
-            entry[key] = value
-        else:
-            entry.pop(key, None)
-    with open(path + ".tmp", "w", encoding="utf-8") as fh:
-        json.dump(data, fh, indent=2, ensure_ascii=False)
-        fh.write("\n")
-    os.replace(path + ".tmp", path)
+    if G.saves_to_user_edits():
+        # the edit is the user's: kept in user_data, the pack's file untouched
+        if not ds.edits.enabled:
+            raise G.SaveError("your edits are turned off: turn them on in Tools › My edits to save")
+        path = user_stadiums.save(sid, dict(values), {k: entry.get(k) for k in user_stadiums.EDIT_KEYS})
+    else:
+        for key, value in values:
+            if value or (key == "pitch_logos" and value is not None):
+                entry[key] = value
+            else:
+                entry.pop(key, None)
+        with open(path + ".tmp", "w", encoding="utf-8") as fh:
+            json.dump(data, fh, indent=2, ensure_ascii=False)
+            fh.write("\n")
+        os.replace(path + ".tmp", path)
     info = ds.stadiums.get(str(sid))
     if isinstance(info, dict):
         for key, value in values:
