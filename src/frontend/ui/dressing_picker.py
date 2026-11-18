@@ -84,7 +84,7 @@ class DressingRow(DropdownRow):
                 view.setPixmap(_pixmap(strip) if strip is not None else QPixmap())
         else:
             from ui.posts_view import PostsView     # GL stack only when opened
-            view = PostsView()
+            view = PostsView(view="pads" if self.kind == "pads" else "posts")
             holder.setFixedHeight(PREVIEW_H)
 
             def show(option):

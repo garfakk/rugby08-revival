@@ -22,18 +22,43 @@ log = get_logger(__name__)
 
 _MODEL = Path(assets_directory()) / "models" / "posts.npz"
 TAGS = ("pada", "padb", "flag", "flgp", "post", "xbar")
-_CENTRE = np.array([140.0, 270.0, 40.0], dtype=np.float32)
-_DISTANCE = 1050.0
+# camera per view: (look-at centre, distance, eye height, yaw)
+_FRAMES = {
+    # the whole goal and the corner flag
+    "posts": ((140.0, 270.0, 40.0), 1050.0, -60.0, 22.0),
+    # close on one post pad and the corner flag (the posts' set shows on
+    # the post rising out of the frame)
+    "pads": ((200.0, 108.0, 0.0), 430.0, 30.0, 18.0),
+}
+# "pads": the corner flag brought next to the post (it stands far off)
+_FLAG_SHIFT = np.array([-75.0, 0.0, -105.0], dtype=np.float32)
 
 
-def _load_meshes():
+def _keep_pads_corner(pos, tri):
+    """Triangles of the right-hand post and the corner flag, below the
+    crossbar: the left post, the crossbar and the flags on top go."""
+    t = tri.reshape(-1, 3)
+    v = pos[t]                                   # (n, 3 corners, xyz)
+    keep = (v[:, :, 0] > 100).all(axis=1) & ~((v[:, :, 1] > 600).all(axis=1))
+    return t[keep].ravel()
+
+
+def _load_meshes(view="posts"):
     data = np.load(_MODEL)
     meshes = {}
     for tag in TAGS:
         if f"{tag}_pos" not in data.files:
             continue
-        buf = np.concatenate([data[f"{tag}_pos"], data[f"{tag}_nrm"], data[f"{tag}_uv"]], axis=1)
-        meshes[tag] = (buf.astype(np.float32), data[f"{tag}_tri"].astype(np.uint32).ravel())
+        pos = data[f"{tag}_pos"]
+        buf = np.concatenate([pos, data[f"{tag}_nrm"], data[f"{tag}_uv"]], axis=1)
+        tri = data[f"{tag}_tri"].astype(np.uint32).ravel()
+        if view == "pads":
+            if tag in ("flag", "flgp"):
+                buf[:, :3] += _FLAG_SHIFT
+            tri = _keep_pads_corner(pos, tri)
+            if not tri.size:
+                continue
+        meshes[tag] = (buf.astype(np.float32), tri)
     return meshes
 
 
@@ -46,8 +71,10 @@ def _translate(v):
 class PostsRenderer:
     """GL side (initialize()/draw(w, h), the contract _GLSurface drives)."""
 
-    def __init__(self):
-        self.yaw = 0.0
+    def __init__(self, view="posts"):
+        self.view = view
+        centre, self._distance, self._eye_y, self.yaw = _FRAMES[view]
+        self._centre = np.array(centre, dtype=np.float32)
         self.transparent = True
         self._pending = None            # {tag: PIL image} waiting for the GL context
         self._tex = {}
@@ -59,7 +86,7 @@ class PostsRenderer:
 
     def initialize(self):
         self._program = PlayerRenderer._build_program(self)
-        for tag, (buf, tri) in _load_meshes().items():
+        for tag, (buf, tri) in _load_meshes(self.view).items():
             vao = GL.glGenVertexArrays(1)
             GL.glBindVertexArray(vao)
             vbo = GL.glGenBuffers(1)
@@ -96,9 +123,9 @@ class PostsRenderer:
         GL.glClearColor(0.0, 0.0, 0.0, 0.0)
         GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
         GL.glEnable(GL.GL_DEPTH_TEST)
-        eye = np.array([0.0, -60.0, _DISTANCE], dtype=np.float32)
+        eye = np.array([0.0, self._eye_y, self._distance], dtype=np.float32)
         proj = _perspective(32.0, max(1e-3, width / max(1, height)), 20.0, 8000.0)
-        model = _rot_y(self.yaw) @ _translate(-_CENTRE)
+        model = _rot_y(self.yaw) @ _translate(-self._centre)
         mvp = proj @ _look_at(eye, (0.0, 0.0, 0.0)) @ model
         GL.glUseProgram(self._program)
         GL.glUniformMatrix4fv(GL.glGetUniformLocation(self._program, 'u_mvp'), 1, GL.GL_TRUE, mvp)
@@ -115,15 +142,13 @@ class PostsRenderer:
 
 class PostsView(QWidget):
     """The goal, seen from a fixed three-quarter angle (it does not move);
-    drawn again only when the textures or the size change."""
+    drawn again only when the textures or the size change. `view` "pads":
+    close on one post pad and the corner flag instead of the whole goal."""
 
-    YAW = 22.0
-
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, view="posts"):
         super().__init__(parent)
         self.setAttribute(Qt.WA_TranslucentBackground, True)
-        self.renderer = PostsRenderer()
-        self.renderer.yaw = self.YAW
+        self.renderer = PostsRenderer(view)
         self._surface = _GLSurface(self.renderer, True)
         self._image = None
 
