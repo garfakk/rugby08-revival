@@ -27,7 +27,7 @@ _FRAMES = {
     # the whole goal and the corner flag
     "posts": ((140.0, 270.0, 40.0), 1050.0, -60.0, 22.0),
     # close on one post pad and the corner flag (the posts' set shows on
-    # the post rising out of the frame)
+    # the post rising out of the frame and the end of the crossbar)
     "pads": ((200.0, 108.0, 0.0), 430.0, 30.0, 18.0),
 }
 # "pads": the corner flag brought next to the post (it stands far off)
@@ -36,7 +36,8 @@ _FLAG_SHIFT = np.array([-75.0, 0.0, -105.0], dtype=np.float32)
 
 def _keep_pads_corner(pos, tri):
     """Triangles of the right-hand post and the corner flag, below the
-    crossbar: the left post, the crossbar and the flags on top go."""
+    crossbar: the left post and the flags on top go (the crossbar stays,
+    running out of the frame)."""
     t = tri.reshape(-1, 3)
     v = pos[t]                                   # (n, 3 corners, xyz)
     keep = (v[:, :, 0] > 100).all(axis=1) & ~((v[:, :, 1] > 600).all(axis=1))
@@ -55,7 +56,8 @@ def _load_meshes(view="posts"):
         if view == "pads":
             if tag in ("flag", "flgp"):
                 buf[:, :3] += _FLAG_SHIFT
-            tri = _keep_pads_corner(pos, tri)
+            if tag != "xbar":
+                tri = _keep_pads_corner(pos, tri)
             if not tri.size:
                 continue
         meshes[tag] = (buf.astype(np.float32), tri)
