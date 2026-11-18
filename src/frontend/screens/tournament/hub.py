@@ -18,6 +18,7 @@ from app.screen_base import Screen
 from app.tournament import formats, persistence
 from app.tournament.session import TournamentSession
 from shared.log import get_logger
+from shared.user_prefs import user_prefs
 from ui import motion
 from ui.broadcast import HintBar, page_header, tracked_font
 from ui.editor_kit import ConfirmDialog
@@ -298,6 +299,8 @@ class TournamentHubScreen(Screen):
 
     # ── data ─────────────────────────────────────────────────────────────
     def on_show(self):
+        if self.create_tile is not None:     # the tournament editor: expert mode only
+            self.create_tile.setVisible(user_prefs.expert_mode)
         super().on_show()
         self.reload()
         (self._cards[0] if self._cards else self.new_tile).setFocus()

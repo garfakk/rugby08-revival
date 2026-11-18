@@ -126,6 +126,22 @@ def test_match_setup_dressing_choice(window, qapp, monkeypatch):
     monkeypatch.setattr(dressing, "library_sets", real)
 
 
+def test_editors_and_crowd_rows_in_expert_mode_only(window, qapp, monkeypatch):
+    """Tools' tournament and stadium editors, the hub's CREATE YOUR OWN and
+    quick match's crowd rows show only in expert mode."""
+    from shared.user_prefs import user_prefs
+    for expert in (False, True):
+        monkeypatch.setattr(user_prefs, "expert_mode", expert, raising=False)
+        window.screen_tools.on_show()
+        assert [t.isHidden() for t in window.screen_tools.expert_tiles] == [not expert] * 2
+        hub = window.screen_tournament_hub
+        hub.on_show()
+        assert hub.create_tile.isHidden() is not expert
+        setup = window.screen_match_setup.setup_screen
+        setup._apply_expert_mode()
+        assert setup.crowd_rows and all(r.isHidden() is not expert for r in setup.crowd_rows.values())
+
+
 def test_match_setup_expert_start_minute(window, qapp, monkeypatch):
     """Expert mode: quick match kicks off from a given minute and score, as
     the tournament's "play from a given minute"; back to a kick-off after."""
@@ -1062,10 +1078,12 @@ def test_boots_picker_folds_sections_and_player_teams_lists_every_season(window,
     assert len(seasons) >= 1
 
 
-def test_match_setup_crowd_rows(window, qapp):
-    """crowd / supporters / atmosphere: the game's own by default, a choice
-    goes to the match data."""
+def test_match_setup_crowd_rows(window, qapp, monkeypatch):
+    """crowd / supporters / atmosphere (expert mode): the game's own by
+    default, a choice goes to the match data."""
     from backend import crowd
+    from shared.user_prefs import user_prefs
+    monkeypatch.setattr(user_prefs, "expert_mode", True, raising=False)
     if not crowd.OPTIONS_ENABLED:
         # switched off for now: no rows, and a stored choice changes nothing
         setup = window.screen_match_setup.setup_screen

@@ -392,9 +392,11 @@ def _own_pitch(cfg, stadium_files):
 def _crowd(cfg):
     """The crowd of this match (backend crowd): {"scene" (game path of the
     scene pack of the environment), "size", "colours" (bool), "mood"}; None
-    when it is the game's own (always, while crowd.OPTIONS_ENABLED is off)."""
+    when it is the game's own (always, while crowd.OPTIONS_ENABLED is off,
+    and outside expert mode)."""
     from backend import crowd
-    if not crowd.OPTIONS_ENABLED:
+    from shared.user_prefs import user_prefs
+    if not crowd.OPTIONS_ENABLED or not user_prefs.expert_mode:
         return None
     if cfg.crowd_size == "full" and not cfg.crowd_colours and cfg.crowd_mood == "normal":
         return None

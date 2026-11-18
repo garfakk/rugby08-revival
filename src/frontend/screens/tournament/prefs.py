@@ -40,6 +40,8 @@ GROUPS = [("match", ["difficulty", "halftime_length"]),
           ("rules", ["law_5022", "law_22m", "law_penalty_touch"])]
 if crowd.OPTIONS_ENABLED:
     GROUPS.append(("crowd", ["crowd_size", "crowd_colours", "crowd_mood"]))
+# shown in expert mode only
+EXPERT_GROUPS = {"crowd"}
 VALUES = {
     "difficulty": [(level, level.capitalize()) for level in difficulty.LEVELS],
     "halftime_length": [(v, f"{v[:-1]} min" if v.endswith("m") else v) for v in HALF_LENGTHS],
@@ -74,8 +76,11 @@ class PrefsPanel(QWidget):
         self._grid.setVerticalSpacing(18)
         self._grid.setSizeConstraint(QLayout.SetNoConstraint)
         self._columns = []
+        from shared.user_prefs import user_prefs
         for title, keys in GROUPS:
             if groups is not None and title not in groups:
+                continue
+            if title in EXPERT_GROUPS and not user_prefs.expert_mode:
                 continue
             column = transparent(QWidget(), f"tourPrefs_{title}")
             col = QVBoxLayout(column)

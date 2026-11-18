@@ -86,13 +86,18 @@ def test_a_quiet_crowd_reacts_less_and_calms_sooner():
 
 
 def test_the_match_data_names_the_scene_only_when_the_crowd_changes(monkeypatch):
+    from shared.user_prefs import user_prefs
     monkeypatch.setattr(crowd, "OPTIONS_ENABLED", True)
+    monkeypatch.setattr(user_prefs, "expert_mode", True)
     cfg = MatchConfig()
     cfg.stadium = {"stadium_id": 49, "data": {"game_id": 49}}
     cfg.environment = "night"
     assert _crowd(cfg) is None
     cfg.crowd_size, cfg.crowd_colours = "half", True
     assert _crowd(cfg) == {"scene": "stadiums/auckland.night", "size": "half", "colours": True, "mood": "normal"}
+    monkeypatch.setattr(user_prefs, "expert_mode", False)          # expert mode only
+    assert _crowd(cfg) is None
+    monkeypatch.setattr(user_prefs, "expert_mode", True)
     monkeypatch.setattr(crowd, "OPTIONS_ENABLED", False)           # switched off: the game's own crowd
     assert _crowd(cfg) is None
 

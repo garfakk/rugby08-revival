@@ -13,10 +13,15 @@ from PyQt5.QtCore import Qt
 from app.screen_base import Screen
 from app.input import Action, KEYMAP
 from shared.config import config
+from shared.user_prefs import user_prefs
 from ui.broadcast import (
     Card, HintBar, MenuTile, page_header, eyebrow_label, display_label, scroll_wrap,
 )
 from ui.theme import BG_BASE, ACCENT, FG_SECONDARY, FG_MUTED
+
+
+# Tools offered in expert mode only
+EXPERT_TOOLS = ("TOURNAMENT EDITOR", "STADIUM EDITOR")
 
 
 class ToolsScreen(Screen):
@@ -61,10 +66,13 @@ class ToolsScreen(Screen):
                 ("CHALLENGE EDITOR", "", on_challenge_editor, on_challenge_editor is None),
             ])
         self.edits_tile = None
+        self.expert_tiles = []       # shown in expert mode only (on_show)
         for title, subtitle, slot, soon in items:
             tile = MenuTile(title, subtitle, soon=soon)
             if title == "MY EDITS":
                 self.edits_tile = tile
+            if title in EXPERT_TOOLS:
+                self.expert_tiles.append(tile)
             if slot is not None:
                 tile.activated.connect(slot)
             self.focus.register(tile)
@@ -74,6 +82,7 @@ class ToolsScreen(Screen):
         menu_w.setLayout(menu)
         bl.addWidget(menu_w, stretch=3)
 
+        self._apply_expert_mode()
         root.addWidget(scroll_wrap(body), stretch=1)
 
         self.hintbar = HintBar()
@@ -81,8 +90,14 @@ class ToolsScreen(Screen):
         root.addWidget(self.hintbar)
 
     def on_show(self):
+        self._apply_expert_mode()
         super().on_show()
         self._update_edits_tile()
+
+    def _apply_expert_mode(self):
+        """Hidden tiles are skipped by keyboard/pad navigation."""
+        for tile in self.expert_tiles:
+            tile.setVisible(user_prefs.expert_mode)
 
     def _update_edits_tile(self):
         """MY EDITS says how many records are edited and how many wait for a choice."""

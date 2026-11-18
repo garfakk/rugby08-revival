@@ -895,6 +895,8 @@ class MatchSetupScreen(KickoffTransition, Screen):
             row.setVisible(user_prefs.expert_mode)
         for row in self._late_start_rows():
             row.setVisible(user_prefs.expert_mode)
+        for row in getattr(self, "crowd_rows", {}).values():
+            row.setVisible(user_prefs.expert_mode)
 
     def _late_start_rows(self):
         if not hasattr(self, "start_minute_row"):
@@ -1132,6 +1134,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
                                     ("crowd_mood", "atmosphere", ["normal", "quiet"])) \
                 if crowd.OPTIONS_ENABLED else ():
             row = SelectorRow(label)
+            row.set_status("EXPERT", EXPERT)
             current = getattr(self.cfg, attr)
             if attr == "crowd_colours":
                 current = "colours" if current else "neutral"
