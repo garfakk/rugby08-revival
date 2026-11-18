@@ -175,6 +175,30 @@ def test_persistence_roundtrip(ds, data_dir):
         persistence.load(t.id)
 
 
+def test_list_saves_reads_summaries_not_saves(ds, data_dir, monkeypatch):
+    """The hub's list comes from the summaries cache; a save is parsed
+    again only when its file changed. Snapshots are never listed."""
+    t = new(ds)
+    engine.simulate_day(t)
+    persistence.save(t)
+    persistence.snapshot(t, "last_match")
+    persistence._index = None                 # a new start: the cache file on disk
+    parsed = []
+    real = persistence._from_data
+    monkeypatch.setattr(persistence, "_from_data", lambda d: parsed.append(1) or real(d))
+    (s,) = persistence.list_saves()
+    assert not parsed
+    assert s["id"] == t.id and s["where"] == report.where_now(t)
+    assert s["played"] == sum(f.played for f in t.fixtures) and s["template"]["name"] == t.template["name"]
+    # changed behind the cache's back (another copy of the app, a restore)
+    engine.simulate_day(t)
+    persistence._write(persistence._path(t.id), t.to_dict() | {"updated": "9999"})
+    (s,) = persistence.list_saves()
+    assert parsed and s["updated"] == "9999" and s["played"] == sum(f.played for f in t.fixtures)
+    persistence.delete(t.id)
+    assert persistence.list_saves() == []
+
+
 def test_migrate_keeps_current_schema(ds):
     data = new(ds).to_dict()
     assert persistence.migrate(copy.deepcopy(data))["schema_version"] == data["schema_version"]

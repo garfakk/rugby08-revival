@@ -78,6 +78,7 @@ def _from_data(data) -> Tournament:
 def save(t: Tournament) -> None:
     t.updated = datetime.now().isoformat(timespec="seconds")
     _write(_path(t.id), t.to_dict())
+    _remember(t)
 
 
 def load(tid: str) -> Tournament:
@@ -86,44 +87,128 @@ def load(tid: str) -> Tournament:
 
 
 def delete(tid: str) -> None:
-    for suffix in ("", ".undo", ".prematch", ".last_match"):
+    for suffix in ("",) + _SNAPSHOTS:
         try:
             os.remove(_path(tid, suffix))
         except FileNotFoundError:
             pass
 
 
+# Snapshots beside a save, never listed as saves of their own.
+_SNAPSHOTS = (".undo", ".prematch", ".last_match")
+
+# Summaries of the saves, kept in a small file beside them so the hub
+# doesn't parse every (multi-MB) save each time it opens. An entry is good
+# while its save's mtime and size match; save() refreshes its own entry.
+_INDEX_NAME = "summaries.cache"
+_INDEX_VERSION = 1
+_index = None            # {"dir": path, "entries": {tid: {"stamp": [mtime_ns, size], "summary": {...}}}}
+
+
+def _stamp(path):
+    st = os.stat(path)
+    return [st.st_mtime_ns, st.st_size]
+
+
+def _load_index(d) -> dict:
+    global _index
+    if _index is not None and _index["dir"] == d:
+        return _index["entries"]
+    entries = {}
+    try:
+        with open(os.path.join(d, _INDEX_NAME), "r", encoding="utf-8") as fh:
+            data = json.load(fh)
+        if data.get("version") == _INDEX_VERSION:
+            entries = data.get("entries") or {}
+    except FileNotFoundError:
+        pass
+    except Exception as e:
+        log.warning("tournament summaries cache unreadable, rebuilding: %s", e)
+    _index = {"dir": d, "entries": entries}
+    return entries
+
+
+def _store_index(d) -> None:
+    try:
+        _write(os.path.join(d, _INDEX_NAME), {"version": _INDEX_VERSION, "entries": _index["entries"]})
+    except OSError as e:
+        log.warning("tournament summaries cache not written: %s", e)
+
+
+def summarize(t: Tournament) -> dict:
+    """What the hub shows of a save, without the save."""
+    from . import report
+    template = t.template or {}
+    human = [(k, v) for k, v in t.teams.items() if v.human]
+    return {
+        "id": t.id, "name": t.name or t.id, "template_id": t.template_id,
+        "season": t.season, "day": t.day,
+        "last_day": max((f.day for f in t.fixtures), default=0),
+        "updated": t.updated,
+        "humans": [v.name or k for k, v in human],
+        "human_ids": [(k, v.season) for k, v in human],
+        "options": t.options,
+        "played": sum(1 for f in t.fixtures if f.played),
+        "total": len(t.fixtures),
+        "champion_id": t.champion,
+        "champion": (t.teams[t.champion].name if t.champion in t.teams else None) if t.champion else None,
+        # the template's look only (the card's emblem and competition name)
+        "template": {k: template[k] for k in ("name", "branding", "branding_season") if k in template},
+        "where": report.where_now(t),
+    }
+
+
+def _remember(t: Tournament) -> None:
+    d = saves_directory()
+    entries = _load_index(d)
+    try:
+        entries[t.id] = {"stamp": _stamp(_path(t.id)), "summary": summarize(t)}
+    except Exception as e:
+        log.warning("tournament %s summary: %s", t.id, e)
+        entries.pop(t.id, None)
+    _store_index(d)
+
+
 def list_saves() -> list:
     """Summaries, most recently updated first: {id, name, template_id,
     season, day, last_day, updated, humans, human_ids [(id, season)],
-    options, played, total, champion, champion_id, error}."""
+    options, played, total, champion, champion_id, template (name,
+    branding, branding_season), where, has_prematch, error}."""
     out = []
     d = saves_directory()
+    entries = _load_index(d)
+    seen, changed = set(), False
     for name in os.listdir(d):
-        if not name.endswith(".json") or name.endswith((".undo.json", ".prematch.json", ".tmp")):
+        if not name.endswith(".json"):
             continue
         tid = name[:-5]
+        if tid.endswith(_SNAPSHOTS):
+            continue
+        seen.add(tid)
+        path = os.path.join(d, name)
         try:
-            with open(os.path.join(d, name), "r", encoding="utf-8") as fh:
-                data = json.load(fh)
-            teams = data.get("teams", {})
-            out.append({
-                "id": tid, "name": data.get("name", tid), "template_id": data.get("template_id", ""),
-                "season": data.get("season", ""), "day": data.get("day", 0),
-                "last_day": max((f.get("day", 0) for f in data.get("fixtures", [])), default=0),
-                "updated": data.get("updated", ""),
-                "humans": [v.get("name", k) for k, v in teams.items() if v.get("human")],
-                "human_ids": [(k, v.get("season", "")) for k, v in teams.items() if v.get("human")],
-                "options": data.get("options", {}),
-                "played": sum(1 for f in data.get("fixtures", []) if f.get("result")),
-                "total": len(data.get("fixtures", [])),
-                "champion_id": data.get("champion"),
-                "champion": teams.get(data.get("champion"), {}).get("name") if data.get("champion") else None,
-                "has_prematch": os.path.exists(_path(tid, ".prematch")),
-            })
+            stamp = _stamp(path)
+            hit = entries.get(tid)
+            if hit and hit.get("stamp") == stamp:
+                summary = dict(hit["summary"])
+            else:
+                with open(path, "r", encoding="utf-8") as fh:
+                    summary = summarize(_from_data(json.load(fh)))
+                summary["id"] = tid
+                entries[tid] = {"stamp": stamp, "summary": summary}
+                changed = True
+                summary = dict(summary)
+            summary["human_ids"] = [tuple(x) for x in summary.get("human_ids") or []]
+            summary["has_prematch"] = os.path.exists(_path(tid, ".prematch"))
+            out.append(summary)
         except Exception as e:
             log.warning("unreadable tournament save %s: %s", name, e)
             out.append({"id": tid, "name": tid, "error": str(e)})
+    for tid in set(entries) - seen:
+        del entries[tid]
+        changed = True
+    if changed:
+        _store_index(d)
     out.sort(key=lambda s: s.get("updated", ""), reverse=True)
     return out
 

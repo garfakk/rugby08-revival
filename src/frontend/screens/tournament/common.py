@@ -143,6 +143,11 @@ def placeholder_crest(size) -> QPixmap:
 
 def clear_crest_cache():
     _CREST_CACHE.clear()
+    _EMBLEM_CACHE.clear()
+
+
+# (logo path, mtime, size) or (None, name, size) -> QPixmap
+_EMBLEM_CACHE = {}
 
 
 def competition_emblem(ds, template, size=72) -> QPixmap:
@@ -158,9 +163,22 @@ def competition_emblem(ds, template, size=72) -> QPixmap:
     candidates = [os.path.join(folder, e[k]) for e in entries for k in ("logo_frontend", "logo") if e.get(k)]
     path = next((c for c in candidates if os.path.isfile(c)), "")
     if path:
+        key = (path, os.path.getmtime(path), size)
+        if key in _EMBLEM_CACHE:
+            return _EMBLEM_CACHE[key]
         pix = QPixmap(path)
         if not pix.isNull():
-            return pix.scaled(size, size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+            pix = pix.scaled(size, size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+            _EMBLEM_CACHE[key] = pix
+            return pix
+    key = (None, template.get("name", ""), size)
+    if key in _EMBLEM_CACHE:
+        return _EMBLEM_CACHE[key]
+    _EMBLEM_CACHE[key] = _painted_emblem(template, size)
+    return _EMBLEM_CACHE[key]
+
+
+def _painted_emblem(template, size) -> QPixmap:
     pix = QPixmap(size, size)
     pix.fill(Qt.transparent)
     p = QPainter(pix)

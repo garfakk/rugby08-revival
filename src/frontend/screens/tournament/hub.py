@@ -15,7 +15,7 @@ from PyQt5.QtWidgets import QHBoxLayout, QScrollArea, QVBoxLayout, QWidget
 
 from app.input import KEYMAP, Action
 from app.screen_base import Screen
-from app.tournament import formats, persistence, report
+from app.tournament import formats, persistence
 from app.tournament.session import TournamentSession
 from shared.log import get_logger
 from ui import motion
@@ -228,7 +228,6 @@ class TournamentHubScreen(Screen):
         self.on_open = on_open
         self._saves = []
         self._cards = []
-        self._loaded = {}            # save id -> (updated, Tournament)
         self._selected = None        # the focused save; None = NEW TOURNAMENT
         self._build()
 
@@ -304,21 +303,6 @@ class TournamentHubScreen(Screen):
         (self._cards[0] if self._cards else self.new_tile).setFocus()
         motion.stagger_in([self.new_tile] + self._cards[:8], step=55)
 
-    def _tournament(self, s):
-        """The save's Tournament (cached until the save changes), else None."""
-        if not s or s.get("error"):
-            return None
-        hit = self._loaded.get(s["id"])
-        if hit and hit[0] == s.get("updated"):
-            return hit[1]
-        try:
-            t = persistence.load(s["id"])
-        except Exception as e:
-            log.warning("tournament %s: %s", s["id"], e)
-            return None
-        self._loaded[s["id"]] = (s.get("updated"), t)
-        return t
-
     def reload(self):
         self.templates = formats.load_templates()
         self._saves = persistence.list_saves()
@@ -333,10 +317,8 @@ class TournamentHubScreen(Screen):
             for s in self._saves:
                 if ("done" if s.get("champion") else "progress") != key:
                     continue
-                t = self._tournament(s)
-                tpl = (t.template if t else None) or self.templates.get(s.get("template_id"))
-                card = SaveCard(self.ds, s, tpl if not s.get("error") else None,
-                                report.where_now(t) if t else "")
+                tpl = s.get("template") or self.templates.get(s.get("template_id"))
+                card = SaveCard(self.ds, s, tpl if not s.get("error") else None, s.get("where", ""))
                 card.activated.connect(lambda s=s: (self._select(s), self._continue()))
                 card.focused.connect(lambda s=s: self._select(s))
                 card.delete_zone.clicked.connect(lambda s=s, c=card: (c.setFocus(), self._select(s),
@@ -400,7 +382,6 @@ class TournamentHubScreen(Screen):
         def done(role):
             if role == "ok":
                 persistence.delete(s["id"])
-                self._loaded.pop(s["id"], None)
                 self._selected = None
                 self.reload()
                 (self._cards[0] if self._cards else self.new_tile).setFocus()
