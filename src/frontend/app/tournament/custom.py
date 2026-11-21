@@ -1127,7 +1127,9 @@ def template_structure(tpl) -> list:
                 n_games = len(spec["fixtures"])
             else:
                 n_games = sum(round_robin_matches(s, legs) for s in sizes)
-            if len(sizes) > 1:
+            if len(sizes) > 1 and spec.get("cross"):
+                detail = f"{len(sizes)} pools · each plays the other pool once"
+            elif len(sizes) > 1:
                 detail = f"{len(sizes)} pools · " + ("home and away" if legs == 2 else "once")
             elif sizes:
                 detail = f"{sizes[0]} teams · " + ("home and away" if legs == 2 else "once")
@@ -1138,7 +1140,8 @@ def template_structure(tpl) -> list:
         else:
             for rnd in spec.get("rounds") or []:
                 ties = rnd.get("ties") or []
-                out.append({"kind": "final" if rnd.get("final") else "round",
+                final = rnd.get("final") or any(isinstance(x, dict) and x.get("final") for x in ties)
+                out.append({"kind": "final" if final else "round",
                             "title": rnd.get("name") or rnd.get("id", ""),
                             "detail": "one game" if len(ties) == 1 else f"{len(ties)} games",
                             "matches": len(ties)})

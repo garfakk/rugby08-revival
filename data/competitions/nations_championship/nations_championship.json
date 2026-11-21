@@ -1,0 +1,490 @@
+{
+  "id": "nations_championship",
+  "name": "Nations Championship",
+  "seasonal": true,
+  "seasons": {
+    "2026": {
+      "template": {
+        "id": "nations_championship_2026",
+        "name": "Nations Championship 2026",
+        "order": 16.0,
+        "description": "The first Nations Championship, as it was played: the Six Nations sides (North) play each team of the other conference once (South: the Rugby Championship sides, Fiji and Japan), three in July down south and three in November up north, real dates and grounds. Finals Weekend at Twickenham pairs the conferences' teams by place: 1st v 1st for the title, 2nd v 2nd for third, down to 6th v 6th. Points: 4 a win, 2 a draw, a bonus point for 4 tries and for losing by 7 or less.",
+        "season": "2026",
+        "match_type": "exhibition",
+        "venue": "home",
+        "points": {
+          "win": 4,
+          "draw": 2,
+          "loss": 0,
+          "try_bonus": {
+            "tries": 4
+          },
+          "losing_bonus": {
+            "margin": 7
+          }
+        },
+        "tiebreakers": [
+          "wins",
+          "points_diff",
+          "tries_diff",
+          "tries_for",
+          "lots"
+        ],
+        "discipline": {
+          "red_ban": [
+            1,
+            4
+          ],
+          "yellow_accumulation": 4,
+          "yellow_ban": 1,
+          "citing_chance": 0.01
+        },
+        "default_options": {
+          "difficulty": "pro",
+          "halftime_length": "5m",
+          "injuries": true,
+          "suspensions": true,
+          "fatigue": true,
+          "cards": true,
+          "sim_variance": 1.0,
+          "injury_rate": 1.0,
+          "injury_duration": 1.0,
+          "law_5022": true,
+          "law_22m": true,
+          "law_penalty_touch": true
+        },
+        "stages": [
+          {
+            "id": "pools",
+            "name": "Conferences",
+            "kind": "round_robin",
+            "cross": true,
+            "legs": 1,
+            "match_subtype": "none",
+            "group_names": {
+              "N": "North",
+              "S": "South"
+            },
+            "fixtures": [
+              {
+                "date": "2026-07-04",
+                "home": "1010",
+                "away": "10001",
+                "stadium": "48",
+                "venue": "One New Zealand Stadium at Te Kaha, Christchurch",
+                "real_score": "34–32"
+              },
+              {
+                "date": "2026-07-04",
+                "home": "1008",
+                "away": "1007",
+                "stadium": "japan_national_stadium",
+                "venue": "Chichibunomiya Rugby Stadium, Tokyo",
+                "real_score": "27–10"
+              },
+              {
+                "date": "2026-07-04",
+                "home": "1002",
+                "away": "10003",
+                "stadium": "3",
+                "venue": "Sydney Football Stadium, Sydney",
+                "real_score": "31–33"
+              },
+              {
+                "date": "2026-07-04",
+                "home": "1005",
+                "away": "1022",
+                "stadium": "36",
+                "venue": "Cardiff City Stadium, Cardiff",
+                "real_score": "24–39"
+              },
+              {
+                "date": "2026-07-04",
+                "home": "1015",
+                "away": "10002",
+                "stadium": "57",
+                "venue": "Ellis Park Stadium, Johannesburg",
+                "real_score": "45–21"
+              },
+              {
+                "date": "2026-07-04",
+                "home": "1001",
+                "away": "1014",
+                "stadium": "43",
+                "venue": "Estadio Mario Alberto Kempes, Córdoba",
+                "real_score": "38–47"
+              },
+              {
+                "date": "2026-07-11",
+                "home": "1010",
+                "away": "1007",
+                "stadium": "50",
+                "venue": "Wellington Regional Stadium, Wellington",
+                "real_score": "47–17"
+              },
+              {
+                "date": "2026-07-11",
+                "home": "1002",
+                "away": "10001",
+                "stadium": "2",
+                "venue": "Lang Park, Brisbane",
+                "real_score": "26–42"
+              },
+              {
+                "date": "2026-07-11",
+                "home": "1008",
+                "away": "10003",
+                "stadium": "3",
+                "venue": "Newcastle International Sports Centre, Newcastle",
+                "real_score": "20–36"
+              },
+              {
+                "date": "2026-07-11",
+                "home": "1005",
+                "away": "10002",
+                "stadium": "salford_city_stadium",
+                "venue": "Hill Dickinson Stadium, Liverpool",
+                "real_score": "8–73"
+              },
+              {
+                "date": "2026-07-11",
+                "home": "1015",
+                "away": "1014",
+                "stadium": "55",
+                "venue": "Loftus Versfeld Stadium, Pretoria",
+                "real_score": "42–28"
+              },
+              {
+                "date": "2026-07-11",
+                "home": "1001",
+                "away": "1022",
+                "stadium": "43",
+                "venue": "Estadio San Juan del Bicentenario, San Juan",
+                "real_score": "35–21"
+              },
+              {
+                "date": "2026-07-18",
+                "home": "1010",
+                "away": "10003",
+                "stadium": "eden_park",
+                "venue": "Eden Park, Auckland",
+                "real_score": "40–21"
+              },
+              {
+                "date": "2026-07-18",
+                "home": "1008",
+                "away": "10001",
+                "stadium": "japan_national_stadium",
+                "venue": "Japan National Stadium, Tokyo",
+                "real_score": "15–42"
+              },
+              {
+                "date": "2026-07-18",
+                "home": "1002",
+                "away": "1007",
+                "stadium": "31",
+                "venue": "Perth Rectangular Stadium, Perth",
+                "real_score": "57–10"
+              },
+              {
+                "date": "2026-07-18",
+                "home": "1005",
+                "away": "1014",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "17–33"
+              },
+              {
+                "date": "2026-07-18",
+                "home": "1015",
+                "away": "1022",
+                "stadium": "58",
+                "venue": "Kings Park Stadium, Durban",
+                "real_score": "43–0"
+              },
+              {
+                "date": "2026-07-18",
+                "home": "1001",
+                "away": "10002",
+                "stadium": "43",
+                "venue": "Estadio Único Madre de Ciudades, Santiago del Estero",
+                "real_score": "24–31"
+              },
+              {
+                "date": "2026-11-06",
+                "home": "10003",
+                "away": "1001",
+                "stadium": "aviva_stadium",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "42–12"
+              },
+              {
+                "date": "2026-11-07",
+                "home": "1007",
+                "away": "1015",
+                "stadium": "stadio_olimpico",
+                "venue": "Juventus Stadium, Turin",
+                "real_score": "7–66"
+              },
+              {
+                "date": "2026-11-07",
+                "home": "1014",
+                "away": "1010",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "21–43"
+              },
+              {
+                "date": "2026-11-07",
+                "home": "1022",
+                "away": "1008",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "28–21"
+              },
+              {
+                "date": "2026-11-07",
+                "home": "10001",
+                "away": "1005",
+                "stadium": "ol_stadium",
+                "venue": "Groupama Stadium, Lyon",
+                "real_score": "54–17"
+              },
+              {
+                "date": "2026-11-08",
+                "home": "10002",
+                "away": "1002",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "45–22"
+              },
+              {
+                "date": "2026-11-13",
+                "home": "10001",
+                "away": "1015",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis",
+                "real_score": "21–19"
+              },
+              {
+                "date": "2026-11-14",
+                "home": "1007",
+                "away": "1001",
+                "stadium": "stadio_olimpico",
+                "venue": "Stadio Luigi Ferraris, Genoa",
+                "real_score": "14–19"
+              },
+              {
+                "date": "2026-11-14",
+                "home": "1022",
+                "away": "1010",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff",
+                "real_score": "35–28"
+              },
+              {
+                "date": "2026-11-14",
+                "home": "10002",
+                "away": "1008",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "78–15"
+              },
+              {
+                "date": "2026-11-14",
+                "home": "10003",
+                "away": "1005",
+                "stadium": "aviva_stadium",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "43–15"
+              },
+              {
+                "date": "2026-11-15",
+                "home": "1014",
+                "away": "1002",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "15–12"
+              },
+              {
+                "date": "2026-11-21",
+                "home": "10002",
+                "away": "1010",
+                "stadium": "14",
+                "venue": "Twickenham Stadium, London",
+                "real_score": "37–12"
+              },
+              {
+                "date": "2026-11-21",
+                "home": "1014",
+                "away": "1008",
+                "stadium": "29",
+                "venue": "Murrayfield Stadium, Edinburgh",
+                "real_score": "67–5"
+              },
+              {
+                "date": "2026-11-21",
+                "home": "10003",
+                "away": "1015",
+                "stadium": "aviva_stadium",
+                "venue": "Aviva Stadium, Dublin",
+                "real_score": "20–17"
+              },
+              {
+                "date": "2026-11-21",
+                "home": "1007",
+                "away": "1005",
+                "stadium": "stadio_olimpico",
+                "venue": "Stadio Friuli, Udine",
+                "real_score": "16–21"
+              },
+              {
+                "date": "2026-11-21",
+                "home": "1022",
+                "away": "1002",
+                "stadium": "32",
+                "venue": "Millennium Stadium, Cardiff"
+              },
+              {
+                "date": "2026-11-21",
+                "home": "10001",
+                "away": "1001",
+                "stadium": "70",
+                "venue": "Stade de France, Saint-Denis"
+              }
+            ]
+          },
+          {
+            "id": "finals",
+            "name": "Finals Weekend",
+            "kind": "knockout",
+            "rounds": [
+              {
+                "id": "fri",
+                "name": "Friday 27 November",
+                "venue": "neutral",
+                "ties": [
+                  {
+                    "id": "nc_p11",
+                    "teams": [
+                      "pools:N6",
+                      "pools:S6"
+                    ],
+                    "date": "2026-11-27",
+                    "time": "16:40",
+                    "stadium": "14",
+                    "venue": "Twickenham Stadium, London",
+                    "name": "11th place"
+                  },
+                  {
+                    "id": "nc_p5",
+                    "teams": [
+                      "pools:N3",
+                      "pools:S3"
+                    ],
+                    "date": "2026-11-27",
+                    "time": "20:10",
+                    "stadium": "14",
+                    "venue": "Twickenham Stadium, London",
+                    "name": "5th place"
+                  }
+                ]
+              },
+              {
+                "id": "sat",
+                "name": "Saturday 28 November",
+                "venue": "neutral",
+                "ties": [
+                  {
+                    "id": "nc_p9",
+                    "teams": [
+                      "pools:N5",
+                      "pools:S5"
+                    ],
+                    "date": "2026-11-28",
+                    "time": "13:10",
+                    "stadium": "14",
+                    "venue": "Twickenham Stadium, London",
+                    "name": "9th place"
+                  },
+                  {
+                    "id": "nc_p3",
+                    "teams": [
+                      "pools:N2",
+                      "pools:S2"
+                    ],
+                    "date": "2026-11-28",
+                    "time": "16:40",
+                    "stadium": "14",
+                    "venue": "Twickenham Stadium, London",
+                    "name": "3rd place"
+                  }
+                ]
+              },
+              {
+                "id": "sun",
+                "name": "Sunday 29 November",
+                "venue": "neutral",
+                "ties": [
+                  {
+                    "id": "nc_p7",
+                    "teams": [
+                      "pools:N4",
+                      "pools:S4"
+                    ],
+                    "date": "2026-11-29",
+                    "time": "13:10",
+                    "stadium": "14",
+                    "venue": "Twickenham Stadium, London",
+                    "name": "7th place"
+                  },
+                  {
+                    "id": "nc_final",
+                    "teams": [
+                      "pools:N1",
+                      "pools:S1"
+                    ],
+                    "date": "2026-11-29",
+                    "time": "16:40",
+                    "stadium": "14",
+                    "venue": "Twickenham Stadium, London",
+                    "name": "Final",
+                    "final": true,
+                    "match_subtype": "final"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "participants": {
+          "default": {
+            "pools": {
+              "N": [
+                "10002",
+                "10001",
+                "10003",
+                "1007",
+                "1014",
+                "1022"
+              ],
+              "S": [
+                "1001",
+                "1002",
+                "1005",
+                "1008",
+                "1010",
+                "1015"
+              ]
+            }
+          }
+        },
+        "_sources": [
+          "https://en.wikipedia.org/wiki/2026_Nations_Championship",
+          "https://www.rugbyfixturestoday.com/competitions/nations-championship/2026"
+        ],
+        "_venue_note": "Game stadium stand-ins: Christchurch's new stadium → Christchurch (48); Chichibunomiya → Japan National Stadium; Newcastle (NSW) → Sydney (3); Cardiff City Stadium → Cardiff (36); Hill Dickinson Stadium, Liverpool → Salford City Stadium; Córdoba, San Juan and Santiago del Estero → Buenos Aires (43); Turin, Genoa and Udine → Stadio Olimpico. Fiji's July home matches were played in Britain. Wales v Australia and France v Argentina (21 November) and Finals Weekend had not finished when the data was made: no real score."
+      }
+    }
+  }
+}

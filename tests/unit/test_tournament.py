@@ -429,6 +429,63 @@ def test_changed_draw_drops_the_real_calendar(ds):
     assert final.date > max(f.date for f in fixtures(t, "pools"))   # generated, after the pools
 
 
+def _cross_template(dated=False):
+    """Two groups that only play each other (Nations Championship), then
+    1st v 1st and 2nd v 2nd."""
+    a, b, c, d = TEAMS
+    tpl = copy.deepcopy(TEMPLATE)
+    tpl["stages"][0].update(cross=True, group_names={"N": "North", "S": "South"})
+    tpl["stages"][1]["rounds"] = [
+        {"id": "p3", "name": "3rd place", "ties": [["pools:N2", "pools:S2"]]},
+        {"id": "final", "name": "Final", "final": True, "ties": [["pools:N1", "pools:S1"]]}]
+    tpl["participants"] = {"default": {"pools": {"N": [a, b], "S": [c, d]}}}
+    if dated:
+        tpl["stages"][0]["fixtures"] = [{"date": dt, "home": h, "away": w} for dt, h, w in (
+            ("2024-07-06", c, a), ("2024-07-06", d, b), ("2024-11-09", a, d), ("2024-11-09", b, c))]
+    return tpl
+
+
+@pytest.mark.parametrize("dated", [False, True])
+def test_cross_groups_play_only_each_other(ds, dated):
+    t = engine.create_tournament(ds, _cross_template(dated), "2024", seed=5)
+    stage = t.stage("pools")
+    north, south = stage.group("N"), stage.group("S")
+    pools = fixtures(t, "pools")
+    assert len(pools) == 4 and len({f.day for f in pools}) == 2
+    for f in pools:
+        assert (f.home in north.teams) != (f.away in north.teams)      # never two of one group
+    if dated:
+        assert [f.date for f in pools] == ["2024-07-06"] * 2 + ["2024-11-09"] * 2
+    engine.simulate_to_end(t)
+    for g in (north, south):
+        tab = standings.group_table(t, stage, g)
+        assert [r.played for r in tab] == [2, 2] and {r.team_id for r in tab} == set(g.teams)
+        points = {tid: 0 for tid in g.teams}
+        for f in pools:
+            for side, opp in ((f.result.home, f.result.away), (f.result.away, f.result.home)):
+                if side.team_id in points:
+                    points[side.team_id] += standings.match_points(t.template.get("points"), side, opp)[0]
+        assert {r.team_id: r.points for r in tab} == points
+    final = next(f for f in t.fixtures if f.final)
+    assert final.home == standings.group_table(t, stage, north)[0].team_id
+    assert final.away == standings.group_table(t, stage, south)[0].team_id
+    assert t.champion == final.result.winner_id()
+
+
+def test_a_tie_can_name_itself_and_be_the_final(ds):
+    """Finals Weekend: one round per day, its placing matches named on their own."""
+    tpl = _cross_template()
+    tpl["stages"][1]["rounds"] = [{"id": "sun", "name": "Sunday", "ties": [
+        {"teams": ["pools:N2", "pools:S2"], "name": "3rd place"},
+        {"teams": ["pools:N1", "pools:S1"], "name": "Final", "final": True, "match_subtype": "final"}]}]
+    t = engine.create_tournament(ds, tpl, "2024", seed=5)
+    ko = fixtures(t, "ko")
+    assert [f.label for f in ko] == ["3rd place", "Final"]
+    assert [f.final for f in ko] == [False, True] and ko[1].match_subtype == "final"
+    engine.simulate_to_end(t)
+    assert t.champion == ko[1].result.winner_id()
+
+
 def test_earlier_kick_offs_of_the_users_matchday_are_played_first(ds):
     from app.tournament.session import TournamentSession
     s = TournamentSession(engine.create_tournament(ds, _dated_template(), "2024", humans=["1010"], seed=3), ds)
@@ -533,10 +590,11 @@ def test_pinned_calendar_rounds_are_full(spec):
     fx = sorted(spec["fixtures"], key=lambda f: (f["date"], f.get("time", "")))
     rounds = scheduler._fixed_rounds(fx)
     per_group = {}
+    group = (lambda f: "x") if spec.get("cross") else (lambda f: f["group"])
     for r, f in zip(rounds, fx):
-        per_group.setdefault(f["group"], {}).setdefault(r, []).append(f)
+        per_group.setdefault(group(f), {}).setdefault(r, []).append(f)
     for gid, by_round in per_group.items():
-        teams = {t for f in spec["fixtures"] if f["group"] == gid for t in (f["home"], f["away"])}
+        teams = {t for f in spec["fixtures"] if group(f) == gid for t in (f["home"], f["away"])}
         assert sorted(by_round) == list(range(1, len(by_round) + 1)), gid
         for r, games in by_round.items():
             assert len(games) == len(teams) // 2, (gid, r)

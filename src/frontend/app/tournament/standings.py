@@ -82,11 +82,13 @@ def match_points(rules, own, opp) -> tuple:
 def _rows(fixtures, team_ids, rules) -> dict:
     rows = {tid: Row(tid) for tid in team_ids}
     for f in fixtures:
-        if not f.result or f.home not in rows or f.away not in rows:
+        if not f.result or (f.home not in rows and f.away not in rows):
             continue
         r = f.result
         for own, opp in ((r.home, r.away), (r.away, r.home)):
-            row = rows[own.team_id]
+            row = rows.get(own.team_id)
+            if row is None:
+                continue        # a cross stage: the other group's side
             row.played += 1
             row.points_for += own.points
             row.points_against += opp.points
@@ -207,7 +209,10 @@ def table(fixtures, team_ids, rules=None, tiebreakers=None, seed="") -> list:
 
 
 def group_table(t, stage, group) -> list:
-    fixtures = [f for f in t.fixtures if f.stage_id == stage.id and f.group == group.id]
+    """A group's table; in a "cross" stage (groups playing each other) over
+    its teams' matches against the other groups."""
+    cross = bool((stage.spec or {}).get("cross"))
+    fixtures = [f for f in t.fixtures if f.stage_id == stage.id and (cross or f.group == group.id)]
     return table(fixtures, group.teams, t.template.get("points"),
                  t.template.get("tiebreakers"), seed=f"{t.seed}:{stage.id}:{group.id}")
 

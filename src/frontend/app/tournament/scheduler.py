@@ -15,7 +15,13 @@ A template can pin a real calendar instead (a historical tournament):
     MAX_STAND_INS teams put in for others or left out (missing from the
     data: their fixtures are dropped); a draw changed further falls back
     to the generated rounds, and the knockout dates are then dropped too;
-  * knockout tie as a dict: {"teams": [...], "date": ..., "stadium": ...}.
+  * knockout tie as a dict: {"teams": [...], "date": ..., "stadium": ...},
+    optionally its own "name", "final" and "match_subtype" (a round of
+    placing matches: "Final", "3rd place"...).
+  A round-robin stage with "cross": true pits each group against the others
+  (Nations Championship: the Six Nations sides play only the other
+  conference's): every team meets every team of the other groups once, the
+  tables still per group. Its pinned fixtures need no "group".
   A pinned round-robin's matchdays are its rounds, numbered per group so
   each holds a full set of matches (_fixed_rounds); dated knockout ties
   become matchdays in date order, a weekend's dates sharing one. Unknown keys (e.g. "venue", "real_score") are
@@ -125,12 +131,28 @@ def _fixed_rounds(fixtures) -> list:
     return rounds
 
 
+def _fixed_cross_fixtures(spec, groups):
+    """A cross stage's pinned fixtures: kept while every group team has its
+    fixtures, a team missing from the data having its fixtures dropped."""
+    fixtures = spec.get("fixtures") or []
+    if not fixtures or not all(f.get("date") for f in fixtures):
+        return None
+    named = {str(t) for f in fixtures for t in (f["home"], f["away"])}
+    actual = {t for g in groups for t in g.teams}
+    if actual - named or len(named - actual) > MAX_STAND_INS * len(groups):
+        return None
+    gone = named - actual
+    return [f for f in fixtures if str(f["home"]) not in gone and str(f["away"]) not in gone]
+
+
 def _fixed_fixtures(spec, groups):
     """The spec's pinned fixtures if they cover these groups' teams, else
     None. A group may differ from the fixtures by at most MAX_STAND_INS
     teams: a team put in for one the fixtures name takes over its fixtures,
     and a team left out (missing from the data) has its fixtures dropped,
     so the real calendar is kept."""
+    if spec.get("cross"):
+        return _fixed_cross_fixtures(spec, groups)
     fixtures = spec.get("fixtures") or []
     if not fixtures or not all(f.get("date") and f.get("group") for f in fixtures):
         return None
@@ -154,6 +176,19 @@ def _fixed_fixtures(spec, groups):
     return [dict(f, home=swap.get((f["group"], str(f["home"])), str(f["home"])),
                  away=swap.get((f["group"], str(f["away"])), str(f["away"])))
             for f in fixtures if str(f["home"]) not in dropped and str(f["away"]) not in dropped]
+
+
+def cross_pairs(groups) -> list:
+    """Every match between teams of different groups, as fixtures dicts
+    {"home", "away"}, home and away alternating."""
+    out = []
+    for i, a in enumerate(groups):
+        for b in groups[i + 1:]:
+            for x, home in enumerate(a.teams):
+                for y, away in enumerate(b.teams):
+                    pair = (home, away) if (x + y) % 2 == 0 else (away, home)
+                    out.append({"home": pair[0], "away": pair[1]})
+    return out
 
 
 def round_robin(teams, legs=1) -> list:
@@ -227,14 +262,26 @@ def schedule_stage(t, stage, start_day) -> int:
             names = {g.id: g.name for g in stage.groups}
             for i, (fx, rnd) in enumerate(zip(ordered, rounds)):
                 day = start_day + rnd - 1
+                gid = "" if spec.get("cross") else fx["group"]
                 t.fixtures.append(Fixture(
-                    id=f"{stage.id}-{fx['group']}-{i + 1}", stage_id=stage.id, day=day,
-                    home=str(fx["home"]), away=str(fx["away"]), group=fx["group"],
+                    id=f"{stage.id}-{gid or 'x'}-{i + 1}", stage_id=stage.id, day=day,
+                    home=str(fx["home"]), away=str(fx["away"]), group=gid,
                     round_id=f"d{day - start_day + 1}", round_name=f"Round {day - start_day + 1}",
-                    label=_label(names.get(fx['group'], fx['group']), f"Round {day - start_day + 1}",
-                                 len(stage.groups)),
+                    label=_label(names.get(gid, gid), f"Round {day - start_day + 1}",
+                                 len(stage.groups) if gid else 1),
                     neutral=neutral, stadium_id=str(fx.get("stadium") or ""),
                     match_subtype=subtype, date=str(fx["date"])))
+            return start_day + max(rounds, default=0)
+        if spec.get("cross"):
+            pairs = cross_pairs(stage.groups)
+            rounds = _balanced_rounds(pairs) or _chronological_rounds(pairs)
+            for i, (fx, rnd) in enumerate(sorted(zip(pairs, rounds), key=lambda p: p[1])):
+                day = start_day + rnd - 1
+                t.fixtures.append(Fixture(
+                    id=f"{stage.id}-x-r{rnd}-{i + 1}", stage_id=stage.id, day=day,
+                    home=fx["home"], away=fx["away"], group="", round_id=f"r{rnd}",
+                    round_name=f"Round {rnd}", label=f"Round {rnd}",
+                    neutral=neutral, match_subtype=subtype))
             return start_day + max(rounds, default=0)
         legs = int(spec.get("legs", 1))
         last = start_day - 1
@@ -265,14 +312,18 @@ def schedule_stage(t, stage, start_day) -> int:
         for i, tie in enumerate(rnd.get("ties", [])):
             tie_id = tie.get("id") if isinstance(tie, dict) else f"{rnd['id']}{i + 1}"
             refs = tie.get("teams") if isinstance(tie, dict) else tie
-            label = rnd.get("name", rnd["id"]) + (f" {i + 1}" if len(rnd.get("ties", [])) > 1 else "")
+            # a tie may name itself and be the final ("Final", "3rd place"
+            # in a Finals Weekend round of placing matches)
+            own = tie if isinstance(tie, dict) else {}
+            label = own.get("name") or (rnd.get("name", rnd["id"])
+                                        + (f" {i + 1}" if len(rnd.get("ties", [])) > 1 else ""))
             t.fixtures.append(Fixture(
                 id=tie_id, stage_id=stage.id, day=days[tie["date"]] if dated else day,
                 round_id=rnd["id"], round_name=rnd.get("name", rnd["id"]), label=label,
                 home_ref=refs[0], away_ref=refs[1], knockout=True, neutral=rnd_neutral,
                 stadium_id=str(tie.get("stadium") or "") if isinstance(tie, dict) else "",
-                match_subtype=rnd.get("match_subtype", "none"),
-                final=bool(rnd.get("final")),
+                match_subtype=own.get("match_subtype", rnd.get("match_subtype", "none")),
+                final=bool(own.get("final", rnd.get("final"))),
                 date=str(tie.get("date") or "") if dated else ""))
         day += 1
     return max(days.values()) + 1 if dated else day

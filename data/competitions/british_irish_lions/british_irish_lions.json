@@ -2,7 +2,6 @@
   "id": "british_irish_lions",
   "name": "British & Irish Lions Tour",
   "seasonal": true,
-  "disabled": true,
   "seasons": {
     "2009": {
       "template": {
