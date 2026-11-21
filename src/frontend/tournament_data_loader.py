@@ -50,9 +50,9 @@ class TournamentDataLoader:
 
           {"id": "5002", "name": "Top 14", "seasonal": false,
            "ball": "...", "logo": "...", "pitch_logo": "...",
-           "pads": "assets/pads",       # optional dressing sets (app/dressing.py):
-           "posts": "assets/posts",     # folders of images, relative to the
-           "adboards": "assets/ads",    # competition folder
+           "pads": "assets/pads.png",   # optional dressing sets (app/dressing.py):
+           "posts": "assets/posts.png", # one picture each (ads: a folder),
+           "adboards": "assets/ads",    # relative to the competition folder
            "logo_frontend": "...",               # optional PNG for the menus only (the
                                                  # in-game "logo" when absent), as teams'
                                                  # logos.frontend

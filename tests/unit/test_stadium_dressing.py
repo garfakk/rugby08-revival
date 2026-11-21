@@ -1,4 +1,4 @@
-"""Stadium dressing: pads / posts sets (image folders) built into the game's
+"""Stadium dressing: pads / posts sets (one picture each) built into the game's
 pads-and-flags file, stock references read from the game, and who decides
 which set a match wears (backend/stadium_dressing.py, app/dressing.py)."""
 import hashlib
@@ -52,13 +52,52 @@ def test_mipmapped_texture_keeps_its_mip_count():
     assert len(block) >= 16 + size
 
 
-def test_set_folders_round_trip(tmp_path):
+def test_set_pictures_round_trip(tmp_path):
     images = {"pada": Image.new("RGBA", (64, 256), "red"), "flag": Image.new("RGBA", (128, 64), "blue")}
-    SD.save_set(images, str(tmp_path / "p"), "pads")
-    assert sorted(os.listdir(tmp_path / "p")) == ["flag.png", "pad_wrap.png"]
-    loaded = SD.load(str(tmp_path / "p"), "pads")
-    assert sorted(loaded) == ["flag", "pada"]
-    assert SD.load(str(tmp_path / "p"), "posts") == {}
+    SD.save_set(images, str(tmp_path / "p.png"), "pads")
+    assert os.listdir(tmp_path) == ["p.png"]
+    assert Image.open(tmp_path / "p.png").size == SD.PADS_SIZE
+    loaded = SD.load(str(tmp_path / "p.png"), "pads")
+    assert sorted(loaded) == ["flag", "flgp", "pada", "padb"]          # the rest: stock
+    assert loaded["pada"].getpixel((10, 10))[:3] == (255, 0, 0)
+    assert loaded["flag"].getpixel((10, 10))[:3] == (0, 0, 255)
+    # any picture of the same shape works
+    small = SD.compose_pads(images).resize((512, 256))
+    assert SD.split_pads(small)["flag"].getpixel((100, 50))[:3] == (0, 0, 255)
+
+
+def test_posts_picture_cut_into_the_game_textures():
+    pic = Image.new("RGBA", SD.POSTS_SIZE, (0, 0, 0, 0))
+    pic.paste((0, 200, 0, 255), (SD.POST_X[0], 0, SD.POST_X[1], 400))          # top of the post
+    pic.paste((255, 255, 255, 255), (SD.POST_X[0], 400, SD.POST_X[1], SD.POSTS_SIZE[1]))
+    pic.paste((200, 0, 0, 255), (SD.POST_X[1], SD.XBAR_Y[0], SD.XBAR_MIDDLE_X[0], SD.XBAR_Y[1]))
+    pic.paste((0, 0, 200, 255), (SD.XBAR_MIDDLE_X[0], SD.XBAR_Y[0], SD.XBAR_MIDDLE_X[1], SD.XBAR_Y[1]))
+    out = SD.split_posts(pic)
+    post, xbar = out["post"], out["xbar"]
+    assert post.getpixel((10, 50))[:3] == (0, 200, 0)                   # row 0 = the top
+    assert post.getpixel((10, post.height - 5))[:3] == (255, 255, 255)
+    w, h = xbar.size
+    for u, colour in ((0.05, (200, 0, 0)), (0.25, (200, 0, 0)), (0.75, (0, 0, 200)), (0.95, (0, 0, 200))):
+        for v in (0.02, 0.5, 0.98):
+            assert xbar.getpixel((int(u * w), int(v * h)))[:3] == colour, (u, v)
+    # and back: the picture of the game's textures cuts into the same
+    again = SD.split_posts(SD.compose_posts(out))
+    assert again["xbar"].getpixel((int(0.25 * w), h // 2))[:3] == (200, 0, 0)
+    assert again["xbar"].getpixel((int(0.75 * w), h // 2))[:3] == (0, 0, 200)
+
+
+def test_older_set_folders_still_load(tmp_path, monkeypatch):
+    point_config(monkeypatch, data_dir=str(tmp_path))
+    folder = tmp_path / "stadium_graphics" / "pads" / "old"
+    folder.mkdir(parents=True)
+    Image.new("RGBA", (64, 256), "red").save(folder / "pad_wrap.png")
+    assert sorted(SD.load("stadium_graphics/pads/old", "pads")) == ["pada"]
+    # a reference to a folder since turned into a picture finds the picture
+    SD.save_set({"pada": Image.new("RGBA", (64, 256), "blue")},
+                str(tmp_path / "stadium_graphics" / "pads" / "conv.png"), "pads")
+    assert SD.library_ref("stadium_graphics/pads/conv") == "stadium_graphics/pads/conv.png"
+    assert SD.library_ref("stadium_graphics/pads/old") == "stadium_graphics/pads/old"
+    assert SD.load("stadium_graphics/pads/conv", "pads")["pada"].getpixel((5, 5))[:3] == (0, 0, 255)
 
 
 def test_stock_reference_read_from_the_cache(tmp_path, monkeypatch):
@@ -77,9 +116,9 @@ def test_deploy_pads_writes_the_game_file(tmp_path, monkeypatch):
     data, game = tmp_path / "data", tmp_path / "game"
     game.mkdir()
     SD.save_set({"post": Image.new("RGBA", (32, 32), (0, 0, 255, 255))},
-                str(data / "stadium_graphics" / "posts" / "blue"), "posts")
+                str(data / "stadium_graphics" / "posts" / "blue.png"), "posts")
     point_config(monkeypatch, data_dir=str(data), game_dir=str(game))
-    GFP.deploy_pads({"pads": "", "posts": "stadium_graphics/posts/blue"})
+    GFP.deploy_pads({"pads": "", "posts": "stadium_graphics/posts/blue.png"})
     out = (game / gsv.game_filenames["stadium_graphics"]).read_bytes()
     assert mu.fsh_entry_image(dict(mu.fsh_entries(out))["post"]).getpixel((4, 4))[2] > 200
 
@@ -137,7 +176,7 @@ def test_suggestions_are_the_stadium_and_the_teams_competitions(tmp_path, monkey
     point_config(monkeypatch, data_dir=str(tmp_path))
     comp = tmp_path / "competitions" / "t14"
     for name, colour in (("a", "red"), ("b", "blue")):
-        SD.save_set({"pada": Image.new("RGBA", (64, 256), colour)}, str(comp / "sets" / name), "pads")
+        SD.save_set({"pada": Image.new("RGBA", (64, 256), colour)}, str(comp / "sets" / f"{name}.png"), "pads")
     monkeypatch.setattr(dressing, "look", lambda ref, kind: ref or None)
     monkeypatch.setattr(dressing, "_TEMPLATES", [
         ("t14", "", {"1"}, set()),               # lists team 1
@@ -145,19 +184,19 @@ def test_suggestions_are_the_stadium_and_the_teams_competitions(tmp_path, monkey
         ("other", "", {"9"}, set())])
 
     class DS:
-        tournaments = {"t14": {"": {"pads": "sets/a"}}, "pro": {"2020": {"pads": "sets/b"}},
-                       "other": {"": {"pads": "sets/a"}}}
+        tournaments = {"t14": {"": {"pads": "sets/a.png"}}, "pro": {"2020": {"pads": "sets/b.png"}},
+                       "other": {"": {"pads": "sets/a.png"}}}
         tournaments_folder_path = {"t14": str(comp), "pro": str(comp), "other": str(comp)}
 
     teams = [("1", {"category": "Top 14"}), ("2", {"category": "Pro D2"})]
     refs = dressing.suggested_refs(DS, "pads", teams, {"game_id": 14}, {"game_id": 70})
-    assert refs == ["stock:standard/twickenham", "competitions/t14/sets/b",
-                    "competitions/t14/sets/a", "stock:standard/stade_de_france"]
+    assert refs == ["stock:standard/twickenham", "competitions/t14/sets/b.png",
+                    "competitions/t14/sets/a.png", "stock:standard/stade_de_france"]
     options = dressing.choices(DS, "pads", None, {"game_id": 14}, refs)
     assert options[0]["ref"] == "" and options[0]["label"] == "Default"
     assert options[0]["default_ref"] == "stock:standard/twickenham"
     flagged = [o["ref"] for o in options if o.get("suggested")]
-    assert flagged == ["", "competitions/t14/sets/b", "competitions/t14/sets/a",
+    assert flagged == ["", "competitions/t14/sets/b.png", "competitions/t14/sets/a.png",
                        "stock:standard/stade_de_france"]
     assert len({o["ref"] for o in options}) == len(options)     # no set listed twice
 
@@ -169,20 +208,38 @@ def test_sets_that_look_alike_are_listed_once(tmp_path, monkeypatch):
     bar = Image.new("RGBA", (16, 16), (240, 240, 240, 255))
     bar.paste((20, 35, 95, 255), (8, 0, 16, 16))
     for name in ("a", "b"):           # the same white post and navy band
-        SD.save_set({"post": Image.new("RGBA", (32, 32), "white"), "xbar": bar}, str(lib / name), "posts")
+        SD.save_set({"post": Image.new("RGBA", (32, 32), "white"), "xbar": bar}, str(lib / f"{name}.png"), "posts")
     SD.save_set({"post": Image.new("RGBA", (32, 32), "white"),
-                 "xbar": Image.new("RGBA", (16, 16), "white")}, str(lib / "plain"), "posts")
+                 "xbar": Image.new("RGBA", (16, 16), "white")}, str(lib / "plain.png"), "posts")
     monkeypatch.setattr(dressing, "stock_sets", lambda kind: [])
 
     class DS:
         tournaments, tournaments_folder_path = {}, {}
 
     options = dressing.choices(DS, "posts")
-    assert [o["label"] for o in options] == ["Default", "White · navy", "White"]
-    assert options[1]["refs"] == ["stadium_graphics/posts/a", "stadium_graphics/posts/b"]
+    assert [o["label"] for o in options] == ["Default", "White & navy", "White"]
+    assert options[1]["refs"] == ["stadium_graphics/posts/a.png", "stadium_graphics/posts/b.png"]
     # a pick folded into another entry still selects that entry
-    assert any("stadium_graphics/posts/b" in o["refs"] for o in dressing.choices(
-        DS, "posts", current="stadium_graphics/posts/b"))
+    assert any("stadium_graphics/posts/b.png" in o["refs"] for o in dressing.choices(
+        DS, "posts", current="stadium_graphics/posts/b.png"))
+
+
+def test_painted_posts_keep_their_name(tmp_path, monkeypatch):
+    from app import dressing
+    point_config(monkeypatch, data_dir=str(tmp_path))
+    lib = tmp_path / "stadium_graphics" / "posts"
+    hoops = Image.new("RGBA", (32, 512), "white")
+    for y in range(0, 512, 64):
+        hoops.paste((200, 30, 40, 255), (0, y, 32, y + 32))
+    SD.save_set({"post": hoops, "xbar": Image.new("RGBA", (16, 16), "white")}, str(lib / "red_hoops.png"), "posts")
+    SD.save_set({"post": Image.new("RGBA", (32, 32), (240, 140, 240, 255)),
+                 "xbar": Image.new("RGBA", (16, 16), (240, 140, 240, 255))}, str(lib / "x.png"), "posts")
+    monkeypatch.setattr(dressing, "stock_sets", lambda kind: [])
+
+    class DS:
+        tournaments, tournaments_folder_path = {}, {}
+
+    assert [o["label"] for o in dressing.choices(DS, "posts")] == ["Default", "Red hoops", "Pink"]
 
 
 def test_choices_ads_options_have_refs(monkeypatch):

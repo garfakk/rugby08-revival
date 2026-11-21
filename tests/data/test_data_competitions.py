@@ -58,27 +58,30 @@ def test_branding_assets_exist(path, known_issue):
 
 @pytest.mark.parametrize("path", _branding_files())
 def test_dressing_sets_are_complete(path):
-    """Each "pads" / "posts" / "adboards" set a competition names is a folder
-    with every picture of its kind (app/dressing.py)."""
-    from backend.stadium_dressing import PADS_FILES, POSTS_FILES
+    """Each "pads" / "posts" set a competition names is one picture of its
+    kind's shape, each "adboards" a folder with something in it
+    (app/dressing.py)."""
+    from PIL import Image
+    from backend.stadium_dressing import PADS_SIZE, POSTS_SIZE
     root = os.path.dirname(path)
     data = formats._read(path)
     entries = [data] + list((data.get("seasons") or {}).values())
     problems = []
     for entry in entries:
-        for key, names in (("pads", PADS_FILES), ("posts", POSTS_FILES), ("adboards", None)):
+        for key, size in (("pads", PADS_SIZE), ("posts", POSTS_SIZE), ("adboards", None)):
             rel = entry.get(key)
             if not rel:
                 continue
-            folder = os.path.join(root, rel)
-            if not os.path.isdir(folder):
+            full = os.path.join(root, rel)
+            if size:
+                if not os.path.isfile(full):
+                    problems.append(f"{key}: {rel} is not a picture")
+                    continue
+                with Image.open(full) as im:
+                    if im.width * size[1] != im.height * size[0]:
+                        problems.append(f"{key}: {rel} is {im.size}, not {size[0]}:{size[1]}")
+            elif not os.path.isdir(full) or not os.listdir(full):
                 problems.append(f"{key}: {rel} is not a set folder")
-                continue
-            have = {os.path.splitext(n)[0] for n in os.listdir(folder)}
-            if names and set(names) - have:
-                problems.append(f"{key}: {rel} lacks {sorted(set(names) - have)}")
-            if not names and not have:
-                problems.append(f"{key}: {rel} is empty")
     assert not problems, problems
 
 

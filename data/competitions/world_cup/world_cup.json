@@ -5,8 +5,8 @@
   "seasons": {
     "2007": {
       "ball": "2007/ball/ball_%.png",
-      "pads": "2007/pads",
-      "posts": "2007/posts",
+      "pads": "2007/pads.png",
+      "posts": "2007/posts.png",
       "logo": "2007/tournament_logo.png",
       "logo_frontend": "2007/logo_frontend_2.png",
       "pitch_logo": "2007/pitch_logos/pitch_logo_%.png",
@@ -670,8 +670,8 @@
     },
     "2015": {
       "ball": "2015/ball/ball_%.png",
-      "pads": "2015/pads",
-      "posts": "2015/posts",
+      "pads": "2015/pads.png",
+      "posts": "2015/posts.png",
       "adboards": "2015/ads",
       "logo": "2015/tournament_logo.png",
       "logo_frontend": "2015/logo_frontend.png",
@@ -1491,8 +1491,8 @@
     },
     "2019": {
       "ball": "2019/ball/ball_%.png",
-      "pads": "2019/pads",
-      "posts": "2019/posts",
+      "pads": "2019/pads.png",
+      "posts": "2019/posts.png",
       "adboards": "2019/ads",
       "logo": "2019/tournament_logo.png",
       "logo_frontend": "2019/logo_frontend.png",
@@ -2206,8 +2206,8 @@
     },
     "2023": {
       "ball": "2023/ball/ball_%.png",
-      "pads": "2023/pads",
-      "posts": "2023/posts",
+      "pads": "2023/pads.png",
+      "posts": "2023/posts.png",
       "adboards": "2023/ads",
       "logo": "2023/tournament_logo.png",
       "logo_frontend": "2023/logo_frontend.png",

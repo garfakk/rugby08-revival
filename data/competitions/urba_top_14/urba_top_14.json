@@ -1794,8 +1794,8 @@
    "logo": "assets/tournament_logo.png",
    "pitch_logo": "assets/pitch_logos/pitch_logo_%.png",
    "ball": "assets/ball/ball_%.png",
-   "pads": "assets/pads",
-   "posts": "assets/posts",
+   "pads": "assets/pads.png",
+   "posts": "assets/posts.png",
    "trophy": {
     "ceremony": "SixNations",
     "model": "assets/trophy/trophy.o",

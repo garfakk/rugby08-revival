@@ -8,15 +8,32 @@ names Tournaments\\World_Cup for all of them, so one file per match):
   flag  corner flag          flgp  corner flag pole
   post  post colour          xbar  crossbar colour
 
-The mod keeps these as image folders ("sets") the player can mix freely:
+The mod keeps each as one picture (a "set") the player can mix freely:
 
-  pads set   pad_wrap.png  pad_top.png  flag.png  flag_pole.png
-  posts set  post.png  crossbar.png
+  pads set   1024 x 512 (any 2:1 size): four areas
+               x 0-256    pad wrap (around the post pad, top = pad top)
+               x 256-512  corner flag pole
+               x 512-1024 corner flag (top half), pad top (bottom left
+                          256 x 256); the bottom right corner is unused
+  posts set  768 x 1024 (any 3:4 size): the goal seen from the front, from
+             the top of the posts down to the top of the pads. Posts
+             x 48-112 and 656-720, crossbar y 906-970 between them. Both
+             posts wear the left one, the crossbar's right half mirrors
+             its left; transparent elsewhere.
 
-A set is named by a reference: a folder (path relative to the mod data, or
+The game's textures are cut from them (split): its post texture runs down the
+post (row 0 at the top), its crossbar texture along the bar from the post
+(u 0.1) to near the middle (u 0.4), then the middle 10% (u 0.6-0.9), the
+same in every stock stadium.
+
+A set is named by a reference: a picture (path relative to the mod data, or
 absolute), or "stock:<name>" for one of the game's own files
 (stadiums/pads_and_flags/<name>, read from data.gob; e.g.
-"stock:standard/twickenham"). Missing images keep the stock World Cup ones.
+"stock:standard/twickenham"). Folders of the older one-picture-per-texture
+sets (pad_wrap.png, pad_top.png, flag.png, flag_pole.png / post.png,
+crossbar.png) still load, and a reference saved to such a folder finds the
+picture of the same name (".../pads" -> ".../pads.png"). Missing textures
+keep the stock World Cup ones.
 """
 import hashlib
 import os
@@ -44,6 +61,19 @@ PADS_FILES = {"pad_wrap": "pada", "pad_top": "padb", "flag": "flag", "flag_pole"
 POSTS_FILES = {"post": "post", "crossbar": "xbar"}
 IMAGE_EXTS = (".png", ".jpg", ".jpeg", ".bmp", ".tga", ".webp")
 MAX_SIDE = 512
+
+# the pads picture: tag -> (left, top, right, bottom) in PADS_SIZE pixels
+PADS_SIZE = (1024, 512)
+PADS_LAYOUT = {"pada": (0, 0, 256, 512), "flgp": (256, 0, 512, 512),
+               "flag": (512, 0, 1024, 256), "padb": (512, 256, 768, 512)}
+# the posts picture (POSTS_SIZE pixels): a post's columns, the crossbar's
+# rows, and its middle part (the crossbar texture's u 0.6-0.9)
+POSTS_SIZE = (768, 1024)
+POST_X = (48, 112)
+RIGHT_POST_X = (656, 720)
+XBAR_Y = (906, 970)
+XBAR_MIDDLE_X = (356, 412)
+XBAR_TEXTURE = (256, 64)
 
 
 def template_path():
@@ -105,11 +135,20 @@ def stock_bytes(game_path):
 # ── sets ────────────────────────────────────────────────────────────────────
 def library_ref(ref):
   """`ref` with a reference into an old library folder moved to the current
-  one; any other reference unchanged."""
+  one, and one to an older pads / posts set folder that is gone moved to
+  the picture of its name; any other reference unchanged."""
   path = (ref or "").replace("\\", "/")
   for old in _OLD_LIBRARIES:
     if path.startswith(old):
-      return LIBRARY + "/" + path[len(old):]
+      ref = path = LIBRARY + "/" + path[len(old):]
+  if not path or is_stock(path) or os.path.isabs(path) or os.path.splitext(path)[1]:
+    return ref
+  from shared.config import config
+  base = os.path.join(config.mod_data_directory, path.rstrip("/"))
+  if not os.path.exists(base):
+    for ext in IMAGE_EXTS:
+      if os.path.isfile(base + ext):
+        return path.rstrip("/") + ext
   return ref
 
 
@@ -155,29 +194,161 @@ def _fsh_images(data, tags):
   return out
 
 
+# ── one picture <-> the game's textures ────────────────────────────────────
+def _scaled(box, size, full):
+  sx, sy = size[0] / full[0], size[1] / full[1]
+  return (box[0] * sx, box[1] * sy, box[2] * sx, box[3] * sy)
+
+
+def _resize(image, size, box=None):
+  """`image` (or its `box`) at `size`; small textures stay crisp, and
+  nothing outside the box bleeds in."""
+  bw = (box[2] - box[0]) if box else image.width
+  bh = (box[3] - box[1]) if box else image.height
+  size = (max(1, round(size[0])), max(1, round(size[1])))
+  if size[0] >= 4 * bw or size[1] >= 4 * bh:
+    return image.resize(size, Image.NEAREST, box=box)
+  if box:
+    image = image.crop(tuple(round(v) for v in box))
+  return image.resize(size, Image.LANCZOS)
+
+
+def split_pads(image):
+  """{tag: PIL image} of a pads picture."""
+  image = image.convert("RGBA")
+  out = {}
+  for tag, box in PADS_LAYOUT.items():
+    l, t, r, b = _scaled(box, image.size, PADS_SIZE)
+    out[tag] = _resize(image, (box[2] - box[0], box[3] - box[1]), (l, t, r, b)) \
+      if image.size != PADS_SIZE else image.crop(box)
+  return out
+
+
+def compose_pads(images):
+  """The pads picture of {tag: PIL image} (tags missing stay transparent)."""
+  canvas = Image.new("RGBA", PADS_SIZE, (0, 0, 0, 0))
+  for tag, box in PADS_LAYOUT.items():
+    if images.get(tag) is not None:
+      canvas.paste(_resize(images[tag].convert("RGBA"), (box[2] - box[0], box[3] - box[1])), box[:2])
+  return canvas
+
+
+def split_posts(image):
+  """{"post", "xbar"} textures of a posts picture: the left post, and the
+  crossbar's left half then its middle laid out as the game's bar wants."""
+  image = image.convert("RGBA")
+  sx, sy = image.width / POSTS_SIZE[0], image.height / POSTS_SIZE[1]
+  post_w, post_h = POST_X[1] - POST_X[0], POSTS_SIZE[1]
+  post = _resize(image, (post_w, post_h), (POST_X[0] * sx, 0, POST_X[1] * sx, image.height))
+  tw, th = XBAR_TEXTURE
+  top, bottom = XBAR_Y[0] * sy, XBAR_Y[1] * sy
+  rows = (round(th * 0.1), round(th * 0.9))
+  cols = [round(tw * f) for f in (0.1, 0.4, 0.6, 0.9)]
+  outer = _resize(image, (cols[1] - cols[0], rows[1] - rows[0]),
+                  (POST_X[1] * sx, top, XBAR_MIDDLE_X[0] * sx, bottom))
+  middle = _resize(image, (cols[3] - cols[2], rows[1] - rows[0]),
+                   (XBAR_MIDDLE_X[0] * sx, top, XBAR_MIDDLE_X[1] * sx, bottom))
+  bar = Image.new("RGBA", (tw, rows[1] - rows[0]))
+  bar.paste(outer, (cols[0], 0))
+  bar.paste(middle, (cols[2], 0))
+  # the margins the bar never shows: their neighbours' edge columns
+  for x0, x1, src in ((0, cols[0], cols[0]), (cols[1], tw // 2, cols[1] - 1),
+                      (tw // 2, cols[2], cols[2]), (cols[3], tw, cols[3] - 1)):
+    if x1 > x0:
+      bar.paste(bar.crop((src, 0, src + 1, bar.height)).resize((x1 - x0, bar.height)), (x0, 0))
+  xbar = Image.new("RGBA", (tw, th))
+  xbar.paste(bar, (0, rows[0]))
+  xbar.paste(bar.crop((0, 0, tw, 1)).resize((tw, rows[0])), (0, 0))
+  xbar.paste(bar.crop((0, bar.height - 1, tw, bar.height)).resize((tw, th - rows[1])), (0, rows[1]))
+  return {"post": post, "xbar": xbar}
+
+
+def compose_posts(images):
+  """The posts picture of a "post" and an "xbar" texture (the game's)."""
+  canvas = Image.new("RGBA", POSTS_SIZE, (0, 0, 0, 0))
+  post, xbar = images.get("post"), images.get("xbar")
+  if post is not None:
+    pic = _resize(post.convert("RGBA"), (POST_X[1] - POST_X[0], POSTS_SIZE[1]))
+    canvas.paste(pic, (POST_X[0], 0))
+    canvas.paste(pic, (RIGHT_POST_X[0], 0))
+  if xbar is not None:
+    xbar = xbar.convert("RGBA")
+    w, h = xbar.size
+    height = XBAR_Y[1] - XBAR_Y[0]
+    outer = _resize(xbar, (XBAR_MIDDLE_X[0] - POST_X[1], height), (w * 0.1, h * 0.1, w * 0.4, h * 0.9))
+    middle = _resize(xbar, (XBAR_MIDDLE_X[1] - XBAR_MIDDLE_X[0], height), (w * 0.6, h * 0.1, w * 0.9, h * 0.9))
+    canvas.paste(outer, (POST_X[1], XBAR_Y[0]))
+    canvas.paste(middle, (XBAR_MIDDLE_X[0], XBAR_Y[0]))
+    canvas.paste(outer.transpose(Image.FLIP_LEFT_RIGHT), (XBAR_MIDDLE_X[1], XBAR_Y[0]))
+  return canvas
+
+
+def split(image, kind):
+  return split_pads(image) if kind == "pads" else split_posts(image)
+
+
+def compose(images, kind):
+  return compose_pads(images) if kind == "pads" else compose_posts(images)
+
+
+# ── loading and saving ──────────────────────────────────────────────────
+def set_path(ref, base=None):
+  """The file or folder the reference `ref` names (a reference to an older
+  set folder that is gone finds the picture of its name), None when there
+  is none or `ref` is a stock one."""
+  if not ref or is_stock(ref):
+    return None
+  path = _resolve_folder(ref, base)
+  if os.path.exists(path):
+    return path
+  for ext in IMAGE_EXTS:
+    if os.path.isfile(path.rstrip("/\\") + ext):
+      return path.rstrip("/\\") + ext
+  return None
+
+
 def load(ref, kind, base=None):
   """{tag: PIL image} of the set `ref` for `kind` ("pads" or "posts"): its
-  images, or the stock file's textures. {} when nothing is found."""
+  picture cut into the game's textures, an older set folder's images, or
+  the stock file's textures. {} when nothing is found."""
   if not ref:
     return {}
   names = PADS_FILES if kind == "pads" else POSTS_FILES
   if is_stock(ref):
     data = stock_bytes(stock_game_path(ref, kind))
     return _fsh_images(data, set(names.values())) if data else {}
-  path = _resolve_folder(ref, base)
-  if os.path.isfile(path) and path.lower().endswith(".fsh"):
+  path = set_path(ref, base)
+  if path is None:
+    return {}
+  if os.path.isdir(path):
+    return _folder_images(path, names)
+  if path.lower().endswith(".fsh"):
     with open(path, "rb") as f:
       return _fsh_images(f.read(), set(names.values()))
-  return _folder_images(path, names)
+  try:
+    return split(_open(path), kind)
+  except OSError as e:
+    log.warning(f"dressing: cannot read {path}: {e}")
+    return {}
 
 
-def save_set(images, folder, kind):
-  """Write {tag: PIL image} as a set folder (file names of `kind`)."""
-  names = {tag: stem for stem, tag in (PADS_FILES if kind == "pads" else POSTS_FILES).items()}
-  os.makedirs(folder, exist_ok=True)
-  for tag, image in images.items():
-    if tag in names:
-      image.save(os.path.join(folder, names[tag] + ".png"))
+def save_set(images, path, kind):
+  """Write {tag: PIL image} as the set picture `path` of `kind`; textures
+  missing take the stock World Cup ones."""
+  full = stock_textures(kind)
+  full.update({t: i for t, i in images.items() if t in full})
+  os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+  compose(full, kind).save(path)
+
+
+def stock_textures(kind=None):
+  """{tag: PIL image} of the stock World Cup file (the template): all, or
+  those of `kind`."""
+  tags = set(PADS_FILES.values()) | set(POSTS_FILES.values())
+  if kind:
+    tags = set((PADS_FILES if kind == "pads" else POSTS_FILES).values())
+  with open(template_path(), "rb") as f:
+    return _fsh_images(f.read(), tags)
 
 
 # ── the game file ───────────────────────────────────────────────────────────
@@ -246,8 +417,7 @@ def build(pads, posts, template_data=None):
 def preview_images(pads_ref, posts_ref, base=None):
   """{tag: PIL image} for the 3D preview: the stock World Cup textures under
   the two sets'."""
-  with open(template_path(), "rb") as f:
-    images = _fsh_images(f.read(), set(PADS_FILES.values()) | set(POSTS_FILES.values()))
+  images = stock_textures()
   images.update(load(pads_ref, "pads", base))
   images.update(load(posts_ref, "posts", base))
   return images

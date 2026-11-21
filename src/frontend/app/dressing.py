@@ -7,11 +7,11 @@ stadium_dressing / adboards):
   pads   post pads + corner flags     posts   post + crossbar colours
   ads    the ad boards
 
-A reference is a path relative to the mod data (a set folder, or for ads also
-a .fsh / picture) or "stock:<name>" (the game's own file, read from
-data.gob). Sets live in:
+A reference is a path relative to the mod data (pads and posts: one picture
+each, backend stadium_dressing; ads: a folder, .fsh or picture) or
+"stock:<name>" (the game's own file, read from data.gob). Sets live in:
 
-  stadium_graphics/<kind>/<set>/      the library (mod data)
+  stadium_graphics/<kind>/<set>       the library (mod data)
   competitions/<c>/<where>/<kind>/    a competition's, named by its JSON
                                       ("pads", "posts", "adboards"), per
                                       season; <where> is assets, a year...
@@ -46,9 +46,15 @@ def _relative(path):
 
 
 # ── the sets on offer ──────────────────────────────────────────────────────
+def _exists(path):
+    """`path` names a set: a file or folder, or an older pads / posts set
+    folder whose picture took its place."""
+    return bool(path) and (os.path.exists(path) or stadium_dressing.set_path(path) is not None)
+
+
 def library_sets(kind):
-    """[{"label", "ref"}] of the library's sets of `kind` (folders; for ads
-    also a loose .fsh or picture)."""
+    """[{"label", "ref"}] of the library's sets of `kind`: pictures (pads,
+    posts) and older set folders; for ads folders, a .fsh or a picture."""
     root = os.path.join(config.mod_data_directory, LIBRARY, kind)
     out = []
     if not os.path.isdir(root):
@@ -57,7 +63,8 @@ def library_sets(kind):
         full = os.path.join(root, name)
         if name.startswith(".") or ".deleted-" in name:
             continue
-        loose = kind == "ads" and name.lower().endswith((".fsh",) + IMAGE_EXTS)
+        exts = ((".fsh",) + IMAGE_EXTS) if kind == "ads" else stadium_dressing.IMAGE_EXTS
+        loose = name.lower().endswith(exts)
         if os.path.isdir(full) or loose:
             out.append({"label": _label(name), "ref": f"{LIBRARY}/{kind}/{name}"})
     return out
@@ -82,7 +89,7 @@ def competition_sets(ds, kind):
         by_ref = {}
         for season, info in seasons.items():
             rel = (info.get(key) or "").strip()
-            if not folder or not rel or not os.path.exists(os.path.join(folder, rel)):
+            if not folder or not rel or not _exists(os.path.join(folder, rel)):
                 continue
             ref = _relative(os.path.join(folder, rel))
             by_ref.setdefault(ref, {"name": info.get("name") or tid, "seasons": []})
@@ -102,7 +109,7 @@ def competition_looks(ds):
             refs = {}
             for kind in KINDS:
                 rel = (info.get(JSON_KEY[kind]) or "").strip()
-                if folder and rel and os.path.exists(os.path.join(folder, rel)):
+                if folder and rel and _exists(os.path.join(folder, rel)):
                     refs[kind] = _relative(os.path.join(folder, rel))
             if not refs:
                 continue
@@ -331,7 +338,7 @@ def suggested_refs(ds, kind, teams=(), stadium=None, home_ground=None):
         info = seasons.get(season) or (seasons.get("") if not season else None)
         folder = ds.tournaments_folder_path.get(comp, "")
         rel = ((info or {}).get(key) or "").strip()
-        if folder and rel and os.path.exists(os.path.join(folder, rel)):
+        if folder and rel and _exists(os.path.join(folder, rel)):
             out.append(_relative(os.path.join(folder, rel)))
     if home_ground:
         out.append(stadium_default(home_ground, kind))
@@ -346,14 +353,15 @@ def suggested_refs(ds, kind, teams=(), stadium=None, home_ground=None):
 # ── one entry per look ─────────────────────────────────────────────────────
 # Many sets look the same (14 English grounds share their pads, nearly all
 # posts are white with a coloured band on the crossbar): the pickers list
-# each look once. Posts are named after their colours.
+# each look once. Plain posts are named after their colours ("White & red"),
+# painted ones (hoops, spirals...) keep their own name.
 _LOOKS = {}
 COLOURS = {
     "white": (235, 235, 235), "grey": (130, 130, 130), "black": (30, 30, 30),
     "navy": (20, 35, 95), "blue": (55, 75, 190), "light blue": (120, 180, 210),
     "red": (175, 30, 40), "maroon": (110, 20, 25), "green": (25, 95, 50),
-    "purple": (90, 60, 140), "orange": (210, 140, 50), "yellow": (230, 200, 40),
-    "pink": (220, 0, 200),
+    "purple": (90, 60, 140), "orange": (230, 90, 30), "gold": (200, 150, 40),
+    "yellow": (235, 205, 40), "pink": (240, 140, 240),
 }
 
 
@@ -370,25 +378,40 @@ def _colour_name(rgb):
     return _colour_names([rgb])[0]
 
 
-def posts_name(images):
-    """"White", "White · navy", "White · orange & black": the post's colour,
-    then the crossbar's band colours by area."""
+def _colour_counts(image, box=None):
+    """[(colour name, share)] of `image` (or its `box`, fractions), most
+    first."""
     import numpy as np
+    from collections import Counter
+    if box:
+        w, h = image.size
+        image = image.crop((int(box[0] * w), int(box[1] * h), max(int(box[0] * w) + 1, int(box[2] * w)),
+                            max(int(box[1] * h) + 1, int(box[3] * h))))
+    px = np.asarray(image.convert("RGB").resize((16, 16), 0)).reshape(-1, 3)   # nearest: no blends
+    return [(n, c / len(px)) for n, c in Counter(_colour_names(px)).most_common()]
+
+
+def posts_name(images):
+    """"White", "White & navy", "Orange & navy": the post's colour, then the
+    crossbar's (the parts the game shows: from the posts in, and the middle).
+    "" when the posts are painted (more than one colour on the post or along
+    the bar), or missing."""
     post, bar = images.get("post"), images.get("xbar")
     if post is None:
         return ""
-    base = _colour_name(np.asarray(post.convert("RGB").resize((8, 8))).reshape(-1, 3).mean(0))
-    name = base.capitalize()
-    if bar is None:
-        return name
-    px = np.asarray(bar.convert("RGB").resize((16, 16))).reshape(-1, 3)
-    names = _colour_names(px)
-    counts = {}
-    for n in names:
-        if n != base:
-            counts[n] = counts.get(n, 0) + 1
-    bands = [n for n, c in sorted(counts.items(), key=lambda kv: -kv[1]) if c >= len(px) // 16][:2]
-    return f"{name} · {' & '.join(bands)}" if bands else name
+    colours = _colour_counts(post)
+    if colours[0][1] < 0.95:
+        return ""
+    names = [colours[0][0]]
+    if bar is not None:
+        outer = _colour_counts(bar, (0.1, 0.1, 0.4, 0.9))
+        middle = _colour_counts(bar, (0.6, 0.1, 0.9, 0.9))
+        if outer[0][1] < 0.95:
+            return ""
+        for name, _ in (outer[0], middle[0]):
+            if name not in names:
+                names.append(name)
+    return " & ".join(names).capitalize()
 
 
 def _placeholder(images):
@@ -407,10 +430,10 @@ def look(ref, kind):
     if not ref:
         return None
     ref = stadium_dressing.library_ref(ref)
-    path = ref if ref.startswith(STOCK) else os.path.join(config.mod_data_directory, ref)
+    path = None if ref.startswith(STOCK) else stadium_dressing.set_path(ref)
     try:
         stamp = 0 if ref.startswith(STOCK) else os.path.getmtime(path)
-    except OSError:
+    except (OSError, TypeError):
         return None
     cached = _LOOKS.get((ref, kind))
     if cached and cached[0] == stamp:
@@ -420,7 +443,7 @@ def look(ref, kind):
     images = stadium_dressing.load(ref, kind)
     if not images or _placeholder(images):
         key = None
-    elif kind == "posts":
+    elif kind == "posts" and posts_name(images):
         key = posts_name(images)
     else:
         h = hashlib.md5()
@@ -430,6 +453,10 @@ def look(ref, kind):
         key = h.hexdigest()
     _LOOKS[(ref, kind)] = (stamp, key)
     return key
+
+
+def _is_hash(key):
+    return len(key) == 32 and all(c in "0123456789abcdef" for c in key)
 
 
 def _one_per_look(kind, options, default_look):
@@ -451,7 +478,8 @@ def _one_per_look(kind, options, default_look):
             continue
         o = dict(o, refs=[o["ref"]])
         if kind == "posts" and key:
-            o["label"] = key
+            # plain: its colours; painted: its own name, written the same way
+            o["label"] = o["label"].capitalize() if _is_hash(key) else key
         if key is not None:
             by_look[key] = o
         out.append(o)
@@ -463,6 +491,7 @@ def choices(ds, kind, current=None, stadium=None, suggested=()):
     suggested sets, then every other set of the library, the competitions
     and the game, each look once (pads, posts); `current` is added when
     none of them stands for it."""
+    current = stadium_dressing.library_ref(current) if current else current
     default = {"label": "Default", "ref": "", "suggested": True, "refs": [""]}
     own = stadium_default(stadium, kind) if stadium else ""
     if own:
@@ -486,5 +515,5 @@ def resolve(cfg, kind):
     """The set reference match `cfg` wears for `kind`."""
     picked = getattr(cfg, CFG_ATTR[kind], None)
     if picked:
-        return picked
+        return stadium_dressing.library_ref(picked)
     return stadium_default((cfg.stadium or {}).get("data") or {}, kind)
