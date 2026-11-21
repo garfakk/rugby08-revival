@@ -1540,14 +1540,102 @@ def _is_mod_proxy(path):
     return False
 
 
-def prepare_real_d3d8(game_dir, name):
+# The name dgVoodoo2's D3D8.dll gets next to the exe when found by itself, and
+# the settings file it reads from there.
+AUTO_D3D8_WRAPPER = "d3d8_dgvoodoo.dll"
+DGVOODOO_FILES = ("dgVoodoo.conf",)
+
+
+def _is_dgvoodoo_d3d8(path):
+  """True for dgVoodoo2's 32-bit D3D8.dll (version resource says dgVoodoo,
+  exports Direct3DCreate8). A 64-bit one (x64 folder copied by mistake), or any
+  other D3D8 DLL, is never chained to by itself: the proxy refuses to load when
+  its real D3D8 fails, and the game would not start."""
+  try:
+    with open(path, "rb") as f:
+      data = f.read()
+    pe = struct.unpack_from("<I", data, 0x3C)[0]
+    return (data[:2] == b"MZ" and data[pe:pe + 4] == b"PE\0\0"
+            and struct.unpack_from("<H", data, pe + 4)[0] == 0x14C
+            and b"Direct3DCreate8" in data and "dgVoodoo".encode("utf-16-le") in data
+            and b"[windowed]" not in data)
+  except (OSError, struct.error):
+    return False
+
+
+def _same_dir(a, b):
+  return os.path.normcase(os.path.abspath(a)) == os.path.normcase(os.path.abspath(b))
+
+
+def _copy_if_changed(src, dst, newer_only=False):
+  """Copy src over dst when dst is missing or differs (newer_only: only when
+  src is newer, so settings changed in the game folder are kept). True if copied."""
+  try:
+    if os.path.exists(dst):
+      if newer_only and os.path.getmtime(src) <= os.path.getmtime(dst):
+        return False
+      if os.path.getsize(src) == os.path.getsize(dst):
+        with open(src, "rb") as a, open(dst, "rb") as b:
+          if a.read() == b.read():
+            return False
+    shutil.copy2(src, dst)
+    return True
+  except OSError as e:
+    log.warning(f"cannot copy {src} to {dst}: {e}")
+    return False
+
+
+def _auto_dgvoodoo(game_dir, original_dir):
+  """Windows, d3d8_real_dll not set: dgVoodoo2's D3D8.dll, kept as
+  AUTO_D3D8_WRAPPER next to the exe, or "" (Windows' D3D8, as before).
+  Taken from next to the exe (renamed instead of overwritten by the proxy), or
+  from the original game folder, which the installer's game_files copy leaves
+  out (copied in with dgVoodoo.conf, refreshed when it changes there)."""
+  dst = _find_in_dir(game_dir, AUTO_D3D8_WRAPPER) or os.path.join(game_dir, AUTO_D3D8_WRAPPER)
+  current = _find_in_dir(game_dir, "d3d8.dll")
+  if current and not _is_mod_proxy(current):
+    if _is_dgvoodoo_d3d8(current):
+      try:
+        os.replace(current, dst)
+        log.info(f"dgVoodoo2 {os.path.basename(current)} next to the game kept as {AUTO_D3D8_WRAPPER}")
+      except OSError as e:
+        log.warning(f"cannot rename {current} to {AUTO_D3D8_WRAPPER}: {e}")
+    else:
+      log.warning(f"{os.path.basename(current)} next to the game is not the mod's: "
+                  f"it is replaced by the mod's. To keep using it, set d3d8_real_dll in config.ini")
+  elif original_dir and os.path.isdir(original_dir) and not _same_dir(original_dir, game_dir):
+    src = _find_in_dir(original_dir, "d3d8.dll")
+    if src and _is_dgvoodoo_d3d8(src):
+      if _copy_if_changed(src, dst):
+        log.info(f"dgVoodoo2 {os.path.basename(src)} of the original game folder copied as "
+                 f"{AUTO_D3D8_WRAPPER}")
+      for extra in DGVOODOO_FILES:
+        extra_src = _find_in_dir(original_dir, extra)
+        if extra_src:
+          _copy_if_changed(extra_src, _find_in_dir(game_dir, extra) or os.path.join(game_dir, extra),
+                           newer_only=True)
+  if os.path.isfile(dst) and _is_dgvoodoo_d3d8(dst):
+    log.info(f"Direct3D 8 through {os.path.basename(dst)} (dgVoodoo2)")
+    return os.path.basename(dst)
+  return ""
+
+
+def prepare_real_d3d8(game_dir, name, original_dir="", auto=None):
   """config.d3d8_real_dll -> the proxy's RealD3D8Dll ("" = system32's d3d8).
-  The first time, a d3d8.dll next to the exe that is not the mod's proxy (a
-  dgVoodoo2 install) is renamed to `name`, so the proxy no longer overwrites
-  it. A name that is d3d8.dll itself, a path, or a file not there is ignored
-  (warning): the game would not start."""
+  Set: the first time, a d3d8.dll next to the exe that is not the mod's proxy
+  is renamed to `name`, so the proxy no longer overwrites it. A name that is
+  d3d8.dll itself, a path, or a file not there is ignored (warning): the game
+  would not start. "none" = always Windows' D3D8.
+  Empty: dgVoodoo2 is found by itself on Windows (_auto_dgvoodoo); `auto`
+  forces that on/off (default: Windows only, it crashes under Wine)."""
   name = str(name or "").strip()
+  if name.lower() == "none":
+    return ""
   if not name:
+    if auto is None:
+      auto = config.platform == "windows"
+    if auto:
+      return _auto_dgvoodoo(game_dir, original_dir)
     current = _find_in_dir(game_dir, "d3d8.dll")
     if current and not _is_mod_proxy(current):
       log.warning(f"{os.path.basename(current)} next to the game is not the mod's (dgVoodoo2?): "
@@ -1573,6 +1661,14 @@ def prepare_real_d3d8(game_dir, name):
   return os.path.basename(target)
 
 
+def keep_d3d8_wrapper():
+  """Run before the static files (the proxy d3d8.dll among them) are copied,
+  so a D3D8 wrapper next to the exe is renamed instead of overwritten. Does
+  nothing when there is none; configure_d3d8_proxy finds it again later."""
+  return prepare_real_d3d8(config.game_launcher_directory, config.d3d8_real_dll,
+                           getattr(config, "R08_original_directory", ""))
+
+
 def configure_d3d8_proxy():
   """Deploy the d3d8.dll proxy (windowed mode + embeddable window) next to the
   game exe, optionally the rugby08patches.dll gameplay patches, and generate the
@@ -1586,7 +1682,8 @@ def configure_d3d8_proxy():
 
   # A D3D8 wrapper (dgVoodoo2...) the proxy hands the game's Direct3D to:
   # set aside before the proxy takes the d3d8.dll name
-  real_d3d8 = prepare_real_d3d8(game_dir, config.d3d8_real_dll)
+  real_d3d8 = prepare_real_d3d8(game_dir, config.d3d8_real_dll,
+                                getattr(config, "R08_original_directory", ""))
 
   # Copy the proxy d3d8.dll next to the exe
   if not copy_file(config.d3d8proxy_dll_filepath, os.path.join(game_dir, "d3d8.dll")):

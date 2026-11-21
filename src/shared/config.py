@@ -316,7 +316,9 @@ class Config:
     # Another D3D8 DLL the proxy passes the game's Direct3D to instead of
     # system32's: a wrapper like dgVoodoo2 (its D3D8.dll renamed, next to the
     # exe). Bare file name, never "d3d8.dll" (the proxy's own name). Empty =
-    # system32. See mod_utils.prepare_real_d3d8.
+    # system32, or dgVoodoo2 found by itself on Windows (next to the exe or in
+    # the original game folder). "none" = always system32. See
+    # mod_utils.prepare_real_d3d8.
     self.d3d8_real_dll = ""
     # Boot the game window off-screen (PosX/PosY=-10000) when embedding, so it
     # never flashes on the desktop before being reparented into the container.
@@ -580,6 +582,10 @@ class Config:
         log.error("'game_launcher_directory' not found in [Main] section of config.ini")
         return
       
+      # Windows installer, copy mode: the user's own game folder, which
+      # game_files was copied from (only read, see mod_utils.prepare_real_d3d8)
+      self.R08_original_directory = main.get('R08_original_directory', '').strip()
+
       if 'R08_filename' in main:
         self.R08_filename = main['R08_filename']
       else:

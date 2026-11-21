@@ -3,6 +3,8 @@ DXT1 / DXT5), BIG archives, RefPack, and the .o models of the 3D preview."""
 import glob
 import os
 import shutil
+import struct
+import time
 
 import numpy as np
 import pytest
@@ -285,13 +287,28 @@ def test_is_custom_asset():
     assert not any(M.is_custom_asset(v) for v in ("", "True", "False", True, 3, None))
 
 
-def test_real_d3d8_keeps_dgvoodoo(tmp_path):
+def _fake_d3d8(machine=0x14C, tag=b"v1", product="dgVoodoo"):
+    """A minimal PE: MZ, e_lfanew, PE header with `machine`, the
+    Direct3DCreate8 export name and a UTF-16 ProductName like a version resource."""
+    data = bytearray(0x200)
+    data[:2] = b"MZ"
+    struct.pack_into("<I", data, 0x3C, 0x80)
+    data[0x80:0x84] = b"PE\0\0"
+    struct.pack_into("<H", data, 0x84, machine)
+    return bytes(data) + b"Direct3DCreate8\0" + product.encode("utf-16-le") + tag
+
+
+def test_real_d3d8_named(tmp_path):
+    """d3d8_real_dll set: the behaviour of every release so far, any DLL."""
     proxy = os.path.join(SRC, "assets", "static_files", "d3d8.dll")
     game = tmp_path
-    (game / "D3D8.dll").write_bytes(b"dgVoodoo D3D8")              # dgVoodoo installed
-    assert M.prepare_real_d3d8(str(game), "") == ""                # not set: Windows' D3D8
+    (game / "D3D8.dll").write_bytes(b"dgVoodoo D3D8")              # any foreign DLL
+    assert M.prepare_real_d3d8(str(game), "", auto=False) == ""    # not set, Linux: Windows' D3D8
+    assert (game / "D3D8.dll").exists()                             # (the proxy overwrites it later)
     assert M.prepare_real_d3d8(str(game), "d3d8.dll") == ""        # the proxy's own name: refused
     assert M.prepare_real_d3d8(str(game), "dgv/d3d8.dll") == ""    # a path: refused
+    assert M.prepare_real_d3d8(str(game), "none") == ""
+    assert (game / "D3D8.dll").exists()
     assert M.prepare_real_d3d8(str(game), "d3d8_dgvoodoo.dll") == "d3d8_dgvoodoo.dll"
     assert (game / "d3d8_dgvoodoo.dll").read_bytes() == b"dgVoodoo D3D8"
     assert not (game / "D3D8.dll").exists()
@@ -302,3 +319,72 @@ def test_real_d3d8_keeps_dgvoodoo(tmp_path):
     # a wrapper name with no file: Windows' D3D8
     assert M.prepare_real_d3d8(str(game), "missing.dll") == ""
     assert (game / "d3d8.dll").exists()
+
+
+def test_real_d3d8_auto_off_on_linux(tmp_path, monkeypatch):
+    game = tmp_path
+    (game / "d3d8.dll").write_bytes(_fake_d3d8())                   # dgVoodoo crashes under Wine
+    monkeypatch.setattr(M.config, "platform", "linux")
+    assert M.prepare_real_d3d8(str(game), "") == ""
+    assert (game / "d3d8.dll").exists() and not (game / M.AUTO_D3D8_WRAPPER).exists()
+    monkeypatch.setattr(M.config, "platform", "windows")
+    assert M.prepare_real_d3d8(str(game), "") == M.AUTO_D3D8_WRAPPER
+
+
+def test_real_d3d8_auto_next_to_exe(tmp_path):
+    proxy = os.path.join(SRC, "assets", "static_files", "d3d8.dll")
+    game = tmp_path
+    shutil.copy(proxy, game / "d3d8.dll")
+    assert M.prepare_real_d3d8(str(game), "", auto=True) == ""      # nothing found: Windows' D3D8
+    assert sorted(os.listdir(game)) == ["d3d8.dll"]
+    # dgVoodoo dropped next to the exe: kept, not overwritten
+    (game / "d3d8.dll").write_bytes(_fake_d3d8())
+    assert M.prepare_real_d3d8(str(game), "", auto=True) == M.AUTO_D3D8_WRAPPER
+    assert not (game / "d3d8.dll").exists()
+    shutil.copy(proxy, game / "d3d8.dll")
+    assert M.prepare_real_d3d8(str(game), "", auto=True) == M.AUTO_D3D8_WRAPPER  # next match too
+    assert M.prepare_real_d3d8(str(game), "none", auto=True) == ""             # turned off
+    (game / M.AUTO_D3D8_WRAPPER).unlink()
+    # never chained to by itself: 64-bit dgVoodoo, other D3D8 DLLs (ReShade,
+    # d3d8to9...), junk. Same as before: left for the proxy to overwrite.
+    for other in (_fake_d3d8(machine=0x8664), _fake_d3d8(product="ReShade"), b"junk", b""):
+        (game / "d3d8.dll").write_bytes(other)
+        assert M.prepare_real_d3d8(str(game), "", auto=True) == ""
+        assert (game / "d3d8.dll").read_bytes() == other
+        assert not (game / M.AUTO_D3D8_WRAPPER).exists()
+
+
+def test_real_d3d8_auto_from_original_game_folder(tmp_path):
+    proxy = os.path.join(SRC, "assets", "static_files", "d3d8.dll")
+    original, game = tmp_path / "Rugby 08", tmp_path / "game_files"
+    original.mkdir(); game.mkdir()
+    shutil.copy(proxy, game / "d3d8.dll")
+    # no wrapper in the original folder, or not dgVoodoo: nothing changes
+    assert M.prepare_real_d3d8(str(game), "", str(original), auto=True) == ""
+    (original / "d3d8.dll").write_bytes(_fake_d3d8(product="ReShade"))
+    assert M.prepare_real_d3d8(str(game), "", str(original), auto=True) == ""
+    assert sorted(os.listdir(game)) == ["d3d8.dll"]
+    (original / "d3d8.dll").unlink()
+    # dgVoodoo in the original game folder: copied in with its conf
+    (original / "D3D8.dll").write_bytes(_fake_d3d8(tag=b"v1"))
+    (original / "dgVoodoo.conf").write_text("FullScreenMode = true")
+    assert M.prepare_real_d3d8(str(game), "", str(original), auto=True) == M.AUTO_D3D8_WRAPPER
+    assert (game / M.AUTO_D3D8_WRAPPER).read_bytes() == _fake_d3d8(tag=b"v1")
+    assert (game / "dgVoodoo.conf").read_text() == "FullScreenMode = true"
+    assert (original / "D3D8.dll").read_bytes() == _fake_d3d8(tag=b"v1")    # original only read
+    assert (game / "d3d8.dll").read_bytes() == open(proxy, "rb").read()
+    # updated in the original folder: refreshed
+    (original / "D3D8.dll").write_bytes(_fake_d3d8(tag=b"v2"))
+    assert M.prepare_real_d3d8(str(game), "", str(original), auto=True) == M.AUTO_D3D8_WRAPPER
+    assert (game / M.AUTO_D3D8_WRAPPER).read_bytes() == _fake_d3d8(tag=b"v2")
+    # conf edited in the game copy (newer): kept
+    (game / "dgVoodoo.conf").write_text("FullScreenMode = false")
+    os.utime(game / "dgVoodoo.conf", (time.time() + 60, time.time() + 60))
+    M.prepare_real_d3d8(str(game), "", str(original), auto=True)
+    assert (game / "dgVoodoo.conf").read_text() == "FullScreenMode = false"
+    # patched in place (same folder): handled as "next to the exe" only
+    assert M.prepare_real_d3d8(str(game), "", str(game), auto=True) == M.AUTO_D3D8_WRAPPER
+    # the original holding the mod's proxy: ignored
+    (game / M.AUTO_D3D8_WRAPPER).unlink()
+    shutil.copy(proxy, original / "D3D8.dll")
+    assert M.prepare_real_d3d8(str(game), "", str(original), auto=True) == ""

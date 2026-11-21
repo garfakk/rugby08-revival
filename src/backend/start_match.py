@@ -129,6 +129,11 @@ def start_match(match_data, copy_static_files = True, create_mission_file = True
 
     # This copies the statics (already modified files that does not need to be edited again) files into the game directory
     report('static', "Copying static files")
+    # A D3D8 wrapper (dgVoodoo2) next to the exe is set aside under its own
+    # name first: the static files hold the proxy d3d8.dll, which would
+    # overwrite it (see mod_utils.prepare_real_d3d8)
+    if config.use_d3d8_proxy:
+        mod_utils.keep_d3d8_wrapper()
     if copy_static_files:
         game_files_processor.copy_static_files()
     else:

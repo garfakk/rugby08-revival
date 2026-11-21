@@ -88,10 +88,12 @@ R08_filename = Rugby08.exe
 # Proxy writes its own log file next to the exe
 #d3d8_log = False
 # Run the game's Direct3D through another D3D8 DLL instead of Windows' own, e.g.
-# dgVoodoo2 (needed on some PCs and handhelds). Give it a name other than
-# d3d8.dll: a dgVoodoo D3D8.dll already next to Rugby08.exe is renamed to it
-# for you at the next match (otherwise copy dgVoodoo's D3D8.dll there under
-# that name). Keep dgVoodoo.conf next to the exe. Empty = Windows' D3D8.
+# dgVoodoo2 (needed on some PCs and handhelds). Windows: dgVoodoo2's D3D8.dll is
+# found by itself, next to Rugby08.exe or in your original Rugby 08 folder
+# (copied in with its dgVoodoo.conf), and kept as d3d8_dgvoodoo.dll. Set a file
+# name other than d3d8.dll to use another DLL: a d3d8.dll next to Rugby08.exe
+# that is not the mod's is renamed to it at the next match. none = always
+# Windows' D3D8.
 #d3d8_real_dll = d3d8_dgvoodoo.dll
 # Boot the game window off-screen until it is embedded (no flash on the desktop)
 #d3d8_offscreen_boot = True
