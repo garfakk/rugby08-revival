@@ -21,9 +21,10 @@ Credits:
 - Rosters: the 2008-09 base roster comes from the [MUP Patch 2009](https://www.therugbyforum.com/threads/mup-v-1-2-season-2008-09.15872) by Fa'atau82 and uli85
 - Code and tools:
     - Commentary decoder: a port of utkdec.c from [vgmstream](https://github.com/vgmstream/vgmstream), based on Andrew D'Addesio's [utkencode](https://github.com/daddesio/utkencode) (public domain)
-- Fonts (all [SIL Open Font License 1.1](https://openfontlicense.org)):
+- Fonts ([SIL Open Font License 1.1](https://openfontlicense.org) unless noted):
     - Interface: [Barlow and Barlow Condensed](https://github.com/jpt/barlow) by Jeremy Tribby
     - Shirt names: Barlow Condensed, [Oswald](https://github.com/googlefonts/OswaldFont) (Vernon Adams), [Anton](https://github.com/googlefonts/AntonFont) (Vernon Adams), Bebas Neue (Dharma Type), Saira Condensed (Omnibus-Type), [Teko](https://github.com/googlefonts/teko) (Indian Type Foundry), [Graduate](https://github.com/etunni/graduate) (Eduardo Tunni), Alfa Slab One (José María Solé), Russo One (Jovanny Lemonad), Black Ops One (James Grieshaber, Eben Sorkin)
+    - Tattoo lettering: Bebas Neue, [Playfair Display SC](https://github.com/clauseggers/Playfair-Display) (Claus Eggers Sørensen), [Bevan](https://github.com/googlefonts/BevanFont) (Vernon Adams); Yellowtail (Astigmatic), Permanent Marker and Rock Salt (Font Diner), [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0)
 - Music:
     - Title: [Midnight Ride](https://archive.org/details/GSP-AP_Collection_V1-4), Artist: GeoSuPhat (George P. Peterson), License: CC BY 3.0  
     - Title: [Rompo Todo](https://archive.org/details/OrquestaDePerros-RolesYOficios) , Artist: Orquesta de Perros, License: CC BY 3.0  
