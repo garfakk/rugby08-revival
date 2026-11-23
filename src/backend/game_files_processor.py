@@ -672,8 +672,26 @@ def edit_graphics_files(match_data):
 
 # This function edits the teams names by editing the game strings files (.english and .french)
 # The new strings (with their ID) are added at the end of a template file (from which the strings we want to write have been previously removed)
+def slot_team_names(game_data):
+  """The names written for the two match teams. The game finds a team by
+  its name on some screens (the pause menu's player statistics): a name
+  shared with a stock team of a lower id, or with the other side, gets a
+  trailing space, so it only matches its own slot (drawn the same)."""
+  names = {}
+  for team in ['team_B', 'team_A']:          # the away slot (56) comes first
+    name = str(game_data[team]['name'])
+    slot = teams_id[team]
+    taken = {n.casefold() for i, n in stock_team_names_before_slots.items() if i < slot}
+    taken |= {n.casefold() for n in names.values()}
+    while name.casefold() in taken:
+      name += " "
+    names[team] = name
+  return names
+
+
 def edit_teams_name(game_data):
-  
+  names = slot_team_names(game_data)
+
   for game_strings in ['game_strings_english', 'game_strings_french']:
     game_strings_filepath = os.path.join(config.game_launcher_directory, game_filenames[game_strings])
     copy_file(os.path.join(config.templates_directory, template_filenames[game_strings]), game_strings_filepath)
@@ -682,7 +700,7 @@ def edit_teams_name(game_data):
         with open(game_strings_filepath, 'ab') as file:
             for team in ['team_A', 'team_B']:
                 file.write(teams_string_id[team])
-                file.write(game_data[team]['name'].encode('utf-8'))
+                file.write(names[team].encode('utf-8'))
                 file.write(b'\x00')
             # a custom stadium's name over its slot's
             stadium = game_data.get('stadium_name')

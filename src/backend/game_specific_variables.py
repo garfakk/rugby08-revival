@@ -267,6 +267,27 @@ teams_id = {
  'team_B': 56,	# Clermont
 }
 
+# The stock team names the game holds under ids 0..58 (read from the running
+# game, team-name table 0x9C86C8). Screens that find a team by its NAME
+# (pause > match statistics > player statistics: FUN_00578b70 ->
+# FUN_005b8130, a case-insensitive compare over ids 0..142, first hit wins)
+# land on one of these instead of the match's slot (59 home, 56 away) when
+# the mod team has the same name, and show an empty table. Ids past 59 can't
+# clash: the slot comes first.
+stock_team_names_before_slots = {
+  1: "Argentina", 2: "Australia", 3: "Canada", 4: "Chile", 5: "England", 6: "Fiji",
+  7: "France", 8: "Georgia", 9: "Ireland", 10: "Italy", 11: "Japan", 12: "Namibia",
+  13: "New Zealand", 14: "Portugal", 15: "Romania", 16: "Russia", 17: "Scotland",
+  18: "South Africa", 19: "Spain", 20: "Samoa", 21: "Tonga", 22: "Tunisia", 23: "Uruguay",
+  24: "United States", 25: "Wales", 26: "Jr. All Blacks", 27: "Lions", 28: "Brumbies",
+  29: "Waratahs", 30: "Reds", 31: "Western Force", 32: "NEC Harlequins", 33: "Earth Titans",
+  34: "Bath", 35: "Bristol", 36: "Gloucester", 38: "Leeds", 39: "Leicester Tigers",
+  40: "London Irish", 41: "Newcastle", 42: "Northampton", 43: "Rotherham", 44: "Sale",
+  45: "Saracens", 46: "London Wasps", 47: "Worcester", 48: "Cornish Pirates", 49: "England",
+  50: "Agen", 51: "Beziers", 52: "Biarritz", 53: "Bourgoin", 54: "Brive", 55: "Castres",
+  57: "Perpignan", 58: "Paris",
+}
+
 # These are the adresses of team data in the roster file
 roster_data_addresses = {
   'team_A': 0x3253C,	# Toulouse
