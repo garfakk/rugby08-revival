@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 """Write the painted posts sets of the library (data/stadium_graphics/posts):
-pictures in the posts layout of backend/stadium_dressing.py (the goal seen
-from the front, 768 x 1024). Run by hand after changing a design:
+pictures in the posts layout of backend/stadium_dressing.py (128 x 1024: the
+post's strip, then the crossbar's, upright). Run by hand after changing a
+design:
 
     python3 tools/make_posts.py
 
-A post's picture wraps round the post, so a stripe that climbs one period
-across the post's width turns into a spiral.
+Each design draws the post (top at y 0) and the crossbar lying flat, from
+the post (x 0) to the middle and on through its middle part; the bar is
+turned upright into its strip at the end. The post's picture wraps round
+the post, so a stripe that climbs one period across its width turns into a
+spiral.
 """
 import os
 import sys
@@ -16,123 +20,103 @@ from PIL import Image, ImageDraw
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path[:0] = [os.path.join(ROOT, "src")]
 
-from backend.stadium_dressing import (POSTS_SIZE, POST_X, RIGHT_POST_X,  # noqa: E402
-                                      XBAR_Y, XBAR_MIDDLE_X)
+from backend.stadium_dressing import POSTS_SIZE, POST_BOX, XBAR_OUTER, XBAR_MIDDLE  # noqa: E402
 
 OUT = os.path.join(ROOT, "data", "stadium_graphics", "posts")
 SS = 4                                   # drawn larger, then shrunk: smooth edges
+
+POST_W, POST_H = POST_BOX[2] - POST_BOX[0], POST_BOX[3] - POST_BOX[1]
+BAR_T = XBAR_OUTER[2] - XBAR_OUTER[0]                    # the bar's thickness
+OUTER_L = XBAR_OUTER[3] - XBAR_OUTER[1]                  # post to the middle
+MIDDLE_L = XBAR_MIDDLE[3] - XBAR_MIDDLE[1]
 
 WHITE, RED, BLACK = (240, 240, 240), (200, 30, 40), (25, 25, 25)
 NAVY, BLUE = (20, 40, 110), (30, 70, 170)
 GREEN, GOLD = (0, 110, 60), (215, 160, 35)
 
 
-def _canvas():
-    return Image.new("RGBA", (POSTS_SIZE[0] * SS, POSTS_SIZE[1] * SS), (0, 0, 0, 0))
+class Design:
+    """A post (POST_W x POST_H) and a flat crossbar (OUTER_L + MIDDLE_L long,
+    BAR_T thick), drawn SS times larger."""
 
+    def __init__(self, post=WHITE, bar=WHITE, middle=None):
+        self.post = Image.new("RGBA", (POST_W * SS, POST_H * SS), post)
+        self.bar = Image.new("RGBA", ((OUTER_L + MIDDLE_L) * SS, BAR_T * SS), bar)
+        self.p, self.b = ImageDraw.Draw(self.post), ImageDraw.Draw(self.bar)
+        if middle:
+            self.middle(middle)
 
-def _box(x0, y0, x1, y1):
-    return (x0 * SS, y0 * SS, x1 * SS - 1, y1 * SS - 1)
+    def middle(self, colour, x0=0.0, x1=1.0):
+        """Paint the bar's middle part (or the share x0-x1 of it)."""
+        a = (OUTER_L + MIDDLE_L * x0) * SS
+        self.b.rectangle((round(a), 0, round((OUTER_L + MIDDLE_L * x1) * SS) - 1, BAR_T * SS), fill=colour)
 
+    def hoops(self, colours, height, top=0, bottom=POST_H):
+        for i, y in enumerate(range(top, bottom, height)):
+            self.p.rectangle((0, y * SS, POST_W * SS, min(bottom, y + height) * SS - 1),
+                             fill=colours[i % len(colours)])
 
-def _posts(draw, colour):
-    for x0, x1 in (POST_X, RIGHT_POST_X):
-        draw.rectangle(_box(x0, 0, x1, POSTS_SIZE[1]), fill=colour)
+    def spiral(self, colour, period, width):
+        """A stripe winding up the post: it climbs `period` pixels across the
+        post's width, `width` thick."""
+        for y in range(-period, POST_H + period, period):
+            pts = [(0, y), (POST_W, y - period), (POST_W, y - period + width), (0, y + width)]
+            self.p.polygon([(x * SS, yy * SS) for x, yy in pts], fill=colour)
 
+    def bar_bands(self, colours, width):
+        """Bands across the bar from the post to the middle part."""
+        for i, x in enumerate(range(0, OUTER_L, width)):
+            self.b.rectangle((x * SS, 0, min(OUTER_L, x + width) * SS - 1, BAR_T * SS),
+                             fill=colours[i % len(colours)])
 
-def _bar(draw, colour, middle=None):
-    draw.rectangle(_box(POST_X[1], XBAR_Y[0], RIGHT_POST_X[0], XBAR_Y[1]), fill=colour)
-    if middle:
-        draw.rectangle(_box(XBAR_MIDDLE_X[0], XBAR_Y[0], XBAR_MIDDLE_X[1], XBAR_Y[1]), fill=middle)
-
-
-def _post_hoops(draw, colours, height, top=0, bottom=None):
-    bottom = POSTS_SIZE[1] if bottom is None else bottom
-    for i, y in enumerate(range(top, bottom, height)):
-        for x0, x1 in (POST_X, RIGHT_POST_X):
-            draw.rectangle(_box(x0, y, x1, min(bottom, y + height)), fill=colours[i % len(colours)])
-
-
-def _bar_bands(draw, colours, width):
-    """Bands across the crossbar, from each post in (the bar's right half
-    mirrors its left)."""
-    for i, x in enumerate(range(POST_X[1], XBAR_MIDDLE_X[0], width)):
-        draw.rectangle(_box(x, XBAR_Y[0], min(XBAR_MIDDLE_X[0], x + width), XBAR_Y[1]),
-                       fill=colours[i % len(colours)])
-
-
-def _spiral(image, colour, period, width):
-    """A stripe winding up each post: climbs `period` pixels across the
-    post's width, `width` thick."""
-    draw = ImageDraw.Draw(image)
-    w = POST_X[1] - POST_X[0]
-    for x0, _ in (POST_X, RIGHT_POST_X):
-        for y in range(-period, POSTS_SIZE[1] + period, period):
-            pts = [(x0, y), (x0 + w, y - period), (x0 + w, y - period + width), (x0, y + width)]
-            draw.polygon([(px * SS, py * SS) for px, py in pts], fill=colour)
-    return image
+    def picture(self):
+        out = Image.new("RGBA", POSTS_SIZE, (0, 0, 0, 0))
+        out.paste(self.post.resize((POST_W, POST_H), Image.LANCZOS), POST_BOX[:2])
+        bar = self.bar.resize((OUTER_L + MIDDLE_L, BAR_T), Image.LANCZOS)
+        for box, x0, x1 in ((XBAR_OUTER, 0, OUTER_L), (XBAR_MIDDLE, OUTER_L, OUTER_L + MIDDLE_L)):
+            # upright: the post end at the top, the bar's top on the right
+            out.paste(bar.crop((x0, 0, x1, BAR_T)).transpose(Image.ROTATE_270), box[:2])
+        return out
 
 
 def red_spiral():
-    image = _canvas()
-    draw = ImageDraw.Draw(image)
-    _posts(draw, WHITE)
-    _spiral(image, RED, 160, 56)
-    _bar(draw, WHITE)
-    _bar_bands(draw, [RED, WHITE], 40)
-    draw.rectangle(_box(XBAR_MIDDLE_X[0], XBAR_Y[0], XBAR_MIDDLE_X[1], XBAR_Y[1]), fill=RED)
-    return image
+    d = Design(WHITE, WHITE, RED)
+    d.spiral(RED, 160, 56)
+    d.bar_bands([RED, WHITE], 140)
+    return d
 
 
 def navy_spiral():
-    image = _canvas()
-    draw = ImageDraw.Draw(image)
-    _posts(draw, WHITE)
-    _spiral(image, NAVY, 200, 48)
-    _bar(draw, WHITE, NAVY)
-    return image
+    d = Design(WHITE, WHITE, NAVY)
+    d.spiral(NAVY, 200, 48)
+    return d
 
 
 def black_hoops():
-    image = _canvas()
-    draw = ImageDraw.Draw(image)
-    _post_hoops(draw, [BLACK, WHITE], 64)
-    _bar(draw, WHITE)
-    _bar_bands(draw, [BLACK, WHITE], 48)
-    draw.rectangle(_box(XBAR_MIDDLE_X[0], XBAR_Y[0], XBAR_MIDDLE_X[1], XBAR_Y[1]), fill=BLACK)
-    return image
+    d = Design(WHITE, WHITE, BLACK)
+    d.hoops([BLACK, WHITE], 64)
+    d.bar_bands([BLACK, WHITE], 160)
+    return d
 
 
 def green_gold_hoops():
-    image = _canvas()
-    draw = ImageDraw.Draw(image)
-    _post_hoops(draw, [GREEN, GOLD], 96)
-    _bar(draw, GOLD, GREEN)
-    return image
+    d = Design(GREEN, GOLD, GREEN)
+    d.hoops([GREEN, GOLD], 96)
+    return d
 
 
 def tricolour():
-    """White posts with a blue, white and red band at the top of each post
+    """White posts with a blue, white and red band near the top of each post
     and in the middle of the bar."""
-    image = _canvas()
-    draw = ImageDraw.Draw(image)
-    _posts(draw, WHITE)
-    _post_hoops(draw, [BLUE, WHITE, RED], 48, top=96, bottom=96 + 3 * 48)
-    _bar(draw, WHITE)
-    third = (XBAR_MIDDLE_X[1] - XBAR_MIDDLE_X[0]) / 3
+    d = Design(WHITE, WHITE)
+    d.hoops([BLUE, WHITE, RED], 48, top=96, bottom=96 + 3 * 48)
     for i, colour in enumerate((BLUE, WHITE, RED)):
-        x = XBAR_MIDDLE_X[0] + i * third
-        draw.rectangle((round(x * SS), XBAR_Y[0] * SS, round((x + third) * SS) - 1, XBAR_Y[1] * SS - 1),
-                       fill=colour)
-    return image
+        d.middle(colour, i / 3, (i + 1) / 3)
+    return d
 
 
 def black_gold():
-    image = _canvas()
-    draw = ImageDraw.Draw(image)
-    _posts(draw, BLACK)
-    _bar(draw, BLACK, GOLD)
-    return image
+    return Design(BLACK, BLACK, GOLD)
 
 
 DESIGNS = {"red_spiral": red_spiral, "navy_spiral": navy_spiral, "black_hoops": black_hoops,
@@ -142,12 +126,8 @@ DESIGNS = {"red_spiral": red_spiral, "navy_spiral": navy_spiral, "black_hoops": 
 def main():
     os.makedirs(OUT, exist_ok=True)
     for name, make in DESIGNS.items():
-        image = make().resize(POSTS_SIZE, Image.LANCZOS)
-        # the bar's right half as the game shows it: its left half mirrored
-        left = image.crop((POST_X[1], XBAR_Y[0], XBAR_MIDDLE_X[0], XBAR_Y[1]))
-        image.paste(left.transpose(Image.FLIP_LEFT_RIGHT), (XBAR_MIDDLE_X[1], XBAR_Y[0]))
         path = os.path.join(OUT, name + ".png")
-        image.save(path, optimize=True)
+        make().picture().save(path, optimize=True)
         print("wrote", path)
 
 

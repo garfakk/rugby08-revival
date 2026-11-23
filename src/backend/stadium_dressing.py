@@ -10,16 +10,18 @@ names Tournaments\\World_Cup for all of them, so one file per match):
 
 The mod keeps each as one picture (a "set") the player can mix freely:
 
-  pads set   1024 x 512 (any 2:1 size): four areas
-               x 0-256    pad wrap (around the post pad, top = pad top)
-               x 256-512  corner flag pole
-               x 512-1024 corner flag (top half), pad top (bottom left
-                          256 x 256); the bottom right corner is unused
-  posts set  768 x 1024 (any 3:4 size): the goal seen from the front, from
-             the top of the posts down to the top of the pads. Posts
-             x 48-112 and 656-720, crossbar y 906-970 between them. Both
-             posts wear the left one, the crossbar's right half mirrors
-             its left; transparent elsewhere.
+  pads set   1088 x 768 (any 17:12 size), packed, each part in the game
+             texture's proportions:
+               x 0-192     pad wrap (one face of the post pad, top = pad top)
+               x 192-576   corner flag pole
+               x 576-1088  corner flag (y 0-256), pad top (y 256-768)
+  posts set  128 x 1024 (any 1:8 size), two strips:
+               x 0-64      the post, from its top (y 0) down to the top of
+                           the pad; it wraps round the post, both posts wear it
+               x 64-128    the crossbar turned upright: from the post (y 0)
+                           to the middle (y 837), then its middle part
+                           (y 837-1024); the bar's top runs down the right
+                           edge. Its other half mirrors this one.
 
 The game's textures are cut from them (split): its post texture runs down the
 post (row 0 at the top), its crossbar texture along the bar from the post
@@ -63,16 +65,15 @@ IMAGE_EXTS = (".png", ".jpg", ".jpeg", ".bmp", ".tga", ".webp")
 MAX_SIDE = 512
 
 # the pads picture: tag -> (left, top, right, bottom) in PADS_SIZE pixels
-PADS_SIZE = (1024, 512)
-PADS_LAYOUT = {"pada": (0, 0, 256, 512), "flgp": (256, 0, 512, 512),
-               "flag": (512, 0, 1024, 256), "padb": (512, 256, 768, 512)}
-# the posts picture (POSTS_SIZE pixels): a post's columns, the crossbar's
-# rows, and its middle part (the crossbar texture's u 0.6-0.9)
-POSTS_SIZE = (768, 1024)
-POST_X = (48, 112)
-RIGHT_POST_X = (656, 720)
-XBAR_Y = (906, 970)
-XBAR_MIDDLE_X = (356, 412)
+PADS_SIZE = (1088, 768)
+PADS_LAYOUT = {"pada": (0, 0, 192, 768), "flgp": (192, 0, 576, 768),
+               "flag": (576, 0, 1088, 256), "padb": (576, 256, 1088, 768)}
+# the posts picture (POSTS_SIZE pixels): the post's strip, and the
+# crossbar's (turned upright): its outer part then its middle
+POSTS_SIZE = (128, 1024)
+POST_BOX = (0, 0, 64, 1024)
+XBAR_OUTER = (64, 0, 128, 837)
+XBAR_MIDDLE = (64, 837, 128, 1024)
 XBAR_TEXTURE = (256, 64)
 
 
@@ -234,20 +235,21 @@ def compose_pads(images):
 
 
 def split_posts(image):
-  """{"post", "xbar"} textures of a posts picture: the left post, and the
-  crossbar's left half then its middle laid out as the game's bar wants."""
+  """{"post", "xbar"} textures of a posts picture: the post's strip, and
+  the crossbar's parts laid out along the game's bar."""
   image = image.convert("RGBA")
-  sx, sy = image.width / POSTS_SIZE[0], image.height / POSTS_SIZE[1]
-  post_w, post_h = POST_X[1] - POST_X[0], POSTS_SIZE[1]
-  post = _resize(image, (post_w, post_h), (POST_X[0] * sx, 0, POST_X[1] * sx, image.height))
+  post = _resize(image, (POST_BOX[2] - POST_BOX[0], POST_BOX[3] - POST_BOX[1]),
+                 _scaled(POST_BOX, image.size, POSTS_SIZE))
   tw, th = XBAR_TEXTURE
-  top, bottom = XBAR_Y[0] * sy, XBAR_Y[1] * sy
   rows = (round(th * 0.1), round(th * 0.9))
   cols = [round(tw * f) for f in (0.1, 0.4, 0.6, 0.9)]
-  outer = _resize(image, (cols[1] - cols[0], rows[1] - rows[0]),
-                  (POST_X[1] * sx, top, XBAR_MIDDLE_X[0] * sx, bottom))
-  middle = _resize(image, (cols[3] - cols[2], rows[1] - rows[0]),
-                   (XBAR_MIDDLE_X[0] * sx, top, XBAR_MIDDLE_X[1] * sx, bottom))
+
+  def part(box, width):
+    # upright in the picture (bar top on the right): back along the bar
+    upright = _resize(image, (rows[1] - rows[0], width), _scaled(box, image.size, POSTS_SIZE))
+    return upright.transpose(Image.ROTATE_90)
+
+  outer, middle = part(XBAR_OUTER, cols[1] - cols[0]), part(XBAR_MIDDLE, cols[3] - cols[2])
   bar = Image.new("RGBA", (tw, rows[1] - rows[0]))
   bar.paste(outer, (cols[0], 0))
   bar.paste(middle, (cols[2], 0))
@@ -268,18 +270,14 @@ def compose_posts(images):
   canvas = Image.new("RGBA", POSTS_SIZE, (0, 0, 0, 0))
   post, xbar = images.get("post"), images.get("xbar")
   if post is not None:
-    pic = _resize(post.convert("RGBA"), (POST_X[1] - POST_X[0], POSTS_SIZE[1]))
-    canvas.paste(pic, (POST_X[0], 0))
-    canvas.paste(pic, (RIGHT_POST_X[0], 0))
+    canvas.paste(_resize(post.convert("RGBA"), (POST_BOX[2] - POST_BOX[0], POST_BOX[3] - POST_BOX[1])),
+                 POST_BOX[:2])
   if xbar is not None:
     xbar = xbar.convert("RGBA")
     w, h = xbar.size
-    height = XBAR_Y[1] - XBAR_Y[0]
-    outer = _resize(xbar, (XBAR_MIDDLE_X[0] - POST_X[1], height), (w * 0.1, h * 0.1, w * 0.4, h * 0.9))
-    middle = _resize(xbar, (XBAR_MIDDLE_X[1] - XBAR_MIDDLE_X[0], height), (w * 0.6, h * 0.1, w * 0.9, h * 0.9))
-    canvas.paste(outer, (POST_X[1], XBAR_Y[0]))
-    canvas.paste(middle, (XBAR_MIDDLE_X[0], XBAR_Y[0]))
-    canvas.paste(outer.transpose(Image.FLIP_LEFT_RIGHT), (XBAR_MIDDLE_X[1], XBAR_Y[0]))
+    for box, (u0, u1) in ((XBAR_OUTER, (0.1, 0.4)), (XBAR_MIDDLE, (0.6, 0.9))):
+      along = _resize(xbar, (box[3] - box[1], box[2] - box[0]), (w * u0, h * 0.1, w * u1, h * 0.9))
+      canvas.paste(along.transpose(Image.ROTATE_270), box[:2])
   return canvas
 
 

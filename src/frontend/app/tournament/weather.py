@@ -85,6 +85,8 @@ REGIONS = {"australia": "Reg1", "pacific_northwest": "Reg1", "california": "Reg1
 DEFAULT_REGION = "Reg2"
 # Grounds with a roof (game id) and the environment whose scene has it
 # closed: the game loads "milleniumcovered.cold" for the Millennium Stadium.
+# A mod stadium names its own in its JSON: "roof": "<environment>" (an
+# indoor ground whose only scene is under its roof, e.g. La Defense Arena).
 COVERED = {32: "cold"}
 
 NIGHT_SHARE = 0.4             # evening kick-offs, unless the template says ("night_share")
@@ -132,7 +134,7 @@ def keep_stadiums(t, ds) -> None:
     so the simulator (which has no data store) knows the grounds."""
     t.components["stadiums"] = {
         str(sid): {"name": info.get("name", ""), "country": info.get("country", ""),
-                   "game_id": info.get("game_id"),
+                   "game_id": info.get("game_id"), "roof": info.get("roof"),
                    "environments": list(info.get("environments") or []),
                    "pitches": list(info.get("pitches") or [])}
         for sid, info in (getattr(ds, "stadiums", None) or {}).items()}
@@ -152,24 +154,27 @@ def _gid(stadium):
         return None
 
 
+def _covered(stadium):
+    """The environment whose scene has the ground's roof shut, or None."""
+    own = (stadium or {}).get("roof")
+    if isinstance(own, str) and own:
+        return own
+    return COVERED.get(_gid(stadium))
+
+
 def env_label(stadium, env) -> str:
     """The name of an environment at a ground: "closed" for the one that has
     the roof shut, else its own."""
-    return "closed" if env == COVERED.get(_gid(stadium)) else str(env)
+    return "closed" if env == _covered(stadium) else str(env)
 
 
 def roof_environment(stadium):
     """The environment in which the ground's roof is closed, or None for
     a ground without one (or a saved copy that lost its game id: the
     Millennium Stadium is also known by name)."""
-    gid = (stadium or {}).get("game_id")
-    if gid is None and "millennium" in str((stadium or {}).get("name", "")).lower():
-        gid = 32
-    try:
-        env = COVERED.get(int(gid))
-    except (TypeError, ValueError):
-        return None
-    return env if env in ((stadium or {}).get("environments") or []) else None
+    env = _covered(stadium)
+    have = set((stadium or {}).get("environments") or []) | set((stadium or {}).get("scenes") or {})
+    return env if env in have else None
 
 
 def _interp(monthly, d):

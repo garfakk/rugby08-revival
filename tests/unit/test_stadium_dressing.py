@@ -68,22 +68,36 @@ def test_set_pictures_round_trip(tmp_path):
 
 def test_posts_picture_cut_into_the_game_textures():
     pic = Image.new("RGBA", SD.POSTS_SIZE, (0, 0, 0, 0))
-    pic.paste((0, 200, 0, 255), (SD.POST_X[0], 0, SD.POST_X[1], 400))          # top of the post
-    pic.paste((255, 255, 255, 255), (SD.POST_X[0], 400, SD.POST_X[1], SD.POSTS_SIZE[1]))
-    pic.paste((200, 0, 0, 255), (SD.POST_X[1], SD.XBAR_Y[0], SD.XBAR_MIDDLE_X[0], SD.XBAR_Y[1]))
-    pic.paste((0, 0, 200, 255), (SD.XBAR_MIDDLE_X[0], SD.XBAR_Y[0], SD.XBAR_MIDDLE_X[1], SD.XBAR_Y[1]))
+    l, t, r, b = SD.POST_BOX
+    pic.paste((0, 200, 0, 255), (l, t, r, 400))                         # top of the post
+    pic.paste((255, 255, 255, 255), (l, 400, r, b))
+    pic.paste((200, 0, 0, 255), SD.XBAR_OUTER)
+    pic.paste((0, 0, 200, 255), SD.XBAR_MIDDLE)
+    # the bar's top runs down the right edge of its strip
+    x = SD.XBAR_OUTER[2] - 8
+    pic.paste((250, 200, 0, 255), (x, 0, SD.XBAR_OUTER[2], SD.XBAR_OUTER[3]))
     out = SD.split_posts(pic)
     post, xbar = out["post"], out["xbar"]
     assert post.getpixel((10, 50))[:3] == (0, 200, 0)                   # row 0 = the top
     assert post.getpixel((10, post.height - 5))[:3] == (255, 255, 255)
     w, h = xbar.size
     for u, colour in ((0.05, (200, 0, 0)), (0.25, (200, 0, 0)), (0.75, (0, 0, 200)), (0.95, (0, 0, 200))):
-        for v in (0.02, 0.5, 0.98):
+        for v in (0.5, 0.85, 0.98):
             assert xbar.getpixel((int(u * w), int(v * h)))[:3] == colour, (u, v)
+    near = lambda a, b: max(abs(x - y) for x, y in zip(a[:3], b)) <= 12       # noqa: E731
+    assert near(xbar.getpixel((int(0.25 * w), 1)), (250, 200, 0))          # v 0: the top
     # and back: the picture of the game's textures cuts into the same
     again = SD.split_posts(SD.compose_posts(out))
     assert again["xbar"].getpixel((int(0.25 * w), h // 2))[:3] == (200, 0, 0)
     assert again["xbar"].getpixel((int(0.75 * w), h // 2))[:3] == (0, 0, 200)
+    assert near(again["xbar"].getpixel((int(0.25 * w), 1)), (250, 200, 0))
+
+
+def test_pads_picture_has_no_unused_space():
+    area = sum((r - l) * (b - t) for l, t, r, b in SD.PADS_LAYOUT.values())
+    assert area == SD.PADS_SIZE[0] * SD.PADS_SIZE[1]
+    assert (SD.POST_BOX[2] - SD.POST_BOX[0]) * SD.POSTS_SIZE[1] + sum(
+        (r - l) * (b - t) for l, t, r, b in (SD.XBAR_OUTER, SD.XBAR_MIDDLE)) == SD.POSTS_SIZE[0] * SD.POSTS_SIZE[1]
 
 
 def test_older_set_folders_still_load(tmp_path, monkeypatch):

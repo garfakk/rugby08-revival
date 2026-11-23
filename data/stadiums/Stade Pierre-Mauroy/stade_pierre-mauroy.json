@@ -6,6 +6,7 @@
     "scenes": {
       "night": "stade_pierre-mauroy.night.big"
     },
+    "roof": "night",
     "files": {
       "frontend/textures/stadiums/felixbollaert.n.fsh": "stade_pierre-mauroy.n.fsh"
     }

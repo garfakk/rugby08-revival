@@ -622,3 +622,16 @@ def test_cpu_squads_default_or_best(ds):
     assert selection.ai_select(t, "10001") == selection.auto_select(t, "10001")
     t.options.pop("cpu_squads")
     assert selection.ai_select(t, "10001") == selection.auto_select(t, "10001")
+
+
+def test_a_stadium_names_its_own_roof():
+    """A mod stadium's "roof" key: that environment is "closed" and has the
+    roof shut (La Defense Arena, Stade Pierre-Mauroy: their night scene)."""
+    from app.tournament import weather
+    arena = {"name": "La Defense Arena", "game_id": 70, "roof": "night",
+             "scenes": {"night": "la_defense_arena.night.big"}, "environments": ["night"]}
+    assert weather.env_label(arena, "night") == "closed"
+    assert weather.roof_environment(arena) == "night"
+    open_air = dict(arena, roof=None)
+    assert weather.env_label(open_air, "night") == "night" and weather.roof_environment(open_air) is None
+    assert weather.env_label({"game_id": 32, "environments": ["cold"]}, "cold") == "closed"
