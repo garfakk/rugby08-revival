@@ -93,6 +93,7 @@ class EditorScreen(Screen):
         bar.addWidget(self.new_btn)
         bar.addWidget(self.dup_btn)
         lay.addLayout(bar)
+        self.list_bar = bar
 
         # Show/group/sort stay collapsed by default — a filter box below
         # (typed narrowing, always visible) covers most browsing, and the

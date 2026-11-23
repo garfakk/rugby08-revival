@@ -98,6 +98,7 @@ class OptionRow(QWidget):
         # actions: a play icon at the left and an ASSIGN button at the right;
         # a click on the row plays it, only ASSIGN picks it (sound clips).
         self.actions = actions
+        self.checked = None         # a tick box at the left when True / False
 
     def set_highlighted(self, on):
         if on != self.highlighted:
@@ -169,6 +170,23 @@ class OptionRow(QWidget):
         p.drawText(a, Qt.AlignCenter, "ASSIGN")
         p.setRenderHint(QPainter.Antialiasing, False)
 
+    def _paint_check(self, p):
+        p.setRenderHint(QPainter.Antialiasing)
+        r = QRectF(13, (self.ROW_H - 16) / 2, 16, 16)
+        if self.checked:
+            p.setPen(Qt.NoPen)
+            p.setBrush(QColor(ACCENT))
+            p.drawRoundedRect(r, 3, 3)
+            p.setPen(QPen(QColor(FG_PRIMARY), 2.2, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
+            p.drawPolyline(QPolygonF([QPointF(r.left() + 3.5, r.center().y()),
+                                      QPointF(r.left() + 6.8, r.bottom() - 4),
+                                      QPointF(r.right() - 3.5, r.top() + 4)]))
+        else:
+            p.setPen(QPen(QColor(LIST_TAG), 1.4))
+            p.setBrush(Qt.NoBrush)
+            p.drawRoundedRect(r.adjusted(0.7, 0.7, -0.7, -0.7), 3, 3)
+        p.setRenderHint(QPainter.Antialiasing, False)
+
     def paintEvent(self, event):
         p = QPainter(self)
         # Always an opaque fill — never leave the row see-through to
@@ -202,6 +220,9 @@ class OptionRow(QWidget):
             text_col = (LIST_SUBDUED_TEXT if self.list_style else DROPDOWN_SUBDUED_TEXT) if self.subdued else (LIST_TEXT if self.list_style else DROPDOWN_TEXT)
 
         x0 = 14
+        if self.checked is not None:
+            self._paint_check(p)
+            x0 = 40
         if self.actions:
             self._paint_actions(p, lit)
             x0 = int(self.play_rect().right()) + 10
@@ -241,12 +262,14 @@ class RowSpec:
     shown."""
 
     FIELDS = ("text", "data", "tag", "tag_color", "disabled", "selected", "subdued",
-              "highlighted", "icon", "subtitle", "list_style", "actions")
+              "highlighted", "icon", "subtitle", "list_style", "actions", "checked")
     __slots__ = FIELDS + ("view",)
 
     def __init__(self, text, data, tag="", tag_color=None, disabled=False, selected=False,
-                 subdued=False, icon=None, subtitle="", list_style=False, actions=False):
+                 subdued=False, icon=None, subtitle="", list_style=False, actions=False,
+                 checked=None):
         self.text, self.data, self.tag, self.tag_color = text, data, tag, tag_color
+        self.checked = checked      # None: no tick box; True / False: one, ticked or not
         self.disabled, self.selected, self.subdued = disabled, selected, subdued
         self.highlighted = False
         self.icon, self.subtitle, self.list_style = icon, subtitle, list_style
@@ -262,6 +285,12 @@ class RowSpec:
     def set_selected(self, on):
         if on != self.selected:
             self.selected = on
+            if self.view is not None:
+                self.view.refresh_spec(self)
+
+    def set_checked(self, on):
+        if on != self.checked:
+            self.checked = on
             if self.view is not None:
                 self.view.refresh_spec(self)
 

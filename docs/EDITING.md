@@ -85,6 +85,17 @@ Heads are not made in the editor, they are `.big` files made with the community 
 ### Save
 `SAVE` (bottom right, `→ my edits`) keeps the player in your edits. `REVERT` goes back to the last save. The list on the left shows an issue count for broken players, the badge at the top right tells if the selected one is fine.
 
+### Change many players at once
+`SELECT` (above the list) puts a tick box on every player. Click to tick, `Shift`+click to tick a run, `ALL` ticks every player the list shows: filter by team or type a position first to pick a whole squad or every prop. `Ctrl`+click on a player starts picking too.
+
+The tabs give way to one form where every field says `keep`. Only what you change is applied:
+- **Ratings**: `Level` (club 70, international 80, world class 88) moves all ratings together until the player's overall is that level, so he keeps his strengths. `All ratings` and each group go up or down by the number set.
+- **Profile** and **Gear**: one value for all of them (nationality, foot, boots, socks, tapes…).
+- **Seasons**: add a season (a copy of each player's newest one) or delete one (a player never loses his last season).
+- `Seasons` at the top picks which seasons the changes go to: all, each player's latest, or one year.
+
+The list on the right shows each player's overall now → after. `APPLY TO N` saves them all; `UNDO` then puts them back as they were. `DELETE N PLAYERS…` removes them and takes them out of their squads. `DONE` goes back to editing one player.
+
 ## Teams
 `Tools > Team editor`. Same logic as the players: list on the left, then the seasons of the team, then the tabs.
 

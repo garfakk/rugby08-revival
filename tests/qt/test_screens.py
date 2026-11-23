@@ -1233,3 +1233,76 @@ def test_narrow_editor_keeps_every_tab_on_the_bar(window, qapp):
     assert editor.shell.list_pane.width() <= 210
     window.resize(1600, 900)
     qapp.processEvents()
+
+
+def test_player_editor_batch_changes_many_players(window, qapp):
+    """SELECT ticks players; the batch form applies one change to all of
+    them in one save, UNDO puts them back, DONE leaves batch mode."""
+    from app import game_data as G
+    G.set_edit_store(window.data.edits)
+    roster = [str(p) for p in window.data.teams["10002"]["2024"]["players"] if p][:3]
+    window.open_player(roster[0], "2024")
+    _wait(qapp, lambda: window.screen_player_editor.record_id == roster[0], 10)
+    editor = window.screen_player_editor
+    before = {p: copy.deepcopy(window.data.players[p]) for p in roster}
+
+    editor.enter_batch()
+    assert editor.batch.active and editor.list.is_checkable()
+    assert editor.list.checked_data() == [roster[0]]
+    editor.list.set_checked(roster)
+    assert editor.batch.pids() == [p for p in editor.list.checked_data()]
+    assert not editor.shell.footer.save_btn.isEnabled()
+
+    editor.batch.socks._emit("up")
+    editor.batch.shift._emit("2")
+    editor.batch.scope.set_value("latest")
+    qapp.processEvents()
+    assert editor.shell.footer.save_btn.isEnabled()
+    assert editor.shell.footer.save_btn.text() == "APPLY TO 3"
+    editor.batch._refresh_preview()
+    assert editor.batch.preview_list.count() == 3
+
+    assert editor.save()
+    for p in roster:
+        latest = max(window.data.players[p]["stats"])
+        block = window.data.players[p]["stats"][latest]
+        old = before[p]["stats"][latest]
+        assert block["socks"] == "up"
+        assert int(block["speed"]) == min(99, int(old["speed"]) + 2)
+        assert window.data.edits.get("players", p)["mine"]["stats"][latest]["socks"] == "up"
+    # the form is clear again, UNDO is offered
+    assert editor.batch.socks.value() == "" and editor.shell.footer.revert_btn.text() == "UNDO"
+    # the open record shows the new data too
+    assert editor.session.working == window.data.players[roster[0]]
+
+    editor.confirm_revert()
+    for p in roster:
+        assert window.data.players[p] == before[p]
+
+    editor.leave_batch()
+    assert not editor.batch.active and not editor.list.is_checkable()
+    assert editor.shell.tabs.isVisible() or not editor.isVisible()
+    for p in roster:
+        window.data.edits.revert("players", p)
+        window.data.refresh_record("players", p)
+    window.show_main()
+
+
+def test_player_list_ctrl_click_starts_picking(window, qapp):
+    from PyQt5.QtCore import Qt
+    from PyQt5.QtWidgets import QApplication
+    pids = sorted(window.data.players)[:2]
+    window.open_player(pids[0], None)
+    _wait(qapp, lambda: window.screen_player_editor.record_id == pids[0], 10)
+    editor = window.screen_player_editor
+    orig = QApplication.keyboardModifiers
+    QApplication.keyboardModifiers = staticmethod(lambda: Qt.ControlModifier)
+    try:
+        editor.list._on_row_picked(pids[1])
+    finally:
+        QApplication.keyboardModifiers = orig
+    assert editor.batch.active and set(editor.list.checked_data()) == set(pids)
+    editor.list._on_row_picked(pids[1])          # a plain click in tick mode unticks
+    assert editor.list.checked_data() == [pids[0]]
+    editor.leave_batch()
+    window.show_main()

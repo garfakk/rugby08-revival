@@ -12,7 +12,7 @@ import os
 
 from PyQt5.QtCore import QTimer, Qt
 from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QGridLayout, QWidget
+from PyQt5.QtWidgets import QApplication, QVBoxLayout, QHBoxLayout, QGridLayout, QWidget
 
 from app import appearance as A
 from app import player_ops as P
@@ -25,6 +25,7 @@ from app import plugin_lookup
 from backend.mod_utils import stock_head_path, stock_kit_paths
 from ui.team_sheet import STAR, STAR_COLOR, is_star
 from screens.editor_base import EditorScreen
+from screens.player_batch import BatchPanel
 from screens.player_tabs import (
     ProfileTab, RatingsTab, AppearanceTab, SkillsTab, TeamsTab, TAB_PROFILE, TAB_RATINGS,
     TAB_APPEARANCE, TAB_SKILLS, TAB_TEAMS,
@@ -128,6 +129,7 @@ class PlayerEditorScreen(EditorScreen):
                      AppearanceTab(self, TAB_APPEARANCE), SkillsTab(self, TAB_SKILLS),
                      TeamsTab(self, TAB_TEAMS)]
         self._build_no_season_page()
+        self._build_batch()
         ds.events.team_changed.connect(lambda _: self._external_change())
         ds.events.team_removed.connect(lambda _: self._external_change())
 
@@ -164,6 +166,137 @@ class PlayerEditorScreen(EditorScreen):
         v.addLayout(row)
         v.addStretch(1)
         self.shell.stack.addWidget(self._no_season_page)
+
+    # ── batch mode: many players changed at once ─────────────────────────
+    def _build_batch(self):
+        self.batch = BatchPanel(self)
+        self.select_btn = compact_button("SELECT")
+        self.select_btn.setToolTip("Change many players at once")
+        self.select_btn.clicked.connect(lambda: self.enter_batch())
+        # beside FILTERS: the row above has no room left in a narrow window
+        lay = self.shell.list_layout
+        at = lay.indexOf(self.filters_toggle)
+        lay.removeWidget(self.filters_toggle)
+        row = QHBoxLayout()
+        row.setSpacing(6)
+        row.addWidget(self.filters_toggle, stretch=1)
+        row.addWidget(self.select_btn, stretch=1)
+        lay.insertLayout(at, row)
+        self.focus.register(self.select_btn)
+
+        self.batch_bar = QWidget()
+        bar = QHBoxLayout(self.batch_bar)
+        bar.setContentsMargins(0, 0, 0, 0)
+        bar.setSpacing(6)
+        self.all_btn = compact_button("ALL")
+        self.all_btn.setToolTip("Tick every player the list shows")
+        self.all_btn.clicked.connect(self.list.check_shown)
+        self.none_btn = compact_button("NONE")
+        self.none_btn.clicked.connect(lambda: self.list.set_checked(()))
+        self.done_btn = compact_button("DONE", "primary")
+        self.done_btn.clicked.connect(self.leave_batch)
+        for b in (self.all_btn, self.none_btn, self.done_btn):
+            bar.addWidget(b)
+            self.focus.register(b)
+        self.shell.list_layout.insertWidget(1, self.batch_bar)
+        self.batch_bar.hide()
+        self.list.checked_changed.connect(self._on_checked)
+        self.list.multi_requested.connect(self._on_multi_click)
+
+    def _on_checked(self):
+        if self.batch.active:
+            n = len(self.list.checked_data())
+            self.none_btn.setEnabled(bool(n))
+            self.batch.refresh()
+
+    def _on_multi_click(self, pid):
+        """Ctrl / Shift + click on a row: picking starts with the player on
+        screen and that one."""
+        start = [p for p in (self.record_id, pid) if p]
+        self.enter_batch(start)
+
+    def enter_batch(self, checked=None):
+        if self.batch.active:
+            return
+
+        def go():
+            for b in (self.new_btn, self.dup_btn, self.select_btn):
+                b.hide()
+            self.batch_bar.show()
+            self.batch.enter()
+            self.list.set_checkable(True, checked if checked is not None
+                                    else [self.record_id] if self.record_id else [])
+            self.fit_panes()
+            self.list.setFocus()
+        self.guard_dirty(go)
+
+    def leave_batch(self, then=None):
+        if not self.batch.active:
+            if then:
+                then()
+            return
+
+        def go():
+            self.batch.leave()
+            self.list.set_checkable(False)
+            self.batch_bar.hide()
+            for b in (self.new_btn, self.dup_btn, self.select_btn):
+                b.show()
+            if self.record_id is not None and self.record_id not in self.ds.players:
+                self.record_id, self.session = None, None
+            if self.session is None and self.list.count():
+                self.list.set_highlight(0)
+                self.open_record(self.list.highlighted_data())
+            else:
+                self.refresh_all()
+            self.fit_panes()
+            self.list.setFocus()
+            if then:
+                then()
+
+        if not self.batch.is_dirty():
+            go()
+            return
+
+        def choice(role):
+            self._dialog = None
+            if role == "apply":
+                if self.batch.apply():
+                    go()
+            elif role == "discard":
+                go()
+
+        n = len(self.batch.pids())
+        self.show_dialog(ConfirmDialog(
+            self, "Apply the changes?",
+            f"The changes to {n} player{'s' if n != 1 else ''} have not been applied.",
+            [("CANCEL", "neutral", "cancel"), ("DISCARD", "danger", "discard"),
+             ("APPLY", "primary", "apply")], choice))
+
+    def after_batch(self, pids):
+        """Players were rewritten by the batch: the list, the panel and the
+        open record (when it is one of them) show the new data."""
+        self.reload_list()
+        if self.record_id in pids and self.session is not None and not self.session.is_dirty():
+            self.session.changed.disconnect(self._on_session_changed)
+            self.session.deleteLater()
+            self.session = None
+            record = self.load_record(self.record_id)
+            if record is not None:
+                from app.edit_session import EditSession
+                self.session = EditSession(record, self)
+                self.session.changed.connect(self._on_session_changed)
+                self.on_record_opened()
+        self.batch.refresh()
+
+    def after_batch_delete(self, pids):
+        if self.record_id in pids:
+            if self.session is not None:
+                self.session.changed.disconnect(self._on_session_changed)
+                self.session.deleteLater()
+            self.record_id, self.session = None, None
+        self.reload_list()
+        self.batch.refresh()
 
     def _edit_identity(self, label, key, value):
         self.edit(label, lambda r: r.__setitem__(key, value), coalesce_key=key,
@@ -402,6 +535,84 @@ class PlayerEditorScreen(EditorScreen):
     def fit_panes(self):
         super().fit_panes()
         self._place_identity(self.width() < 1400)
+        if getattr(self, "batch", None) is not None and self.batch.active:
+            # the before / after list, when there is room for it (the
+            # title counts the players going up and down either way)
+            show = self.width() >= 1250
+            self.shell.preview_pane.setVisible(show)
+            self.shell.preview_sep.setVisible(show)
+            QTimer.singleShot(0, self.batch.fit)
+
+    def save(self):
+        if self.batch.active:
+            return self.batch.apply()
+        return super().save()
+
+    def confirm_revert(self):
+        if self.batch.active:
+            self.batch.revert_or_undo()
+            return
+        super().confirm_revert()
+
+    def undo(self):
+        if self.batch.active:
+            if not self.batch.is_dirty():
+                self.batch.undo()
+            return
+        super().undo()
+
+    def redo(self):
+        if not self.batch.active:
+            super().redo()
+
+    def request_leave(self):
+        if self.batch.active:
+            self.leave_batch()
+            return
+        super().request_leave()
+
+    def request_open(self, record_id):
+        if not self.batch.active:
+            super().request_open(record_id)
+
+    def switch_tab(self, delta):
+        if not self.batch.active:
+            super().switch_tab(delta)
+
+    def _focus_first_in_tab(self):
+        if self.batch.active:
+            self.focus.focus_first(within=self.batch.page)
+            return
+        super()._focus_first_in_tab()
+
+    def _update_hints(self):
+        if not (getattr(self, "batch", None) is not None and self.batch.active) \
+                or self._dialog is not None:
+            super()._update_hints()
+            return
+        if self.pane() == "list":
+            hints = [("↕", "browse"), ("A", "tick"), ("X", "filter"), ("→", "edit"),
+                     ("B", "done")]
+        else:
+            focused = QApplication.focusWidget()
+            hints = self.tab_hints(focused) or [("↕←→", "move"), ("A", "edit")]
+            hints = hints + [("B", "list")]
+        self.shell.footer.hints.set_hints(hints)
+
+    def _on_focus_changed(self, old, new):
+        super()._on_focus_changed(old, new)
+        page = self.batch.page if getattr(self, "batch", None) is not None else None
+        if page is not None and self.batch.active and new is not None \
+                and page.isAncestorOf(new) and new is not page.widget():
+            page.ensureWidgetVisible(new, 0, 40)
+
+    def _refresh_chrome(self):
+        super()._refresh_chrome()
+        if getattr(self, "batch", None) is not None and self.batch.active:
+            self.dup_btn.setEnabled(False)
+            self.batch.refresh_footer()
+        else:
+            self.shell.footer.revert_btn.setText("REVERT")
 
     # ── seasons pane (narrow column left of the tabs) ──────────────────────
     def _build_season_pane(self):
@@ -600,6 +811,9 @@ class PlayerEditorScreen(EditorScreen):
         super().apply_view_hint(hint)
 
     def refresh_view(self):
+        if self.batch.active:
+            self.batch.refresh()
+            return
         stats = self.session.working.get("stats") or {}
         if self.season not in stats:
             self.season = sorted(stats)[-1] if stats else None
@@ -884,10 +1098,11 @@ class PlayerEditorScreen(EditorScreen):
 
     # ── create / duplicate / delete ──────────────────────────────────────
     def new_record(self):
-        self._player_dialog(duplicate=False)
+        if not self.batch.active:
+            self._player_dialog(duplicate=False)
 
     def duplicate_record(self):
-        if self.session is not None:
+        if self.session is not None and not self.batch.active:
             self._player_dialog(duplicate=True)
 
     def _player_dialog(self, duplicate):

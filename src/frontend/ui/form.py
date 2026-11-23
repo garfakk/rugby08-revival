@@ -13,7 +13,7 @@ key would be swallowed as text or, worse, bounce focus back to the top of
 the form. Handing focus to the editor only for the duration of an edit keeps
 one model of "where am I" for pad, keyboard and mouse alike.
 """
-from PyQt5.QtWidgets import QWidget, QLineEdit, QSizePolicy, QScrollArea, QVBoxLayout
+from PyQt5.QtWidgets import QApplication, QWidget, QLineEdit, QSizePolicy, QScrollArea, QVBoxLayout
 from PyQt5.QtGui import QPainter, QColor, QPen, QFont
 from PyQt5.QtCore import Qt, QRectF, pyqtSignal
 
@@ -297,6 +297,8 @@ class SearchList(QWidget):
 
     highlighted = pyqtSignal(object)     # cursor moved — no commitment
     activated = pyqtSignal(object)       # clicked or confirmed — a real pick
+    checked_changed = pyqtSignal()       # tick boxes (set_checkable): the ticked rows changed
+    multi_requested = pyqtSignal(object) # Ctrl / Shift + click outside tick mode
 
     def __init__(self, placeholder="search", parent=None, show_filter=True):
         super().__init__(parent)
@@ -336,6 +338,9 @@ class SearchList(QWidget):
         self._selected = None
         self._filter = ""
         self._search_keys = []  # extra text matched by the filter, per item
+        self._checkable = False # every row shows a tick box (picking many)
+        self._checked = set()
+        self._anchor = None     # the last row ticked by hand: Shift + click ticks up to it
 
     # ── content ──────────────────────────────────────────────────────────
     def set_items(self, items, keep_data=None, search_text=None):
@@ -361,8 +366,15 @@ class SearchList(QWidget):
 
     def _rebuild(self, keep_data=None):
         self._all_rows = [RowSpec(text, data, tag=tag, tag_color=tag_color, subdued=subdued,
-                                  selected=(data == self._selected), list_style=True)
+                                  selected=(data == self._selected), list_style=True,
+                                  checked=(data in self._checked) if self._checkable else None)
                           for data, text, tag, tag_color, subdued in self._items]
+        if self._checkable:
+            # a record that left the list is no longer ticked
+            live = {it[0] for it in self._items}
+            if not self._checked <= live:
+                self._checked &= live
+                self.checked_changed.emit()
         self._apply_filter(keep_data)
 
     def _apply_filter(self, keep_data=None):
@@ -424,15 +436,80 @@ class SearchList(QWidget):
             self.select_data(data)
 
     def _on_row_picked(self, data):
+        mods = QApplication.keyboardModifiers()
+        if self._checkable:
+            if mods & Qt.ShiftModifier and self._anchor is not None:
+                self.check_range(self._anchor, data)
+            else:
+                self.toggle_checked(data)
+            return
+        if mods & (Qt.ControlModifier | Qt.ShiftModifier):
+            self.multi_requested.emit(data)
+            return
         self.set_selected(data)
         self.activated.emit(data)
 
     def activate(self):
         data = self.highlighted_data()
+        if data is not None and self._checkable:
+            self.toggle_checked(data)
+            return True
         if data is not None:
             self.set_selected(data)
             self.activated.emit(data)
         return data is not None
+
+    # ── tick boxes ───────────────────────────────────────────────────────
+    def set_checkable(self, on, checked=()):
+        """Show a tick box on every row (click / Enter / Space ticks it,
+        Shift + click ticks a run of rows) or hide them all again."""
+        self._checkable = bool(on)
+        self._checked = set(checked) if on else set()
+        self._anchor = next(iter(checked), None) if on else None
+        for row in self._all_rows:
+            row.set_checked((row.data in self._checked) if on else None)
+        self.checked_changed.emit()
+
+    def is_checkable(self):
+        return self._checkable
+
+    def checked_data(self):
+        """The ticked rows' data, in list order (shown or filtered out)."""
+        return [it[0] for it in self._items if it[0] in self._checked]
+
+    def set_checked(self, datas):
+        self._checked = set(datas)
+        for row in self._all_rows:
+            row.set_checked(row.data in self._checked)
+        self.checked_changed.emit()
+
+    def toggle_checked(self, data):
+        on = data not in self._checked
+        (self._checked.add if on else self._checked.discard)(data)
+        self._anchor = data
+        for row in self._all_rows:
+            if row.data == data:
+                row.set_checked(on)
+        self.checked_changed.emit()
+
+    def check_range(self, a, b):
+        """Tick every shown row from `a` to `b` (the anchor stays on `a`)."""
+        idx = {r.data: i for i, r in enumerate(self._rows)}
+        if a not in idx or b not in idx:
+            self.toggle_checked(b)
+            return
+        lo, hi = sorted((idx[a], idx[b]))
+        for row in self._rows[lo:hi + 1]:
+            self._checked.add(row.data)
+            row.set_checked(True)
+        self.checked_changed.emit()
+
+    def check_shown(self):
+        """Tick every row the filter shows (the others keep their box)."""
+        for row in self._rows:
+            self._checked.add(row.data)
+            row.set_checked(True)
+        self.checked_changed.emit()
 
     def count(self):
         return len(self._rows)
@@ -468,6 +545,8 @@ class SearchList(QWidget):
         elif k == Qt.Key_End:
             self.set_highlight(len(self._rows) - 1)
         elif k in (Qt.Key_Return, Qt.Key_Enter):
+            self.activate()
+        elif k == Qt.Key_Space and self._checkable:
             self.activate()
         elif k == Qt.Key_Slash or (k == Qt.Key_F and event.modifiers() & Qt.ControlModifier):
             self.begin_filter()
