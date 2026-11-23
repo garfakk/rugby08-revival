@@ -32,6 +32,7 @@ from shared.config import *
 from backend.R08_handler import *
 import backend.game_files_processor as game_files_processor
 import backend.mod_utils as mod_utils
+from backend import commentary_deploy
 from shared.game_profile import game_profile
 
 from shared.log import get_logger, setup_logging
@@ -100,6 +101,7 @@ def start_match(match_data, copy_static_files = True, create_mission_file = True
         'graphics': 40,
         'teams':    5,
         'roster':   32,
+        'commentary': 4,
         'proxy':    8,
     }
     total_weight = sum(step_weights.values())
@@ -173,6 +175,11 @@ def start_match(match_data, copy_static_files = True, create_mission_file = True
         game_files_processor.edit_roster_file(match_data)
     else:
         log.debug("Roster file not edited")
+
+    # The new commentary name clips (mod data commentary/) in the game's
+    # speech archives; only rebuilt when they changed
+    report('commentary', "Adding commentary names")
+    commentary_deploy.deploy()
 
     # Deploy the d3d8 proxy (windowed mode + embeddable window + patches)
     report('proxy', "Deploying windowing patches")

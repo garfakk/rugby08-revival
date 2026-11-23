@@ -13,7 +13,7 @@ import random
 from backend import game_specific_variables as gsv
 from backend import pitch_stripes
 from shared.config import config
-from shared import shirt_names
+from shared import commentary, shirt_names
 from app import appearance, competition_branding, difficulty, dressing
 from app.game_data import WIND_POWER_MAX, frontend_logo, normalise_position, wind_world_xz
 from app.state import DataStore, MatchConfig, TeamSlot
@@ -152,7 +152,8 @@ def _player_to_match_data(player: dict, season=None) -> dict:
 
     return {
         "name": player.get("display_name", player.get("name", "Unknown")),
-        "commentary": to_int(player.get("commentary", 0), 0),
+        "commentary": commentary.in_game(commentary.match_clip(
+            to_int(player.get("commentary", 0), 0), player.get("last_name", ""))),
         "age": age,
         "weight": to_int(player.get("weight", 80), 80),
         "height": to_int(player.get("height", 180), 180),

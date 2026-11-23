@@ -45,6 +45,7 @@ STRUCTURE = [
     "stadiums",
     "competitions",
     "challenges",
+    "commentary",
 ]
 
 README = """\
@@ -81,6 +82,14 @@ teams/
 stadiums/       stadiums.json, or one folder per stadium
 competitions/   one folder per competition (<name>/<name>.json and assets/)
 challenges/     challenge .json files
+
+commentary/     names said by the commentator (.wav recordings)
+  Dupont.wav        said for every player called Dupont who has no clip
+                    of his own name in the game
+  3001_Dupont.wav   a numbered one, picked for a player in the Player
+                    editor (Commentary > Load from disk... does this)
+  Short clips of just the name work best. They are added to the game
+  when a match starts.
 
 Keep the file names of the pack when you want to replace a file.
 
