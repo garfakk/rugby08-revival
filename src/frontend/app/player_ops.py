@@ -135,3 +135,110 @@ def delete_everywhere(ds, pid, remove_from_squads, skip_team_ids=()):
                 save_team(ds.teams_file_path[tid], tid, seasons)
                 teams.append(tid)
     return files, teams, skipped
+
+
+# ── New players: where they go, what they start with ──────────────────────
+# Starting levels offered when a player is created: the position overall the
+# new player's ratings are set to.
+LEVELS = [("club", "Club", 70), ("international", "International", 80), ("world", "World class", 88)]
+
+
+def level_overall(level):
+    return next((ovr for key, _label, ovr in LEVELS if key == level), LEVELS[0][2])
+
+
+def target_players_file(ds, near_pid=None):
+    """The file a new player is written to: the one holding `near_pid`, else
+    the players file holding the most players ("" when there is none)."""
+    files = ds.players_files()
+    near = ds.players_file_path.get(near_pid) if near_pid else None
+    if near in files:
+        return near
+    if not files:
+        return ""
+    counts = {}
+    for path in ds.players_file_path.values():
+        counts[path] = counts.get(path, 0) + 1
+    return max(files, key=lambda f: counts.get(f, 0))
+
+
+def _latest_block(record):
+    stats = (record or {}).get("stats") or {}
+    return stats[max(stats)] if stats else None
+
+
+def typical_season(players, position, overall):
+    """A season block for a new player at `position`: the ratings, height and
+    weight are the average of the players already playing there, moved up or
+    down until the position overall is `overall`. Every rating at the same
+    value when nobody plays there yet."""
+    from app.ratings import position_overall
+    block = new_player_season()
+    block["position1"] = position
+    peers = [b for b in (_latest_block(r) for r in players.values())
+             if b and b.get("position1") == position]
+
+    def num(b, key):
+        try:
+            return float(b.get(key))
+        except (TypeError, ValueError):
+            return None
+
+    means = {}
+    for key in RATING_KEYS + ["height", "weight"]:
+        vals = [v for v in (num(b, key) for b in peers) if v is not None and v > 0]
+        means[key] = sum(vals) / len(vals) if vals else None
+    for key in ("height", "weight"):
+        if means[key]:
+            block[key] = str(round(means[key]))
+    base = {k: (means[k] if means[k] is not None else overall) for k in RATING_KEYS}
+    shift = 0.0
+    for _ in range(6):          # clamping can move the overall: settle in a few steps
+        for k in RATING_KEYS:
+            block[k] = str(max(1, min(99, round(base[k] + shift))))
+        got = position_overall(block)
+        if got is None or got == overall:
+            break
+        shift += overall - got
+    return block
+
+
+def create_player(ds, first, last, season, position, level=None, path=None, near_pid=None):
+    """Write a new player to the players file and register him. Returns his id."""
+    first, last = (first or "").strip(), (last or "").strip()
+    if not (first or last):
+        raise ValueError("the player needs a first or last name")
+    path = path or target_players_file(ds, near_pid)
+    if not path:
+        raise ValueError("there is no players file to save into")
+    name = truncate_bytes(f"{first[0]}. {last}" if first and last else (last or first))
+    pid = allocate_player_id(ds.players_files(), ds.players)
+    record = blank_player(name, season, position)
+    if level:
+        record["stats"][str(season)] = typical_season(ds.players, position, level_overall(level))
+    record["first_name"], record["last_name"] = first, last
+    add_player(path, pid, record)
+    ds.register_player(pid, record, path)
+    return pid
+
+
+def add_to_squad(ds, pid, tid, season):
+    """Put the player in a team's squad for that season: the first empty
+    shirt up to 22, else after the last player. Saved at once. Returns his
+    shirt number (the one he has if he is already there)."""
+    pid = str(pid)
+    seasons = ds.team_seasons(tid)
+    info = seasons.get(str(season))
+    if info is None:
+        raise ValueError("the team has no squad that season")
+    roster = info.setdefault("players", [])
+    ids = [str(p) for p in roster]
+    if pid in ids:
+        return ids.index(pid) + 1
+    empty = next((i for i, p in enumerate(ids[:22]) if not p), None)
+    if empty is None:
+        empty = len(roster)
+    team_ops.place(info, empty, pid)
+    save_team(ds.teams_file_path[tid], tid, seasons)
+    ds.events.team_changed.emit(tid)
+    return empty + 1

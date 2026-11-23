@@ -8,7 +8,9 @@ the season picked in the header. Each season-specific card has an ALL
 SEASONS box (on by default): while it is ticked, the card's edits are
 written to every season of the record, not only the one shown.
 """
+import copy
 import os
+import re
 from datetime import datetime
 
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QSizePolicy
@@ -24,7 +26,7 @@ from app import star_classes
 from shared.user_prefs import user_prefs
 from app.game_data import (
     POSITIONS, POSITION_ALIASES, SKIN_TONES, TAPES, FEET, SOCKS, BOOT_STYLES,
-    SHIRT_POSITIONS, DEFAULT_HEIGHT, DEFAULT_WEIGHT,
+    SHIRT_POSITIONS, DEFAULT_HEIGHT, DEFAULT_WEIGHT, SaveError,
 )
 from app.ratings import GROUPS, LABELS, group_avg, position_overall, previous_season
 from app.season import season_label
@@ -37,6 +39,7 @@ from ui.editor_kit import (
 )
 from ui.dropdown import PopupList
 from ui.face_picker import FacePicker
+from app.tattoos import store as tattoo_store, render as tattoo_render
 from ui.team_sheet import SHEET_ROWS, POSITION_NAMES, POSITION_SHORT
 
 LOAD_LABELS = dict(LOAD_ROWS)
@@ -464,8 +467,41 @@ class AppearanceTab(PlayerTab):
         g.add(self.skin)
         skin_card.add(g)
         self.add_scope(skin_card, "skin", ("skin", "skin_tone"))
+        adjust_btn = compact_button("SKIN COLOUR…")
+        adjust_btn.setToolTip("Brightness, contrast, warmth… of this player's skin")
+        adjust_btn.clicked.connect(lambda: self._open_tattoos("skin"))
+        self.screen.focus.register(adjust_btn)
+        skin_card.add(adjust_btn)
 
         left.addWidget(skin_card)
+
+        # ── tattoos (one flattened picture, first in skin_overlay) ─────────
+        tat_card = SectionCard("tattoos")
+        row = QHBoxLayout()
+        row.setSpacing(10)
+        self.tattoo_thumb = Thumb(128, 64)
+        self.tattoo_thumb.clicked.connect(lambda: self._open_tattoos("add"))
+        row.addWidget(self.tattoo_thumb)
+        col = QVBoxLayout()
+        col.setSpacing(4)
+        self.tattoo_note = Note("", color=FG_SECONDARY, size=T_LABEL)
+        col.addWidget(self.tattoo_note)
+        btns = QHBoxLayout()
+        btns.setSpacing(6)
+        self.tattoo_btn = compact_button("EDIT TATTOOS…")
+        self.tattoo_btn.clicked.connect(lambda: self._open_tattoos("add"))
+        self.screen.focus.register(self.tattoo_btn)
+        btns.addWidget(self.tattoo_btn)
+        self.tattoo_remove_btn = compact_button("REMOVE")
+        self.tattoo_remove_btn.clicked.connect(self._remove_tattoos)
+        self.screen.focus.register(self.tattoo_remove_btn)
+        btns.addWidget(self.tattoo_remove_btn)
+        btns.addStretch(1)
+        col.addLayout(btns)
+        row.addLayout(col, stretch=1)
+        tat_card.add_layout(row)
+        self.add_scope(tat_card, "tattoos", ("tattoos",))
+        left.addWidget(tat_card)
 
         # ── layers: strap, bottom baselayer, top baselayer, gloves ─────────
         # Four dedicated stacks instead of one mixed one, each multi-layer,
@@ -577,6 +613,11 @@ class AppearanceTab(PlayerTab):
             return SPECIAL[v]
         if v in SKIN_TONES:
             return {"l_medium": "light-med", "d_medium": "dark-med"}.get(v, v)
+        src = tattoo_store.skin_source({"skin": v}, self.mod_dir)
+        if src["rel"]:
+            base = A.normalize_tone(src["skin"]) or (A.label_of(src["skin"]) if src["skin"] else
+                                                       A.normalize_tone(self.stats().get("skin_tone")) or "light")
+            return f"{self._skin_display(base) if base in SKIN_TONES else base} (adjusted)"
         return A.label_of(v)
 
     def _boot_icon(self, v):
@@ -608,23 +649,135 @@ class AppearanceTab(PlayerTab):
 
     # ── skin base ────────────────────────────────────────────────────────
     def _on_skin(self, value):
+        def image(rel):
+            self._skin_edit("skin image", lambda st: st.__setitem__("skin", rel))
         if value in LOAD_LABELS:
             self.refresh()
-            self._load(self.skin, "skins", value == LOAD_FOLDER,
-                       lambda rel: self.edit_stat("skin image", "skin", rel, coalesce=False),
-                       "custom skin texture")
+            self._load(self.skin, "skins", value == LOAD_FOLDER, image, "custom skin texture")
             return
         if value == "__file__":
-            self._browse(self.skin, "skins",
-                         lambda rel: self.edit_stat("skin image", "skin", rel, coalesce=False),
-                         "custom skin texture")
+            self._browse(self.skin, "skins", image, "custom skin texture")
             self.refresh()
             return
         if value in SKIN_TONES:
-            self.edit_seasons("skin tone", "skin",
-                              lambda st: st.update({"skin_tone": value, "skin": ""}), coalesce=False)
+            self._skin_edit("skin tone", lambda st: st.update({"skin_tone": value, "skin": ""}))
             return
-        self.edit_stat("skin image", "skin", value, coalesce=False)
+        image(value)
+
+    def _skin_edit(self, label, update):
+        """A new skin, with the tattoos re-inked on it in the same step: their ink takes the colour of the
+        skin under it, so tattoos flattened on the old skin would look pasted on."""
+        stats = copy.deepcopy(self.stats())
+        update(stats)
+        tattoo = self._reinked(stats)
+
+        def apply(st):
+            update(st)
+            if tattoo and tattoo_store.tattoo_of(st):
+                tattoo_store.put_on(st, tattoo)
+        self.edit_seasons(label, "skin", apply, coalesce=False)
+
+    # ── tattoos & skin colour ────────────────────────────────────────────
+    def _library(self):
+        return tattoo_store.Library(self.mod_dir)
+
+    def _pid(self):
+        return str(self.screen.record_id)
+
+    def _reinked(self, stats):
+        """The player's tattoos flattened again on the skin of `stats` (a new path), or None when there is
+        nothing to redo (no tattoos, or only a picture made elsewhere)."""
+        rel = tattoo_store.tattoo_of(stats)
+        if not rel:
+            return None
+        lib = self._library()
+        design = tattoo_store.load_design(stats, self.mod_dir, lib)
+        if not any(L["motif"] != tattoo_render.ATLAS_MOTIF for L in design["layers"]):
+            return None
+        from ui.skin_preview import _stock_image
+        try:
+            base = tattoo_store.source_image(stats, self.mod_dir, str(stats.get("skin") or ""), _stock_image)
+            return tattoo_store.write_tattoos(self.mod_dir, self._pid(), design, base, lib) or None
+        except Exception as e:
+            log.warning(f"tattoos not re-inked on the new skin: {e}")
+            return None
+
+    def _open_tattoos(self, start="add"):
+        if not self.screen.session or not self.screen.season:
+            return
+        from ui.tattoo_editor import TattooEditor, covered_by_kit
+        from ui.skin_preview import _stock_image
+        stats = self.stats()
+        lib = self._library()
+        design = tattoo_store.load_design(stats, self.mod_dir, lib)
+        src = tattoo_store.skin_source(stats, self.mod_dir)
+        base = tattoo_store.source_image(stats, self.mod_dir, src["skin"], _stock_image)
+        others = tattoo_store.other_layers(stats, self.mod_dir)
+        rec = self.record()
+        name = rec.get("display_name") or f"{rec.get('first_name', '')} {rec.get('last_name', '')}".strip()
+        many = len(rec.get("stats") or {}) > 1
+        TattooEditor(self.screen, f"Tattoos and skin — {name}" if name else "Tattoos and skin", design,
+                     src["adjust"], base, others, lib,
+                     on_save=lambda d, a: self._save_tattoos(d, a, src, base, lib),
+                     on_close=self.screen.refresh_stage,
+                     scope_box=self._scopes.get("tattoos") if many else None, start=start,
+                     covered=covered_by_kit(stats))
+
+    def _save_tattoos(self, design, adjust, src, base, lib):
+        mod, pid = self.mod_dir, self._pid()
+        adjust = tattoo_render.clean_adjust(adjust)
+        skin_value = None
+        if adjust != src["adjust"]:
+            skin_value = tattoo_store.write_skin(mod, pid, src["skin"], adjust, base) or src["skin"]
+        tattoo = tattoo_store.write_tattoos(mod, pid, design, tattoo_render.adjust_skin(base, adjust), lib)
+        self.edit_seasons("tattoos", "tattoos", lambda st: tattoo_store.put_on(st, tattoo, skin_value),
+                          coalesce=False)
+        self._cleanup_tattoos()
+        self.refresh()
+
+    def _remove_tattoos(self):
+        if not tattoo_store.tattoo_of(self.stats()):
+            return
+        self.edit_seasons("remove tattoos", "tattoos", lambda st: tattoo_store.put_on(st, ""), coalesce=False)
+
+    def _cleanup_tattoos(self):
+        """Delete this player's earlier tattoo / skin versions nothing uses any more (the saved players,
+        this edit and its undo history all count)."""
+        session = self.screen.session
+        records = list(getattr(self.screen.ds, "players", {}).values())
+        if session is not None:
+            records += [session.baseline, session.working]
+            for e in list(getattr(session, "_undo", [])) + list(getattr(session, "_redo", [])):
+                records += [getattr(e, "before", None), getattr(e, "after", None)]
+        try:
+            tattoo_store.cleanup(self.mod_dir, self._pid(), tattoo_store.referenced(records))
+        except Exception as e:
+            log.warning(f"tattoo cleanup: {e}")
+
+    def _refresh_tattoos(self, stats):
+        rel = tattoo_store.tattoo_of(stats)
+        path = A.abs_path(self.mod_dir, rel) if rel else ""
+        has = bool(rel) and os.path.isfile(path)
+        self.tattoo_remove_btn.setEnabled(bool(rel))
+        if not has:
+            self.tattoo_thumb.set_text("NONE")
+            self.tattoo_note.setText("No tattoos." if not rel else f"{rel} not found.")
+            self.tattoo_btn.setText("ADD TATTOOS…")
+            return
+        self.tattoo_btn.setText("EDIT TATTOOS…")
+        data = tattoo_store._sidecar(self.mod_dir, rel)
+        n = len(data.get("layers") or []) if data else 0
+        self.tattoo_note.setText(f"{n} tattoo{'s' if n != 1 else ''}." if n else "Tattoos (one picture).")
+        try:
+            from PIL import Image
+            from PyQt5.QtGui import QImage, QPixmap
+            im = Image.open(path).convert("RGBA")
+            bg = Image.new("RGBA", im.size, (217, 195, 174, 255))
+            im = Image.alpha_composite(bg, im).resize((128, 64))
+            q = QImage(im.tobytes("raw", "RGBA"), 128, 64, 512, QImage.Format_RGBA8888).copy()
+            self.tattoo_thumb.set_pixmap(QPixmap.fromImage(q), "NONE")
+        except Exception:
+            self.tattoo_thumb.set_text("?")
 
     # ── layers ───────────────────────────────────────────────────────────
     def _layers(self, stats=None):
@@ -777,9 +930,12 @@ class AppearanceTab(PlayerTab):
         mod = self.mod_dir
         skin = str(stats.get("skin") or "")
         custom = bool(skin) and A.normalize_tone(skin) is None
-        skin_opts = A.asset_options(mod, "skins")
+        # adjusted skins belong to one player each: only this one's shows
+        skin_opts = [o for o in A.asset_options(mod, "skins")
+                     if o == skin or not re.search(r"_tint_[0-9a-f]{10}\.png$", o)]
         self.skin.set_options(list(SKIN_TONES) + skin_opts + ["__file__", *LOAD_LABELS])
         self.skin.set_value(skin if custom else (A.normalize_tone(stats.get("skin_tone")) or "light"))
+        self._refresh_tattoos(stats)
 
         # layer stacks: strap, bottom baselayer, top baselayer, gloves
         for zone, _label, kind in self.LAYER_SECTIONS:
@@ -984,7 +1140,10 @@ class TeamsTab(PlayerTab):
 
     def __init__(self, screen, index):
         super().__init__(screen, index)
-        card = SectionCard("teams")
+        self.add_btn = compact_button("+ ADD TO A TEAM…")
+        self.add_btn.clicked.connect(self._pick_team)
+        screen.focus.register(self.add_btn)
+        card = SectionCard("teams", right=self.add_btn)
         self.rows = QVBoxLayout()
         self.rows.setSpacing(4)
         card.add_layout(self.rows)
@@ -1004,7 +1163,8 @@ class TeamsTab(PlayerTab):
         memberships = sorted(self.screen.ds.memberships(self.screen.record_id, with_variants=True),
                              key=lambda m: m[2], reverse=True)
         if not memberships:
-            self.rows.addWidget(Note("Not in any squad.", color=FG_SECONDARY, size=T_LABEL))
+            self.rows.addWidget(Note("Not in any squad yet: + ADD TO A TEAM puts the player in one.",
+                                     color=FG_SECONDARY, size=T_LABEL))
         shown = None
         for tid, name, s, shirt, variant in memberships:
             if s != shown:
@@ -1022,3 +1182,57 @@ class TeamsTab(PlayerTab):
             self.screen.focus.register(b)
             self.rows.addWidget(b)
             self._row_btns.append(b)
+
+    def _pick_team(self):
+        """Teams with a squad in the season on screen; picking one puts the
+        player in its first empty shirt (else after the last player), saved."""
+        ds, season, pid = self.screen.ds, self.screen.season, self.screen.record_id
+        if not season or pid is None:
+            return
+        joined = {m[0] for m in ds.memberships(pid) if m[2] == season}
+        rows = []
+        for tid in ds.team_ids():
+            info = ds.team_seasons(tid).get(season)
+            if info is not None and tid not in joined:
+                n = len([p for p in info.get("players", []) if p])
+                rows.append((info.get("name", tid), tid, n))
+        popup = PopupList(self.screen, width=360, height=420, own_keys=True)
+        popup.set_title(f"add to a team · {season_label(season)}")
+        rows.sort(key=lambda r: r[0].lower())
+
+        def fill(text=""):
+            popup.clear_rows()
+            shown = [r for r in rows if text.strip().lower() in r[0].lower()]
+            for name, tid, n in shown:
+                popup.add_row(name, tid, tag=f"{n} players")
+            if not shown:
+                popup.add_row("no team matches" if rows else
+                              f"no team has a {season_label(season)} squad", None, disabled=True)
+            popup.set_highlight(0)
+        popup.add_search_box("Search teams…").textChanged.connect(fill)
+        fill()
+        popup.size_to(max(1, min(10, len(rows))))
+        popup.picked.connect(self._add_to)
+        popup.open_at(self.add_btn, self.screen)
+
+    def _add_to(self, tid):
+        if not tid:
+            return
+        screen = self.screen
+        team_ed = getattr(screen.window(), "screen_team_editor", None)
+        if (team_ed is not None and team_ed.record_id == tid and team_ed.session is not None
+                and team_ed.session.is_dirty()):
+            screen.shell.footer.set_status(
+                "That team has unsaved changes in the team editor: save or revert them first", WARN)
+            return
+        try:
+            shirt = P.add_to_squad(screen.ds, screen.record_id, tid, screen.season)
+        except (ValueError, OSError, SaveError) as e:
+            screen.shell.footer.set_status(f"Could not add: {e}", DANGER_LITE)
+            return
+        name = screen.ds.team_seasons(tid)[screen.season].get("name", tid)
+        screen.shell.footer.set_status(
+            f"Added to {name} as #{shirt}" + (" (replacement)" if 15 < shirt <= 22 else
+                                               " (extra player)" if shirt > 22 else ""), GREEN)
+        screen.reload_list()
+        self.refresh()

@@ -14,8 +14,9 @@ from PyQt5.QtGui import QPainter, QColor, QPen, QFont, QFontMetrics, QDrag
 from PyQt5.QtCore import Qt, QRectF, QTimer, pyqtSignal, QMimeData, QPoint
 
 from app import team_ops as T
+from app import player_ops as P
 from app.game_data import (
-    ASSET_SPECS, COUNTRIES, country_label, ROLE_KEYS, SET_PLAYS, TEAM_TYPES, STARTING_XV, SQUAD_SIZE,
+    SaveError, ASSET_SPECS, COUNTRIES, country_label, ROLE_KEYS, SET_PLAYS, TEAM_TYPES, STARTING_XV, SQUAD_SIZE,
     frontend_logo, looks_reversed,
 )
 from app.ratings import position_overall
@@ -31,7 +32,7 @@ from ui.editor_kit import (
 )
 from ui.team_sheet import is_star
 from ui.team_sheet import (
-    MATCH_SHEET_ROWS, SUBSTITUTES, SlotAvatar, SubChip, PlayerPickerPopup, FITS, SEARCH, POSITION_NAMES,
+    MATCH_SHEET_ROWS, SUBSTITUTES, SlotAvatar, SubChip, PlayerPickerPopup, FITS, SEARCH, NEW_PLAYER, POSITION_NAMES,
     POSITION_SHORT, ROLE_SHORT, last_name,
 )
 from ui.widgets import StyledButton
@@ -120,6 +121,10 @@ def _set_optional(info, key, value):
         info.pop(key, None)
 
 
+_SUMMARY_TABS = {"squad": TAB_SQUAD, "starters": TAB_SQUAD, "roles": TAB_SQUAD,
+                 "kits": TAB_KITS}
+
+
 class OverviewTab(TeamTab):
     def __init__(self, screen, index):
         super().__init__(screen, index)
@@ -176,6 +181,7 @@ class OverviewTab(TeamTab):
         self.summary_grid.setHorizontalSpacing(12)
         self.summary_grid.setVerticalSpacing(10)
         self.summary_labels = {}
+        self.summary_go = {}
         for r, (key, label) in enumerate((("squad", "Squad"), ("starters", "Starting XV fit"),
                                           ("roles", "Roles set"), ("kits", "Kits"),
                                           ("assets", "Asset files"))):
@@ -185,10 +191,17 @@ class OverviewTab(TeamTab):
             self.summary_grid.addWidget(name, r, 0)
             self.summary_grid.addWidget(value, r, 1)
             self.summary_labels[key] = value
+            # what is left to do on a new team: one click to the tab doing it
+            go = compact_button("SET UP →", height=26)
+            go.clicked.connect(lambda _=False, k=key: self._set_up(k))
+            go.hide()
+            screen.focus.register(go)
+            self.summary_grid.addWidget(go, r, 2)
+            self.summary_go[key] = go
         summary.add_layout(self.summary_grid)
         right.addWidget(summary)
 
-        danger = SectionCard("team file")
+        danger = SectionCard("team")
         self.file_note = Note("", color=FG_TERTIARY)
         danger.add(self.file_note)
         self.delete_btn = _button("DELETE TEAM…", "danger")
@@ -270,9 +283,18 @@ class OverviewTab(TeamTab):
                                                                               "banners")))
         self._set_summary("assets", "all found" if not missing else f"{missing} problem(s)",
                           GREEN if not missing else WARN)
+        from shared.user_prefs import user_prefs
         self.file_note.setText(self.screen.file_label())
+        self.file_note.setVisible(bool(user_prefs.expert_mode))
+
+    def _set_up(self, key):
+        if key == "assets":
+            self.screen.open_issues()      # the list says which picture, a click goes there
+        else:
+            self.screen.shell.tabs.set_index(_SUMMARY_TABS[key])
 
     def _set_summary(self, key, text, color):
+        self.summary_go[key].setVisible(color not in (GREEN, FG_PRIMARY))
         lbl = self.summary_labels[key]
         lbl.setText(text)
         lbl.setStyleSheet(lbl.styleSheet().split("color:")[0] + f"color: {color};"
@@ -1571,7 +1593,8 @@ class SquadTab(TeamTab):
         self.picker.open_for(title, entries, current, taken, anchor, self.screen, tags=tags,
                              subtitles=subtitles, search=search,
                              stars=lambda pid: is_star(self.stats(pid)),
-                             mode=FITS if (current is not None or suggested) else SEARCH)
+                             mode=FITS if (current is not None or suggested) else SEARCH,
+                             offer_new=True)
 
     def _other_seasons_players(self):
         """The players this team named in its other seasons, nearest first."""
@@ -1590,6 +1613,9 @@ class SquadTab(TeamTab):
         number = self._picker_shirt
         if number is None or pid is None:
             return
+        if pid == NEW_PLAYER:
+            QTimer.singleShot(0, lambda: self._new_player(number, self.picker.query()))
+            return
         roster = self.roster()
         if number - 1 < len(roster) and roster[number - 1] == str(pid):
             return
@@ -1599,6 +1625,47 @@ class SquadTab(TeamTab):
         # on to the next shirt (an extra player: the + ADD button)
         self.selected_shirt = number + 1 if number < SQUAD_SIZE else number
         QTimer.singleShot(0, lambda: self.slots.get(self.selected_shirt, self.extra_add_btn).setFocus())
+
+    def _new_player(self, number, typed=""):
+        """Create a player for this shirt (saved to the players file at once)
+        and put him in it, as one squad edit."""
+        from app.game_data import POSITIONS, SHIRT_POSITIONS
+        words = typed.split()
+        first = TextField("First name")
+        last = TextField("Last name")
+        if words:
+            first.set_value(" ".join(words[:-1]))
+            last.set_value(words[-1])
+        position = ChoiceField("Position", POSITIONS, allow_blank=False,
+                               display=lambda v: POSITION_NAMES.get(v, v.replace("_", " ")))
+        position.set_value(SHIRT_POSITIONS.get(number, "centre"))
+        level = SegmentField("Level", [k for k, _l, _o in P.LEVELS],
+                             display=lambda v: next(lab for k, lab, _o in P.LEVELS if k == v))
+        level.set_value("international")
+        screen = self.screen
+
+        def done(role):
+            screen._dialog = None
+            if role != "ok":
+                return
+            try:
+                near = next((p for p in self.roster() if p), None)
+                pid = P.create_player(screen.ds, first.value(), last.value(), screen.season,
+                                      position.value(), level=level.value(), near_pid=near)
+            except (ValueError, OSError, SaveError) as e:
+                screen.shell.footer.set_status(f"Could not create player: {e}", DANGER_LITE)
+                return
+            self._picker_shirt = number
+            self._on_pick(pid)
+            screen.shell.footer.set_status(
+                f"Created {screen.ds.players[pid]['display_name']} as player {number}"
+                " · EDIT PLAYER for the face and ratings", GREEN)
+
+        screen.show_dialog(FormDialog(
+            screen, f"New player · shirt {number}",
+            f"Joins the {season_label(screen.season)} squad. Ratings start at the level picked.",
+            {"first": first, "last": last, "position": position, "level": level},
+            [("CANCEL", "neutral", "cancel"), ("CREATE", "primary", "ok")], done))
 
     def _remove(self, number=None):
         roster = self.roster()

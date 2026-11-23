@@ -64214,7 +64214,7 @@
  },
  "126424": {
   "display_name": "F.Montanella",
-  "first_name": "",
+  "first_name": "Franck",
   "last_name": "Montanella",
   "birthdate": "1982/03/26",
   "commentary": "2390",
@@ -70952,7 +70952,7 @@
     "height": "199",
     "weight": "116",
     "face": "players/heads/courtney_lawes.big",
-    "skin_tone": "d_medium",
+    "skin_tone": "l_medium",
     "foot": "right_footed",
     "headgear": "",
     "boot_style": "0",
@@ -71000,7 +71000,11 @@
     "ss_scrummager": "",
     "ss_defensive_organisation": "",
     "ss_ball_winner": "",
-    "ss_tackling": "yes"
+    "ss_tackling": "yes",
+    "skin_overlay": [
+     "players/tattoos/118007.png"
+    ],
+    "skin": "players/skins/118007_tint.png"
    },
    "2024": {
     "position1": "second_row",
@@ -71010,7 +71014,7 @@
     "height": "199",
     "weight": "117",
     "face": "players/heads/courtney_lawes.big",
-    "skin_tone": "d_medium",
+    "skin_tone": "l_medium",
     "foot": "right_footed",
     "headgear": "",
     "boot_style": "1",
@@ -71058,7 +71062,11 @@
     "ss_scrummager": "",
     "ss_defensive_organisation": "",
     "ss_ball_winner": "",
-    "ss_tackling": ""
+    "ss_tackling": "",
+    "skin_overlay": [
+     "players/tattoos/118007.png"
+    ],
+    "skin": "players/skins/118007_tint.png"
    },
    "2023": {
     "position1": "second_row",
@@ -71068,7 +71076,7 @@
     "height": "199",
     "weight": "117",
     "face": "players/heads/courtney_lawes.big",
-    "skin_tone": "d_medium",
+    "skin_tone": "l_medium",
     "foot": "right_footed",
     "headgear": "",
     "boot_style": "1",
@@ -71116,7 +71124,11 @@
     "ss_scrummager": "",
     "ss_defensive_organisation": "",
     "ss_ball_winner": "",
-    "ss_tackling": ""
+    "ss_tackling": "",
+    "skin_overlay": [
+     "players/tattoos/118007.png"
+    ],
+    "skin": "players/skins/118007_tint.png"
    },
    "2022": {
     "position1": "second_row",
@@ -71126,7 +71138,7 @@
     "height": "199",
     "weight": "117",
     "face": "players/heads/courtney_lawes.big",
-    "skin_tone": "d_medium",
+    "skin_tone": "l_medium",
     "foot": "right_footed",
     "headgear": "",
     "boot_style": "1",
@@ -71174,7 +71186,11 @@
     "ss_scrummager": "",
     "ss_defensive_organisation": "",
     "ss_ball_winner": "",
-    "ss_tackling": ""
+    "ss_tackling": "",
+    "skin_overlay": [
+     "players/tattoos/118007.png"
+    ],
+    "skin": "players/skins/118007_tint.png"
    },
    "2020": {
     "position1": "second_row",
@@ -71184,7 +71200,7 @@
     "height": "199",
     "weight": "117",
     "face": "players/heads/courtney_lawes.big",
-    "skin_tone": "d_medium",
+    "skin_tone": "l_medium",
     "foot": "right_footed",
     "headgear": "",
     "boot_style": "1",
@@ -71232,7 +71248,11 @@
     "ss_scrummager": "",
     "ss_defensive_organisation": "",
     "ss_ball_winner": "",
-    "ss_tackling": ""
+    "ss_tackling": "",
+    "skin_overlay": [
+     "players/tattoos/118007.png"
+    ],
+    "skin": "players/skins/118007_tint.png"
    },
    "2019": {
     "position1": "second_row",
@@ -71242,7 +71262,7 @@
     "height": "199",
     "weight": "117",
     "face": "players/heads/courtney_lawes.big",
-    "skin_tone": "d_medium",
+    "skin_tone": "l_medium",
     "foot": "right_footed",
     "headgear": "",
     "boot_style": "1",
@@ -71290,7 +71310,11 @@
     "ss_scrummager": "",
     "ss_defensive_organisation": "",
     "ss_ball_winner": "",
-    "ss_tackling": ""
+    "ss_tackling": "",
+    "skin_overlay": [
+     "players/tattoos/118007.png"
+    ],
+    "skin": "players/skins/118007_tint.png"
    },
    "2009": {
     "position1": "second_row",
@@ -71300,7 +71324,7 @@
     "height": "199",
     "weight": "116",
     "face": "players/heads/courtney_lawes.big",
-    "skin_tone": "d_medium",
+    "skin_tone": "l_medium",
     "foot": "right_footed",
     "headgear": "",
     "boot_style": "0",
@@ -71348,7 +71372,11 @@
     "ss_scrummager": "",
     "ss_defensive_organisation": "",
     "ss_ball_winner": "",
-    "ss_tackling": "yes"
+    "ss_tackling": "yes",
+    "skin_overlay": [
+     "players/tattoos/118007.png"
+    ],
+    "skin": "players/skins/118007_tint.png"
    },
    "2018": {
     "position1": "second_row",
@@ -71358,7 +71386,7 @@
     "height": "199",
     "weight": "117",
     "face": "players/heads/courtney_lawes.big",
-    "skin_tone": "d_medium",
+    "skin_tone": "l_medium",
     "foot": "right_footed",
     "headgear": "",
     "boot_style": "1",
@@ -71406,7 +71434,11 @@
     "ss_scrummager": "",
     "ss_defensive_organisation": "",
     "ss_ball_winner": "",
-    "ss_tackling": ""
+    "ss_tackling": "",
+    "skin_overlay": [
+     "players/tattoos/118007.png"
+    ],
+    "skin": "players/skins/118007_tint.png"
    },
    "2017": {
     "position1": "second_row",
@@ -71416,7 +71448,7 @@
     "height": "199",
     "weight": "117",
     "face": "players/heads/courtney_lawes.big",
-    "skin_tone": "d_medium",
+    "skin_tone": "l_medium",
     "foot": "right_footed",
     "headgear": "",
     "boot_style": "1",
@@ -71464,7 +71496,11 @@
     "ss_scrummager": "",
     "ss_defensive_organisation": "",
     "ss_ball_winner": "",
-    "ss_tackling": ""
+    "ss_tackling": "",
+    "skin_overlay": [
+     "players/tattoos/118007.png"
+    ],
+    "skin": "players/skins/118007_tint.png"
    },
    "2021": {
     "position1": "second_row",
@@ -71474,7 +71510,7 @@
     "height": "199",
     "weight": "117",
     "face": "players/heads/courtney_lawes.big",
-    "skin_tone": "d_medium",
+    "skin_tone": "l_medium",
     "foot": "right_footed",
     "headgear": "",
     "boot_style": "1",
@@ -71522,7 +71558,11 @@
     "ss_scrummager": "",
     "ss_defensive_organisation": "",
     "ss_ball_winner": "",
-    "ss_tackling": ""
+    "ss_tackling": "",
+    "skin_overlay": [
+     "players/tattoos/118007.png"
+    ],
+    "skin": "players/skins/118007_tint.png"
    },
    "2016": {
     "position1": "second_row",
@@ -71532,7 +71572,7 @@
     "height": "199",
     "weight": "117",
     "face": "players/heads/courtney_lawes.big",
-    "skin_tone": "d_medium",
+    "skin_tone": "l_medium",
     "foot": "right_footed",
     "headgear": "",
     "boot_style": "1",
@@ -71580,7 +71620,11 @@
     "ss_scrummager": "",
     "ss_defensive_organisation": "",
     "ss_ball_winner": "",
-    "ss_tackling": ""
+    "ss_tackling": "",
+    "skin_overlay": [
+     "players/tattoos/118007.png"
+    ],
+    "skin": "players/skins/118007_tint.png"
    }
   }
  },
@@ -144322,7 +144366,7 @@
  },
  "142468": {
   "display_name": "J.Pritchard",
-  "first_name": "",
+  "first_name": "James",
   "last_name": "Pritchard",
   "birthdate": "1979/07/21",
   "commentary": "2233",
@@ -155798,7 +155842,7 @@
  },
  "142648": {
   "display_name": "A.Tuitavake",
-  "first_name": "",
+  "first_name": "Anthony",
   "last_name": "Tuitavake",
   "birthdate": "1983/12/12",
   "commentary": "2407",
@@ -160470,7 +160514,7 @@
  },
  "142760": {
   "display_name": "T.Latimer",
-  "first_name": "",
+  "first_name": "Tanerau",
   "last_name": "Latimer",
   "birthdate": "1986/05/16",
   "commentary": "819",
@@ -168882,7 +168926,7 @@
  },
  "142890": {
   "display_name": "V.Delasau",
-  "first_name": "",
+  "first_name": "Vilimoni",
   "last_name": "Delasau",
   "birthdate": "1978/07/12",
   "commentary": "379",
@@ -169929,7 +169973,7 @@
  },
  "142901": {
   "display_name": "G.Toniolatti",
-  "first_name": "",
+  "first_name": "Giulio",
   "last_name": "Toniolatti",
   "birthdate": "1984/01/15",
   "commentary": "1518",
@@ -194441,7 +194485,7 @@
  },
  "143371": {
   "display_name": "P.Canavosio",
-  "first_name": "",
+  "first_name": "Pablo",
   "last_name": "Canavosio",
   "birthdate": "1981/12/26",
   "commentary": "1888",
@@ -194630,7 +194674,7 @@
  },
  "143373": {
   "display_name": "G.Lovobalavu",
-  "first_name": "",
+  "first_name": "Gabiriele",
   "last_name": "Lovobalavu",
   "birthdate": "1986/06/20",
   "commentary": "877",
@@ -209037,7 +209081,7 @@
  },
  "143702": {
   "display_name": "Y.Watanabe",
-  "first_name": "",
+  "first_name": "Yasunori",
   "last_name": "Watanabe",
   "birthdate": "1974/07/02",
   "commentary": "2531",
@@ -215299,7 +215343,7 @@
  },
  "143841": {
   "display_name": "G.Whitelock",
-  "first_name": "",
+  "first_name": "George",
   "last_name": "Whitelock",
   "birthdate": "1987/03/27",
   "commentary": "1643",
@@ -219587,7 +219631,7 @@
  },
  "143941": {
   "display_name": "G.Shepherdson",
-  "first_name": "",
+  "first_name": "Guy",
   "last_name": "Shepherdson",
   "birthdate": "1982/02/17",
   "commentary": "2270",
@@ -305923,7 +305967,11 @@
     "weight": "97",
     "skin_tone": "light",
     "skin": "",
-    "skin_overlay": [],
+    "skin_overlay": [
+     "players/tattoos/144801.png",
+     "players/straps/wrist_right.png",
+     "players/straps/wrist_2_left.png"
+    ],
     "face": "players/heads/jack_nowell.big",
     "foot": "right_footed",
     "headgear": "",
@@ -305983,7 +306031,11 @@
     "weight": "97",
     "skin_tone": "light",
     "skin": "",
-    "skin_overlay": [],
+    "skin_overlay": [
+     "players/tattoos/144801.png",
+     "players/straps/wrist_right.png",
+     "players/straps/wrist_2_left.png"
+    ],
     "face": "players/heads/jack_nowell.big",
     "foot": "right_footed",
     "headgear": "",
@@ -306043,7 +306095,11 @@
     "weight": "97",
     "skin_tone": "light",
     "skin": "",
-    "skin_overlay": [],
+    "skin_overlay": [
+     "players/tattoos/144801.png",
+     "players/straps/wrist_right.png",
+     "players/straps/wrist_2_left.png"
+    ],
     "face": "players/heads/jack_nowell.big",
     "foot": "right_footed",
     "headgear": "",
@@ -306103,7 +306159,11 @@
     "weight": "97",
     "skin_tone": "light",
     "skin": "",
-    "skin_overlay": [],
+    "skin_overlay": [
+     "players/tattoos/144801.png",
+     "players/straps/wrist_right.png",
+     "players/straps/wrist_2_left.png"
+    ],
     "face": "players/heads/jack_nowell.big",
     "foot": "right_footed",
     "headgear": "",
@@ -306163,7 +306223,11 @@
     "weight": "97",
     "skin_tone": "light",
     "skin": "",
-    "skin_overlay": [],
+    "skin_overlay": [
+     "players/tattoos/144801.png",
+     "players/straps/wrist_right.png",
+     "players/straps/wrist_2_left.png"
+    ],
     "face": "players/heads/jack_nowell.big",
     "foot": "right_footed",
     "headgear": "",
@@ -306223,7 +306287,11 @@
     "weight": "97",
     "skin_tone": "light",
     "skin": "",
-    "skin_overlay": [],
+    "skin_overlay": [
+     "players/tattoos/144801.png",
+     "players/straps/wrist_right.png",
+     "players/straps/wrist_2_left.png"
+    ],
     "face": "players/heads/jack_nowell.big",
     "foot": "right_footed",
     "headgear": "",
@@ -306283,7 +306351,11 @@
     "weight": "97",
     "skin_tone": "light",
     "skin": "",
-    "skin_overlay": [],
+    "skin_overlay": [
+     "players/tattoos/144801.png",
+     "players/straps/wrist_right.png",
+     "players/straps/wrist_2_left.png"
+    ],
     "face": "players/heads/jack_nowell.big",
     "foot": "right_footed",
     "headgear": "",
@@ -306343,7 +306415,11 @@
     "weight": "97",
     "skin_tone": "light",
     "skin": "",
-    "skin_overlay": [],
+    "skin_overlay": [
+     "players/tattoos/144801.png",
+     "players/straps/wrist_right.png",
+     "players/straps/wrist_2_left.png"
+    ],
     "face": "players/heads/jack_nowell.big",
     "foot": "right_footed",
     "headgear": "",
@@ -306403,7 +306479,11 @@
     "weight": "97",
     "skin_tone": "light",
     "skin": "",
-    "skin_overlay": [],
+    "skin_overlay": [
+     "players/tattoos/144801.png",
+     "players/straps/wrist_right.png",
+     "players/straps/wrist_2_left.png"
+    ],
     "face": "players/heads/jack_nowell.big",
     "foot": "right_footed",
     "headgear": "",
@@ -463182,7 +463262,7 @@
  },
  "146285": {
   "display_name": "Jc.Venter",
-  "first_name": "",
+  "first_name": "Janco",
   "last_name": "Venter",
   "birthdate": "1994/09/19",
   "commentary": "",
@@ -1647712,7 +1647792,7 @@
  },
  "159439": {
   "display_name": "J. Marino",
-  "first_name": "",
+  "first_name": "João",
   "last_name": "Marino",
   "birthdate": "1993/01/01",
   "commentary": "925",
@@ -1647781,7 +1647861,7 @@
  },
  "159440": {
   "display_name": "S. Bonavento",
-  "first_name": "",
+  "first_name": "Santiago",
   "last_name": "Bonavento",
   "birthdate": "1999/01/01",
   "commentary": "1855",
@@ -1647850,7 +1647930,7 @@
  },
  "159441": {
   "display_name": "F. Moreno",
-  "first_name": "",
+  "first_name": "Facundo",
   "last_name": "Moreno",
   "birthdate": "2000/01/01",
   "commentary": "1033",
@@ -1647919,7 +1647999,7 @@
  },
  "159442": {
   "display_name": "C. Dias",
-  "first_name": "",
+  "first_name": "Cléber",
   "last_name": "Dias",
   "birthdate": "2002/01/01",
   "commentary": "",
@@ -1647988,7 +1648068,7 @@
  },
  "159443": {
   "display_name": "H. Lucio",
-  "first_name": "",
+  "first_name": "Helder",
   "last_name": "Lucio",
   "birthdate": "1995/01/01",
   "commentary": "879",
@@ -1648057,7 +1648137,7 @@
  },
  "159444": {
   "display_name": "R. Santos",
-  "first_name": "",
+  "first_name": "Renato",
   "last_name": "Santos",
   "birthdate": "1995/01/01",
   "commentary": "2258",
@@ -1648126,7 +1648206,7 @@
  },
  "159445": {
   "display_name": "M. Claudio",
-  "first_name": "",
+  "first_name": "Matheus",
   "last_name": "Claudio",
   "birthdate": "1997/01/01",
   "commentary": "",
@@ -1648195,7 +1648275,7 @@
  },
  "159446": {
   "display_name": "A. Arruda",
-  "first_name": "",
+  "first_name": "André",
   "last_name": "Arruda",
   "birthdate": "2004/01/01",
   "commentary": "",
@@ -1648264,7 +1648344,7 @@
  },
  "159447": {
   "display_name": "Z. Booysen",
-  "first_name": "",
+  "first_name": "Zinedine",
   "last_name": "Booysen",
   "birthdate": "2006/01/01",
   "commentary": "1859",
@@ -1648333,7 +1648413,7 @@
  },
  "159448": {
   "display_name": "J. Amaral",
-  "first_name": "",
+  "first_name": "João",
   "last_name": "Amaral",
   "birthdate": "2001/01/01",
   "commentary": "",
@@ -1648402,7 +1648482,7 @@
  },
  "159449": {
   "display_name": "T. Mynhardt",
-  "first_name": "",
+  "first_name": "Tasriq",
   "last_name": "Mynhardt",
   "birthdate": "2003/01/01",
   "commentary": "",
@@ -1648471,7 +1648551,7 @@
  },
  "159450": {
   "display_name": "R. Tenorio",
-  "first_name": "",
+  "first_name": "Robert",
   "last_name": "Tenorio",
   "birthdate": "1998/01/01",
   "commentary": "",
@@ -1648540,7 +1648620,7 @@
  },
  "159451": {
   "display_name": "L. Massari",
-  "first_name": "",
+  "first_name": "Lorenzo",
   "last_name": "Massari",
   "birthdate": "1992/01/01",
   "commentary": "",
@@ -1648609,7 +1648689,7 @@
  },
  "159452": {
   "display_name": "S. Luna",
-  "first_name": "",
+  "first_name": "Sérgio",
   "last_name": "Luna",
   "birthdate": "1992/01/01",
   "commentary": "",
@@ -1648816,7 +1648896,7 @@
  },
  "159455": {
   "display_name": "H. Ferreira",
-  "first_name": "",
+  "first_name": "Henrique",
   "last_name": "Ferreira",
   "birthdate": "2001/01/01",
   "commentary": "",
@@ -1648885,7 +1648965,7 @@
  },
  "159456": {
   "display_name": "M. Mokunyane",
-  "first_name": "",
+  "first_name": "Motomotsi",
   "last_name": "Mokunyane",
   "birthdate": "1993/01/01",
   "commentary": "",
@@ -1648954,7 +1649034,7 @@
  },
  "159457": {
   "display_name": "A. De Melo",
-  "first_name": "",
+  "first_name": "Adrio",
   "last_name": "De Melo",
   "birthdate": "2000/01/01",
   "commentary": "",
@@ -1649023,7 +1649103,7 @@
  },
  "159458": {
   "display_name": "M. Lemes",
-  "first_name": "",
+  "first_name": "Maiki",
   "last_name": "Lemes",
   "birthdate": "1998/01/01",
   "commentary": "",
@@ -1649161,7 +1649241,7 @@
  },
  "159460": {
   "display_name": "L. Tranquez",
-  "first_name": "",
+  "first_name": "Lucas",
   "last_name": "Tranquez",
   "birthdate": "2006/01/01",
   "commentary": "",
@@ -1649368,7 +1649448,7 @@
  },
  "159463": {
   "display_name": "N. Sydorowitz",
-  "first_name": "",
+  "first_name": "Nick",
   "last_name": "Sydorowitz",
   "birthdate": "1999/01/01",
   "commentary": "",
@@ -1649575,7 +1649655,7 @@
  },
  "159466": {
   "display_name": "A. Cox",
-  "first_name": "",
+  "first_name": "Ashwin",
   "last_name": "Cox",
   "birthdate": "2003/01/01",
   "commentary": "310",
@@ -1649713,7 +1649793,7 @@
  },
  "159468": {
   "display_name": "J. Leszczynski",
-  "first_name": "",
+  "first_name": "Julián",
   "last_name": "Leszczynski",
   "birthdate": "2000/01/01",
   "commentary": "",
@@ -1649782,7 +1649862,7 @@
  },
  "159469": {
   "display_name": "N. Toth",
-  "first_name": "",
+  "first_name": "Nicolas",
   "last_name": "Toth",
   "birthdate": "1996/01/01",
   "commentary": "1505",
@@ -1649851,7 +1649931,7 @@
  },
  "159470": {
   "display_name": "J. Chavez",
-  "first_name": "",
+  "first_name": "Jordi",
   "last_name": "Chavez",
   "birthdate": "1992/01/01",
   "commentary": "254",
@@ -1649920,7 +1650000,7 @@
  },
  "159471": {
   "display_name": "V. Marciali",
-  "first_name": "",
+  "first_name": "Valentino",
   "last_name": "Marciali",
   "birthdate": "2001/01/01",
   "commentary": "2137",
@@ -1649989,7 +1650069,7 @@
  },
  "159472": {
   "display_name": "M. Gasparotti",
-  "first_name": "",
+  "first_name": "Mateo",
   "last_name": "Gasparotti",
   "birthdate": "2003/01/01",
   "commentary": "1986",
@@ -1650058,7 +1650138,7 @@
  },
  "159473": {
   "display_name": "J. Dominguez",
-  "first_name": "",
+  "first_name": "Joaquín",
   "last_name": "Dominguez",
   "birthdate": "1995/01/01",
   "commentary": "408",
@@ -1650127,7 +1650207,7 @@
  },
  "159474": {
   "display_name": "M. Todaro",
-  "first_name": "",
+  "first_name": "Manuel",
   "last_name": "Todaro",
   "birthdate": "1998/01/01",
   "commentary": "1505",
@@ -1650196,7 +1650276,7 @@
  },
  "159475": {
   "display_name": "A. Nunez",
-  "first_name": "",
+  "first_name": "Ariel",
   "last_name": "Nunez",
   "birthdate": "1995/01/01",
   "commentary": "1757",
@@ -1650265,7 +1650345,7 @@
  },
  "159476": {
   "display_name": "M. Muniagurria",
-  "first_name": "",
+  "first_name": "Matías",
   "last_name": "Muniagurria",
   "birthdate": "2001/01/01",
   "commentary": "1051",
@@ -1650334,7 +1650414,7 @@
  },
  "159477": {
   "display_name": "J. Strada",
-  "first_name": "",
+  "first_name": "Juan Cruz",
   "last_name": "Strada",
   "birthdate": "1996/01/01",
   "commentary": "1316",
@@ -1650472,7 +1650552,7 @@
  },
  "159479": {
   "display_name": "J. Gonzalez",
-  "first_name": "",
+  "first_name": "Juan",
   "last_name": "Gonzalez",
   "birthdate": "2007/01/01",
   "commentary": "576",
@@ -1650541,7 +1650621,7 @@
  },
  "159480": {
   "display_name": "F. Gaspes",
-  "first_name": "",
+  "first_name": "Francisco",
   "last_name": "Gaspes",
   "birthdate": "2004/01/01",
   "commentary": "541",
@@ -1650610,7 +1650690,7 @@
  },
  "159481": {
   "display_name": "R. Amarilla",
-  "first_name": "",
+  "first_name": "Ramiro",
   "last_name": "Amarilla",
   "birthdate": "2004/01/01",
   "commentary": "1809",
@@ -1650747,9 +1650827,9 @@
   }
  },
  "159483": {
-  "display_name": "V. Quattrochi",
-  "first_name": "",
-  "last_name": "Quattrochi",
+  "display_name": "V. Quattrocchi",
+  "first_name": "Valentino",
+  "last_name": "Quattrocchi",
   "birthdate": "1995/01/01",
   "commentary": "1766",
   "stats": {
@@ -1650817,7 +1650897,7 @@
  },
  "159484": {
   "display_name": "C. Perez",
-  "first_name": "",
+  "first_name": "Cesar",
   "last_name": "Perez",
   "birthdate": "2001/01/01",
   "commentary": "1166",
@@ -1650886,7 +1650966,7 @@
  },
  "159485": {
   "display_name": "C. Blasco",
-  "first_name": "",
+  "first_name": "Camilo",
   "last_name": "Blasco",
   "birthdate": "2002/01/01",
   "commentary": "131",
@@ -1650955,7 +1651035,7 @@
  },
  "159486": {
   "display_name": "E. Quinteros",
-  "first_name": "",
+  "first_name": "Enrique",
   "last_name": "Quinteros",
   "birthdate": "1995/01/01",
   "commentary": "1224",
@@ -1651024,7 +1651104,7 @@
  },
  "159487": {
   "display_name": "J. Sebriano",
-  "first_name": "",
+  "first_name": "Juan Martin",
   "last_name": "Sebriano",
   "birthdate": "1993/01/01",
   "commentary": "2266",
@@ -1651093,7 +1651173,7 @@
  },
  "159488": {
   "display_name": "S. Urbieta",
-  "first_name": "",
+  "first_name": "Sebastián",
   "last_name": "Urbieta",
   "birthdate": "1994/01/01",
   "commentary": "2314",
@@ -1651162,7 +1651242,7 @@
  },
  "159489": {
   "display_name": "A. Heyn",
-  "first_name": "",
+  "first_name": "Alejandro",
   "last_name": "Heyn",
   "birthdate": "1997/01/01",
   "commentary": "653",
@@ -1651438,7 +1651518,7 @@
  },
  "159493": {
   "display_name": "R. Robadin",
-  "first_name": "",
+  "first_name": "Rodrigo",
   "last_name": "Robadin",
   "birthdate": "1993/01/01",
   "commentary": "",
@@ -1651507,7 +1651587,7 @@
  },
  "159494": {
   "display_name": "J. Mernes",
-  "first_name": "",
+  "first_name": "Juan",
   "last_name": "Mernes",
   "birthdate": "2007/01/01",
   "commentary": "997",
@@ -1651645,7 +1651725,7 @@
  },
  "159496": {
   "display_name": "G. Bareiro",
-  "first_name": "",
+  "first_name": "Gonzalo",
   "last_name": "Bareiro",
   "birthdate": "1998/01/01",
   "commentary": "1830",
@@ -1651714,7 +1651794,7 @@
  },
  "159497": {
   "display_name": "F. Paiva",
-  "first_name": "",
+  "first_name": "Facundo",
   "last_name": "Paiva",
   "birthdate": "2001/01/01",
   "commentary": "1761",
@@ -1651783,7 +1651863,7 @@
  },
  "159498": {
   "display_name": "M. Perillo",
-  "first_name": "",
+  "first_name": "Mateo",
   "last_name": "Perillo",
   "birthdate": "1993/01/01",
   "commentary": "1168",
@@ -1651852,7 +1651932,7 @@
  },
  "159499": {
   "display_name": "J. Myszka",
-  "first_name": "",
+  "first_name": "Joaquín",
   "last_name": "Myszka",
   "birthdate": "2001/01/01",
   "commentary": "2163",
@@ -1651921,7 +1652001,7 @@
  },
  "159500": {
   "display_name": "A. Iglesias",
-  "first_name": "",
+  "first_name": "Agustin",
   "last_name": "Iglesias",
   "birthdate": "1995/01/01",
   "commentary": "2050",
@@ -1651990,7 +1652070,7 @@
  },
  "159501": {
   "display_name": "M. Rosmarino",
-  "first_name": "",
+  "first_name": "Manuel",
   "last_name": "Rosmarino",
   "birthdate": "1991/01/01",
   "commentary": "",
@@ -1652059,7 +1652139,7 @@
  },
  "159502": {
   "display_name": "F. Aliaga",
-  "first_name": "",
+  "first_name": "Felipe",
   "last_name": "Aliaga",
   "birthdate": "2003/01/01",
   "commentary": "",
@@ -1652128,7 +1652208,7 @@
  },
  "159503": {
   "display_name": "P. Suarez",
-  "first_name": "",
+  "first_name": "Pedro",
   "last_name": "Suarez",
   "birthdate": "1997/01/01",
   "commentary": "",
@@ -1652197,7 +1652277,7 @@
  },
  "159504": {
   "display_name": "M. Ardao",
-  "first_name": "",
+  "first_name": "Manuel",
   "last_name": "Ardao",
   "birthdate": "2002/01/01",
   "commentary": "",
@@ -1652266,7 +1652346,7 @@
  },
  "159505": {
   "display_name": "M. Diana",
-  "first_name": "",
+  "first_name": "Manuel",
   "last_name": "Diana",
   "birthdate": "1997/01/01",
   "commentary": "",
@@ -1652335,7 +1652415,7 @@
  },
  "159506": {
   "display_name": "A. Molinas",
-  "first_name": "",
+  "first_name": "Alejandro",
   "last_name": "Molinas",
   "birthdate": "1999/01/01",
   "commentary": "",
@@ -1652404,7 +1652484,7 @@
  },
  "159507": {
   "display_name": "J. Ferrario",
-  "first_name": "",
+  "first_name": "Justo",
   "last_name": "Ferrario",
   "birthdate": "2005/01/01",
   "commentary": "",
@@ -1652473,7 +1652553,7 @@
  },
  "159508": {
   "display_name": "I. Facciolo",
-  "first_name": "",
+  "first_name": "Ignacio",
   "last_name": "Facciolo",
   "birthdate": "1996/01/01",
   "commentary": "",
@@ -1652542,7 +1652622,7 @@
  },
  "159509": {
   "display_name": "J. Suarez",
-  "first_name": "",
+  "first_name": "Joaquín",
   "last_name": "Suarez",
   "birthdate": "1997/01/01",
   "commentary": "",
@@ -1652611,7 +1652691,7 @@
  },
  "159510": {
   "display_name": "J. Alonso",
-  "first_name": "",
+  "first_name": "Juan Manuel",
   "last_name": "Alonso",
   "birthdate": "2005/01/01",
   "commentary": "",
@@ -1652680,7 +1652760,7 @@
  },
  "159511": {
   "display_name": "T. Castex",
-  "first_name": "",
+  "first_name": "Tomás",
   "last_name": "Castex",
   "birthdate": "1995/01/01",
   "commentary": "",
@@ -1652749,7 +1652829,7 @@
  },
  "159512": {
   "display_name": "S. Marolda",
-  "first_name": "",
+  "first_name": "Santiago",
   "last_name": "Marolda",
   "birthdate": "1992/01/01",
   "commentary": "",
@@ -1652818,7 +1652898,7 @@
  },
  "159513": {
   "display_name": "J. Bessio",
-  "first_name": "",
+  "first_name": "Juan Francisco",
   "last_name": "Bessio",
   "birthdate": "2002/01/01",
   "commentary": "",
@@ -1652887,7 +1652967,7 @@
  },
  "159514": {
   "display_name": "S. Dalmao",
-  "first_name": "",
+  "first_name": "Sebastián",
   "last_name": "Dalmao",
   "birthdate": "2003/01/01",
   "commentary": "",
@@ -1652956,7 +1653036,7 @@
  },
  "159515": {
   "display_name": "D. Rodriguez",
-  "first_name": "",
+  "first_name": "Darío",
   "last_name": "Rodriguez",
   "birthdate": "1998/01/01",
   "commentary": "",
@@ -1653025,7 +1653105,7 @@
  },
  "159516": {
   "display_name": "A. Sonnevelo",
-  "first_name": "",
+  "first_name": "Alex",
   "last_name": "Sonnevelo",
   "birthdate": "2000/01/01",
   "commentary": "",
@@ -1653094,7 +1653174,7 @@
  },
  "159517": {
   "display_name": "M. Ponte",
-  "first_name": "",
+  "first_name": "Manuel",
   "last_name": "Ponte",
   "birthdate": "1995/01/01",
   "commentary": "1198",
@@ -1653163,7 +1653243,7 @@
  },
  "159518": {
   "display_name": "J. Pereira",
-  "first_name": "",
+  "first_name": "Juan Francisco",
   "last_name": "Pereira",
   "birthdate": "2002/01/01",
   "commentary": "",
@@ -1653232,7 +1653312,7 @@
  },
  "159519": {
   "display_name": "M. Acosta",
-  "first_name": "",
+  "first_name": "Mateo",
   "last_name": "Acosta",
   "birthdate": "2004/01/01",
   "commentary": "",
@@ -1653301,7 +1653381,7 @@
  },
  "159520": {
   "display_name": "F. Suarez",
-  "first_name": "",
+  "first_name": "Francisco",
   "last_name": "Suarez",
   "birthdate": "1995/01/01",
   "commentary": "",
@@ -1653370,7 +1653450,7 @@
  },
  "159521": {
   "display_name": "J. Porro",
-  "first_name": "",
+  "first_name": "Jesús",
   "last_name": "Porro",
   "birthdate": "2002/01/01",
   "commentary": "",
@@ -1653439,7 +1653519,7 @@
  },
  "159522": {
   "display_name": "S. Perez",
-  "first_name": "",
+  "first_name": "Sebastián",
   "last_name": "Perez",
   "birthdate": "2003/01/01",
   "commentary": "",
@@ -1653508,7 +1653588,7 @@
  },
  "159523": {
   "display_name": "B. Cat",
-  "first_name": "",
+  "first_name": "Bautista",
   "last_name": "Cat",
   "birthdate": "2005/01/01",
   "commentary": "",
@@ -1653577,7 +1653657,7 @@
  },
  "159524": {
   "display_name": "L. Bianchi",
-  "first_name": "",
+  "first_name": "Lucas",
   "last_name": "Bianchi",
   "birthdate": "2005/01/01",
   "commentary": "",
@@ -1653646,7 +1653726,7 @@
  },
  "159525": {
   "display_name": "F. Lawlor",
-  "first_name": "",
+  "first_name": "Francisco",
   "last_name": "Lawlor",
   "birthdate": "1998/01/01",
   "commentary": "",
@@ -1653715,7 +1653795,7 @@
  },
  "159526": {
   "display_name": "A. Perillo",
-  "first_name": "",
+  "first_name": "Alfonso",
   "last_name": "Perillo",
   "birthdate": "1999/01/01",
   "commentary": "",
@@ -1653784,7 +1653864,7 @@
  },
  "159527": {
   "display_name": "N. Pittaluga",
-  "first_name": "",
+  "first_name": "Nicolás",
   "last_name": "Pittaluga",
   "birthdate": "2000/01/01",
   "commentary": "",
@@ -1653852,9 +1653932,9 @@
   }
  },
  "159528": {
-  "display_name": "N. Guayo",
-  "first_name": "",
-  "last_name": "Guayo",
+  "display_name": "N. Aguayo",
+  "first_name": "Norman",
+  "last_name": "Aguayo",
   "birthdate": "1995/01/01",
   "commentary": "",
   "stats": {
@@ -1653922,7 +1654002,7 @@
  },
  "159529": {
   "display_name": "A. Bohme",
-  "first_name": "",
+  "first_name": "Augusto",
   "last_name": "Bohme",
   "birthdate": "2000/01/01",
   "commentary": "",
@@ -1653991,7 +1654071,7 @@
  },
  "159530": {
   "display_name": "B. Gurruchaga",
-  "first_name": "",
+  "first_name": "Baltazar",
   "last_name": "Gurruchaga",
   "birthdate": "1996/01/01",
   "commentary": "",
@@ -1654060,7 +1654140,7 @@
  },
  "159531": {
   "display_name": "S. Pedrero",
-  "first_name": "",
+  "first_name": "Santiago",
   "last_name": "Pedrero",
   "birthdate": "2005/01/01",
   "commentary": "",
@@ -1654129,7 +1654209,7 @@
  },
  "159532": {
   "display_name": "A. Toth",
-  "first_name": "",
+  "first_name": "Agustín",
   "last_name": "Toth",
   "birthdate": "1993/01/01",
   "commentary": "",
@@ -1654198,7 +1654278,7 @@
  },
  "159533": {
   "display_name": "C. Saavedra",
-  "first_name": "",
+  "first_name": "Clemente",
   "last_name": "Saavedra",
   "birthdate": "2001/01/01",
   "commentary": "",
@@ -1654267,7 +1654347,7 @@
  },
  "159534": {
   "display_name": "J. Milesi",
-  "first_name": "",
+  "first_name": "Joaquín",
   "last_name": "Milesi",
   "birthdate": "1995/01/01",
   "commentary": "",
@@ -1654336,7 +1654416,7 @@
  },
  "159535": {
   "display_name": "S. Montagner",
-  "first_name": "",
+  "first_name": "Santiago",
   "last_name": "Montagner",
   "birthdate": "2003/01/01",
   "commentary": "",
@@ -1654405,7 +1654485,7 @@
  },
  "159536": {
   "display_name": "M. Torrealba",
-  "first_name": "",
+  "first_name": "Marcelo",
   "last_name": "Torrealba",
   "birthdate": "1999/01/01",
   "commentary": "",
@@ -1654474,7 +1654554,7 @@
  },
  "159537": {
   "display_name": "R. Fernandez",
-  "first_name": "",
+  "first_name": "Rodrigo",
   "last_name": "Fernandez",
   "birthdate": "1999/01/01",
   "commentary": "",
@@ -1654543,7 +1654623,7 @@
  },
  "159538": {
   "display_name": "N. Saab",
-  "first_name": "",
+  "first_name": "Nicolás",
   "last_name": "Saab",
   "birthdate": "1993/01/01",
   "commentary": "",
@@ -1654612,7 +1654692,7 @@
  },
  "159539": {
   "display_name": "N. Garafulic",
-  "first_name": "",
+  "first_name": "Nicolás",
   "last_name": "Garafulic",
   "birthdate": "2006/01/01",
   "commentary": "",
@@ -1654681,7 +1654761,7 @@
  },
  "159540": {
   "display_name": "D. Saavedra",
-  "first_name": "",
+  "first_name": "Domingo",
   "last_name": "Saavedra",
   "birthdate": "1994/01/01",
   "commentary": "",
@@ -1654750,7 +1654830,7 @@
  },
  "159541": {
   "display_name": "C. Game",
-  "first_name": "",
+  "first_name": "Cristóbal",
   "last_name": "Game",
   "birthdate": "2004/01/01",
   "commentary": "",
@@ -1654888,7 +1654968,7 @@
  },
  "159543": {
   "display_name": "S. Lues",
-  "first_name": "",
+  "first_name": "Salvador",
   "last_name": "Lues",
   "birthdate": "2002/01/01",
   "commentary": "",
@@ -1654957,7 +1655037,7 @@
  },
  "159544": {
   "display_name": "M. Schlesinger",
-  "first_name": "",
+  "first_name": "Max",
   "last_name": "Schlesinger",
   "birthdate": "2008/01/01",
   "commentary": "",
@@ -1655026,7 +1655106,7 @@
  },
  "159545": {
   "display_name": "S. Valenzuela",
-  "first_name": "",
+  "first_name": "Santiago",
   "last_name": "Valenzuela",
   "birthdate": "2003/01/01",
   "commentary": "",
@@ -1655095,7 +1655175,7 @@
  },
  "159546": {
   "display_name": "N. Triviño",
-  "first_name": "",
+  "first_name": "Nicolás",
   "last_name": "Triviño",
   "birthdate": "1928/01/01",
   "commentary": "",
@@ -1655164,7 +1655244,7 @@
  },
  "159547": {
   "display_name": "B. Videla",
-  "first_name": "",
+  "first_name": "Benjamín",
   "last_name": "Videla",
   "birthdate": "2004/01/01",
   "commentary": "",
@@ -1655233,7 +1655313,7 @@
  },
  "159548": {
   "display_name": "T. Salas",
-  "first_name": "",
+  "first_name": "Tomás",
   "last_name": "Salas",
   "birthdate": "2006/01/01",
   "commentary": "",
@@ -1655371,7 +1655451,7 @@
  },
  "159550": {
   "display_name": "J. Delgado",
-  "first_name": "",
+  "first_name": "Jorge",
   "last_name": "Delgado",
   "birthdate": "2002/01/01",
   "commentary": "",
@@ -1655440,7 +1655520,7 @@
  },
  "159551": {
   "display_name": "I. Gurruchaga",
-  "first_name": "",
+  "first_name": "Iñaki",
   "last_name": "Gurruchaga",
   "birthdate": "1999/01/01",
   "commentary": "",
@@ -1655509,7 +1655589,7 @@
  },
  "159552": {
   "display_name": "A. Escobar",
-  "first_name": "",
+  "first_name": "Alfonso",
   "last_name": "Escobar",
   "birthdate": "1998/01/01",
   "commentary": "",
@@ -1655578,7 +1655658,7 @@
  },
  "159553": {
   "display_name": "E. Tchimino",
-  "first_name": "",
+  "first_name": "Ernesto",
   "last_name": "Tchimino",
   "birthdate": "1996/01/01",
   "commentary": "1887",
@@ -1655647,7 +1655727,7 @@
  },
  "159554": {
   "display_name": "L. Berti",
-  "first_name": "",
+  "first_name": "Lucas",
   "last_name": "Berti",
   "birthdate": "1993/01/01",
   "commentary": "",
@@ -1655716,7 +1655796,7 @@
  },
  "159555": {
   "display_name": "J. Reyes",
-  "first_name": "",
+  "first_name": "Juan Cruz",
   "last_name": "Reyes",
   "birthdate": "2000/01/01",
   "commentary": "",
@@ -1655785,7 +1655865,7 @@
  },
  "159556": {
   "display_name": "L. Strabucchi",
-  "first_name": "",
+  "first_name": "Luca",
   "last_name": "Strabucchi",
   "birthdate": "2003/01/01",
   "commentary": "",
@@ -1655923,7 +1656003,7 @@
  },
  "159558": {
   "display_name": "B. Garrido",
-  "first_name": "",
+  "first_name": "Benjamín",
   "last_name": "Garrido",
   "birthdate": "2000/01/01",
   "commentary": "547",
@@ -1655991,9 +1656071,9 @@
   }
  },
  "159559": {
-  "display_name": "R. Guarib",
-  "first_name": "",
-  "last_name": "Guarib",
+  "display_name": "R. Guraib",
+  "first_name": "Raúl",
+  "last_name": "Guraib",
   "birthdate": "1995/01/01",
   "commentary": "",
   "stats": {
@@ -1656061,7 +1656141,7 @@
  },
  "159560": {
   "display_name": "F. Moreno",
-  "first_name": "",
+  "first_name": "Francisco",
   "last_name": "Moreno",
   "birthdate": "2000/01/01",
   "commentary": "1033",
@@ -1656130,7 +1656210,7 @@
  },
  "159561": {
   "display_name": "L. Asevedo",
-  "first_name": "",
+  "first_name": "Luciano",
   "last_name": "Asevedo",
   "birthdate": "2001/01/01",
   "commentary": "1805",
@@ -1656199,7 +1656279,7 @@
  },
  "159562": {
   "display_name": "I. Marquieguez",
-  "first_name": "",
+  "first_name": "Ignacio",
   "last_name": "Marquieguez",
   "birthdate": "2003/01/01",
   "commentary": "2130",
@@ -1656268,7 +1656348,7 @@
  },
  "159563": {
   "display_name": "T. Dande",
-  "first_name": "",
+  "first_name": "Tomás",
   "last_name": "Dande",
   "birthdate": "2003/01/01",
   "commentary": "346",
@@ -1656337,7 +1656417,7 @@
  },
  "159564": {
   "display_name": "A. Sarelli",
-  "first_name": "",
+  "first_name": "Agustín",
   "last_name": "Sarelli",
   "birthdate": "1999/01/01",
   "commentary": "1679",
@@ -1656406,7 +1656486,7 @@
  },
  "159565": {
   "display_name": "T. Sbrocco",
-  "first_name": "",
+  "first_name": "Thiago",
   "last_name": "Sbrocco",
   "birthdate": "2001/01/01",
   "commentary": "1132",
@@ -1656475,7 +1656555,7 @@
  },
  "159566": {
   "display_name": "E. Pregot",
-  "first_name": "",
+  "first_name": "Estanislao",
   "last_name": "Pregot",
   "birthdate": "2000/01/01",
   "commentary": "1209",
@@ -1656544,7 +1656624,7 @@
  },
  "159567": {
   "display_name": "I. Cerruti",
-  "first_name": "",
+  "first_name": "Ignacio",
   "last_name": "Cerruti",
   "birthdate": "2005/01/01",
   "commentary": "2267",
@@ -1656613,7 +1656693,7 @@
  },
  "159568": {
   "display_name": "M. Pasquini",
-  "first_name": "",
+  "first_name": "Mateo",
   "last_name": "Pasquini",
   "birthdate": "2006/01/01",
   "commentary": "1148",
@@ -1656682,7 +1656762,7 @@
  },
  "159569": {
   "display_name": "B. Estofan",
-  "first_name": "",
+  "first_name": "Bautista",
   "last_name": "Estofan",
   "birthdate": "2004/01/01",
   "commentary": "462",
@@ -1656751,7 +1656831,7 @@
  },
  "159570": {
   "display_name": "M. Orlando",
-  "first_name": "",
+  "first_name": "Matías",
   "last_name": "Orlando",
   "birthdate": "1995/01/01",
   "commentary": "2196",
@@ -1656820,7 +1656900,7 @@
  },
  "159571": {
   "display_name": "T. Vanni",
-  "first_name": "",
+  "first_name": "Tomás",
   "last_name": "Vanni",
   "birthdate": "2006/01/01",
   "commentary": "1582",
@@ -1656889,7 +1656969,7 @@
  },
  "159572": {
   "display_name": "T. Elizalde",
-  "first_name": "",
+  "first_name": "Tomás",
   "last_name": "Elizalde",
   "birthdate": "1992/01/01",
   "commentary": "",
@@ -1657027,7 +1657107,7 @@
  },
  "159574": {
   "display_name": "J. Vivas",
-  "first_name": "",
+  "first_name": "Juan Manuel",
   "last_name": "Vivas",
   "birthdate": "1996/01/01",
   "commentary": "1842",
@@ -1657096,7 +1657176,7 @@
  },
  "159575": {
   "display_name": "M. Mukdise",
-  "first_name": "",
+  "first_name": "Miguel",
   "last_name": "Mukdise",
   "birthdate": "2005/01/01",
   "commentary": "2491",
@@ -1657165,7 +1657245,7 @@
  },
  "159576": {
   "display_name": "N. Heit",
-  "first_name": "",
+  "first_name": "Nicolás",
   "last_name": "Heit",
   "birthdate": "2003/01/01",
   "commentary": "2206",
@@ -1657303,7 +1657383,7 @@
  },
  "159578": {
   "display_name": "M. Sauze",
-  "first_name": "",
+  "first_name": "Matías",
   "last_name": "Sauze",
   "birthdate": "2003/01/01",
   "commentary": "1318",
@@ -1657441,7 +1657521,7 @@
  },
  "159580": {
   "display_name": "R. Navarro",
-  "first_name": "",
+  "first_name": "Rodrigo",
   "last_name": "Navarro",
   "birthdate": "1993/01/01",
   "commentary": "1061",
@@ -1657510,7 +1657590,7 @@
  },
  "159581": {
   "display_name": "M. Muntaner",
-  "first_name": "",
+  "first_name": "Mariano",
   "last_name": "Muntaner",
   "birthdate": "1995/01/01",
   "commentary": "1022",
@@ -1657579,7 +1657659,7 @@
  },
  "159582": {
   "display_name": "F. Marini",
-  "first_name": "",
+  "first_name": "Franco",
   "last_name": "Marini",
   "birthdate": "1995/01/01",
   "commentary": "925",
@@ -1657648,7 +1657728,7 @@
  },
  "159583": {
   "display_name": "F. Hamilton",
-  "first_name": "",
+  "first_name": "Facundo",
   "last_name": "Hamilton",
   "birthdate": "2000/01/01",
   "commentary": "618",
@@ -1657717,7 +1657797,7 @@
  },
  "159584": {
   "display_name": "S. Saleme",
-  "first_name": "",
+  "first_name": "Santiago",
   "last_name": "Saleme",
   "birthdate": "1999/01/01",
   "commentary": "2256",
@@ -1657855,7 +1657935,7 @@
  },
  "159586": {
   "display_name": "M. Ledesma",
-  "first_name": "",
+  "first_name": "Máximo",
   "last_name": "Ledesma",
   "birthdate": "1931/01/01",
   "commentary": "",
@@ -1657924,7 +1658004,7 @@
  },
  "159587": {
   "display_name": "P. Coll",
-  "first_name": "",
+  "first_name": "Pedro",
   "last_name": "Coll",
   "birthdate": "2001/01/01",
   "commentary": "2065",
@@ -1658062,7 +1658142,7 @@
  },
  "159589": {
   "display_name": "J. Revol",
-  "first_name": "",
+  "first_name": "Juan",
   "last_name": "Revol",
   "birthdate": "2002/01/01",
   "commentary": "588",
@@ -1658131,7 +1658211,7 @@
  },
  "159590": {
   "display_name": "A. Pronce",
-  "first_name": "",
+  "first_name": "Alejandro",
   "last_name": "Pronce",
   "birthdate": "2003/01/01",
   "commentary": "",
@@ -1658269,7 +1658349,7 @@
  },
  "159592": {
   "display_name": "E. Ocampo",
-  "first_name": "",
+  "first_name": "Enzo",
   "last_name": "Ocampo",
   "birthdate": "2005/01/01",
   "commentary": "1885",
@@ -1658407,7 +1658487,7 @@
  },
  "159594": {
   "display_name": "L. Simes",
-  "first_name": "",
+  "first_name": "Lautaro",
   "last_name": "Simes",
   "birthdate": "2003/01/01",
   "commentary": "1373",
@@ -1658476,7 +1658556,7 @@
  },
  "159595": {
   "display_name": "G. Fissore",
-  "first_name": "",
+  "first_name": "Genaro",
   "last_name": "Fissore",
   "birthdate": "2003/01/01",
   "commentary": "496",
@@ -1658545,7 +1658625,7 @@
  },
  "159596": {
   "display_name": "N. Viola",
-  "first_name": "",
+  "first_name": "Nicolás",
   "last_name": "Viola",
   "birthdate": "2003/01/01",
   "commentary": "3",
@@ -1658614,7 +1658694,7 @@
  },
  "159597": {
   "display_name": "J. Hernandez",
-  "first_name": "",
+  "first_name": "Julián",
   "last_name": "Hernandez",
   "birthdate": "1997/01/01",
   "commentary": "1729",
@@ -1658683,7 +1658763,7 @@
  },
  "159598": {
   "display_name": "A. Vertiz",
-  "first_name": "",
+  "first_name": "Agustín",
   "last_name": "Vertiz",
   "birthdate": "2000/01/01",
   "commentary": "1593",
@@ -1658752,7 +1658832,7 @@
  },
  "159599": {
   "display_name": "F. Valarolo",
-  "first_name": "",
+  "first_name": "Faustino",
   "last_name": "Valarolo",
   "birthdate": "2002/01/01",
   "commentary": "1799",
@@ -1658821,7 +1658901,7 @@
  },
  "159600": {
   "display_name": "F. Pueyrredon",
-  "first_name": "",
+  "first_name": "Facundo",
   "last_name": "Pueyrredon",
   "birthdate": "2003/01/01",
   "commentary": "1798",
@@ -1658890,7 +1658970,7 @@
  },
  "159601": {
   "display_name": "M. Soler",
-  "first_name": "",
+  "first_name": "Mateo",
   "last_name": "Soler",
   "birthdate": "1996/01/01",
   "commentary": "1",
@@ -1658959,7 +1659039,7 @@
  },
  "159602": {
   "display_name": "M. Sanchez",
-  "first_name": "",
+  "first_name": "Mateo",
   "last_name": "Sanchez",
   "birthdate": "2003/01/01",
   "commentary": "1312",
@@ -1659028,7 +1659108,7 @@
  },
  "159603": {
   "display_name": "N. Revol",
-  "first_name": "",
+  "first_name": "Nicolás",
   "last_name": "Revol",
   "birthdate": "2005/01/01",
   "commentary": "",
@@ -1659166,7 +1659246,7 @@
  },
  "159605": {
   "display_name": "A. Cugnini",
-  "first_name": "",
+  "first_name": "Augusto",
   "last_name": "Cugnini",
   "birthdate": "2000/01/01",
   "commentary": "5",
@@ -1659235,7 +1659315,7 @@
  },
  "159606": {
   "display_name": "A. Bildosola",
-  "first_name": "",
+  "first_name": "Aitor",
   "last_name": "Bildosola",
   "birthdate": "1997/01/01",
   "commentary": "1843",
@@ -1659304,7 +1659384,7 @@
  },
  "159607": {
   "display_name": "F. Rodriguez",
-  "first_name": "",
+  "first_name": "Facundo",
   "last_name": "Rodriguez",
   "birthdate": "2002/01/01",
   "commentary": "2249",
@@ -1659373,7 +1659453,7 @@
  },
  "159608": {
   "display_name": "A. Segura",
-  "first_name": "",
+  "first_name": "Agustín",
   "last_name": "Segura",
   "birthdate": "2000/01/01",
   "commentary": "",
@@ -1659511,7 +1659591,7 @@
  },
  "159610": {
   "display_name": "G. Fernandez",
-  "first_name": "",
+  "first_name": "Galo",
   "last_name": "Fernandez",
   "birthdate": "2000/01/01",
   "commentary": "1960",
@@ -1659580,7 +1659660,7 @@
  },
  "159611": {
   "display_name": "O. Filippa",
-  "first_name": "",
+  "first_name": "Octavio",
   "last_name": "Filippa",
   "birthdate": "2005/01/01",
   "commentary": "1963",
@@ -1659649,7 +1659729,7 @@
  },
  "159612": {
   "display_name": "F. Rolotti",
-  "first_name": "",
+  "first_name": "Federico",
   "last_name": "Rolotti",
   "birthdate": "2002/01/01",
   "commentary": "1286",
@@ -1659718,7 +1659798,7 @@
  },
  "159613": {
   "display_name": "T. Gonzalez",
-  "first_name": "",
+  "first_name": "Tomás",
   "last_name": "Gonzalez",
   "birthdate": "2003/01/01",
   "commentary": "576",
@@ -1659787,7 +1659867,7 @@
  },
  "159614": {
   "display_name": "G. Podesta",
-  "first_name": "",
+  "first_name": "Genaro",
   "last_name": "Podesta",
   "birthdate": "2004/01/01",
   "commentary": "2228",
@@ -1659856,7 +1659936,7 @@
  },
  "159615": {
   "display_name": "N. Roger",
-  "first_name": "",
+  "first_name": "Nicolás",
   "last_name": "Roger",
   "birthdate": "2002/01/01",
   "commentary": "1",
@@ -1659925,7 +1660005,7 @@
  },
  "159616": {
   "display_name": "E. Giudice",
-  "first_name": "",
+  "first_name": "Ernesto",
   "last_name": "Giudice",
   "birthdate": "2001/01/01",
   "commentary": "745",
@@ -1659994,7 +1660074,7 @@
  },
  "159617": {
   "display_name": "L. Avaca",
-  "first_name": "",
+  "first_name": "Luciano",
   "last_name": "Avaca",
   "birthdate": "2009/01/01",
   "commentary": "",
@@ -1660063,7 +1660143,7 @@
  },
  "159618": {
   "display_name": "M. Medrano",
-  "first_name": "",
+  "first_name": "Matías",
   "last_name": "Medrano",
   "birthdate": "2018/12/19",
   "commentary": "",
@@ -1660132,7 +1660212,7 @@
  },
  "159619": {
   "display_name": "I. Bottazzini",
-  "first_name": "",
+  "first_name": "Ignacio",
   "last_name": "Bottazzini",
   "birthdate": "2018/01/01",
   "commentary": "",
@@ -1660201,7 +1660281,7 @@
  },
  "159620": {
   "display_name": "R. Berardi",
-  "first_name": "",
+  "first_name": "Ramiro",
   "last_name": "Berardi",
   "birthdate": "2018/01/01",
   "commentary": "",
@@ -1660339,7 +1660419,7 @@
  },
  "159622": {
   "display_name": "M. Toledo",
-  "first_name": "",
+  "first_name": "Marcelo",
   "last_name": "Toledo",
   "birthdate": "2018/01/01",
   "commentary": "",
@@ -1660408,7 +1660488,7 @@
  },
  "159623": {
   "display_name": "J. Rachel",
-  "first_name": "",
+  "first_name": "Juan Cruz",
   "last_name": "Rachel",
   "birthdate": "2001/01/01",
   "commentary": "1166",
@@ -1660477,7 +1660557,7 @@
  },
  "159624": {
   "display_name": "A. Wall",
-  "first_name": "",
+  "first_name": "Augusto",
   "last_name": "Wall",
   "birthdate": "1997/01/01",
   "commentary": "2335",
@@ -1660546,7 +1660626,7 @@
  },
  "159625": {
   "display_name": "J. Bernasconi",
-  "first_name": "",
+  "first_name": "Juan Pedro",
   "last_name": "Bernasconi",
   "birthdate": "2018/01/01",
   "commentary": "110",
@@ -1660615,7 +1660695,7 @@
  },
  "159626": {
   "display_name": "L. Marguery",
-  "first_name": "",
+  "first_name": "Lucas",
   "last_name": "Marguery",
   "birthdate": "2018/01/01",
   "commentary": "",
@@ -1660684,7 +1660764,7 @@
  },
  "159627": {
   "display_name": "B. Farise",
-  "first_name": "",
+  "first_name": "Bautista",
   "last_name": "Farise",
   "birthdate": "2018/01/01",
   "commentary": "",
@@ -1660753,7 +1660833,7 @@
  },
  "159628": {
   "display_name": "J. Ulloa",
-  "first_name": "",
+  "first_name": "Jerónimo",
   "last_name": "Ulloa",
   "birthdate": "2018/01/01",
   "commentary": "",
@@ -1660822,7 +1660902,7 @@
  },
  "159629": {
   "display_name": "F. Ledesma",
-  "first_name": "",
+  "first_name": "Felipe",
   "last_name": "Ledesma",
   "birthdate": "2018/01/01",
   "commentary": "2094",
@@ -1660891,7 +1660971,7 @@
  },
  "159630": {
   "display_name": "A. Fraga",
-  "first_name": "",
+  "first_name": "Agustín",
   "last_name": "Fraga",
   "birthdate": "2018/01/01",
   "commentary": "",
@@ -1660960,7 +1661040,7 @@
  },
  "159631": {
   "display_name": "S. Pernas",
-  "first_name": "",
+  "first_name": "Santiago",
   "last_name": "Pernas",
   "birthdate": "2000/01/01",
   "commentary": "",
@@ -1661029,7 +1661109,7 @@
  },
  "159632": {
   "display_name": "T. Wade",
-  "first_name": "",
+  "first_name": "Tobías",
   "last_name": "Wade",
   "birthdate": "2000/01/01",
   "commentary": "1617",
@@ -1661098,7 +1661178,7 @@
  },
  "159633": {
   "display_name": "M. Camerlinckx",
-  "first_name": "",
+  "first_name": "Marcos",
   "last_name": "Camerlinckx",
   "birthdate": "2004/01/01",
   "commentary": "230",
@@ -1661236,7 +1661316,7 @@
  },
  "159635": {
   "display_name": "J. Penoucos",
-  "first_name": "",
+  "first_name": "Juan",
   "last_name": "Penoucos",
   "birthdate": "2004/01/01",
   "commentary": "1163",
@@ -1661305,7 +1661385,7 @@
  },
  "159636": {
   "display_name": "J. Sorondo",
-  "first_name": "",
+  "first_name": "Jerónimo",
   "last_name": "Sorondo",
   "birthdate": "2006/01/01",
   "commentary": "2266",
@@ -1661374,7 +1661454,7 @@
  },
  "159637": {
   "display_name": "R. Manzo",
-  "first_name": "",
+  "first_name": "Ramiro",
   "last_name": "Manzo",
   "birthdate": "2007/01/01",
   "commentary": "",
@@ -1661443,7 +1661523,7 @@
  },
  "159638": {
   "display_name": "N. Clausen",
-  "first_name": "",
+  "first_name": "Nahuel",
   "last_name": "Clausen",
   "birthdate": "2003/01/01",
   "commentary": "",
@@ -1661512,7 +1661592,7 @@
  },
  "159639": {
   "display_name": "S. Cordero",
-  "first_name": "",
+  "first_name": "Santiago",
   "last_name": "Cordero",
   "birthdate": "1997/01/01",
   "commentary": "",
@@ -1661581,7 +1661661,7 @@
  },
  "159640": {
   "display_name": "V. Vicente",
-  "first_name": "",
+  "first_name": "Valentín",
   "last_name": "Vicente",
   "birthdate": "2005/01/01",
   "commentary": "",
@@ -1661650,7 +1661730,7 @@
  },
  "159641": {
   "display_name": "N. Zunini",
-  "first_name": "",
+  "first_name": "Nahuel",
   "last_name": "Zunini",
   "birthdate": "2004/01/01",
   "commentary": "1446",
@@ -1661719,7 +1661799,7 @@
  },
  "159642": {
   "display_name": "F. Lusarreta",
-  "first_name": "",
+  "first_name": "Francisco",
   "last_name": "Lusarreta",
   "birthdate": "2001/01/01",
   "commentary": "",
@@ -1661788,7 +1661868,7 @@
  },
  "159643": {
   "display_name": "F. Santarelli",
-  "first_name": "",
+  "first_name": "Faustino",
   "last_name": "Santarelli",
   "birthdate": "2005/01/01",
   "commentary": "",
@@ -1661857,7 +1661937,7 @@
  },
  "159644": {
   "display_name": "A. Lavayen",
-  "first_name": "",
+  "first_name": "Alejo",
   "last_name": "Lavayen",
   "birthdate": "2006/01/01",
   "commentary": "2078",
@@ -1661926,7 +1662006,7 @@
  },
  "159645": {
   "display_name": "E. Renthel",
-  "first_name": "",
+  "first_name": "Estanislao",
   "last_name": "Renthel",
   "birthdate": "2000/01/01",
   "commentary": "1260",
@@ -1661995,7 +1662075,7 @@
  },
  "159646": {
   "display_name": "I. Diaz",
-  "first_name": "",
+  "first_name": "Ignacio",
   "last_name": "Diaz",
   "birthdate": "2006/01/01",
   "commentary": "397",
@@ -1662064,7 +1662144,7 @@
  },
  "159647": {
   "display_name": "D. Ghisolfi",
-  "first_name": "",
+  "first_name": "Danilo",
   "last_name": "Ghisolfi",
   "birthdate": "1994/01/01",
   "commentary": "",
@@ -1662133,7 +1662213,7 @@
  },
  "159648": {
   "display_name": "D. Correa",
-  "first_name": "",
+  "first_name": "Diego",
   "last_name": "Correa",
   "birthdate": "1999/01/01",
   "commentary": "",
@@ -1662202,7 +1662282,7 @@
  },
  "159649": {
   "display_name": "M. Cuneo",
-  "first_name": "",
+  "first_name": "Manuel",
   "last_name": "Cuneo",
   "birthdate": "2004/01/01",
   "commentary": "325",
@@ -1662270,9 +1662350,9 @@
   }
  },
  "159650": {
-  "display_name": "L. Dipieri",
-  "first_name": "",
-  "last_name": "Dipieri",
+  "display_name": "L. Dipierri",
+  "first_name": "Lisandro",
+  "last_name": "Dipierri",
   "birthdate": "1999/01/01",
   "commentary": "1934",
   "stats": {
@@ -1662340,7 +1662420,7 @@
  },
  "159651": {
   "display_name": "L. Colidio",
-  "first_name": "",
+  "first_name": "Lorenzo",
   "last_name": "Colidio",
   "birthdate": "2002/01/01",
   "commentary": "280",
@@ -1662409,7 +1662489,7 @@
  },
  "159652": {
   "display_name": "L. Bur",
-  "first_name": "",
+  "first_name": "Lucas",
   "last_name": "Bur",
   "birthdate": "1999/01/01",
   "commentary": "200",
@@ -1662478,7 +1662558,7 @@
  },
  "159653": {
   "display_name": "I. Gandini",
-  "first_name": "",
+  "first_name": "Ignacio",
   "last_name": "Gandini",
   "birthdate": "2002/01/01",
   "commentary": "1719",
@@ -1662547,7 +1662627,7 @@
  },
  "159654": {
   "display_name": "F. Villagran",
-  "first_name": "",
+  "first_name": "Felipe",
   "last_name": "Villagran",
   "birthdate": "2002/01/01",
   "commentary": "1603",
@@ -1662616,7 +1662696,7 @@
  },
  "159655": {
   "display_name": "M. Bernstein",
-  "first_name": "",
+  "first_name": "Manuel",
   "last_name": "Bernstein",
   "birthdate": "2003/01/01",
   "commentary": "1838",
@@ -1662685,7 +1662765,7 @@
  },
  "159656": {
   "display_name": "A. Sugasti",
-  "first_name": "",
+  "first_name": "Alejo",
   "last_name": "Sugasti",
   "birthdate": "2006/01/01",
   "commentary": "1450",
@@ -1662754,7 +1662834,7 @@
  },
  "159657": {
   "display_name": "I. Dogliani",
-  "first_name": "",
+  "first_name": "Ignacio",
   "last_name": "Dogliani",
   "birthdate": "2005/01/01",
   "commentary": "405",
@@ -1662823,7 +1662903,7 @@
  },
  "159658": {
   "display_name": "G. Dicapua",
-  "first_name": "",
+  "first_name": "Gino",
   "last_name": "Dicapua",
   "birthdate": "2004/01/01",
   "commentary": "393",
@@ -1662892,7 +1662972,7 @@
  },
  "159659": {
   "display_name": "G. Chesini",
-  "first_name": "",
+  "first_name": "Guido",
   "last_name": "Chesini",
   "birthdate": "1996/01/01",
   "commentary": "1900",
@@ -1662961,7 +1663041,7 @@
  },
  "159660": {
   "display_name": "B. Heit",
-  "first_name": "",
+  "first_name": "Bruno",
   "last_name": "Heit",
   "birthdate": "2006/01/01",
   "commentary": "2017",
@@ -1663030,7 +1663110,7 @@
  },
  "159661": {
   "display_name": "L. Cipriani",
-  "first_name": "",
+  "first_name": "Lautaro",
   "last_name": "Cipriani",
   "birthdate": "2004/01/01",
   "commentary": "1901",
@@ -1663098,9 +1663178,9 @@
   }
  },
  "159662": {
-  "display_name": "F. Rosseto",
-  "first_name": "",
-  "last_name": "Rosseto",
+  "display_name": "F. Rosetto",
+  "first_name": "Franco",
+  "last_name": "Rosetto",
   "birthdate": "1996/01/01",
   "commentary": "",
   "stats": {
@@ -1663168,7 +1663248,7 @@
  },
  "159663": {
   "display_name": "I. Orsetti",
-  "first_name": "",
+  "first_name": "Ignacio",
   "last_name": "Orsetti",
   "birthdate": "1994/01/01",
   "commentary": "1105",
@@ -1663237,7 +1663317,7 @@
  },
  "159664": {
   "display_name": "I. Gallo",
-  "first_name": "",
+  "first_name": "Ignacio",
   "last_name": "Gallo",
   "birthdate": "2000/01/01",
   "commentary": "540",
@@ -1663306,7 +1663386,7 @@
  },
  "159665": {
   "display_name": "J. Vara",
-  "first_name": "",
+  "first_name": "Jerónimo",
   "last_name": "Vara",
   "birthdate": "2004/01/01",
   "commentary": "1559",
@@ -1663375,7 +1663455,7 @@
  },
  "159666": {
   "display_name": "J. Lovell",
-  "first_name": "",
+  "first_name": "Juan",
   "last_name": "Lovell",
   "birthdate": "1992/01/01",
   "commentary": "878",
@@ -1663444,7 +1663524,7 @@
  },
  "159667": {
   "display_name": "J. Baronio",
-  "first_name": "",
+  "first_name": "Juan",
   "last_name": "Baronio",
   "birthdate": "2005/01/01",
   "commentary": "",
@@ -1663513,7 +1663593,7 @@
  },
  "159668": {
   "display_name": "B. Ordiz",
-  "first_name": "",
+  "first_name": "Benjamín",
   "last_name": "Ordiz",
   "birthdate": "1998/01/01",
   "commentary": "",
@@ -1663582,7 +1663662,7 @@
  },
  "159669": {
   "display_name": "T. Sigura",
-  "first_name": "",
+  "first_name": "Tomás",
   "last_name": "Sigura",
   "birthdate": "1997/01/01",
   "commentary": "1372",
@@ -1663651,7 +1663731,7 @@
  },
  "159670": {
   "display_name": "F. Cescut",
-  "first_name": "",
+  "first_name": "Federico",
   "last_name": "Cescut",
   "birthdate": "1995/01/01",
   "commentary": "1896",
@@ -1663720,7 +1663800,7 @@
  },
  "159671": {
   "display_name": "E. Avaca",
-  "first_name": "",
+  "first_name": "Enzo",
   "last_name": "Avaca",
   "birthdate": "2002/01/01",
   "commentary": "1560",
@@ -1663788,9 +1663868,9 @@
   }
  },
  "159672": {
-  "display_name": "J. Rogriguez",
-  "first_name": "",
-  "last_name": "Rogriguez",
+  "display_name": "J. Rodriguez",
+  "first_name": "Juan Ignacio",
+  "last_name": "Rodriguez",
   "birthdate": "2005/01/01",
   "commentary": "2249",
   "stats": {
@@ -1663858,7 +1663938,7 @@
  },
  "159673": {
   "display_name": "B. Grenon",
-  "first_name": "",
+  "first_name": "Bautista",
   "last_name": "Grenon",
   "birthdate": "1998/01/01",
   "commentary": "2003",
@@ -1663927,7 +1664007,7 @@
  },
  "159674": {
   "display_name": "I. Zabella",
-  "first_name": "",
+  "first_name": "Ignacio",
   "last_name": "Zabella",
   "birthdate": "2002/01/01",
   "commentary": "1679",
@@ -1663996,7 +1664076,7 @@
  },
  "159675": {
   "display_name": "B. Estelles",
-  "first_name": "",
+  "first_name": "Bautista",
   "last_name": "Estelles",
   "birthdate": "2000/01/01",
   "commentary": "446",
@@ -1664065,7 +1664145,7 @@
  },
  "159676": {
   "display_name": "F. Lluch",
-  "first_name": "",
+  "first_name": "Francisco",
   "last_name": "Lluch",
   "birthdate": "1996/01/01",
   "commentary": "864",
@@ -1664134,7 +1664214,7 @@
  },
  "159677": {
   "display_name": "E. Boffelli",
-  "first_name": "",
+  "first_name": "Emiliano",
   "last_name": "Boffelli",
   "birthdate": "1998/01/01",
   "commentary": "1852",

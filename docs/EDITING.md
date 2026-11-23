@@ -170,6 +170,15 @@ To add files or replace the pack's, use only `user_data/mod_data/`. It has the l
 
 The pack is never modified, so a new release never erases them. Restart the program after changing files.
 
+## Commentary names (`user_data/mod_data/commentary/`)
+
+The commentator can say names the game never recorded. Give him a recording of just the name, as a `.wav` file (any quality; it is cut, levelled and converted to the game's format when a match starts):
+
+- **For one player:** Player editor, `Commentary` > `Load from disk…`. The recording is saved as `<id>_<last name>.wav` and the player gets it.
+- **For every player with that surname:** put `Dupont.wav` in `user_data/mod_data/commentary/`. Every Dupont who has no clip of his own name uses it.
+
+Players whose clip is only a sound-alike also switch to a clip of their exact surname when one exists. To make names in the stock commentator's voice, see `tools/voicegen`.
+
 ## Custom stadiums
 
 A custom stadium takes the place of a stock one in the game (its slot). Put a folder in `user_data/mod_data/stadiums/` with a json named after the folder (lower case, spaces as `_`) and the stadium's scene packs (`.big`, one per environment):
@@ -186,6 +195,7 @@ stadiums/Eden Park/eden_park.night.big
 
 - `game_id`: the stock stadium it overwrites (the ids of `stadiums/stadiums.json`, Auckland = 49).
 - `scenes`: environment (`day`, `night`, `overcast`, `cold`) -> scene pack. The stadium is offered in these environments only.
+- `roof` (optional): the environment whose scene is under a closed roof (La Defense Arena and Stade Pierre-Mauroy: `"night"`). It is named `closed` in the menus, and a match in it has no rain, snow or wind.
 - `files` (optional): any other game file of that stadium, game path -> file, e.g. `{"frontend/textures/stadiums/auckland.d.fsh": "preview.fsh"}`.
 - `dressing` (optional): the stadium's own pads, posts and ads (see Stadium dressing below).
 - `screen` (optional): the texture of the scene pack's `Textures.fsh` that is a giant screen (La Defense Arena: `"scre"`). Each match paints it with both crests, the team names and the competition logo (or VS). It is set when the match loads: no live score.
@@ -197,8 +207,8 @@ The files are put over the slot's only for a match at that stadium, and the name
 
 What surrounds the pitch is three independent sets, picked in quick match (advanced settings, `STADIUM`), where the open list previews them (pads and posts on a 3D goal, ads as a strip):
 
-- **pads**: post pads and corner flags, one picture of 1024 × 512 (any 2:1 size works): the pad wrap at x 0–256 (its top is the top of the pad), the corner flag pole at x 256–512, the corner flag at x 512–1024 on the top half, the pad top at x 512–768 on the bottom half; the bottom right corner is unused
-- **posts**: one picture of 768 × 1024 (any 3:4 size works) showing the goal from the front, from the top of the posts down to the top of the pads: posts at x 48–112 and 656–720, crossbar at y 906–970 between them, transparent elsewhere. Paint any design on them. The game has one texture for both posts and one for the crossbar, so both posts wear the left one and the crossbar's right half mirrors its left; the middle of the bar (x 356–412) has its own part. The list names plain posts after their colours ("White & red") and painted ones after their file (`tools/make_posts.py` makes the library's: spirals, hoops, tricolour)
+- **pads**: post pads and corner flags, one picture of 1088 × 768 (any 17:12 size works), packed with no empty space, each part in the proportions of the game's texture: the pad wrap at x 0–192 (one face of the post pad, its top at the top), the corner flag pole at x 192–576, the corner flag at x 576–1088 on y 0–256, the pad top below it (y 256–768)
+- **posts**: one picture of 128 × 1024 (any 1:8 size works), two strips: the post at x 0–64, from its top down to the top of the pad (it wraps round the post: a stripe climbing across it makes a spiral), and the crossbar turned upright at x 64–128, from the post at the top down to the middle (y 0–837), then its middle part (y 837–1024); the bar's top runs down the right edge. The game has one texture for both posts and one for the crossbar, so both posts wear the strip and the bar's other half mirrors it. The list names plain posts after their colours ("White & red") and painted ones after their file (`tools/make_posts.py` makes the library's: spirals, hoops, tricolour)
 - **ads**: the ad boards, a `.fsh` (World Cup or Standard layout), a picture or a folder of pictures (each picture one ad, about 3:1 works best), or a folder with a `.fsh` and pictures named after its boards (`ads0.png`…) that replace those boards
 
 Open any set in `data/stadium_graphics/` as a starting point. Pictures are resized to powers of two (512 max). The older set folders (`pad_wrap.png`, `pad_top.png`, `flag.png`, `flag_pole.png` / `post.png`, `crossbar.png`) still work, a missing picture there keeping the stock one.

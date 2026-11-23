@@ -152,7 +152,8 @@ class EditorScreen(Screen):
                     or group in (r.get("groups") or ())]
         sort = self.sort_choice.value() or "name"
         if sort == "name":
-            rows.sort(key=lambda r: r["text"].lower())
+            # a row may give its own name order (players: surname first)
+            rows.sort(key=lambda r: (r.get("name_key") or r["text"]).lower())
         elif sort == "issues":
             rows.sort(key=lambda r: (-r.get("errors", 0), -r.get("issues", 0), r["text"].lower()))
         else:
@@ -487,6 +488,35 @@ class EditorScreen(Screen):
 
     def _on_tab_changed(self, index):
         self._update_hints()
+        if self.FIT_PANES:
+            self.fit_panes()
+
+    # ── pane widths follow the window ────────────────────────────────────
+    FIT_PANES = False          # a screen sets this to let fit_panes size its list / preview
+    PREVIEW_TABS = ()          # tabs that keep the preview even in a narrow window
+
+    def fit_panes(self):
+        """The list and the preview give their room to the tab being edited
+        as the window narrows; below ~1250 px the preview shows only on the
+        tabs that need it (PREVIEW_TABS)."""
+        w = self.width()
+        sh = self.shell
+        sh.list_pane.setFixedWidth(280 if w >= 1500 else 240 if w >= 1250 else 210)
+        narrow = w < 1250
+        self.new_btn.setText("+ NEW" if narrow else f"+ NEW {self.RECORD_NOUN.upper()}")
+        self.dup_btn.setText("COPY" if narrow else "DUPLICATE")
+        if sh.preview_pane is None:
+            return
+        wide = w >= 1250
+        show = wide or sh.tabs.index() in self.PREVIEW_TABS
+        sh.preview_pane.setFixedWidth(340 if w >= 1500 else 280 if wide else 240)
+        sh.preview_pane.setVisible(show)
+        sh.preview_sep.setVisible(show)
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        if self.FIT_PANES:
+            self.fit_panes()
 
     def pane(self):
         w = QApplication.focusWidget()

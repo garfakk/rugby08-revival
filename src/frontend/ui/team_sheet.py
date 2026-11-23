@@ -591,6 +591,9 @@ class _PickerToolbar(QWidget):
         self.segments.set_index(i, notify)
 
 
+NEW_PLAYER = "__new_player__"     # picked: the screen creates a player for the shirt
+
+
 class PlayerPickerPopup(QWidget):
     """Anchored dropdown opened by activating a shirt on the sheet —
     selection happens here, not in the side panel.
@@ -632,6 +635,7 @@ class PlayerPickerPopup(QWidget):
         self._taken_by = {}
         self._tags = {}
         self._subtitles = {}
+        self._offer_new = False     # a last "+ New player…" row (picked as NEW_PLAYER)
         self._stars = None
         self._mode = FITS
         self._seg_modes = [FITS, ALL]   # segment index -> view
@@ -643,7 +647,8 @@ class PlayerPickerPopup(QWidget):
         self._popup.hide()
 
     def open_for(self, title, entries, current_pid, taken_by, anchor, screen,
-                 tags=None, subtitles=None, search=None, mode=FITS, highlight=None, stars=None):
+                 tags=None, subtitles=None, search=None, mode=FITS, highlight=None, stars=None,
+                 offer_new=False):
         """`entries`: [(pid, name, fits)] for the WHOLE squad, already in the
         order they should appear. `taken_by`: {pid: shirt_number} for every
         OTHER filled slot. `tags`: optional {pid: (text, color)} overrides.
@@ -660,6 +665,7 @@ class PlayerPickerPopup(QWidget):
         self._tags = tags or {}
         self._subtitles = subtitles or {}
         self._stars = stars          # optional pid -> bool: star players get a ★
+        self._offer_new = offer_new
         self._mode = mode if (mode != SEARCH or self._search is not None) else FITS
         fit_count = sum(1 for pid, _, fits in self._entries
                         if fits or pid == current_pid)
@@ -682,7 +688,7 @@ class PlayerPickerPopup(QWidget):
             rows = self._visible_entries()
             index = next((i for i, (pid, _, _) in enumerate(rows) if pid == highlight), None)
             if index is not None:
-                self._popup.set_highlight(index)
+                self._popup.set_highlight(index + (1 if self._offer_new else 0))
         self._popup.open_at(anchor, screen)
         # ensureWidgetVisible needs a laid-out scroll area, and open_at shows
         # without spinning the event loop, so defer the first scroll.
@@ -742,10 +748,12 @@ class PlayerPickerPopup(QWidget):
 
         rows = self._visible_entries()
         if not rows:
+            self._add_new_row()
             self._popup.add_row("NO PLAYER MATCHES" if self._mode == SEARCH
                                 else "NO PLAYER FITS THIS SHIRT", None, disabled=True)
             return
 
+        self._add_new_row()          # first: never buried under the whole database
         for pid, name, fits in rows:
             if pid in self._tags:
                 tag, tag_col = self._tags[pid]
@@ -762,7 +770,16 @@ class PlayerPickerPopup(QWidget):
                                 subdued=not fits, subtitle=self._subtitles.get(pid, ""))
 
         index = next((i for i, (pid, _, _) in enumerate(rows) if pid == keep_pid), 0)
-        self._popup.set_highlight(index)
+        self._popup.set_highlight(index + (1 if self._offer_new else 0))
+
+    def _add_new_row(self):
+        if self._offer_new:
+            name = self._query.strip() if self._mode == SEARCH else ""
+            self._popup.add_row(f"+ New player “{name}”…" if name else "+ New player…", NEW_PLAYER,
+                                subtitle="create one for this shirt", tag_color=ACCENT)
+
+    def query(self):
+        return self._query.strip() if self._mode == SEARCH else ""
 
     # ── passthroughs the screen drives from the action layer ─────────────
     def move_highlight(self, delta):

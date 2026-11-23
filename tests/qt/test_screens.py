@@ -582,7 +582,7 @@ def test_new_player_dialog_has_no_file_choice(window, qapp):
     qapp.processEvents()
     dialog = editor._dialog
     assert isinstance(dialog, FormDialog)
-    assert "target" not in dialog.fields and set(dialog.fields) == {"first", "last", "year", "position"}
+    assert "target" not in dialog.fields and set(dialog.fields) == {"first", "last", "year", "position", "level", "team"}
     year = dialog.fields["year"]
     assert year.formatter(year.value()) == season_label(year.value()) and "-" in year.formatter(year.value())
     dialog.close()
@@ -645,6 +645,50 @@ def test_player_editor_edit_save(window, qapp):
     window.data.refresh_record("players", pid)
     assert window.data.players[pid]["display_name"] != "Z.Tested"
     screen.reload()
+    window.show_main()
+
+
+def test_player_editor_loads_a_commentary_recording(window, qapp, tmp_path, monkeypatch):
+    """Commentary > Load from disk… keeps the recording as <id>_<last name>.wav
+    in the mod data's commentary folder and gives the player that clip."""
+    import shutil
+    import wave
+    from PyQt5.QtWidgets import QFileDialog
+    from app import disk_import
+    from shared import commentary
+    from ui.editor_kit import LOAD_FILES
+    src = tmp_path / "take.wav"
+    with wave.open(str(src), "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(22050)
+        w.writeframes(b"".join(int(8000 * ((i // 40) % 2 * 2 - 1)).to_bytes(2, "little", signed=True)
+                               for i in range(11025)))
+    folder = tmp_path / "commentary"
+    monkeypatch.setattr(commentary, "custom_folder", lambda: str(folder))
+    monkeypatch.setattr(QFileDialog, "getOpenFileName", lambda *a, **k: (str(src), ""))
+
+    def copy(a, b):
+        os.makedirs(os.path.dirname(b), exist_ok=True)
+        shutil.copy2(a, b)
+    monkeypatch.setattr(disk_import, "copy_into_data", copy)
+    pid = str(window.data.teams["10002"]["2024"]["players"][0])
+    window.open_player(pid, "2024")
+    _wait(qapp, lambda: window.screen_player_editor.record_id == pid, 10)
+    editor = window.screen_player_editor
+    try:
+        assert editor.commentary.options[0] == LOAD_FILES
+        editor.commentary._emit(LOAD_FILES)
+        _wait(qapp, lambda: os.listdir(folder) if folder.exists() else False, 10)
+        (fn,) = os.listdir(folder)
+        cid = fn.split("_", 1)[0].lstrip("0")
+        assert editor.session.working["commentary"] == cid
+        assert int(cid) >= commentary.CUSTOM_BASE and cid in editor.commentary.options
+        last = editor.session.working.get("last_name") or "take"
+        assert editor._commentary_label(cid).startswith(commentary.custom_clips()[int(cid)][0])
+        assert last.split()[0][:3].lower() in fn.lower() or not last
+    finally:
+        editor.session.revert()
     window.show_main()
 
 
@@ -1116,3 +1160,76 @@ def test_match_setup_crowd_rows(window, qapp, monkeypatch):
     crowd = build_match_data(window.data, setup.cfg)["crowd"]
     assert crowd["size"] == "half" and crowd["colours"] is True and crowd["mood"] == "normal"
     setup.cfg.crowd_size, setup.cfg.crowd_colours = "full", False
+
+
+def test_new_player_joins_a_team_with_ratings_for_his_position(window, qapp):
+    from app.ratings import position_overall
+    from app import player_ops as P
+    window.show_player_editor()
+    editor = window.screen_player_editor
+    editor._create_player("Ann", "Tester", "2024", "winger", "world", "10002")
+    qapp.processEvents()
+    pid = editor.record_id
+    rec = window.data.players[pid]
+    assert rec["display_name"] == "A. Tester" and rec["last_name"] == "Tester"
+    block = rec["stats"]["2024"]
+    assert abs(position_overall(block) - P.level_overall("world")) <= 1
+    assert pid in [str(p) for p in window.data.teams["10002"]["2024"]["players"]]
+
+
+def test_add_to_a_team_from_the_teams_tab(window, qapp):
+    from screens.player_tabs import TAB_TEAMS
+    editor = window.screen_player_editor
+    editor._create_player("Bo", "Lonely", "2024", "hooker", "club", "")
+    qapp.processEvents()
+    pid = editor.record_id
+    assert not window.data.memberships(pid)
+    tab = editor.tabs[TAB_TEAMS]
+    tab._add_to("10002")
+    roster = [str(p) for p in window.data.teams["10002"]["2024"]["players"]]
+    assert pid in roster
+    assert any(m[0] == "10002" for m in window.data.memberships(pid))
+
+
+def test_squad_picker_creates_a_player_for_the_shirt(window, qapp):
+    from screens.team_tabs import TAB_SQUAD
+    window.open_team("10002", "2024")
+    _wait(qapp, lambda: window.screen_team_editor.record_id == "10002", 10)
+    team_ed = window.screen_team_editor
+    squad = team_ed.tabs[TAB_SQUAD]
+    n = len(window.data.players)
+    squad._new_player(2, "Joe Bloggs")
+    dialog = team_ed._dialog
+    assert dialog.fields["first"].value() == "Joe" and dialog.fields["last"].value() == "Bloggs"
+    assert dialog.fields["position"].value() == "hooker"
+    dialog._on_choice("ok")
+    qapp.processEvents()
+    assert len(window.data.players) == n + 1
+    new = [p for p in window.data.players if window.data.players[p].get("last_name") == "Bloggs"][0]
+    assert str(team_ed.season_block()["players"][1]) == new
+    team_ed.session.revert() if hasattr(team_ed.session, "revert") else None
+
+
+def test_new_team_starts_from_another_teams_look(window, qapp):
+    team_ed = window.screen_team_editor
+    team_ed._create_team("Test Fifteen", "club", "", "2024", False, True, start="10002")
+    qapp.processEvents()
+    tid = team_ed.record_id
+    info = window.data.team_seasons(tid)["2024"]
+    src = window.data.team_seasons("10002")["2024"]
+    assert info["name"] == "Test Fifteen" and info["players"] == []
+    assert set(info["kits"]) == set(src["kits"])
+    assert all(v == "" for v in info["roles"].values())
+
+
+def test_narrow_editor_keeps_every_tab_on_the_bar(window, qapp):
+    window.resize(1000, 640)
+    window.show_player_editor()
+    for _ in range(5):
+        qapp.processEvents()
+    editor = window.screen_player_editor
+    tabs = editor.shell.tabs
+    assert tabs._rects()[-1].right() <= tabs.width()
+    assert editor.shell.list_pane.width() <= 210
+    window.resize(1600, 900)
+    qapp.processEvents()

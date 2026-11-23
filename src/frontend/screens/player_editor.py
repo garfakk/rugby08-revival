@@ -12,7 +12,7 @@ import os
 
 from PyQt5.QtCore import QTimer, Qt
 from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QWidget
+from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QGridLayout, QWidget
 
 from app import appearance as A
 from app import player_ops as P
@@ -34,7 +34,7 @@ from ui import motion
 from ui.broadcast import Card, display_label, eyebrow_label, tracked_font
 from ui.editor_kit import (
     Avatar, Badge, FormDialog, ConfirmDialog, TextField, NumberField, ChoiceField,
-    SegmentField, RatingField, Note, compact_button, open_season_menu, ScopeCheck,
+    SegmentField, RatingField, Note, compact_button, SeasonBar, ScopeCheck, LOAD_FILES,
 )
 from ui.form import SearchList
 from ui.skin_preview import compose as skin_compose
@@ -49,6 +49,14 @@ from ui.sound_preview import SoundPreview
 from shared.log import get_logger
 
 log = get_logger(__name__)
+
+
+def clip_file_name(name):
+    """A name as it goes in a clip's file name: plain letters, "_" for spaces."""
+    import re
+    import unicodedata
+    plain = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode()
+    return re.sub(r"[^A-Za-z0-9]+", "_", plain).strip("_") or "Name"
 
 PROFILE_KEYS = {"record", "display_name", "first_name", "last_name", "birthdate", "commentary",
                 "position1", "position2", "position3", "height", "weight", "foot", "nationality"}
@@ -71,6 +79,16 @@ def _display_name_default(record):
     return P.truncate_bytes(last or first) or "Unknown"
 
 
+def _surname_key(record):
+    """Players are listed by surname ("Stuart, Will"), not by the initial
+    their in-game name starts with."""
+    last = (record.get("last_name") or "").strip()
+    first = (record.get("first_name") or "").strip()
+    if not last:
+        first, last = _first_last_default(record)
+    return f"{last} {first}".strip()
+
+
 def _first_last_default(record):
     """The mirror image of _display_name_default: when BOTH first and last
     name are blank, guess them from the in-game name instead — everything
@@ -90,8 +108,9 @@ class PlayerEditorScreen(EditorScreen):
     TAB_TITLES = ["Profile", "Ratings", "Appearance", "Skills", "Teams"]
     RECORD_NOUN = "player"
     LIST_PLACEHOLDER = "name, id, position, team"
-    MID_PANE = True
     COMPACT_HEADER = True
+    FIT_PANES = True
+    PREVIEW_TABS = (TAB_APPEARANCE,)
     IDENTITY_PANE = True
     PREVIEW_PANE = True
 
@@ -152,8 +171,15 @@ class PlayerEditorScreen(EditorScreen):
 
     # ── commentary name ──────────────────────────────────────────────────
     def _commentary_label(self, value):
+        if value == LOAD_FILES:
+            return "Load from disk…"
         name = self._commentary_names.get(int(value)) if str(value).isdigit() else None
         return f"{name} ({value})" if name else f"#{value}"
+
+    def _commentary_options(self):
+        names = self._commentary_names
+        return [LOAD_FILES] + sorted((str(i) for i in names),
+                                     key=lambda v: (names[int(v)].lower(), int(v)))
 
     def _commentary_guess(self):
         """Where the list opens for a player with no clip yet: the first
@@ -162,13 +188,60 @@ class PlayerEditorScreen(EditorScreen):
         if not last:
             return None
         for v in self.commentary.options:
-            if self._commentary_names[int(v)].lower().startswith(last):
+            if v != LOAD_FILES and self._commentary_names[int(v)].lower().startswith(last):
                 return v
         return None
 
     def _play_commentary(self, value):
         if value and str(value).isdigit():
             self._sound.play(f"commentary_{value}", lambda: commentary.wav_bytes(value))
+
+    def _on_commentary(self, value):
+        if value == LOAD_FILES:
+            self._show_commentary()             # the stored one until a file is loaded
+            QTimer.singleShot(0, self._load_commentary)
+            return
+        self._edit_identity("commentary", "commentary", value)
+
+    def _show_commentary(self, record=None):
+        if record is None:
+            record = self.session.working if self.session else {}
+        cid = str(record.get("commentary", "") or "").strip()
+        self.commentary.set_value("" if cid in ("", "0") else cid)
+
+    def _load_commentary(self):
+        """A recording from disk becomes this player's commentary name: kept
+        in the user's mod data as <id>_<last name>.wav, added to the game at
+        the next match (backend/commentary_deploy.py)."""
+        from PyQt5.QtWidgets import QFileDialog
+        from app import disk_import
+        from shared import commentary_audio
+        from ui.editor_kit import load_from_disk
+        start = getattr(load_from_disk, "last_dir", "") or os.path.expanduser("~")
+        src, _ = QFileDialog.getOpenFileName(self, "Commentary recording", start,
+                                             "Recordings (*.wav)")
+        if not src or self.session is None:
+            return
+        load_from_disk.last_dir = os.path.dirname(os.path.normpath(src))
+        try:
+            commentary_audio.samples(src)
+        except ValueError as e:
+            ConfirmDialog(self, "Recording not usable", str(e).capitalize() + ".",
+                          [("OK", "primary", "ok")], lambda _r: None, cancel_role="ok")
+            return
+        record = self.session.working
+        said = record.get("last_name") or os.path.splitext(os.path.basename(src))[0]
+        cid = commentary.next_id()
+        dst = os.path.join(commentary.custom_folder(), f"{cid:04d}_{clip_file_name(said)}.wav")
+        try:
+            disk_import.copy_into_data(src, dst)
+        except (OSError, ValueError) as e:
+            ConfirmDialog(self, "Could not load the recording", str(e),
+                          [("OK", "primary", "ok")], lambda _r: None, cancel_role="ok")
+            return
+        self._commentary_names = commentary.names()
+        self.commentary.set_options(self._commentary_options())
+        self._edit_identity("commentary", "commentary", str(cid))
 
     def _edit_shirt_name(self, value):
         value = (value or "").strip()
@@ -255,22 +328,24 @@ class PlayerEditorScreen(EditorScreen):
         big_row.addWidget(self.last_name, stretch=1)
         outer.addLayout(big_row)
 
-        small_row = QHBoxLayout()
-        small_row.setSpacing(16)
-        small_row.addSpacing(56 + 16)   # align under the name fields, past the avatar
+        # birthdate / in-game name / commentary: one line, two in a narrow
+        # window (_place_identity)
+        small_row = self._id_grid = QGridLayout()
+        small_row.setHorizontalSpacing(16)
+        small_row.setVerticalSpacing(8)
+        small_row.setContentsMargins(56 + 16, 0, 0, 0)   # under the name fields, past the avatar
+        self._id_two_lines = None
 
         self.birthdate = self.register_field(
             "birthdate", TextField("Birthdate", placeholder="YYYY/MM/DD",
                                    validator=normalise_birthdate), TAB_PROFILE)
         self.birthdate.label_width = 88
         self.birthdate.edited.connect(lambda v: self._edit_identity("birthdate", "birthdate", v))
-        small_row.addWidget(self.birthdate, stretch=1)
 
         self.display_name = self.register_field(
             "display_name", TextField("In-game name", max_bytes=14), TAB_PROFILE)
         self.display_name.label_width = 98
         self.display_name.edited.connect(lambda v: self._edit_identity("in-game name", "display_name", v))
-        small_row.addWidget(self.display_name, stretch=1)
 
         # What a team with shirt names prints on this player's back instead
         # of the generated text (shared/shirt_names.py).
@@ -278,7 +353,6 @@ class PlayerEditorScreen(EditorScreen):
             "shirt_name", TextField("Shirt name"), TAB_PROFILE)
         self.shirt_name.label_width = 88
         self.shirt_name.edited.connect(self._edit_shirt_name)
-        small_row.addWidget(self.shirt_name, stretch=1)
         self.shirt_name.setVisible(False)      # hidden for now; saved overrides still apply
 
         # The name the commentators say, picked from the game's recorded
@@ -287,10 +361,9 @@ class PlayerEditorScreen(EditorScreen):
         self._commentary_names = commentary.names()
         self.commentary = self.register_field(
             "commentary", ChoiceField(
-                "Commentary",
-                sorted((str(i) for i in self._commentary_names),
-                       key=lambda v: (self._commentary_names[int(v)].lower(), int(v))),
+                "Commentary", self._commentary_options(),
                 display=self._commentary_label, blank_label="none", clearable=True), TAB_PROFILE)
+        self.commentary.actions = (LOAD_FILES,)
         self.commentary.label_width = 98
         self.commentary.popup_title = "commentary name"
         self.commentary.off_list_badge = bool(self._commentary_names)
@@ -298,51 +371,52 @@ class PlayerEditorScreen(EditorScreen):
         self.commentary.searchable = True
         self.commentary.on_play = self._play_commentary
         self.commentary.on_popup_closed = lambda: self._sound.stop()
-        self.commentary.edited.connect(lambda v: self._edit_identity("commentary", "commentary", v))
-        small_row.addWidget(self.commentary, stretch=1)
+        self.commentary.edited.connect(self._on_commentary)
         outer.addLayout(small_row)
 
         self._sound = SoundPreview(self)
 
+        # labels sized to their text, never cut ("First na…")
+        for f in (self.first_name, self.last_name, self.birthdate, self.display_name,
+                  self.shirt_name, self.commentary):
+            f.label_width = f.label_text_width() + 18
+        self._place_identity(False)
         self.shell.identity_layout.addWidget(id_card)
+
+    def _place_identity(self, two_lines):
+        if two_lines == self._id_two_lines:
+            return
+        self._id_two_lines = two_lines
+        grid = self._id_grid
+        for w in (self.birthdate, self.display_name, self.commentary):
+            grid.removeWidget(w)
+        if two_lines:
+            grid.addWidget(self.display_name, 0, 0)
+            grid.addWidget(self.birthdate, 0, 1)
+            grid.addWidget(self.commentary, 1, 0, 1, 2)
+        else:
+            grid.addWidget(self.birthdate, 0, 0)
+            grid.addWidget(self.display_name, 0, 1)
+            grid.addWidget(self.commentary, 0, 2)
+
+    def fit_panes(self):
+        super().fit_panes()
+        self._place_identity(self.width() < 1400)
 
     # ── seasons pane (narrow column left of the tabs) ──────────────────────
     def _build_season_pane(self):
-        mid = self.shell.mid_layout
-        seasons_card = Card()
-        sv = QVBoxLayout(seasons_card)
-        sv.setContentsMargins(10, 12, 10, 10)
-        sv.setSpacing(6)
-        head = QHBoxLayout()
-        head.addWidget(eyebrow_label("seasons", color=FG_TERTIARY, size=11))
-        head.addStretch(1)
-        self.season_add_btn = compact_button("+ ADD")
-        self.season_add_btn.clicked.connect(lambda: self.season_action("add"))
-        head.addWidget(self.season_add_btn)
-        self.season_menu_btn = compact_button("⋯")
-        self.season_menu_btn.setFixedWidth(30)
-        self.season_menu_btn.clicked.connect(
-            lambda: open_season_menu(self.season_menu_btn, self.window(), self.season_action))
-        head.addWidget(self.season_menu_btn)
-        sv.addLayout(head)
-        self.season_list = SearchList("", show_filter=False)
-        self.season_list.activated.connect(self.set_season)
-        sv.addWidget(self.season_list, stretch=1)
-        mid.addWidget(seasons_card, stretch=1)
+        # the season being edited: one button above the tabs, opening the
+        # record's seasons and the season actions
+        self.season_bar = SeasonBar()
+        self.season_bar.picked.connect(self.set_season)
+        self.season_bar.action.connect(self.season_action)
+        self.focus.register(self.season_bar.button)
 
-        for w in (self.season_add_btn, self.season_menu_btn, self.season_list):
-            self.focus.register(w)
-
-        # A visible thread from "which season is picked" to "whose data this
-        # is": the pill's colour is the same accent the active row in the
-        # seasons list uses, and it sits right where that season's tab
-        # content begins.
         self.season_row = QWidget()
         ctx = QHBoxLayout(self.season_row)
         ctx.setContentsMargins(0, 0, 0, 10)
         ctx.setSpacing(8)
-        self.season_pill = Badge("SEASON —", ACCENT, filled=True)
-        ctx.addWidget(self.season_pill)
+        ctx.addWidget(self.season_bar)
         ctx.addStretch(1)
         self.shell.right_layout.insertWidget(0, self.season_row)
 
@@ -479,6 +553,7 @@ class PlayerEditorScreen(EditorScreen):
                 "issues": f["issues"],
                 "group": teams[0] if teams else "", "groups": teams,
                 "sort": {"ovr": ovr},
+                "name_key": _surname_key(record),
             })
         return rows
 
@@ -565,12 +640,9 @@ class PlayerEditorScreen(EditorScreen):
         self.display_name.set_value(record.get("display_name", ""))
         self.display_name.set_hint(_display_name_default(record))
         self.shirt_name.set_value(record.get("shirt_name", ""))
-        cid = str(record.get("commentary", "") or "").strip()
-        self.commentary.set_value("" if cid in ("", "0") else cid)
+        self._show_commentary(record)
 
     def _refresh_seasons(self, stats):
-        self.season_pill.set_text(
-            f"SEASON {season_label(self.season)}" if self.season else "NO SEASON")
         items = []
         for s in sorted(stats):
             block = stats[s]
@@ -581,18 +653,18 @@ class PlayerEditorScreen(EditorScreen):
             star = is_star(block)
             items.append((s, season_label(s), f"{STAR} {tag}" if star else tag,
                          STAR_COLOR if star else FG_TERTIARY, False))
-        self.season_list.set_items(items, keep_data=self.season)
-        self.season_list.set_selected(self.season)
+        self.season_bar.set_items([i[:4] for i in items], self.season)
 
     # ── 3D preview ───────────────────────────────────────────────────────
-    def refresh_stage(self, preview_face=_NO_PREVIEW, preview_boots=_NO_PREVIEW):
+    def refresh_stage(self, preview_face=_NO_PREVIEW, preview_boots=_NO_PREVIEW, preview_skin=None):
         """Rebuild the always-visible 3D preview from the current season's
         appearance. `preview_face` overrides the stored `face` value without
         touching the record — same format either way (a stock id, a custom
         .big path, or blank/None for generic) — used by the head picker to
         show a candidate live while it's still just being browsed; omit it
         to show the real stored face. `preview_boots` does the same for
-        `boot_style` (the boots picker's hovered row)."""
+        `boot_style` (the boots picker's hovered row). `preview_skin` is a whole
+        skin texture to wear instead (the tattoo editor's work in progress)."""
         if self.session is None or self.season is None:
             self.stage.set_placeholder("NO SEASON")
             self._stage_key = None
@@ -618,6 +690,8 @@ class PlayerEditorScreen(EditorScreen):
         resolved = A.resolve(stats, mod)
         skin_path, skin_entry = skin_compose(resolved, os.path.join(config.temp_directory, "skin_previews"),
                                              force=True)
+        if preview_skin:
+            skin_path = preview_skin
 
         finger_tape = str(stats.get("finger_tape") or "none")
         wrist_tape = str(stats.get("wrist_tape") or "none")
@@ -705,10 +779,8 @@ class PlayerEditorScreen(EditorScreen):
         # widget actually focused. Handle the mid pane's own widgets first;
         # identity fields reuse the exact hints ProfileTab already gives the
         # same field types, since it's the same widgets, just relocated.
-        if focused is self.season_list:
-            return [("↕", "browse"), ("A", "load season")]
-        if focused in (self.season_add_btn, self.season_menu_btn):
-            return [("A", "open")]
+        if focused is self.season_bar.button:
+            return [("A", "seasons")]
         if isinstance(focused, ScopeCheck):
             return [("A", "edit every season" if not focused.checked else "edit this season only")]
         if isinstance(focused, NumberField):
@@ -819,77 +891,87 @@ class PlayerEditorScreen(EditorScreen):
             self._player_dialog(duplicate=True)
 
     def _player_dialog(self, duplicate):
-        files = [f for f in self.ds.players_files()]
         name = TextField("In-game name", max_bytes=14)
         first = TextField("First name")
         last = TextField("Last name")
-        # No choice of file: the player goes where the one being edited lives,
-        # else into the file holding the most players
-        current_path = self.ds.players_file_path.get(self.record_id) if self.record_id else None
-        if current_path in files:
-            target = current_path
-        elif files:
-            counts = {}
-            for path in self.ds.players_file_path.values():
-                counts[path] = counts.get(path, 0) + 1
-            target = max(files, key=lambda f: counts.get(f, 0))
-        else:
-            target = ""
-        year = NumberField("First season", lo=1900, hi=2100, allow_blank=False, formatter=season_label)
+        year = NumberField("Season", lo=1900, hi=2100, allow_blank=False, formatter=season_label)
         year.set_value(self.season or (self.ds.seasons() or ["2026"])[-1])
-        position = ChoiceField("Primary position", POSITIONS, allow_blank=False, display=position_name)
-        position.set_value("centre")
+        position = ChoiceField("Position", POSITIONS, allow_blank=False, display=position_name)
+        position.set_value((self.stats() or {}).get("position1") or "centre" if self.record_id else "centre")
+        level = SegmentField("Level", [k for k, _l, _o in P.LEVELS],
+                             display=lambda v: next(lab for k, lab, _o in P.LEVELS if k == v))
+        level.set_value("international")
+        # the team the new player joins: the one the player on screen plays for
+        team_names = {tid: (self.ds.team_seasons(tid).get(max(self.ds.team_seasons(tid)), {}) or {})
+                      .get("name", tid) for tid in self.ds.team_ids() if self.ds.team_seasons(tid)}
+        team = ChoiceField("Team", sorted(team_names, key=lambda t: team_names[t].lower()),
+                           allow_blank=True, blank_label="none", display=lambda t: team_names.get(t, t))
+        team.searchable = True
+        team.popup_title = "team"
+        here = [m[0] for m in self.ds.memberships(self.record_id) if m[2] == self.season] \
+            if self.record_id else []
+        team.set_value(here[0] if here else "")
         if duplicate:
             fields = {"name": name}
             name.set_value(P.duplicate_record(self.session.working)["display_name"])
         else:
-            # The in-game name is made from these ("J. Smith"); editable after
-            fields = {"first": first, "last": last}
-            fields["year"] = year
-            fields["position"] = position
+            fields = {"first": first, "last": last, "position": position, "level": level,
+                      "team": team, "year": year}
 
         def done(role):
             self._dialog = None
             if role != "ok":
                 return
             try:
-                self._create_player(name.value().strip(), target, year.value(),
-                                    position.value(), duplicate,
-                                    first.value().strip(), last.value().strip())
+                if duplicate:
+                    self._duplicate_player(name.value().strip())
+                else:
+                    self._create_player(first.value(), last.value(), year.value(), position.value(),
+                                        level.value(), team.value())
             except (ValueError, SaveError, OSError) as e:
                 self.shell.footer.set_status(f"Could not create player: {e}", DANGER_LITE)
 
         self.show_dialog(FormDialog(
             self, "Duplicate player" if duplicate else "New player",
-            ("Copies every season under a new id. Squads are unchanged."
-             if duplicate else "Saved to your edits right away."
-             if saves_to_user_edits() else "Written to the players file right away."),
+            "Copies every season under a new id. Squads are unchanged." if duplicate else
+            "Ratings start at the level picked, shaped like other players in that position.",
             fields, [("CANCEL", "neutral", "cancel"), ("CREATE", "primary", "ok")], done))
 
-    def _create_player(self, name, path, year, position, duplicate, first="", last=""):
-        if not duplicate:
-            if not (first or last):
-                raise ValueError("the player needs a first or last name")
-            name = _display_name_default({"first_name": first, "last_name": last})
+    def _duplicate_player(self, name):
         if not name:
             raise ValueError("the player needs an in-game name")
+        path = P.target_players_file(self.ds, self.record_id)
         if not path:
             raise ValueError("there is no players file to save into")
         pid = P.allocate_player_id(self.ds.players_files(), self.ds.players)
-        if duplicate:
-            record = copy.deepcopy(self.session.working)
-            record["display_name"] = P.truncate_bytes(name)
-        else:
-            record = P.blank_player(P.truncate_bytes(name), year, position)
-            record["first_name"], record["last_name"] = first, last
+        record = copy.deepcopy(self.session.working)
+        record["display_name"] = P.truncate_bytes(name)
         from app.game_data import add_player
         add_player(path, pid, record)
         self.ds.register_player(pid, record, path)
+        self._open_created(pid, f"Created {name}")
+
+    def _create_player(self, first, last, year, position, level="international", team=""):
+        pid = P.create_player(self.ds, first, last, year, position, level=level, near_pid=self.record_id)
+        name = self.ds.players[pid]["display_name"]
+        note = ""
+        if team:
+            try:
+                shirt = P.add_to_squad(self.ds, pid, team, year)
+                tname = self.ds.team_seasons(team)[str(year)].get("name", team)
+                note = f" · {tname} #{shirt}"
+            except (ValueError, SaveError, OSError, KeyError):
+                note = " · not added to the team: it has no squad that season"
+        self._open_created(pid, f"Created {name}{note}", season=str(year))
+
+    def _open_created(self, pid, text, season=None):
         self.reload_list()
 
         def go():
             self.open_record(pid)
-            self.shell.footer.set_status(f"Created {name} · id {pid} in {save_target(path)}", GREEN)
+            if season:
+                self.set_season(season)
+            self.shell.footer.set_status(text, GREEN)
         self.guard_dirty(go)
 
     def delete_record(self):
@@ -907,7 +989,7 @@ class PlayerEditorScreen(EditorScreen):
             text += (f" Listed in {len(memberships)} squad(s): "
                      + ", ".join(f"{m[1]} {m[2]} #{m[3]}" for m in memberships[:5])
                      + ("…" if len(memberships) > 5 else "")
-                     + ". Later shirts move up and his roles are cleared.")
+                     + ". Later shirts move up and the player's roles are cleared.")
 
         def done(role):
             self._dialog = None
@@ -930,7 +1012,7 @@ class PlayerEditorScreen(EditorScreen):
                 self.list.set_highlight(0)
                 self.open_record(self.list.highlighted_data())
             self.shell.footer.set_status(
-                f"Deleted {name}" + (f" and removed him from {len(teams)} team file(s)" if teams else ""),
+                f"Deleted {name}" + (f" and removed from {len(teams)} team file(s)" if teams else ""),
                 FG_SECONDARY)
 
         fields = {"remove": remove} if memberships else {}

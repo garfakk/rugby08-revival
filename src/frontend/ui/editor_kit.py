@@ -1056,10 +1056,12 @@ class ChoiceField(FieldBase):
                 if fold and title and title not in self._open_sections:
                     continue
             tag, tag_col = self.tag_for(opt) if self.tag_for else ("", None)
-            popup.add_row(text, opt, tag=tag, tag_color=tag_col,
-                          selected=(opt == self._value),
-                          icon=self.icon_for(opt) if self.icon_for else None,
-                          subtitle=self.subtitle_for(opt) if self.subtitle_for else "")
+            row = popup.add_row(text, opt, tag=tag, tag_color=tag_col,
+                                selected=(opt == self._value),
+                                icon=self.icon_for(opt) if self.icon_for else None,
+                                subtitle=self.subtitle_for(opt) if self.subtitle_for else "")
+            if opt in self.actions:
+                row.actions = False         # no play icon / ASSIGN on "Load from disk…"
 
     def _on_popup_pick(self, popup, value):
         if not isinstance(value, tuple):
@@ -2341,13 +2343,16 @@ class TabStrip(QWidget):
         self.hidden = set()                       # tabs not offered (see set_hidden)
         self._index = 0
         self.pad = 44                             # width added around a title
+        self._size = font_size
         self._font = tracked_font(FONT_DISPLAY, font_size, QFont.Bold, track=1.4)
+        self._fit = (self._font, self.pad)        # what is drawn: shrunk to the bar's width
 
     def index(self):
         return self._index
 
     def set_metrics(self, font_size, pad):
         """Smaller titles and tighter tabs for a narrow window."""
+        self._size = font_size
         self._font = tracked_font(FONT_DISPLAY, font_size, QFont.Bold, track=1.4)
         self.pad = pad
         self.update()
@@ -2379,7 +2384,21 @@ class TabStrip(QWidget):
         self.update()
 
     def _rects(self):
-        fm = QFontMetrics(self._font)
+        """Every tab stays on the bar: in a narrow bar the padding, then the
+        titles, shrink until they all fit."""
+        font, pad = self._font, self.pad
+        candidates = [(font, pad)] + [(font, p) for p in (30, 20, 14) if p < pad]
+        candidates += [(tracked_font(FONT_DISPLAY, size, QFont.Bold, track=1.0), 14)
+                       for size in range(self._size - 1, 8, -1)]
+        for font, pad in candidates:
+            rects = self._rects_with(font, pad)
+            if not rects or rects[-1].right() <= self.width():
+                break
+        self._fit = (font, pad)
+        return rects
+
+    def _rects_with(self, font, pad):
+        fm = QFontMetrics(font)
         x = 0
         out = []
         for i, t in enumerate(self.titles):
@@ -2391,7 +2410,7 @@ class TabStrip(QWidget):
             # letter spacing: take the widest measure, and add the spacing back,
             # so a title is never wider than its tab.
             w = (max(fm.horizontalAdvance(text), fm.boundingRect(text).width())
-                 + round(len(text) * self._font.letterSpacing()) + self.pad)
+                 + round(len(text) * font.letterSpacing()) + pad)
             if self.counts[i]:
                 w += 26
             out.append(QRectF(x, 0, w, self.height()))
@@ -2416,13 +2435,15 @@ class TabStrip(QWidget):
         p.setRenderHint(QPainter.Antialiasing)
         focused = self.hasFocus()
         p.fillRect(QRectF(0, self.height() - 1, self.width(), 1), QColor(BORDER))
-        for i, r in enumerate(self._rects()):
+        rects = self._rects()
+        font, pad = self._fit
+        for i, r in enumerate(rects):
             if i in self.hidden:
                 continue
             on = i == self._index
-            p.setFont(self._font)
+            p.setFont(font)
             p.setPen(QColor(FG_PRIMARY if on else FG_TERTIARY))
-            tr = r.adjusted(self.pad // 2, 0, -self.pad // 2 - (26 if self.counts[i] else 0), 0)
+            tr = r.adjusted(pad // 2, 0, -pad // 2 - (26 if self.counts[i] else 0), 0)
             p.drawText(tr, Qt.AlignLeft | Qt.AlignVCenter | Qt.TextDontClip, self.titles[i].upper())
             if on:
                 p.fillRect(QRectF(r.x() + 12, self.height() - 3, r.width() - 24, 3),
@@ -2559,6 +2580,64 @@ def open_season_menu(anchor, screen, on_pick):
     popup.picked.connect(on_pick)
     popup.open_at(anchor, screen)
     return popup
+
+
+class SeasonBar(QWidget):
+    """One button naming the season being edited ("SEASON 2023-2024 ▾"):
+    it opens the list of the record's seasons, with the add / duplicate /
+    delete actions under them. Takes the room of a single row above the
+    tabs instead of a whole column."""
+
+    picked = pyqtSignal(str)
+    action = pyqtSignal(str)          # "add" | "duplicate" | "delete"
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self._items = []              # [(season, label, tag, tag_color)]
+        self._current = ""
+        h = QHBoxLayout(self)
+        h.setContentsMargins(0, 0, 0, 0)
+        h.setSpacing(6)
+        self.button = compact_button("SEASON —", "primary")
+        self.button.setMinimumWidth(190)
+        self.button.clicked.connect(self.open)
+        h.addWidget(self.button)
+
+    def set_text(self, text):
+        self.button.setText(text + ("  ▾" if self._items else ""))
+
+    def set_items(self, items, current):
+        """items: [(season, label, tag, tag_color)]"""
+        self._items = list(items)
+        self._current = current or ""
+        label = next((lab for s, lab, _t, _c in self._items if s == self._current), "")
+        self.set_text(f"SEASON {label}" if label else "NO SEASON")
+
+    def open(self):
+        screen = self.window()
+        popup = PopupList(screen, width=380, height=360, own_keys=True)
+        popup.set_title("seasons")
+        for s, label, tag, color in sorted(self._items, key=lambda i: i[0], reverse=True):
+            popup.add_row(label, ("season", s), tag=tag, tag_color=color, selected=s == self._current)
+        popup.add_row("+ Add a season…", ("action", "add"))
+        if self._current:
+            popup.add_row("Copy to another year…", ("action", "duplicate"))
+            popup.add_row("Delete this season…", ("action", "delete"), tag_color=DANGER_LITE)
+        popup.size_to(min(9, len(self._items) + 3))
+        popup.picked.connect(self._on_pick)
+        popup.closed.connect(lambda: self.button.setFocus())
+        popup.open_at(self.button, screen)
+        if self._current:
+            idx = [s for s, *_ in sorted(self._items, key=lambda i: i[0], reverse=True)].index(self._current) \
+                if self._current in [i[0] for i in self._items] else 0
+            popup.set_highlight(idx)
+        return popup
+
+    def _on_pick(self, data):
+        if not data:
+            return
+        kind, value = data
+        (self.picked if kind == "season" else self.action).emit(value)
 
 
 class EditorHeader(QWidget):
