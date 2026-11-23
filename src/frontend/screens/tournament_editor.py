@@ -413,6 +413,136 @@ class TeamRow(QWidget):
             self.buttons.append(b)
 
 
+class TeamTile(ActivatableCard):
+    """A team to click in or out of the tournament: crest, name, ✓ when in."""
+    W, H = 116, 86
+
+    def __init__(self, tid, name, pix, parent=None):
+        super().__init__(parent)
+        self.tid, self.name, self.pix = tid, name, pix
+        self.setFixedSize(self.W, self.H)
+        self.setToolTip(name)
+
+    def paintEvent(self, event):
+        p = QPainter(self)
+        self.paint_background(p)
+        p.setRenderHint(QPainter.SmoothPixmapTransform)
+        p.setRenderHint(QPainter.Antialiasing)
+        if self.pix is not None and not self.pix.isNull():
+            s = min(44 / self.pix.width(), 44 / self.pix.height())
+            w, h = self.pix.width() * s, self.pix.height() * s
+            p.drawPixmap(QRectF((self.W - w) / 2, 8 + (44 - h) / 2, w, h), self.pix, QRectF(self.pix.rect()))
+        p.setFont(tracked_font(FONT_DISPLAY, T_SMALL, QFont.DemiBold, 0.3))
+        p.setPen(QColor(FG_PRIMARY if self.selected else FG_TERTIARY))
+        text = p.fontMetrics().elidedText(self.name, Qt.ElideRight, self.W - 12)
+        p.drawText(QRectF(6, 56, self.W - 12, 24), Qt.AlignCenter, text)
+        if self.selected:
+            r = QRectF(self.W - 24, 6, 18, 18)
+            p.setPen(Qt.NoPen)
+            p.setBrush(QColor(ACCENT))
+            p.drawEllipse(r)
+            p.setPen(QColor(BG_BASE))
+            p.setFont(tracked_font(FONT_DISPLAY, T_SMALL, QFont.Bold, 0))
+            p.drawText(r, Qt.AlignCenter, "✓")
+
+
+class TeamPicker(QWidget):
+    """Every team of a kind as crest tiles: a click puts it in the
+    tournament or takes it out. `toggled(team id)`; `changed()` when the
+    kind or the search changes (the screen refills the tiles)."""
+
+    toggled = pyqtSignal(str)
+    changed = pyqtSignal()
+
+    def __init__(self, focus, parent=None):
+        super().__init__(parent)
+        self._focus = focus
+        self.tiles = []
+        v = QVBoxLayout(self)
+        v.setContentsMargins(0, 0, 0, 0)
+        v.setSpacing(8)
+        bar = QHBoxLayout()
+        bar.setSpacing(8)
+        self.f_kind = ChoiceField("show", allow_blank=False, display=self._kind_label)
+        self.f_kind.popup_title = "teams to show"
+        self.f_kind.searchable = True
+        self.f_kind.label_width = 60
+        self.f_kind.edited.connect(lambda _v: self.changed.emit())
+        bar.addWidget(self.f_kind, stretch=2)
+        self.search = QLineEdit()
+        self.search.setPlaceholderText("Search a team…")
+        self.search.setFixedHeight(34)
+        self.search.setStyleSheet(
+            f"QLineEdit {{ background: {BG_RAISED}; color: {FG_PRIMARY}; border: 1px solid {BORDER};"
+            f" padding: 4px 8px; font-family: '{FONT_DISPLAY}'; font-size: 12pt; }}"
+            f"QLineEdit:focus {{ border: 1px solid {ACCENT}; }}")
+        self.search.textChanged.connect(lambda _t: self.changed.emit())
+        bar.addWidget(self.search, stretch=1)
+        v.addLayout(bar)
+        self.scroll = QScrollArea()
+        self.scroll.setWidgetResizable(True)
+        self.scroll.setFrameShape(QScrollArea.NoFrame)
+        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.scroll.setStyleSheet("QScrollArea { background: transparent; border: none; }")
+        self.scroll.viewport().setStyleSheet("background: transparent;")
+        self.scroll.setFixedHeight(2 * TeamTile.H + 3 * 8 + 4)
+        self.holder = QWidget()
+        self.holder.setObjectName("tileHolder")
+        self.holder.setStyleSheet("QWidget#tileHolder { background: transparent; }")
+        self.grid = QGridLayout(self.holder)
+        self.grid.setContentsMargins(0, 0, 6, 0)
+        self.grid.setSpacing(8)
+        self.scroll.setWidget(self.holder)
+        v.addWidget(self.scroll)
+        for w in (self.f_kind, self.search):
+            focus.register(w)
+        self._cols = 0
+
+    @staticmethod
+    def _kind_label(v):
+        return C.TEAM_SOURCES.get(v) or (v[4:] if v.startswith("cat:") else v)
+
+    def query(self):
+        return self.search.text().casefold().strip()
+
+    def set_tiles(self, rows, selected):
+        """rows: [(team id, name, crest pixmap)] in order."""
+        for t in self.tiles:
+            self._focus.unregister(t)
+            t.setParent(None)
+            t.deleteLater()
+        self.tiles = []
+        for tid, name, pix in rows:
+            tile = TeamTile(tid, name, pix)
+            tile.activated.connect(lambda t=tid: self.toggled.emit(t))
+            self._focus.register(tile)
+            self.tiles.append(tile)
+        self._cols = 0
+        self._layout()
+        self.set_selected(selected)
+
+    def set_selected(self, selected):
+        for t in self.tiles:
+            t.selected = t.tid in selected
+            t.update()
+
+    def _layout(self):
+        cols = max(1, (self.scroll.viewport().width() - 6 + 8) // (TeamTile.W + 8))
+        if cols == self._cols:
+            return
+        self._cols = cols
+        for t in self.tiles:
+            self.grid.removeWidget(t)
+        for i, t in enumerate(self.tiles):
+            self.grid.addWidget(t, i // cols, i % cols)
+        self.grid.setColumnStretch(cols, 1)
+        self.grid.setRowStretch(len(self.tiles) // cols + 1, 1)
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        self._layout()
+
+
 class OrderedList(QWidget):
     """Rows the user can put in order (▲ ▼), remove (✕) and add to (+): the
     tie-breakers, the neutral stadiums. Emits `changed(list)`."""
@@ -517,7 +647,7 @@ class OrderedList(QWidget):
 # The screen
 # ═════════════════════════════════════════════════════════════════════════
 class TournamentEditorScreen(EditorScreen):
-    TAB_TITLES = ["Setup", "Teams", "Rules", "Schedule", "Look"]
+    TAB_TITLES = ["Format", "Teams", "Rules", "Dates", "Look"]
     RECORD_NOUN = "tournament"
     LIST_PLACEHOLDER = "filter"
     PREVIEW_PANE = True
@@ -531,6 +661,9 @@ class TournamentEditorScreen(EditorScreen):
         self._teams_sig = None
         self._groups_holder_items = []
         self._starting = False
+        self._more = False           # MORE OPTIONS: the Rules and Dates tabs and the finer settings
+        self._pick_cache = {}        # (kind, season) -> team ids the picker offers
+        self._pick_sig = None
         self._stock, self._edits = {}, {}
         self.on_play = on_play
         super().__init__(ds, on_back)
@@ -739,9 +872,12 @@ class TournamentEditorScreen(EditorScreen):
         self._starting = False
         self.reload_list()
         self.open_record(tid)
-        self.shell.tabs.set_index(TAB_SETUP)
+        # the shape is picked already: on to the teams (step 2)
+        self.shell.tabs.set_index(TAB_TEAMS if key != "blank" else TAB_SETUP)
         self._sync_start()
-        self.f_name.setFocus()
+        if key == "blank":
+            self.f_name.setFocus()
+        self.shell.footer.set_status("Click teams in or out, then NEXT", FG_SECONDARY)
 
     def duplicate_record(self):
         if self.session is None or self.is_base():
@@ -921,6 +1057,12 @@ class TournamentEditorScreen(EditorScreen):
         page.addLayout(bar)
         self.teams_note = Note("", color=FG_TERTIARY)
         page.addWidget(self.teams_note)
+        self.picker_card = SectionCard("Click teams in or out")
+        self.team_picker = TeamPicker(self.focus)
+        self.team_picker.toggled.connect(self._toggle_team)
+        self.team_picker.changed.connect(lambda: self._refresh_picker(force=True))
+        self.picker_card.add(self.team_picker)
+        page.addWidget(self.picker_card)
         self.groups_grid = holder = ReflowGrid()
         self.register_field("groups", holder, TAB_TEAMS)
         self.focus.unregister(holder)
@@ -1007,6 +1149,58 @@ class TournamentEditorScreen(EditorScreen):
             cards.append(card)
             self._groups_holder_items.append(card)
         self.groups_grid.set_cards(cards, single=fmt != "groups")
+
+    # ── the crest picker ─────────────────────────────────────────────────
+    def _picker_kinds(self):
+        return ["internationals"] + [f"cat:{c}" for c in C.categories(self.ds)
+                                     if c.lower() != "international"] + ["clubs", "all"]
+
+    def _picker_ids(self, kind):
+        key = (kind, self.d["season"])
+        if key not in self._pick_cache:
+            self._pick_cache[key] = C.teams_from_source(self.ds, kind, self.d["season"])
+        return self._pick_cache[key]
+
+    def _refresh_picker(self, force=False):
+        d = self.d
+        tp = self.team_picker
+        kinds = self._picker_kinds()
+        tp.f_kind.set_options(kinds)
+        if tp.f_kind.value() not in kinds:
+            teams = C.all_teams(d)
+            internationals = set(self._picker_ids("internationals"))
+            clubs = [t for t in teams if t not in internationals]
+            kind = "internationals"
+            if clubs:
+                cats = {str((self.ds.teams.get(t, {}).get(self._season_of(t)) or {}).get("category") or "")
+                        for t in clubs}
+                cat = next(iter(cats)) if len(cats) == 1 else ""
+                kind = f"cat:{cat}" if cat and f"cat:{cat}" in kinds else "clubs"
+            tp.f_kind.set_value(kind)
+        selected = set(C.all_teams(d))
+        sig = (tp.f_kind.value(), tp.query(), d["season"])
+        if force or sig != self._pick_sig:
+            self._pick_sig = sig
+            q = tp.query()
+            ids = list(self._picker_ids(tp.f_kind.value()))
+            ids += [t for t in selected if t not in ids and t in self.ds.teams]    # what is in stays shown
+            rows = sorted(((t, self._team_name(t)) for t in ids), key=lambda r: r[1].lower())
+            rows = [(t, n, self._crest(t, 48)) for t, n in rows if not q or q in n.casefold()]
+            tp.set_tiles(rows, selected)
+        else:
+            tp.set_selected(selected)
+
+    def _toggle_team(self, tid):
+        if self.session is None or self.is_base():
+            return
+        for i, g in enumerate(self.d["groups"]):
+            if tid in g["teams"]:
+                self._remove_team(i, g["teams"].index(tid))
+                return
+        groups = self.d["groups"]
+        i = min(range(len(groups)), key=lambda k: len(groups[k]["teams"])) if groups else 0
+        self._add_teams(i, [tid])
+        self.shell.footer.set_status(f"{self._team_name(tid)} is in", GREEN)
 
     def _short_squads(self):
         from app.tournament.engine import usable_squad
@@ -1428,14 +1622,44 @@ class TournamentEditorScreen(EditorScreen):
 
     # ── LOOK ─────────────────────────────────────────────────────────────
     def _build_look(self):
+        from .tournament.look_preview import GraphicsStrip, LookGallery, LookStadium
         page = self._page(TAB_LOOK)
-        card = SectionCard("In the game")
+        card = SectionCard("Competition look")
+        card.add(Note("The logos, pitch logos, ball and stadium dressing of a real competition: "
+                      "click one to use it.", color=FG_SECONDARY))
+        self.look_gallery = LookGallery(self.focus)
+        self.look_gallery.picked.connect(lambda v: self._set("branding", v or "", "competition look"))
+        # two rows tall: the pictures and the stadium stay in reach below
+        scroll = self.look_scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QScrollArea.NoFrame)
+        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        scroll.setStyleSheet("QScrollArea { background: transparent; border: none; }")
+        scroll.viewport().setStyleSheet("background: transparent;")
+        scroll.setFixedHeight(2 * 112 + 8 + 4)
+        scroll.setWidget(self.look_gallery)
+        card.add(scroll)
+        page.addWidget(card)
+
+        self.look_graphics_card = SectionCard("What it brings")
+        self.look_graphics = GraphicsStrip()
+        self.look_graphics_card.add(self.look_graphics)
+        self.look_graphics_card.add(self.look_graphics.trophy)
+        page.addWidget(self.look_graphics_card)
+
+        self.look_stadium_card = SectionCard("In the stadium")
+        self.look_stadium = LookStadium(self.ds, self.focus)
+        self.look_stadium_card.add(self.look_stadium)
+        page.addWidget(self.look_stadium_card)
+
+        # the finer settings (MORE OPTIONS)
+        self.look_more = card = SectionCard("More")
         grid = FieldGrid(columns=1)
         self.f_desc = self._field("description", TextField("description", max_bytes=200,
                                   placeholder="written from the format"), TAB_LOOK, grid)
         self.f_desc.edited.connect(lambda v: self._set("description", v.strip(), "description"))
         self.f_match_type = self._field("match_type", ChoiceField(
-            "presentation", list(C.MATCH_TYPES), allow_blank=False,
+            "TV graphics", list(C.MATCH_TYPES), allow_blank=False,
             display=lambda v: C.MATCH_TYPES.get(v, v)), TAB_LOOK, grid)
         self.f_match_type.edited.connect(lambda v: self._set("match_type", v, "presentation"))
         self.f_branding = self._field("branding", ChoiceField(
@@ -1444,6 +1668,7 @@ class TournamentEditorScreen(EditorScreen):
         self.f_branding.popup_title = "competition look"
         self.f_branding.searchable = True
         self.f_branding.edited.connect(lambda v: self._set("branding", v or "", "competition look"))
+        self.f_branding.hide()                 # the gallery above picks it
         self.f_variant = self._field("variant", ChoiceField(
             "squads", allow_blank=True, blank_label="none: the usual squads",
             display=lambda v: v.replace("_", " ").title()), TAB_LOOK, grid)
@@ -1456,6 +1681,21 @@ class TournamentEditorScreen(EditorScreen):
         card.add(grid)
         page.addWidget(card)
         page.addStretch(1)
+        self._looks_loaded = False
+
+    def _refresh_look(self, d):
+        if not self._looks_loaded:
+            from .tournament.look_preview import look_choices
+            self._looks_loaded = True
+            self.look_gallery.set_looks(self.ds, look_choices(self.ds))
+        self.look_gallery.set_current(d["branding"])
+        current = next((c for c in self.look_gallery.cards if c.selected), None)
+        if current is not None:
+            self.look_scroll.ensureWidgetVisible(current, 0, 0)
+        self.look_graphics.show_look(self.ds, d["branding"])
+        preferred = [d.get("final_stadium")] + list(d.get("venues") or [])
+        self.look_stadium.prepare([s for s in preferred if s])
+        self.look_stadium.set_look(d["branding"])
 
     # ── preview pane ─────────────────────────────────────────────────────
     def _build_preview(self):
@@ -1497,11 +1737,64 @@ class TournamentEditorScreen(EditorScreen):
         lay.addWidget(scroll, stretch=1)
         self.pv_status = Note("", color=GREEN, size=T_LABEL + 1)
         lay.addWidget(self.pv_status)
+        from PyQt5.QtWidgets import QBoxLayout
+        steps = self._steps_box = QBoxLayout(QBoxLayout.LeftToRight)
+        steps.setSpacing(8)
+        self.more_btn = compact_button("MORE OPTIONS")
+        self.more_btn.setToolTip("Rules, dates and the finer settings")
+        self.more_btn.clicked.connect(lambda: self._set_more(not self._more))
+        steps.addWidget(self.more_btn)
+        self.next_btn = compact_button("NEXT  ›")
+        self.next_btn.clicked.connect(self._next_step)
+        steps.addWidget(self.next_btn, stretch=1)
+        lay.addLayout(steps)
         self.play_btn = compact_button("PLAY  ›", "primary")
         self.play_btn.setMinimumHeight(44)
         self.play_btn.clicked.connect(self._play)
         lay.addWidget(self.play_btn)
-        self.focus.register(self.play_btn)
+        for b in (self.more_btn, self.next_btn, self.play_btn):
+            self.focus.register(b)
+
+    # ── steps: format, teams, look (rules and dates with MORE OPTIONS) ────
+    def _set_more(self, on):
+        if on == self._more:
+            return
+        self._more = on
+        self.more_btn.setText("FEWER OPTIONS" if on else "MORE OPTIONS")
+        if self.session is not None:
+            self.refresh_view()
+        self._sync_next()
+
+    def _shown_tabs(self):
+        hidden = self.shell.tabs.hidden
+        return [i for i in range(len(self.TAB_TITLES)) if i not in hidden]
+
+    def _next_step(self):
+        tabs = self._shown_tabs()
+        i = self.shell.tabs.index()
+        later = [t for t in tabs if t > i]
+        if later:
+            self.shell.tabs.set_index(later[0])
+
+    def _sync_next(self):
+        tabs = self._shown_tabs()
+        later = [t for t in tabs if t > self.shell.tabs.index()]
+        self.next_btn.setVisible(bool(later))
+        if later:
+            self.next_btn.setText(f"NEXT: {self.TAB_TITLES[later[0]].upper()}  ›")
+
+    def _on_tab_changed(self, index):
+        super()._on_tab_changed(index)
+        self._sync_next()
+
+    def reveal(self, key):
+        """An issue on a tab MORE OPTIONS hides opens them first."""
+        entry = self._field_for_key(key)
+        tab = entry[0] if entry else self.tab_for_issue(key)
+        if not self._more and (tab in (TAB_RULES, TAB_SCHEDULE)
+                               or (entry and not entry[1].isVisibleTo(self.shell.page(tab)))):
+            self._set_more(True)
+        super().reveal(key)
 
     def _refresh_preview(self, d, issues):
         base = self.is_base()
@@ -1574,7 +1867,9 @@ class TournamentEditorScreen(EditorScreen):
         if base:
             self.f_season.set_options([d["season"]] if d["season"] else [])
         self.format_row.setVisible(not base)
-        self.shell.tabs.set_hidden([TAB_SCHEDULE] if base else [])
+        more = self._more
+        self.shell.tabs.set_hidden(sorted(({TAB_SCHEDULE} if base else set())
+                                          | (set() if more else {TAB_RULES, TAB_SCHEDULE})))
         discipline = list(C.DISCIPLINE_PRESETS) + ([C.ORIGINAL] if base else [])
         self.f_discipline.set_options(discipline)
 
@@ -1587,7 +1882,7 @@ class TournamentEditorScreen(EditorScreen):
         self.f_legs.set_value(d["legs"])
         self.f_groups_n.setVisible(fmt == "groups")
         self.f_groups_n.set_value(len(d["groups"]))
-        self.league_grid.setVisible(fmt == "league")
+        self.league_grid.setVisible(fmt == "league" and (more or cat_mode))
         self.f_teams_from.set_value(d["teams_from"])
         self.f_category.setVisible(cat_mode)
         self.f_category.set_options(C.categories(self.ds))
@@ -1602,12 +1897,12 @@ class TournamentEditorScreen(EditorScreen):
         seedings = {"groups": ["cross", "ranked"], "cup": ["ranked", "listed"]}.get(fmt, [])
         self.f_seeding.set_options(seedings)
         self.f_seeding.set_value(d["seeding"] if d["seeding"] in seedings else (seedings or [""])[0])
-        self.f_seeding.setVisible(bool(seedings))
+        self.f_seeding.setVisible(bool(seedings) and more)
         has_ko = C.qualifiers(d) >= 2 or fmt == "cup"
         self.f_third.set_value(d["third_place"])
-        self.f_third.setVisible(has_ko)
+        self.f_third.setVisible(has_ko and more)
         self.f_ko_draw.set_value(d["knockout_draw"])
-        self.f_ko_draw.setVisible(has_ko)
+        self.f_ko_draw.setVisible(has_ko and more)
         self.ko_card.set_title("The cup" if fmt == "cup" else ("Play-offs" if fmt == "league" else "Knockouts"))
         self.ko_card.setVisible((has_ko or fmt == "league") and not base)
         self.table_card.setVisible(fmt != "cup" and not base)
@@ -1619,6 +1914,9 @@ class TournamentEditorScreen(EditorScreen):
         for b in (self.fill_btn, self.shuffle_btn, self.clear_btn):
             b.setVisible(not cat_mode and not base)
         self.shuffle_btn.setEnabled(n > 1)
+        self.picker_card.setVisible(not cat_mode and not base)
+        if not cat_mode and not base:
+            self._refresh_picker()
         self.clear_btn.setEnabled(n > 0)
         self.teams_note.setVisible(cat_mode)
         self.teams_note.setText(f"Every {d['category'] or '…'} club plays, one edition per season."
@@ -1655,6 +1953,11 @@ class TournamentEditorScreen(EditorScreen):
         self.f_day.set_value(dd)
         self.f_every.set_value(d["every"])
         self.dates_note.setText(self._dates_text(d))
+
+        # look
+        self.look_more.setVisible(more)
+        self._refresh_look(d)
+        self._sync_next()
 
     def _base_template(self):
         """The data competition as the open edit makes it."""
@@ -1764,10 +2067,13 @@ class TournamentEditorScreen(EditorScreen):
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
-        compact = self.width() < 1150
+        w = self.width()
+        compact = w < 1250
         self.shell.list_pane.setFixedWidth(230 if compact else 250)
-        self.shell.preview_pane.setFixedWidth(250 if compact else 320)
-        self.shell.tabs.set_metrics(11 if compact else 13, 8 if compact else 30)
+        self.shell.preview_pane.setFixedWidth(240 if compact else 320)
+        self.shell.tabs.set_metrics(11 if w < 1150 else 13, 8 if w < 1150 else 30)
+        from PyQt5.QtWidgets import QBoxLayout
+        self._steps_box.setDirection(QBoxLayout.TopToBottom if compact else QBoxLayout.LeftToRight)
 
     def pane(self):
         return "list" if self.session is None else super().pane()

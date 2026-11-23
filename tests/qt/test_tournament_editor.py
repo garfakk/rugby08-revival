@@ -337,3 +337,46 @@ def test_a_data_competition_can_be_edited_and_reset(editor, qapp):
     assert tid not in C.load_edits() and editor.record_id == tid
     assert editor.d["name"] != "My edition"
     del editor.ds.teams[new]
+
+
+def test_simple_steps_hide_rules_and_dates_until_more_options(editor, qapp):
+    from screens import tournament_editor as TE
+    editor._create("six_nations")
+    _settle(qapp)
+    assert editor.shell.tabs.index() == TE.TAB_TEAMS             # the shape is picked: on to the teams
+    assert {TE.TAB_RULES, TE.TAB_SCHEDULE} <= editor.shell.tabs.hidden
+    assert "LOOK" in editor.next_btn.text()
+    editor._next_step()
+    assert editor.shell.tabs.index() == TE.TAB_LOOK and not editor.next_btn.isVisibleTo(editor)
+    editor._set_more(True)
+    assert not ({TE.TAB_RULES, TE.TAB_SCHEDULE} & editor.shell.tabs.hidden)
+    editor._set_more(False)
+
+
+def test_crest_tiles_put_teams_in_and_out(editor, qapp):
+    from app.tournament import custom as C
+    editor._create("blank")
+    _settle(qapp)
+    tiles = editor.team_picker.tiles
+    assert tiles
+    tid = tiles[0].tid
+    editor._toggle_team(tid)
+    _settle(qapp)
+    assert tid in C.all_teams(editor.d)
+    assert next(t for t in editor.team_picker.tiles if t.tid == tid).selected
+    editor._toggle_team(tid)
+    _settle(qapp)
+    assert tid not in C.all_teams(editor.d)
+
+
+def test_look_gallery_picks_the_competition_look(editor, qapp):
+    editor._create("blank")
+    editor.look_gallery.picked.emit("")
+    _settle(qapp)
+    assert editor.look_gallery.cards[0].key == "" and editor.look_gallery.cards[0].selected
+    looks = [c.key for c in editor.look_gallery.cards if c.key]
+    if looks:
+        editor.look_gallery.picked.emit(looks[0])
+        _settle(qapp)
+        assert editor.d["branding"] == looks[0]
+        assert any(p.pix is not None for p in editor.look_graphics.pictures.values())
