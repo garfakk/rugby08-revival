@@ -17,10 +17,12 @@ Credits:
 - Heads:
     - [Rugby 08 Original Update Workshop](https://www.therugbyforum.com/threads/rugby-08-original-update-workshop.49742): Carel du preez and the workshop's contributors
     - [jim546](https://github.com/jimw546/jimw546-s-Rugby-08-stuff), [JPilky](https://www.therugbyforum.com/threads/trf-custom-face-design-tracker.47791), EN9ne, Pieter1989 and TommyDelpe
-- Trophies: Bouclier de Brennus (Top 14) [photo](https://commons.wikimedia.org/wiki/File:Mus%C3%A9e_du_Vieux_Toulouse_-_Bouclier_de_Brennus.jpg) by Frédéric Neupont, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) (the texture, adapted, is under the same licence); converted to the game's format with [otools](https://bitbucket.org/fifam/otools) by Dmitri
+- Trophies: the other competitions reuse the game's own trophies (Heineken Cup, Premiership, Tri Nations, Super 12, Bledisloe...); Bouclier de Brennus (Top 14) [photo](https://commons.wikimedia.org/wiki/File:Mus%C3%A9e_du_Vieux_Toulouse_-_Bouclier_de_Brennus.jpg) by Frédéric Neupont, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) (the texture, adapted, is under the same licence); converted to the game's format with [otools](https://bitbucket.org/fifam/otools) by Dmitri
 - Rosters: the 2008-09 base roster comes from the [MUP Patch 2009](https://www.therugbyforum.com/threads/mup-v-1-2-season-2008-09.15872) by Fa'atau82 and uli85
 - Code and tools:
     - Commentary decoder: a port of utkdec.c from [vgmstream](https://github.com/vgmstream/vgmstream), based on Andrew D'Addesio's [utkencode](https://github.com/daddesio/utkencode) (public domain)
+    - Commentary encoder (new name clips): a port of Andrew D'Addesio's [utkencode](https://github.com/daddesio/utkencode) (public domain)
+    - Commentary voices tool (tools/voicegen): [F5-TTS](https://github.com/SWivid/F5-TTS) by Yushen Chen et al. (code MIT, pretrained model [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)), cloning the stock commentator from the game's own clips
 - Fonts ([SIL Open Font License 1.1](https://openfontlicense.org) unless noted):
     - Interface: [Barlow and Barlow Condensed](https://github.com/jpt/barlow) by Jeremy Tribby
     - Shirt names: Barlow Condensed, [Oswald](https://github.com/googlefonts/OswaldFont) (Vernon Adams), [Anton](https://github.com/googlefonts/AntonFont) (Vernon Adams), Bebas Neue (Dharma Type), Saira Condensed (Omnibus-Type), [Teko](https://github.com/googlefonts/teko) (Indian Type Foundry), [Graduate](https://github.com/etunni/graduate) (Eduardo Tunni), Alfa Slab One (José María Solé), Russo One (Jovanny Lemonad), Black Ops One (James Grieshaber, Eben Sorkin)

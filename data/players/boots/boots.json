@@ -1,13 +1,4 @@
 {
-  "Nike": [
-    "players/boots/boots_6.png",
-    "players/boots/boots_7.png",
-    "players/boots/boots_8.png",
-    "players/boots/boots_10.png",
-    "players/boots/boots_16.png",
-    "players/boots/boots_18.png",
-    "players/boots/boots_21.png"
-  ],
   "Adidas": [
     "players/boots/boots_5.png",
     "players/boots/boots_12.png",
@@ -21,13 +12,27 @@
     "players/boots/boots_27.png",
     "players/boots/boots_28.png"
   ],
+  "Nike": [
+    "players/boots/boots_2.png",
+    "players/boots/boots_6.png",
+    "players/boots/boots_7.png",
+    "players/boots/boots_8.png",
+    "players/boots/boots_10.png",
+    "players/boots/boots_16.png",
+    "players/boots/boots_18.png",
+    "players/boots/boots_21.png"
+  ],
+  "Asics": [
+    "players/boots/boots_13.png",
+    "players/boots/boots_20.png"
+  ],
   "Puma": [
     "players/boots/boots_3.png",
+    "players/boots/boots_4.png",
     "players/boots/boots_11.png"
   ],
   "Le Coq Sportif": [
     "players/boots/boots_1.png",
-    "players/boots/boots_2.png",
     "players/boots/boots_9.png"
   ],
   "Under Armour": [
@@ -35,10 +40,5 @@
   ],
   "Mizuno": [
     "players/boots/boots_15.png"
-  ],
-  "Other": [
-    "players/boots/boots_4.png",
-    "players/boots/boots_13.png",
-    "players/boots/boots_20.png"
   ]
 }
