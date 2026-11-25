@@ -6,7 +6,7 @@ to_match_config()  fixture + both selections -> app.state.MatchConfig, fed
                    their *effective* ratings (effects.effective_record), so
                    fatigue and future form/morale reach the game's roster.
                    The fixture's weather (tournament/weather.py) sets the
-                   environment, pitch, rain/snow, breath and (calm under a
+                   environment, pitch, rain/snow, fog, breath and (calm under a
                    closed roof) wind. Baselayers and gloves are only the
                    ones set on the players.
 from_game_result() R08_handler.read_match_result() dict -> MatchResult.
@@ -108,6 +108,31 @@ def _game_stage(t, fixture, match_type) -> str:
     return sub
 
 
+def fixture_referee(ds, t, fixture):
+    """The referee of `fixture` (app/referees.py) for option "referee": the
+    game's own (""), one id for every match, or "random": drawn from all the
+    referees, the same one every time for the same fixture."""
+    from app import referees
+    from .engine import fixture_rng
+    choice = t.options.get("referee") or referees.STOCK
+    pool = getattr(ds, "referees", None) or {}
+    if choice == referees.RANDOM:
+        return referees.draw("all", pool, fixture_rng(t, fixture, "referee").random()) or referees.STOCK
+    return choice if choice in pool else referees.STOCK
+
+
+def fixture_referee_kit(ds, t, fixture, colours):
+    """The referee's kit for `fixture` (app/referees.py) from option
+    "referee_kits", the kits the competition's referees wear: the one that
+    stands out most from both teams' `colours`, a draw (the same every time
+    for the same fixture) between kits as good; "" = the referee's own."""
+    from app import referees
+    from .engine import fixture_rng
+    allowed = set(referees.kits())
+    listed = [k for k in t.options.get("referee_kits") or [] if k in allowed]
+    return referees.best_kit(listed, colours, fixture_rng(t, fixture, "referee_kit")) or referees.OWN_KIT
+
+
 def to_match_config(ds, t, fixture) -> MatchConfig:
     cfg = MatchConfig()
     humans = []
@@ -148,6 +173,9 @@ def to_match_config(ds, t, fixture) -> MatchConfig:
     cfg.crowd_size = opts.get("crowd_size", "full")
     cfg.crowd_colours = bool(opts.get("crowd_colours", False))
     cfg.crowd_mood = opts.get("crowd_mood", "normal")
+    cfg.referee = fixture_referee(ds, t, fixture)
+    cfg.referee_kit = fixture_referee_kit(ds, t, fixture,
+                                          [slot.kit(ds).get("color") for slot in (cfg.home, cfg.away)])
     cfg.match_type = game_match_type(tpl, fixture)
     cfg.match_subtype = _game_stage(t, fixture, cfg.match_type)
     if tpl.get("trophy_lift", True):
@@ -180,6 +208,7 @@ def to_match_config(ds, t, fixture) -> MatchConfig:
     # Reassign Controllers must reach either team, and the DLL lock would close
     # whichever side the pre-match board left without a device.
     cfg.lock_controllers = len(humans) < 2
+    cfg.restart_allowed = False                  # the result counts: no Restart Match in game
     return cfg
 
 
@@ -194,6 +223,7 @@ def _apply_weather(ds, t, fixture, cfg):
     if fc["precip"] == "snow":
         cfg.snow_intensity = 18.0 if fc["heavy"] else 8.0
     cfg.breath = fc["breath"]
+    cfg.fog = fc.get("fog", "off")
     stadium = (cfg.stadium or {}).get("data")
     if fc["roof_closed"] or weather.roof_environment(stadium) == cfg.environment:
         cfg.wind_power = 0           # calm under the roof, whatever Settings > Wind says

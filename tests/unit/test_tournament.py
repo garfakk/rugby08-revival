@@ -635,3 +635,34 @@ def test_a_stadium_names_its_own_roof():
     open_air = dict(arena, roof=None)
     assert weather.env_label(open_air, "night") == "night" and weather.roof_environment(open_air) is None
     assert weather.env_label({"game_id": 32, "environments": ["cold"]}, "cold") == "closed"
+
+
+def test_fog_when_it_is_cool_damp_and_still(ds):
+    """Fog in a tournament: mist on some cool dry days, a haze of spray in
+    heavy rain, none under a closed roof or in the snow; the bridge sends it
+    to the game and the summary says it."""
+    import random
+    from app.tournament import bridge, weather
+    rng = random.Random(1)
+    rolls = [weather._fog(rng, temp, "none", False, night, True, False)
+             for temp in (4, 20) for night in (False, True) for _ in range(2000)]
+    cool, warm = rolls[:4000], rolls[4000:]
+    assert 0.08 < sum(f != "off" for f in cool) / len(cool) < 0.25
+    assert all(f == "off" for f in warm)
+    assert {"light", "medium", "thick"} <= set(cool)
+    assert weather._fog(rng, 4, "none", False, True, True, True) == "off"      # roof closed
+    assert weather._fog(rng, -3, "snow", True, True, True, False) == "off"
+    assert {weather._fog(rng, 10, "rain", True, False, True, False) for _ in range(50)} == {"off", "light"}
+    assert {weather._fog(rng, 10, "rain", False, False, True, False) for _ in range(50)} == {"off"}
+
+    t = engine.create_tournament(ds, _dated_template(), "2024", seed=3)
+    seen = set()
+    for f in t.fixtures:
+        fc = weather.forecast(t, f, ds)
+        seen.add(fc["fog"])
+        if f.home and f.away:
+            assert bridge.to_match_config(ds, t, f).fog == fc["fog"]
+        if fc["fog"] != "off":
+            assert {"light": "haze", "medium": "mist", "thick": "fog"}[fc["fog"]] in fc["summary"]
+    from backend import game_specific_variables as gsv
+    assert seen <= set(gsv.fog_levels) and "off" in seen

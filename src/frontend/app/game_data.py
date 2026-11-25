@@ -80,6 +80,18 @@ def wind_world_xz(deg, attack_sign):
 # UI range for reR08 ENABLE_SNOWFX's intensity levels.
 SNOW_INTENSITY_MAX = 26.0
 
+# The quick match weather, one at a time: (label, (rain, precip_mode,
+# snow_intensity, fog)) in MatchConfig. Snow = reR08 ENABLE_SNOWFX, fog =
+# rugby08patches.dll fog presets (gsv.fog_levels).
+WEATHER = {
+    "clear": ("clear", (False, "stock", None, "off")),
+    "rain": ("rain", (True, "stock", None, "off")),
+    "snow": ("snow", (False, "snow", 13.0, "off")),
+    "fog_light": ("light fog", (False, "stock", None, "light")),
+    "fog": ("fog", (False, "stock", None, "medium")),
+    "fog_thick": ("thick fog", (False, "stock", None, "thick")),
+}
+
 # ── Vocabularies the roster file understands ─────────────────────────────
 # backend/game_specific_variables.py::positions_id. The game draws no
 # distinction between loosehead/tighthead or blindside/openside, but the
@@ -563,6 +575,14 @@ class SaveError(Exception):
     pass
 
 
+class EditsOffError(SaveError):
+    """A save into the user's edits while they are turned off: the editors
+    offer to turn them on and save again (EditorScreen.ask_edits_on)."""
+
+    def __init__(self, msg="your edits are turned off"):
+        super().__init__(msg)
+
+
 #: The user's edits (app/user_edits.EditStore). Saving a team or a player
 #: goes there, unless _into_pack (the maintainer's config save_edits_to =
 #: mod): then the pack file itself is written and the record's edit, now in
@@ -600,7 +620,7 @@ def saves_to_user_edits() -> bool:
 def save_target(path: str) -> str:
     """Where a save of the record from `path` goes, for the editors' labels."""
     if saves_to_user_edits():
-        return "my edits" if _edits.enabled else "my edits (turned off: saving is blocked)"
+        return "my edits" if _edits.enabled else "my edits (turned off)"
     return os.path.basename(path or "")
 
 
@@ -621,7 +641,7 @@ def _keep(kind, rid, record, path):
     if not _edits.enabled:
         # the editors show the pack's records: a save would replace the
         # kept edit with them
-        raise SaveError("your edits are turned off: turn them on in Tools › My edits to save")
+        raise EditsOffError()
     try:
         _edits.save(kind, rid, record, path)
     except OSError as e:

@@ -1520,6 +1520,21 @@ def configure_match_laws(game_dir, laws):
   log.info("Laws: " + ", ".join(f"{k} {'on' if v else 'off'}" for k, v in values.items()))
 
 
+def configure_match_fog(game_dir, fog):
+  """rugby08patches.dll fog for this match: the patch on with its preset
+  ("light" / "medium" / "thick"), or off for a clear match ("off" or
+  anything else). The mission's <WEATHER fog> says the same."""
+  ini = os.path.join(game_dir, "rugby08patches.ini")
+  level = fog if fog in ("light", "medium", "thick") else "off"
+  try:
+    _set_ini_value(ini, "patches", "fog", "0" if level == "off" else "1")
+    _set_ini_value(ini, "fog", "fog", level)
+  except OSError as e:
+    log.warning(f"cannot update {ini}: {e}")
+    return
+  log.info(f"Fog: {level}")
+
+
 def _find_in_dir(directory, name):
   """The path of `name` in `directory`, any letter case (dgVoodoo ships
   D3D8.dll); None when absent."""

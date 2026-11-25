@@ -71,6 +71,7 @@ DEFAULTS = {
     "rain": False,
     "precip_mode": "stock",
     "snow_intensity": None,
+    "fog": "off",
     "wind_power": None,
     "wind_dir_deg": 0,
     "breath": None,
@@ -115,6 +116,7 @@ CHOOSABLE = {
     "environment": "environment",
     "pitch_texture": "pitch",
     "precip_mode": "precipitation",
+    "fog": "fog",
     "kick_assist": "easy goal kick",
 }
 # Always left to the player, whatever `user_choice` says: the challenge's own
@@ -446,7 +448,7 @@ def to_match_config(ds, data: dict) -> MatchConfig:
 
     for key in ("difficulty", "halftime_length", "home_team_side", "kick_off",
                 "match_type", "match_subtype", "environment", "pitch_texture",
-                "rain", "precip_mode", "snow_intensity", "wind_power",
+                "rain", "precip_mode", "snow_intensity", "fog", "wind_power",
                 "breath", "anthem", "haka_home", "haka_away", "trophy_lift",
                 "stadium_flags", "kick_assist", "mission_mode_name",
                 "mission_mode_time", "mission_mode_period"):
@@ -467,6 +469,7 @@ def to_match_config(ds, data: dict) -> MatchConfig:
     cfg.objectives = copy.deepcopy(data["objectives"])
     cfg.controllers = {1: {"kind": "kbd", "label": "KEYBOARD", "zone": data["user_side"]}}
     cfg.lock_controllers = True
+    cfg.restart_allowed = False          # a retry goes through the challenge screen
     # A bare MatchConfig has no pitch logo or tournament logo, so a
     # challenge without branding showed neither: lay the "default"
     # competition's down first (not its dressing: the stadium's own is the
@@ -577,6 +580,7 @@ def choice_options(ds, data: dict, key: str):
         "environment": (ENVIRONMENTS, str),
         "pitch_texture": (["default"] + list(gsv.pitch_textures), str),
         "precip_mode": (PRECIP_MODES, str),
+        "fog": (gsv.fog_levels, str),
         "kick_assist": ([False, True], yes_no),
     }[key]
     values = list(values)

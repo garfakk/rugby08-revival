@@ -5,8 +5,8 @@ One modal, one grid, two sources: the ~550 stock faces
 app.stock_faces.load_stock_faces() lists (id + the real player name it was
 modelled on, where known) or the mod's own custom players/heads/*.big
 files (app.player_ops.head_options). A STOCK/CUSTOM toggle swaps which one
-the grid shows; both share the same click-to-arm-and-live-preview,
-USE THIS HEAD-or-double-click-to-confirm mechanics.
+the grid shows; in both a click assigns the head (the 3D preview beside
+the grid shows it) and a double-click assigns it and closes.
 
 Thumbnails are never bulk-extracted: each is decoded lazily, only once its
 cell actually scrolls into view, off the GUI thread (QThreadPool) — see
@@ -50,8 +50,8 @@ from PyQt5.QtCore import (
 )
 
 from app import player_ops as P
-from app.stock_faces import search_stock_faces, available_attributes
-from backend.mod_utils import stock_portrait_path
+from app.stock_faces import load_stock_faces, search_stock_faces, available_attributes
+from backend.mod_utils import stock_head_path, stock_portrait_path
 from ui.broadcast import Card, display_label, eyebrow_label
 from ui.editor_kit import Thumb, Note, ChoiceField, SegmentField, compact_button, load_from_disk
 from ui.face_thumbs import face_png_bytes
@@ -68,6 +68,8 @@ CELL_W, CELL_H = 108, 132
 THUMB_SIZE = 88
 COLUMNS = 5
 SEARCH_DEBOUNCE_MS = 150
+REFEREE_HEADS = (45000, 45005)   # the game's referee heads (stock face ids)
+REFEREE_PREFIX = "referee_"      # a mod head file named referee_<name>.big is a referee's
 
 
 class _ThumbSignals(QObject):
@@ -98,8 +100,8 @@ class _ThumbJob(QRunnable):
 
 
 class _FaceCell(QWidget):
-    """One grid cell: thumbnail + title + subtitle. A single click arms it
-    (live preview, stays open); a double-click confirms it straight away."""
+    """One grid cell: thumbnail + title + subtitle. A click assigns the
+    head (the picker stays open); a double-click assigns it and closes."""
 
     clicked = pyqtSignal()
     activated = pyqtSignal()
@@ -116,6 +118,9 @@ class _FaceCell(QWidget):
         v.setSpacing(2)
         self.thumb = Thumb(THUMB_SIZE, THUMB_SIZE)
         self.thumb.set_text("…")
+        # Thumb takes mouse presses itself (own clicked signal): let them reach
+        # the cell, so clicking / double-clicking the image picks the head.
+        self.thumb.setAttribute(Qt.WA_TransparentForMouseEvents)
         self.set_selected(selected)
         thumb_row = QHBoxLayout()
         thumb_row.addStretch(1)
@@ -152,12 +157,9 @@ class _FaceCell(QWidget):
 class FacePicker(QWidget):
     """Modal grid of heads — stock faces or the mod's own custom
     players/heads/*.big files, switched with a STOCK/CUSTOM toggle. A click
-    arms a candidate — live-previewed via `on_preview` (e.g. the screen's 3D
-    stage) without closing the grid, so several can be compared before
-    committing. USE THIS HEAD or a double-click emits `picked` (str: a
-    digit id for stock, a mod-relative .big path for custom) and closes;
-    Escape or CLOSE closes without one, calling `on_cancel` to revert
-    whatever `on_preview` last showed.
+    emits `picked` (str: a digit id for stock, a mod-relative .big path for
+    custom) and keeps the grid open, so several can be tried in turn; a
+    double-click also closes. Closing with nothing picked calls `on_cancel`.
 
     `current` is the record's raw `face` value (a digit string, a
     mod-relative .big path, or blank) — it picks the toggle's starting
@@ -165,14 +167,20 @@ class FacePicker(QWidget):
 
     picked = pyqtSignal(str)
 
-    def __init__(self, screen, current="", on_preview=None, on_cancel=None):
+    def __init__(self, screen, current="", on_preview=None, on_cancel=None, referees=False):
+        """`referees`: a REFEREES side first (the game's referee heads and
+        the mod's players/heads/referee_*.big), the one it opens on."""
         super().__init__(screen)
+        self._referees = referees
         self._screen = screen
         self._cells = {}          # key -> _FaceCell, for the CURRENT filter/mode only
         self._on_preview = on_preview
         self._on_cancel = on_cancel
         current = str(current or "")
-        if current.isdigit():
+        if referees:
+            self._mode = "referees"
+            self._current = int(current) if current.isdigit() else (current or None)
+        elif current.isdigit():
             self._mode = "stock"
             self._current = int(current)
         elif current:
@@ -212,19 +220,16 @@ class FacePicker(QWidget):
         head = QHBoxLayout()
         head.addWidget(display_label("head", T_TITLE, QFont.Bold, track=0.8, upper=False))
         head.addStretch(1)
-        self.mode_seg = SegmentField("", ["stock", "custom"])
+        self.mode_seg = SegmentField("", (["referees"] if referees else []) + ["stock", "custom"])
         self.mode_seg.label_width = 0
-        self.mode_seg.setFixedWidth(180)
+        self.mode_seg.setFixedWidth(270 if referees else 180)
         self.mode_seg.set_value(self._mode)
         self.mode_seg.edited.connect(self._on_mode_changed)
         head.addWidget(self.mode_seg)
         head.addStretch(1)
-        self.use_btn = compact_button("USE THIS HEAD", "primary")
-        self.use_btn.setEnabled(self._current is not None)
-        self.use_btn.clicked.connect(self._confirm)
-        head.addWidget(self.use_btn)
+        self._assigned = False
         close_btn = compact_button("CLOSE", "neutral")
-        close_btn.clicked.connect(self._close)
+        close_btn.clicked.connect(lambda: self._close(committed=self._assigned))
         head.addWidget(close_btn)
         v.addLayout(head)
 
@@ -325,7 +330,7 @@ class FacePicker(QWidget):
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:
-            self._close()
+            self._close(committed=self._assigned)
         event.accept()
 
     def _close(self, committed=False):
@@ -347,12 +352,32 @@ class FacePicker(QWidget):
         path = os.path.join(config.mod_data_directory, key)
         return path if os.path.isfile(path) else None
 
+    def _resolve_referee(self, key):
+        if isinstance(key, int):
+            # the game's referees have no menu portrait: their head's own face
+            return (self._resolve_stock(key)
+                    or stock_head_path(key, os.path.join(config.temp_directory, "stock_heads")))
+        return self._resolve_custom(key)
+
     def _resolver(self):
-        return self._resolve_stock if self._mode == "stock" else self._resolve_custom
+        return {"stock": self._resolve_stock, "referees": self._resolve_referee}.get(
+            self._mode, self._resolve_custom)
+
+    def _referee_entries(self):
+        """The game's referee heads, then the mod's referee_*.big heads."""
+        out = [{"id": f["id"], "name": f["name"].replace(" (referee)", ""), "where": "stock"}
+               for f in load_stock_faces() if REFEREE_HEADS[0] <= f["id"] <= REFEREE_HEADS[1]]
+        for rel in P.head_options(config.mod_data_directory):
+            base = os.path.basename(rel)[:-4]
+            if base.lower().startswith(REFEREE_PREFIX):
+                out.append({"id": rel, "where": "custom",
+                            "name": base[len(REFEREE_PREFIX):].replace("_", " ").title()})
+        return out
 
     def _update_mode_chrome(self):
         self.search.setPlaceholderText(
-            "search by id or player name…" if self._mode == "stock" else "search by file name…")
+            "search by id or player name…" if self._mode == "stock" else
+            "search by name…" if self._mode == "referees" else "search by file name…")
         for f in self._filter_fields.values():
             f.setVisible(self._mode == "stock")
 
@@ -364,6 +389,10 @@ class FacePicker(QWidget):
     # ── grid / search ────────────────────────────────────────────────────
     def _entries(self):
         query = self.search.text()
+        if self._mode == "referees":
+            q = query.strip().lower()
+            return [e for e in self._referee_entries()
+                    if not q or q in e["name"].lower() or q in str(e["id"]).lower()]
         if self._mode == "stock":
             filters = {name: f.value() for name, f in self._filter_fields.items()}
             return search_stock_faces(query, filters)
@@ -397,10 +426,11 @@ class FacePicker(QWidget):
             item = self._grid.takeAt(0)
             w = item.widget()
             if w is not None:
-                w.setParent(None)
+                w.hide()                 # kept by the grid until deleted: it may be the one clicked
                 w.deleteLater()
         self._cells = {}
         subtitle_of = ((lambda e: e["name"]) if self._mode == "stock" else
+                       (lambda e: e["where"]) if self._mode == "referees" else
                        (lambda e: os.path.dirname(e["id"])))
         title_of = ((lambda e: e["id"]) if self._mode == "stock" else (lambda e: e["name"]))
         for i, entry in enumerate(entries):
@@ -411,7 +441,8 @@ class FacePicker(QWidget):
             self._grid.addWidget(cell, i // COLUMNS, i % COLUMNS)
             self._cells[key] = cell
         total = (len(search_stock_faces("")) if self._mode == "stock"
-                else len(P.head_options(config.mod_data_directory)))
+                 else len(self._referee_entries()) if self._mode == "referees"
+                 else len(P.head_options(config.mod_data_directory)))
         self.count_note.setText(f"{len(entries)} of {total} heads"
                                 if len(entries) != total else f"{total} heads")
         QTimer.singleShot(0, self._load_visible)
@@ -455,7 +486,9 @@ class FacePicker(QWidget):
         cell.set_thumb(data)
 
     def _arm(self, key, confirm=False):
-        if key != self._current:
+        """A click assigns the head (the picker stays open to try others);
+        a double-click assigns it and closes."""
+        if key != self._current or not self._assigned:
             old = self._cells.get(self._current)
             if old is not None:
                 old.set_selected(False)
@@ -463,14 +496,7 @@ class FacePicker(QWidget):
             cell = self._cells.get(key)
             if cell is not None:
                 cell.set_selected(True)
-            self.use_btn.setEnabled(True)
-            if self._on_preview is not None:
-                self._on_preview(key)
+            self._assigned = True
+            self.picked.emit(str(key))
         if confirm:
-            self._confirm()
-
-    def _confirm(self):
-        if self._current is None:
-            return
-        self.picked.emit(str(self._current))
-        self._close(committed=True)
+            self._close(committed=True)

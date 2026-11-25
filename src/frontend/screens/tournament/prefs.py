@@ -34,14 +34,16 @@ PREFS = {
     "crowd_size": ("Crowd", "cycle"),
     "crowd_colours": ("Team Colours", "toggle"),
     "crowd_mood": ("Atmosphere", "cycle"),
+    "referee": ("Referee", "cycle"),
 }
 GROUPS = [("match", ["difficulty", "halftime_length"]),
           ("squad", ["injuries", "fatigue", "suspensions", "cpu_squads"]),
           ("rules", ["law_5022", "law_22m", "law_penalty_touch"])]
 if crowd.OPTIONS_ENABLED:
     GROUPS.append(("crowd", ["crowd_size", "crowd_colours", "crowd_mood"]))
+GROUPS.append(("referee", ["referee"]))
 # shown in expert mode only
-EXPERT_GROUPS = {"crowd"}
+EXPERT_GROUPS = {"crowd", "referee"}
 VALUES = {
     "difficulty": [(level, level.capitalize()) for level in difficulty.LEVELS],
     "halftime_length": [(v, f"{v[:-1]} min" if v.endswith("m") else v) for v in HALF_LENGTHS],
@@ -53,7 +55,24 @@ VALUES = {
 DEFAULTS = {"difficulty": "elite", "halftime_length": "5m",
             "injuries": True, "fatigue": True, "suspensions": True, "cpu_squads": "default",
             "law_5022": True, "law_22m": True, "law_penalty_touch": True,
-            "crowd_size": "full", "crowd_colours": False, "crowd_mood": "normal"}
+            "crowd_size": "full", "crowd_colours": False, "crowd_mood": "normal",
+            "referee": "", "referee_kits": []}
+KIT_ROW = "referee_kit:"   # + kit: one toggle row per referee kit ("referee_kits")
+
+
+def referee_values():
+    """The referee choices (app/referees.py): the game's own, one drawn for
+    each match, or the same one every match."""
+    from app import referees
+    return ([(referees.STOCK, "Game's own"), (referees.RANDOM, "Random")]
+            + [(rid, r["name"] or rid) for rid, r in referees.load().items()])
+
+
+def referee_kit_keys():
+    """The rows of the referee kits a competition's referees may wear (none
+    ticked: each referee's own)."""
+    from app import referees
+    return [KIT_ROW + kit for kit in referees.kits()]
 
 
 class PrefsPanel(QWidget):
@@ -67,6 +86,7 @@ class PrefsPanel(QWidget):
         super().__init__(parent)
         transparent(self, "tourPrefs")
         self._values = dict(DEFAULTS)
+        self._pairs = dict(VALUES, referee=referee_values())
         self.rows = {}
         # The groups side by side when they fit, else wrapped onto more rows
         # (a small window): see _reflow.
@@ -76,8 +96,11 @@ class PrefsPanel(QWidget):
         self._grid.setVerticalSpacing(18)
         self._grid.setSizeConstraint(QLayout.SetNoConstraint)
         self._columns = []
+        self._order = []
         from shared.user_prefs import user_prefs
         for title, keys in GROUPS:
+            if title == "referee":
+                keys = keys + referee_kit_keys()
             if groups is not None and title not in groups:
                 continue
             if title in EXPERT_GROUPS and not user_prefs.expert_mode:
@@ -93,6 +116,7 @@ class PrefsPanel(QWidget):
                 row = self._row(key)
                 col.addWidget(row)
                 self.rows[key] = row
+                self._order.append(key)
             col.addStretch(1)
             self._columns.append(column)
         self._per_row = 0
@@ -149,17 +173,27 @@ class PrefsPanel(QWidget):
                 if PREFS[key][1] == "toggle":
                     row.set_state(bool(value))
                 else:
-                    shown = dict(VALUES[key])
-                    row.set_current(shown.get(value, VALUES[key][0][1]))
+                    shown = dict(self._pairs[key])
+                    row.set_current(shown.get(value, self._pairs[key][0][1]))
                 self._values[key] = value
+            self._values["referee_kits"] = list(self._values.get("referee_kits") or [])
+            for key, row in self.rows.items():
+                if key.startswith(KIT_ROW):
+                    row.set_state(key[len(KIT_ROW):] in self._values["referee_kits"])
         finally:
             self._quiet = False
 
     def _row(self, key):
+        if key.startswith(KIT_ROW):
+            from app import referees
+            kit = key[len(KIT_ROW):]
+            return ToggleRow(f"{referees.kit_label(kit).capitalize()} kit",
+                             kit in (self._values.get("referee_kits") or []),
+                             lambda on, k=kit: self._set_kit(k, bool(on)))
         label, kind = PREFS[key]
         if kind == "toggle":
             return ToggleRow(label, bool(self._values[key]), lambda on, k=key: self._set(k, bool(on)))
-        pairs = VALUES[key]
+        pairs = self._pairs[key]
         shown = dict(pairs)
         back = {text: value for value, text in pairs}
         current = shown.get(self._values[key], pairs[0][1])
@@ -171,9 +205,16 @@ class PrefsPanel(QWidget):
         if not self._quiet:
             self.changed.emit(key, value)
 
+    def _set_kit(self, kit, on):
+        """Tick / untick referee kit `kit` (option "referee_kits")."""
+        kits = [k for k in self._values.get("referee_kits") or [] if k != kit]
+        if on:
+            kits.append(kit)
+        self._set("referee_kits", kits)
+
     def values(self):
-        return dict(self._values)
+        return dict(self._values, referee_kits=list(self._values.get("referee_kits") or []))
 
     def focus_rows(self):
         """The rows in focus order (one column, then the next)."""
-        return [self.rows[k] for _title, keys in GROUPS for k in keys if k in self.rows]
+        return [self.rows[k] for k in self._order]

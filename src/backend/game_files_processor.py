@@ -32,7 +32,7 @@ sys.path.append(str(Path(__file__).parent.parent))
 import backend.process_handler
 from backend.game_specific_variables import *
 from backend.mod_utils import *
-from backend import adboards, crowd, pitch_stripes, pitches, stadium_dressing, stadium_screen
+from backend import adboards, crowd, referee, pitch_lines, pitch_stripes, pitches, stadium_dressing, stadium_screen
 from shared.app_paths import assets_directory
 from shared.config import *
 
@@ -153,6 +153,9 @@ def create_mission_file(match_data):
             # reR08 ENABLE_STADIUM_FLAGS — no-op on stadiums without RWC
             # dressing groups, harmless everywhere else.
             mission_attrs["stadium_flags"] = "on" if stadium_flags else "off"
+        if "match_restart" in match_data:
+            # reR08 ENABLE_MATCH_RESTART: the quit popup's Restart Match
+            mission_attrs["match_restart"] = "on" if match_data["match_restart"] else "off"
         if match_data.get("kick_assist"):
             # reR08 ENABLE_EASY_GOALKICK — depends on wind (below) being on.
             mission_attrs["kickassist"] = "on"
@@ -160,6 +163,8 @@ def create_mission_file(match_data):
         # (app.difficulty; only set for a human vs CPU match).
         for key, value in (match_data.get("cpu_edge") or {}).items():
             mission_attrs[key] = value if isinstance(value, str) else str(int(value))
+        # reR08 ENABLE_REFEREE_RULES: the chosen referee's ref_* strictness
+        mission_attrs.update(referee.mission_rules(match_data))
 
         mission = ET.Element("MISSION", mission_attrs)
 
@@ -194,6 +199,9 @@ def create_mission_file(match_data):
             weather_attrs["precip"] = precip_mode
             if precip_mode == "snow" and match_data.get("snow_intensity") is not None:
                 weather_attrs["intensity"] = str(match_data["snow_intensity"])
+        fog = match_data.get("fog")
+        if fog and fog != "off":
+            weather_attrs["fog"] = fog                            # reR08 ENABLE_FOG preset
         breath = match_data.get("breath")
         if breath is not None:
             weather_attrs["breath"] = "on" if breath else "off"   # reR08 ENABLE_BREATH
@@ -780,6 +788,7 @@ def deploy_stadium_files(match_data):
         except (OSError, ValueError, struct.error) as e:
           log.warning(f"Pitch stripes not applied: {e}")
   deployed += _deploy_own_pitch(match_data.get("own_pitch"), game_dir)
+  deployed += _deploy_lines(match_data.get("pitch_lines"), game_dir, deployed)
   deployed += _deploy_crowd(match_data.get("crowd"), match_data, game_dir, deployed)
   try:
     if deployed:
@@ -841,6 +850,25 @@ def _deploy_own_pitch(own, game_dir):
   except (OSError, ValueError, struct.error) as e:
     log.warning(f"Own pitch {own['name']} not applied: {e}")
   return put
+
+
+def _deploy_lines(spec, game_dir, deployed):
+  """The stadium's line style (backend pitch_lines) in the match's scene
+  pack: {"scene": game path, "style"}. Returns the file names it put in the
+  game dir that aren't in `deployed` yet."""
+  if not spec or not pitch_lines.clean(spec.get("style")):
+    return []
+  try:
+    scene = _loose_copy(spec["scene"], game_dir)
+    if scene is None:
+      log.warning(f"Pitch lines: the scene {spec['scene']} can't be read")
+      return []
+    if pitch_lines.apply(scene[1], spec["style"]):
+      log.info(f"Pitch lines: {spec['style']} on {spec['scene']}")
+    return [scene[0]] if scene[2] and scene[0] not in deployed else []
+  except (OSError, ValueError, struct.error) as e:
+    log.warning(f"Pitch lines {spec.get('style')} not applied: {e}")
+    return []
 
 
 def _deploy_crowd(spec, match_data, game_dir, deployed):

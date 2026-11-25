@@ -16,6 +16,7 @@ from PyQt5.QtCore import QObject, pyqtSignal
 from app import variants as V
 from app import game_data as G
 from app import user_stadiums
+from app import referees
 from app.team_browse import GROUPS, info_group
 from app.user_edits import EditStore, KINDS
 from shared.user_prefs import user_prefs
@@ -94,6 +95,8 @@ class DataStore:
         self.all_stadiums = self.stadiums
         self.stadiums = {}
         self.sync_stadiums()
+        # the referees a match can have (app/referees.py; expert mode)
+        self.referees = referees.load()
         self.events = DataEvents()
 
     @staticmethod
@@ -503,6 +506,7 @@ class MatchConfig:
     # no special-casing downstream).
     pitch_texture: str = "default"  # a gsv.pitch_textures name, e.g. Reg2_08_muddy_n — reR08 ENABLE_PITCH
     rain: bool = False  # reR08 ENABLE_WEATHER (precipitation on/off)
+    fog: str = "off"    # rugby08patches.dll fog: gsv.fog_levels
     pitch_logo_choice: str = "none"  # tournament id, or "none"
     # Tournament id whose logo fills the tournament logo slot (scoreboard,
     # menus); "" = none chosen, the home team's crest is used
@@ -516,6 +520,9 @@ class MatchConfig:
     # the opponent). Tournament (one managed side) and challenge matches; quick
     # match and tournament matches between two managed teams leave it off.
     lock_controllers: bool = False
+    # The quit popup's Restart Match in the game (reR08 match_restart): quick
+    # match only; a tournament or challenge result can't be replayed in game.
+    restart_allowed: bool = True
     # Laws (rugby08patches.dll rule_5022 / rule_22m): the 50/22, and the 22m
     # gain in ground lost when the ball was taken back into the 22. Both are
     # current law; a tournament sets them by its era.
@@ -529,6 +536,12 @@ class MatchConfig:
     crowd_size: str = "full"
     crowd_colours: bool = False
     crowd_mood: str = "normal"
+    # The referee (app/referees.py): an id, referees.RANDOM, or "" = the
+    # game's own. Expert mode only; a tournament draws one per fixture.
+    referee: str = ""
+    # The referee's kit (app/referees.py): "" = his own, referees.AUTO_KIT =
+    # the one that stands out most from both teams', or a kit
+    referee_kit: str = ""
 
     # ── Advanced/.mis fields (config.advanced_user) ─────────────────────
     # Only reachable from the ADVANCED pane's extra sections, which only

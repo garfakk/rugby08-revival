@@ -1091,7 +1091,7 @@ class TournamentDashboardScreen(Screen):
         v.addWidget(Note("Changes apply from your next match.", color=FG_TERTIARY))
         # MATCH only: the squad rules (injuries, fatigue, suspensions) are
         # fixed for the whole tournament
-        self.prefs = PrefsPanel(groups=("match", "crowd"))
+        self.prefs = PrefsPanel(groups=("match", "crowd", "referee"))
         self.prefs.changed.connect(self._pref_changed)
         for r in self.prefs.focus_rows():
             self.focus.register(r)

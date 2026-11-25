@@ -317,3 +317,34 @@ def test_tournament_both_sides_managed_unlocks_controllers(ds):
     assert cfg.lock_controllers is False              # pause menu can move a device to either team
     assert {c["zone"] for c in cfg.controllers.values()} == {"home", "away"}
     assert build_match_data(ds, cfg)["lock_controllers"] is False
+
+
+def test_restart_match_only_in_quick_match(ds, run_match):
+    """reR08 match_restart: the quit popup's Restart Match stays for a quick
+    match, is gone from tournament matches (challenges: test_challenges)."""
+    import copy
+    md = build_match_data(ds, make_match_config(ds))
+    assert md["match_restart"] is True
+    t = engine.create_tournament(ds, copy.deepcopy(TEMPLATE), "2024", humans=["10002"], seed=5)
+    cfg = bridge.to_match_config(ds, t, t.fixtures[0])
+    assert cfg.restart_allowed is False and build_match_data(ds, cfg)["match_restart"] is False
+    files = run_match(dict(md, match_restart=False))
+    root = ET.parse(files[gsv.game_filenames["missionFile"]]).getroot()
+    assert root.get("match_restart") == "off"
+
+
+def test_fog_in_the_mission(ds, run_match):
+    """The match setup's fog reaches the mission's <WEATHER fog> (reR08
+    ENABLE_FOG); a clear match writes none."""
+    cfg = make_match_config(ds)
+    md = build_match_data(ds, cfg)
+    assert md["fog"] == "off"
+    cfg.fog = "medium"
+    md = build_match_data(ds, cfg)
+    assert md["fog"] == "medium"
+    files = run_match(md)
+    weather = ET.parse(files[gsv.game_filenames["missionFile"]]).getroot().find("GAME/ENVIRONMENT/WEATHER")
+    assert weather.get("fog") == "medium"
+    files = run_match(dict(md, fog="off"))
+    weather = ET.parse(files[gsv.game_filenames["missionFile"]]).getroot().find("GAME/ENVIRONMENT/WEATHER")
+    assert weather.get("fog") is None

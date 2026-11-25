@@ -1,0 +1,65 @@
+{
+ "victor_scholtz": {
+  "name": "Victor Scholtz",
+  "face": "45000",
+  "kit": "referees/kits/rwc2007_red.png",
+  "kit_back": "referees/kits/rwc2007_red_back.png",
+  "rules": {}
+ },
+ "steve_smith": {
+  "name": "Steve Smith",
+  "face": "45001",
+  "kit": "referees/kits/irb2009_orange.png",
+  "kit_back": "referees/kits/irb2009_orange_back.png",
+  "rules": {}
+ },
+ "gerry_maher": {
+  "name": "Gerry Maher",
+  "face": "45002",
+  "kit": "referees/kits/wr2019_black.png",
+  "kit_back": "referees/kits/wr2019_black_back.png",
+  "rules": {}
+ },
+ "pierre_dubois": {
+  "name": "Pierre Dubois",
+  "face": "45003",
+  "kit": "referees/kits/rwc2015_pink.png",
+  "kit_back": "referees/kits/rwc2015_pink_back.png",
+  "rules": {}
+ },
+ "eddie_foskett": {
+  "name": "Eddie Foskett",
+  "face": "45004",
+  "kit": "referees/kits/wr2021_orange.png",
+  "kit_back": "referees/kits/wr2021_orange_back.png",
+  "rules": {}
+ },
+ "brett_shaw": {
+  "name": "Brett Shaw",
+  "face": "45005",
+  "kit": "referees/kits/rwc2023_yellow.png",
+  "kit_back": "referees/kits/rwc2023_yellow_back.png",
+  "rules": {}
+ },
+ "wayne_barnes": {
+  "name": "Wayne Barnes",
+  "face": "players/heads/referee_wayne_barnes.big",
+  "kit": "referees/kits/rwc2011_white.png",
+  "kit_back": "referees/kits/rwc2011_white_back.png",
+  "rules": {}
+ },
+ "jaco_peyper": {
+  "name": "Jaco Peyper",
+  "face": "players/heads/referee_jaco_peyper.big",
+  "kit": "referees/kits/rwc2019_purple.png",
+  "kit_back": "referees/kits/rwc2019_purple_back.png",
+  "rules": {}
+ },
+ "nigel_owens": {
+  "name": "Nigel Owens",
+  "face": "players/heads/referee_nigel_owens.big",
+  "kit": "referees/kits/wr2021_white.png",
+  "kit_back": "referees/kits/wr2021_white_back.png",
+  "rules": {}
+ }
+}

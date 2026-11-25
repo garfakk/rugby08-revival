@@ -21,20 +21,21 @@ from ui.theme import BG_BASE, ACCENT, FG_SECONDARY, FG_MUTED
 
 
 # Tools offered in expert mode only
-EXPERT_TOOLS = ("TOURNAMENT EDITOR", "STADIUM EDITOR")
+EXPERT_TOOLS = ("TOURNAMENT EDITOR", "STADIUM EDITOR", "REFEREE EDITOR")
 
 
 class ToolsScreen(Screen):
     def __init__(self, ds, on_back, on_team_editor, on_player_editor, on_import=None,
                  on_challenge_editor=None, on_edits=None, on_updates=None,
-                 on_tournament_editor=None, on_stadium_editor=None):
+                 on_tournament_editor=None, on_stadium_editor=None, on_referee_editor=None):
         super().__init__(on_back=on_back)
         self.ds = ds
         self._build(on_team_editor, on_player_editor, on_import, on_challenge_editor, on_edits,
-                    on_updates, on_tournament_editor, on_stadium_editor)
+                    on_updates, on_tournament_editor, on_stadium_editor, on_referee_editor)
 
     def _build(self, on_team_editor, on_player_editor, on_import=None, on_challenge_editor=None,
-               on_edits=None, on_updates=None, on_tournament_editor=None, on_stadium_editor=None):
+               on_edits=None, on_updates=None, on_tournament_editor=None, on_stadium_editor=None,
+               on_referee_editor=None):
         root = QVBoxLayout(self)
         root.setContentsMargins(0, 0, 0, 0)
         root.setSpacing(0)
@@ -60,6 +61,8 @@ class ToolsScreen(Screen):
             items.insert(2, ("TOURNAMENT EDITOR", "", on_tournament_editor, False))
         if on_stadium_editor is not None:
             items.insert(3, ("STADIUM EDITOR", "", on_stadium_editor, False))
+        if on_referee_editor is not None:
+            items.insert(4, ("REFEREE EDITOR", "", on_referee_editor, False))
         if config.developper_mode:
             items.extend([
                 ("IMPORT ROSTER", "", on_import, on_import is None),

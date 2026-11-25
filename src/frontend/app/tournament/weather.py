@@ -13,6 +13,9 @@ or evening) and from those:
   * at a ground with a roof (the Millennium Stadium), whether it is closed:
     in the rain or the cold. Closed = its covered scene, no rain or snow,
     no wind,
+  * fog (rugby08patches.dll presets light / medium / thick): mist on a
+    cool, still day, more in a wet season and in the evening, a haze of
+    spray in heavy rain; never under a closed roof or in the snow,
   * cold breath, and how many players would wear baselayers or gloves
     (worked out, not applied to players yet).
 It is seeded per fixture (engine.fixture_rng), so a fixture always gets the
@@ -92,6 +95,11 @@ COVERED = {32: "cold"}
 NIGHT_SHARE = 0.4             # evening kick-offs, unless the template says ("night_share")
 COLD = 6                      # °C at or below which the "cold" environment is preferred
 BREATH = 8                    # °C at or below which breath shows
+# chance of fog in a dry match by temperature (°C, up to): mist forms in cool,
+# damp air, hardly ever in the warmth
+FOG_CHANCE = ((8, 0.06), (12, 0.04), (16, 0.015))
+FOG_WET_SEASON, FOG_EVENING = 1.8, 1.5   # how much more often then
+FOG_HEAVY_RAIN = 0.5          # chance of a light haze of spray in heavy rain
 WET_SEASON = 0.27             # a month's rain chance from which pitches are worn and muddy
 RAIN_SCALE = 0.8              # CLIMATES' rain chances are "a wet day"; this makes them "rain during the match"
 
@@ -245,10 +253,25 @@ def pitch_texture(condition, environment, region="Reg2", allowed=()) -> str:
     return "default"
 
 
+def _fog(rng, temp, precip, heavy, night, wet_season, roof_closed) -> str:
+    """"off" / "light" / "medium" / "thick" (see FOG_CHANCE). Draws its two
+    numbers last, so the rest of a fixture's weather is as it always was."""
+    chance_roll, level_roll = rng.random(), rng.random()
+    if roof_closed or precip == "snow":
+        return "off"
+    if precip == "rain":
+        return "light" if heavy and chance_roll < FOG_HEAVY_RAIN else "off"
+    chance = next((c for limit, c in FOG_CHANCE if temp <= limit), 0.0)
+    chance *= (FOG_WET_SEASON if wet_season else 1.0) * (FOG_EVENING if night else 1.0)
+    if chance_roll >= chance:
+        return "off"
+    return "light" if level_roll < 0.45 else "medium" if level_roll < 0.85 else "thick"
+
+
 def forecast(t, fixture, ds=None) -> dict:
     """The fixture's weather (see the module docstring). Keys: date, temp,
     precip ("none"/"rain"/"snow"), heavy, night, environment, pitch,
-    condition, roof_closed, breath, baselayers / gloves (share of players
+    condition, roof_closed, fog, breath, baselayers / gloves (share of players
     who would wear them — not applied to players yet),
     summary ("6°C · heavy rain · evening")."""
     from .engine import fixture_rng
@@ -302,6 +325,8 @@ def forecast(t, fixture, ds=None) -> dict:
     else:
         condition = "best" if roll < 0.5 else "norm"
 
+    fog = _fog(rng, temp, precip, heavy, night, wet_season, roof_closed)
+
     if temp <= 4:
         baselayers = 0.7
     elif temp <= 8:
@@ -319,11 +344,13 @@ def forecast(t, fixture, ds=None) -> dict:
         words.append("overcast")
     else:
         words.append("clear")
+    if fog != "off":
+        words.append({"light": "haze", "medium": "mist", "thick": "fog"}[fog])
     words.append("evening" if night else "afternoon")
     return {
         "date": d.isoformat() if d else "", "temp": round(temp, 1), "precip": precip, "heavy": heavy,
         "night": night, "environment": environment, "condition": condition, "roof_closed": roof_closed,
         "pitch": pitch_texture(condition, environment, region_of(climate), allowed_textures(stadium)), "breath": temp <= BREATH,
-        "baselayers": baselayers, "gloves": 0.25 if temp <= 2 else 0.0,
+        "baselayers": baselayers, "gloves": 0.25 if temp <= 2 else 0.0, "fog": fog,
         "summary": " · ".join(words),
     }

@@ -1,0 +1,44 @@
+{
+ "victor_scholtz": {
+  "name": "Victor Scholtz",
+  "face": "45000",
+  "kit": "stock:a",
+  "kit_back": "",
+  "rules": {}
+ },
+ "steve_smith": {
+  "name": "Steve Smith",
+  "face": "45001",
+  "kit": "stock:d",
+  "kit_back": "",
+  "rules": {}
+ },
+ "gerry_maher": {
+  "name": "Gerry Maher",
+  "face": "45002",
+  "kit": "stock:a",
+  "kit_back": "",
+  "rules": {}
+ },
+ "pierre_dubois": {
+  "name": "Pierre Dubois",
+  "face": "45003",
+  "kit": "stock:d",
+  "kit_back": "",
+  "rules": {}
+ },
+ "eddie_foskett": {
+  "name": "Eddie Foskett",
+  "face": "45004",
+  "kit": "stock:a",
+  "kit_back": "",
+  "rules": {}
+ },
+ "brett_shaw": {
+  "name": "Brett Shaw",
+  "face": "45005",
+  "kit": "stock:d",
+  "kit_back": "",
+  "rules": {}
+ }
+}

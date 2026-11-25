@@ -63,6 +63,9 @@ WIND_VECTOR_SCALE = 1000
 
 # Weather precipitation IDs. Note: this is a custom setting that works only with the DLL patch
 precipitation_id = {"none": 0, "rain": 1, "snow": 3}
+# rugby08patches.dll fog presets (visibility: light 1500 m haze, medium 700 m
+# mist, thick 350 m fog); "off" = a clear match
+fog_levels = ["off", "light", "medium", "thick"]
 
 # Pre-match anthem (reR08 ENABLE_ANTHEM, .mis MISSION intro= / anthem=).
 # Every match is played in two club slots (teams_id), so the stock game picks
@@ -258,7 +261,18 @@ game_filenames={
     'kit_front': "48907084330b37ed8a59352b7c098652.big",	# Clermont home kit front
     'kit_back': "2135ae8bb4df0dc91849cd78000467f1.fsh",		# Clermont home kit back
 
-  }
+  },
+
+  # The match referee (backend/referee.py): DB record 45000 always wears head
+  # 45000 and kit slot 2, "referee.a" or "referee.d" (the game picks one,
+  # config+0x18f8), so a chosen referee goes over all of them
+  'referee': {
+    'head': "e05aceea3d0263a4541928878709070f.big",
+    'kit_a': "cd8db44ecfb1003bd4768062033be6f0.big",
+    'kit_d': "f6a77a69ddf16a1d5f30c95aa5422403.big",
+    'numbers_a': "15b082c5bb78287464ba44368bcc277d.fsh",
+    'numbers_d': "6c145d650a283f675abc5a818c00c849.fsh",
+  },
 }
 
 # Teams ID

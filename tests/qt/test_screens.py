@@ -53,6 +53,7 @@ SCREENS = [
     ("show_challenge_editor", "screen_challenge_editor"),
     ("show_tournament_editor", "screen_tournament_editor"),
     ("show_stadium_editor", "screen_stadium_editor"),
+    ("show_referee_editor", "screen_referee_editor"),
     ("show_challenge_mode", "screen_challenge_mode"),
     ("show_tournament_hub", "screen_tournament_hub"),
     ("show_tournament_wizard", "screen_tournament_wizard"),
@@ -126,20 +127,51 @@ def test_match_setup_dressing_choice(window, qapp, monkeypatch):
     monkeypatch.setattr(dressing, "library_sets", real)
 
 
+def test_match_setup_pitch_logo_preview(window, qapp, tmp_path):
+    """The pitch logo row's open list shows the logos of the option under
+    the cursor; picking one dresses the match."""
+    from PyQt5.QtWidgets import QLabel
+    from app.match_data_builder import build_match_data
+    window.show_match_setup()
+    qapp.processEvents()
+    setup = window.screen_match_setup.setup_screen
+    if not setup.cfg.controllers:
+        setup.cfg.controllers = {1: {"kind": "kbd", "label": "KEYBOARD", "zone": "home"}}
+    row = setup.pitch_logo_row
+    assert row.current()[0] == "none" and len(row._values) > 1
+    row._open_popup()
+    qapp.processEvents()
+    view = row._popup.findChild(QLabel)
+    bare = view.pixmap().toImage()                               # "none": the pitch alone
+    row._popup.hovered.emit(row._values[1])
+    assert not view.pixmap().isNull() and view.pixmap().toImage() != bare
+    view.pixmap().save(str(tmp_path / "pitch_logo_preview.png"))
+    row._popup.picked.emit(row._values[1])
+    row._popup.close_popup()
+    qapp.processEvents()
+    assert setup.cfg.pitch_logo_choice == row._values[1][0]
+    assert build_match_data(window.data, setup.cfg)["pitch_logos"]
+    row.set_index(0)
+    row.changed.emit()
+    assert build_match_data(window.data, setup.cfg)["pitch_logos"] == ""
+
+
 def test_editors_and_crowd_rows_in_expert_mode_only(window, qapp, monkeypatch):
-    """Tools' tournament and stadium editors, the hub's CREATE YOUR OWN and
-    quick match's crowd rows show only in expert mode."""
+    """Tools' tournament, stadium and referee editors, the hub's CREATE YOUR
+    OWN and quick match's crowd and referee rows show only in expert mode."""
     from shared.user_prefs import user_prefs
     for expert in (False, True):
         monkeypatch.setattr(user_prefs, "expert_mode", expert, raising=False)
         window.screen_tools.on_show()
-        assert [t.isHidden() for t in window.screen_tools.expert_tiles] == [not expert] * 2
+        assert [t.isHidden() for t in window.screen_tools.expert_tiles] == [not expert] * 3
         hub = window.screen_tournament_hub
         hub.on_show()
         assert hub.create_tile.isHidden() is not expert
         setup = window.screen_match_setup.setup_screen
         setup._apply_expert_mode()
         assert setup.crowd_rows and all(r.isHidden() is not expert for r in setup.crowd_rows.values())
+        assert setup.referee_row.isHidden() is not expert
+        assert setup.referee_kit_row.isHidden() is not expert
 
 
 def test_match_setup_expert_start_minute(window, qapp, monkeypatch):
@@ -645,6 +677,40 @@ def test_player_editor_edit_save(window, qapp):
     window.data.refresh_record("players", pid)
     assert window.data.players[pid]["display_name"] != "Z.Tested"
     screen.reload()
+    window.show_main()
+
+
+def test_player_editor_save_with_edits_off(window, qapp):
+    """Edits turned off: SAVE asks to turn them on instead of failing, the
+    typed change survives the question and is saved once they are on; the
+    unsaved-changes guard then carries on where the user was going."""
+    from app import game_data as G
+    G.set_edit_store(window.data.edits)
+    pid = str(window.data.teams["10002"]["2024"]["players"][1])
+    window.open_player(pid, "2024")
+    _wait(qapp, lambda: window.screen_player_editor.record_id == pid, 10)
+    editor = window.screen_player_editor
+    window.data.set_edits_enabled(False)
+    try:
+        editor.edit("rename", lambda w: w.__setitem__("display_name", "Z.Off"))
+        assert editor.save() is False
+        dialog = editor._dialog
+        assert dialog is not None and editor.session.is_dirty()
+        dialog.choose("cancel")
+        assert not window.data.edits.enabled and editor.session.is_dirty()
+
+        went = []
+        editor.guard_dirty(lambda: went.append(True))
+        editor._dialog.choose("save")                  # unsaved changes: SAVE
+        assert not went
+        editor._dialog.choose("on")                    # edits off: TURN ON AND SAVE
+        assert went and window.data.edits.enabled
+        assert not editor.session.is_dirty()
+        assert window.data.edits.get("players", pid)["mine"]["display_name"] == "Z.Off"
+    finally:
+        window.data.set_edits_enabled(True)
+        window.data.edits.revert("players", pid)
+        window.data.refresh_record("players", pid)
     window.show_main()
 
 
@@ -1210,16 +1276,118 @@ def test_squad_picker_creates_a_player_for_the_shirt(window, qapp):
     team_ed.session.revert() if hasattr(team_ed.session, "revert") else None
 
 
-def test_new_team_starts_from_another_teams_look(window, qapp):
-    team_ed = window.screen_team_editor
-    team_ed._create_team("Test Fifteen", "club", "", "2024", False, True, start="10002")
+def test_new_team_dialog_needs_a_name_and_a_group(window, qapp):
+    """New team: name, type, group, season only; CREATE stays off until the
+    name and the group are filled, and empty fields show no "not set"."""
+    from ui.editor_kit import FormDialog
+    window.show_team_editor()
     qapp.processEvents()
-    tid = team_ed.record_id
-    info = window.data.team_seasons(tid)["2024"]
-    src = window.data.team_seasons("10002")["2024"]
-    assert info["name"] == "Test Fifteen" and info["players"] == []
-    assert set(info["kits"]) == set(src["kits"])
-    assert all(v == "" for v in info["roles"].values())
+    editor = window.screen_team_editor
+    editor.new_record()
+    qapp.processEvents()
+    dialog = editor._dialog
+    assert isinstance(dialog, FormDialog)
+    assert set(dialog.fields) == {"name", "type", "group", "year"}
+    create = next(b for b, role in dialog.buttons if role == "ok")
+    name, group = dialog.fields["name"], dialog.fields["group"]
+    assert name.blank_text == "" and group.blank_label == ""
+    assert not create.isEnabled()
+    name.set_value("Test Fifteen")
+    name.edited.emit("Test Fifteen")
+    assert not create.isEnabled()
+    dialog.choose("ok")                         # refused: no group yet
+    assert editor._dialog is dialog
+    group.set_value(group.options[0])
+    group.edited.emit(group.options[0])
+    assert create.isEnabled()
+    dialog.choose("ok")
+    qapp.processEvents()
+    tid = editor.record_id
+    info = window.data.team_seasons(tid)[max(window.data.team_seasons(tid))]
+    assert info["name"] == "Test Fifteen" and info.get("group") == group.options[0]
+
+
+def test_editor_list_filters_and_season_pane(window, qapp):
+    """Team type and nationality filters; the season list back in its own
+    pane; the filter box hint has no dash."""
+    window.show_team_editor()
+    qapp.processEvents()
+    teams = window.screen_team_editor
+    kind = teams.extra_filters["type"]
+    assert set(kind.options) <= {"club", "international", "special"} and kind.options
+    kind.set_value("international")
+    kind.edited.emit("international")
+    shown = teams.list.count()
+    assert all((window.data.team_seasons(tid)[max(window.data.team_seasons(tid))].get("type")) == "international"
+               for tid, *_ in teams.list_items()[0])
+    kind.set_value("")
+    kind.edited.emit("")
+    assert teams.list.count() >= shown
+    assert teams.shell.mid_pane is not None and teams.season_list.isVisibleTo(teams)
+    assert not teams.list.search.dash
+
+    window.show_player_editor()
+    qapp.processEvents()
+    players = window.screen_player_editor
+    nat = players.extra_filters["nationality"]
+    assert nat.options
+    nat.set_value(nat.options[0])
+    nat.edited.emit(nat.options[0])
+    for pid, *_ in players.list_items()[0]:
+        stats = window.data.players[pid]["stats"]
+        assert stats[max(stats)].get("nationality") == nat.options[0]
+    nat.set_value("")
+    nat.edited.emit("")
+    assert players.shell.mid_pane is not None and players.season_list.count() >= 1
+
+
+def test_shirt_names_preview_without_squad_says_player_name(window, qapp):
+    from screens import team_tabs
+    from shared import shirt_names as SN
+    assert SN.shirt_text(team_tabs.SAMPLE_PLAYER, "surname", "upper") == "PLAYER NAME"
+    assert SN.shirt_text(team_tabs.SAMPLE_PLAYER, "full", "asis") == "Player name"
+    assert SN.shirt_text(team_tabs.SAMPLE_PLAYER, "initial", "asis") == "Player name"
+
+
+def test_head_picker_click_assigns(window, qapp):
+    from ui.face_picker import FacePicker
+    from app.stock_faces import search_stock_faces
+    pid = next(iter(window.data.players))
+    window.open_player(pid, None)
+    _wait(qapp, lambda: window.screen_player_editor.record_id == pid, 10)
+    editor = window.screen_player_editor
+    got = []
+    picker = FacePicker(editor)
+    picker.picked.connect(got.append)
+    face = str(search_stock_faces("")[0]["id"])
+    picker._cells[search_stock_faces("")[0]["id"]].clicked.emit()
+    assert got == [face] and picker.isVisible()            # assigned, still open to try others
+    picker._cells[search_stock_faces("")[0]["id"]].activated.emit()
+    assert not picker.isVisible()                          # double-click closes
+    qapp.processEvents()
+
+    # real mouse on the thumbnail image (not the cell margin) picks the head too
+    from PyQt5.QtCore import Qt
+    from PyQt5.QtTest import QTest
+    from PyQt5.QtWidgets import QWidget
+    got.clear()
+    picker = FacePicker(editor)
+    picker.picked.connect(got.append)
+    second = search_stock_faces("")[1]["id"]
+    thumb = picker._cells[second].thumb
+    for splash in window.findChildren(QWidget, options=Qt.FindChildrenRecursively):
+        if type(splash).__name__ == "IntroSplash":
+            splash.hide()                                  # it covers the window in tests
+    qapp.processEvents()
+    # through the QWindow, so Qt hit-tests like a real click (a QWidget target
+    # would get the event directly, whatever is on top of it)
+    win, at = window.windowHandle(), thumb.mapTo(window, thumb.rect().center())
+    QTest.mouseClick(win, Qt.LeftButton, pos=at)
+    assert got == [str(second)] and picker.isVisible()
+    QTest.mouseDClick(win, Qt.LeftButton, pos=at)
+    from PyQt5 import sip
+    assert sip.isdeleted(picker) or not picker.isVisible()   # double-click closed it
+    qapp.processEvents()
 
 
 def test_narrow_editor_keeps_every_tab_on_the_bar(window, qapp):
@@ -1306,3 +1474,136 @@ def test_player_list_ctrl_click_starts_picking(window, qapp):
     assert editor.list.checked_data() == [pids[0]]
     editor.leave_batch()
     window.show_main()
+
+
+def test_referee_editor_new_rename_kit_delete(window, qapp, monkeypatch, tmp_path):
+    """Tools' referee editor: + NEW makes a referee, a new name and kit are
+    SAVEd in the user's edits, quick match lists it, DELETE takes it away."""
+    from app import referees as R
+    monkeypatch.setattr(config, "directory_user_edits", str(tmp_path / "edits"))
+    window.data.referees = R.load()
+    window.show_referee_editor()
+    _wait(qapp, lambda: window.screens.currentWidget() is window.screen_referee_editor, 10)
+    ed = window.screen_referee_editor
+    before = set(R.load())
+    ed.new_record()
+    qapp.processEvents()
+    rid = ed.record_id
+    assert rid not in before and rid in R.load()
+    ed._set_name("Test Referee")
+    ed._set_kit("stock:d")
+    assert ed.save()
+    saved = R.load()[rid]
+    assert saved["name"] == "Test Referee" and saved["kit"] == "stock:d"
+    assert window.data.referees[rid]["name"] == "Test Referee"
+    setup = window.screen_match_setup.setup_screen
+    setup._sync_referees()
+    assert (rid, "Test Referee") in setup.referee_row._values
+    assert ("stock:d", "green") in setup.referee_kit_row._values
+    ed.delete_record()
+    dialog = ed._dialog
+    assert dialog is not None
+    dialog.choose("ok")
+    qapp.processEvents()
+    assert rid not in R.load() and rid not in window.data.referees
+    window.show_main()
+
+
+def test_tournament_prefs_referee_kits(qapp, monkeypatch):
+    """The tournament settings' referee group: a toggle per referee kit,
+    the ticked ones in option "referee_kits"."""
+    from shared.user_prefs import user_prefs
+    from screens.tournament.prefs import KIT_ROW, PrefsPanel
+    monkeypatch.setattr(user_prefs, "expert_mode", True, raising=False)
+    panel = PrefsPanel(groups=("referee",))
+    seen = []
+    panel.changed.connect(lambda k, v: seen.append((k, v)))
+    assert KIT_ROW + "stock:a" in panel.rows and KIT_ROW + "stock:d" in panel.rows
+    panel.set_values({"referee_kits": ["stock:d"]})
+    assert panel.rows[KIT_ROW + "stock:d"].state() and not panel.rows[KIT_ROW + "stock:a"].state()
+    panel._set_kit("stock:a", True)
+    assert seen[-1] == ("referee_kits", ["stock:d", "stock:a"])
+    panel._set_kit("stock:d", False)
+    assert panel.values()["referee_kits"] == ["stock:a"]
+    assert panel.rows[KIT_ROW + "stock:a"] in panel.focus_rows()
+
+
+def test_head_picker_referees_side(window, qapp, monkeypatch, tmp_path):
+    """The referee editor's head picker opens on REFEREES: the game's six
+    referee heads and the mod's players/heads/referee_*.big."""
+    from shared.config import config
+    from ui.face_picker import FacePicker
+    heads = tmp_path / "players" / "heads"
+    heads.mkdir(parents=True)
+    (heads / "referee_wayne_barnes.big").write_bytes(b"BIGF")
+    (heads / "head_1.big").write_bytes(b"BIGF")
+    monkeypatch.setattr(config, "mod_data_directory", str(tmp_path))
+    picker = FacePicker(window, current="45002", referees=True)
+    try:
+        assert picker._mode == "referees" and picker._current == 45002
+        ids = [e["id"] for e in picker._entries()]
+        assert ids == [45000, 45001, 45002, 45003, 45004, 45005, "players/heads/referee_wayne_barnes.big"]
+        assert picker._referee_entries()[-1]["name"] == "Wayne Barnes"
+        picker.search.setText("barnes")
+        assert [e["id"] for e in picker._entries()] == ["players/heads/referee_wayne_barnes.big"]
+        seen = []
+        picker.picked.connect(seen.append)
+        picker._arm("players/heads/referee_wayne_barnes.big")
+        assert seen == ["players/heads/referee_wayne_barnes.big"]
+    finally:
+        picker._close()
+    plain = FacePicker(window, current="45002")
+    try:
+        assert plain._mode == "stock"
+    finally:
+        plain._close()
+
+
+def test_quick_match_referee_rows_preview(window, qapp, monkeypatch):
+    """Quick match's referee rows open a list with the hovered referee (or
+    the current referee in the hovered kit) shown in 3D."""
+    from app import referees as R
+    from backend import referee as B
+    from ui.referee_picker import RefereeRow
+    monkeypatch.setattr(B, "stock_kit_paths", lambda letter, cache_dir=None: (f"kit.{letter}", "numbers"))
+    monkeypatch.setattr(B.mod_utils, "stock_head_path", lambda face, cache: f"head.{face}")
+    setup = window.screen_match_setup.setup_screen
+    assert isinstance(setup.referee_row, RefereeRow) and isinstance(setup.referee_kit_row, RefereeRow)
+    rid = next(iter(window.data.referees))
+    face = window.data.referees[rid]["face"]
+    setup.cfg.referee_kit = R.OWN_KIT
+    assert setup._referee_preview(R.RANDOM, "") is None
+    assert setup._referee_preview(R.STOCK, "")[0] == "head.45000"
+    assert setup._referee_preview(rid, "stock:d")[:2] == (f"head.{face}", "kit.d")
+    shown = []
+    monkeypatch.setattr("ui.player_stage.KitStage.update_kit",
+                        lambda self, *a, **k: shown.append((a[1], k.get("head_path"))))
+    setup.referee_kit_row._open_popup()
+    popup = setup.referee_kit_row._popup
+    try:
+        popup.hovered.emit(("stock:d", "green"))
+        assert shown[-1][0] == "kit.d"
+    finally:
+        popup.close_popup()
+
+
+def test_match_card_wind_and_weather(window, qapp):
+    """Quick match's match card: wind and weather side by side; the weather
+    is one of rain, snow or fog; the crowd rows are in ADVANCED."""
+    from app.game_data import WEATHER
+    setup = window.screen_match_setup.setup_screen
+    for row in (setup.wind_power_row, setup.weather_row):
+        assert not setup.advanced_panel.isAncestorOf(row)
+    assert all(setup.advanced_panel.isAncestorOf(r) for r in setup.crowd_rows.values())
+    assert list(WEATHER) == setup.weather_row._values
+
+    def pick(key):
+        setup.weather_row.set_index(setup.weather_row.index_of(key))
+        setup.weather_row.changed.emit()
+        c = setup.cfg
+        return c.rain, c.precip_mode, c.snow_intensity, c.fog
+
+    assert pick("snow") == (False, "snow", 13.0, "off")
+    assert pick("rain") == (True, "stock", None, "off")
+    assert pick("fog_thick") == (False, "stock", None, "thick")
+    assert pick("clear") == (False, "stock", None, "off")

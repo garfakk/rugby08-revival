@@ -11,7 +11,7 @@ import os
 import random
 
 from backend import game_specific_variables as gsv
-from backend import pitch_stripes
+from backend import pitch_lines, pitch_stripes
 from shared.config import config
 from shared import commentary, shirt_names
 from app import appearance, competition_branding, difficulty, dressing
@@ -390,6 +390,21 @@ def _own_pitch(cfg, stadium_files):
             "scene": scene, "stadium": slot["file"], "environment": env}
 
 
+def _pitch_lines(cfg):
+    """The stadium's line style (backend pitch_lines): {"scene" (game path of
+    the scene pack of the environment), "style"}; None for the game's lines."""
+    info = (cfg.stadium or {}).get("data") or {}
+    style = pitch_lines.clean(info.get("lines") or "")
+    try:
+        slot = gsv.STADIUM_SLOTS.get(int(info.get("game_id")))
+    except (TypeError, ValueError):
+        slot = None
+    if not style or not slot:
+        return None
+    env = cfg.environment
+    return {"scene": slot["scenes"].get(env) or f"stadiums/{slot['file']}.{env}", "style": style}
+
+
 def _crowd(cfg):
     """The crowd of this match (backend crowd): {"scene" (game path of the
     scene pack of the environment), "size", "colours" (bool), "mood"}; None
@@ -451,6 +466,19 @@ def _presentation(home_info: dict, away_info: dict, cfg) -> dict:
         "haka_home": bool(cfg.haka_home or haka(home_info)),
         "haka_away": bool(cfg.haka_away or haka(away_info)),
     }
+
+
+def _referee(ds, cfg):
+    """match_data["referee"] (backend/referee.py): the chosen referee's head,
+    kit and rules; {} = the game's own (always, outside expert mode)."""
+    from app import referees
+    from shared.user_prefs import user_prefs
+    if not user_prefs.expert_mode:
+        return {}
+    pool = getattr(ds, "referees", None) or {}
+    colours = [slot.kit(ds).get("color") for slot in (cfg.home, cfg.away)]
+    kit = referees.resolve_kit(getattr(cfg, "referee_kit", ""), colours)
+    return referees.match_data(pool, referees.pick(pool, cfg.referee), kit)
 
 
 def build_match_data(ds: DataStore, cfg: MatchConfig):
@@ -579,6 +607,7 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
         "stadium_name": stadium_name,
         "stadium_screen": _stadium_screen(cfg, stadium_files, competition_logo),
         "stadium_stripes": _stadium_stripes(cfg, stadium_files),
+        "pitch_lines": _pitch_lines(cfg),
         "pads": dressing_refs["pads"],
         "posts": dressing_refs["posts"],
         "adboards": dressing_refs["ads"],
@@ -592,6 +621,7 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
         "own_pitch": own_pitch,
         "crowd": _crowd(cfg),
         "rain": cfg.rain,
+        "fog": cfg.fog if cfg.fog in gsv.fog_levels else "off",
         "ball": selected_ball,
         "banners": selected_banners,
         "tournament_logo": tournament_logo,
@@ -603,7 +633,7 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
         # backend/pitch_logos): None = the game's own layout
         "pitch_logo_layout": ((cfg.stadium or {}).get("data") or {}).get("pitch_logos"),
         "flags": _team_asset_path(ds, cfg.home.team_id, home_info.get("flags", "")),
-        "referee": {"face": "", "kit_back": "", "kit_front": ""},
+        "referee": _referee(ds, cfg),
         # ── Advanced/.mis fields — see the comment above and MatchConfig's
         # own for what each depends on. All at their "omit" default unless
         # the advanced panel (config.advanced_user) was used.
@@ -619,6 +649,7 @@ def build_match_data(ds: DataStore, cfg: MatchConfig):
         "trophy_lifter": cfg.trophy_lifter,
         "stadium_flags": _stadium_flags(cfg),
         "kick_assist": cfg.kick_assist,
+        "match_restart": bool(cfg.restart_allowed),
         "mission_state": mission_state,
         "mission_nis": list(cfg.mission_nis),
         "score_events": list(cfg.score_events),

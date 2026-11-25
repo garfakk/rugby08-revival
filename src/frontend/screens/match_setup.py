@@ -32,7 +32,7 @@ from app import difficulty
 from app import variants as V
 from app.match_data_builder import build_match_data
 from app.game_data import (
-    SNOW_INTENSITY_MAX, WIND_POWER_NAMES, frontend_logo, random_wind,
+    WEATHER, WIND_POWER_NAMES, frontend_logo, random_wind,
 )
 from app.season import nearest_season, season_label
 from app.shell import present
@@ -858,6 +858,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self._sync_stadium_list()      # stadiums switched on / off in the stadium editor
         self._sync_environment_choices()   # the stadium editor's environments / pitches
         self._sync_pitch_choices()
+        self._sync_referees()          # the referee editor's changes
         self._apply_expert_mode()      # picks up a Settings toggle flipped meanwhile
         self._apply_picker_style()     # same, for Settings > Quick Match Picker
         self._maybe_reroll()
@@ -888,15 +889,55 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self.away_col._refresh_kit_preview()
         self.play_btn.setFocus()
 
+    def _sync_referees(self):
+        """The referee choices again (the referee editor may have changed
+        them), keeping the current one."""
+        from app import referees
+        keep = self.cfg.referee
+        values = ([(referees.STOCK, "game's own"), (referees.RANDOM, "random")]
+                  + [(rid, r["name"] or rid) for rid, r in (getattr(self.ds, "referees", None) or {}).items()])
+        index = next((i for i, v in enumerate(values) if v[0] == keep), 0)
+        self.referee_row.set_values(values, index=index)
+        self.cfg.referee = values[index][0]
+        keep = self.cfg.referee_kit
+        values = ([(referees.OWN_KIT, "referee's own"), (referees.AUTO_KIT, "best contrast")]
+                  + [(kit, referees.kit_label(kit)) for kit in referees.kits()])
+        index = next((i for i, v in enumerate(values) if v[0] == keep), 0)
+        self.referee_kit_row.set_values(values, index=index)
+        self.cfg.referee_kit = values[index][0]
+
+    def _referee_preview(self, referee, kit):
+        """(head, front, back) of referee choice `referee` in kit choice
+        `kit` for the 3D preview (ui/referee_picker.py); None = a referee
+        drawn at random."""
+        from app import referees
+        from backend.referee import preview_files
+        if referee == referees.RANDOM:
+            return None
+        record = (getattr(self.ds, "referees", None) or {}).get(referee) if referee else None
+        face = record["face"] if record else "45000"
+        try:
+            colours = [slot.kit(self.ds).get("color") for slot in (self.cfg.home, self.cfg.away)]
+        except Exception:
+            colours = []
+        chosen = referees.resolve_kit(kit, colours, random.Random(0))
+        if chosen:
+            return preview_files(face, chosen, referees.kit_back(chosen))
+        return preview_files(face, record["kit"] if record else "stock:a",
+                             record["kit_back"] if record else "")
+
     def _apply_expert_mode(self):
-        """Show the disabled "coming soon" rows only in expert mode. Hidden
-        rows are skipped by keyboard/pad navigation (FocusManager.alive)."""
-        for row in getattr(self, "_coming_soon_rows", []):
-            row.setVisible(user_prefs.expert_mode)
+        """Show the expert rows only in expert mode. Hidden rows are skipped
+        by keyboard/pad navigation (FocusManager.alive)."""
+        if hasattr(self, "referee_row"):
+            self.referee_row.setVisible(user_prefs.expert_mode)
+            self.referee_kit_row.setVisible(user_prefs.expert_mode)
         for row in self._late_start_rows():
             row.setVisible(user_prefs.expert_mode)
         for row in getattr(self, "crowd_rows", {}).values():
             row.setVisible(user_prefs.expert_mode)
+        if getattr(self, "_crowd_heading", None) is not None:
+            self._crowd_heading.setVisible(user_prefs.expert_mode)
 
     def _late_start_rows(self):
         if not hasattr(self, "start_minute_row"):
@@ -975,6 +1016,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
     def _on_environment_changed(self):
         self.cfg.environment = self.environment_row.current()
         self._sync_roof_wind()
+        self._sync_pitch_choices()      # the stadium's own pitch is per environment
 
     def _roll_wind(self):
         """Settle the wind for this match: the strength is the row's (none
@@ -1014,7 +1056,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
         body.setObjectName("matchSetupBody")
         body.setStyleSheet("QWidget#matchSetupBody { background: transparent; }")
         bl = QHBoxLayout(body)
-        bl.setContentsMargins(80, 24, 80, 20)
+        bl.setContentsMargins(80, 16, 80, 12)     # tight: no scrolling on a 900-line screen
         bl.setSpacing(24)
 
         self.home_col = TeamColumn("home", HOME_TINT, self)
@@ -1060,12 +1102,12 @@ class MatchSetupScreen(KickoffTransition, Screen):
         wrap = QWidget()
         wv = QVBoxLayout(wrap)
         wv.setContentsMargins(0, 0, 0, 0)
-        wv.setSpacing(14)
+        wv.setSpacing(10)
 
         card = Card(translucent=True)
         v = QVBoxLayout(card)
-        v.setContentsMargins(24, 18, 24, 20)
-        v.setSpacing(10)
+        v.setContentsMargins(16, 10, 16, 10)
+        v.setSpacing(6)
 
         v.addWidget(eyebrow_label("match", color=ACCENT, size=15))
 
@@ -1114,10 +1156,12 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self.focus.register(self.environment_row)
         v.addWidget(self.environment_row)
 
-        # Wind (the reR08 wind patch, Settings > Wind: Advanced): strength =
-        # the .mis <WIND power> strength 0..4, picked at random each time the
-        # screen opens; the direction (relative to home) is always random,
-        # rolled afresh at each kick-off (_roll_wind).
+        # Wind, then weather, a row each. Wind (the reR08 wind patch,
+        # Settings > Wind: Advanced): strength = the .mis <WIND power>
+        # strength 0..4, picked at random each time the screen opens; the
+        # direction (relative to home) is always random, rolled afresh at
+        # each kick-off (_roll_wind). Weather: one of rain, snow or fog
+        # (app.game_data.WEATHER).
         self.wind_power_row = SelectorRow("wind")
         self.wind_power_row.set_values(list(WIND_POWER_NAMES), index=0)
         self.wind_power_row._display = lambda n: WIND_POWER_NAMES.get(n, '')
@@ -1125,25 +1169,12 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self.focus.register(self.wind_power_row)
         v.addWidget(self.wind_power_row)
 
-        # The crowd (backend crowd): how full the stands are, fans in the
-        # teams' colours, a quieter crowd
-        from backend import crowd
-        self.crowd_rows = {}
-        for attr, label, values in (("crowd_size", "crowd", ["full", "busy", "half", "sparse"]),
-                                    ("crowd_colours", "supporters", ["neutral", "colours"]),
-                                    ("crowd_mood", "atmosphere", ["normal", "quiet"])) \
-                if crowd.OPTIONS_ENABLED else ():
-            row = SelectorRow(label)
-            row.set_status("EXPERT", EXPERT)
-            current = getattr(self.cfg, attr)
-            if attr == "crowd_colours":
-                current = "colours" if current else "neutral"
-            row.set_values(values, index=values.index(current) if current in values else 0)
-            row.changed.connect(lambda a=attr, r=row: self._on_crowd_changed(a, r.current()))
-            self.focus.register(row)
-            v.addWidget(row)
-            self.crowd_rows[attr] = row
-
+        self.weather_row = SelectorRow("weather")
+        self.weather_row.set_values(list(WEATHER), index=0)
+        self.weather_row._display = lambda k: WEATHER[k][0]
+        self.weather_row.changed.connect(self._on_weather_changed)
+        self.focus.register(self.weather_row)
+        v.addWidget(self.weather_row)
 
         self.advanced_btn = StyledButton("ADVANCED", "neutral")
         self.advanced_btn.setMinimumHeight(BTN_HEIGHT)
@@ -1151,7 +1182,6 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self.focus.register(self.advanced_btn)
         v.addWidget(self.advanced_btn)
         wv.addWidget(card)
-        wv.addSpacing(14)
 
         # Controllers — its own container below the match card: an icon for
         # the keyboard and each gamepad connected, moved by that device itself
@@ -1161,7 +1191,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
         # their connection order). Every device on CPU = CPU vs CPU.
         controls_card = Card(translucent=True)
         cv = QVBoxLayout(controls_card)
-        cv.setContentsMargins(24, 18, 24, 20)
+        cv.setContentsMargins(24, 10, 24, 10)
         cv.setSpacing(10)
         cv.addWidget(eyebrow_label("Controllers", color=ACCENT, size=15))
         self.controller_board = ControllerBoard()
@@ -1281,21 +1311,51 @@ class MatchSetupScreen(KickoffTransition, Screen):
             self.start_score_rows[side] = row
         self._sync_late_start_rows()
 
-        # Referee: hidden unless Settings > Expert Mode is on (_apply_expert_mode);
-        # referee_openplay is still EXPERIMENTAL in reR08.
-        self._coming_soon_rows = []
-        for label in ("referee",):
+        # Referee (app/referees.py): expert mode only (_apply_expert_mode)
+        from ui.referee_picker import RefereeRow
+        self.referee_row = RefereeRow(
+            "referee", lambda v: self._referee_preview(v[0], self.cfg.referee_kit))
+        self.referee_row.set_status("EXPERT", EXPERT)
+        self.referee_row.changed.connect(
+            lambda: setattr(self.cfg, "referee", (self.referee_row.current() or ("", ""))[0]))
+        self.focus.register(self.referee_row)
+        v.addWidget(self.referee_row)
+        self.referee_kit_row = RefereeRow(
+            "referee kit", lambda v: self._referee_preview(self.cfg.referee, v[0]))
+        self.referee_kit_row.set_status("EXPERT", EXPERT)
+        self.referee_kit_row.changed.connect(
+            lambda: setattr(self.cfg, "referee_kit", (self.referee_kit_row.current() or ("", ""))[0]))
+        self.focus.register(self.referee_kit_row)
+        v.addWidget(self.referee_kit_row)
+        self._sync_referees()
+
+        # ── Crowd (expert mode) ── how full the stands are, fans in the
+        # teams' colours, a quieter crowd (backend/crowd.py)
+        from backend import crowd
+        self.crowd_rows = {}
+        self._crowd_heading = None
+        if crowd.OPTIONS_ENABLED:
+            v.addSpacing(8)
+            self._crowd_heading = eyebrow_label("CROWD", color=ACCENT, size=13)
+            v.addWidget(self._crowd_heading)
+        for attr, label, values in (("crowd_size", "crowd", ["full", "busy", "half", "sparse"]),
+                                    ("crowd_colours", "supporters", ["neutral", "colours"]),
+                                    ("crowd_mood", "atmosphere", ["normal", "quiet"])) \
+                if crowd.OPTIONS_ENABLED else ():
             row = SelectorRow(label)
-            row.set_free_text("—")
-            row.set_disabled_visual(True)
-            row.set_status("EXPERT · COMING SOON", EXPERT)
+            row.set_status("EXPERT", EXPERT)
+            current = getattr(self.cfg, attr)
+            if attr == "crowd_colours":
+                current = "colours" if current else "neutral"
+            row.set_values(values, index=values.index(current) if current in values else 0)
+            row.changed.connect(lambda a=attr, r=row: self._on_crowd_changed(a, r.current()))
             self.focus.register(row)
             v.addWidget(row)
-            self._coming_soon_rows.append(row)
+            self.crowd_rows[attr] = row
         self._apply_expert_mode()
 
         # ── Pitch & weather ──
-        section("PITCH & WEATHER")
+        section("PITCH")
         # reR08 ENABLE_PITCH's whitelist (gsv.pitch_textures: the game's own
         # names, which the DLL matches exactly), or the ones the stadium's
         # "pitches" lists. "default" (not in the whitelist) = the stadium's
@@ -1309,13 +1369,6 @@ class MatchSetupScreen(KickoffTransition, Screen):
         v.addWidget(self.pitch_row)
         self._sync_pitch_choices()
 
-        self.rain_row = SelectorRow("rain")
-        self.rain_row.set_values(["no", "yes"], index=0)
-        self.rain_row.changed.connect(
-            lambda: setattr(self.cfg, "rain", self.rain_row.current() == "yes"))
-        self.focus.register(self.rain_row)
-        v.addWidget(self.rain_row)
-
         if config.advanced_user:
             self._build_advanced_weather_rows(v)
 
@@ -1324,7 +1377,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
         # picked (app/dressing.py); the open lists preview them.
         section("STADIUM")
         from app import competition_branding, dressing
-        from ui.dressing_picker import DressingRow, ads_strip
+        from ui.dressing_picker import DressingRow, PitchLogoRow, ads_strip, pitch_logo_preview
         from backend import stadium_dressing
 
         def stadium_info():
@@ -1365,12 +1418,13 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self.ads_row = self.dressing_rows["ads"]
 
         # Pitch logo: "none" (the default: a quick match has no competition)
-        # or a competition's pack (data/competitions/*/assets/pitch_logos).
-        self._pitch_logo_choices = [("none", "none")] + competition_branding.choices(self.ds, "pitch_logo")
+        # or a competition's pack (data/competitions/*/assets/pitch_logos),
+        # one entry per distinct pack; previewed where the stadium paints them.
+        self._pitch_logo_choices = [("none", "none")] + competition_branding.unique_choices(self.ds, "pitch_logo")
         default_index = 0
-        self.pitch_logo_row = SelectorRow("pitch logo")
+        self.pitch_logo_row = PitchLogoRow("pitch logo", lambda choice: pitch_logo_preview(
+            self.ds, choice, stadium_info().get("pitch_logos")))
         self.pitch_logo_row.set_values(self._pitch_logo_choices, index=default_index)
-        self.pitch_logo_row._display = lambda t: t[1]
         self.pitch_logo_row.changed.connect(
             lambda: setattr(self.cfg, "pitch_logo_choice",
                             (self.pitch_logo_row.current() or ("none", ""))[0]))
@@ -1382,11 +1436,12 @@ class MatchSetupScreen(KickoffTransition, Screen):
         section("PRESENTATION")
         # Tournament logo (scoreboard / in-game graphics): "none" (the
         # default, a blank logo) or a competition's.
-        self._tournament_logo_choices = [("none", "none")] + competition_branding.choices(self.ds, "logo")
+        self._tournament_logo_choices = [("none", "none")] + competition_branding.unique_choices(self.ds, "logo")
         logo_index = 0
-        self.tournament_logo_row = SelectorRow("tournament logo")
+        from ui.dressing_picker import TournamentLogoRow, tournament_logo_preview
+        self.tournament_logo_row = TournamentLogoRow(
+            "tournament logo", lambda choice: tournament_logo_preview(self.ds, choice))
         self.tournament_logo_row.set_values(self._tournament_logo_choices, index=logo_index)
-        self.tournament_logo_row._display = lambda t: t[1]
         self.tournament_logo_row.changed.connect(
             lambda: setattr(self.cfg, "tournament_logo_choice",
                             (self.tournament_logo_row.current() or ("", ""))[0]))
@@ -1415,27 +1470,9 @@ class MatchSetupScreen(KickoffTransition, Screen):
 
     # ── config.advanced_user rows ────────────────────────────────────────
     def _build_advanced_weather_rows(self, v):
-        """The weather extras reR08 supports beyond the plain rain toggle
-        above (wind lives on the match card — see _build_mid_column). Every row here is additive/optional at the MatchConfig
-        level (see its own comment) — leaving all of them at their default
-        produces the exact same .mis this screen has always produced."""
-
-        # Overrides the plain rain toggle above when set to anything but
-        # "stock" — it's the only path to real falling snow (precipitation
-        # alone can't show it; see game_specific_variables.py).
-        self.precip_row = SelectorRow("precipitation override")
-        self.precip_row.set_values(["stock", "none", "rain", "snow"], index=0)
-        self.precip_row.changed.connect(self._on_precip_mode_changed)
-        self.focus.register(self.precip_row)
-        v.addWidget(self.precip_row)
-
-        self.snow_intensity_row = SelectorRow("snow intensity")
-        self.snow_intensity_row.set_values(list(range(int(SNOW_INTENSITY_MAX) + 1)), index=13)
-        self.snow_intensity_row.changed.connect(
-            lambda: setattr(self.cfg, "snow_intensity", float(self.snow_intensity_row.current())))
-        self.snow_intensity_row.set_disabled_visual(True)
-        self.focus.register(self.snow_intensity_row)
-        v.addWidget(self.snow_intensity_row)
+        """The weather extras beyond the match card's wind and weather
+        (_build_mid_column). Left at its default it produces the exact
+        same .mis this screen has always produced."""
 
         self.breath_row = SelectorRow("cold breath")
         self.breath_row.set_values(["stock", "off", "on"], index=0)
@@ -1444,12 +1481,11 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self.focus.register(self.breath_row)
         v.addWidget(self.breath_row)
 
-    def _on_precip_mode_changed(self):
-        mode = self.precip_row.current()
-        self.cfg.precip_mode = mode
-        # Snow intensity only means anything once snow is actually chosen —
-        # greyed out otherwise so it doesn't read as a live control.
-        self.snow_intensity_row.set_disabled_visual(mode != "snow")
+    def _on_weather_changed(self):
+        """The weather row (rain, snow or fog: app.game_data.WEATHER) into
+        the match config."""
+        (self.cfg.rain, self.cfg.precip_mode, self.cfg.snow_intensity,
+         self.cfg.fog) = WEATHER[self.weather_row.current()][1]
 
     def _build_advanced_presentation_rows(self, v):
         """.mis presentation attrs (anthem/haka/trophy/stadium dressing) and
@@ -1642,21 +1678,46 @@ class MatchSetupScreen(KickoffTransition, Screen):
 
     def _sync_pitch_choices(self):
         """The pitches the selected stadium allows (all of the game's when
-        it lists none); the pick stays if it is still one."""
+        it lists none). No "default" entry: while nothing is picked
+        (cfg "default") the row shows the stadium's own pitch for the
+        environment; a pick stays if it is still one."""
         row = getattr(self, "pitch_row", None)
         if row is None:
             return
         from backend import pitches
         info = (self.cfg.stadium or {}).get("data") or {}
         names = pitches.allowed(info) or list(pitches.NAMES)
+        own = self._stadium_pitch(info)
+        if own and own not in names:
+            names.append(own)
         names = sorted(names, key=pitches.condition_order)      # driest first, the game's order within
         labels = pitches.simple_labels(names)
-        own = info.get("pitch") or ""             # the stadium's default pitch (stadium editor)
-        default = f"Default · {pitches.condition_label(own)}" if own else "Default"
-        values = [("default", default, own)] + [(n, labels[n]) for n in names]
-        keep = next((i for i, (n, *_rest) in enumerate(values) if n == self.cfg.pitch_texture), 0)
-        row.set_values(values, index=keep)
-        self.cfg.pitch_texture = values[keep][0]
+        values = [(n, labels[n]) for n in names]
+        if not own:                     # the stadium's own pitch unknown (no game): the game picks
+            values.insert(0, ("default", "Default", ""))
+        picked = self.cfg.pitch_texture if self.cfg.pitch_texture in names else "default"
+        index = next((i for i, (n, *_rest) in enumerate(values) if n == (own if picked == "default" else picked)), 0)
+        row.set_values(values, index=index)
+        self.cfg.pitch_texture = picked
+
+    def _stadium_pitch(self, info):
+        """The pitch a match at stadium `info` plays on unless one is picked:
+        the stadium editor's, else its scene's own for the environment; ""
+        when unknown."""
+        from backend import pitches, stadium_scene
+        if info.get("pitch"):
+            return info["pitch"]
+        try:
+            path = stadium_scene.pack_path(info, self.cfg.environment)
+        except Exception as e:
+            log.warning(f"stadium pitch: {e}")
+            path = None
+        if not path:
+            return ""
+        cache = self.__dict__.setdefault("_scene_pitch_cache", {})
+        if path not in cache:
+            cache[path] = pitches.own_name(path)
+        return cache[path] if cache[path] in pitches.NAMES else ""
 
     # ── advanced panel ───────────────────────────────────────────────────
     def _environment_label(self, env):

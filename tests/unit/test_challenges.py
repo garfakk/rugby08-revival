@@ -245,3 +245,9 @@ def test_saves_and_deletes_go_to_user_data_not_the_pack(data_dir, tmp_path, monk
     assert C.load_all()[pid]["name"] == pack[pid]["name"]
     with pytest.raises(OSError):
         C.save(pid, mine)
+
+
+def test_no_restart_match_in_game(ds):
+    """A retry goes through the challenge screen, not the game's Restart Match."""
+    cfg = C.to_match_config(ds, load_fixture())
+    assert cfg.restart_allowed is False

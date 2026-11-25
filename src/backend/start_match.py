@@ -32,7 +32,7 @@ from shared.config import *
 from backend.R08_handler import *
 import backend.game_files_processor as game_files_processor
 import backend.mod_utils as mod_utils
-from backend import commentary_deploy
+from backend import commentary_deploy, referee
 from shared.game_profile import game_profile
 
 from shared.log import get_logger, setup_logging
@@ -52,10 +52,13 @@ def start_match(match_data, copy_static_files = True, create_mission_file = True
         ...
         ...
         
-        'referee': {
-            'face': 'some_path/face.big'
-            'kit_front': 'some_path/face.big'
-            'kit_back': 'some_path/kit_back.fsh'
+        'referee': {                  # {} = the stock referee (backend/referee.py)
+            'id': 'wayne_barnes',
+            'name': 'Wayne Barnes',
+            'face': 45003,            # or 'players/heads/x.big'
+            'kit_front': 'stock:a',   # or 'referees/kits/x.png'
+            'kit_back': '',           # or 'referees/kits/x_back.png'
+            'rules': {},              # ref_* .mis keys (reR08 refrules.cpp)
         },
       
         'team_A': {
@@ -159,6 +162,7 @@ def start_match(match_data, copy_static_files = True, create_mission_file = True
     if edit_graphics_files :
         game_files_processor.edit_graphics_files(match_data)
         game_files_processor.deploy_stadium_files(match_data)
+        referee.deploy(match_data)
     else:
         log.debug("Graphics files not created")
     
@@ -190,6 +194,7 @@ def start_match(match_data, copy_static_files = True, create_mission_file = True
                                                 bool(match_data.get("lock_controllers")))
             mod_utils.configure_match_laws(config.game_launcher_directory,
                                            match_data.get("laws") or {})
+            mod_utils.configure_match_fog(config.game_launcher_directory, match_data.get("fog"))
     else:
         log.debug("No windowing helper used (d3d8 proxy off)")
             

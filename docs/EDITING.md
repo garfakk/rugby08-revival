@@ -51,8 +51,8 @@ This is where the images go.
 *Appearance (custom head, boots, skin and strap layers):*  
 ![appearance](img/player_appearance.png)
 
-- **Head**: `CHOOSE HEAD…` opens the head browser. `stock` are the ~550 faces of the original game, `custom` are the `.big` files of `data/players/heads/`. Click one to try it on the 3D preview, then `USE THIS HEAD`.
-- **Boots**: the list has sections. `Stock` is the game's 10 styles, then the brands listed in `players/boots/boots.json` (`{"Nike": ["players/boots/boots_6.png", ...]}`, a title and the boots it holds; edit it to sort the boots your own way), and `Custom` for the images that file does not place: the boots you add. Sections fold: only the one holding the current boots is open.
+- **Head**: `CHOOSE HEAD…` opens the head browser. `stock` are the ~550 faces of the original game, `custom` are the `.big` files of `data/players/heads/`. Click one to give it to the player (the 3D preview shows it, the browser stays open to try others); a double-click also closes it.
+- **Boots**: the list has sections. `Generic` is the game's 10 styles, then the brands listed in `players/boots/boots.json` (`{"Nike": ["players/boots/boots_6.png", ...]}`, a title and the boots it holds; edit it to sort the boots your own way), and `Custom` for the images that file does not place: the boots you add. Sections fold: only the one holding the current boots is open.
 - **Goal-kick style**: the kicking animation of the player, any of the 20 stock ones.
 - **Socks and tapes**: wrist, thigh, finger (`none` unless you pick one).
 - **Skin**: the list has a `Default` section (the 4 stock tones) and a `Custom` one (your textures).
@@ -100,7 +100,7 @@ The list on the right shows each player's overall now → after. `APPLY TO N` sa
 `Tools > Team editor`. Same logic as the players: list on the left, then the seasons of the team, then the tabs.
 
 ### Create a team
-`+ NEW TEAM` asks a name, type (club, international or special), group (France, England, International...) and first season. It creates a folder in `teams/` with one blank season. All the images of the team live in this folder (`teams/France/kits_2024/...`), and the editor only browses inside it, so copy your files there first, like for the players.
+`+ NEW TEAM` asks a name, type (club, international or special), group (France, England, International...) and first season; the name and the group are required. It creates a folder in `teams/` with one blank season. All the images of the team live in this folder (`teams/France/kits_2024/...`), and the editor only browses inside it, so copy your files there first, like for the players.
 
 *New team:*  
 ![new team](img/new_team.png)
@@ -219,7 +219,7 @@ The files are put over the slot's only for a match at that stadium, and the name
 What surrounds the pitch is three independent sets, picked in quick match (advanced settings, `STADIUM`), where the open list previews them (pads and posts on a 3D goal, ads as a strip):
 
 - **pads**: post pads and corner flags, one picture of 1088 × 768 (any 17:12 size works), packed with no empty space, each part in the proportions of the game's texture: the pad wrap at x 0–192 (one face of the post pad, its top at the top), the corner flag pole at x 192–576, the corner flag at x 576–1088 on y 0–256, the pad top below it (y 256–768)
-- **posts**: one picture of 128 × 1024 (any 1:8 size works), two strips: the post at x 0–64, from its top down to the top of the pad (it wraps round the post: a stripe climbing across it makes a spiral), and the crossbar turned upright at x 64–128, from the post at the top down to the middle (y 0–837), then its middle part (y 837–1024); the bar's top runs down the right edge. The game has one texture for both posts and one for the crossbar, so both posts wear the strip and the bar's other half mirrors it. The list names plain posts after their colours ("White & red") and painted ones after their file (`tools/make_posts.py` makes the library's: spirals, hoops, tricolour)
+- **posts**: one picture of 128 × 1024 (any 1:8 size works), two strips: the post at x 0–64, from its top down to the top of the pad (the post has eight sides and each shows the whole strip width, the next one mirrored: rows make rings, a stripe climbing across the strip makes a zigzag ring, nothing can wind round like a spiral; the crossbar meets the post at about y 943), and the crossbar turned upright at x 64–128, from the post at the top down to the middle (y 0–837), then its middle part (y 837–1024); the bar's top runs down the right edge. The game has one texture for both posts and one for the crossbar, so both posts wear the strip and the bar's other half mirrors it. The list names plain posts after their colours ("White & red") and painted ones after their file, written the same way: colours first, then the pattern (`red_white_zigzag.png` is "Red & white zigzag"; `tools/make_posts.py` makes the library's hoops, zigzags, fades and tips)
 - **ads**: the ad boards, a `.fsh` (World Cup or Standard layout), a picture or a folder of pictures (each picture one ad, about 3:1 works best), or a folder with a `.fsh` and pictures named after its boards (`ads0.png`…) that replace those boards
 
 Open any set in `data/stadium_graphics/` as a starting point. Pictures are resized to powers of two (512 max). The older set folders (`pad_wrap.png`, `pad_top.png`, `flag.png`, `flag_pole.png` / `post.png`, `crossbar.png`) still work, a missing picture there keeping the stock one.
@@ -246,3 +246,19 @@ Quick match (`crowd`, `supporters`, `atmosphere`) and tournaments (the `crowd` g
 
 The game draws the crowd as flat panels (`rwh0`..`rwh3` in a scene pack's `Stadium.o`) with 16 animated pictures (`Crowd.fsh`). A match empties panels and repaints the pictures in the scene pack it deploys. Not tested in the game yet.
 
+
+## Referees
+
+Expert mode only. Quick match (`referee`, in the ADVANCED panel) and tournaments (the `referee` setting, also on the dashboard) choose the referee: the game's own, `random` (in a tournament: one drawn for each match, always the same for the same match) or a given one. `Tools > Referee editor` lists them, with the head (`CHOOSE HEAD…`, stock or your own `players/heads/*.big`) and kit tried on the 3D view. `SAVE` keeps them in `user_data/edits/referees.json`; the pack's list is `referees/referees.json`:
+
+```json
+{"wayne_barnes": {"name": "Wayne Barnes", "face": "45003", "kit": "stock:a",
+                  "kit_back": "", "rules": {"ref_whistle": 1.5}}}
+```
+
+- **face**: a stock head id (the game's referees are 45000 to 45005) or a head `.big` in mod data, as for players.
+- **kit**: `stock:a` (orange) or `stock:d` (green), or an image in `referees/kits/` (512×512, laid out like a player's front kit; `Load from disk…` in the kit list copies yours there). **kit_back**: an optional 256×256 back panel image; without one the stock back is kept.
+- **Any kit on any referee**: quick match's `referee kit` row keeps the referee's own kit, picks `best contrast` (the kit, of all of them, that stands out most from both teams' kit colours) or puts a given kit on him, the game's own referee included. A tournament's referee settings list every kit with a toggle: the kits its referees wear. Each match then gets the ticked kit that stands out most from both teams (a draw between kits as good, always the same for the same match). None ticked: each referee's own kit. A custom kit's back is `<name>_back.png` next to it, when there is one.
+- **rules**: the referee's strictness, written as is on the match's `.mis` (`ref_offside`, `ref_knock_on`, `ref_forward_pass`, `ref_high_tackle`, `ref_ruck_hands`, `ref_ruck_bury`, `ref_advantage`, `ref_whistle`… read by rugby08patches.dll `referee_rules`). Only `ref_*` keys are kept. The editor does not show them yet.
+
+A match puts the head over the game's referee head (`players/heads/45000`) and the kit over both referee kits (`kit/kits/referee.a` and `.d`, the game picks one), as loose files removed before the next match. The game has no referee name, so the name only shows in the app. Not tested in the game yet.

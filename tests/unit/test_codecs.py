@@ -388,3 +388,12 @@ def test_real_d3d8_auto_from_original_game_folder(tmp_path):
     (game / M.AUTO_D3D8_WRAPPER).unlink()
     shutil.copy(proxy, original / "D3D8.dll")
     assert M.prepare_real_d3d8(str(game), "", str(original), auto=True) == ""
+
+
+def test_configure_match_fog(tmp_path):
+    ini = tmp_path / "rugby08patches.ini"
+    ini.write_text("[patches]\nwind = 1\n")
+    M.configure_match_fog(str(tmp_path), "thick")
+    assert ini.read_text() == "[patches]\nwind = 1\nfog = 1\n[fog]\nfog = thick\n"
+    M.configure_match_fog(str(tmp_path), None)              # a clear match: the patch off
+    assert "fog = 0\n" in ini.read_text() and ini.read_text().endswith("[fog]\nfog = off\n")
