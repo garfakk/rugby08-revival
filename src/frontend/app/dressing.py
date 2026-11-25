@@ -26,7 +26,7 @@ import os
 
 from backend import game_specific_variables as gsv
 from backend import stadium_dressing
-from backend import pitch_stripes
+from backend import pitch_lines, pitch_stripes
 from backend.adboards import IMAGE_EXTS
 from shared.config import config
 
@@ -174,14 +174,15 @@ def stadium_pack_file(sid):
 
 
 def save_stadium(ds, sid, refs, pitches=(), logos=None, stripes=None, environments=None,
-                 enabled=True, pitch="") -> str:
+                 enabled=True, pitch="", lines="") -> str:
     """Save what the stadium editor sets on stadium `sid`: "dressing" ({kind:
     ref}, empty refs removed; none = the slot's stock sets), "pitches" (the
     pitch textures a match there may use; none = any), "pitch" (the pitch of a
     match there left on "default"; "" = the stadium's own), "pitch_logos"
     (backend/pitch_logos layout; None = the game's own), "stripes"
     ({environment: {"opacity", "brightness"}}, backend/pitch_stripes; none =
-    the scene packs' own), "environments" (the ones a match there may use;
+    the scene packs' own), "lines" (backend/pitch_lines style; "" = the
+    game's), "environments" (the ones a match there may use;
     None = the pack's) and "enabled" (False: not played). Kept, as every
     edit, in user_data/edits/stadiums (app/user_stadiums.py) or, in the
     maintainer's mode (config save_edits_to = mod), written in the stadium's
@@ -197,13 +198,14 @@ def save_stadium(ds, sid, refs, pitches=(), logos=None, stripes=None, environmen
     refs = {k: v for k, v in (refs or {}).items() if k in KINDS and v}
     stripes = {env: v for env, v in ((e, pitch_stripes.clean(v)) for e, v in (stripes or {}).items()) if v}
     values = {"dressing": refs, "pitches": list(pitches or []), "pitch": pitch or "",
-              "pitch_logos": logos, "stripes": stripes, "environments": list(environments or []),
+              "pitch_logos": logos, "stripes": stripes, "lines": pitch_lines.clean(lines),
+              "environments": list(environments or []),
               "enabled": bool(enabled)}
     entry = data[str(sid)]
     if G.saves_to_user_edits():
         # the edit is the user's: kept in user_data, the pack's file untouched
         if not ds.edits.enabled:
-            raise G.SaveError("your edits are turned off: turn them on in Tools › My edits to save")
+            raise G.EditsOffError()
         path = user_stadiums.save(sid, values, {k: entry.get(k) for k in user_stadiums.EDIT_KEYS})
     else:
         for key, value in values.items():
@@ -354,15 +356,35 @@ def suggested_refs(ds, kind, teams=(), stadium=None, home_ground=None):
 # Many sets look the same (14 English grounds share their pads, nearly all
 # posts are white with a coloured band on the crossbar): the pickers list
 # each look once. Plain posts are named after their colours ("White & red"),
-# painted ones (hoops, spirals...) keep their own name.
+# painted ones (hoops, zigzags...) are named after their file the same way
+# ("Red & white zigzag").
 _LOOKS = {}
 COLOURS = {
     "white": (235, 235, 235), "grey": (130, 130, 130), "black": (30, 30, 30),
-    "navy": (20, 35, 95), "blue": (55, 75, 190), "light blue": (120, 180, 210),
+    "navy": (20, 35, 95), "blue": (55, 75, 190), "sky blue": (120, 180, 210),
     "red": (175, 30, 40), "maroon": (110, 20, 25), "green": (25, 95, 50),
     "purple": (90, 60, 140), "orange": (230, 90, 30), "gold": (200, 150, 40),
     "yellow": (235, 205, 40), "pink": (240, 140, 240),
 }
+
+
+def painted_label(name):
+    """A painted set's label from its file name, written like the plain
+    ones: "red_white_zigzag.png" -> "Red & white zigzag"; a name not
+    starting with colours (edinburgh, tricolour) as it is."""
+    words = os.path.splitext(os.path.basename(name))[0].lower().split("_")
+    colours = []
+    while words:
+        two = " ".join(words[:2])
+        if len(words) > 1 and two in COLOURS:
+            colours.append(two)
+            words = words[2:]
+        elif words[0] in COLOURS:
+            colours.append(words.pop(0))
+        else:
+            break
+    label = " ".join([" & ".join(colours)] + words).strip()
+    return label.capitalize() if label else _label(name)
 
 
 def _colour_names(pixels):
@@ -479,7 +501,8 @@ def _one_per_look(kind, options, default_look):
         o = dict(o, refs=[o["ref"]])
         if kind == "posts" and key:
             # plain: its colours; painted: its own name, written the same way
-            o["label"] = o["label"].capitalize() if _is_hash(key) else key
+            o["label"] = painted_label(o["ref"]) if _is_hash(key) and \
+                o["ref"].startswith(f"{LIBRARY}/posts/") else (o["label"].capitalize() if _is_hash(key) else key)
         if key is not None:
             by_look[key] = o
         out.append(o)

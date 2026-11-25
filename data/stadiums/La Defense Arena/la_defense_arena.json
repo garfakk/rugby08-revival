@@ -11,14 +11,12 @@
       "frontend/textures/stadiums/stadedefrance.n.fsh": "la_defense_arena.n.fsh"
     },
     "screen": "scre",
-    "pitches": [
-      "Mod_08_hybrid_d"
-    ],
     "stripes": {
       "night": {
-        "opacity": 0,
-        "brightness": 116
+        "opacity": 10,
+        "brightness": 91
       }
-    }
+    },
+    "pitch": "Mod_08_synthetic_n"
   }
 }

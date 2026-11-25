@@ -3,12 +3,13 @@ app/user_stadiums.py — the user's own edits to stadiums
 =========================================================
 What the stadium editor sets on a stadium (its pads / posts / ads, the pitches
 a match there may use, its default pitch, the pitch logos, the mowing stripes,
+the line style,
 the environments and whether it is played at all) is kept apart from the data pack, in user_data/edits/stadiums/,
 one small file per edited stadium:
 
     {"format": 1, "kind": "stadiums", "id": "twickenham_stoop",
      "mine": {"dressing": {...}, "pitches": [...], "pitch": "", "pitch_logos": null,
-              "stripes": {...}, "environments": [], "enabled": true},
+              "stripes": {...}, "lines": "", "environments": [], "enabled": true},
      "saved": "2026-11-17T09:00:00"}
 
 At load those keys replace the pack's, key by key: a new data pack changes
@@ -27,9 +28,9 @@ from shared.log import get_logger
 log = get_logger(__name__)
 
 FORMAT = 1
-EDIT_KEYS = ("dressing", "pitches", "pitch", "pitch_logos", "stripes", "environments", "enabled")
+EDIT_KEYS = ("dressing", "pitches", "pitch", "pitch_logos", "stripes", "lines", "environments", "enabled")
 _EMPTY = {"pitches": [], "environments": [], "dressing": {}, "stripes": {}, "pitch": "",
-          "pitch_logos": None, "enabled": True}
+          "pitch_logos": None, "lines": "", "enabled": True}
 
 #: {stadium id: {key: value}} of the editable keys as the data pack has them
 #: (after the loader's defaults), taken by apply() before the edits: what an

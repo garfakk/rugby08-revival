@@ -100,6 +100,16 @@ def test_pads_picture_has_no_unused_space():
         (r - l) * (b - t) for l, t, r, b in (SD.XBAR_OUTER, SD.XBAR_MIDDLE)) == SD.POSTS_SIZE[0] * SD.POSTS_SIZE[1]
 
 
+def test_renamed_posts_sets_still_found():
+    """Library sets renamed to say what they look like: old references
+    (saved stadiums, quick match picks) go to the new name, in the pack."""
+    root = os.path.join(os.path.dirname(__file__), "..", "..", "data")
+    for old, new in SD._RENAMED.items():
+        assert SD.library_ref(old) == new
+        assert os.path.isfile(os.path.join(root, new)), new
+        assert not os.path.exists(os.path.join(root, old)), old
+
+
 def test_older_set_folders_still_load(tmp_path, monkeypatch):
     point_config(monkeypatch, data_dir=str(tmp_path))
     folder = tmp_path / "stadium_graphics" / "pads" / "old"
@@ -132,7 +142,7 @@ def test_deploy_pads_writes_the_game_file(tmp_path, monkeypatch):
     SD.save_set({"post": Image.new("RGBA", (32, 32), (0, 0, 255, 255))},
                 str(data / "stadium_graphics" / "posts" / "blue.png"), "posts")
     point_config(monkeypatch, data_dir=str(data), game_dir=str(game))
-    GFP.deploy_pads({"pads": "", "posts": "stadium_graphics/posts/blue.png"})
+    GFP.deploy_pads({"pads": "", "posts": "stadium_graphics/posts/sky_blue.png"})
     out = (game / gsv.game_filenames["stadium_graphics"]).read_bytes()
     assert mu.fsh_entry_image(dict(mu.fsh_entries(out))["post"]).getpixel((4, 4))[2] > 200
 
@@ -320,3 +330,11 @@ def test_tournament_pitch_comes_from_the_stadium_list():
     assert weather.pitch_texture("best", "day", "Reg2", allowed) == "Reg2_08_best_d"
     assert weather.pitch_texture("muddy", "night", "Reg2") == "Reg2_08_muddy_n"             # no list: as before
     assert weather.allowed_textures({"pitches": ["reg2_08_best_d", "x"]}) == ["Reg2_08_best_d"]
+
+
+def test_painted_posts_labels():
+    from app.dressing import painted_label
+    assert painted_label("stadium_graphics/posts/red_white_zigzag.png") == "Red & white zigzag"
+    assert painted_label("sky_blue_white_hoops.png") == "Sky blue & white hoops"
+    assert painted_label("white_red_tips.png") == "White & red tips"
+    assert painted_label("tricolour.png") == "Tricolour"

@@ -101,3 +101,47 @@ def choices(ds, key: str) -> list:
             name = info.get("name") or tid
             out.append((choice_key(tid, season), f"{name} {season}" if season else name))
     return out
+
+
+def _files_digest(folder: str, relative: str):
+    """md5s of the file(s) a texture setting names (both frames of a "%"
+    pattern), None when none can be read."""
+    import hashlib
+    paths = [relative.replace("%", str(i)) for i in (1, 2)] if "%" in relative else [relative]
+    out = []
+    for rel in paths:
+        try:
+            with open(os.path.join(folder, rel), "rb") as fh:
+                out.append(hashlib.md5(fh.read()).hexdigest())
+        except OSError:
+            out.append("")
+    return tuple(out) if any(out) else None
+
+
+def unique_choices(ds, key: str) -> list:
+    """choices(), with the seasons of a competition whose `key` textures are
+    the same files merged into one entry: its first season's key, labelled
+    with the competition's name alone when every season shares them, else
+    with the span ("Six Nations 2019–2026")."""
+    out = []
+    for tid, seasons in ds.tournaments.items():
+        folder = ds.tournaments_folder_path.get(tid, "")
+        groups = {}                     # digest -> [season], first seen first
+        for season, info in seasons.items():
+            rel = (info.get(key) or "").strip()
+            if not _on_disk(folder, rel):
+                continue
+            digest = _files_digest(folder, rel) or ("", season)
+            groups.setdefault(digest, []).append(season)
+        for members in groups.values():
+            name = seasons[members[0]].get("name") or tid
+            if not members[0]:
+                label = name
+            elif len(groups) == 1 and len(members) == len(seasons) > 1:
+                label = name
+            elif len(members) == 1:
+                label = f"{name} {members[0]}"
+            else:
+                label = f"{name} {members[0]}–{members[-1]}"
+            out.append((choice_key(tid, members[0]), label))
+    return out

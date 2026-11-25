@@ -26,7 +26,7 @@ from PyQt5.QtWidgets import QHBoxLayout, QSizePolicy, QVBoxLayout, QWidget
 
 from app import dressing, user_stadiums
 from app.game_data import save_target
-from backend import pitch_logos, pitch_stripes, pitches
+from backend import pitch_lines, pitch_logos, pitch_stripes, pitches
 from shared.log import get_logger
 from ui.dressing_picker import DressingRow
 from ui.editor_kit import (ChoiceField, FieldGrid, Note, NumberField, SectionCard, SegmentField, ToggleGrid,
@@ -236,6 +236,14 @@ class StadiumEditorScreen(EditorScreen):
         row.addStretch(1)
         card.add_layout(row)
         page.addWidget(card)
+        card = SectionCard("Lines")
+        grid = FieldGrid(columns=1)
+        self.f_lines = SegmentField("numbers", ["on", "off"])
+        self.f_lines.edited.connect(self._set_lines)
+        grid.add(self.f_lines)
+        self.register_field("lines", self.f_lines, 1)
+        card.add(grid)
+        page.addWidget(card)
         card = SectionCard("Default pitch")
         grid = FieldGrid(columns=1)
         labels = pitches.simple_labels(sorted(pitches.NAMES, key=pitches.condition_order))
@@ -404,14 +412,15 @@ class StadiumEditorScreen(EditorScreen):
         return dict({k: own.get(k, "") for k in dressing.KINDS}, pitches=pitches.allowed(info),
                     logos=logos, stripes={e: v for e, v in stripes.items() if v},
                     environments=envs or self._default_envs_of(info, record_id),
-                    pitch=str(info.get("pitch") or ""), enabled=user_stadiums.enabled(info))
+                    pitch=str(info.get("pitch") or ""), lines=pitch_lines.clean(info.get("lines") or ""),
+                    enabled=user_stadiums.enabled(info))
 
     def write_record(self):
         w = self.session.working
         envs = None if set(w["environments"]) == set(self._default_envs()) else w["environments"]
         path = dressing.save_stadium(self.ds, self.record_id, {k: w[k] for k in dressing.KINDS},
                                      w["pitches"], w["logos"], w["stripes"], envs,
-                                     enabled=w["enabled"], pitch=w["pitch"])
+                                     enabled=w["enabled"], pitch=w["pitch"], lines=w["lines"])
         return f"Saved in {save_target(path)}"
 
     # ── edits ────────────────────────────────────────────────────────────
@@ -447,8 +456,22 @@ class StadiumEditorScreen(EditorScreen):
             w["stripes"] = {}
             w["environments"] = self._default_envs()
             w["pitch"] = ""
+            w["lines"] = ""
             w["enabled"] = True
         self.edit("stock dressing", mutate)
+
+    def _set_lines(self, value):
+        style = "no_numbers" if value == "off" else ""
+        if self.session is None or self.d.get("lines", "") == style:
+            return
+
+        def mutate(w):
+            w["lines"] = style
+        self.edit(pitch_lines.LABELS[style], mutate)
+
+    def _show_lines(self):
+        """The stadium's line style on the view."""
+        self.view.set_line_style(self.d.get("lines", "") if self.session else "")
 
     def _set_enabled(self, value):
         on = value != "off"
@@ -553,6 +576,8 @@ class StadiumEditorScreen(EditorScreen):
             self._show_pitch()
             self._show_logos()
             self._show_record()
+            self.view.set_textures(self._team_textures())
+            self._show_lines()
             self._refresh_stripe_fields()
         QTimer.singleShot(10, go)
 
@@ -792,6 +817,33 @@ class StadiumEditorScreen(EditorScreen):
         self.f_pitches.set_pictures(dict(self.f_pitches.raw, **{"": pitches.grass(own) if own else None}))
         self.f_pitches.set_label("", f"Own · {pitches.label(own)}" if own else "Stadium's own")
 
+    def _home_teams(self):
+        """Up to two teams playing here (their latest season's
+        `primaryStadium`): [(team id, season block)], nations first."""
+        found = []
+        for tid in self.ds.teams:
+            seasons = self.ds.teams.get(tid) or {}
+            for season in sorted(seasons, reverse=True):
+                info = seasons[season] or {}
+                if info.get("primaryStadium"):
+                    if str(info["primaryStadium"]) == str(self.record_id):
+                        found.append((info.get("type") != "international", str(season), tid, info))
+                    break
+        found.sort(key=lambda f: f[0])
+        return [(tid, info) for _n, _s, tid, info in found[:2]]
+
+    def _team_textures(self):
+        """The flags and banners of the teams at home here (team_textures);
+        none found = the stadium's neutral stand-ins."""
+        from backend import stadium_scene
+        refs = []
+        for tid, info in self._home_teams():
+            rel = info.get("banners") or ""
+            folder = self.ds.teams_folder_path.get(tid, "")
+            refs.append(os.path.join(folder, rel) if rel and folder else "")
+        refs += ["", ""]
+        return stadium_scene.team_textures(refs[0], refs[1])
+
     def _show_record(self):
         if self.session is not None:
             self._show({k: self.d.get(k, "") for k in dressing.KINDS})
@@ -834,9 +886,10 @@ class StadiumEditorScreen(EditorScreen):
         self.f_envs.set_values(self.d["environments"])
         self.f_enabled.set_value("on" if self.d["enabled"] else "off")
         self.f_default_pitch.set_value(self.d["pitch"])
+        self.f_lines.set_value("off" if self.d.get("lines") == "no_numbers" else "on")
         own = all(not self.d.get(k) for k in dressing.KINDS) and not n and self.d.get("logos") is None \
             and not self.d["stripes"] and set(self.d["environments"]) == set(self._default_envs()) \
-            and not self.d["pitch"] and self.d["enabled"]
+            and not self.d["pitch"] and not self.d.get("lines") and self.d["enabled"]
         self._refresh_logo_fields()
         self._refresh_stripe_fields()
         self._show_logos()
@@ -844,6 +897,8 @@ class StadiumEditorScreen(EditorScreen):
         dirty = self.session is not None and self.session.is_dirty()
         self.note.setText("SAVE keeps it in your edits." if dirty else "")
         self._show_record()
+        if self._scene is not None:
+            self._show_lines()
 
     def collect_issues(self):
         return []

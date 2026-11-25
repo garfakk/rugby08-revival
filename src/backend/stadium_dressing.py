@@ -55,6 +55,13 @@ STOCK_PREFIX = "stock:"
 # work (library_ref).
 LIBRARY = "stadium_graphics"
 _OLD_LIBRARIES = ("dressing/", "ingame_graphics/")
+# library sets renamed to say what they look like: old ref -> new
+_RENAMED = {
+  f"{LIBRARY}/posts/blue.png": f"{LIBRARY}/posts/sky_blue.png",
+  f"{LIBRARY}/posts/black_hoops.png": f"{LIBRARY}/posts/black_white_hoops.png",
+  f"{LIBRARY}/posts/red_spiral.png": f"{LIBRARY}/posts/red_white_zigzag.png",
+  f"{LIBRARY}/posts/navy_spiral.png": f"{LIBRARY}/posts/navy_white_zigzag.png",
+}
 PADS_DIR = "stadiums/pads_and_flags"
 ADS_DIR = "stadiums/adboards"
 
@@ -136,12 +143,15 @@ def stock_bytes(game_path):
 # ── sets ────────────────────────────────────────────────────────────────────
 def library_ref(ref):
   """`ref` with a reference into an old library folder moved to the current
-  one, and one to an older pads / posts set folder that is gone moved to
-  the picture of its name; any other reference unchanged."""
+  one, a renamed library set to its new name, and one to an older pads /
+  posts set folder that is gone moved to the picture of its name; any other
+  reference unchanged."""
   path = (ref or "").replace("\\", "/")
   for old in _OLD_LIBRARIES:
     if path.startswith(old):
       ref = path = LIBRARY + "/" + path[len(old):]
+  if path in _RENAMED:
+    return _RENAMED[path]
   if not path or is_stock(path) or os.path.isabs(path) or os.path.splitext(path)[1]:
     return ref
   from shared.config import config

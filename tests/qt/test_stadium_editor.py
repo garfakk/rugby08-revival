@@ -80,7 +80,7 @@ def test_pick_save_and_reset(window, qapp):
     _settle(qapp, 40)
     assert ed.record_id == sid and ed.d == {"pads": "", "posts": "", "ads": "", "pitches": [], "logos": None,
                                                    "stripes": {}, "environments": ["day"],
-                                                   "pitch": "", "enabled": True}
+                                                   "pitch": "", "lines": "", "enabled": True}
     assert ed.view._message                              # no game here: said, not crashed
     choices = ed._choices("pads", "")
     other = next(o["ref"] for o in choices if o["ref"])
@@ -326,8 +326,28 @@ def test_default_pitch_is_used_when_the_match_leaves_it_on_default(window, qapp)
     assert pitch_name(cfg) == "Reg2_08_snow_n"             # a pick wins
     setup = window.screen_match_setup.setup_screen
     setup.cfg.stadium = cfg.stadium
-    setup._sync_pitch_choices()
-    assert setup.pitch_row._values[0][0] == "default" and setup.pitch_row._values[0][2] == "Reg2_08_muddy_n"
+    setup.cfg.pitch_texture = "default"
+    setup._sync_pitch_choices()                 # no "default" entry: the stadium's own pitch shown
+    assert "default" not in [v[0] for v in setup.pitch_row._values]
+    assert setup.pitch_row.current()[0] == "Reg2_08_muddy_n" and setup.cfg.pitch_texture == "default"
     ed._set_default_pitch("")
     assert ed.save()
     assert not _mine("test_ground").get("pitch")
+
+
+def test_line_style_saved(window, qapp):
+    ed = window.screen_stadium_editor
+    window.show_stadium_editor()
+    _settle(qapp)
+    ed.request_open("test_ground")
+    _settle(qapp)
+    ed._set_lines("off")
+    _settle(qapp)
+    assert ed.d["lines"] == "no_numbers" and ed.f_lines.value() == "off"
+    assert ed.save()
+    assert _mine("test_ground")["lines"] == "no_numbers"
+    assert window.data.stadiums["test_ground"]["lines"] == "no_numbers"     # a match there plays it
+    ed._set_lines("on")
+    assert ed.save()
+    assert not _mine("test_ground").get("lines")
+    assert not window.data.stadiums["test_ground"].get("lines")
