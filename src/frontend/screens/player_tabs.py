@@ -26,7 +26,7 @@ from app import star_classes
 from shared.user_prefs import user_prefs
 from app.game_data import (
     POSITIONS, POSITION_ALIASES, SKIN_TONES, TAPES, FEET, SOCKS, BOOT_STYLES,
-    SHIRT_POSITIONS, DEFAULT_HEIGHT, DEFAULT_WEIGHT, SaveError,
+    SHIRT_POSITIONS, DEFAULT_HEIGHT, DEFAULT_WEIGHT, SaveError, EditsOffError,
 )
 from app.ratings import GROUPS, LABELS, group_avg, position_overall, previous_season
 from app.season import season_label
@@ -705,6 +705,13 @@ class AppearanceTab(PlayerTab):
     def _open_tattoos(self, start="add"):
         if not self.screen.session or not self.screen.season:
             return
+        try:
+            self._open_tattoo_editor(start)
+        except Exception as e:                 # a button slot must never raise
+            log.error(f"tattoo editor: {e}", exc_info=True)
+            self.screen.shell.footer.set_status(f"Could not open the tattoos: {e}", DANGER_LITE)
+
+    def _open_tattoo_editor(self, start):
         from ui.tattoo_editor import TattooEditor, covered_by_kit
         from ui.skin_preview import _stock_image
         stats = self.stats()
@@ -1156,7 +1163,7 @@ class TeamsTab(PlayerTab):
             item = self.rows.takeAt(0)
             w = item.widget()
             if w is not None:
-                w.setParent(None)
+                w.hide()                 # kept by its parent until deleted: it may be the one clicked
                 w.deleteLater()
         self._row_btns = []
 
@@ -1227,6 +1234,9 @@ class TeamsTab(PlayerTab):
             return
         try:
             shirt = P.add_to_squad(screen.ds, screen.record_id, tid, screen.season)
+        except EditsOffError:
+            screen.ask_edits_on(lambda: self._add_to(tid), replaces=False)
+            return
         except (ValueError, OSError, SaveError) as e:
             screen.shell.footer.set_status(f"Could not add: {e}", DANGER_LITE)
             return

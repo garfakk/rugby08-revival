@@ -71,6 +71,22 @@ def _qimage(img):
     return q.copy()
 
 
+def _discard(w, parent=None):
+    """Drop a widget that may be the one being clicked right now: hidden at once, deleted once the event loop is
+    back. (setParent(None) would hand it to Python, which deletes it on the spot, under its own click.)"""
+    if w is None:
+        return
+    if parent is not None:
+        w.setParent(parent)                   # owned by Qt again until deleteLater runs
+    w.hide()
+    w.deleteLater()
+
+
+def _clear_layout(layout):
+    while layout.count():
+        _discard(layout.takeAt(0).widget())
+
+
 def _label(text, size=T_SMALL, color=FG_SECONDARY, bold=False):
     lab = QLabel(text)
     lab.setWordWrap(True)
@@ -893,6 +909,8 @@ class TattooEditor(QWidget):
             slice(None), [L for L in self.design["layers"] if L["id"] != lid]), "delete")
         if self.sel_id == lid:
             self.set_selected("")
+        else:
+            self._refresh_layer_list()
 
     def move_layer(self, lid, d):
         ls = self.design["layers"]
@@ -903,6 +921,7 @@ class TattooEditor(QWidget):
         def swap():
             ls[i], ls[i + d] = ls[i + d], ls[i]
         self.edit(swap, "order")
+        self._refresh_layer_list()
 
     def clear_all(self):
         if not self.design["layers"]:
@@ -984,9 +1003,12 @@ class TattooEditor(QWidget):
             log.warning(f"3D tattoo preview failed: {e}")
 
     def _turn_stage(self, yaw):
+        if hasattr(self.stage, "_yaw"):
+            self.stage._yaw = yaw                   # kept when the preview is rebuilt
         pv = getattr(self.stage, "player_view", None)
-        if pv is not None:
-            pv.renderer.yaw = yaw
+        renderer = getattr(pv, "renderer", None)
+        if renderer is not None:
+            renderer.yaw = yaw
             pv.update()
 
     # ── left: add ────────────────────────────────────────────────────────
@@ -1046,12 +1068,7 @@ class TattooEditor(QWidget):
                 for mid, mo in M.REG.items() if mo.cat == cat]
 
     def _fill_catalogue(self):
-        while self.grid.count():
-            w = self.grid.takeAt(0).widget()
-            if w is not None:
-                w.hide()
-                w.setParent(None)
-                w.deleteLater()
+        _clear_layout(self.grid)
         items = self._catalogue()
         cols = 3
         tiles = []
@@ -1081,13 +1098,19 @@ class TattooEditor(QWidget):
                 tile.set_pix(thumb())
             except RuntimeError:                  # the tile went with a newer list
                 pass
+            except Exception as e:                # a thumbnail that can't be drawn stays blank
+                log.warning(f"tattoo thumbnail: {e}")
         if self._thumb_jobs:
             QTimer.singleShot(0, self._load_thumbs)
 
     def _confirm_remove_picture(self, key, name):
         def done(role):
             if role == "remove":
-                self.library.remove(key[5:])
+                try:
+                    self.library.remove(key[5:])
+                except (OSError, ValueError) as e:
+                    log.warning(f"tattoo picture not removed: {e}")
+                    return
                 _THUMBS.pop(("m", key), None)
                 self._fill_catalogue()
         ConfirmDialog(self, f"Remove “{name}”?", "It leaves your pictures. Tattoos made with it keep it.",
@@ -1171,12 +1194,7 @@ class TattooEditor(QWidget):
                       lambda r: self.clear_all() if r == "go" else None)
 
     def _refresh_layer_list(self):
-        while self.list_v.count():
-            it = self.list_v.takeAt(0)
-            if it.widget():
-                it.widget().hide()
-                it.widget().setParent(None)
-                it.widget().deleteLater()
+        _clear_layout(self.list_v)
         layers = self.design["layers"]
         if not layers:
             self.list_v.addWidget(_label("No tattoo yet. Choose a spot on the body, then a tattoo in ADD.",
@@ -1235,9 +1253,7 @@ class TattooEditor(QWidget):
             self._refresh_layer_list()
 
     def _refresh_props(self):
-        old = self.props_scroll.takeWidget()
-        if old is not None:
-            old.deleteLater()
+        _discard(self.props_scroll.takeWidget(), self.props_scroll)
         host = QWidget()
         v = QVBoxLayout(host)
         v.setContentsMargins(0, 4, 6, 4)

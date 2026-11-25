@@ -16,7 +16,7 @@ from PyQt5.QtCore import Qt, QRectF, QTimer, pyqtSignal, QMimeData, QPoint
 from app import team_ops as T
 from app import player_ops as P
 from app.game_data import (
-    SaveError, ASSET_SPECS, COUNTRIES, country_label, ROLE_KEYS, SET_PLAYS, TEAM_TYPES, STARTING_XV, SQUAD_SIZE,
+    SaveError, EditsOffError, ASSET_SPECS, COUNTRIES, country_label, ROLE_KEYS, SET_PLAYS, TEAM_TYPES, STARTING_XV, SQUAD_SIZE,
     frontend_logo, looks_reversed,
 )
 from app.ratings import position_overall
@@ -523,9 +523,7 @@ class KitsTab(TeamTab):
             self._wire_asset(f, key)
             fgrid.add(f)
         right.add(fgrid)
-        right.add(Note(ASSET_SPECS["backKitFile"]["note"] + " A kit_back_%.png series or a "
-                       "back-number strip (.webp) is expected. The game's own files also work: "
-                       "a .big shirt front and a .fsh of the 22 backs."))
+        right.add(Note(ASSET_SPECS["backKitFile"]["note"] + ""))
         self.back_strip = FrameStrip(22, thumb=(46, 46), max_show=11)
         right.add(self.back_strip)
         ugrid = FieldGrid(columns=1)
@@ -826,6 +824,8 @@ TEXT_MODE_LABELS = {"surname": "surname", "initial": "j. surname", "display": "i
 CASE_LABELS = {"upper": "capitals", "asis": "as typed"}
 
 
+#: shown on the back when the shirt has no player (an empty squad)
+SAMPLE_PLAYER = {"last_name": "Player name", "display_name": "Player name"}
 
 
 class ShirtNamesTab(TeamTab):
@@ -1192,8 +1192,8 @@ class ShirtNamesTab(TeamTab):
         font_path, variation, found = SN.resolve_font(style["font"], self.screen.team_folder())
         try:
             printer = SN.BackPrinter(style, font_path, SN.expand_back_paths(pattern), variation)
-            text = (self.try_name or SN.shirt_text(self._player(self.preview_shirt), style["text"],
-                                                   style["case"])) if style["enabled"] else ""
+            text = (self.try_name or SN.shirt_text(self._player(self.preview_shirt) or SAMPLE_PLAYER,
+                                                   style["text"], style["case"])) if style["enabled"] else ""
             if self.try_name and style["case"] == "upper":
                 text = text.upper()
             image = printer.render(self.preview_shirt - 1, text)
@@ -1646,12 +1646,17 @@ class SquadTab(TeamTab):
 
         def done(role):
             screen._dialog = None
-            if role != "ok":
-                return
+            if role == "ok":
+                run()
+
+        def run():
             try:
                 near = next((p for p in self.roster() if p), None)
                 pid = P.create_player(screen.ds, first.value(), last.value(), screen.season,
                                       position.value(), level=level.value(), near_pid=near)
+            except EditsOffError:
+                screen.ask_edits_on(run, replaces=False)
+                return
             except (ValueError, OSError, SaveError) as e:
                 screen.shell.footer.set_status(f"Could not create player: {e}", DANGER_LITE)
                 return

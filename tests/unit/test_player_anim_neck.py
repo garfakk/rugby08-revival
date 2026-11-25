@@ -42,3 +42,14 @@ def test_neck_stays_in_the_collar(figure, cls):
         h = anim.pose(head, wh, t)[0][stub].mean(0)
         # the stub's offset from the collar centre only turns with the torso
         assert np.hypot(*(h - b)[[0, 2]]) == pytest.approx(3.8, abs=0.15), t
+
+
+def test_collar_does_not_move_the_rig(figure):
+    """Collars are kit options; a taller stand collar used to raise the
+    measured body top and shift the shoulders and hips with it."""
+    parts, rig = figure
+    stand = _Part(np.concatenate([_ring(y, 6) for y in (95, 98)]))
+    stand.group = '05'
+    other = A.PlayerRig(parts + [stand])
+    for attr in ('height', 'hip_y', 'shoulder_y', 'shoulder_x', 'elbow_x'):
+        assert getattr(other, attr) == pytest.approx(getattr(rig, attr))

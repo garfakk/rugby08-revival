@@ -460,6 +460,7 @@ class TextField(FieldBase):
         self._value = ""
         self.max_bytes = max_bytes
         self.placeholder = placeholder
+        self.blank_text = NOT_SET      # what an empty field says without a placeholder ("" = nothing)
         self.validator = validator
         self._edit = QLineEdit(self)
         self._edit.setFrame(False)
@@ -566,7 +567,7 @@ class TextField(FieldBase):
         if self.is_editing():
             return
         if not self._value:
-            self.draw_blank(p, rect, self.placeholder or NOT_SET)
+            self.draw_blank(p, rect, self.placeholder or self.blank_text)
             return
         p.setFont(self._value_font)
         p.setPen(QColor(FG_PRIMARY))
@@ -2582,64 +2583,6 @@ def open_season_menu(anchor, screen, on_pick):
     return popup
 
 
-class SeasonBar(QWidget):
-    """One button naming the season being edited ("SEASON 2023-2024 ▾"):
-    it opens the list of the record's seasons, with the add / duplicate /
-    delete actions under them. Takes the room of a single row above the
-    tabs instead of a whole column."""
-
-    picked = pyqtSignal(str)
-    action = pyqtSignal(str)          # "add" | "duplicate" | "delete"
-
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self._items = []              # [(season, label, tag, tag_color)]
-        self._current = ""
-        h = QHBoxLayout(self)
-        h.setContentsMargins(0, 0, 0, 0)
-        h.setSpacing(6)
-        self.button = compact_button("SEASON —", "primary")
-        self.button.setMinimumWidth(190)
-        self.button.clicked.connect(self.open)
-        h.addWidget(self.button)
-
-    def set_text(self, text):
-        self.button.setText(text + ("  ▾" if self._items else ""))
-
-    def set_items(self, items, current):
-        """items: [(season, label, tag, tag_color)]"""
-        self._items = list(items)
-        self._current = current or ""
-        label = next((lab for s, lab, _t, _c in self._items if s == self._current), "")
-        self.set_text(f"SEASON {label}" if label else "NO SEASON")
-
-    def open(self):
-        screen = self.window()
-        popup = PopupList(screen, width=380, height=360, own_keys=True)
-        popup.set_title("seasons")
-        for s, label, tag, color in sorted(self._items, key=lambda i: i[0], reverse=True):
-            popup.add_row(label, ("season", s), tag=tag, tag_color=color, selected=s == self._current)
-        popup.add_row("+ Add a season…", ("action", "add"))
-        if self._current:
-            popup.add_row("Copy to another year…", ("action", "duplicate"))
-            popup.add_row("Delete this season…", ("action", "delete"), tag_color=DANGER_LITE)
-        popup.size_to(min(9, len(self._items) + 3))
-        popup.picked.connect(self._on_pick)
-        popup.closed.connect(lambda: self.button.setFocus())
-        popup.open_at(self.button, screen)
-        if self._current:
-            idx = [s for s, *_ in sorted(self._items, key=lambda i: i[0], reverse=True)].index(self._current) \
-                if self._current in [i[0] for i in self._items] else 0
-            popup.set_highlight(idx)
-        return popup
-
-    def _on_pick(self, data):
-        if not data:
-            return
-        kind, value = data
-        (self.picked if kind == "season" else self.action).emit(value)
-
-
 class EditorHeader(QWidget):
     back_clicked = pyqtSignal()
     issues_clicked = pyqtSignal()
@@ -3043,7 +2986,7 @@ class ConfirmDialog(QWidget):
     def keyPressEvent(self, event):
         k = event.key()
         focus = QApplication.focusWidget()
-        order = self._focusables() + [b for b, _ in self.buttons]
+        order = self._focusables() + [b for b, _ in self.buttons if b.isEnabled()]
         if k == Qt.Key_Escape or (k == Qt.Key_Backspace and not isinstance(focus, QLineEdit)):
             self.choose(self._cancel_role)
         elif k in (Qt.Key_Return, Qt.Key_Enter):
@@ -3071,7 +3014,7 @@ class FormDialog(ConfirmDialog):
     """A dialog whose content is a FieldGrid; `fields` maps name → field."""
 
     def __init__(self, screen, title, text, fields, buttons, on_choice,
-                 cancel_role="cancel", width=560, footer=None):
+                 cancel_role="cancel", width=560, footer=None, required=()):
         grid = FieldGrid(columns=1)
         self.fields = fields
         for f in fields.values():
@@ -3088,6 +3031,29 @@ class FormDialog(ConfirmDialog):
         if footer:
             self.footer_note.setText(footer)
         super().__init__(screen, title, text, buttons, on_choice, cancel_role, content, width)
+        # fields that must be filled: the other buttons stay off until they are
+        self._required = [fields[k] for k in required]
+        for f in self._required:
+            f.edited.connect(lambda _v: self._update_ready())
+            edit = getattr(f, "_edit", None)
+            if edit is not None:
+                edit.textChanged.connect(lambda _t: self._update_ready())
+        self._update_ready()
+
+    @staticmethod
+    def _filled(f):
+        if isinstance(f, TextField) and f.is_editing():
+            return bool(f._edit.text().strip())
+        return bool(str(f.value() or "").strip())
+
+    def ready(self):
+        return all(self._filled(f) for f in self._required)
+
+    def _update_ready(self):
+        ok = self.ready()
+        for b, role in self.buttons:
+            if role != self._cancel_role:
+                b.setEnabled(ok)
 
     def commit_fields(self):
         """Take what is still being typed in any field: one click on OK both ends the edit and confirms."""
@@ -3100,6 +3066,9 @@ class FormDialog(ConfirmDialog):
     def choose(self, role):
         if not self._done and role != self._cancel_role:
             self.commit_fields()
+            if not self.ready():
+                self._update_ready()
+                return
         super().choose(role)
 
     def values(self):

@@ -832,8 +832,7 @@ class TournamentEditorScreen(EditorScreen):
         def choice(role):
             self._dialog = None
             if role == "save":
-                if self.save():
-                    then()
+                self.save(then)
             elif role == "discard":
                 self._drafts.pop(self.record_id, None)
                 self.session = None
@@ -926,7 +925,7 @@ class TournamentEditorScreen(EditorScreen):
             self.shell.footer.set_status(f"Deleted {name}", FG_SECONDARY)
         self.confirm("Delete this tournament?", name, "DELETE", go)
 
-    def save(self):
+    def save(self, then=None):
         if self.session is not None and self.record_id in self._drafts and not self.session.is_dirty():
             # a fresh draft, untouched: its starting point is saved as it is
             try:
@@ -938,8 +937,10 @@ class TournamentEditorScreen(EditorScreen):
             self.reload_list()
             self.refresh_all()
             self.shell.footer.set_status(message, GREEN)
+            if then:
+                then()
             return True
-        return super().save()
+        return super().save(then)
 
     # ── SETUP ────────────────────────────────────────────────────────────
     def _build_setup(self):

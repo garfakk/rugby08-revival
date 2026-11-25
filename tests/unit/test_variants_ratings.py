@@ -160,14 +160,14 @@ def test_boot_sections_from_the_json(tmp_path):
     boots.mkdir(parents=True)
     for n in (2, 10, 11):
         (boots / f"boots_{n}.png").write_bytes(b"x")
-    assert [t for t, _ in A.boot_sections(str(tmp_path))] == ["Stock", "Custom"]
+    assert [t for t, _ in A.boot_sections(str(tmp_path))] == ["Generic", "Custom"]
     (boots / "boots.json").write_text(json.dumps({
         "Nike": ["players/boots/boots_10.png", "players/boots/missing.png", "3"],
         "Empty": []}), encoding="utf-8")
     sections = dict(A.boot_sections(str(tmp_path)))
-    assert list(sections) == ["Stock", "Nike", "Custom"]
+    assert list(sections) == ["Generic", "Nike", "Custom"]
     assert sections["Nike"] == ["players/boots/boots_10.png", "3"]      # a missing file is ignored
-    assert "3" not in sections["Stock"] and len(sections["Stock"]) == 9
+    assert "3" not in sections["Generic"] and len(sections["Generic"]) == 9
     assert sections["Custom"] == ["players/boots/boots_2.png", "players/boots/boots_11.png"]
     (boots / "boots.json").write_text("not json", encoding="utf-8")
-    assert [t for t, _ in A.boot_sections(str(tmp_path))] == ["Stock", "Custom"]
+    assert [t for t, _ in A.boot_sections(str(tmp_path))] == ["Generic", "Custom"]

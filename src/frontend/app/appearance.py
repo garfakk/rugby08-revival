@@ -147,7 +147,7 @@ def asset_options(mod_dir, kind):
 
 #: the file that sorts the boots into the picker's sections (in the mod data)
 BOOTS_JSON = "players/boots/boots.json"
-STOCK_SECTION, CUSTOM_SECTION = "Stock", "Custom"
+STOCK_SECTION, CUSTOM_SECTION = "Generic", "Custom"
 
 
 def _natural(text):
@@ -160,7 +160,7 @@ def boot_sections(mod_dir):
     players/boots/boots.json maps a title to the boots it holds, in order: a stock
     style number ("0".."9") or an image path ("players/boots/boots_12.png"):
         {"Nike": ["players/boots/boots_6.png", ...], "Adidas": [...]}
-    Stock styles it does not place make the first section ("Stock"); every
+    Stock styles it does not place make the first section ("Generic"); every
     image in the boots folder it does not place, the last one ("Custom"):
     the boots a user adds land there. Entries naming a missing file are
     ignored, and without the file there are just those two sections."""

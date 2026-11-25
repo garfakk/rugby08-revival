@@ -42,6 +42,7 @@ class TextRow(QWidget):
         self._label = label
         self._value = str(value or "")
         self._placeholder = placeholder
+        self.dash = True        # an empty value starts with "—" (a filter box shows only its hint)
         self._problem = ""
 
         self._edit = QLineEdit(self)
@@ -167,7 +168,8 @@ class TextRow(QWidget):
         else:
             # Unmistakably not a value: a dash, then the hint, in the
             # de-emphasised colour.
-            shown = f"—  {self._placeholder}" if self._placeholder else "—"
+            dash = "—" if self.dash else ""
+            shown = f"{dash}  {self._placeholder}".strip() if self._placeholder else dash
             colour = FG_TERTIARY
         p.setPen(QColor(colour))
         elided = p.fontMetrics().elidedText(shown, Qt.ElideRight, self.width() - 26)
@@ -314,6 +316,8 @@ class SearchList(QWidget):
         # A short, fixed vocabulary (e.g. a player's seasons) never needs
         # narrowing down — the filter box would just be dead chrome above it.
         self.search = TextRow("filter", placeholder=placeholder) if show_filter else None
+        if self.search is not None:
+            self.search.dash = False
         if self.search is not None:
             # Narrow as you type, not on Enter — a filter you can't see
             # working until you commit it reads as broken.

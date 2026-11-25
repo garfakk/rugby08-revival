@@ -16,6 +16,10 @@ later without touching the renderer (it consumes positions/normals only).
 """
 import numpy as np
 
+# Kit-option geometry left out of the bind-pose measurements: the three
+# collars ('03' open, '04' crew, '05' stand) and the wrist/thigh tape bands.
+_RIG_IGNORED_GROUPS = {'03', '04', '05', '08', '09', '10', '11'}
+
 
 class PlayerRig:
     """Weights and joints derived from the bind pose, once, for all parts."""
@@ -25,7 +29,11 @@ class PlayerRig:
         # so counting it would stretch `height` and drag every landmark that
         # is a fraction of it (hip, knee) up with it. The head still gets
         # weights below — it rides the torso.
-        body = [p for p in parts if not getattr(p, 'is_head', False)] or parts
+        # Collars and tapes are kit options: a taller stand collar raised the
+        # measured top of the body, shifting every landmark, so the same
+        # player changed shape with the collar picked.
+        body = [p for p in parts if not getattr(p, 'is_head', False)
+                and getattr(p, 'group', None) not in _RIG_IGNORED_GROUPS] or parts
         allpos = np.concatenate([p.positions for p in body])
         self.lo = allpos.min(0)
         self.hi = allpos.max(0)
@@ -41,6 +49,17 @@ class PlayerRig:
         self.hand_x = float(np.abs(allpos[:, 0]).max())
         self.elbow_x = self.shoulder_x + 0.46 * (self.hand_x - self.shoulder_x)
         self.hip_x = self.shoulder_x * 0.45
+        # The arm drops fully only past this short band outboard of the
+        # shoulder joint; inside it the weight ramps up, rounding the corner
+        # where the sleeve turns down.
+        self.deltoid = 0.2 * (self.elbow_x - self.shoulder_x)
+        # Clavicle: in the T-pose the shirt runs flat from the collar out to
+        # the arm, and dropping only the arm leaves that flat top — a square
+        # shoulder. Tilting the whole outer shoulder down from the base of the
+        # neck as well gives the sloped line from neck to arm. The arm drops
+        # that much less, so it still hangs where it did.
+        self.clavicle_x = 0.3 * self.shoulder_x
+        self.clavicle_drop = np.deg2rad(15.0)
         self.height = height
         # The head sits on top of the body, so the neck is the body's own top.
         self.neck_y = float(self.hi[1])
@@ -95,7 +114,9 @@ class PlayerRig:
         return float(centers[plateau].mean())
 
     def _part_weights(self, pos, is_head=False):
-        """Hard 0/1 membership, one segment per joint — no blend weights.
+        """Hard 0/1 membership, one segment per joint — no blend weights
+        except across the shoulder, which the game itself blends (see
+        __init__).
 
         Every vertex belongs wholly to one segment, so each segment turns as a
         rigid body and the chest, sleeves and limbs keep their exact bind-pose
@@ -109,8 +130,21 @@ class PlayerRig:
         # Arm: outboard of the shoulder joint, up in the shoulder band (the
         # band keeps the hips, which are about as wide, out of it).
         arm = (np.abs(x) >= self.shoulder_x) & (y >= self.shoulder_y - self.height * 0.12)
-        arm_l = arm & (x > 0)
-        arm_r = arm & (x < 0)
+        # Weight ramp across the shoulder band (see __init__).
+        u = np.clip((np.abs(x) - self.shoulder_x) / max(self.deltoid, 1e-6), 0.0, 1.0)
+        ramp = u * u * (3.0 - 2.0 * u)
+        arm = np.where(arm, ramp, 0.0)
+        arm_l = arm * (x > 0)
+        arm_r = arm * (x < 0)
+        # Clavicle: ramps in from the base of the neck to the shoulder joint
+        # (the arm rides it fully), and fades in with height so the chest
+        # under the shoulder isn't dragged down with it.
+        cu = np.clip((np.abs(x) - self.clavicle_x) / max(self.shoulder_x - self.clavicle_x, 1e-6), 0.0, 1.0)
+        y0 = self.shoulder_y - self.height * 0.12
+        cv = np.clip((y - y0) / (self.height * 0.08), 0.0, 1.0)
+        clav = (cu * cu * (3.0 - 2.0 * cu)) * (cv * cv * (3.0 - 2.0 * cv)) * (not is_head)
+        clav_l = clav * (x > 0)
+        clav_r = clav * (x < 0)
         # Elbow: the forearm, outboard of the elbow joint.
         elbow = np.abs(x) >= self.elbow_x
 
@@ -128,6 +162,7 @@ class PlayerRig:
         head = np.full(len(pos), bool(is_head))
 
         return dict(arm_l=arm_l.astype(np.float32), arm_r=arm_r.astype(np.float32),
+                    clav_l=clav_l.astype(np.float32), clav_r=clav_r.astype(np.float32),
                     elbow=elbow.astype(np.float32),
                     leg_l=leg_l.astype(np.float32), leg_r=leg_r.astype(np.float32),
                     knee=knee.astype(np.float32),
@@ -135,8 +170,24 @@ class PlayerRig:
                     head=head.astype(np.float32))
 
 
-def _bend(pos, nrm, weight, pivot, axis, angle):
+def _clavicles(pos, nrm, weights, rig):
+    """Tilt both outer shoulders down from the base of the neck (see
+    PlayerRig.clavicle_drop). Applied after the arms, which it carries."""
+    if 'clav_l' not in weights or not rig.clavicle_drop:
+        return
+    pl = np.array([rig.clavicle_x, rig.shoulder_y, 0.0], dtype=np.float32)
+    pr = np.array([-rig.clavicle_x, rig.shoulder_y, 0.0], dtype=np.float32)
+    _bend(pos, nrm, weights['clav_l'], pl, 'z', -rig.clavicle_drop, linear=True)
+    _bend(pos, nrm, weights['clav_r'], pr, 'z', rig.clavicle_drop, linear=True)
+
+
+def _bend(pos, nrm, weight, pivot, axis, angle, linear=False):
     """Rotate `pos`/`nrm` about `pivot`, each vertex turning `weight * angle`.
+
+    `linear` blends partly weighted vertices the way the game skins them
+    instead: a lerp between the bind pose and the fully turned pose. Only the
+    shoulder uses it — there the chord pulls the top of the shoulder into the
+    sloped line the game shows; turned on arcs it bulged into a pad.
 
     Scaling the *angle* per vertex keeps every vertex on its own rotation arc.
     Interpolating the position instead — lerping between the bind pose and the
@@ -147,6 +198,14 @@ def _bend(pos, nrm, weight, pivot, axis, angle):
     """
     sel = weight > 1e-3
     if not np.any(sel):
+        return
+    if linear:
+        w = weight[sel][:, None]
+        p0, n0 = pos[sel], nrm[sel]
+        full = np.ones(len(pos), dtype=np.float32)
+        _bend(pos, nrm, full * sel, pivot, axis, angle)
+        pos[sel] = p0 * (1.0 - w) + pos[sel] * w
+        nrm[sel] = n0 * (1.0 - w) + nrm[sel] * w
         return
     theta = weight[sel] * angle
     c, s = np.cos(theta), np.sin(theta)
@@ -214,10 +273,11 @@ class JogAnimation:
         sh_l = np.array([rig.shoulder_x, rig.shoulder_y, 0.0], dtype=np.float32)
         sh_r = np.array([-rig.shoulder_x, rig.shoulder_y, 0.0], dtype=np.float32)
         # Composed as Rx @ Rz in matrix form, so the Z drop is applied first.
-        _bend(pos, nrm, arm_l, sh_l, 'z', -drop + splay)
+        _bend(pos, nrm, arm_l, sh_l, 'z', -drop + splay + rig.clavicle_drop, linear=True)
         _bend(pos, nrm, arm_l, sh_l, 'x', fore)
-        _bend(pos, nrm, arm_r, sh_r, 'z', drop - splay)
+        _bend(pos, nrm, arm_r, sh_r, 'z', drop - splay - rig.clavicle_drop, linear=True)
         _bend(pos, nrm, arm_r, sh_r, 'x', -fore)
+        _clavicles(pos, nrm, weights, rig)
 
         # ── Knees: heels kick backwards on the leg's backswing
         knee_l = leg_l * weights['knee'] * max(0.0, -swing)
@@ -293,10 +353,11 @@ class IdleAnimation:
         fore = np.deg2rad(3.0) * sway
         sh_l = np.array([rig.shoulder_x, rig.shoulder_y, 0.0], dtype=np.float32)
         sh_r = np.array([-rig.shoulder_x, rig.shoulder_y, 0.0], dtype=np.float32)
-        _bend(pos, nrm, arm_l, sh_l, 'z', -drop + splay)
+        _bend(pos, nrm, arm_l, sh_l, 'z', -drop + splay + rig.clavicle_drop, linear=True)
         _bend(pos, nrm, arm_l, sh_l, 'x', fore)
-        _bend(pos, nrm, arm_r, sh_r, 'z', drop - splay)
+        _bend(pos, nrm, arm_r, sh_r, 'z', drop - splay - rig.clavicle_drop, linear=True)
         _bend(pos, nrm, arm_r, sh_r, 'x', -fore)
+        _clavicles(pos, nrm, weights, rig)
 
         # ── Legs: feet planted, so only the shift's small counter-lean.
         lean = np.deg2rad(1.2) * sway
@@ -441,10 +502,11 @@ class RelaxedWaitAnimation:
         _bend(pos, nrm, w['arm_r'] * w['elbow'], el_r, 'y', np.deg2rad(12.0 - 2.0 * breath))
         sh_l = np.array([rig.shoulder_x, rig.shoulder_y, 0.0], dtype=np.float32)
         sh_r = np.array([-rig.shoulder_x, rig.shoulder_y, 0.0], dtype=np.float32)
-        _bend(pos, nrm, w['arm_l'], sh_l, 'z', -(drop + splay))
+        _bend(pos, nrm, w['arm_l'], sh_l, 'z', -(drop + splay) + rig.clavicle_drop, linear=True)
         _bend(pos, nrm, w['arm_l'], sh_l, 'x', fore)
-        _bend(pos, nrm, w['arm_r'], sh_r, 'z', (drop - splay))
+        _bend(pos, nrm, w['arm_r'], sh_r, 'z', (drop - splay) - rig.clavicle_drop, linear=True)
         _bend(pos, nrm, w['arm_r'], sh_r, 'x', -fore)
+        _clavicles(pos, nrm, w, rig)
 
         # ── Head: looks about on its own clock, and stays level against the
         # shoulder roll rather than tipping with it. Turned before the torso,
@@ -520,10 +582,11 @@ class WalkAnimation:
         splay = np.deg2rad(6.0)
         sh_l = np.array([rig.shoulder_x, rig.shoulder_y, 0.0], dtype=np.float32)
         sh_r = np.array([-rig.shoulder_x, rig.shoulder_y, 0.0], dtype=np.float32)
-        _bend(pos, nrm, arm_l, sh_l, 'z', -drop + splay)
+        _bend(pos, nrm, arm_l, sh_l, 'z', -drop + splay + rig.clavicle_drop, linear=True)
         _bend(pos, nrm, arm_l, sh_l, 'x', fore)
-        _bend(pos, nrm, arm_r, sh_r, 'z', drop - splay)
+        _bend(pos, nrm, arm_r, sh_r, 'z', drop - splay - rig.clavicle_drop, linear=True)
         _bend(pos, nrm, arm_r, sh_r, 'x', -fore)
+        _clavicles(pos, nrm, weights, rig)
 
         # ── Knees: the trailing leg's heel lifts as it comes through, the
         # leading one stays nearly straight to plant. A walk never kicks the

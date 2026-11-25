@@ -25,7 +25,7 @@ from app import disk_import
 from app import team_ops as T
 from app import variants as V
 from app.game_data import (
-    check_team_detailed, check_team_variants, season_errors, save_team, delete_team, save_target, saves_to_user_edits, SaveError,
+    check_team_detailed, check_team_variants, season_errors, save_team, delete_team, save_target, saves_to_user_edits, SaveError, EditsOffError,
     TEAM_TYPES, ASSET_SPECS, frontend_logo,
 )
 from app.team_browse import GROUPS, group_label, info_group
@@ -39,7 +39,7 @@ from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QWidget
 from ui.broadcast import Card, eyebrow_label
 from ui.form import SearchList
 from ui.editor_kit import (
-    Badge, compact_button, SeasonBar, VariantPicker, ConfirmDialog, FormDialog, TextField, NumberField, ChoiceField,
+    Badge, compact_button, open_season_menu, VariantPicker, ConfirmDialog, FormDialog, TextField, NumberField, ChoiceField,
     SegmentField, asset_status, load_pixmap,
 )
 from ui.theme import (
@@ -51,7 +51,9 @@ from shared.config import config
 class TeamEditorScreen(EditorScreen):
     TAB_TITLES = ["Overview", "Kits", "Shirt names", "Squad & roles", "Other"]
     RECORD_NOUN = "team"
+    EDIT_KIND = "teams"
     LIST_PLACEHOLDER = "filter teams"
+    MID_PANE = True
     FIT_PANES = True
 
     def __init__(self, ds, on_back, open_player=None):
@@ -79,18 +81,36 @@ class TeamEditorScreen(EditorScreen):
 
     # ── seasons pane (narrow column left of the tabs, as in the player editor) ──
     def _build_season_pane(self):
-        # the season being edited: one button above the tabs, opening the
-        # record's seasons and the season actions
-        self.season_bar = SeasonBar()
-        self.season_bar.picked.connect(self.set_season)
-        self.season_bar.action.connect(self.season_action)
-        self.focus.register(self.season_bar.button)
+        seasons_card = Card()
+        sv = QVBoxLayout(seasons_card)
+        sv.setContentsMargins(8, 12, 8, 10)
+        sv.setSpacing(6)
+        head = QHBoxLayout()
+        head.addWidget(eyebrow_label("seasons", color=FG_TERTIARY, size=11))
+        head.addStretch(1)
+        self.season_add_btn = compact_button("+ ADD")
+        self.season_add_btn.setMinimumWidth(0)
+        self.season_add_btn.clicked.connect(lambda: self.season_action("add"))
+        head.addWidget(self.season_add_btn)
+        self.season_menu_btn = compact_button("⋯")
+        self.season_menu_btn.setFixedWidth(30)
+        self.season_menu_btn.clicked.connect(
+            lambda: open_season_menu(self.season_menu_btn, self.window(), self.season_action))
+        head.addWidget(self.season_menu_btn)
+        sv.addLayout(head)
+        self.season_list = SearchList("", show_filter=False)
+        self.season_list.activated.connect(self.set_season)
+        sv.addWidget(self.season_list, stretch=1)
+        self.shell.mid_layout.addWidget(seasons_card, stretch=1)
+        for w in (self.season_add_btn, self.season_menu_btn, self.season_list):
+            self.focus.register(w)
 
         self.season_row = QWidget()
         ctx = QHBoxLayout(self.season_row)
         ctx.setContentsMargins(0, 0, 0, 10)
         ctx.setSpacing(8)
-        ctx.addWidget(self.season_bar)
+        self.season_pill = Badge("NO SEASON", ACCENT, filled=True)
+        ctx.addWidget(self.season_pill)
         # the mod leaves a season with errors out until it is fixed and saved
         self.season_warn = Badge("TEAM NOT USED UNTIL ERRORS ARE FIXED:", WARN, filled=True)
         self.season_warn.hide()
@@ -104,13 +124,17 @@ class TeamEditorScreen(EditorScreen):
             season_errors(self.season_block(), self.ds.players, self.season)))
         items = [(s, season_label(s),
                   "DRAFT" if working[s].get("draft") else
-                  f"{len([p for p in working[s].get('players', []) if p])} players",
+                  str(len([p for p in working[s].get('players', []) if p])),
                   WARN if working[s].get("draft") else FG_TERTIARY, False) for s in sorted(working)]
-        self.season_bar.set_items([i[:4] for i in items], self.season)
+        self.season_pill.set_text(
+            f"SEASON {season_label(self.season)}" if self.season else "NO SEASON")
+        self.season_list.set_items(items, keep_data=self.season)
+        self.season_list.set_selected(self.season)
 
     # ── record plumbing ──────────────────────────────────────────────────
     GROUP_LABEL = "Group"
     SORTS = [("name", "name"), ("issues", "most issues"), ("squad", "squad size")]
+    EXTRA_FILTERS = [("type", "Type")]
 
     def list_rows(self):
         rows = []
@@ -131,6 +155,7 @@ class TeamEditorScreen(EditorScreen):
                 "search": f"{tid} {info_group(info)} {' '.join(seasons)}",
                 "errors": errors + drafts, "issues": len(issues), "group": info_group(info),
                 "sort": {"squad": n},
+                "filters": {"type": info.get("type") or ""},
             })
         return rows
 
@@ -348,8 +373,10 @@ class TeamEditorScreen(EditorScreen):
         }
 
     def tab_hints(self, focused):
-        if focused is self.season_bar.button:
-            return [("A", "seasons")]
+        if focused is self.season_list:
+            return [("↕", "browse"), ("A", "load season")]
+        if focused in (self.season_add_btn, self.season_menu_btn):
+            return [("A", "open")]
         tab = self.tabs[self.shell.tabs.index()]
         return tab.hints(focused)
 
@@ -559,8 +586,9 @@ class TeamEditorScreen(EditorScreen):
 
     def _team_dialog(self, duplicate):
         name = TextField("Team name")
+        name.blank_text = ""
         team_type = SegmentField("Type", TEAM_TYPES)
-        group = ChoiceField("Group", GROUPS, allow_blank=True, display=group_label)
+        group = ChoiceField("Group", GROUPS, allow_blank=False, blank_label="", display=group_label)
         group.popup_title = "group (where the team is listed)"
         year = NumberField("Season", lo=1900, hi=2100, allow_blank=False, formatter=season_label)
         copy_files = SegmentField("Copy image files", ["yes", "no"])
@@ -570,74 +598,37 @@ class TeamEditorScreen(EditorScreen):
         group.set_value(info.get("group", "") if duplicate else "")
         year.set_value(self.season or "2026")
         copy_files.set_value("yes")
-        # a new team starts from another one's kits, crest, ball and banners
-        # (renamed, own folder): a blank team has no picture to show in game
-        names = {tid: (self.ds.team_seasons(tid).get(max(self.ds.team_seasons(tid))) or {}).get("name", tid)
-                 for tid in self.ds.team_ids() if self.ds.team_seasons(tid)}
-        start = ChoiceField("Kits & crest from", sorted(names, key=lambda t: names[t].lower()),
-                            allow_blank=True, blank_label="none (blank team)",
-                            display=lambda t: names.get(t, t))
-        start.searchable = True
-        start.popup_title = "start from this team's look"
-        start.set_value(self.record_id if self.record_id in names else "")
-        squad = SegmentField("Squad", ["empty", "copy"],
-                             display=lambda v: {"empty": "empty", "copy": "copy its players"}[v])
-        squad.set_value("empty")
         if not duplicate:
-            fields = {"name": name, "type": team_type, "group": group, "start": start,
-                      "squad": squad, "year": year}
+            fields = {"name": name, "type": team_type, "group": group, "year": year}
         else:
             fields = {"name": name, "type": team_type, "group": group, "copy": copy_files}
 
         def done(role):
             self._dialog = None
-            if role != "ok":
-                return
+            if role == "ok":
+                run()
+
+        def run():
             try:
                 self._create_team(name.value().strip(), team_type.value() or "club",
                                   group.value(), year.value(), duplicate,
-                                  copy_files.value() == "yes",
-                                  start=None if duplicate else start.value(),
-                                  copy_squad=squad.value() == "copy")
+                                  copy_files.value() == "yes")
+            except EditsOffError:
+                self.ask_edits_on(run, replaces=False)
             except (ValueError, OSError, SaveError) as e:
                 self.shell.footer.set_status(f"Could not create team: {e}", DANGER_LITE)
 
         self.show_dialog(FormDialog(
             self, "Duplicate team" if duplicate else "New team",
-            "Copies every season into a new team." if duplicate else
-            "Start from another team's kits and crest, then change what you like.",
+            "Copies every season into a new team." if duplicate else "",
             fields, [("CANCEL", "neutral", "cancel"),
-                     ("CREATE", "primary", "ok")], done))
+                     ("CREATE", "primary", "ok")], done, required=("name",) if duplicate else ("name", "group")))
 
-    def _start_season(self, src, year, name, team_type, group, copy_squad):
-        """The first season of a new team made from team `src`: its season
-        nearest `year`, renamed, with its squad or an empty one."""
-        seasons = self.ds.team_seasons(src)
-        if not seasons:
-            return T.new_team_season(name, team_type, group)
-        near = min(seasons, key=lambda s: abs(int(s) - int(year)) if str(s).isdigit() else 9999)
-        info = copy.deepcopy(seasons[near])
-        info["name"], info["type"] = name, team_type
-        info.pop("draft", None)
-        if group:
-            info["group"] = group
-        else:
-            info.pop("group", None)
-        if not copy_squad:
-            info["players"] = []
-            info["roles"] = {k: "" for k in (info.get("roles") or {})}
-            info["setPlays"] = {k: "" for k in (info.get("setPlays") or {})}
-            for _vid, entry in ((info.get(V.VARIANT_KEY) or {}).items()):
-                if isinstance(entry, dict):
-                    entry.pop("players", None)
-                    entry.pop("roles", None)
-                    entry.pop("setPlays", None)
-        return info
-
-    def _create_team(self, name, team_type, group, year, duplicate, copy_files, start=None,
-                     copy_squad=False):
+    def _create_team(self, name, team_type, group, year, duplicate, copy_files):
         if not name:
             raise ValueError("the team needs a name")
+        if not group and not duplicate:
+            raise ValueError("the team needs a group")
         teams_dir = config.directory_teams
         folder = T.safe_folder_name(name, teams_dir)
         tid = T.allocate_team_id(team_type, self.ds.team_json_ids, {**self.ds.teams, **self.ds.team_drafts})
@@ -651,9 +642,6 @@ class TeamEditorScreen(EditorScreen):
                 else:
                     info.pop("group", None)
             source_folder = self.team_folder() if copy_files else None
-        elif start:
-            seasons = {str(year): self._start_season(start, year, name, team_type, group, copy_squad)}
-            source_folder = self.ds.teams_folder_path.get(start) or None
         else:
             seasons = {str(year): T.new_team_season(name, team_type, group)}
             source_folder = None
@@ -680,6 +668,9 @@ class TeamEditorScreen(EditorScreen):
         def do_delete():
             try:
                 outcome = delete_team(path, tid)
+            except EditsOffError:
+                self.ask_edits_on(do_delete, replaces=False)
+                return
             except SaveError as e:
                 self.shell.footer.set_status(f"Delete failed: {e}", DANGER_LITE)
                 return

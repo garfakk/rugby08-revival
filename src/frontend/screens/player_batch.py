@@ -16,7 +16,7 @@ from PyQt5.QtWidgets import QBoxLayout, QHBoxLayout, QVBoxLayout
 from app import appearance as A
 from app import player_batch as B
 from app import player_ops as P
-from app.game_data import FEET, SOCKS, TAPES, SaveError, save_players
+from app.game_data import FEET, SOCKS, TAPES, EditsOffError, SaveError, save_players
 from app.ratings import GROUPS
 from app.season import season_label
 from backend import game_specific_variables as gsv
@@ -445,6 +445,10 @@ class BatchPanel:
             return True
         try:
             self._write(after)
+        except EditsOffError:
+            # once on, apply again: the changes land on the kept edits
+            self.screen.ask_edits_on(self.apply, replaces=False)
+            return False
         except (SaveError, OSError) as e:
             footer.set_status(f"Save failed: {e}", DANGER_LITE)
             return False

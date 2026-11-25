@@ -21,6 +21,7 @@ from PyQt5.QtCore import Qt, QTimer
 from app.screen_base import Screen
 from app.input import Action, KEYMAP
 from app.edit_session import EditSession
+from app.game_data import EditsOffError
 from ui.dropdown import PopupList
 from ui.editor_kit import (
     EditorShell, ConfirmDialog, FormDialog, FieldBase, TextField, NumberField, ChoiceField,
@@ -36,6 +37,7 @@ from ui.theme import GREEN, DANGER_LITE, FG_SECONDARY, FG_TERTIARY, BTN_HEIGHT_S
 class EditorScreen(Screen):
     TAB_TITLES = []
     RECORD_NOUN = "record"
+    EDIT_KIND = ""            # "players" / "teams": the user-edit kind of the records
     LIST_PLACEHOLDER = "filter"
     MID_PANE = False          # a screen sets this to add EditorShell's optional mid pane
     COMPACT_HEADER = False    # a screen with no per-record header content sets this
@@ -110,11 +112,22 @@ class EditorScreen(Screen):
         self.show_filter.label_width = 60
         self.group_filter = ChoiceField(self.GROUP_LABEL, allow_blank=True, blank_label="all")
         self.group_filter.label_width = 60
+        # a screen's own filters (team type, nationality): rows give their value
+        # under row["filters"][key]
+        self.extra_filters = {}
+        for key, label in self.EXTRA_FILTERS:
+            f = ChoiceField(label, allow_blank=True, blank_label="all", display=self.filter_label(key))
+            f.label_width = 60
+            f.searchable = True
+            self.extra_filters[key] = f
         self.sort_choice = ChoiceField("Sort", [k for k, _ in self.SORTS], allow_blank=False,
                                        display=lambda v: dict(self.SORTS).get(v, v))
         self.sort_choice.label_width = 60
         self.sort_choice.set_value(self.SORTS[0][0])
-        for f in (self.show_filter, self.group_filter, self.sort_choice):
+        filters = (self.show_filter, self.group_filter, *self.extra_filters.values(), self.sort_choice)
+        width = max(60, *(f.label_text_width() + 18 for f in filters))
+        for f in filters:
+            f.label_width = width
             f.edited.connect(lambda _v: self.reload_list())
             self._filters_panel.add(f)
         lay.addWidget(self._filters_panel)
@@ -126,18 +139,23 @@ class EditorScreen(Screen):
         self.count_note = Note("", color=FG_TERTIARY)
         lay.addWidget(self.count_note)
         for w in (self.new_btn, self.dup_btn, self.filters_toggle, self.show_filter,
-                  self.group_filter, self.sort_choice, self.list):
+                  self.group_filter, *self.extra_filters.values(), self.sort_choice, self.list):
             self.focus.register(w)
 
     GROUP_LABEL = "Group"
     SORTS = [("name", "name"), ("issues", "most issues")]
+    EXTRA_FILTERS = ()        # [(key, label)]: more list filters, values from row["filters"]
+
+    def filter_label(self, key):
+        """How an extra filter shows its values."""
+        return lambda v: str(v).replace("_", " ")
 
     def list_rows(self):
         """[{id, text, tag, color, search, errors, issues, group, sort:{key: value}}]"""
         return []
 
     def list_items(self):
-        rows = self.list_rows()
+        rows = all_rows = self.list_rows()
         groups = sorted({r.get("group") for r in rows if r.get("group")})
         self.group_filter.set_options(groups)
         if self.group_filter.value() and self.group_filter.value() not in groups:
@@ -151,6 +169,16 @@ class EditorScreen(Screen):
         if group:
             rows = [r for r in rows if r.get("group") == group
                     or group in (r.get("groups") or ())]
+        for key, f in self.extra_filters.items():
+            values = sorted({v for r in all_rows if (v := (r.get("filters") or {}).get(key))},
+                            key=lambda v: self.filter_label(key)(v).lower())
+            f.set_options(values)
+            want = f.value()
+            if want and want not in values:
+                f.set_value("")
+                want = ""
+            if want:
+                rows = [r for r in rows if (r.get("filters") or {}).get(key) == want]
         sort = self.sort_choice.value() or "name"
         if sort == "name":
             # a row may give its own name order (players: surname first)
@@ -346,11 +374,18 @@ class EditorScreen(Screen):
         self._update_hints()
 
     # ── save / revert / undo ─────────────────────────────────────────────
-    def save(self):
+    def save(self, then=None):
+        """Write the open record. `then` runs once it is saved, also when the
+        save waits on the "turn your edits on" question."""
         if self.session is None or not self.session.is_dirty():
+            if then:
+                then()
             return True
         try:
             message = self.write_record()
+        except EditsOffError:
+            self.ask_edits_on(lambda: self.save(then))
+            return False
         except Exception as e:     # SaveError and anything unexpected from disk
             self.shell.footer.set_status(f"Save failed: {e}", DANGER_LITE)
             return False
@@ -362,7 +397,35 @@ class EditorScreen(Screen):
         if isinstance(message, tuple):          # (text, colour): a save with a caveat
             message, color = message
         self.shell.footer.set_status(message or "Saved", color)
+        if then:
+            then()
         return True
+
+    def ask_edits_on(self, retry, replaces=True):
+        """A save was refused because the user's edits are turned off: offer
+        to turn them on here and run `retry`, nothing typed is lost.
+        `replaces`: the save writes the open record as shown (the pack's,
+        edits off), so a kept edit of it is overwritten."""
+        edits = self.ds.edits
+        kept = edits.count()
+        text = "Saving turns them back on"
+        text += (f", with your {kept} other edited record{'s' if kept != 1 else ''}." if kept
+                 else ".")
+        if replaces and self.EDIT_KIND and self.record_id is not None and edits.is_edited(self.EDIT_KIND,
+                                                                            self.record_id):
+            text += f"\nThis {self.RECORD_NOUN}'s kept edit is replaced by what you save."
+
+        def choice(role):
+            self._dialog = None
+            if role == "on":
+                self.ds.set_edits_enabled(True)
+                retry()
+            else:
+                self.focus_list_or_content()
+
+        self.show_dialog(ConfirmDialog(
+            self, "Your edits are turned off", text,
+            [("CANCEL", "neutral", "cancel"), ("TURN ON AND SAVE", "primary", "on")], choice))
 
     def after_save(self):
         pass
@@ -405,8 +468,7 @@ class EditorScreen(Screen):
         def choice(role):
             self._dialog = None
             if role == "save":
-                if self.save():
-                    then()
+                self.save(then)
             elif role == "discard":
                 self.session.revert()
                 then()
@@ -506,6 +568,11 @@ class EditorScreen(Screen):
         narrow = w < 1250
         self.new_btn.setText("+ NEW" if narrow else f"+ NEW {self.RECORD_NOUN.upper()}")
         self.dup_btn.setText("COPY" if narrow else "DUPLICATE")
+        if sh.mid_pane is not None:
+            sh.mid_pane.setFixedWidth(230 if w >= 1500 else 210 if w >= 1250 else 200)
+            add = getattr(self, "season_add_btn", None)
+            if add is not None:
+                add.setText("+" if narrow else "+ ADD")
         if sh.preview_pane is None:
             return
         wide = w >= 1250

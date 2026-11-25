@@ -17,7 +17,7 @@ from PyQt5.QtWidgets import QApplication, QVBoxLayout, QHBoxLayout, QGridLayout,
 from app import appearance as A
 from app import player_ops as P
 from app.game_data import (
-    check_player_detailed, save_player, save_target, saves_to_user_edits, SaveError, POSITIONS, SHIRT_POSITIONS,
+    check_player_detailed, save_player, save_target, saves_to_user_edits, SaveError, EditsOffError, POSITIONS, SHIRT_POSITIONS,
 )
 from app.ratings import position_overall
 from app.season import season_label
@@ -35,7 +35,7 @@ from ui import motion
 from ui.broadcast import Card, display_label, eyebrow_label, tracked_font
 from ui.editor_kit import (
     Avatar, Badge, FormDialog, ConfirmDialog, TextField, NumberField, ChoiceField,
-    SegmentField, RatingField, Note, compact_button, SeasonBar, ScopeCheck, LOAD_FILES,
+    SegmentField, RatingField, Note, compact_button, open_season_menu, ScopeCheck, LOAD_FILES,
 )
 from ui.form import SearchList
 from ui.skin_preview import compose as skin_compose
@@ -108,7 +108,9 @@ def _first_last_default(record):
 class PlayerEditorScreen(EditorScreen):
     TAB_TITLES = ["Profile", "Ratings", "Appearance", "Skills", "Teams"]
     RECORD_NOUN = "player"
+    EDIT_KIND = "players"
     LIST_PLACEHOLDER = "name, id, position, team"
+    MID_PANE = True
     COMPACT_HEADER = True
     FIT_PANES = True
     PREVIEW_TABS = (TAB_APPEARANCE,)
@@ -543,10 +545,10 @@ class PlayerEditorScreen(EditorScreen):
             self.shell.preview_sep.setVisible(show)
             QTimer.singleShot(0, self.batch.fit)
 
-    def save(self):
+    def save(self, then=None):
         if self.batch.active:
             return self.batch.apply()
-        return super().save()
+        return super().save(then)
 
     def confirm_revert(self):
         if self.batch.active:
@@ -616,18 +618,36 @@ class PlayerEditorScreen(EditorScreen):
 
     # ── seasons pane (narrow column left of the tabs) ──────────────────────
     def _build_season_pane(self):
-        # the season being edited: one button above the tabs, opening the
-        # record's seasons and the season actions
-        self.season_bar = SeasonBar()
-        self.season_bar.picked.connect(self.set_season)
-        self.season_bar.action.connect(self.season_action)
-        self.focus.register(self.season_bar.button)
+        seasons_card = Card()
+        sv = QVBoxLayout(seasons_card)
+        sv.setContentsMargins(8, 12, 8, 10)
+        sv.setSpacing(6)
+        head = QHBoxLayout()
+        head.addWidget(eyebrow_label("seasons", color=FG_TERTIARY, size=11))
+        head.addStretch(1)
+        self.season_add_btn = compact_button("+ ADD")
+        self.season_add_btn.setMinimumWidth(0)
+        self.season_add_btn.clicked.connect(lambda: self.season_action("add"))
+        head.addWidget(self.season_add_btn)
+        self.season_menu_btn = compact_button("⋯")
+        self.season_menu_btn.setFixedWidth(30)
+        self.season_menu_btn.clicked.connect(
+            lambda: open_season_menu(self.season_menu_btn, self.window(), self.season_action))
+        head.addWidget(self.season_menu_btn)
+        sv.addLayout(head)
+        self.season_list = SearchList("", show_filter=False)
+        self.season_list.activated.connect(self.set_season)
+        sv.addWidget(self.season_list, stretch=1)
+        self.shell.mid_layout.addWidget(seasons_card, stretch=1)
+        for w in (self.season_add_btn, self.season_menu_btn, self.season_list):
+            self.focus.register(w)
 
         self.season_row = QWidget()
         ctx = QHBoxLayout(self.season_row)
         ctx.setContentsMargins(0, 0, 0, 10)
         ctx.setSpacing(8)
-        ctx.addWidget(self.season_bar)
+        self.season_pill = Badge("SEASON —", ACCENT, filled=True)
+        ctx.addWidget(self.season_pill)
         ctx.addStretch(1)
         self.shell.right_layout.insertWidget(0, self.season_row)
 
@@ -661,6 +681,7 @@ class PlayerEditorScreen(EditorScreen):
     # ── record plumbing ──────────────────────────────────────────────────
     GROUP_LABEL = "Team"
     SORTS = [("name", "name"), ("ovr", "overall"), ("issues", "most issues")]
+    EXTRA_FILTERS = [("nationality", "Nationality")]
 
     def _row_facts(self, pid, record):
         """What the list shows for one player, from the record alone."""
@@ -676,6 +697,7 @@ class PlayerEditorScreen(EditorScreen):
             "short": POSITION_SHORT.get(pos, pos[:3].upper() if pos else "—"),
             "ovr": position_overall(block) if block else None,
             "star": is_star(block),
+            "nat": str(block.get("nationality") or "").strip(),
         }
 
     def _cached_facts(self, pid, record):
@@ -765,6 +787,7 @@ class PlayerEditorScreen(EditorScreen):
                 "group": teams[0] if teams else "", "groups": teams,
                 "sort": {"ovr": ovr},
                 "name_key": _surname_key(record),
+                "filters": {"nationality": f["nat"]},
             })
         return rows
 
@@ -867,7 +890,10 @@ class PlayerEditorScreen(EditorScreen):
             star = is_star(block)
             items.append((s, season_label(s), f"{STAR} {tag}" if star else tag,
                          STAR_COLOR if star else FG_TERTIARY, False))
-        self.season_bar.set_items([i[:4] for i in items], self.season)
+        self.season_pill.set_text(
+            f"SEASON {season_label(self.season)}" if self.season else "NO SEASON")
+        self.season_list.set_items(items, keep_data=self.season)
+        self.season_list.set_selected(self.season)
 
     # ── 3D preview ───────────────────────────────────────────────────────
     def refresh_stage(self, preview_face=_NO_PREVIEW, preview_boots=_NO_PREVIEW, preview_skin=None):
@@ -993,8 +1019,10 @@ class PlayerEditorScreen(EditorScreen):
         # widget actually focused. Handle the mid pane's own widgets first;
         # identity fields reuse the exact hints ProfileTab already gives the
         # same field types, since it's the same widgets, just relocated.
-        if focused is self.season_bar.button:
-            return [("A", "seasons")]
+        if focused is self.season_list:
+            return [("↕", "browse"), ("A", "load season")]
+        if focused in (self.season_add_btn, self.season_menu_btn):
+            return [("A", "open")]
         if isinstance(focused, ScopeCheck):
             return [("A", "edit every season" if not focused.checked else "edit this season only")]
         if isinstance(focused, NumberField):
@@ -1135,14 +1163,18 @@ class PlayerEditorScreen(EditorScreen):
 
         def done(role):
             self._dialog = None
-            if role != "ok":
-                return
+            if role == "ok":
+                run()
+
+        def run():
             try:
                 if duplicate:
                     self._duplicate_player(name.value().strip())
                 else:
                     self._create_player(first.value(), last.value(), year.value(), position.value(),
                                         level.value(), team.value())
+            except EditsOffError:
+                self.ask_edits_on(run, replaces=False)
             except (ValueError, SaveError, OSError) as e:
                 self.shell.footer.set_status(f"Could not create player: {e}", DANGER_LITE)
 
@@ -1208,10 +1240,15 @@ class PlayerEditorScreen(EditorScreen):
 
         def done(role):
             self._dialog = None
-            if role != "ok":
-                return
+            if role == "ok":
+                run()
+
+        def run():
             try:
                 files, teams, skipped = P.delete_everywhere(self.ds, pid, remove.value() == "yes")
+            except EditsOffError:
+                self.ask_edits_on(run, replaces=False)
+                return
             except (SaveError, OSError) as e:
                 self.shell.footer.set_status(f"Delete failed: {e}", DANGER_LITE)
                 return
