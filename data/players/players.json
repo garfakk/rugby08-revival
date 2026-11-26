@@ -217389,7 +217389,8 @@
     "tight_tape": "",
     "finger_tape": "",
     "crashball": "82",
-    "gap_defense": "82"
+    "gap_defense": "82",
+    "star_voice": "25"
    },
    "2010": {
     "attack": "96",
@@ -217435,7 +217436,8 @@
     "tight_tape": "",
     "finger_tape": "",
     "crashball": "82",
-    "gap_defense": "82"
+    "gap_defense": "82",
+    "star_voice": "25"
    }
   }
  },
@@ -1655174,7 +1655176,7 @@
   }
  },
  "159546": {
-  "display_name": "N. Triviño",
+  "display_name": "N.Trivino",
   "first_name": "Nicolás",
   "last_name": "Triviño",
   "birthdate": "1928/01/01",

@@ -235,7 +235,7 @@ class TournamentWeather(unittest.TestCase):
         names = {e.name: self.ds.stadiums.get(e.stadium_id, {}).get("name") for e in t.teams.values()}
         self.assertEqual(names["Scotland"], "Murrayfield")
         self.assertEqual(names["Wales"], "Millennium Stadium")
-        self.assertEqual(names["Italy"], "Rome")
+        self.assertEqual(names["Italy"], "Stadio Olimpico")      # its primaryStadium
 
 
 if __name__ == "__main__":

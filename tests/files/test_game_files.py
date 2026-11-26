@@ -209,8 +209,10 @@ def test_team_names_appended(game_dir, match_data):
         template = open(os.path.join(config.templates_directory, gsv.template_filenames[key]), "rb").read()
         tail = written[len(template):]
         assert written.startswith(template)
-        assert tail == (gsv.teams_string_id["team_A"] + match_data["team_A"]["name"].encode() + b"\0"
-                        + gsv.teams_string_id["team_B"] + match_data["team_B"]["name"].encode() + b"\0")
+        names = GFP.slot_team_names(match_data)      # a stock team's name gets a trailing space
+        assert names["team_A"].strip() == match_data["team_A"]["name"]
+        assert tail == (gsv.teams_string_id["team_A"] + names["team_A"].encode() + b"\0"
+                        + gsv.teams_string_id["team_B"] + names["team_B"].encode() + b"\0")
 
 
 # ── clean-up ─────────────────────────────────────────────────────────────

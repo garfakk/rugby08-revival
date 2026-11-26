@@ -27,6 +27,9 @@ GOLDEN = os.path.join(TESTS, "golden")
 # Same import roots as run.py.
 sys.path[:0] = [os.path.join(SRC, "frontend"), SRC]
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+# No OpenGL under offscreen: MainWindow must not re-exec the process with the
+# software renderer (that would replace the pytest run, see main._warm_up_gl).
+os.environ.setdefault("R08_GL_FALLBACK_TRIED", "1")
 
 _APP = tempfile.mkdtemp(prefix="r08-tests-")
 USER_DATA = os.path.join(_APP, "user_data")

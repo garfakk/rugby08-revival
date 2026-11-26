@@ -428,7 +428,10 @@ class MainWindow(QMainWindow):
             log.warning("Retrying once with the software OpenGL renderer (QT_OPENGL=software)")
             os.environ["QT_OPENGL"] = "software"
             os.environ["R08_GL_FALLBACK_TRIED"] = "1"
-            os.execv(sys.executable, [sys.executable] + sys.argv[1:])
+            # Frozen: the exe is the program. From source: keep the script
+            # (sys.argv[0], main.py) or python would start with none.
+            args = sys.argv[1:] if getattr(sys, "frozen", False) else sys.argv
+            os.execv(sys.executable, [sys.executable] + args)
 
     def _on_intro_finished(self):
         self._intro = None
