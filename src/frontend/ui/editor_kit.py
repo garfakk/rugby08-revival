@@ -2569,6 +2569,21 @@ class VariantPicker(QWidget):
         popup.open_at(self.menu_btn, self.window())
 
 
+def season_year_field(taken, suggestion):
+    """The year of a new season, as a dropdown: every year from 1990 to a
+    couple past now, newest first, less the seasons `taken`."""
+    import datetime
+    taken = {str(s) for s in taken}
+    top = max([datetime.date.today().year + 2, int(suggestion)]
+              + [int(s) + 1 for s in taken if str(s).isdigit()])
+    years = [str(y) for y in range(top, 1989, -1) if str(y) not in taken]
+    from app.season import season_label
+    field = ChoiceField("Season", years, allow_blank=False, display=season_label)
+    field.popup_title = "season"
+    field.set_value(str(suggestion) if str(suggestion) in years else (years[0] if years else ""))
+    return field
+
+
 def open_season_menu(anchor, screen, on_pick):
     """The Add / Duplicate / Delete season menu, anchored to any widget —
     shared by `SeasonPicker` and the player editor's seasons pane."""

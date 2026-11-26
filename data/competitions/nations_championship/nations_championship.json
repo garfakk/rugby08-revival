@@ -2,6 +2,11 @@
   "id": "nations_championship",
   "name": "Nations Championship",
   "seasonal": true,
+  "logo": "assets/tournament_logo.png",
+  "logo_frontend": "assets/tournament_logo.png",
+  "pitch_logo": "assets/pitch_logos/pitch_logo_%.png",
+  "pads": "",
+  "posts": "assets/posts.png",
   "seasons": {
     "2026": {
       "template": {

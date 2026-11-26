@@ -343,6 +343,30 @@ def test_settings_tabs_and_reset(window, qapp):
     window.show_main()
 
 
+def test_settings_gameplay_controls_group(window, qapp):
+    """Gameplay groups offload mode, line-out control and lineout maul or
+    pass under "controls", between match setup and rules."""
+    from screens.settings import TABS
+    s = window.screen_settings
+    window.show_settings()
+    qapp.processEvents()
+    layout = s._pages[TABS.index("Gameplay")].layout_
+    order = []
+    for i in range(layout.count()):
+        w = layout.itemAt(i).widget()
+        if w is None:
+            continue
+        order.append(getattr(w, "label", None) and getattr(w.label, "text", lambda: None)() or
+                     (w.text() if hasattr(w, "text") else None))
+    texts = [t for t in order if t]
+    lower = [t.lower() for t in texts]
+    c = lower.index("controls")
+    assert lower[c + 1:c + 4] == ["offload mode", "line-out control", "lineout maul or pass"]
+    assert lower.index("match setup") < c < lower.index("rules")
+    assert "offload mode" not in lower[lower.index("rules"):]
+    window.show_main()
+
+
 def test_settings_preferred_difficulty(window, qapp, monkeypatch):
     """Settings > Preferred Difficulty is what quick match starts on; no
     screen centre offsets any more."""
@@ -1595,7 +1619,10 @@ def test_match_card_wind_and_weather(window, qapp):
     for row in (setup.wind_power_row, setup.weather_row):
         assert not setup.advanced_panel.isAncestorOf(row)
     assert all(setup.advanced_panel.isAncestorOf(r) for r in setup.crowd_rows.values())
+    setup.environment_row.set_values(["cold", "day"], index=0)
+    setup._on_environment_changed()
     assert list(WEATHER) == setup.weather_row._values
+    assert "fog_light" not in WEATHER
 
     def pick(key):
         setup.weather_row.set_index(setup.weather_row.index_of(key))
@@ -1607,3 +1634,75 @@ def test_match_card_wind_and_weather(window, qapp):
     assert pick("rain") == (True, "stock", None, "off")
     assert pick("fog_thick") == (False, "stock", None, "thick")
     assert pick("clear") == (False, "stock", None, "off")
+
+
+def test_snow_weather_cold_only_and_snow_pitch(window, qapp):
+    """Snow is offered in the cold environment only and brings a snow pitch;
+    elsewhere a frosty or snow pitch is never the default."""
+    from backend import pitches
+    setup = window.screen_match_setup.setup_screen
+    setup.cfg.pitch_texture = "default"
+    setup.environment_row.set_values(["day", "cold"], index=0)
+    setup._on_environment_changed()
+    assert "snow" not in setup.weather_row._values
+    shown = setup.pitch_row.current()[0]
+    assert shown == "default" or pitches.condition(shown) not in ("snow", "frosty")
+
+    setup.environment_row.set_index(1)
+    setup._on_environment_changed()
+    setup.weather_row.set_index(setup.weather_row.index_of("snow"))
+    setup.weather_row.changed.emit()
+    assert pitches.condition(setup.cfg.pitch_texture) == "snow"
+    assert setup.cfg.pitch_texture == setup.pitch_row.current()[0]
+
+    setup.environment_row.set_index(0)          # back to day: no snow, no snow pitch
+    setup._on_environment_changed()
+    assert setup.weather_row.current() == "clear"
+    assert setup.cfg.precip_mode == "stock"
+    assert setup.cfg.pitch_texture == "default" or \
+        pitches.condition(setup.cfg.pitch_texture) not in ("snow", "frosty")
+
+
+def test_closed_roof_defaults_to_calm_and_clear(window, qapp):
+    """The Millennium Stadium's cold scene (roof closed): no wind and clear
+    weather by default; leaving it puts the picks back."""
+    setup = window.screen_match_setup.setup_screen
+    entries = setup.stadium_row._values
+    i = next(i for i, (_sid, info) in enumerate(entries) if int(info.get("game_id", -1)) == 32)
+    setup.stadium_row.set_index(i)
+    setup._on_stadium_changed()
+    envs = setup.environment_row._values
+    other = next(e for e in envs if e != "cold")
+    setup.environment_row.set_index(envs.index(other))
+    setup._on_environment_changed()
+    setup.weather_row.set_index(setup.weather_row.index_of("rain"))
+    setup.weather_row.changed.emit()
+
+    setup.environment_row.set_index(envs.index("cold"))
+    setup._on_environment_changed()
+    assert setup.weather_row.current() == "clear"
+    assert setup.cfg.rain is False and setup.cfg.fog == "off"
+    assert setup.wind_power_row.current() == 0
+
+    setup.environment_row.set_index(envs.index(other))
+    setup._on_environment_changed()
+    assert setup.weather_row.current() == "rain"
+
+
+def test_season_pane_delete_button_and_year_dropdown(window, qapp):
+    """Team and player editors: no ⋯ menu by the seasons list, a DELETE
+    SEASON button by the season name, and a new season's year is a dropdown
+    without the seasons already there."""
+    from ui.editor_kit import ChoiceField
+    window.open_team("1010", "2024")
+    _wait(qapp, lambda: window.screen_team_editor.record_id == "1010", 10)
+    for editor in (window.screen_team_editor,):
+        assert not hasattr(editor, "season_menu_btn")
+        assert editor.season_delete_btn.parent() is editor.season_row
+        editor.season_action("add")
+        year = editor._dialog.fields["year"]
+        assert isinstance(year, ChoiceField)
+        assert year.value() and not set(year.options) & set(editor.session.working)
+        assert year.options == sorted(year.options, reverse=True)
+        editor._dialog.close()
+        editor._dialog = None

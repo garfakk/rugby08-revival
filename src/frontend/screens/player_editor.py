@@ -35,7 +35,7 @@ from ui import motion
 from ui.broadcast import Card, display_label, eyebrow_label, tracked_font
 from ui.editor_kit import (
     Avatar, Badge, FormDialog, ConfirmDialog, TextField, NumberField, ChoiceField,
-    SegmentField, RatingField, Note, compact_button, open_season_menu, ScopeCheck, LOAD_FILES,
+    SegmentField, RatingField, Note, compact_button, season_year_field, ScopeCheck, LOAD_FILES,
 )
 from ui.form import SearchList
 from ui.skin_preview import compose as skin_compose
@@ -629,17 +629,12 @@ class PlayerEditorScreen(EditorScreen):
         self.season_add_btn.setMinimumWidth(0)
         self.season_add_btn.clicked.connect(lambda: self.season_action("add"))
         head.addWidget(self.season_add_btn)
-        self.season_menu_btn = compact_button("⋯")
-        self.season_menu_btn.setFixedWidth(30)
-        self.season_menu_btn.clicked.connect(
-            lambda: open_season_menu(self.season_menu_btn, self.window(), self.season_action))
-        head.addWidget(self.season_menu_btn)
         sv.addLayout(head)
         self.season_list = SearchList("", show_filter=False)
         self.season_list.activated.connect(self.set_season)
         sv.addWidget(self.season_list, stretch=1)
         self.shell.mid_layout.addWidget(seasons_card, stretch=1)
-        for w in (self.season_add_btn, self.season_menu_btn, self.season_list):
+        for w in (self.season_add_btn, self.season_list):
             self.focus.register(w)
 
         self.season_row = QWidget()
@@ -649,6 +644,11 @@ class PlayerEditorScreen(EditorScreen):
         self.season_pill = Badge("SEASON —", ACCENT, filled=True)
         ctx.addWidget(self.season_pill)
         ctx.addStretch(1)
+        # Deleting the season on show sits with its name, away from the list.
+        self.season_delete_btn = compact_button("DELETE SEASON", "ghost")
+        self.season_delete_btn.clicked.connect(lambda: self.season_action("delete"))
+        ctx.addWidget(self.season_delete_btn)
+        self.focus.register(self.season_delete_btn)
         self.shell.right_layout.insertWidget(0, self.season_row)
 
     # ── 3D preview pane (fixed width, always visible) ──────────────────────
@@ -892,6 +892,7 @@ class PlayerEditorScreen(EditorScreen):
                          STAR_COLOR if star else FG_TERTIARY, False))
         self.season_pill.set_text(
             f"SEASON {season_label(self.season)}" if self.season else "NO SEASON")
+        self.season_delete_btn.setVisible(len(stats) > 1)     # a record keeps one season at least
         self.season_list.set_items(items, keep_data=self.season)
         self.season_list.set_selected(self.season)
 
@@ -1021,7 +1022,7 @@ class PlayerEditorScreen(EditorScreen):
         # same field types, since it's the same widgets, just relocated.
         if focused is self.season_list:
             return [("↕", "browse"), ("A", "load season")]
-        if focused in (self.season_add_btn, self.season_menu_btn):
+        if focused in (self.season_add_btn, self.season_delete_btn):
             return [("A", "open")]
         if isinstance(focused, ScopeCheck):
             return [("A", "edit every season" if not focused.checked else "edit this season only")]
@@ -1064,18 +1065,17 @@ class PlayerEditorScreen(EditorScreen):
             return
         stats = self.session.working.get("stats") or {}
         if action in ("add", "duplicate"):
-            year = NumberField("Season", lo=1900, hi=2100, allow_blank=False, formatter=season_label)
             team_seasons = sorted({s for m in self.ds.memberships(self.record_id) for s in [m[2]]}
                                   - set(stats))
             all_seasons = sorted(set(self.ds.seasons()) - set(stats))
             suggestion = (team_seasons or all_seasons or [str(max(int(s) for s in stats) + 1)
                                                           if stats else "2026"])[0]
-            year.set_value(suggestion)
+            year = season_year_field(stats, suggestion)
             source = ChoiceField("Start from", sorted(stats), allow_blank=True,
-                                 blank_label="Blank season (all ratings 50)",
+                                 blank_label="Blank season",
                                  display=lambda s: f"Copy of {season_label(s)}")
             source.set_value(self.season if action == "duplicate" else (sorted(stats)[-1] if stats else ""))
-            hint = ("Type the year the season ends in (2026 is 2025-2026). "
+            hint = ("Pick the year the season ends in (2026 is 2025-2026). "
                     "Squads using a season this player lacks fall back to the nearest one.")
             if team_seasons:
                 hint += (f" Squad seasons without ratings: "

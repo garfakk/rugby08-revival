@@ -27,6 +27,7 @@ reads it (wet ball: fewer tries, harder kicks) and the dashboard shows it.
 import math
 
 from . import calendar
+from app.game_data import SNOW_ENVIRONMENTS
 
 # Monthly match-time temperature (°C) and chance of rain during a match,
 # January first.
@@ -302,6 +303,8 @@ def forecast(t, fixture, ds=None) -> dict:
     roof_closed = roof is not None and (environment == roof or precip != "none")
     if roof_closed:
         environment, precip, heavy = roof, "none", False
+    elif precip == "snow" and environment not in SNOW_ENVIRONMENTS:
+        precip, heavy = "none", False                   # snow only falls in the cold scene
     # the ground's lighting decides what the kick-off can look like
     if environment == "night":
         night = True
@@ -312,6 +315,8 @@ def forecast(t, fixture, ds=None) -> dict:
     roll = rng.random()
     if roof_closed:
         condition = "best" if roll < 0.5 else "norm"
+    elif environment not in SNOW_ENVIRONMENTS and temp <= 1 and precip == "none":
+        condition = "hard" if roll < 0.5 else "norm"   # frosty / snow pitches: the cold scene only
     elif precip == "snow" or (temp <= -2 and roll < 0.3):
         condition = "snow"
     elif temp <= 1 and precip == "none":

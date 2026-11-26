@@ -314,16 +314,54 @@ def _unpack_565(c):
   return np.stack([(r << 3) | (r >> 2), (g << 2) | (g >> 4), (b << 3) | (b >> 2)], axis=1).astype(np.int32)
 
 
+def _dxt_endpoints(rgb):
+  """(N, 16, 3) int32 -> (lo, hi) (N, 3) int32 endpoints along each block's principal axis.
+
+  The axis comes from a few power iterations on the colour covariance; the
+  endpoints are the extreme projections, then refined once by least squares
+  on the 4-colour palette weights (as squish / stb_dxt do)."""
+  px = rgb.astype(np.float32)
+  mean = px.mean(axis=1, keepdims=True)
+  d = px - mean
+  cov = np.einsum('nki,nkj->nij', d, d)                                        # (N, 3, 3)
+  axis = (px.max(axis=1) - px.min(axis=1)) + 1e-3                             # start: bbox diagonal
+  for _ in range(6):
+    axis = np.einsum('nij,nj->ni', cov, axis)
+    axis /= np.linalg.norm(axis, axis=1, keepdims=True) + 1e-12
+  t = np.einsum('nki,ni->nk', d, axis)                                         # (N, 16)
+  tmin, tmax = t.min(axis=1), t.max(axis=1)
+  lo = mean[:, 0] + tmin[:, None] * axis
+  hi = mean[:, 0] + tmax[:, None] * axis
+  # least-squares refinement: weights 0, 1/3, 2/3, 1 snapped from t
+  span = np.maximum(tmax - tmin, 1e-6)
+  w = np.rint((t - tmin[:, None]) / span[:, None] * 3) / 3                     # (N, 16) weight of hi
+  a = 1 - w
+  aa, bb, ab = (a * a).sum(1), (w * w).sum(1), (a * w).sum(1)
+  det = aa * bb - ab * ab
+  ax = np.einsum('nk,nki->ni', a, px)
+  bx = np.einsum('nk,nki->ni', w, px)
+  ok = det > 1e-3
+  inv = np.where(ok, 1 / np.where(ok, det, 1), 0)[:, None]
+  lo2 = (ax * bb[:, None] - bx * ab[:, None]) * inv
+  hi2 = (bx * aa[:, None] - ax * ab[:, None]) * inv
+  lo = np.where(ok[:, None], lo2, lo)
+  hi = np.where(ok[:, None], hi2, hi)
+  return (np.clip(np.rint(lo), 0, 255).astype(np.int32),
+          np.clip(np.rint(hi), 0, 255).astype(np.int32))
+
+
 def _encode_dxt_color(blocks):
   """Encode the 8-byte DXT color part of each block (4-color mode).
 
   blocks: (N, 16, 4) int32. Returns (c0, c1, index_bits) as uint32 arrays.
-  Endpoints are per-channel min/max — fast and good enough for asset
-  repackaging (same strategy as ea-files-editor).
+  Endpoints lie on the block's principal colour axis (not the per-channel
+  min/max corners: for two unlike colours, e.g. blue lettering on orange,
+  those corners are neither colour and the edge pixels turn purple/green).
   """
   rgb = blocks[:, :, :3]
-  c0 = _pack_565(rgb.max(axis=1))
-  c1 = _pack_565(rgb.min(axis=1))
+  lo, hi = _dxt_endpoints(rgb)
+  c0 = _pack_565(hi)
+  c1 = _pack_565(lo)
   # 4-color mode requires c0 > c1; swap where needed. Equal endpoints are
   # fine: every pixel then maps to index 0.
   swap = c0 < c1

@@ -82,15 +82,23 @@ SNOW_INTENSITY_MAX = 26.0
 
 # The quick match weather, one at a time: (label, (rain, precip_mode,
 # snow_intensity, fog)) in MatchConfig. Snow = reR08 ENABLE_SNOWFX, fog =
-# rugby08patches.dll fog presets (gsv.fog_levels).
+# rugby08patches.dll fog presets (gsv.fog_levels). Snow is only offered in
+# the "cold" environment (SNOW_ENVIRONMENTS).
 WEATHER = {
     "clear": ("clear", (False, "stock", None, "off")),
     "rain": ("rain", (True, "stock", None, "off")),
     "snow": ("snow", (False, "snow", 13.0, "off")),
-    "fog_light": ("light fog", (False, "stock", None, "light")),
     "fog": ("fog", (False, "stock", None, "medium")),
     "fog_thick": ("thick fog", (False, "stock", None, "thick")),
 }
+SNOW_ENVIRONMENTS = ("cold",)
+# Pitch conditions a match only gets by default in those environments.
+WINTER_PITCHES = ("frosty", "snow")
+
+
+def weather_choices(environment):
+    """The WEATHER keys on offer in an environment."""
+    return [k for k in WEATHER if k != "snow" or environment in SNOW_ENVIRONMENTS]
 
 # ── Vocabularies the roster file understands ─────────────────────────────
 # backend/game_specific_variables.py::positions_id. The game draws no

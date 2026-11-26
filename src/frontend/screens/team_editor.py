@@ -39,7 +39,7 @@ from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QWidget
 from ui.broadcast import Card, eyebrow_label
 from ui.form import SearchList
 from ui.editor_kit import (
-    Badge, compact_button, open_season_menu, VariantPicker, ConfirmDialog, FormDialog, TextField, NumberField, ChoiceField,
+    Badge, compact_button, season_year_field, VariantPicker, ConfirmDialog, FormDialog, TextField, NumberField, ChoiceField,
     SegmentField, asset_status, load_pixmap,
 )
 from ui.theme import (
@@ -92,17 +92,12 @@ class TeamEditorScreen(EditorScreen):
         self.season_add_btn.setMinimumWidth(0)
         self.season_add_btn.clicked.connect(lambda: self.season_action("add"))
         head.addWidget(self.season_add_btn)
-        self.season_menu_btn = compact_button("⋯")
-        self.season_menu_btn.setFixedWidth(30)
-        self.season_menu_btn.clicked.connect(
-            lambda: open_season_menu(self.season_menu_btn, self.window(), self.season_action))
-        head.addWidget(self.season_menu_btn)
         sv.addLayout(head)
         self.season_list = SearchList("", show_filter=False)
         self.season_list.activated.connect(self.set_season)
         sv.addWidget(self.season_list, stretch=1)
         self.shell.mid_layout.addWidget(seasons_card, stretch=1)
-        for w in (self.season_add_btn, self.season_menu_btn, self.season_list):
+        for w in (self.season_add_btn, self.season_list):
             self.focus.register(w)
 
         self.season_row = QWidget()
@@ -116,6 +111,11 @@ class TeamEditorScreen(EditorScreen):
         self.season_warn.hide()
         ctx.addWidget(self.season_warn)
         ctx.addStretch(1)
+        # Deleting the season on show sits with its name, away from the list.
+        self.season_delete_btn = compact_button("DELETE SEASON", "ghost")
+        self.season_delete_btn.clicked.connect(lambda: self.season_action("delete"))
+        ctx.addWidget(self.season_delete_btn)
+        self.focus.register(self.season_delete_btn)
         self.shell.right_layout.insertWidget(0, self.season_row)
 
     def _refresh_seasons(self):
@@ -128,6 +128,7 @@ class TeamEditorScreen(EditorScreen):
                   WARN if working[s].get("draft") else FG_TERTIARY, False) for s in sorted(working)]
         self.season_pill.set_text(
             f"SEASON {season_label(self.season)}" if self.season else "NO SEASON")
+        self.season_delete_btn.setVisible(len(working) > 1)     # a record keeps one season at least
         self.season_list.set_items(items, keep_data=self.season)
         self.season_list.set_selected(self.season)
 
@@ -375,7 +376,7 @@ class TeamEditorScreen(EditorScreen):
     def tab_hints(self, focused):
         if focused is self.season_list:
             return [("↕", "browse"), ("A", "load season")]
-        if focused in (self.season_add_btn, self.season_menu_btn):
+        if focused in (self.season_add_btn, self.season_delete_btn):
             return [("A", "open")]
         tab = self.tabs[self.shell.tabs.index()]
         return tab.hints(focused)
@@ -439,12 +440,11 @@ class TeamEditorScreen(EditorScreen):
             return
         seasons = self.session.working
         if action in ("add", "duplicate"):
-            year = NumberField("Season", lo=1900, hi=2100, allow_blank=False, formatter=season_label)
             try:
                 suggestion = str(max(int(s) for s in seasons) + 1)
             except ValueError:
                 suggestion = "2026"
-            year.set_value(suggestion)
+            year = season_year_field(seasons, suggestion)
             source = ChoiceField("Start from", sorted(seasons), allow_blank=True,
                                  blank_label="Blank season (empty squad and files)",
                                  display=lambda s: f"Copy of {season_label(s)}")
@@ -470,7 +470,7 @@ class TeamEditorScreen(EditorScreen):
 
             self.show_dialog(FormDialog(
                 self, "Add season" if action == "add" else "Duplicate season",
-                "Type the year the season ends in (2026 is 2025-2026). Each season has its own name, kits, crest, squad and roles.",
+                "Pick the year the season ends in (2026 is 2025-2026). Each season has its own name, kits, crest, squad and roles.",
                 {"year": year, "source": source},
                 [("CANCEL", "neutral", "cancel"), ("ADD SEASON", "primary", "ok")], done))
         elif action == "delete":

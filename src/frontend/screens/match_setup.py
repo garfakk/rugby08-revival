@@ -32,7 +32,8 @@ from app import difficulty
 from app import variants as V
 from app.match_data_builder import build_match_data
 from app.game_data import (
-    WEATHER, WIND_POWER_NAMES, frontend_logo, random_wind,
+    SNOW_ENVIRONMENTS, WEATHER, WINTER_PITCHES, WIND_POWER_NAMES, frontend_logo, random_wind,
+    weather_choices,
 )
 from app.season import nearest_season, season_label
 from app.shell import present
@@ -680,6 +681,8 @@ class TeamColumn(QWidget):
 
 
 class MatchSetupScreen(KickoffTransition, Screen):
+    _auto_pitch = None      # the pitch _default_pitch last picked (_sync_pitch_choices)
+
     def __init__(self, ds: DataStore, on_back, on_play_begin, on_play_reveal, on_edit_squad,
                  on_edit_mission=None):
         super().__init__(on_back=on_back)
@@ -1000,21 +1003,29 @@ class MatchSetupScreen(KickoffTransition, Screen):
         return weather.roof_environment(info) == self.cfg.environment
 
     def _sync_roof_wind(self):
-        """Under a closed roof the wind defaults to none (the row can still
-        be changed); leaving it puts the strength back."""
-        if not hasattr(self, "wind_power_row"):
+        """Under a closed roof the wind defaults to none and the weather to
+        clear (the rows can still be changed); leaving it puts them back."""
+        if not hasattr(self, "wind_power_row") or not hasattr(self, "weather_row"):
             return
         closed = self._roof_closed()
         if closed and not self._roof_calm:
             self._wind_before_roof = self.wind_power_row.current()
+            self._weather_before_roof = self.weather_row.current()
             self.wind_power_row.set_index(self.wind_power_row.index_of(0))
+            self.weather_row.set_index(self.weather_row.index_of("clear"))
+            self._on_weather_changed()
         elif not closed and self._roof_calm:
             self.wind_power_row.set_index(self.wind_power_row.index_of(self._wind_before_roof))
+            before = self.weather_row.index_of(getattr(self, "_weather_before_roof", "clear"))
+            if before is not None:
+                self.weather_row.set_index(before)
+                self._on_weather_changed()
         self._roof_calm = closed
         self._on_wind_changed()
 
     def _on_environment_changed(self):
         self.cfg.environment = self.environment_row.current()
+        self._sync_weather_choices()
         self._sync_roof_wind()
         self._sync_pitch_choices()      # the stadium's own pitch is per environment
 
@@ -1161,7 +1172,8 @@ class MatchSetupScreen(KickoffTransition, Screen):
         # strength 0..4, picked at random each time the screen opens; the
         # direction (relative to home) is always random, rolled afresh at
         # each kick-off (_roll_wind). Weather: one of rain, snow or fog
-        # (app.game_data.WEATHER).
+        # (app.game_data.WEATHER); snow only in the cold environment
+        # (_sync_weather_choices).
         self.wind_power_row = SelectorRow("wind")
         self.wind_power_row.set_values(list(WIND_POWER_NAMES), index=0)
         self.wind_power_row._display = lambda n: WIND_POWER_NAMES.get(n, '')
@@ -1170,7 +1182,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
         v.addWidget(self.wind_power_row)
 
         self.weather_row = SelectorRow("weather")
-        self.weather_row.set_values(list(WEATHER), index=0)
+        self.weather_row.set_values(weather_choices(self.cfg.environment), index=0)
         self.weather_row._display = lambda k: WEATHER[k][0]
         self.weather_row.changed.connect(self._on_weather_changed)
         self.focus.register(self.weather_row)
@@ -1486,6 +1498,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
         the match config."""
         (self.cfg.rain, self.cfg.precip_mode, self.cfg.snow_intensity,
          self.cfg.fog) = WEATHER[self.weather_row.current()][1]
+        self._sync_pitch_choices()      # snow brings a snow pitch by default
 
     def _build_advanced_presentation_rows(self, v):
         """.mis presentation attrs (anthem/haka/trophy/stadium dressing) and
@@ -1695,10 +1708,34 @@ class MatchSetupScreen(KickoffTransition, Screen):
         values = [(n, labels[n]) for n in names]
         if not own:                     # the stadium's own pitch unknown (no game): the game picks
             values.insert(0, ("default", "Default", ""))
-        picked = self.cfg.pitch_texture if self.cfg.pitch_texture in names else "default"
+        # A pick made by the rules below (not by the player) follows them
+        # when the weather or environment changes.
+        auto = self._default_pitch(names, own)
+        current = self.cfg.pitch_texture
+        if current == "default" or current == self._auto_pitch or current not in names:
+            picked = auto or "default"
+        else:
+            picked = current
+        self._auto_pitch = auto
         index = next((i for i, (n, *_rest) in enumerate(values) if n == (own if picked == "default" else picked)), 0)
         row.set_values(values, index=index)
         self.cfg.pitch_texture = picked
+
+    def _default_pitch(self, names, own):
+        """The pitch picked for the player, or None for the stadium's own:
+        a snow pitch in the snow; never a frosty or snow one outside the
+        cold environment (another of the stadium's, in its light)."""
+        from app.tournament import weather
+        from backend import pitches
+        env = self.cfg.environment
+        if self.cfg.precip_mode == "snow":
+            snow = [n for n in names if pitches.condition(n) == "snow"]
+            return weather.pitch_texture("snow", env, allowed=snow) if snow else None
+        if env not in SNOW_ENVIRONMENTS and own and pitches.condition(own) in WINTER_PITCHES:
+            others = [n for n in names if pitches.condition(n) not in WINTER_PITCHES]
+            if others:
+                return weather.pitch_texture("norm", env, own.split("_", 1)[0], allowed=others)
+        return None
 
     def _stadium_pitch(self, info):
         """The pitch a match at stadium `info` plays on unless one is picked:
@@ -1735,7 +1772,22 @@ class MatchSetupScreen(KickoffTransition, Screen):
         current = self.cfg.environment if self.cfg.environment in envs else envs[0]
         self.environment_row.set_values(envs, index=envs.index(current))
         self.cfg.environment = current
+        self._sync_weather_choices()
         self._sync_roof_wind()
+
+    def _sync_weather_choices(self):
+        """The weathers the environment allows (snow: the cold one only); a
+        pick it doesn't allow goes back to clear."""
+        row = getattr(self, "weather_row", None)
+        if row is None:
+            return
+        keys = weather_choices(self.cfg.environment)
+        current = row.current()
+        if row._values == keys:
+            return
+        row.set_values(keys, index=keys.index(current) if current in keys else 0)
+        if row.current() != current:
+            self._on_weather_changed()
 
     def _on_match_type_changed(self):
         self.cfg.match_type = self.match_type_row.current()

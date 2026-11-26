@@ -60,6 +60,11 @@ CONDITIONS = {"best": "Perfect", "dry": "Dry", "norm": "Normal", "hard": "Hard",
               "frosty": "Frosty", "snow": "Snow", "synthetic": "Synthetic", "hybrid": "Hybrid"}
 
 
+def condition(name) -> str:
+    """"light mud" of "Reg2_08_light_Mud_n"."""
+    return _split(name)[1]
+
+
 def condition_label(name) -> str:
     """"Muddy" of "Reg2_08_muddy_n": the condition alone."""
     condition = _split(name)[1]

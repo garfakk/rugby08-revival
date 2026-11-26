@@ -94,6 +94,22 @@ def test_mod_utils_codecs_roundtrip(encode, decode, alpha):
         assert np.abs(out[..., 3].astype(int) - rgba[..., 3]).max() <= 17
 
 
+@pytest.mark.parametrize("encode,decode", [(M._encode_dxt1, M._decode_dxt1), (M._encode_dxt5, M._decode_dxt5)])
+def test_dxt_two_colour_edge_keeps_both_colours(encode, decode):
+    """Blue lettering on orange (Australia's Santos back): a block holding both
+    colours must decode to those colours, not to the per-channel min/max
+    corners (purple / dark green contours in game)."""
+    orange, blue = [238, 119, 41], [5, 129, 189]
+    rgba = np.full((8, 8, 4), 255, np.uint8)
+    rgba[..., :3] = orange
+    rgba[:, 3:6, :3] = blue                       # a stroke crossing the blocks' middle
+    rgba[2, 2, :3] = [(o + b) // 2 for o, b in zip(orange, blue)]   # an antialiased pixel
+    out = decode(encode(rgba), 8, 8)[..., :3].astype(int)
+    err = np.abs(out - rgba[..., :3]).max(axis=2)
+    err[2, 2] = 0
+    assert err.max() <= 12
+
+
 def _compare_fshlib(name, index=0):
     path = os.path.join(TEMPLATES, name)
     ours = np.asarray(fshlib.Fsh(open(path, "rb").read()).entries[index].decode())

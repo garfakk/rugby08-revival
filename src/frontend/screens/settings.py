@@ -43,6 +43,8 @@ RATIO_CHOICES = ["Auto", *SCREEN_RATIOS]
 # Game options with no visible effect: kept in the profile, not offered
 HIDDEN_SETTINGS = {"gamma"}
 LOG_LEVELS = ["OFF", "DEBUG", "INFO", "WARNING", "ERROR"]
+# The game's Gameplay options shown under "controls" rather than "rules"
+CONTROL_KEYS = ("offload", "lineout")
 
 
 class SettingsScreen(QWidget):
@@ -140,7 +142,8 @@ class SettingsScreen(QWidget):
         if tab == "Display":
             groups = [("window", self._window_rows()), ("graphics", self._game_rows("VIDEO"))]
         elif tab == "Gameplay":
-            groups = [("match setup", self._match_rows()), ("rules", self._game_rows("GAMEPLAY"))]
+            groups = [("match setup", self._match_rows()), ("controls", self._control_rows()),
+                      ("rules", self._game_rows("GAMEPLAY", skip=CONTROL_KEYS))]
         elif tab == "Advanced":
             groups = [("", self._advanced_rows())]
         else:
@@ -196,9 +199,10 @@ class SettingsScreen(QWidget):
 
         return CycleRow("Resolution", labels, f"{current[0]}x{current[1]}", apply)
 
-    def _game_rows(self, section):
-        """One row per game option of that SECTIONS group, written into the
-        game's profile at every launch."""
+    def _game_rows(self, section, keys=None, skip=()):
+        """One row per game option of that SECTIONS group (only `keys`, in
+        that order, when given; none of `skip`), written into the game's
+        profile at every launch."""
         def _set(key):
             def apply(value):
                 game_profile.set(key, value)
@@ -207,9 +211,13 @@ class SettingsScreen(QWidget):
                     self._music.set_volume(value)
             return apply
 
+        settings = dict(SECTIONS)[section]
+        if keys is not None:
+            by_key = {s.key: s for s in settings}
+            settings = [by_key[k] for k in keys if k in by_key]
         rows = []
-        for s in dict(SECTIONS)[section]:
-            if s.key in HIDDEN_SETTINGS:
+        for s in settings:
+            if s.key in HIDDEN_SETTINGS or s.key in skip:
                 continue
             current = game_profile.get(s.key)
             if s.kind == "bool":
@@ -240,10 +248,6 @@ class SettingsScreen(QWidget):
             user_prefs.difficulty = label.lower()
             user_prefs.save()
 
-        def _set_lineout_jump(on):
-            user_prefs.lineout_jump = bool(on)
-            user_prefs.save()
-
         # Wind: Standard = the game's own random wind; Advanced = the reR08
         # wind patch, strength set in match setup (direction random).
         # Coin toss before each quick/tournament match: decides kick-off and
@@ -254,12 +258,21 @@ class SettingsScreen(QWidget):
         rows = [
             CycleRow("Preferred Difficulty", levels, difficulty.preferred().capitalize(), _set_difficulty),
             CycleRow("Wind", ["Standard", "Advanced"], user_prefs.wind_mode.capitalize(), _set_wind_mode),
-            # rugby08patches.dll lineout_jump (backend.mod_utils.configure_match_laws)
-            ToggleRow("Lineout Maul Or Pass", user_prefs.lineout_jump, _set_lineout_jump),
         ]
         if COIN_TOSS_OFFERED:      # not offered for now (shared/user_prefs.py)
             rows.insert(2, ToggleRow("Coin Toss", user_prefs.coin_toss, _set_coin_toss))
         return rows
+
+    def _control_rows(self):
+        """How the player controls the match: the game's offload and
+        line-out options, then the mod's lineout maul-or-pass."""
+        def _set_lineout_jump(on):
+            user_prefs.lineout_jump = bool(on)
+            user_prefs.save()
+
+        # rugby08patches.dll lineout_jump (backend.mod_utils.configure_match_laws)
+        return self._game_rows("GAMEPLAY", keys=CONTROL_KEYS) + [
+            ToggleRow("Lineout Maul Or Pass", user_prefs.lineout_jump, _set_lineout_jump)]
 
     def _advanced_rows(self):
         def _set_preview_3d(on):
