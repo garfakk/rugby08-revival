@@ -126,9 +126,16 @@ class UserPrefs:
         self.wind_mode = "advanced"
         # rugby08patches.dll lineout_jump: the front and middle jumpers can
         # each set up a maul or pass to the scrum-half (human: jumper key +
-        # Space = maul, key alone = pass). Off = the stock lineout.
+        # maul key = maul, key alone = pass). Off = the stock lineout.
         # Settings > Lineout Maul Or Pass.
         self.lineout_jump = False
+        # The maul key of that lineout: a keyboard key ("space", "shift",
+        # "a", "f1", or a Windows virtual-key number) and a pad button
+        # ("rb", "lb", "a", "b", "x", "y", "back", "start", "ls", "rs", or a
+        # DirectInput button number; "none" = no pad button).
+        # Only in user_prefs.ini (backend.mod_utils.maul_key_vk / maul_pad_button).
+        self.lineout_maul_key = "space"
+        self.lineout_maul_button = "rb"
         # The user's team/player edits (user_data/edits) laid over the data
         # pack. Off: the pack alone is used, the edits are kept. Tools › My edits.
         self.use_edits = True
@@ -182,6 +189,10 @@ class UserPrefs:
             if mode in ("standard", "advanced"):
                 self.wind_mode = mode
             self.lineout_jump = cp.getboolean(_SECTION, "lineout_jump", fallback=self.lineout_jump)
+            self.lineout_maul_key = cp.get(_SECTION, "lineout_maul_key",
+                                           fallback=self.lineout_maul_key).strip().lower() or "space"
+            self.lineout_maul_button = cp.get(_SECTION, "lineout_maul_button",
+                                              fallback=self.lineout_maul_button).strip().lower() or "none"
 
     def screen_ratio_label(self):
         """The Settings > Screen Ratio choice: "Auto" or a SCREEN_RATIOS label."""
@@ -228,7 +239,9 @@ class UserPrefs:
                         "match_picker": self.match_picker,
                         "difficulty": self.difficulty,
                         "wind_mode": self.wind_mode,
-                        "lineout_jump": str(self.lineout_jump)}
+                        "lineout_jump": str(self.lineout_jump),
+                        "lineout_maul_key": self.lineout_maul_key,
+                        "lineout_maul_button": self.lineout_maul_button}
         if not self.screen_ratio_set:
             # left out until chosen, so the first launch still detects it
             del cp[_SECTION]["widescreen"], cp[_SECTION]["widescreen_aspect"]

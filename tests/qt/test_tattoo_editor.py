@@ -162,3 +162,17 @@ def test_tattoo_editor_save(window, qapp, slot_errors):
     finally:
         _settle(qapp)
         screen.session.revert()
+
+
+def test_tattoo_map_sides_and_default(window, qapp, slot_errors, tmp_path):
+    """Left arm/leg drawn left of the right ones; new tattoos go on one side."""
+    screen, tab, ed = _open(window, qapp)
+    try:
+        rects, _ = ed.map._layout()
+        assert rects[("arm", "b")].x() < rects[("arm", "a")].x() < rects[("leg", "b")].x() < rects[("leg", "a")].x()
+        assert ed.side_mode == "one" and ed.side_chips.value() == "one"
+    finally:
+        ed._close()
+        _settle(qapp)
+        screen.session.revert()
+    assert not slot_errors

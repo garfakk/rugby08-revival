@@ -556,7 +556,14 @@ class SquadEditorScreen(Screen):
         for n, held in list(self.assignment.items()):
             if held == pid and n != number:
                 self.assignment[n] = None
+        displaced = self.assignment.get(number)
         self.assignment[number] = pid
+        # The roles of the man losing a starting shirt go to whoever takes it,
+        # not to shirt 1 (_refresh_role_options' fallback).
+        if displaced is not None and number in STARTERS:
+            for key, holder in self.roles.items():
+                if holder == displaced:
+                    self.roles[key] = pid
         self._refresh_all()
 
     def _on_picker_closed(self):

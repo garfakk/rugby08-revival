@@ -41,9 +41,9 @@ log = get_logger(__name__)
 READY = "Ready-made"
 MINE = "My pictures"
 CATEGORIES = [READY, "Fully inked", "Bands", "Tribal", "Rugby", "Symbols", "Ornament", "Lettering", "Skin marks", MINE]
-SIDES = [("both", "Both"), ("a", "Right"), ("b", "Left")]
+SIDES = [("both", "Both"), ("b", "Left"), ("a", "Right")]
 INKS = ["#1c2433", "#0b0b0d", "#1f3a5f", "#7a1020", "#1d5a2c", "#5a3a1a"]
-TILE_ORDER = [("arm", "a", "RIGHT ARM"), ("arm", "b", "LEFT ARM"), ("leg", "a", "RIGHT LEG"), ("leg", "b", "LEFT LEG")]
+TILE_ORDER = [("arm", "b", "LEFT ARM"), ("arm", "a", "RIGHT ARM"), ("leg", "b", "LEFT LEG"), ("leg", "a", "RIGHT LEG")]
 
 
 def covered_by_kit(stats):
@@ -614,7 +614,7 @@ class TattooEditor(QWidget):
         self.base_source = base_source          # PIL RGBA 512×256, before the skin sliders
         self.other_layers = other_layers        # PIL layers painted over the tattoos (straps, gloves…)
         self.sel_id = ""
-        self.side_mode = "both"
+        self.side_mode = "one"
         self.spot = {"limb": "arm", "side": "a", "x": Rn.LIMBS["arm"]["front"], "y": 90}
         self._undo, self._redo = [], []
         self._pending = None                     # (label, state) taken at begin_edit
@@ -686,7 +686,7 @@ class TattooEditor(QWidget):
         bar = QHBoxLayout()
         bar.setSpacing(6)
         bar.addWidget(_label("New tattoos go on", T_SMALL, FG_TERTIARY))
-        self.side_chips = Chips([("both", "BOTH SIDES"), ("one", "ONE SIDE")], per_row=2, value="both")
+        self.side_chips = Chips([("both", "BOTH SIDES"), ("one", "ONE SIDE")], per_row=2, value="one")
         self.side_chips.picked.connect(self._set_side_mode)
         bar.addWidget(self.side_chips)
         bar.addStretch(1)
@@ -735,7 +735,7 @@ class TattooEditor(QWidget):
                 b.clicked.connect(lambda _c=False, y=yaw: self._turn_stage(y))
                 views.addWidget(b)
             sv.addLayout(views)
-            self.stage_box.setFixedWidth(260)
+            self.stage_box.setFixedWidth(340)       # wide enough for the arms
             body.addWidget(self.stage_box)
 
         # The screen behind has its own Ctrl+Z, Ctrl+S… shortcuts: two shortcuts on one key fire neither, so

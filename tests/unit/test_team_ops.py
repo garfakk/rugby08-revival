@@ -364,3 +364,14 @@ def test_mark_drafts_flags_a_season_with_errors_only_when_changed():
     legacy = {"2024": copy.deepcopy(broken)}
     assert T.mark_drafts(legacy, {"2024": copy.deepcopy(broken)}, players) == {}
     assert "draft" not in legacy["2024"]
+
+
+def test_place_from_outside_hands_the_roles_to_the_new_starter():
+    info, _ = _squad()
+    info["roles"]["captain"] = "16"
+    T.place(info, 9, "99")                       # shirt 10, holder of the other roles
+    assert info["players"][9] == "99" and info["players"][-1] == "10"
+    assert all(info["roles"][k] == "99" for k in ROLE_KEYS if k != "captain")
+    assert info["roles"]["captain"] == "16"
+    T.place(info, 15, "98")                      # a replacement's shirt: roles stay put
+    assert info["roles"]["captain"] == "16"

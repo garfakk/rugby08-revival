@@ -1706,3 +1706,21 @@ def test_season_pane_delete_button_and_year_dropdown(window, qapp):
         assert year.options == sorted(year.options, reverse=True)
         editor._dialog.close()
         editor._dialog = None
+
+
+def test_squad_editor_role_follows_the_shirt(qapp):
+    """Replacing a starter who holds a role gives the role to the man who
+    takes his shirt, not to shirt 1."""
+    from screens.squad_editor import SquadEditorScreen
+    players = {str(i): {"display_name": f"P{i}", "last_name": f"P{i}"} for i in range(1, 25)}
+    lineup = {"players_id": [str(i) for i in range(1, 23)],
+              "roles": {"captain": "10", "goalKicker": "10", "viceCaptain": "9"}}
+    ed = SquadEditorScreen("home", "Team", players, lineup, lambda *a: None, lambda: None)
+    ed._picker_slot = 10
+    ed._on_picker_pick(23)                       # from outside the squad into shirt 10
+    assert ed.roles["captain"] == 23 and ed.roles["goalKicker"] == 23
+    assert ed.roles["viceCaptain"] == 9
+    ed._picker_slot = 9
+    ed._on_picker_pick(16)                       # a replacement moves up into shirt 9
+    assert ed.roles["viceCaptain"] == 16
+    ed.deleteLater()

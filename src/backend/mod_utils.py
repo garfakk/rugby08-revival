@@ -1537,6 +1537,62 @@ def configure_controller_lock(game_dir, locked):
   log.info(f"Controller lock: {'on' if locked else 'off'}")
 
 
+# Windows virtual-key codes by name, for the lineout maul key.
+_VK_NAMES = {"space": 0x20, "shift": 0x10, "ctrl": 0x11, "control": 0x11, "alt": 0x12,
+             "lshift": 0xA0, "rshift": 0xA1, "lctrl": 0xA2, "rctrl": 0xA3,
+             "lalt": 0xA4, "ralt": 0xA5, "tab": 0x09, "enter": 0x0D, "return": 0x0D,
+             "backspace": 0x08, "capslock": 0x14, "insert": 0x2D, "delete": 0x2E,
+             "home": 0x24, "end": 0x23, "pageup": 0x21, "pagedown": 0x22,
+             "up": 0x26, "down": 0x28, "left": 0x25, "right": 0x27,
+             **{f"f{n}": 0x6F + n for n in range(1, 13)},
+             **{f"num{n}": 0x60 + n for n in range(10)},
+             ";": 0xBA, "=": 0xBB, ",": 0xBC, "-": 0xBD, ".": 0xBE, "/": 0xBF,
+             "`": 0xC0, "[": 0xDB, "\\": 0xDC, "]": 0xDD, "'": 0xDE}
+# Pad buttons by name: DirectInput numbers of an Xbox pad.
+_PAD_BUTTONS = {"a": 1, "b": 2, "x": 3, "y": 4, "lb": 5, "rb": 6, "back": 7,
+                "select": 7, "start": 8, "ls": 9, "rs": 10}
+
+
+def maul_key_vk(name):
+  """user_prefs lineout_maul_key -> virtual-key code: a name ("space",
+  "f1", "a", "7"), or "vk:N" / a number of two digits or more; Space when
+  unreadable, 0 for "none"."""
+  text = str(name).strip().lower()
+  if text in ("none", "off", ""):
+    return 0
+  if text in _VK_NAMES:
+    return _VK_NAMES[text]
+  if len(text) == 1 and text.isalnum():
+    return ord(text.upper())
+  number = text[3:] if text.startswith("vk:") else text
+  try:
+    vk = int(number, 0)
+    if 0 < vk < 256:
+      return vk
+  except ValueError:
+    pass
+  log.warning(f"lineout_maul_key {name!r} not understood, using space")
+  return 0x20
+
+
+def maul_pad_button(name):
+  """user_prefs lineout_maul_button -> DirectInput button number (1..32): a
+  name ("rb", "lb", "a"...) or the number; 0 for "none"; RB when unreadable."""
+  text = str(name).strip().lower()
+  if text in ("none", "off", "0", ""):
+    return 0
+  if text in _PAD_BUTTONS:
+    return _PAD_BUTTONS[text]
+  try:
+    button = int(text)
+    if 1 <= button <= 32:
+      return button
+  except ValueError:
+    pass
+  log.warning(f"lineout_maul_button {name!r} not understood, using rb")
+  return _PAD_BUTTONS["rb"]
+
+
 def configure_match_laws(game_dir, laws):
   """rugby08patches.dll laws for this match: rule_5022 / rule_22m /
   penalty_touch_end (with cpu_penalty_touch) from `laws`
@@ -1552,6 +1608,8 @@ def configure_match_laws(game_dir, laws):
   try:
     for key, on in values.items():
       _set_ini_value(ini, "patches", key, "1" if on else "0")
+    _set_ini_value(ini, "lineout_jump", "maul_vk", str(maul_key_vk(user_prefs.lineout_maul_key)))
+    _set_ini_value(ini, "lineout_jump", "maul_button", str(maul_pad_button(user_prefs.lineout_maul_button)))
   except OSError as e:
     log.warning(f"cannot update {ini}: {e}")
     return

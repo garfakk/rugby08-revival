@@ -270,13 +270,27 @@ def test_configure_match_laws(tmp_path, monkeypatch):
     ini = tmp_path / "rugby08patches.ini"
     ini.write_text("[patches]\nwind = 1\n")
     monkeypatch.setattr(M.user_prefs, "lineout_jump", False)
+    monkeypatch.setattr(M.user_prefs, "lineout_maul_key", "space")
+    monkeypatch.setattr(M.user_prefs, "lineout_maul_button", "rb")
     M.configure_match_laws(str(tmp_path), {"rule_5022": False, "rule_22m": True})
-    assert ini.read_text() == "[patches]\nwind = 1\nrule_5022 = 0\nrule_22m = 1\npenalty_touch_end = 0\ncpu_penalty_touch = 0\nlineout_jump = 0\n"
+    assert ini.read_text() == "[patches]\nwind = 1\nrule_5022 = 0\nrule_22m = 1\npenalty_touch_end = 0\ncpu_penalty_touch = 0\nlineout_jump = 0\n[lineout_jump]\nmaul_vk = 32\nmaul_button = 6\n"
     monkeypatch.setattr(M.user_prefs, "lineout_jump", True)
     M.configure_match_laws(str(tmp_path), {"penalty_touch_end": True})
     assert "penalty_touch_end = 1\ncpu_penalty_touch = 1\n" in ini.read_text()   # the CPU knows the law
     M.configure_match_laws(str(tmp_path), {})              # no laws given: the stock game
-    assert ini.read_text() == "[patches]\nwind = 1\nrule_5022 = 0\nrule_22m = 0\npenalty_touch_end = 0\ncpu_penalty_touch = 0\nlineout_jump = 1\n"
+    assert ini.read_text() == "[patches]\nwind = 1\nrule_5022 = 0\nrule_22m = 0\npenalty_touch_end = 0\ncpu_penalty_touch = 0\nlineout_jump = 1\n[lineout_jump]\nmaul_vk = 32\nmaul_button = 6\n"
+
+    monkeypatch.setattr(M.user_prefs, "lineout_maul_key", "f")
+    monkeypatch.setattr(M.user_prefs, "lineout_maul_button", "lb")
+    M.configure_match_laws(str(tmp_path), {})
+    assert "maul_vk = 70\nmaul_button = 5\n" in ini.read_text()
+
+
+def test_maul_key_names():
+    assert [M.maul_key_vk(k) for k in ("space", "Shift", "q", "7", "f1", "vk:0x5a", "none", "??")] == \
+        [0x20, 0x10, ord("Q"), ord("7"), 0x70, 0x5A, 0, 0x20]
+    assert [M.maul_pad_button(b) for b in ("rb", "A", "start", "12", "none", "0", "99")] == \
+        [6, 1, 8, 12, 0, 0, 6]
 
 
 def test_resolve_player_skin_layers(tmp_path):

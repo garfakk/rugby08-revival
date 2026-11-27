@@ -662,6 +662,8 @@ class PlayerEditorScreen(EditorScreen):
         self.stage = KitStage(default_yaw=15.0)
         self._preview_layout.addWidget(self.stage, stretch=1)
         self.shell.preview_layout.addWidget(self._preview_card, stretch=1)
+        # wider than the shell's default: the whole player, arms out, fits
+        self.shell.preview_pane.setFixedWidth(440)
 
     def borrow_stage(self, new_parent):
         """Pull the 3D stage out of its normal spot in the preview pane for

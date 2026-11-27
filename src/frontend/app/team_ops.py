@@ -147,6 +147,11 @@ def place(info, i, pid):
     roster[i] = pid
     if displaced:
         roster.append(displaced)
+        if i < STARTING_XV:     # out of the starting XV: his roles go to the new man in his shirt
+            roles = info.get("roles") or {}
+            for key, value in list(roles.items()):
+                if str(value) == displaced:
+                    roles[key] = pid
 
 
 def clear_slot(info, i):
