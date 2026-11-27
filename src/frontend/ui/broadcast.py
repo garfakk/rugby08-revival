@@ -292,6 +292,21 @@ class SelectorRow(QWidget):
         self._fw_click_boundary = None   # set by _paint_compact once it knows where the text sits
         self._inline = False
 
+
+    def set_compact(self, on):
+        """Switch to the slim chip (44 px, label above the value) or back to
+        the full row: screens with little height use the chip."""
+        on = bool(on)
+        if on == self._compact:
+            return
+        self._compact = on
+        if on:
+            self.setMinimumHeight(0)
+            self.setFixedHeight(44)
+        else:
+            self.setMaximumHeight(16777215)
+            self.setMinimumHeight(64)
+        self.update()
     def set_inline(self, on: bool = True):
         """Compact rows only: label and value on one line ("SEASON 2008-2009"),
         a slimmer chip."""

@@ -1731,6 +1731,68 @@ def _auto_dgvoodoo(game_dir, original_dir):
   return ""
 
 
+def find_dgvoodoo(game_dir=None, original_dir=None):
+  """Path of a usable dgVoodoo2 D3D8.dll for the game, or "": kept as
+  AUTO_D3D8_WRAPPER (found earlier or added in Settings), still named
+  d3d8.dll next to the exe, or in the original game folder. Reads only."""
+  game_dir = game_dir if game_dir is not None else config.game_launcher_directory
+  if original_dir is None:
+    original_dir = getattr(config, "R08_original_directory", "")
+  for directory, name in ((game_dir, AUTO_D3D8_WRAPPER), (game_dir, "d3d8.dll"),
+                          (original_dir, "d3d8.dll")):
+    path = _find_in_dir(directory, name) if directory and os.path.isdir(directory) else None
+    if path and _is_dgvoodoo_d3d8(path):
+      return path
+  return ""
+
+
+def add_dgvoodoo(dll_path, game_dir=None):
+  """Settings > Advanced > Use dgVoodoo2 > ADD FILES: dgVoodoo2's 32-bit
+  D3D8.dll (its MS/x86 folder) copied next to the game as AUTO_D3D8_WRAPPER,
+  with the dgVoodoo.conf found beside it or up to two folders above (the
+  release zip keeps it at its root). Returns (ok, message for the user)."""
+  game_dir = game_dir if game_dir is not None else config.game_launcher_directory
+  if not dll_path or not os.path.isfile(dll_path):
+    return False, "No file picked."
+  if not _is_dgvoodoo_d3d8(dll_path):
+    return False, ("That is not dgVoodoo2's 32-bit D3D8.dll. Pick the one in dgVoodoo's "
+                   "MS\\x86 folder.")
+  if not game_dir or not os.path.isdir(game_dir):
+    return False, "The game folder is not set."
+  dst = _find_in_dir(game_dir, AUTO_D3D8_WRAPPER) or os.path.join(game_dir, AUTO_D3D8_WRAPPER)
+  try:
+    shutil.copy2(dll_path, dst)
+  except OSError as e:
+    return False, f"Could not copy it into the game folder: {e}"
+  added = ["D3D8.dll"]
+  folder = os.path.dirname(os.path.abspath(dll_path))
+  for _ in range(3):
+    for extra in DGVOODOO_FILES:
+      src = _find_in_dir(folder, extra)
+      if src:
+        try:
+          shutil.copy2(src, _find_in_dir(game_dir, extra) or os.path.join(game_dir, extra))
+          added.append(extra)
+        except OSError as e:
+          log.warning(f"cannot copy {src}: {e}")
+    if len(added) > 1:
+      break
+    folder = os.path.dirname(folder)
+  log.info(f"dgVoodoo2 added from {dll_path}: {', '.join(added)}")
+  if len(added) == 1:
+    return True, "dgVoodoo2 added (no dgVoodoo.conf found: its default settings are used)."
+  return True, "dgVoodoo2 added with its dgVoodoo.conf."
+
+
+def dgvoodoo_wanted(found=None):
+  """Settings > Advanced > Use dgVoodoo2: "on" / "off" as chosen, else on
+  when dgVoodoo2 is there (found: find_dgvoodoo's answer, looked up when None)."""
+  choice = str(getattr(user_prefs, "use_dgvoodoo", "") or "").lower()
+  if choice in ("on", "off"):
+    return choice == "on"
+  return bool(find_dgvoodoo() if found is None else found)
+
+
 def prepare_real_d3d8(game_dir, name, original_dir="", auto=None):
   """config.d3d8_real_dll -> the proxy's RealD3D8Dll ("" = system32's d3d8).
   Set: the first time, a d3d8.dll next to the exe that is not the mod's proxy
@@ -1745,6 +1807,14 @@ def prepare_real_d3d8(game_dir, name, original_dir="", auto=None):
   if not name:
     if auto is None:
       auto = config.platform == "windows"
+      choice = str(getattr(user_prefs, "use_dgvoodoo", "") or "").lower()
+      if choice == "off":
+        # kept aside (renamed, so the proxy does not overwrite it), not used
+        if _auto_dgvoodoo(game_dir, original_dir):
+          log.info("dgVoodoo2 off (Settings > Advanced): Windows' Direct3D 8 used")
+        return ""
+      if choice == "on" and not auto:
+        log.warning("Use dgVoodoo2 is on, but dgVoodoo2 only works on Windows: not used")
     if auto:
       return _auto_dgvoodoo(game_dir, original_dir)
     current = _find_in_dir(game_dir, "d3d8.dll")

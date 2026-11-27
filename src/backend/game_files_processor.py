@@ -14,6 +14,7 @@ Alternatively you can run this script directly, in this case the match data will
 import hashlib
 import struct
 import os
+import re
 import time
 import math
 import random
@@ -388,6 +389,42 @@ def deploy_pads(match_data):
     log.info(f"Pads: {pads_ref or 'default'}, posts: {posts_ref or 'default'}")
 
 
+# The XML that names, per "<stadium file>.<environment>", the ads and pads
+# files a stadium scene loads (static_files; every entry points at the files
+# deploy_pads / deploy_adboards write).
+DRESSING_XML = "456c6d548b2e7a8a1d9c7016d63d7bfe.xml"
+
+
+def ensure_dressing_entry(match_data):
+    """A scene the XML has no entry for (an environment a custom stadium adds
+    to its slot: Stade Marcel Michelin's day on the night-only Clermont slot)
+    loads no pads, flags or posts: the game paints its missing-texture image
+    on them. Add the match's "<file>.<environment>" with the ad layout of the
+    slot's other entries (Standard when it has none). Returns True if added."""
+    slot = STADIUM_SLOTS.get(int((match_data or {}).get("stadium") or 0))
+    env = str((match_data or {}).get("environment") or "").lower()
+    if not slot or not env:
+        return False
+    key = f"{slot['file']}.{env}"
+    path = os.path.join(config.game_launcher_directory, DRESSING_XML)
+    if not os.path.isfile(path):
+        path_src = os.path.join(config.static_files_directory, DRESSING_XML)
+        if not os.path.isfile(path_src) or not copy_file(path_src, path):
+            return False
+    with open(path, "r", encoding="utf-8") as f:
+        xml = f.read()
+    if f'<stadium name="{key}">' in xml:
+        return False
+    m = re.search(r'<stadium name="' + re.escape(slot["file"]) + r'\.[a-z]+">\s*(<default[^>]*/>)', xml)
+    default = m.group(1) if m else '<default \t\tads="Standard\\France_Standard"\t\tpads="Tournaments\\World_Cup"/>'
+    entry = f'\t<stadium name="{key}">\n\t\t{default}\n\t</stadium>\n'
+    xml = xml.replace("</stadiums>", entry + "</stadiums>", 1)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(xml)
+    log.info(f"Stadium dressing XML: {key} added (pads, flags, posts, ads)")
+    return True
+
+
 def deploy_adboards(match_data):
     """Put the match's ad set (match_data["adboards"]: a .fsh, an image or a
     folder in the mod data; none = the mod's own World Cup set) over the two
@@ -462,6 +499,10 @@ def edit_graphics_files(match_data):
             log.error("Error while copying ball template file")
 
   # Post pads, corner flags and posts: one file built from the two sets.
+  try:
+    ensure_dressing_entry(match_data)
+  except (OSError, ValueError) as e:
+    log.warning(f"Stadium dressing XML not updated: {e}")
   try:
     deploy_pads(match_data)
   except (OSError, ValueError, struct.error) as e:

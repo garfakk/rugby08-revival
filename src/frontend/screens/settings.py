@@ -11,6 +11,7 @@ Keys go through app.input's actions, so a pad drives it the same way:
 Up/Down pick a row, Left/Right (or a click) change it, round, Q/E (LB/RB)
 switch tabs, Y resets the tab, Esc (B) goes back.
 """
+import os
 import sys
 import logging
 from pathlib import Path
@@ -30,6 +31,7 @@ from app.display import native_resolution, native_screen_ratio
 from app.team_browse import DEFAULT_STYLE, STYLES, style_label
 from app.input import Action, KEYMAP, HINT_GLYPH
 from ui import StyledButton, ToggleRow, CycleRow, SliderRow
+from ui.widgets import ActionRow
 from ui.broadcast import HintBar, page_header
 from ui.editor_kit import TabStrip, TabPage, ConfirmDialog
 from ui.broadcast import eyebrow_label
@@ -311,7 +313,43 @@ class SettingsScreen(QWidget):
                      style_label(user_prefs.match_picker), _set_picker),
             ToggleRow("Check For Updates", user_prefs.check_updates, _set_check_updates),
             CycleRow("Log Level", LOG_LEVELS, user_prefs.log_level or current, _set_log_level),
+            self._dgvoodoo_row(),
         ]
+
+    def _dgvoodoo_row(self):
+        """Use dgVoodoo2 (the game's Direct3D 8 through dgVoodoo2, for PCs
+        where the game shows nothing or crashes without it): a toggle, on by
+        default, when its D3D8.dll is there (next to the game, the original
+        game folder or added here); else ADD FILES to pick it."""
+        from backend import mod_utils
+        found = mod_utils.find_dgvoodoo()
+        if not found:
+            return ActionRow("Use dgVoodoo2", "ADD FILES…", self._add_dgvoodoo)
+
+        def _set(on):
+            user_prefs.use_dgvoodoo = "on" if on else "off"
+            user_prefs.save()
+        return ToggleRow("Use dgVoodoo2", mod_utils.dgvoodoo_wanted(found), _set)
+
+    def _add_dgvoodoo(self):
+        from PyQt5.QtWidgets import QFileDialog
+        from backend import mod_utils
+        path, _ = QFileDialog.getOpenFileName(
+            self, "dgVoodoo2's D3D8.dll (in its MS\\x86 folder)", os.path.expanduser("~"),
+            "D3D8.dll (D3D8.dll d3d8.dll);;DLL (*.dll)")
+        if not path:
+            return
+        ok, message = mod_utils.add_dgvoodoo(path)
+        if ok:
+            user_prefs.use_dgvoodoo = "on"
+            user_prefs.save()
+            index = TABS.index("Advanced")
+            self._fill_page(index)                    # the toggle, now that it is there
+            row = next((r for r in self._rows[index] if r.label.text() == "Use dgVoodoo2"), None)
+            if row is not None:
+                row.setFocus()
+        ConfirmDialog(self, "dgVoodoo2" if ok else "Not added", message,
+                      [("OK", "primary", "ok")], lambda _role: None)
 
     # ── reset ──
     def _ask_reset(self):
@@ -338,6 +376,7 @@ class SettingsScreen(QWidget):
             user_prefs.check_updates = True
             user_prefs.log_level = ""
             user_prefs.match_picker = DEFAULT_STYLE
+            user_prefs.use_dgvoodoo = ""
             user_prefs.save()
             setup_logging()
         else:

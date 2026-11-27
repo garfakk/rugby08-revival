@@ -19,12 +19,17 @@ from PyQt5.QtCore import Qt
 from app.screen_base import Screen
 from ui import StyledButton
 from ui.broadcast import (
-    Card, HintBar, page_header, eyebrow_label, display_label, label_css,
+    Card, HintBar, page_header, eyebrow_label, display_label, label_css, scroll_wrap,
 )
 from ui.stat_compare import StatComparison
 from ui.theme import (
     BG_BASE, ACCENT, HOME_TINT, AWAY_TINT, FG_SECONDARY, FG_MUTED, FONT_DISPLAY, BTN_HEIGHT,
 )
+
+CREST = 80            # team crest box in the scoreline
+NAME_W = 340          # team names longer than this are cut short
+STAT_ROW_H = 30       # stat_compare paints a row's bar 24-29 px down
+STATS_W = 540         # the statistics' painted width (numbers either side of the bars)
 
 STAT_ROWS = [
     ("TRIES", lambda s, st: s.get("tries", 0)),
@@ -61,7 +66,7 @@ class MatchReport(QWidget):
         self.setStyleSheet("QWidget#matchReport { background: transparent; }")
         bl = QVBoxLayout(self)
         bl.setContentsMargins(0, 0, 0, 0)
-        bl.setSpacing(16)
+        bl.setSpacing(12)
 
         # ── scoreline ────────────────────────────────────────────────────
         self.scoreline = QWidget()
@@ -70,17 +75,19 @@ class MatchReport(QWidget):
         score_row.setContentsMargins(0, 0, 0, 0)
         score_row.setSpacing(24)
 
-        self.home_crest = QLabel(); self.home_crest.setFixedSize(110, 110)
+        self.home_crest = QLabel(); self.home_crest.setFixedSize(CREST, CREST)
         self.home_crest.setAlignment(Qt.AlignCenter)
         self.home_crest.setStyleSheet("background: transparent;")
-        self.away_crest = QLabel(); self.away_crest.setFixedSize(110, 110)
+        self.away_crest = QLabel(); self.away_crest.setFixedSize(CREST, CREST)
         self.away_crest.setAlignment(Qt.AlignCenter)
         self.away_crest.setStyleSheet("background: transparent;")
 
         self.home_name = display_label("—", 26, QFont.Bold, track=1.2)
         self.away_name = display_label("—", 26, QFont.Bold, track=1.2)
-        self.home_score = display_label("0", 66, QFont.Bold, track=1.0)
-        self.away_score = display_label("0", 66, QFont.Bold, track=1.0, color=FG_SECONDARY)
+        for name in (self.home_name, self.away_name):    # long names cut short (_set_name)
+            name.setMaximumWidth(NAME_W)
+        self.home_score = display_label("0", 60, QFont.Bold, track=1.0)
+        self.away_score = display_label("0", 60, QFont.Bold, track=1.0, color=FG_SECONDARY)
 
         score_row.addStretch(1)
         score_row.addWidget(self.home_crest, alignment=Qt.AlignVCenter)
@@ -100,35 +107,90 @@ class MatchReport(QWidget):
         self.status_label.setAlignment(Qt.AlignCenter)
         bl.addWidget(self.status_label)
 
-        # ── statistics ───────────────────────────────────────────────────
+        # ── statistics | scorers, side by side ───────────────────────────
+        # (stacked, they are too tall for a 1080p laptop at 150 %, about
+        # 1280x690 of layout)
+        blocks = QHBoxLayout()
+        blocks.setSpacing(16)
+
         self.stats_card = Card()
         sv = QVBoxLayout(self.stats_card)
-        sv.setContentsMargins(24, 16, 24, 16)
+        sv.setContentsMargins(24, 12, 24, 12)
+        sv.setSpacing(6)
         sv.addWidget(eyebrow_label("match statistics", color=ACCENT, size=13))
-        self.stats = StatComparison([])
-        sv.addWidget(self.stats)
-        bl.addWidget(self.stats_card, stretch=1)
+        self.stats = StatComparison([], row_h=STAT_ROW_H, grow=True)
+        self.stats.setMinimumWidth(STATS_W)
+        sv.addWidget(self.stats, stretch=1)
+        blocks.addWidget(self.stats_card, stretch=1)
 
-        # ── scorers ──────────────────────────────────────────────────────
-        scorers = QHBoxLayout()
-        scorers.setSpacing(20)
-        self.home_scorers = self._scorer_card("scorers · home", HOME_TINT)
-        self.away_scorers = self._scorer_card("scorers · away", AWAY_TINT)
-        scorers.addWidget(self.home_scorers[0], stretch=1)
-        scorers.addWidget(self.away_scorers[0], stretch=1)
-        bl.addLayout(scorers, stretch=1)
+        # one card, home and away side by side like the score above
+        self.scorers_card = Card()
+        cv = QVBoxLayout(self.scorers_card)
+        cv.setContentsMargins(24, 12, 24, 12)
+        cv.setSpacing(6)
+        cv.addWidget(eyebrow_label("scorers", color=ACCENT, size=13))
+        inner = QWidget()
+        inner.setStyleSheet("background: transparent;")
+        cols = QHBoxLayout(inner)
+        cols.setContentsMargins(0, 0, 0, 0)
+        cols.setSpacing(24)
+        self.home_scorers = self._scorer_column(cols, HOME_TINT, "home")
+        self.away_scorers = self._scorer_column(cols, AWAY_TINT, "away")
+        self._scorers_inner = inner
+        self._scorers_scroll = scroll_wrap(inner, horizontal=False)        # a long list scrolls
+        cv.addWidget(self._scorers_scroll, stretch=1)
+        # nobody scored: one line in the middle of the card, not two empty columns
+        self.no_scorers = display_label("No scorers in this match", 13, QFont.DemiBold,
+                                        track=1.2, color=FG_MUTED)
+        self.no_scorers.setAlignment(Qt.AlignCenter)
+        self.no_scorers.hide()
+        cv.addWidget(self.no_scorers, stretch=1)
+        blocks.addWidget(self.scorers_card, stretch=1)
+        bl.addLayout(blocks, stretch=1)
+        bl.addStretch(0)
+        from ui.stat_compare import ROW_H
+        m = sv.contentsMargins()
+        self._card_chrome = m.top() + m.bottom() + sv.spacing() + 24       # margins + title
+        self._stats_full = len(STAT_ROWS) * ROW_H + self._card_chrome
+        self._fit_cards()
 
-    def _scorer_card(self, title, tint):
-        card = Card(stripe=tint)
-        v = QVBoxLayout(card)
-        v.setContentsMargins(22, 14, 22, 14)
-        v.setSpacing(6)
-        v.addWidget(eyebrow_label(title, color=tint, size=12))
-        holder = QVBoxLayout()
-        holder.setSpacing(4)
-        v.addLayout(holder)
+    def _show_scorers(self, any_scorer):
+        """The two columns, or the one "no scorers" line when nobody scored."""
+        self._scorers_scroll.setVisible(any_scorer)
+        self.no_scorers.setVisible(not any_scorer)
+
+    def _fit_cards(self):
+        """Both cards as tall as the taller of the statistics at full size
+        and the whole scorer list, no taller: on a big screen the spare
+        height stays below them; on a short one the scorers scroll."""
+        scorers = self._scorers_inner.sizeHint().height() + self._card_chrome
+        cap = max(self._stats_full, scorers)
+        for card in (self.stats_card, self.scorers_card):
+            card.setMaximumHeight(cap)
+
+    def _scorer_column(self, cols, tint, side):
+        """One side's scorers: the team's name over a line in its colour,
+        then name over scores per scorer."""
+        col = QWidget()
+        col.setStyleSheet("background: transparent;")
+        outer = QVBoxLayout(col)
+        outer.setContentsMargins(0, 0, 0, 0)
+        outer.setSpacing(8)
+        team = eyebrow_label(side, color=tint, size=11)
+        outer.addWidget(team)
+        line = QWidget()
+        line.setFixedHeight(3)
+        line.setStyleSheet(f"background: {tint};")
+        outer.addWidget(line)
+        v = QVBoxLayout()
+        v.setContentsMargins(0, 0, 0, 0)
+        v.setSpacing(8)
         v.addStretch(1)
-        return card, holder
+        outer.addLayout(v)
+        v.team_label = team
+        v.column = col
+        cols.addWidget(col, stretch=1, alignment=Qt.AlignTop)
+        return v
 
     # ── data ─────────────────────────────────────────────────────────────
     def set_result(self, match_data, result):
@@ -138,8 +200,11 @@ class MatchReport(QWidget):
         a fabricated 0-0."""
         home = (match_data or {}).get("team_A", {})
         away = (match_data or {}).get("team_B", {})
-        self.home_name.setText(home.get("name", "HOME").upper())
-        self.away_name.setText(away.get("name", "AWAY").upper())
+        self._set_name(self.home_name, home.get("name", "HOME"))
+        self._set_name(self.away_name, away.get("name", "AWAY"))
+        for holder, info, default in ((self.home_scorers, home, "home"), (self.away_scorers, away, "away")):
+            name = str(info.get("name") or default).upper()
+            holder.team_label.setText(holder.team_label.fontMetrics().elidedText(name, Qt.ElideRight, 260))
         self._set_crest(self.home_crest, home.get("logo_frontend") or home.get("logo"))
         self._set_crest(self.away_crest, away.get("logo_frontend") or away.get("logo"))
 
@@ -149,8 +214,10 @@ class MatchReport(QWidget):
             self.home_score.setText("–")
             self.away_score.setText("–")
             self.stats.set_rows([("NO RESULT READ FROM THE GAME", 0, 0)])
-            self._fill_scorers(self.home_scorers[1], [])
-            self._fill_scorers(self.away_scorers[1], [])
+            self._fill_scorers(self.home_scorers, [])
+            self._fill_scorers(self.away_scorers, [])
+            self._show_scorers(False)
+            self._fit_cards()
             return
 
         hs = result.get("team_A", {}).get("score", {}) or {}
@@ -162,10 +229,12 @@ class MatchReport(QWidget):
         self.stats.set_rows([(label, fn(hs, hst), fn(as_, ast)) for label, fn in STAT_ROWS])
         self.stats.reveal()
 
-        self._fill_scorers(self.home_scorers[1], result.get("team_A", {}).get("players", []),
-                           _times(result, "team_A"))
-        self._fill_scorers(self.away_scorers[1], result.get("team_B", {}).get("players", []),
-                           _times(result, "team_B"))
+        home_n = self._fill_scorers(self.home_scorers, result.get("team_A", {}).get("players", []),
+                                    _times(result, "team_A"))
+        n = self._fill_scorers(self.away_scorers, result.get("team_B", {}).get("players", []),
+                               _times(result, "team_B"))
+        self._show_scorers(bool(n or home_n))
+        self._fit_cards()
 
     def _set_status(self, result):
         """Banner under the scoreline: blank at full time, a warning when the
@@ -179,6 +248,13 @@ class MatchReport(QWidget):
             self.status_label.setText("")
         self.status_label.setVisible(bool(self.status_label.text()))
 
+    @staticmethod
+    def _set_name(label, name):
+        """The team name, cut short with … when wider than NAME_W."""
+        text = str(name).upper()
+        label.setText(label.fontMetrics().elidedText(text, Qt.ElideRight, NAME_W))
+        label.setToolTip(text if label.text() != text else "")
+
     def _set_crest(self, label, rel_path):
         from shared.config import config
         import os
@@ -189,13 +265,14 @@ class MatchReport(QWidget):
         if os.path.exists(path):
             pix = QPixmap(path)
             if not pix.isNull():
-                label.setPixmap(pix.scaled(100, 100, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+                label.setPixmap(pix.scaled(CREST - 8, CREST - 8, Qt.KeepAspectRatio, Qt.SmoothTransformation))
 
     def _fill_scorers(self, holder, players, times=None):
         times = times or {}
-        while holder.count():
+        while holder.count() > 1:                        # the trailing stretch stays
             item = holder.takeAt(0)
             if item.widget():
+                item.widget().hide()
                 item.widget().deleteLater()
 
         scorers = []
@@ -215,19 +292,24 @@ class MatchReport(QWidget):
                 scorers.append((p.get("name", "—"), " · ".join(events)))
 
         if not scorers:
-            holder.addWidget(display_label("No scorers", 12, QFont.DemiBold,
-                                            track=1.2, color=FG_MUTED))
-            return
-        for name, events in scorers[:8]:
-            row = QHBoxLayout()
-            row.addWidget(display_label(name, 15, QFont.Bold, track=0.4))
-            row.addStretch(1)
-            row.addWidget(display_label(events, 11, QFont.DemiBold, track=1.0,
-                                        color=FG_SECONDARY))
-            wrapper = QWidget()
-            wrapper.setStyleSheet("background: transparent;")
-            wrapper.setLayout(row)
-            holder.addWidget(wrapper)
+            holder.insertWidget(0, display_label("No scorers", 12, QFont.DemiBold,
+                                                 track=1.2, color=FG_MUTED))
+            return 0
+        for i, (name, events) in enumerate(scorers):
+            # name over its scores: the column is half a card wide
+            entry = QWidget()
+            entry.setStyleSheet("background: transparent; border: none;")
+            ev = QVBoxLayout(entry)
+            ev.setContentsMargins(0, 0, 0, 0)
+            ev.setSpacing(0)
+            ev.addWidget(display_label(name, 14, QFont.Bold, track=0.4))
+            scores = QLabel(events.upper())
+            scores.setWordWrap(True)
+            scores.setStyleSheet(label_css(10, QFont.DemiBold, FG_SECONDARY, FONT_DISPLAY)
+                                 + " background: transparent; border: none;")
+            ev.addWidget(scores)
+            holder.insertWidget(i, entry)
+        return len(scorers)
 
 
 class PostMatchScreen(Screen):
@@ -247,8 +329,8 @@ class PostMatchScreen(Screen):
         body = QWidget()
         body.setStyleSheet(f"background: {BG_BASE};")
         bl = QVBoxLayout(body)
-        bl.setContentsMargins(80, 24, 80, 16)
-        bl.setSpacing(16)
+        bl.setContentsMargins(60, 12, 60, 10)
+        bl.setSpacing(10)
         self.report = MatchReport()
         bl.addWidget(self.report, stretch=1)
 

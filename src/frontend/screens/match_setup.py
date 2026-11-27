@@ -12,7 +12,7 @@ import threading
 from copy import deepcopy
 
 from PyQt5.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QStackedWidget, QFrame,
+    QWidget, QVBoxLayout, QHBoxLayout, QBoxLayout, QLabel, QStackedWidget, QFrame,
     QScrollArea,
 )
 from PyQt5.QtGui import QPixmap, QFont
@@ -108,6 +108,7 @@ class TeamColumn(QWidget):
 
     CREST_SHARE = 0.20
     KIT_SHARE = 0.40   # crest and name share a line, so the kit gets the rest
+    MIN_STAGE = 90
 
     def __init__(self, side, tint, screen, parent=None):
         super().__init__(parent)
@@ -303,9 +304,19 @@ class TeamColumn(QWidget):
         self._crest_size = 132
 
     # ── proportional sizing ──────────────────────────────────────────────
+    def _card_height(self):
+        """The height the card has to fill: the screen's body (so a short
+        window shrinks the crest and kit instead of scrolling), else its own."""
+        avail = getattr(self.screen, "card_height", None)
+        h = avail() if callable(avail) else 0
+        return h if h > 0 else self.card.height()
+
     def resizeEvent(self, event):
         super().resizeEvent(event)
-        h = self.card.height()
+        self.fit_height()
+
+    def fit_height(self):
+        h = self._card_height()
         if h <= 0:
             return
         crest = max(64, int(h * self.CREST_SHARE))
@@ -325,9 +336,14 @@ class TeamColumn(QWidget):
         """Restores the stage's card-proportional fixed height — needed
         after the kickoff sequence relaxes it to animate the stage's
         geometry freely, then reparents it back into the card."""
-        h = self.card.height()
+        h = self._card_height()
         if h > 0:
-            self.stage.setFixedHeight(max(90, int(h * self.KIT_SHARE)))
+            # its share, but never more than what the rest of the card leaves
+            m = self.card.layout().contentsMargins()
+            chrome = (self._chrome_top.minimumSizeHint().height()
+                      + self._chrome_bottom.minimumSizeHint().height()
+                      + m.top() + m.bottom() + 2 * self.card.layout().spacing())
+            self.stage.setFixedHeight(max(self.MIN_STAGE, min(int(h * self.KIT_SHARE), h - chrome)))
 
     def _apply_crest(self):
         if self._crest_src.isNull():
@@ -693,6 +709,9 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self._defer_3d = True
         self._first_show = True
         self._reroll = False             # see new_match
+        # The user picked the stadium: changing teams no longer moves it
+        # (_auto_select_home_stadium). A new quick match from the menu clears it.
+        self._stadium_picked = False
         self.ds = ds
         self.cfg = MatchConfig()
         # Split in two so the backend can start working (file prep, the
@@ -822,6 +841,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
         which keeps the pair rolled (and preloaded) at build time, nor on a
         return from the game or the squad editor, which keep their teams."""
         self._reroll = True
+        self._stadium_picked = False
 
     def _maybe_reroll(self):
         reroll, self._reroll = self._reroll, False
@@ -1056,6 +1076,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self.header_widget = page_header("Quick match", right="",
                                           on_back=self._on_back_clicked)
         root.addWidget(self.header_widget)
+        self._header_layout = self.header_widget.layout()
 
         # The atmosphere backdrop spans the whole screen (see resizeEvent), not
         # just the body: the kickoff sequence fades the header, hint bar and kick
@@ -1152,7 +1173,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self.stadium_row.set_values(self._stadium_list)
         self.stadium_row._display = lambda t: t[1].get("name", str(t[0]))
         self.stadium_row.group = lambda t: t[1].get("country")
-        self.stadium_row.changed.connect(self._on_stadium_changed)
+        self.stadium_row.changed.connect(self._on_stadium_picked)
         self.focus.register(self.stadium_row)
         v.addWidget(self.stadium_row)
 
@@ -1162,6 +1183,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
         # "environments"); see _sync_environment_choices, called both below
         # and from _on_stadium_changed.
         self.environment_row = SelectorRow("environment")
+        self._full_rows = [self.environment_row]
         self.environment_row._display = self._environment_label
         self.environment_row.changed.connect(self._on_environment_changed)
         self.focus.register(self.environment_row)
@@ -1179,14 +1201,19 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self.wind_power_row._display = lambda n: WIND_POWER_NAMES.get(n, '')
         self.wind_power_row.changed.connect(self._on_wind_changed)
         self.focus.register(self.wind_power_row)
-        v.addWidget(self.wind_power_row)
+        # one row each, side by side on a short screen (_apply_compact)
+        self._wind_weather = QBoxLayout(QBoxLayout.TopToBottom)
+        self._wind_weather.setSpacing(6)
+        self._wind_weather.addWidget(self.wind_power_row)
+        v.addLayout(self._wind_weather)
 
         self.weather_row = SelectorRow("weather")
         self.weather_row.set_values(weather_choices(self.cfg.environment), index=0)
         self.weather_row._display = lambda k: WEATHER[k][0]
         self.weather_row.changed.connect(self._on_weather_changed)
         self.focus.register(self.weather_row)
-        v.addWidget(self.weather_row)
+        self._wind_weather.addWidget(self.weather_row)
+        self._full_rows += [self.wind_power_row, self.weather_row]
 
         self.advanced_btn = StyledButton("ADVANCED", "neutral")
         self.advanced_btn.setMinimumHeight(BTN_HEIGHT)
@@ -1557,6 +1584,31 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self.focus.register(mission_btn)
         v.addWidget(mission_btn)
 
+    # Below this screen height (a 1080p laptop at 150 % leaves ~690) the
+    # setup fits without scrolling: KICK OFF in the header, slim selectors,
+    # wind and weather side by side, the kits sized to what is left.
+    COMPACT_BELOW_H = 860
+
+    def _apply_compact(self, compact):
+        if getattr(self, "_compact", None) == compact:
+            return
+        self._compact = compact
+        for row in self._full_rows:
+            row.set_compact(compact)
+        self._wind_weather.setDirection(QBoxLayout.LeftToRight if compact else QBoxLayout.TopToBottom)
+        if compact:
+            self._header_layout.insertWidget(self._header_layout.count(), self.play_btn,
+                                             alignment=Qt.AlignVCenter)
+        else:
+            self._bottom_layout.addWidget(self.play_btn)
+
+    def card_height(self):
+        """Height of a team card when it fills the body without scrolling."""
+        if not hasattr(self, "body_scroll"):
+            return 0
+        m = self._body_layout.contentsMargins()
+        return self.body_scroll.viewport().height() - m.top() - m.bottom()
+
     def _advanced_rect(self):
         return QRect(self.width() - ADVANCED_PANEL_W, 0,
                      ADVANCED_PANEL_W, self.height())
@@ -1567,11 +1619,15 @@ class MatchSetupScreen(KickoffTransition, Screen):
             self._backdrop.setGeometry(self.rect())
             self._backdrop.lower()
         if hasattr(self, "_body_layout"):
+            compact = self.height() < self.COMPACT_BELOW_H
             # 80 px sides on a big screen, down to 16 on a small one
             side = max(16, min(80, (self.width() - 1200) // 4))
-            self._body_layout.setContentsMargins(side, 24, side, 20)
+            self._body_layout.setContentsMargins(side, 10 if compact else 24, side, 8 if compact else 20)
             self._body_layout.setSpacing(24 if self.width() >= 1400 else 12)
-            self._bottom_layout.setContentsMargins(side, 0, side, 20)
+            self._bottom_layout.setContentsMargins(side, 0, side, 0 if compact else 20)
+            self._apply_compact(compact)
+            for col in (self.home_col, self.away_col):
+                col.fit_height()
         if hasattr(self, "_advanced_slide"):
             self._advanced_slide.sync_geometry()
 
@@ -1631,7 +1687,12 @@ class MatchSetupScreen(KickoffTransition, Screen):
         self.cfg.ball_choice = options[index]["choice"] if options else None
 
     # ── stadium ──────────────────────────────────────────────────────────
-    def _auto_select_home_stadium(self):
+    def _on_stadium_picked(self):
+        """The user chose a stadium (the row only signals the user's picks)."""
+        self._stadium_picked = True
+        self._on_stadium_changed()
+
+    def _auto_select_home_stadium(self, force=False):
         """Picks the venue for the home team's season (its `primaryStadium`
         in teams/*.json) whenever the home side or its season changes —
         matches drop into that team's actual home ground without the user
@@ -1639,6 +1700,8 @@ class MatchSetupScreen(KickoffTransition, Screen):
         no primaryStadium yet, or it points at a stadium not in the loaded
         list (unset team, or an id that doesn't resolve)."""
         if not self._stadium_list:
+            return
+        if self._stadium_picked and not force:
             return
         slot = self.cfg.home
         sid = None
@@ -1675,7 +1738,7 @@ class MatchSetupScreen(KickoffTransition, Screen):
             self.stadium_row.set_index(ids.index(current))
             self._on_stadium_changed()
         else:
-            self._auto_select_home_stadium()
+            self._auto_select_home_stadium(force=True)     # the picked one is gone
 
     def _on_stadium_changed(self):
         entry = self.stadium_row.current()

@@ -187,3 +187,22 @@ def test_closed_roof_means_no_wind(setup, monkeypatch, mode):
     _ground(setup, 14)                       # an open ground
     setup._roll_wind()
     assert setup.cfg.wind_power == (3 if mode == "advanced" else None)
+
+
+def test_a_picked_stadium_stays_when_the_teams_change(window, setup, qapp):
+    """The home team's ground is picked for the user until they choose a
+    stadium; from then on changing teams leaves it alone."""
+    window.show_match_setup(new=True)
+    qapp.processEvents()
+    row = setup.stadium_row
+    current = row.current()
+    other = next(v for v in setup._stadium_list if v != current)
+    row._on_picked(other)                              # the user's pick
+    assert setup.cfg.stadium["data"] is other[1]
+    for tid in [t for t in setup.ds.teams if t != setup.cfg.home.team_id][:3]:
+        setup.cfg.home.team_id = tid
+        setup.cfg.home.season = sorted(setup.ds.teams[tid])[-1]
+        setup.on_team_changed("home")
+        assert row.current() == other
+    setup.new_match()                                  # a new quick match from the menu
+    assert setup._stadium_picked is False

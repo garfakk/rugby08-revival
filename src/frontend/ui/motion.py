@@ -89,11 +89,18 @@ def after_paint(widget, fn, delay=0):
         QTimer.singleShot(delay, fn)
         return
 
+    from PyQt5 import sip
+
+    def run():
+        # the widget (and what fn touches on it) may be gone by then
+        if not sip.isdeleted(widget):
+            fn()
+
     class _Once(QObject):
         def eventFilter(self, watched, event):
             if event.type() == QEvent.Paint:
                 watched.removeEventFilter(self)
-                QTimer.singleShot(delay, fn)
+                QTimer.singleShot(delay, run)
                 self.deleteLater()
             return False
     f = _Once(widget)

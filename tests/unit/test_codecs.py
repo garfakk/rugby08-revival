@@ -427,3 +427,63 @@ def test_configure_match_fog(tmp_path):
     assert ini.read_text() == "[patches]\nwind = 1\nfog = 1\n[fog]\nfog = thick\n"
     M.configure_match_fog(str(tmp_path), None)              # a clear match: the patch off
     assert "fog = 0\n" in ini.read_text() and ini.read_text().endswith("[fog]\nfog = off\n")
+
+
+def test_dgvoodoo_setting(tmp_path, monkeypatch):
+    """Settings > Advanced > Use dgVoodoo2: on by itself when found, off by
+    choice (kept aside, Windows' D3D8), files added by hand."""
+    game, original, dl = tmp_path / "game", tmp_path / "orig", tmp_path / "dgVoodoo2_86"
+    for d in (game, original, dl / "MS" / "x86"):
+        d.mkdir(parents=True)
+    monkeypatch.setattr(M.config, "platform", "windows")
+    monkeypatch.setattr(M.user_prefs, "use_dgvoodoo", "")
+    assert M.find_dgvoodoo(str(game), str(original)) == ""
+    assert M.dgvoodoo_wanted(found="") is False
+    # added by hand: the 32-bit D3D8.dll, its dgVoodoo.conf two folders up
+    assert M.add_dgvoodoo(str(dl / "nothing.dll"), str(game))[0] is False
+    (dl / "MS" / "x64").mkdir()
+    (dl / "MS" / "x64" / "D3D8.dll").write_bytes(_fake_d3d8(machine=0x8664))
+    ok, msg = M.add_dgvoodoo(str(dl / "MS" / "x64" / "D3D8.dll"), str(game))
+    assert not ok and "32-bit" in msg
+    (dl / "MS" / "x86" / "D3D8.dll").write_bytes(_fake_d3d8())
+    (dl / "dgVoodoo.conf").write_text("[General]")
+    ok, msg = M.add_dgvoodoo(str(dl / "MS" / "x86" / "D3D8.dll"), str(game))
+    assert ok and "dgVoodoo.conf" in msg
+    assert (game / M.AUTO_D3D8_WRAPPER).read_bytes() == _fake_d3d8()
+    assert (game / "dgVoodoo.conf").read_text() == "[General]"
+    assert M.find_dgvoodoo(str(game), str(original)) == str(game / M.AUTO_D3D8_WRAPPER)
+    assert M.dgvoodoo_wanted(found="x") is True                       # found: on by default
+    assert M.prepare_real_d3d8(str(game), "", str(original)) == M.AUTO_D3D8_WRAPPER
+    # turned off: Windows' D3D8, the file stays for later
+    monkeypatch.setattr(M.user_prefs, "use_dgvoodoo", "off")
+    assert M.dgvoodoo_wanted(found="x") is False
+    assert M.prepare_real_d3d8(str(game), "", str(original)) == ""
+    assert (game / M.AUTO_D3D8_WRAPPER).exists()
+    # a dgVoodoo d3d8.dll dropped next to the exe while off: renamed, not overwritten, not used
+    (game / M.AUTO_D3D8_WRAPPER).unlink()
+    (game / "d3d8.dll").write_bytes(_fake_d3d8(tag=b"v2"))
+    assert M.prepare_real_d3d8(str(game), "", str(original)) == ""
+    assert (game / M.AUTO_D3D8_WRAPPER).read_bytes() == _fake_d3d8(tag=b"v2")
+    # on, under Wine: never chained (dgVoodoo crashes there)
+    monkeypatch.setattr(M.user_prefs, "use_dgvoodoo", "on")
+    monkeypatch.setattr(M.config, "platform", "linux")
+    assert M.prepare_real_d3d8(str(game), "", str(original)) == ""
+
+
+def test_dressing_xml_entry_for_added_environment(tmp_path, monkeypatch):
+    """Stade Marcel Michelin's day on the night-only Clermont slot (26): the
+    dressing XML gets clermont.day, with Clermont's ads layout, once."""
+    from backend import game_files_processor as G
+    src = os.path.join(SRC, "assets", "static_files", G.DRESSING_XML)
+    shutil.copy(src, tmp_path / G.DRESSING_XML)
+    monkeypatch.setattr(G.config, "game_launcher_directory", str(tmp_path))
+    assert G.ensure_dressing_entry({"stadium": 26, "environment": "night"}) is False   # stock: there
+    assert G.ensure_dressing_entry({"stadium": 26, "environment": "day"}) is True
+    xml = (tmp_path / G.DRESSING_XML).read_text()
+    i = xml.index('<stadium name="clermont.day">')
+    assert 'ads="Standard\\France_Standard"' in xml[i:i + 200] and 'pads="Tournaments\\World_Cup"' in xml[i:i + 200]
+    assert xml.rstrip().endswith("</stadiums>")
+    import xml.etree.ElementTree as ET
+    ET.fromstring(xml.encode())                                    # still well formed
+    assert G.ensure_dressing_entry({"stadium": 26, "environment": "day"}) is False    # once
+    assert G.ensure_dressing_entry({"stadium": 9999, "environment": "day"}) is False  # unknown slot

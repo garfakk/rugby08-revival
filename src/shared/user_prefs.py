@@ -134,6 +134,9 @@ class UserPrefs:
         # ("rb", "lb", "a", "b", "x", "y", "back", "start", "ls", "rs", or a
         # DirectInput button number; "none" = no pad button).
         # Only in user_prefs.ini (backend.mod_utils.maul_key_vk / maul_pad_button).
+        # Settings > Advanced > Use dgVoodoo2: "on" / "off", or "" = on when
+        # dgVoodoo2 is found (backend.mod_utils.dgvoodoo_wanted).
+        self.use_dgvoodoo = ""
         self.lineout_maul_key = "space"
         self.lineout_maul_button = "rb"
         # The user's team/player edits (user_data/edits) laid over the data
@@ -189,6 +192,9 @@ class UserPrefs:
             if mode in ("standard", "advanced"):
                 self.wind_mode = mode
             self.lineout_jump = cp.getboolean(_SECTION, "lineout_jump", fallback=self.lineout_jump)
+            self.use_dgvoodoo = cp.get(_SECTION, "use_dgvoodoo", fallback="").strip().lower()
+            if self.use_dgvoodoo not in ("on", "off"):
+                self.use_dgvoodoo = ""
             self.lineout_maul_key = cp.get(_SECTION, "lineout_maul_key",
                                            fallback=self.lineout_maul_key).strip().lower() or "space"
             self.lineout_maul_button = cp.get(_SECTION, "lineout_maul_button",
@@ -240,6 +246,7 @@ class UserPrefs:
                         "difficulty": self.difficulty,
                         "wind_mode": self.wind_mode,
                         "lineout_jump": str(self.lineout_jump),
+                        "use_dgvoodoo": self.use_dgvoodoo,
                         "lineout_maul_key": self.lineout_maul_key,
                         "lineout_maul_button": self.lineout_maul_button}
         if not self.screen_ratio_set:

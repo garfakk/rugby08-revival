@@ -5,7 +5,7 @@ This mod was inspired by the incredible work of [The Rugby Forum](https://www.th
 A huge thanks to them!  
 
 Credits:  
-- Core app: Garfakk
+- Core app: Garfakk, using Claude Code (Opus 5.5)
 - Game assets used (kits, logos, balls, banners):
     - 2026 Super Rugby Americas and URBA Top 14: [RugbyMedia.ar](https://www.therugbyforum.com/members/rugbymedia-ar.88221/)
     - 2021-2025: [jim546](https://github.com/jimw546/jimw546-s-Rugby-08-stuff) ([2021 Kit Updates](https://www.therugbyforum.com/threads/2021-kit-updates.47969), [2022-23 Kit Updates](https://www.therugbyforum.com/threads/2022-23-kit-updates.48571))

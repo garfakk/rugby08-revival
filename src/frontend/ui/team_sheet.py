@@ -543,7 +543,7 @@ class StatsPanel(QWidget):
             return
         p = QPainter(self)
         w = self.width()
-        row_h = max(26, min(34, self.height() / len(self.attributes)))
+        row_h = max(24, min(34, self.height() / len(self.attributes)))
         y = 0
         for label, key in self.attributes:
             try:

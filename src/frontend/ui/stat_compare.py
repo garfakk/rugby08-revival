@@ -38,9 +38,13 @@ def _num(v):
 class StatComparison(QWidget):
     """Home value | label | away value, with a split bar showing the share."""
 
-    def __init__(self, rows=(), parent=None, home_color=HOME_TINT, away_color=AWAY_TINT, row_h=ROW_H):
+    def __init__(self, rows=(), parent=None, home_color=HOME_TINT, away_color=AWAY_TINT, row_h=ROW_H,
+                 grow=False):
+        """`row_h`: the row height (the minimum one with `grow`, rows then
+        spreading out up to ROW_H when the widget is taller)."""
         super().__init__(parent)
         self._row_h = row_h
+        self._grow = grow
         self._progress = 1.0
         self._colors = (home_color, away_color)
         self._anim = None
@@ -89,6 +93,9 @@ class StatComparison(QWidget):
         p = QPainter(self)
         mid = self.width() / 2
         y = 0
+        row_h = self._row_h
+        if self._grow and self.rows:
+            row_h = max(self._row_h, min(ROW_H, self.height() / len(self.rows)))
         for i, (label, hv, av) in enumerate(self.rows):
             k = self._row_progress(i)
             p.setOpacity(1.0)
@@ -111,4 +118,4 @@ class StatComparison(QWidget):
             p.fillRect(QRectF(mid - 20 - bar_w * h / total, bar_y, bar_w * h / total, 5),
                        QColor(self._colors[0]))
             p.fillRect(QRectF(mid + 20, bar_y, bar_w * a / total, 5), QColor(self._colors[1]))
-            y += self._row_h
+            y += row_h

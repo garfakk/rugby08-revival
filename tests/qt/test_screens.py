@@ -1724,3 +1724,112 @@ def test_squad_editor_role_follows_the_shirt(qapp):
     ed._on_picker_pick(16)                       # a replacement moves up into shirt 9
     assert ed.roles["viceCaptain"] == 16
     ed.deleteLater()
+
+
+# A 1080p laptop at 150 % scaling leaves the UI about 1280x720 of layout
+# (main._fit_ui_scale), less a window title bar.
+LAPTOP = (1280, 690)
+_KEEP = []
+
+
+def _no_vertical_scroll(widget):
+    from PyQt5.QtWidgets import QScrollArea
+    bars = [a.verticalScrollBar() for a in widget.findChildren(QScrollArea) if a.isVisibleTo(widget)]
+    return [b.maximum() for b in bars]
+
+
+def test_squad_editor_fits_a_laptop_screen(qapp):
+    """Starting XV, replacements and the side panel without scrolling, also
+    with a competition squad picker."""
+    from screens.squad_editor import SquadEditorScreen
+    players = {str(i): {"display_name": f"P{i}", "last_name": f"Player{i}", "first_name": "First",
+                        "attack": 70} for i in range(1, 25)}
+    lineup = {"players_id": [str(i) for i in range(1, 23)], "roles": {}}
+    for variants in ((), (("world_cup", "World Cup"),)):
+        ed = SquadEditorScreen("home", "Team", players, lineup, lambda *a: None, lambda: None,
+                               variants=variants, load_variant=lambda vid: (players, lineup))
+        ed.resize(*LAPTOP)
+        ed.show()
+        for _ in range(5):
+            qapp.processEvents()
+        body = ed._body_layout.parentWidget()
+        assert ed.height() == LAPTOP[1]
+        assert all(m == 0 for m in _no_vertical_scroll(ed)[:1]), variants
+        assert body.minimumSizeHint().height() <= body.height(), variants
+        ed.hide()
+        _KEEP.append(ed)            # not deleted: queued animations still point at it
+
+
+def test_full_time_with_scorers_fits_a_laptop_screen(qapp):
+    """Nine statistics rows and the scorers beside them, not cut off."""
+    from screens.post_match import PostMatchScreen
+    screen = PostMatchScreen(on_main_menu=lambda: None)
+    players = [{"id": i, "name": f"Scorer{i}", "tries": 1} for i in range(1, 7)]
+    side = {"players": players, "score": {"points": 30, "tries": 6}, "stats": {}}
+    screen.set_result({"team_A": {"name": "British & Irish Lions"}, "team_B": {"name": "Capibaras XV"}},
+                      {"team_A": side, "team_B": side, "finished": True})
+    screen.resize(*LAPTOP)
+    screen.show()
+    for _ in range(5):
+        qapp.processEvents()
+    report = screen.report
+    assert screen.minimumSizeHint().height() <= LAPTOP[1]       # nothing forced the window taller
+    assert report.minimumSizeHint().height() <= report.height()
+    assert report.stats.height() >= report.stats.minimumHeight()
+    screen.hide()
+    _KEEP.append(screen)
+
+
+def test_quick_match_fits_a_laptop_screen(window, qapp):
+    """No scrolling on a 1080p laptop: KICK OFF moves into the header,
+    the kits shrink to what is left; full size again on a big window."""
+    size = window.size()
+    try:
+        window.resize(*LAPTOP)
+        window.show_match_setup()
+        for _ in range(10):
+            qapp.processEvents()
+        s = window.screen_match_setup.setup_screen
+        assert s.body_scroll.verticalScrollBar().maximum() == 0
+        assert s.play_btn.parent() is s.header_widget
+        window.resize(1920, 1030)
+        for _ in range(10):
+            qapp.processEvents()
+        assert s.play_btn.parent() is not s.header_widget
+        assert s.body_scroll.verticalScrollBar().maximum() == 0
+    finally:
+        window.resize(size)
+        qapp.processEvents()
+
+
+def test_settings_use_dgvoodoo(window, qapp, monkeypatch, tmp_path):
+    """Advanced > Use dgVoodoo2: ADD FILES while it is not found, then a
+    toggle (on), which turns it off by choice."""
+    from backend import mod_utils
+    from screens.settings import TABS
+    from shared.user_prefs import user_prefs
+    from ui.widgets import ActionRow
+    from ui import ToggleRow
+    monkeypatch.setattr(user_prefs, "use_dgvoodoo", "")
+    monkeypatch.setattr(user_prefs, "save", lambda: None)
+    found = {"path": ""}
+    monkeypatch.setattr(mod_utils, "find_dgvoodoo", lambda *a: found["path"])
+    monkeypatch.setattr(mod_utils, "add_dgvoodoo",
+                        lambda path: (found.update(path=path) or True, "dgVoodoo2 added."))
+    from PyQt5.QtWidgets import QFileDialog
+    monkeypatch.setattr(QFileDialog, "getOpenFileName", lambda *a, **k: (str(tmp_path / "D3D8.dll"), ""))
+    screen = window.screen_settings
+    advanced = TABS.index("Advanced")
+    screen._fill_page(advanced)
+    row = _settings_rows(screen, "Advanced")["Use dgVoodoo2"]
+    assert isinstance(row, ActionRow)
+    row.activate()                                   # pick the file: added, toggle on
+    qapp.processEvents()
+    row = _settings_rows(screen, "Advanced")["Use dgVoodoo2"]
+    assert isinstance(row, ToggleRow) and row.state() and user_prefs.use_dgvoodoo == "on"
+    row.adjust(1)
+    assert user_prefs.use_dgvoodoo == "off"
+    from ui.editor_kit import ConfirmDialog
+    for dialog in screen.findChildren(ConfirmDialog):
+        dialog.hide()
+        dialog.deleteLater()

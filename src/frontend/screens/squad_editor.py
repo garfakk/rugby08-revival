@@ -64,7 +64,7 @@ ROLE_LABELS = {
 SIDE_PANEL_WIDTH = 340    # the left-hand actions card
 SIDE_PANEL_MARGIN = 22
 ROLES_PANEL_W = 440       # the roles/set-plays slide-over on the right
-POSITION_ROWS = 3         # a player carries up to 3 positions
+SHEET_BTN_HEIGHT = 32     # CLEAR ALL / RESET on the sheet's title line
 
 
 def _elide_for(label, text: str) -> str:
@@ -147,6 +147,22 @@ class SquadEditorScreen(Screen):
         # No header BACK button: DISCARD leaves, and the B key / pad BACK still does.
         header = page_header(f"Squad · {self.team_name}", right=self._count_text())
         self._count_lbl = header.findChild(QLabel, "pageHeaderRight")
+        # Competition squads of the season (a World Cup squad…) — only shown
+        # when the team has one; in the header bar, so the side panel keeps
+        # its height on a laptop screen. The kits are picked on the setup card.
+        self.variant_row = None
+        if self.variants:
+            labels = dict(self.variants)
+            values = [""] + [vid for vid, _ in self.variants]
+            self.variant_row = SelectorRow("variant", values=values, compact=True,
+                                           display=lambda vid: labels.get(vid, "Default"))
+            self.variant_row.set_index(values.index(self.variant))
+            self.variant_row.changed.connect(self._on_variant_changed)
+            self.variant_row.setFixedWidth(SIDE_PANEL_WIDTH - 2 * SIDE_PANEL_MARGIN)
+            hl = header.layout()
+            at = hl.indexOf(self._count_lbl) if self._count_lbl is not None else hl.count()
+            hl.insertWidget(at, self.variant_row, alignment=Qt.AlignVCenter)
+            hl.insertSpacing(at + 1, 18)
         root.addWidget(header)
 
         body = QWidget()
@@ -184,7 +200,23 @@ class SquadEditorScreen(Screen):
         v = QVBoxLayout(card)
         v.setContentsMargins(24, 16, 24, 16)
         v.setSpacing(6)
-        v.addWidget(eyebrow_label("starting xv", color=self.tint, size=13))
+        self._sheet_layout = v
+        # CLEAR ALL / RESET act on the sheet, so they sit on its title line
+        # (the side panel is the tallest column on a laptop screen)
+        head = QHBoxLayout()
+        head.setSpacing(8)
+        head.addWidget(eyebrow_label("starting xv", color=self.tint, size=13))
+        head.addStretch(1)
+        self.clear_btn = StyledButton("CLEAR ALL", "ghost")
+        self.clear_btn.clicked.connect(self._clear_all)
+        self.reset_btn = StyledButton("RESET", "ghost")
+        self.reset_btn.clicked.connect(self._reset)
+        for btn in (self.clear_btn, self.reset_btn):
+            btn.setFixedHeight(SHEET_BTN_HEIGHT)
+            btn.setMinimumWidth(110)
+            self.focus.register(btn)
+            head.addWidget(btn)
+        v.addLayout(head)
 
         self.avatars = {}
         for row in MATCH_SHEET_ROWS:
@@ -201,12 +233,15 @@ class SquadEditorScreen(Screen):
             hl.addStretch(1)
             v.addLayout(hl)
 
-        v.addSpacing(4)
+        rule_box = QWidget()
+        rule_box.setStyleSheet("background: transparent;")
+        self._rule_layout = QVBoxLayout(rule_box)
+        self._rule_layout.setContentsMargins(0, 4, 0, 6)
         rule = QWidget()
         rule.setFixedHeight(1)
         rule.setStyleSheet(f"background: {BORDER};")
-        v.addWidget(rule)
-        v.addSpacing(6)
+        self._rule_layout.addWidget(rule)
+        v.addWidget(rule_box)
 
         v.addWidget(eyebrow_label("replacements", color=FG_SECONDARY, size=12))
         subs = QHBoxLayout()
@@ -229,23 +264,12 @@ class SquadEditorScreen(Screen):
         card = Card()
         card.setFixedWidth(SIDE_PANEL_WIDTH)
         v = QVBoxLayout(card)
-        v.setContentsMargins(SIDE_PANEL_MARGIN, 16, SIDE_PANEL_MARGIN, 16)
-        v.setSpacing(10)
+        v.setContentsMargins(SIDE_PANEL_MARGIN, 14, SIDE_PANEL_MARGIN, 14)
+        v.setSpacing(6)
+        self._side_layout = v
 
-        # Competition squads of the season (a World Cup squad…) — only shown
-        # when the team has one. The kits are picked on the setup card.
-        self.variant_row = None
-        if self.variants:
-            labels = dict(self.variants)
-            values = [""] + [vid for vid, _ in self.variants]
-            self.variant_row = SelectorRow("variant", values=values, compact=True,
-                                           display=lambda vid: labels.get(vid, "Default"))
-            self.variant_row.set_index(values.index(self.variant))
-            self.variant_row.changed.connect(self._on_variant_changed)
+        if self.variant_row is not None:      # in the header, first of the panel's controls
             self.focus.register(self.variant_row)
-            v.addWidget(self.variant_row)
-            v.addSpacing(6)
-
         self.slot_lbl = eyebrow_label("number 1", color=ACCENT, size=13)
         v.addWidget(self.slot_lbl)
 
@@ -253,7 +277,7 @@ class SquadEditorScreen(Screen):
         self.player_first_lbl = display_label("", 14, QFont.DemiBold, track=0.6,
                                               color=FG_SECONDARY, upper=False)
         self.player_first_lbl.setFixedWidth(inner_w)
-        self.player_name_lbl = display_label("—", 26, QFont.Bold, track=0.6)
+        self.player_name_lbl = display_label("—", 22, QFont.Bold, track=0.6)
         self.player_name_lbl.setFixedWidth(inner_w)
         names = QVBoxLayout()           # first name right on top of the last name
         names.setSpacing(0)
@@ -263,23 +287,13 @@ class SquadEditorScreen(Screen):
         names.addWidget(self.player_first_lbl)
         names.addWidget(self.player_name_lbl)
         v.addLayout(names)
-        # one position per row, always POSITION_ROWS rows tall: the panel
+        # every position on one line (cut short when too long), so the panel
         # never moves with how many positions a player has
-        self.player_pos_lbls = []
-        pos_box = QWidget()
-        pos_box.setStyleSheet("background: transparent;")
-        pv = QVBoxLayout(pos_box)
-        pv.setContentsMargins(0, 0, 0, 0)
-        pv.setSpacing(2)
-        for _ in range(POSITION_ROWS):
-            lbl = display_label("", 11, QFont.DemiBold, track=1.6, color=FG_SECONDARY)
-            lbl.setFixedWidth(inner_w)
-            pv.addWidget(lbl)
-            self.player_pos_lbls.append(lbl)
-        pos_box.setFixedHeight(pos_box.sizeHint().height())
-        v.addWidget(pos_box)
+        self.player_pos_lbl = display_label("", 11, QFont.DemiBold, track=1.6, color=FG_SECONDARY)
+        self.player_pos_lbl.setFixedWidth(inner_w)
+        v.addWidget(self.player_pos_lbl)
 
-        v.addSpacing(10)
+        v.addSpacing(6)
         v.addWidget(eyebrow_label("attributes", color=FG_SECONDARY, size=12))
         self.stats = StatsPanel()
         v.addWidget(self.stats)
@@ -294,20 +308,6 @@ class SquadEditorScreen(Screen):
         self.roles_btn.clicked.connect(self.toggle_roles)
         self.focus.register(self.roles_btn)
         v.addWidget(self.roles_btn)
-
-        reset_line = QHBoxLayout()
-        reset_line.setSpacing(8)
-        self.clear_btn = StyledButton("CLEAR ALL", "ghost")
-        self.clear_btn.setMinimumHeight(BTN_HEIGHT)
-        self.clear_btn.clicked.connect(self._clear_all)
-        self.focus.register(self.clear_btn)
-        reset_line.addWidget(self.clear_btn, stretch=1)
-        self.reset_btn = StyledButton("RESET", "ghost")
-        self.reset_btn.setMinimumHeight(BTN_HEIGHT)
-        self.reset_btn.clicked.connect(self._reset)
-        self.focus.register(self.reset_btn)
-        reset_line.addWidget(self.reset_btn, stretch=1)
-        v.addLayout(reset_line)
 
         # Why SAVE is unavailable — filled by _update_save_state
         self.save_note = QLabel("")
@@ -390,7 +390,13 @@ class SquadEditorScreen(Screen):
             for chip in self.sub_chips.values():
                 chip.setMinimumWidth(100 if small else 150)
             side = 16 if small else 60
-            self._body_layout.setContentsMargins(side, 12 if small else 20, side, 12 if small else 16)
+            self._body_layout.setContentsMargins(side, 10 if small else 20, side, 10 if small else 16)
+            self._body_layout.setSpacing(16 if small else 24)
+            # attribute rows down to 24 px (stat_compare's bar sits 18 px down)
+            self.stats.setMinimumHeight(240 if small else 330)
+            self._sheet_layout.setContentsMargins(20, 10 if small else 16, 20, 10 if small else 16)
+            self._sheet_layout.setSpacing(3 if small else 6)
+            self._rule_layout.setContentsMargins(0, 0 if small else 4, 0, 0 if small else 6)
         if hasattr(self, "_roles_slide"):
             self._roles_slide.sync_geometry()
         if hasattr(self, "picker") and self.picker.isVisible():
@@ -472,9 +478,9 @@ class SquadEditorScreen(Screen):
         first = (player or {}).get("first_name") or ""
         self.player_first_lbl.setText(_elide_for(self.player_first_lbl, first) if first else "")
         self.player_name_lbl.setText(_elide_for(self.player_name_lbl, _last_name(player)))
-        positions = _all_positions(player).split(" / ") if player else []
-        for i, lbl in enumerate(self.player_pos_lbls):
-            lbl.setText(_elide_for(lbl, positions[i]) if i < len(positions) else "")
+        positions = _all_positions(player) if player else ""
+        self.player_pos_lbl.setText(_elide_for(self.player_pos_lbl, positions) if positions else "")
+        self.player_pos_lbl.setToolTip(positions)
         self.stats.set_player(player)
 
         if player and not self._fits(player, fit_number):

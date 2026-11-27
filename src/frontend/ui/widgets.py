@@ -442,6 +442,31 @@ class CycleRow(SettingRow):
         self._on_change(value)
 
 
+class ActionRow(SettingRow):
+    """A row whose control is a button: a click, Enter or A runs it."""
+
+    def __init__(self, label: str, button_text: str, on_activate, parent=None):
+        super().__init__(label, parent)
+        self._on_activate = on_activate
+        box = QWidget()
+        box.setFixedWidth(self.CONTROL_WIDTH)
+        h = QHBoxLayout(box)
+        h.setContentsMargins(0, 0, 0, 0)
+        h.addStretch()
+        self.button = StyledButton(button_text, "neutral")
+        self.button.setFixedHeight(36)
+        self.button.clicked.connect(self.activate)
+        h.addWidget(self.button)
+        self._own(box)
+
+    def activate(self):
+        self.setFocus(Qt.MouseFocusReason)
+        self._on_activate()
+
+    def adjust(self, delta):
+        """Left / Right: nothing to step through."""
+
+
 class SliderRow(SettingRow):
     """An integer in [minimum, maximum]: a slider and its current value.
     on_change is called with the value as the slider moves."""
