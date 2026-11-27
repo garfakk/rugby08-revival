@@ -1,0 +1,65 @@
+{
+ "version": 2,
+ "layers": [
+  {
+   "id": "753f717a",
+   "motif": "gen:solid_band",
+   "params": {
+    "top": "straight",
+    "bottom": "straight",
+    "edge": 0.18,
+    "repeats": 6,
+    "cut": "none",
+    "cut_size": 9.0,
+    "dot": 1.0
+   },
+   "name": "Solid band",
+   "seed": 38311,
+   "limb": "arm",
+   "side": "b",
+   "x": 48.21145374449339,
+   "y": 78.15859030837004,
+   "w": 128.0,
+   "h": 12.16,
+   "rot": 0,
+   "flip": false,
+   "opacity": 0.753,
+   "color": "#1c2433",
+   "soft": 0.6,
+   "ink": "embed",
+   "wrap": true,
+   "visible": true,
+   "src": ""
+  },
+  {
+   "id": "8c8df00c",
+   "motif": "gen:solid_band",
+   "params": {
+    "top": "straight",
+    "bottom": "straight",
+    "edge": 0.18,
+    "repeats": 6,
+    "cut": "none",
+    "cut_size": 9.0,
+    "dot": 1.0
+   },
+   "name": "Solid band",
+   "seed": 38951,
+   "limb": "arm",
+   "side": "b",
+   "x": 93.6035242290749,
+   "y": 91.34801762114535,
+   "w": 128.0,
+   "h": 4.54,
+   "rot": 0,
+   "flip": false,
+   "opacity": 0.7482500000000001,
+   "color": "#1c2433",
+   "soft": 0.6,
+   "ink": "embed",
+   "wrap": true,
+   "visible": true,
+   "src": ""
+  }
+ ]
+}
