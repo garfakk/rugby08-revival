@@ -63,8 +63,9 @@
     "ss_defensive_organisation": "",
     "ss_scrummager": "",
     "ss_jumper": "",
-    "skin": "players/skins/baille.png",
+    "skin": "",
     "skin_overlay": [
+     "players/tattoos/10224_a59a2b56db.png",
      "players/straps/knee_right.png"
     ]
    },
@@ -125,8 +126,9 @@
     "ss_defensive_organisation": "",
     "ss_scrummager": "",
     "ss_jumper": "",
-    "skin": "players/skins/baille.png",
+    "skin": "",
     "skin_overlay": [
+     "players/tattoos/10224_a59a2b56db.png",
      "players/straps/knee_right.png"
     ]
    },
@@ -187,8 +189,9 @@
     "ss_defensive_organisation": "",
     "ss_scrummager": "",
     "ss_jumper": "",
-    "skin": "players/skins/baille.png",
+    "skin": "",
     "skin_overlay": [
+     "players/tattoos/10224_a59a2b56db.png",
      "players/straps/knee_right.png"
     ]
    },
@@ -249,8 +252,9 @@
     "ss_defensive_organisation": "",
     "ss_scrummager": "",
     "ss_jumper": "",
-    "skin": "players/skins/baille.png",
+    "skin": "",
     "skin_overlay": [
+     "players/tattoos/10224_a59a2b56db.png",
      "players/straps/knee_right.png"
     ]
    },
@@ -311,8 +315,9 @@
     "ss_defensive_organisation": "",
     "ss_scrummager": "",
     "ss_jumper": "",
-    "skin": "players/skins/baille.png",
+    "skin": "",
     "skin_overlay": [
+     "players/tattoos/10224_a59a2b56db.png",
      "players/straps/knee_right.png"
     ]
    },
@@ -373,8 +378,9 @@
     "ss_defensive_organisation": "",
     "ss_scrummager": "",
     "ss_jumper": "",
-    "skin": "players/skins/baille.png",
+    "skin": "",
     "skin_overlay": [
+     "players/tattoos/10224_a59a2b56db.png",
      "players/straps/knee_right.png"
     ]
    },
@@ -435,8 +441,9 @@
     "ss_defensive_organisation": "",
     "ss_scrummager": "",
     "ss_jumper": "",
-    "skin": "players/skins/baille.png",
+    "skin": "",
     "skin_overlay": [
+     "players/tattoos/10224_a59a2b56db.png",
      "players/straps/knee_right.png"
     ]
    },
@@ -497,8 +504,9 @@
     "ss_defensive_organisation": "",
     "ss_scrummager": "",
     "ss_jumper": "",
-    "skin": "players/skins/baille.png",
+    "skin": "",
     "skin_overlay": [
+     "players/tattoos/10224_a59a2b56db.png",
      "players/straps/knee_right.png"
     ]
    }
@@ -3718,7 +3726,7 @@
     "height": "186",
     "weight": "83",
     "face": "players/heads/ntamack.big",
-    "skin_tone": "d_medium",
+    "skin_tone": "l_medium",
     "foot": "right_footed",
     "position3": "",
     "headgear": "",
@@ -3768,8 +3776,9 @@
     "ss_defensive_organisation": "",
     "ss_scrummager": "",
     "ss_jumper": "",
-    "skin": "players/skins/ntamack.png",
+    "skin": "",
     "skin_overlay": [
+     "players/tattoos/10237_6414e98aba.png",
      "players/straps/wrist_right.png",
      "players/straps/wrist_2_left.png",
      "players/straps/knee_left.png"
@@ -3785,7 +3794,7 @@
     "height": "186",
     "weight": "83",
     "face": "players/heads/ntamack.big",
-    "skin_tone": "d_medium",
+    "skin_tone": "l_medium",
     "foot": "right_footed",
     "position3": "",
     "headgear": "",
@@ -3835,8 +3844,9 @@
     "ss_defensive_organisation": "",
     "ss_scrummager": "",
     "ss_jumper": "",
-    "skin": "players/skins/ntamack.png",
+    "skin": "",
     "skin_overlay": [
+     "players/tattoos/10237_6414e98aba.png",
      "players/straps/wrist_right.png",
      "players/straps/wrist_2_left.png",
      "players/straps/knee_left.png"
@@ -3852,7 +3862,7 @@
     "height": "186",
     "weight": "83",
     "face": "players/heads/ntamack.big",
-    "skin_tone": "d_medium",
+    "skin_tone": "l_medium",
     "foot": "right_footed",
     "position3": "",
     "headgear": "",
@@ -3902,8 +3912,9 @@
     "ss_defensive_organisation": "",
     "ss_scrummager": "",
     "ss_jumper": "",
-    "skin": "players/skins/ntamack.png",
+    "skin": "",
     "skin_overlay": [
+     "players/tattoos/10237_6414e98aba.png",
      "players/straps/wrist_right.png",
      "players/straps/wrist_2_left.png",
      "players/straps/knee_left.png"
@@ -3919,7 +3930,7 @@
     "height": "186",
     "weight": "83",
     "face": "players/heads/ntamack.big",
-    "skin_tone": "d_medium",
+    "skin_tone": "l_medium",
     "foot": "right_footed",
     "position3": "",
     "headgear": "",
@@ -3969,8 +3980,9 @@
     "ss_defensive_organisation": "",
     "ss_scrummager": "",
     "ss_jumper": "",
-    "skin": "players/skins/ntamack.png",
+    "skin": "",
     "skin_overlay": [
+     "players/tattoos/10237_6414e98aba.png",
      "players/straps/wrist_right.png",
      "players/straps/wrist_2_left.png",
      "players/straps/knee_left.png"
@@ -3986,7 +3998,7 @@
     "height": "186",
     "weight": "83",
     "face": "players/heads/ntamack.big",
-    "skin_tone": "d_medium",
+    "skin_tone": "l_medium",
     "foot": "right_footed",
     "position3": "",
     "headgear": "",
@@ -4036,8 +4048,9 @@
     "ss_defensive_organisation": "",
     "ss_scrummager": "",
     "ss_jumper": "",
-    "skin": "players/skins/ntamack.png",
+    "skin": "",
     "skin_overlay": [
+     "players/tattoos/10237_6414e98aba.png",
      "players/straps/wrist_right.png",
      "players/straps/wrist_2_left.png",
      "players/straps/knee_left.png"
@@ -4053,7 +4066,7 @@
     "height": "186",
     "weight": "83",
     "face": "players/heads/ntamack.big",
-    "skin_tone": "d_medium",
+    "skin_tone": "l_medium",
     "foot": "right_footed",
     "position3": "",
     "headgear": "",
@@ -4103,8 +4116,9 @@
     "ss_defensive_organisation": "",
     "ss_scrummager": "",
     "ss_jumper": "",
-    "skin": "players/skins/ntamack.png",
+    "skin": "",
     "skin_overlay": [
+     "players/tattoos/10237_6414e98aba.png",
      "players/straps/wrist_right.png",
      "players/straps/wrist_2_left.png",
      "players/straps/knee_left.png"
@@ -4120,7 +4134,7 @@
     "height": "186",
     "weight": "83",
     "face": "players/heads/ntamack.big",
-    "skin_tone": "d_medium",
+    "skin_tone": "l_medium",
     "foot": "right_footed",
     "position3": "",
     "headgear": "",
@@ -4170,8 +4184,9 @@
     "ss_defensive_organisation": "",
     "ss_scrummager": "",
     "ss_jumper": "",
-    "skin": "players/skins/ntamack.png",
+    "skin": "",
     "skin_overlay": [
+     "players/tattoos/10237_6414e98aba.png",
      "players/straps/wrist_right.png",
      "players/straps/wrist_2_left.png",
      "players/straps/knee_left.png"
@@ -4187,7 +4202,7 @@
     "height": "186",
     "weight": "83",
     "face": "players/heads/ntamack.big",
-    "skin_tone": "d_medium",
+    "skin_tone": "l_medium",
     "foot": "right_footed",
     "position3": "",
     "headgear": "",
@@ -4237,8 +4252,9 @@
     "ss_defensive_organisation": "",
     "ss_scrummager": "",
     "ss_jumper": "",
-    "skin": "players/skins/ntamack.png",
+    "skin": "",
     "skin_overlay": [
+     "players/tattoos/10237_6414e98aba.png",
      "players/straps/wrist_right.png",
      "players/straps/wrist_2_left.png",
      "players/straps/knee_left.png"
@@ -4313,8 +4329,9 @@
     "ss_defensive_organisation": "",
     "ss_scrummager": "",
     "ss_jumper": "",
-    "skin": "players/skins/fickou.png",
+    "skin": "",
     "skin_overlay": [
+     "players/tattoos/10541_11d45be33f.png",
      "players/straps/elbow_right.png",
      "players/straps/below_knee_left.png"
     ],
@@ -4377,8 +4394,9 @@
     "ss_defensive_organisation": "",
     "ss_scrummager": "",
     "ss_jumper": "",
-    "skin": "players/skins/fickou.png",
+    "skin": "",
     "skin_overlay": [
+     "players/tattoos/10541_11d45be33f.png",
      "players/straps/elbow_right.png",
      "players/straps/below_knee_left.png"
     ],
@@ -4441,8 +4459,9 @@
     "ss_defensive_organisation": "",
     "ss_scrummager": "",
     "ss_jumper": "",
-    "skin": "players/skins/fickou.png",
+    "skin": "",
     "skin_overlay": [
+     "players/tattoos/10541_11d45be33f.png",
      "players/straps/elbow_right.png",
      "players/straps/below_knee_left.png"
     ],
@@ -4505,8 +4524,9 @@
     "ss_defensive_organisation": "",
     "ss_scrummager": "",
     "ss_jumper": "",
-    "skin": "players/skins/fickou.png",
+    "skin": "",
     "skin_overlay": [
+     "players/tattoos/10541_11d45be33f.png",
      "players/straps/elbow_right.png",
      "players/straps/below_knee_left.png"
     ],
@@ -4569,8 +4589,9 @@
     "ss_defensive_organisation": "",
     "ss_scrummager": "",
     "ss_jumper": "",
-    "skin": "players/skins/fickou.png",
+    "skin": "",
     "skin_overlay": [
+     "players/tattoos/10541_11d45be33f.png",
      "players/straps/elbow_right.png",
      "players/straps/below_knee_left.png"
     ],
@@ -4633,8 +4654,9 @@
     "ss_defensive_organisation": "",
     "ss_scrummager": "",
     "ss_jumper": "",
-    "skin": "players/skins/fickou.png",
+    "skin": "",
     "skin_overlay": [
+     "players/tattoos/10541_11d45be33f.png",
      "players/straps/elbow_right.png",
      "players/straps/below_knee_left.png"
     ],
@@ -4697,8 +4719,9 @@
     "ss_defensive_organisation": "",
     "ss_scrummager": "",
     "ss_jumper": "",
-    "skin": "players/skins/fickou.png",
+    "skin": "",
     "skin_overlay": [
+     "players/tattoos/10541_11d45be33f.png",
      "players/straps/elbow_right.png",
      "players/straps/below_knee_left.png"
     ],
@@ -4761,8 +4784,9 @@
     "ss_defensive_organisation": "",
     "ss_scrummager": "",
     "ss_jumper": "",
-    "skin": "players/skins/fickou.png",
+    "skin": "",
     "skin_overlay": [
+     "players/tattoos/10541_11d45be33f.png",
      "players/straps/elbow_right.png",
      "players/straps/below_knee_left.png"
     ],
@@ -4825,8 +4849,9 @@
     "ss_defensive_organisation": "",
     "ss_scrummager": "",
     "ss_jumper": "",
-    "skin": "players/skins/fickou.png",
+    "skin": "",
     "skin_overlay": [
+     "players/tattoos/10541_11d45be33f.png",
      "players/straps/elbow_right.png",
      "players/straps/below_knee_left.png"
     ],
@@ -4889,8 +4914,9 @@
     "ss_defensive_organisation": "",
     "ss_scrummager": "",
     "ss_jumper": "",
-    "skin": "players/skins/fickou.png",
+    "skin": "",
     "skin_overlay": [
+     "players/tattoos/10541_11d45be33f.png",
      "players/straps/elbow_right.png",
      "players/straps/below_knee_left.png"
     ],
@@ -70959,7 +70985,7 @@
     "socks": "up",
     "gloves": "",
     "wrist_tape": "none",
-    "tight_tape": "none",
+    "tight_tape": "both",
     "finger_tape": "none",
     "special_ability": "8",
     "crashball": "99",
@@ -71002,7 +71028,7 @@
     "ss_ball_winner": "",
     "ss_tackling": "yes",
     "skin_overlay": [
-     "players/tattoos/118007.png"
+     "players/tattoos/118007_ee090b1094.png"
     ],
     "skin": "players/skins/118007_tint.png"
    },
@@ -71064,7 +71090,7 @@
     "ss_ball_winner": "",
     "ss_tackling": "",
     "skin_overlay": [
-     "players/tattoos/118007.png"
+     "players/tattoos/118007_ee090b1094.png"
     ],
     "skin": "players/skins/118007_tint.png"
    },
@@ -71126,7 +71152,7 @@
     "ss_ball_winner": "",
     "ss_tackling": "",
     "skin_overlay": [
-     "players/tattoos/118007.png"
+     "players/tattoos/118007_ee090b1094.png"
     ],
     "skin": "players/skins/118007_tint.png"
    },
@@ -71188,7 +71214,7 @@
     "ss_ball_winner": "",
     "ss_tackling": "",
     "skin_overlay": [
-     "players/tattoos/118007.png"
+     "players/tattoos/118007_ee090b1094.png"
     ],
     "skin": "players/skins/118007_tint.png"
    },
@@ -71250,7 +71276,7 @@
     "ss_ball_winner": "",
     "ss_tackling": "",
     "skin_overlay": [
-     "players/tattoos/118007.png"
+     "players/tattoos/118007_ee090b1094.png"
     ],
     "skin": "players/skins/118007_tint.png"
    },
@@ -71312,7 +71338,7 @@
     "ss_ball_winner": "",
     "ss_tackling": "",
     "skin_overlay": [
-     "players/tattoos/118007.png"
+     "players/tattoos/118007_ee090b1094.png"
     ],
     "skin": "players/skins/118007_tint.png"
    },
@@ -71331,7 +71357,7 @@
     "socks": "up",
     "gloves": "",
     "wrist_tape": "none",
-    "tight_tape": "none",
+    "tight_tape": "both",
     "finger_tape": "none",
     "special_ability": "8",
     "crashball": "99",
@@ -71374,7 +71400,7 @@
     "ss_ball_winner": "",
     "ss_tackling": "yes",
     "skin_overlay": [
-     "players/tattoos/118007.png"
+     "players/tattoos/118007_ee090b1094.png"
     ],
     "skin": "players/skins/118007_tint.png"
    },
@@ -71436,7 +71462,7 @@
     "ss_ball_winner": "",
     "ss_tackling": "",
     "skin_overlay": [
-     "players/tattoos/118007.png"
+     "players/tattoos/118007_ee090b1094.png"
     ],
     "skin": "players/skins/118007_tint.png"
    },
@@ -71498,7 +71524,7 @@
     "ss_ball_winner": "",
     "ss_tackling": "",
     "skin_overlay": [
-     "players/tattoos/118007.png"
+     "players/tattoos/118007_ee090b1094.png"
     ],
     "skin": "players/skins/118007_tint.png"
    },
@@ -71560,7 +71586,7 @@
     "ss_ball_winner": "",
     "ss_tackling": "",
     "skin_overlay": [
-     "players/tattoos/118007.png"
+     "players/tattoos/118007_ee090b1094.png"
     ],
     "skin": "players/skins/118007_tint.png"
    },
@@ -71622,7 +71648,7 @@
     "ss_ball_winner": "",
     "ss_tackling": "",
     "skin_overlay": [
-     "players/tattoos/118007.png"
+     "players/tattoos/118007_ee090b1094.png"
     ],
     "skin": "players/skins/118007_tint.png"
    }
@@ -305970,7 +305996,7 @@
     "skin_tone": "light",
     "skin": "",
     "skin_overlay": [
-     "players/tattoos/144801.png",
+     "players/tattoos/144801_34b7c3b95d.png",
      "players/straps/wrist_right.png",
      "players/straps/wrist_2_left.png"
     ],
@@ -306034,7 +306060,7 @@
     "skin_tone": "light",
     "skin": "",
     "skin_overlay": [
-     "players/tattoos/144801.png",
+     "players/tattoos/144801_34b7c3b95d.png",
      "players/straps/wrist_right.png",
      "players/straps/wrist_2_left.png"
     ],
@@ -306098,7 +306124,7 @@
     "skin_tone": "light",
     "skin": "",
     "skin_overlay": [
-     "players/tattoos/144801.png",
+     "players/tattoos/144801_34b7c3b95d.png",
      "players/straps/wrist_right.png",
      "players/straps/wrist_2_left.png"
     ],
@@ -306162,7 +306188,7 @@
     "skin_tone": "light",
     "skin": "",
     "skin_overlay": [
-     "players/tattoos/144801.png",
+     "players/tattoos/144801_34b7c3b95d.png",
      "players/straps/wrist_right.png",
      "players/straps/wrist_2_left.png"
     ],
@@ -306226,7 +306252,7 @@
     "skin_tone": "light",
     "skin": "",
     "skin_overlay": [
-     "players/tattoos/144801.png",
+     "players/tattoos/144801_34b7c3b95d.png",
      "players/straps/wrist_right.png",
      "players/straps/wrist_2_left.png"
     ],
@@ -306290,7 +306316,7 @@
     "skin_tone": "light",
     "skin": "",
     "skin_overlay": [
-     "players/tattoos/144801.png",
+     "players/tattoos/144801_34b7c3b95d.png",
      "players/straps/wrist_right.png",
      "players/straps/wrist_2_left.png"
     ],
@@ -306354,7 +306380,7 @@
     "skin_tone": "light",
     "skin": "",
     "skin_overlay": [
-     "players/tattoos/144801.png",
+     "players/tattoos/144801_34b7c3b95d.png",
      "players/straps/wrist_right.png",
      "players/straps/wrist_2_left.png"
     ],
@@ -306418,7 +306444,7 @@
     "skin_tone": "light",
     "skin": "",
     "skin_overlay": [
-     "players/tattoos/144801.png",
+     "players/tattoos/144801_34b7c3b95d.png",
      "players/straps/wrist_right.png",
      "players/straps/wrist_2_left.png"
     ],
@@ -306482,7 +306508,7 @@
     "skin_tone": "light",
     "skin": "",
     "skin_overlay": [
-     "players/tattoos/144801.png",
+     "players/tattoos/144801_34b7c3b95d.png",
      "players/straps/wrist_right.png",
      "players/straps/wrist_2_left.png"
     ],
